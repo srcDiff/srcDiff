@@ -12,7 +12,7 @@ import difflib
 from datetime import datetime, time
 
 maxcount = 700
-error_filename = "srcMLTestReport"
+error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
 
 FIELD_WIDTH_LANGUAGE = 5
@@ -20,16 +20,9 @@ FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
 
-srcmltranslator = os.environ.get("SRC2SRCML")
-if srcmltranslator == "" or srcmltranslator == None:
-	srcmltranslator = "../bin/src2srcml"
-
 srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "" or srcmlutility == None:
 	srcmlutility = "../bin/srcml2src"
-
-# srcExpr translator
-srcexprtranslator = '/home/collard/srcML/trunk/srcexpr/src/srcexpr'
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
