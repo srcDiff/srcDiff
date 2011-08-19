@@ -42,28 +42,32 @@ else
 XML_LIB_SRC2SRCDIFF=-lxml2 -lregex -liberty
 endif
 
+#libsrcml include
+LIBSRCML_INCLUDE = ../bin/src
+LIBSRCML_LIB = ../bin/
+
 # project dirs
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
-EXE= diffe2diff diffeopt difffact diffver $(EXE_DIR)src2srcdiff
-#diffe2diff diffe2src
+EXE = $(EXE_DIR)src2srcdiff
+
 
 all : ${EXE}
 
-$(OBJ_DIR)src2srcdiff.o : src2srcdiff.cpp  ../src/srcMLTranslator.hpp ../src/srcmlapps.hpp ../src/Options.hpp ../src/srcmlns.hpp shortest_edit_script.h xmlrw.h diffrw.h
+$(OBJ_DIR)src2srcdiff.o : src2srcdiff.cpp shortest_edit_script.h xmlrw.h diffrw.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(EXE_DIR)src2srcdiff : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_script.o xmlrw.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^  $(LDFLAGS) ${XML_LIB_SRC2SRCDIFF} ${XML_IO_LIB} -o $@
+$(EXE_DIR)src2srcdiff : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^  $(LDFLAGS) ${XML_LIB_SRC2SRCDIFF} ${XML_IO_LIB} $(LIBSRCML_LIB)libsrcml.a -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
-	g++ -c xmlrw.cpp -O3 -I/usr/include/libxml2
+	g++ -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@
 
 $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h
 	g++ -c $< -o $@
 
 clean :
-	rm -f ${EXE_DIR}/* $(OBJ_DIR)/*
+	rm -f ${EXE} $(OBJ_DIR)*
 
 
