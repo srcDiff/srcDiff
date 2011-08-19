@@ -1,0 +1,180 @@
+<refentry>
+
+<refentryinfo>
+    <date>2011-03-30</date>
+</refentryinfo>
+
+<refmeta>
+  <refentrytitle>SHORTEST_EDIT_SCRIPT</refentrytitle><manvolnum>1</manvolnum><refmiscinfo>SHORTEST_EDIT_SCRIPT 1.0</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+  <refname>shortest_edit_script</refname><refpurpose>constructs the shortest edit script from two sequences.</refpurpose>
+</refnamediv>
+
+<refsect1><title>Library</title>
+
+  <para>
+    Differencing Library (libdiff) 
+  </para>
+
+</refsect1>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+
+  <funcsynopsisinfo>
+#include "shortest_edit_script.h"
+  </funcsynopsisinfo>
+
+  <funcprototype>
+    <funcdef><returnvalue>int</returnvalue> <function>shortest_edit_script</function></funcdef>
+    <paramdef>int <parameter>sequence_one_size</parameter></paramdef>
+    <paramdef>const void * <parameter>sequence_one</parameter></paramdef>
+    <paramdef>int <parameter>sequence_two_size</parameter></paramdef>
+    <paramdef>const void * <parameter>sequence_two</parameter></paramdef>
+    <paramdef>int <parameter>compare<funcparams>const void *, const void *</funcparams></parameter></paramdef>
+    <paramdef>const void * <parameter>accessor<funcparams>int index, const void *</funcparams></parameter></paramdef>
+    <paramdef>struct edit ** <parameter>edit_script</parameter></paramdef>
+  </funcprototype>
+
+  <funcprototype>
+    <funcdef><returnvalue>void</returnvalue> <function>free_shortest_edit_script</function></funcdef>
+    <paramdef>struct edit * <parameter>edit_script</parameter></paramdef>
+  </funcprototype>
+
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title>
+
+  <para>
+    <function>shortest_edit_script</function> calculates the shortest sequence of add and delete operations required to turn <replaceable>sequence_one</replaceable> into <replaceable>sequence_two</replaceable>.  The parameters <replaceable>sequence_one</replaceable> and <replaceable>sequence_two</replaceable> are two sequences being compared, and <replaceable>sequence_one_size</replaceable> and <replaceable>sequence_two_size</replaceable> are the respective size of the two sequences.  <replaceable>compare</replaceable> is a pointer to a function to compare the elements of the two sequences and <replaceable>accessor</replaceable> is another pointer to a function to access the elements within the sequences.  <replaceable>edit_script</replaceable> is a pass-by-return variable the holds a compacted version of the shortest edit script.
+  </para>
+
+  <para>
+    The function pointers <replaceable>compare</replaceable> and <replaceable>accessor</replaceable> are user specified functions to allow the algorithm to run on and access elements from any sequence type and compare any two elements within the two sequence types.  The supplied <replaceable>accessor</replaceable> function accesses the data structure of one of the supplied sequences and returns an element at a given position.  The <replaceable>compare</replaceable> function compares two elements from the two sequences using the <replaceable>accessor</replaceable> function and returns a <literal>0</literal> when the two elements are the same and any other number otherwise.
+  </para>
+
+  <para>
+    After execution, the <replaceable>edit_script</replaceable> parameter holds a compacted linked list of the minimum number of edits required to transform <replaceable>sequence_one</replaceable> into <replaceable>sequence_two</replaceable>.  The <replaceable>edit</replaceable> structure is defined as:
+
+    <variablelist>
+      <varlistentry>
+        <listitem>
+          <variablelist>
+            <varlistentry>
+              <term>struct <structname>edit</structname> {</term>
+              <listitem>
+                <member><structfield>int operation;</structfield> /* The operation INSERT or DELETE */</member>
+                <member><structfield>int offset_sequence_one;</structfield> /* Sequence one offset */</member>
+                <member><structfield>int offset_sequence_two;</structfield> /* Sequence two offset */</member>
+                <member><structfield>int length;</structfield> /* Number of consecutive inserts or consecutive deletes */</member>
+                <member><structfield>struct edit * next;</structfield> /* Link to the next edit */</member>
+                <member><structfield>struct edit * previous;</structfield> /* Link to the previous edit */</member>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>};</term>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+  </para>
+
+  <para>
+    <function>free_shortest_edit_script</function> frees the memory allocated during a previous call to <function>shortest_edit_script</function>.  The parameter <replaceable>edit_script</replaceable> is the linked list created from a previous call to <function>shortest_edit_script</function>.  If <replaceable>edit_script</replaceable> is NULL, then <function>free_shortest_edit_script</function> does nothing.
+  </para>
+
+</refsect1>
+
+<refsect1><title>Return Values</title>
+
+  <para>
+    Upon <function>shortest_edit_script</function>'s successful completion the length of compacted edit script <replaceable>edit_script</replaceable> is returned. Otherwise, a -1 is returned to indicate a memory error with ERRNO set appropriately or a -2 is returned indicating a failure to compute the shortest edit script.
+  </para>
+
+  <para>
+    <function>free_shortest_edit_script</function> does not return anything.
+  </para>
+
+</refsect1>
+
+<refsect1><title>Errors</title>
+
+  <para>
+    <function>shortest_edit script</function> can return with the following error conditions:
+  </para>
+
+  <para>-1: Memory error.  ERRNO will be set according to <function>malloc</function></para>
+
+  <para>-2: Fatal Error.  shortest_edit_script failed to compute the shortest edit script</para>
+
+  <para>
+    <function>free_shortest_edit script</function> does not return anything.
+  </para>
+
+</refsect1>
+
+<refsect1><title>Caveats</title>
+
+  <para>
+    <function>shortest_edit script</function> requires O(N<superscript>2</superscript>) space and will slow down and fail when given excessively large sequences with large amounts of differences.
+  </para>
+
+  <para>
+    The maximum resulting file name size for the output files is 100 characters.  This includes the appended number and extension, and is used also limited to reduce memory allocation and increase speed.
+  </para>
+
+</refsect1>
+
+<refsect1><title>Bugs</title>
+
+  <para>
+    No known bugs have been reported.
+  </para>
+
+</refsect1>
+
+<refsect1><title>See Also</title>
+
+  <para>
+    <command>diff</command>(1)
+  </para>
+
+</refsect1>
+
+<refsect1><title>Author</title>
+
+  <para>Written by 
+    <author>
+      <firstname>Michael</firstname>
+      <othername role="mi">J.</othername>
+      <surname>Decker</surname>
+      <contrib>Original author</contrib>
+    </author> 
+  </para>
+
+</refsect1>
+
+<refsect1><title>References</title>
+
+  <para>
+    The algorithm is based off of Myers and Miller's shortest edit script algorithm:
+  </para>
+  
+  <para>
+    W. Miller and E. W. Myers. (1985, A file comparison program. Software: Practice and Experience 15(11), pp. 1025-1040. Available: http://ezproxy.uakron.edu:2132/10.1002/spe.4380151102.
+  </para>
+  
+  <para>
+    E. Myers. (1986, An O ( ND ) difference algorithm and its variations. Algorithmica 1(1), pp. 251-266. Available: http://ezproxy.uakron.edu:2132/10.1007/BF01840446.
+  </para>
+
+</refsect1>
+
+</refentry>

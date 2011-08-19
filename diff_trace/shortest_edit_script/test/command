@@ -1,0 +1,1 @@
+ls -1 2.6.37.6 | xargs -I% bash -c 'test -f 2.6.38.2/% && ! cmp 2.6.37.6/% 2.6.38.2/% && echo -e "Linux Kernel\t2.6.37.6/%\t2.6.38.2/%"' | grep -v "differ:" | grep -v "EOF" >> ../test_file_list.txt
