@@ -211,7 +211,7 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_new);
     xmlTextReaderRead(reader_new);
 
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcML/srcDiff\" language=\"C\" filename=\""));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcDiff\" language=\"C\" filename=\""));
     xmlTextWriterWriteRawLen(writer, BAD_CAST argv[1], strlen(argv[1]));
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\">"));
 
@@ -276,6 +276,7 @@ int main(int argc, char * argv[]) {
     for(unsigned int j = last_diff; j < lines1.size(); ++rbuf_old.line_number, ++j)
       output_xml_line(&rbuf_old, reader_old, writer);
 
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit>"));
   }
 
   // cleanup everything
