@@ -15,8 +15,6 @@
     mjd52@zips.uakron.edu
 -->
 
-<xsl:template match="/">
-
-</xsl:template>
+<xsl:template match="*"><xsl:value-of select="."/></xsl:template>
 </xsl:stylesheet>
 
