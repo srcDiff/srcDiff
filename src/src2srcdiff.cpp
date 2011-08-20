@@ -211,7 +211,9 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_new);
     xmlTextReaderRead(reader_new);
 
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcDiff\">"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcML/srcDiff\" language=\"C\" filename=\""));
+    xmlTextWriterWriteRawLen(writer, BAD_CAST argv[1], strlen(argv[1]));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\">"));
 
     struct edit * edits = edit_script;
     for (; edits; edits = edits->next) {
