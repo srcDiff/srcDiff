@@ -205,9 +205,13 @@ int main(int argc, char * argv[]) {
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
     xmlTextReaderRead(reader_old);
+    xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
     xmlTextReaderRead(reader_new);
+    xmlTextReaderRead(reader_new);
+
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcDiff\">"));
 
     struct edit * edits = edit_script;
     for (; edits; edits = edits->next) {
