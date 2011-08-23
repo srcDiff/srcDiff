@@ -106,7 +106,7 @@ def src2srcdiff(source_file_old, source_file_new, encoding, language, directory,
 
 #	command.append("--quiet")
 
-	return safe_communicate(command, text_file)
+	return safe_communicate(command, "")
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
@@ -378,15 +378,15 @@ try:
 							unitxml = extract_unit(filexml, count)
 
 						# convert the unit in xml to text
-						unit_text_old = extract_source(unitxml, 0)
-						unit_text_new = extract_source(unitxml, 1)
+						unit_text_old = extract_source(unitxml, "0")
+						unit_text_new = extract_source(unitxml, "1")
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
                                                         unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = src2srcdiff(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
