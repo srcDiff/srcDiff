@@ -211,7 +211,19 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_new);
     xmlTextReaderRead(reader_new);
 
+    // output merged unit
+    xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/src/srcDiff", (const xmlChar *)"diff", NULL };
+    xmlNsPtr ns = unit->nsDef;
+    if(ns) {
+      for(; ns->next; ns = ns->next);
+
+      ns->next = &diff;
+    }
+    else
+      unit->nsDef = &diff;
+
     outputNode(*unit, writer);
+
     /*    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcDiff\" language=\"C\" filename=\""));
     xmlTextWriterWriteRawLen(writer, BAD_CAST argv[1], strlen(argv[1]));
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\">"));
