@@ -211,25 +211,18 @@ int main(int argc, char * argv[]) {
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
     xmlTextReaderRead(reader_old);
-    xmlNodePtr unit = getCurrentNode(reader_old);
-    xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
     xmlTextReaderRead(reader_new);
-    xmlTextReaderRead(reader_new);
 
-    // output merged unit
-    xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
-    xmlNsPtr ns = unit->nsDef;
-    if(ns) {
-      for(; ns->next; ns = ns->next);
+    // create srcdiff unit
+    xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
 
-      ns->next = &diff;
-    }
-    else
-      unit->nsDef = &diff;
-
+    // output srcdiff unit
     outputNode(*unit, writer);
+
+    xmlTextReaderRead(reader_old);
+    xmlTextReaderRead(reader_new);
 
     /*    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcDiff\" language=\"C\" filename=\""));
     xmlTextWriterWriteRawLen(writer, BAD_CAST argv[1], strlen(argv[1]));
@@ -647,6 +640,20 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new) {
+
+  // get unit from old source code
+    xmlNodePtr unit = getCurrentNode(reader_old);
+
+    xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
+    xmlNsPtr ns = unit->nsDef;
+    if(ns) {
+      for(; ns->next; ns = ns->next);
+
+      ns->next = &diff;
+    }
+    else
+      unit->nsDef = &diff;
+
 
   return NULL;
 }
