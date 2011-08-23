@@ -9,10 +9,9 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "../bin/src/srcmlapps.hpp"
-#include "../bin/src/Options.hpp"
-#include "../bin/src/srcMLTranslator.hpp"
-#include "../bin/src/Language.hpp"
+#include "../bin/Options.hpp"
+#include "../bin/srcMLTranslator.hpp"
+#include "../bin/Language.hpp"
 #include "shortest_edit_script.h"
 
 #include <libxml/xmlreader.h>
