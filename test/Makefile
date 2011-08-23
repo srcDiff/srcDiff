@@ -2,7 +2,7 @@
 # Makefile
 
 all: ExtractSource
-
+	./test_suite.py
 
 ExtractSource: ExtractSource.o SAX2ExtractSource.o
 	g++ -I /usr/include/libxml2 -lxml2 $^ -o $@ 
