@@ -5,10 +5,18 @@
   mjd52@zips.uakron.edu
 */
 
-#ifndef INCLUDED_SAX2ELEMENTINFO_HPP
-#define INCLUDED_SAX2ELEMENTINFO_HPP
+#ifndef INCLUDED_SAX2EXTRACTSOURCE_HPP
+#define INCLUDED_SAX2EXTRACTSOURCE_HPP
 
 #include <libxml/parser.h>
+
+enum operation { DELETE, INSERT };
+
+struct source_diff {
+
+  operation op;
+  bool in_diff;
+};
 
 xmlSAXHandler factory();
 
