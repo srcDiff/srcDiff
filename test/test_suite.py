@@ -105,7 +105,15 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist):
 
-	command = [src2srcdiff, source_file_old, source_file_new]
+        command = [globals()["src2srcdiff"]]
+
+        temp_file = open("temp_file_one", "w")
+        temp_file.write(source_file_old)
+        temp_file.close()
+
+        temp_file = open("temp_file_two", "w")
+        temp_file.write(source_file_new)
+        temp_file.close()
 
 #	if directory != "":
 #		command.extend(["--directory", directory])
@@ -122,7 +130,7 @@ def src2srcdiff(source_file_old, source_file_new, encoding, language, directory,
 
 #	command.append("--quiet")
 
-	return safe_communicate(command, "")
+	return safe_communicate_two_files(command, "temp_file_one", "temp_file_two")
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
