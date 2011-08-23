@@ -52,6 +52,21 @@ def safe_communicate_file(command, filename):
 			raise
 
 # extracts a particular unit from a srcML file
+def safe_communicate_two_files(command, filename_one, filename_two):
+
+	newcommand = command[:]
+	newcommand.append(filename_one)
+	newcommand.append(filename_two)
+	try:
+		return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
+	except OSError, (errornum, strerror):
+		try:
+			return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
+		except OSError, (errornum, strerror):
+			sperrorlist.append((command, xml_filename, errornum, strerror))
+			raise
+
+# extracts a particular unit from a srcML file
 def extract_unit(src, count):
 
 	command = [srcmlutility, "--unit=" + str(count), "--xml"]
