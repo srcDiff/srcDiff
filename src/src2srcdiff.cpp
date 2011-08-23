@@ -52,6 +52,9 @@ struct reader_buffer {
   std::vector<xmlNode *> * buffer;
 };
 
+// create srcdiff unit
+xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
+
 // outputs a line of xml (used for old file)
 void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer);
 
@@ -640,4 +643,10 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     outputNode(*(*rbuf_old->buffer)[i], writer);
 
   xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+}
+
+// create srcdiff unit
+xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new) {
+
+  return NULL;
 }
