@@ -623,4 +623,5 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   for(unsigned int i = (rbuf_old->buffer->size() - end) + 1; i < rbuf_old->buffer->size(); ++i)
     outputNode(*(*rbuf_old->buffer)[i], writer);
 
+  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
