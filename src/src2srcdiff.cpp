@@ -83,22 +83,22 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "/dev/stdout";
   /*
-   if(argc < 4) {
+    if(argc < 4) {
 
     srcdiff_file = "/dev/stdout";
-  }
-  else {
+    }
+    else {
 
-      if(strcmp(argv[1], argv[3]) == 0 || strcmp(argv[2], argv[3]) == 0) {
+    if(strcmp(argv[1], argv[3]) == 0 || strcmp(argv[2], argv[3]) == 0) {
 
-      fprintf(stderr, "Input and output file must be different\n");
-      return 1;
+    fprintf(stderr, "Input and output file must be different\n");
+    return 1;
     }
 
     srcdiff_file = argv[3];
-  }
+    }
   */
-  
+
   /*
     Compute the differences between the two source files
 
@@ -225,8 +225,8 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_new);
 
     /*    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcDiff\" language=\"C\" filename=\""));
-    xmlTextWriterWriteRawLen(writer, BAD_CAST argv[1], strlen(argv[1]));
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\">"));
+          xmlTextWriterWriteRawLen(writer, BAD_CAST argv[1], strlen(argv[1]));
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\">"));
     */
     struct edit * edits = edit_script;
     for (; edits; edits = edits->next) {
@@ -480,7 +480,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
         }
       }
 
-      
+
       // end and save text node if finished and get next node
       if(!(*rbuf->characters)) {
 
@@ -583,7 +583,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
     // end if text node contents differ
     if((xmlReaderTypes)(*rbuf_old->buffer)[start]->type == XML_READER_TYPE_TEXT && strcmp((const char *)(*rbuf_old->buffer)[start]->content, (const char *)(*rbuf_new->buffer)[start]->content) != 0)
-       break;
+      break;
 
   // detect if no change may be error
   if(start == rbuf_old->buffer->size() || start == rbuf_new->buffer->size()) {
@@ -642,18 +642,18 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new) {
 
   // get unit from old source code
-    xmlNodePtr unit = getCurrentNode(reader_old);
+  xmlNodePtr unit = getCurrentNode(reader_old);
 
-    xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
-    xmlNsPtr ns = unit->nsDef;
-    if(ns) {
-      for(; ns->next; ns = ns->next);
+  xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
+  xmlNsPtr ns = unit->nsDef;
+  if(ns) {
+    for(; ns->next; ns = ns->next);
 
-      ns->next = &diff;
-    }
-    else
-      unit->nsDef = &diff;
+    ns->next = &diff;
+  }
+  else
+    unit->nsDef = &diff;
 
 
-  return NULL;
+  return unit;
 }
