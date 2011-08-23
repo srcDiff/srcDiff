@@ -1,5 +1,5 @@
 /*
-  SAX2ElementInfo.cpp
+  SAX2ExtractSource.cpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu

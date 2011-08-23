@@ -1,5 +1,5 @@
 /*
-  SAX2ElementInfo.hpp
+  SAX2ExtractSource.hpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu

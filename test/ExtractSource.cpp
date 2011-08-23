@@ -1,5 +1,5 @@
 /*
-  ElementInfo.cpp
+  ExtractSource.cpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu
