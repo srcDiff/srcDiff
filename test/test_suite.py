@@ -23,6 +23,7 @@ sperrorlist = []
 srcmltranslator = "src2srcml"
 srcmlutility = "srcml2src"
 extractutility = "./ExtractSource"
+src2srcdiff = "../bin/src2srcdiff"
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
