@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit>
+
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcML/srcDiff" language="C++"><expr_stmt><expr><name><diff:old status="start"/>a<diff:old status="end"/><diff:new status="start"/>b<diff:new status="end"/></name></expr>;</expr_stmt>
+</unit>
+
+</unit>
