@@ -216,7 +216,7 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_new);
 
     // output merged unit
-    xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/src/srcDiff", (const xmlChar *)"diff", NULL };
+    xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
     xmlNsPtr ns = unit->nsDef;
     if(ns) {
       for(; ns->next; ns = ns->next);
