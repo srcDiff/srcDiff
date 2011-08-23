@@ -16,9 +16,9 @@ static void parseDocument(xmlParserCtxtPtr ctxt);
 
 int main(int argc, char * argv[]) {
 
-  if(argc < 2) {
+  if(argc < 3) {
 
-    fprintf(stderr, "Usage: %s xmlfile\n", "ElementInfo");
+    fprintf(stderr, "Usage: %s xmlfile operation\n", "ExtractSource");
     return 1;
   }
 
@@ -28,6 +28,9 @@ int main(int argc, char * argv[]) {
   // setup sax handler
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
+
+  struct source_diff data = { (operation)atoi(argv[2]), false};
+  ctxt->_private = &data;
 
   // process the document
   parseDocument(ctxt);
