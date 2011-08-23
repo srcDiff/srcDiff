@@ -42,7 +42,7 @@ int line_compare(const void * e1, const void * e2) {
 }
 
 // converts source code to srcML
-void translate_to_srcML(const char * source_file, const char * srcml_file);
+void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
 // stores information during xml Text Reader processing
 struct reader_buffer {
@@ -72,18 +72,21 @@ int main(int argc, char * argv[]) {
   // test for correct input
   if(argc < 3) {
 
-    fprintf(stderr, "Usage: src2srcdiff oldFile newFile srcdiffFile\n");
+    //    fprintf(stderr, "Usage: src2srcdiff oldFile newFile srcdiffFile\n");
+    fprintf(stderr, "Usage: src2srcdiff oldFile newFile dir\n");
     return 1;
   }
 
   const char * srcdiff_file;
-  if(argc < 4) {
+  srcdiff_file = "/dev/stdout";
+  /*
+   if(argc < 4) {
 
     srcdiff_file = "/dev/stdout";
   }
   else {
 
-    if(strcmp(argv[1], argv[3]) == 0 || strcmp(argv[2], argv[3]) == 0) {
+      if(strcmp(argv[1], argv[3]) == 0 || strcmp(argv[2], argv[3]) == 0) {
 
       fprintf(stderr, "Input and output file must be different\n");
       return 1;
@@ -91,7 +94,8 @@ int main(int argc, char * argv[]) {
 
     srcdiff_file = argv[3];
   }
-
+  */
+  
   /*
     Compute the differences between the two source files
 
@@ -150,7 +154,7 @@ int main(int argc, char * argv[]) {
   }
 
   // translate file one
-  translate_to_srcML(argv[1], srcml_file_one);
+  translate_to_srcML(argv[1], srcml_file_one, argv[3]);
 
   // create temporary file for srcML file two
   char * srcml_file_two = mktemp(strdup(srcdiff_template));
@@ -161,7 +165,7 @@ int main(int argc, char * argv[]) {
   }
 
   // translate file two
-  translate_to_srcML(argv[2], srcml_file_two);
+  translate_to_srcML(argv[2], srcml_file_two, argv[3]);
 
   /*
     Create xmlreaders and the xmlwriter
@@ -324,7 +328,7 @@ int main(int argc, char * argv[]) {
 }
 
 // converts source code to srcML
-void translate_to_srcML(const char * source_file, const char * srcml_file) {
+void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {
 
   // register default language extensions
   Language::register_standard_file_extensions();
@@ -342,7 +346,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file) {
   translator.setInput(source_file);
 
   // translate file
-  translator.translate(source_file, NULL, source_file, NULL, language);
+  translator.translate(NULL, dir, NULL, NULL, language);
 
   // close the input file
   translator.close();
