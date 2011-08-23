@@ -68,7 +68,7 @@ def extract_source(srcML, operation):
 	# run the srcml processor
 	command = [extractutility, operation]
 
-	return safe_communicate(command, srctext)
+	return safe_communicate(command, srcML)
 
 # converts from unix to dos line endings
 def unix2dos(srctext):
