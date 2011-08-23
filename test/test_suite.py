@@ -108,11 +108,11 @@ def src2srcdiff(source_file_old, source_file_new, encoding, language, directory,
 
         command = [globals()["src2srcdiffutility"]]
 
-        temp_file = open("temp_file_one", "w")
+        temp_file = open("temp_file_one.c", "w")
         temp_file.write(source_file_old)
         temp_file.close()
 
-        temp_file = open("temp_file_two", "w")
+        temp_file = open("temp_file_two.c", "w")
         temp_file.write(source_file_new)
         temp_file.close()
 
@@ -131,7 +131,7 @@ def src2srcdiff(source_file_old, source_file_new, encoding, language, directory,
 
 #	command.append("--quiet")
 
-	return safe_communicate_two_files(command, "temp_file_one", "temp_file_two", directory)
+	return safe_communicate_two_files(command, "temp_file_one.c", "temp_file_two.c", directory)
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
