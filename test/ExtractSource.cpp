@@ -36,7 +36,7 @@ int main(int argc, char * argv[]) {
   }
 
   // create the ctxt
-  xmlParserCtxtPtr ctxt = createURLParserCtxt(argv[1]);
+  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcML_file);
 
   // setup sax handler
   xmlSAXHandler sax = factory();
