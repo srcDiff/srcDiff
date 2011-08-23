@@ -16,10 +16,23 @@ static void parseDocument(xmlParserCtxtPtr ctxt);
 
 int main(int argc, char * argv[]) {
 
-  if(argc < 3) {
+  char * srcML_file;
+  int diff;
+  if(argc < 2) {
 
     fprintf(stderr, "Usage: %s xmlfile operation\n", "ExtractSource");
     return 1;
+  }
+
+  if(argc < 3) {
+
+    srcML_file = (char *)"/dev/stdin";
+    diff = atoi(argv[1]);
+  }
+  else {
+
+    srcML_file = argv[1];
+    diff = atoi(argv[2]);
   }
 
   // create the ctxt
@@ -28,8 +41,6 @@ int main(int argc, char * argv[]) {
   // setup sax handler
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
-
-  int diff = atoi(argv[2]);
 
   struct source_diff data = { diff ? INSERT : DELETE, false};
 
