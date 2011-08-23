@@ -29,7 +29,10 @@ int main(int argc, char * argv[]) {
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
 
-  struct source_diff data = { (operation)atoi(argv[2]), false};
+  int diff = atoi(argv[2]);
+
+  struct source_diff data = { diff ? INSERT : DELETE, false};
+
   ctxt->_private = &data;
 
   // process the document
