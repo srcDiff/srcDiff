@@ -4,4 +4,16 @@
 <unit><expr_stmt><expr><name><diff:old status="start"/>a<diff:old status="end"/><diff:new status="start"/>b<diff:new status="end"/></name></expr>;</expr_stmt>
 </unit>
 
+<unit><expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>aba<diff:new status="end"/></name></expr>;</expr_stmt>
+</unit>
+
+<unit><expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>aab<diff:new status="end"/></name></expr>;</expr_stmt>
+</unit>
+
+<unit><expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>aba<diff:new status="end"/></name></expr>;</expr_stmt>
+</unit>
+
+<unit><expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>baa<diff:new status="end"/></name></expr>;</expr_stmt>
+</unit>
+
 </unit>
