@@ -386,7 +386,7 @@ try:
                                                         unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = src2srcdiff(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = src2srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
