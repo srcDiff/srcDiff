@@ -20,9 +20,9 @@ FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
 
-srcmlutility = os.environ.get("SRCML2SRC")
-if srcmlutility == "" or srcmlutility == None:
-	srcmlutility = "../bin/srcml2src"
+srcmltranslator = "src2srcml"
+srcmlutility = "srcml2src"
+extractutility = "ExtractSource"
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
@@ -63,11 +63,10 @@ def name2filestr(src_filename):
 	return file
 
 # converts a srcML file back to text
-def srcml2src(srctext, encoding):
+def extract_source(srcML, operation):
 
 	# run the srcml processor
-	command = [srcmlutility]
-	command.append("--src-encoding=" + encoding)
+	command = [extractutility, operation]
 
 	return safe_communicate(command, srctext)
 
@@ -88,24 +87,24 @@ def xmldiff(xml_filename1, xml_filename2):
 		return ""
 
 # find differences of two files
-def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
+def src2srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist):
 
-	command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
+	command = [src2srcdiff, source_file_old, source_file_new]
 
-	if directory != "":
-		command.extend(["--directory", directory])
+#	if directory != "":
+#		command.extend(["--directory", directory])
+#
+#      	if filename != "":
+#		command.extend(["--filename", filename])
 
-       	if filename != "":
-		command.extend(["--filename", filename])
-
-	command.extend(prefixlist)
+#	command.extend(prefixlist)
 
 	#print command
 
 	# run the srcml processor
-	command.append("--src-encoding=" + encoding)
+#	command.append("--src-encoding=" + encoding)
 
-	command.append("--quiet")
+#	command.append("--quiet")
 
 	return safe_communicate(command, text_file)
 
@@ -379,7 +378,8 @@ try:
 							unitxml = extract_unit(filexml, count)
 
 						# convert the unit in xml to text
-						unittext = srcml2src(unitxml, encoding)
+						unit_text_old = extract_source(unitxml, 0)
+						unit_text_new = extract_source(unitxml, 1)
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
