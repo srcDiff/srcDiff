@@ -23,7 +23,7 @@ sperrorlist = []
 srcmltranslator = "src2srcml"
 srcmlutility = "srcml2src"
 extractutility = "./ExtractSource"
-src2srcdiff = "../bin/src2srcdiff"
+src2srcdiffutility = "../bin/src2srcdiff"
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
@@ -105,7 +105,7 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist):
 
-        command = [globals()["src2srcdiff"]]
+        command = [globals()["src2srcdiffutility"]]
 
         temp_file = open("temp_file_one", "w")
         temp_file.write(source_file_old)
