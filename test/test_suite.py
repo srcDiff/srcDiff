@@ -52,11 +52,12 @@ def safe_communicate_file(command, filename):
 			raise
 
 # extracts a particular unit from a srcML file
-def safe_communicate_two_files(command, filename_one, filename_two):
+def safe_communicate_two_files(command, filename_one, filename_two, directory):
 
 	newcommand = command[:]
 	newcommand.append(filename_one)
 	newcommand.append(filename_two)
+	newcommand.append(directory)
 	try:
 		return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
 	except OSError, (errornum, strerror):
@@ -130,7 +131,7 @@ def src2srcdiff(source_file_old, source_file_new, encoding, language, directory,
 
 #	command.append("--quiet")
 
-	return safe_communicate_two_files(command, "temp_file_one", "temp_file_two")
+	return safe_communicate_two_files(command, "temp_file_one", "temp_file_two", directory)
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
