@@ -204,6 +204,7 @@ int main(int argc, char * argv[]) {
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
     xmlTextReaderRead(reader_old);
+    xmlNodePtr unit = getCurrentNode(reader_old);
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
