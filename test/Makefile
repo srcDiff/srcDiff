@@ -1,7 +1,7 @@
 ##
 # Makefile
 
-all: ExtractSource SwitchDifferences
+all: ExtractSource #SwitchDifferences
 	./test_suite.py
 
 ExtractSource: ExtractSource.o SAX2ExtractSource.o
@@ -24,4 +24,4 @@ SAX2SwitchDifferences.o: SAX2SwitchDifferences.cpp SAX2SwitchDifferences.hpp
 
 
 clean:
-	rm -f ExtractSource SwitchDifferences
+	rm -f ExtractSource ExtractSource.o SwitchDifferences SwitchDifferences.o
