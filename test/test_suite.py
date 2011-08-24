@@ -107,11 +107,11 @@ def src2srcdiff(source_file_old, source_file_new, encoding, language, directory,
 
         command = [globals()["src2srcdiffutility"]]
 
-        temp_file = open("temp_file_one.c", "w")
+        temp_file = open("temp_file_one.cpp", "w")
         temp_file.write(source_file_old)
         temp_file.close()
 
-        temp_file = open("temp_file_two.c", "w")
+        temp_file = open("temp_file_two.cpp", "w")
         temp_file.write(source_file_new)
         temp_file.close()
 
