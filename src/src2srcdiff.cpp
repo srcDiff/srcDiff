@@ -641,9 +641,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new) {
 
-  // get unit from old source code
+  // get units from source code
   xmlNodePtr unit = getCurrentNode(reader_old);
+  xmlNodePtr unit_new = getCurrentNode(reader_old);
 
+  // add diff namespace
   xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
   xmlNsPtr ns = unit->nsDef;
   if(ns) {
@@ -653,7 +655,6 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
   }
   else
     unit->nsDef = &diff;
-
 
   return unit;
 }
