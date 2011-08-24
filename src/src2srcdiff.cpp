@@ -26,6 +26,7 @@
 
 // constant template for temporary file names
 char * srcdiff_template = (char *)"srcdifftemp.XXX";
+xmlNs diff =  { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
 
 // diff accessor function
 const void * line_index(int idx, const void *s) {
@@ -648,8 +649,6 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
   xmlNodePtr unit_new = getCurrentNode(reader_old);
 
   // add diff namespace
-  xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
-
   addNamespace(&unit->nsDef, &diff);
 
   return unit;
@@ -662,7 +661,7 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
   if(namespaces) {
     for(; namespaces->next; namespaces = namespaces->next);
 
-    ns->next = ns;
+    namespaces->next = ns;
   }
   else
     *nsDef = ns;
