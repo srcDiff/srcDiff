@@ -641,7 +641,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   // move right change pointer
   unsigned int end = 1;
-  for(; (rbuf_old->buffer->size() - end) > 0 && (rbuf_new->buffer->size() - end) > 0 &&  (*rbuf_old->buffer)[rbuf_old->buffer->size() - end]->type == (*rbuf_new->buffer)[rbuf_new->buffer->size() - end]->type && strcmp((const char *)(*rbuf_old->buffer)[rbuf_old->buffer->size() - end]->name, (const char *)(*rbuf_new->buffer)[rbuf_new->buffer->size() - end]->name) == 0; ++end)
+  for(; (rbuf_old->buffer->size() - end) > 0 && (rbuf_new->buffer->size() - end) > 0 && (*rbuf_old->buffer)[rbuf_old->buffer->size() - end]->type == (*rbuf_new->buffer)[rbuf_new->buffer->size() - end]->type && strcmp((const char *)(*rbuf_old->buffer)[rbuf_old->buffer->size() - end]->name, (const char *)(*rbuf_new->buffer)[rbuf_new->buffer->size() - end]->name) == 0; ++end)
 
     // end if text node contents differ
     if((xmlReaderTypes)(*rbuf_old->buffer)[rbuf_old->buffer->size() - end]->type == XML_READER_TYPE_TEXT && strcmp((const char *)(*rbuf_old->buffer)[rbuf_old->buffer->size() - end]->content, (const char *)(*rbuf_new->buffer)[rbuf_new->buffer->size() - end]->content) != 0)
