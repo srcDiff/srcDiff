@@ -644,8 +644,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     return;
   }
  
-  fprintf(stderr, "HERE: %d:%d\n", start, end);
-
   // output preceeding nodes from old
   for(unsigned int i = 0; i < start; ++i)
     outputNode(*(*rbuf_old->buffer)[i], writer);
