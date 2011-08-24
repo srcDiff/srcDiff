@@ -542,6 +542,10 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
         for(unsigned int k = i; k <= j; ++k)
           outputNode(*(*rbuf->buffer)[k], writer);
 
+        // output elements after match
+        for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
+          outputNode(*(*rbuf->buffer)[k], writer);
+
         // output diff tags and elements after match on delete
         if(edit->operation == DELETE) {
 
@@ -555,10 +559,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
         }
-
-        // output elements after match
-        for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
-          outputNode(*(*rbuf->buffer)[k], writer);
 
         // output newline
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
