@@ -638,6 +638,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
+void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
+
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new) {
 
@@ -647,14 +649,22 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 
   // add diff namespace
   xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
-  xmlNsPtr ns = unit->nsDef;
-  if(ns) {
-    for(; ns->next; ns = ns->next);
 
-    ns->next = &diff;
-  }
-  else
-    unit->nsDef = &diff;
+  addNamespace(&unit->nsDef, &diff);
 
   return unit;
+}
+
+void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
+
+  xmlNsPtr namespaces = *nsDef;
+
+  if(namespaces) {
+    for(; namespaces->next; namespaces = namespaces->next);
+
+    ns->next = ns;
+  }
+  else
+    *nsDef = ns;
+
 }
