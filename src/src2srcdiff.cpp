@@ -657,33 +657,33 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   for(unsigned int i = 0; i < start; ++i)
     outputNode(*(*rbuf_old->buffer)[i], writer);
 
-  if(start != (rbuf_old->buffer->size() - end)) {
+  if(start <= (rbuf_old->buffer->size() - end)) {
 
-  // output diff tag
-  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+    // output diff tag
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
-  // output deleted nodes
-  for(unsigned int i = start; i <= rbuf_old->buffer->size() - end; ++i)
-    outputNode(*(*rbuf_old->buffer)[i], writer);
+    // output deleted nodes
+    for(unsigned int i = start; i <= rbuf_old->buffer->size() - end; ++i)
+      outputNode(*(*rbuf_old->buffer)[i], writer);
 
-  // output diff tag
-  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+    // output diff tag
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
-    }
+  }
 
-    if(start != (rbuf_new->buffer->size() - end)) {
+  if(start <= (rbuf_new->buffer->size() - end)) {
 
-  // output diff tag
-  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+    // output diff tag
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-  // output inserted nodes
-  for(unsigned int i = start; i <= rbuf_new->buffer->size() - end; ++i)
-    outputNode(*(*rbuf_new->buffer)[i], writer);
+    // output inserted nodes
+    for(unsigned int i = start; i <= rbuf_new->buffer->size() - end; ++i)
+      outputNode(*(*rbuf_new->buffer)[i], writer);
 
-  // output diff tag
-  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+    // output diff tag
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
-    }
+  }
 
   // output nodes after change from old
   for(unsigned int i = (rbuf_old->buffer->size() - end) + 1; i < rbuf_old->buffer->size(); ++i)
