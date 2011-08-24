@@ -657,7 +657,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   for(unsigned int i = 0; i < start; ++i)
     outputNode(*(*rbuf_old->buffer)[i], writer);
 
-  if(start != (rbuf_old->buffer->size() - end)) {
+  if(start <= (rbuf_old->buffer->size() - end)) {
 
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -671,7 +671,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   }
 
-  if(start != (rbuf_new->buffer->size() - end)) {
+  if(start <= (rbuf_new->buffer->size() - end)) {
 
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
