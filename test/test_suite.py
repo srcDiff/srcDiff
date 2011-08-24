@@ -20,7 +20,6 @@ FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
 
-srcmltranslator = "src2srcml"
 srcmlutility = "srcml2src"
 extractutility = "./ExtractSource"
 src2srcdiffutility = "../bin/src2srcdiff"
@@ -212,12 +211,6 @@ def nondefaultxmlns(l):
 			newl.append(a)
 	return newl
 
-# version of src2srcml
-def src2srcmlversion():
-	last_line = safe_communicate([srcmltranslator, "-V"], "")
-
-	return last_line.splitlines()[0].strip()
-
 # version of srcml2src
 def srcml2srcversion():
 
@@ -254,7 +247,6 @@ Tee(error_filename)
 print "Testing:"
 print 
 
-print src2srcmlversion()
 print srcml2srcversion()
 print
 
@@ -296,10 +288,6 @@ elif len(sys.argv) > 2:
 base_dir = "../suite"
 
 errorlist = []
-
-#if not(os.path.isfile(srcmltranslator)):
-#	print srcmltranslator + " does not exist."
-#	exit
 
 m = re.compile(specname + "$")
 
@@ -519,7 +507,6 @@ os.remove("temp_file_two.c")
 
 # output tool version
 print
-print src2srcmlversion(), srcmltranslator
 print srcml2srcversion(), srcmlutility
 
 exit
