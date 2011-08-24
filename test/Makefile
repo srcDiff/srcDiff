@@ -1,7 +1,7 @@
 ##
 # Makefile
 
-all: ExtractSource
+all: ExtractSource SwitchDifferences
 	./test_suite.py
 
 ExtractSource: ExtractSource.o SAX2ExtractSource.o
