@@ -514,6 +514,8 @@ current_time = datetime.now()
 os.rename(error_filename, error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension)
 f.close()
 
+os.remove("temp_file_one.c")
+os.remove("temp_file_two.c")
 
 # output tool version
 print
