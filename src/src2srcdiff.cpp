@@ -26,7 +26,7 @@
 
 // constant template for temporary file names
 char * srcdiff_template = (char *)"srcdifftemp.XXX";
-xmlNs diff =  { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcML/srcDiff", (const xmlChar *)"diff", NULL};
+xmlNs diff =  { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", NULL};
 
 // diff accessor function
 const void * line_index(int idx, const void *s) {
