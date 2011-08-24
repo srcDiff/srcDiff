@@ -51,6 +51,7 @@ struct reader_buffer {
   int line_number;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
+  std::vector<xmlNode *> * context;
 };
 
 // create srcdiff unit
@@ -211,9 +212,11 @@ int main(int argc, char * argv[]) {
     // run through diffs adding markup
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
+    rbuf_old.context = new std::vector<xmlNode *>;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
+    rbuf_new.context = new std::vector<xmlNode *>;
     xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
