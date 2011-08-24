@@ -556,22 +556,28 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
         // output diff tags and elements after match on delete
         if(edit->operation == DELETE) {
 
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+
           // output elements after match
           for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
             outputNode(*(*rbuf->buffer)[k], writer);
 
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>\n"));
         }
         else {
 
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
           // output elements after match
           for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
             outputNode(*(*rbuf->buffer)[k], writer);
 
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>\n"));
         }
+
+          // output newline
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+        
 
         // exit after match
         return;
