@@ -565,18 +565,59 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
         }
 
-          // output elements after match
-          for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
-            outputNode(*(*rbuf->buffer)[k], writer);
+        // output elements after match
+        for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
+          outputNode(*(*rbuf->buffer)[k], writer);
 
-          // output newline
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+        // output newline
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 
         // exit after match
         return;
       }
     }
   }
+
+  // output correct diff tag and on delete output elements before matching tag and diff element
+  if(edit->operation == DELETE) {
+
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+  }
+  else {
+
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+  }
+
+
+  // if did not match then probably closing open tags from previous diff
+  for(i = i - 2; i > 0; --i)
+    // find non-end elements
+    if((xmlReaderTypes)(*rbuf->buffer)[i]->type != XML_READER_TYPE_END_ELEMENT)
+      break;
+
+  // output diff
+  for(unsigned int j = 0; j <= i ; ++j)
+    outputNode(*(*rbuf->buffer)[j], writer);
+
+  // output diff tags and elements after match on delete
+  if(edit->operation == DELETE) {
+
+    // output diff tag
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+
+  }
+  else {
+
+    // output diff tag
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+  }
+
+  // output remaining
+  for(unsigned int j = i + 1; j < rbuf->buffer->size() ; ++j)
+    outputNode(*(*rbuf->buffer)[j], writer);
 }
 
 // output a change
