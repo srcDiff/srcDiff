@@ -513,7 +513,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer) {
 
   // for each element start from beginning
-  for(unsigned int i = 0; i < rbuf->buffer->size(); ++i) {
+  unsigned int i;
+  for(i = 0; i < rbuf->buffer->size(); ++i) {
 
     // skip non-start element
     if((xmlReaderTypes)(*rbuf->buffer)[i]->type != XML_READER_TYPE_ELEMENT)
@@ -529,21 +530,18 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       // test if matching tags
       if(strcmp((const char *)(*rbuf->buffer)[i]->name, (const char *)(*rbuf->buffer)[j]->name) == 0) {
 
+        // output elements before matching tags
+        for(unsigned int k = 0; k < i; ++k)
+          outputNode(*(*rbuf->buffer)[k], writer);
+
+
         // output correct diff tag and on delete output elements before matching tag and diff element
         if(edit->operation == DELETE) {
-
-          // output elements before matching tags
-          for(unsigned int k = 0; k < i; ++k)
-            outputNode(*(*rbuf->buffer)[k], writer);
 
           // output diff tag start
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
         }
         else {
-
-          // output elements before matching tags
-          for(unsigned int k = 0; k < i; ++k)
-            outputNode(*(*rbuf->buffer)[k], writer);
 
           // output diff tag start
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
@@ -559,25 +557,20 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
           // output diff tag
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
-          // output elements after match
-          for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
-            outputNode(*(*rbuf->buffer)[k], writer);
-
         }
         else {
 
           // output diff tag
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
+        }
+
           // output elements after match
           for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
             outputNode(*(*rbuf->buffer)[k], writer);
 
-        }
-
           // output newline
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
-        
 
         // exit after match
         return;
