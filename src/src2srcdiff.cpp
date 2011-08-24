@@ -541,9 +541,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
         }
         else {
 
-          // output preeceding text if any
-          if(strcmp((const char *)(*rbuf->buffer)[0]->name, "text") == 0)
-            outputNode(*(*rbuf->buffer)[0], writer);
+          // output elements before matching tags
+          for(unsigned int k = 0; k < i; ++k)
+            outputNode(*(*rbuf->buffer)[k], writer);
 
           // output diff tag start
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
@@ -563,10 +563,15 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
           // output diff tag
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>\n"));
         }
-        else
+        else {
+
+          // output elements after match
+          for(unsigned int k = j + 1; k < rbuf->buffer->size(); ++k)
+            outputNode(*(*rbuf->buffer)[k], writer);
 
           // output diff tag
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>\n"));
+        }
 
         // exit after match
         return;
