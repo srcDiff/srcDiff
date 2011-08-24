@@ -225,10 +225,6 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
-    /*    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:diff=\"http://www.sdml.info/srcML/srcDiff\" language=\"C\" filename=\""));
-          xmlTextWriterWriteRawLen(writer, BAD_CAST argv[1], strlen(argv[1]));
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\">"));
-    */
     struct edit * edits = edit_script;
     for (; edits; edits = edits->next) {
 
@@ -268,18 +264,13 @@ int main(int argc, char * argv[]) {
 
         collect_difference(&rbuf_new, reader_new, edits);
         output_single(&rbuf_new, edits, writer);
-        //for(int j = 0; j < edits->length; ++j)
-        //output_xml_line(&rbuf_new, reader_new, writer);
+
         last_diff = edits->offset_sequence_one + 1;
         break;
       case DELETE:
-        //        for(int j = rbuf_old.line_number - edits->offset_sequence_one; j < edits->length; ++rbuf_old.line_number, ++j)
-        //output_xml_line(&rbuf_old, reader_old, writer);
 
         collect_difference(&rbuf_old, reader_old, edits);
         output_single(&rbuf_old, edits, writer);
-        //for(int i = 0; i < rbuf_old.buffer->size(); ++i)
-        //outputNode(*(*rbuf_old.buffer)[i], writer);
 
         last_diff = edits->offset_sequence_one + edits->length;
         break;
@@ -652,6 +643,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     fprintf(stderr, "ERROR\n");
     return;
   }
+ 
+  fprintf(stderr, "HERE: %d:%d\n", start, end);
 
   // output preceeding nodes from old
   for(unsigned int i = 0; i < start; ++i)
