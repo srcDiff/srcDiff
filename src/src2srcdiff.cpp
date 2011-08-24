@@ -725,10 +725,10 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
   xmlNodePtr node = getCurrentNode(reader);
-  if((xmlReaderTypes)node->type != XML_READER_TYPE_ELEMENT) {
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     rbuf->context->push_back(node);
-  } else if((xmlReaderTypes)node->type != XML_READER_TYPE_END_ELEMENT) {
+  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     rbuf->context->pop_back();
   }
