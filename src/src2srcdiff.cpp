@@ -72,6 +72,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 // output a change
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new,  struct edit * edit, xmlTextWriterPtr writer);
 
+void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
@@ -386,6 +388,8 @@ void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTe
     }
     else {
 
+      update_context(rbuf, reader);
+
       // output non-text node and get next node
       outputXML(reader, writer);
       xmlTextReaderRead(reader);
@@ -425,8 +429,10 @@ void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
     }
     else
 
-      // get next node
-      xmlTextReaderRead(reader);
+      update_context(rbuf, reader);
+
+  // get next node
+  xmlTextReaderRead(reader);
 }
 
 // collect the differnces
@@ -494,6 +500,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       }
     }
     else {
+
+      update_context(rbuf, reader);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getCurrentNode(reader));
@@ -645,7 +653,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     fprintf(stderr, "ERROR\n");
     return;
   }
- 
+
   // output preceeding nodes from old
   for(unsigned int i = 0; i < start; ++i)
     outputNode(*(*rbuf_old->buffer)[i], writer);
