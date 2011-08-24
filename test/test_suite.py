@@ -130,7 +130,7 @@ def src2srcdiff(source_file_old, source_file_new, encoding, language, directory,
 
 #	command.append("--quiet")
 
-	return safe_communicate_two_files(command, "temp_file_one.c", "temp_file_two.c", directory)
+	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory)
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
@@ -502,8 +502,8 @@ current_time = datetime.now()
 os.rename(error_filename, error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension)
 f.close()
 
-os.remove("temp_file_one.c")
-os.remove("temp_file_two.c")
+os.remove("temp_file_one.cpp")
+os.remove("temp_file_two.cpp")
 
 # output tool version
 print
