@@ -698,7 +698,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(unsigned int i = rbuf->buffer->size() - in_diff_count; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
-  if(rbuf->has_end_nl)
+  if((rbuf->has_end_nl && !rbuf->context->size()) || rbuf->context->size())
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
