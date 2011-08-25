@@ -159,6 +159,7 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "Error with shortest edit script");
     return distance;
   }
+
   /*
     Translate both files to srcML separately.
   */
@@ -361,7 +362,8 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 // outputs a line of xml (used for old file)
 void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
 
-  while(true)
+  int not_done = 1;
+  while(not_done)
 
     // look if in text node
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
@@ -396,7 +398,7 @@ void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTe
 
         rbuf->characters = NULL;
 
-        xmlTextReaderRead(reader);
+        not_done = xmlTextReaderRead(reader);
       }
     }
     else {
@@ -406,14 +408,15 @@ void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTe
 
       // output non-text node and get next node
       outputXML(reader, writer);
-      xmlTextReaderRead(reader);
+      not_done = xmlTextReaderRead(reader);
     }
 }
 
 // advances to next line of xml (used for new file)
 void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
-  while(true)
+  int not_done = 1;
+  while(not_done)
 
     // look if in text node
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
@@ -438,7 +441,7 @@ void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
         rbuf->characters = NULL;
 
-        xmlTextReaderRead(reader);
+        not_done = xmlTextReaderRead(reader);
       }
     }
     else {
@@ -448,7 +451,7 @@ void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
       update_in_diff(rbuf, reader, false);
 
       // get next node
-      xmlTextReaderRead(reader);
+      not_done = xmlTextReaderRead(reader);
     }
 }
 
@@ -460,7 +463,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 
   // allocate new buffer
   rbuf->buffer = new std::vector<xmlNode *>;
-  while(true)
+  int not_done = 1;
+  while(not_done)
 
     // look if in text node
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
@@ -513,7 +517,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 
         rbuf->characters = NULL;
 
-        xmlTextReaderRead(reader);
+      not_done = xmlTextReaderRead(reader);
       }
     }
     else {
@@ -524,7 +528,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       // save non-text node and get next node
       rbuf->buffer->push_back(getCurrentNode(reader));
 
-      xmlTextReaderRead(reader);
+      not_done = xmlTextReaderRead(reader);
     }
 
 }
