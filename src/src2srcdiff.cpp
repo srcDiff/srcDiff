@@ -642,7 +642,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-  for(int i = rbuf->in_diff->size() - rbuf->buffer->size(); i < 0 && (*rbuf->in_diff)[i]; ++i);
+  for(int i = rbuf->in_diff->size() - rbuf->buffer->size(); i < 0 && (*rbuf->in_diff)[i]; --i)
+    fprintf(stderr, "%s - %d", (const xmlChar *)(*rbuf->context)[i], (*rbuf->in_diff)[i]);
 
   // output diff
   for(unsigned int i = 0; i < rbuf->buffer->size() ; ++i)
