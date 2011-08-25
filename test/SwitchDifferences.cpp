@@ -20,14 +20,6 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
-// stores information during xml Text Reader processing
-struct reader_buffer {
-
-  bool in_out_diff;
-  bool exited_out_diff;
-  std::vector<xmlNode *> * buffer;
-};
-
 int main(int argc, char * argv[]) {
 
   /*
@@ -57,14 +49,29 @@ int main(int argc, char * argv[]) {
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+    bool in_out_diff;
+    bool exited_out_diff;
+    std::vector<xmlNode *> buffer;
     while(xmlTextReaderRead(reader) == 1) {
 
       xmlNodePtr node = getRealCurrentNode(reader);
+
+      if(node->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, "old") == 0) {
+
+        if(in_out_diff)
+          exited_out_diff = true;
+
+        in_out_diff = !in_out_diff;
+        continue;
+      }
+
+      if(in_out_diff)
+        buffer.push_back(node);
+      
       outputNode(*node, writer);
     }
 
     xmlFreeTextReader(reader);
-
 
     xmlTextWriterEndDocument(writer);
     xmlFreeTextWriter(writer);
