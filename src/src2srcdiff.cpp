@@ -686,6 +686,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(unsigned int i = 0; i < rbuf->buffer->size() - in_diff_count; ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
+  if(!in_depth_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+
   // output diff tags and elements after match on delete
   if(edit->operation == DELETE)
 
@@ -696,12 +699,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
-
   // output diff
   for(unsigned int i = rbuf->buffer->size() - in_diff_count; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
-  if((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines))
+  if(in_depth_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
