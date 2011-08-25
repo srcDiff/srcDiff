@@ -52,6 +52,7 @@ int main(int argc, char * argv[]) {
     bool in_out_diff = false;
     bool exited_out_diff = false;
     bool wait_out_diff = false;
+    bool end_wait_diff = false;
     std::vector<xmlNode *> buffer;
     while(xmlTextReaderRead(reader) == 1) {
 
@@ -66,16 +67,39 @@ int main(int argc, char * argv[]) {
         continue;
       }
 
+      if(wait_out_diff && strcmp((const char *)node->name, "new") == 0) {
+
+        wait_out_diff = false;
+        end_wait_diff = true;
+        continue;
+      }
+
       if(exited_out_diff) {
 
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+        if(strcmp((const char *)node->name, "new") != 0) {
 
-        for(int i = 0; i < buffer.size(); ++i)
-          outputNode(*buffer[i], writer);
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+          for(int i = 0; i < buffer.size(); ++i)
+            outputNode(*buffer[i], writer);
+
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>\n"));
+
+          buffer = std::vector<xmlNode *>();
+        } else 
+          wait_out_diff = true;
 
         exited_out_diff = false;
+      } else if(end_wait_diff) {
+
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+          
+        for(int i = 0; i < buffer.size(); ++i)
+          outputNode(*buffer[i], writer);
+        
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+
+        end_wait_diff = false;
         buffer = std::vector<xmlNode *>();
       } else if(in_out_diff) {
 
