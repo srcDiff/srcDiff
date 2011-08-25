@@ -390,14 +390,14 @@ try:
 						if count > maxcount:
 							break
 
-						# total count of test cases
-						total_count = total_count + 1
-
 						# save the particular nested unit
 						if number == 0:
 							unitxml = filexml
 						else:
 							unitxml = extract_unit(filexml, count)
+
+						# total count of test cases
+						total_count = total_count + 1
 
 						# convert the unit in xml to text
 						unit_text_old = extract_source(unitxml, "0")
