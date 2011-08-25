@@ -665,12 +665,14 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   if(edit->operation == DELETE)
 
     // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>\n"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
   else
 
     // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>\n"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
   
+  if(rbuf->context->size() > 0)
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
 // output a change
