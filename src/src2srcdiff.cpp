@@ -662,8 +662,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT)
     ++open_count;
-    
+
   }
+
+  for(int i = rbuf->in_diff->size() - open_count; i > 0 && (*rbuf->in_diff)[i]; --i)
+    fprintf(stderr, "HERE\n");
 
   // output diff
   for(unsigned int i = 0; i < rbuf->buffer->size() ; ++i)
