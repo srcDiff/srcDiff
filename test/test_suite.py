@@ -420,13 +420,13 @@ try:
 						if result != "":
 							error_count += 1
 							
-							errorlist.append((directory + " " + language, count, result))
+							errorlist.append((directory + " " + language, count * 2, result))
 
 							# part of list of nested unit number in output
-							print "\033[0;31m" + str(count) + "\033[0m",
+							print "\033[0;31m" + str(count * 2) + "\033[0m",
 						elif number != 0:
 							# part of list of nested unit number in output
-							print "\033[0;33m" + str(count) + "\033[0m",
+							print "\033[0;33m" + str(count * 2) + "\033[0m",
 
 						# total count of test cases
 						total_count = total_count + 1
@@ -454,13 +454,13 @@ try:
 						if result != "":
 							error_count += 1
 							
-							errorlist.append((directory + " " + language, count, result))
+							errorlist.append((directory + " " + language, count * 2 + 1, result))
 
 							# part of list of nested unit number in output
-							print "\033[0;31m" + str(count) + "\033[0m",
+							print "\033[0;31m" + str(count * 2 + 1) + "\033[0m",
 						elif number != 0:
 							# part of list of nested unit number in output
-							print "\033[0;33m" + str(count) + "\033[0m",
+							print "\033[0;33m" + str(count * 2 + 1) + "\033[0m",
 	
 					except OSError, (errornum, strerror):
 						continue
