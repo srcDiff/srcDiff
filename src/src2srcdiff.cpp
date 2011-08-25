@@ -49,6 +49,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 struct reader_buffer {
 
   int line_number;
+  int num_lines;
   bool has_end_nl;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
@@ -234,12 +235,14 @@ int main(int argc, char * argv[]) {
     // run through diffs adding markup
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
+    rbuf_old.num_lines = lines1.size();
     rbuf_old.has_end_nl = has_end_nl1;
     rbuf_old.context = new std::vector<xmlNode *>;
     rbuf_old.in_diff = new std::vector<bool>;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
+    rbuf_new.num_lines = lines2.size();
     rbuf_new.has_end_nl = has_end_nl2;
     rbuf_new.context = new std::vector<xmlNode *>;
     rbuf_new.in_diff = new std::vector<bool>;
@@ -698,7 +701,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(unsigned int i = rbuf->buffer->size() - in_diff_count; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
-  if((rbuf->has_end_nl && !rbuf->context->size()) || rbuf->context->size())
+  if((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines))
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
