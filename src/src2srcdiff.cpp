@@ -51,6 +51,7 @@ struct reader_buffer {
   int line_number;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
+  std::vector<bool> * in_change;
   std::vector<xmlNode *> * context;
 };
 
@@ -73,6 +74,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new,  struct edit * edit, xmlTextWriterPtr writer);
 
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
+
+void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff);
 
 int main(int argc, char * argv[]) {
 
@@ -215,10 +218,12 @@ int main(int argc, char * argv[]) {
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
     rbuf_old.context = new std::vector<xmlNode *>;
+    rbuf_old.in_diff = new std::vector<bool>;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
     rbuf_new.context = new std::vector<xmlNode *>;
+    rbuf_new.in_diff = new std::vector<bool>;
     xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
@@ -389,6 +394,7 @@ void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTe
     else {
 
       update_context(rbuf, reader);
+      update_in_diff(rbuf, reader, false);
 
       // output non-text node and get next node
       outputXML(reader, writer);
@@ -427,12 +433,15 @@ void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
         xmlTextReaderRead(reader);
       }
     }
-    else
+    else {
 
       update_context(rbuf, reader);
 
-  // get next node
-  xmlTextReaderRead(reader);
+      update_in_diff(rbuf, reader, false);
+
+      // get next node
+      xmlTextReaderRead(reader);
+    }
 }
 
 // collect the differnces
@@ -502,6 +511,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
     else {
 
       update_context(rbuf, reader);
+      update_in_diff(rbuf, reader, true);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getCurrentNode(reader));
@@ -723,6 +733,18 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 }
 
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
+
+  xmlNodePtr node = getCurrentNode(reader);
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    rbuf->context->push_back(node);
+  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    rbuf->context->pop_back();
+  }
+}
+
+void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff) {
 
   xmlNodePtr node = getCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
