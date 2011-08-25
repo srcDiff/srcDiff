@@ -703,8 +703,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(unsigned int i = rbuf->buffer->size() - in_diff_count; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
-  //if(in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
-  //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+  if(in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
 // output a change
