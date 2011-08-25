@@ -22,19 +22,11 @@ int main(int argc, char * argv[]) {
   int diff;
   if(argc < 2) {
 
-    fprintf(stderr, "Usage: %s xmlfile operation\n", "SwitchDifferences");
-    return 1;
-  }
-
-  if(argc < 3) {
-
     srcML_file = (char *)"/dev/stdin";
-    diff = atoi(argv[1]);
   }
   else {
 
     srcML_file = argv[1];
-    diff = atoi(argv[2]);
   }
 
   // create the ctxt
