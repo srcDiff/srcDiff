@@ -23,4 +23,4 @@ xmlrw.o: xmlrw.cpp xmlrw.h
 	g++ -I /usr/include/libxml2 -lxml2 -c $< -o $@ 
 
 clean:
-	rm -f ExtractSource ExtractSource.o SwitchDifferences SwitchDifferences.o
+	rm -f ExtractSource ExtractSource.o SAX2ExtractSource.o SwitchDifferences SwitchDifferences.o xmlrw.o
