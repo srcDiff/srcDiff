@@ -58,9 +58,6 @@ int main(int argc, char * argv[]) {
 
       if(strcmp((const char *)node->name, "old") == 0) {
 
-        if(node->type == XML_READER_TYPE_ELEMENT)
-          continue;
-
         if(in_out_diff)
           exited_out_diff = true;
 
@@ -76,11 +73,16 @@ int main(int argc, char * argv[]) {
           outputNode(*buffer[i], writer);
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
-        buffer = std::vector<xmlNode *>();
-      } else if(in_out_diff)
-        buffer.push_back(node);
 
-      outputNode(*node, writer);
+        exited_out_diff = false;
+        buffer = std::vector<xmlNode *>();
+      } else if(in_out_diff) {
+
+        buffer.push_back(node);
+        continue;
+      }
+
+        outputNode(*node, writer);
     }
 
     xmlFreeTextReader(reader);
