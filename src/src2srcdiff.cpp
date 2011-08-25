@@ -127,6 +127,10 @@ int main(int argc, char * argv[]) {
     buffer = new std::string();
     getline(file1, *buffer);
   }
+
+  if(*buffer != "")
+    lines1.push_back((char *)buffer->c_str());
+
   file1.close();
 
   // gather file 2
@@ -139,6 +143,10 @@ int main(int argc, char * argv[]) {
     buffer = new std::string();
     getline(file2, *buffer);
   }
+
+  if(*buffer != "")
+    lines2.push_back((char *)buffer->c_str());
+
   file2.close();
 
   // calculate the differences
