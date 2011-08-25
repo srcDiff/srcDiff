@@ -41,8 +41,8 @@ void endDocument(void* ctx) {
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		     const xmlChar** attributes) {
+                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_switch * data = (source_switch *)ctxt->_private;
@@ -57,6 +57,26 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   name += (const char *)localname;
 
   xmlTextWriterStartElement(data->writer, (const xmlChar *)name.c_str());
+
+  static bool first = true;
+
+  if(first) {
+
+    first = false;
+
+    int index;
+    for(int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+      std::string ns = "xmlns";
+      if(namespaces[index]) {
+
+        ns += ":";
+        ns += (const char *)namespaces[index];
+      }
+
+      xmlTextWriterWriteAttribute(data->writer, (const xmlChar *)ns.c_str(), (const xmlChar *)namespaces[index+1]);
+    }
+  }
 
   int index;
   for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
