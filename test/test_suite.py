@@ -22,7 +22,7 @@ sperrorlist = []
 
 srcmlutility = "srcml2src"
 extractutility = "./ExtractSource"
-switchtutility = "./SwitchDifferences"
+switchutility = "./SwitchDifferences"
 src2srcdiffutility = "../bin/src2srcdiff"
 
 # extracts a particular unit from a srcML file
@@ -88,7 +88,7 @@ def extract_source(srcML, operation):
 	return safe_communicate(command, srcML)
 
 # switch diff order
-def switch_differences(srcML):
+def switch_difference(srcML):
 
 	# run the srcml processor
 	command = [switchutility]
