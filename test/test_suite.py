@@ -88,7 +88,7 @@ def extract_source(srcML, operation):
 	return safe_communicate(command, srcML)
 
 # switch diff order
-def switch_difference(srcML):
+def switch_differences(srcML):
 
 	# run the srcml processor
 	command = [switchutility]
