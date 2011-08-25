@@ -9,6 +9,7 @@
 #include <string.h>
 #include <vector>
 #include <libxml/parserInternals.h>
+#include <libxml/xmlwriter.h>
 #include "SAX2SwitchDifferences.hpp"
 
 // forward declarations
@@ -43,7 +44,15 @@ int main(int argc, char * argv[]) {
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
 
-  struct source_switch data = { false, false, std::vector<xmlNodePtr>() };
+  // create the writer
+  xmlTextWriterPtr writer = xmlNewTextWriterFilename("/dev/stdout", 0);
+  if (writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdout");
+
+    return 1;
+  }
+
+  struct source_switch data = { false, false, std::vector<xmlNodePtr>(), writer };
 
   ctxt->_private = &data;
 

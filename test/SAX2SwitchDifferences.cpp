@@ -39,7 +39,9 @@ void endDocument(void* ctx) {
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		     const xmlChar** attributes) { }
+		     const xmlChar** attributes) {
+
+}
 
 void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
