@@ -49,6 +49,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 struct reader_buffer {
 
   int line_number;
+  bool has_end_nl;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
   std::vector<bool> * in_diff;
@@ -112,6 +113,8 @@ int main(int argc, char * argv[]) {
   */
 
   // files used for differences
+  bool has_end_nl1 = true;
+  bool has_end_nl2 = true;
   std::vector<char *> lines1;
   std::vector<char *> lines2;
 
@@ -128,8 +131,11 @@ int main(int argc, char * argv[]) {
     getline(file1, *buffer);
   }
 
-  if(*buffer != "")
+  if(*buffer != "") {
+
+    has_end_nl1 = false;
     lines1.push_back((char *)buffer->c_str());
+  }
 
   file1.close();
 
@@ -144,9 +150,11 @@ int main(int argc, char * argv[]) {
     getline(file2, *buffer);
   }
 
-  if(*buffer != "")
-    lines2.push_back((char *)buffer->c_str());
+  if(*buffer != "") {
 
+    has_end_nl2 = false;
+    lines2.push_back((char *)buffer->c_str());
+  }
   file2.close();
 
   // calculate the differences
@@ -226,11 +234,13 @@ int main(int argc, char * argv[]) {
     // run through diffs adding markup
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
+    rbuf_old.has_end_nl = has_end_nl1;
     rbuf_old.context = new std::vector<xmlNode *>;
     rbuf_old.in_diff = new std::vector<bool>;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
+    rbuf_new.has_end_nl = has_end_nl2;
     rbuf_new.context = new std::vector<xmlNode *>;
     rbuf_new.in_diff = new std::vector<bool>;
     xmlTextReaderRead(reader_new);
@@ -683,7 +693,12 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
-  if(rbuf->context->size() > 0)
+
+  // output diff
+  for(unsigned int i = rbuf->buffer->size() - in_diff_count; i < rbuf->buffer->size(); ++i)
+    outputNode(*(*rbuf->buffer)[i], writer);
+
+  if(rbuf->has_end_nl)
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
