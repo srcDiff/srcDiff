@@ -51,7 +51,7 @@ struct reader_buffer {
   int line_number;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
-  std::vector<bool> * in_change;
+  std::vector<bool> * in_diff;
   std::vector<xmlNode *> * context;
 };
 
@@ -749,9 +749,9 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool i
   xmlNodePtr node = getCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    rbuf->context->push_back(node);
+    rbuf->in_diff->push_back(indiff);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    rbuf->context->pop_back();
+    rbuf->in_diff->pop_back();
   }
 }
