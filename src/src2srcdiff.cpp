@@ -687,7 +687,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   int diff_end;
   int close_count;
-  for(diff_end = rbuf->buffer->size(); diff_end > 0 && close_count < open_count; --diff_end) {
+  for(diff_end = rbuf->buffer->size(); diff_end > 0 && close_count < in_diff_count; --diff_end) {
 
     xmlNodePtr node = (*rbuf->buffer)[diff_end];
 
