@@ -92,7 +92,7 @@ int main(int argc, char * argv[]) {
           for(int i = 0; i < buffer.size(); ++i)
             outputNode(*buffer[i], writer);
 
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>\n"));
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
           buffer = std::vector<xmlNode *>();
         } else 
