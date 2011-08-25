@@ -200,9 +200,6 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
 
       xmlTextWriterStartElement(writer, node.name);
 
-    if (xmlHasProp(&node, BAD_CAST "type"))
-      xmlTextWriterWriteAttribute(writer, BAD_CAST "type", xmlGetProp(&node, BAD_CAST "type"));
-
     // copy all the namespaces
     if(strcmp((const char *)node.name, "unit") == 0) {
       xmlNsPtr ns = node.nsDef;
@@ -228,6 +225,7 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
     {
       xmlAttrPtr attribute = node.properties;
       while (attribute) {
+
         xmlTextWriterWriteAttribute(writer, attribute->name, attribute->children->content);
         attribute = attribute->next;
       }
