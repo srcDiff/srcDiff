@@ -9,16 +9,12 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "../bin/Options.hpp"
-#include "../bin/srcMLTranslator.hpp"
-#include "../bin/Language.hpp"
-#include "shortest_edit_script.h"
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include "xmlrw.h"
-#include "diffrw.h"
+#include "../src/xmlrw.h"
+#include "../src/diffrw.h"
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
@@ -27,8 +23,8 @@
 // stores information during xml Text Reader processing
 struct reader_buffer {
 
-  int line_number;
-  unsigned char * characters;
+  bool in_out_diff;
+  bool exited_out_diff;
   std::vector<xmlNode *> * buffer;
 };
 
@@ -48,6 +44,7 @@ int main(int argc, char * argv[]) {
       fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdin");
 
       return 1;
+    }
 
     // create the writer
     writer = xmlNewTextWriterFilename("/dev/stdout", 0);
@@ -60,6 +57,11 @@ int main(int argc, char * argv[]) {
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+    while(xmlTextReaderRead(reader) == 1) {
+
+      xmlNodePtr node = getCurrentNode(reader);
+      outputNode(*node, writer);
+    }
 
     xmlFreeTextReader(reader);
 
