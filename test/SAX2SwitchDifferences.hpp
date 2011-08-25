@@ -9,13 +9,13 @@
 #define INCLUDED_SAX2SWITCHDIFFERENCES_HPP
 
 #include <libxml/parser.h>
+#include <vector>
 
-enum operation { DELETE, INSERT };
+struct source_switch {
 
-struct source_diff {
-
-  operation op;
-  bool in_diff;
+  bool in_old_diff;
+  bool exited_old;
+  std::vector<xmlNode *> old_diff_nodes; 
 };
 
 xmlSAXHandler factory();

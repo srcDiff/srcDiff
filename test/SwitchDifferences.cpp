@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 #include <libxml/parserInternals.h>
 #include "SAX2SwitchDifferences.hpp"
 
@@ -42,7 +43,7 @@ int main(int argc, char * argv[]) {
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
 
-  struct source_diff data = { diff ? INSERT : DELETE, false};
+  struct source_switch data = { false, false, std::vector<xmlNodePtr>() };
 
   ctxt->_private = &data;
 

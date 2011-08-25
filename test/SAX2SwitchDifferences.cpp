@@ -44,25 +44,31 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
+  struct source_switch * data = (source_switch *)ctxt->_private;
 
+/*
   if((data->op == DELETE && strcmp((const char *)localname, "new") == 0)
      || (data->op == INSERT && strcmp((const char *)localname, "old") == 0)) {
 
     data->in_diff = !data->in_diff;
   }
+*/
+
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
+  struct source_switch * data = (source_switch *)ctxt->_private;
 
+  /*
   if(!data->in_diff) {
 
     for(int i = 0; i < len; ++i)
       fprintf(stdout, "%c", (char)ch[i]);
-  }
+      }
+  */
+
 }
 
 void comments(void* ctx, const xmlChar* ch) {
