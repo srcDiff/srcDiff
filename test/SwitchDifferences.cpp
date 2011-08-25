@@ -56,7 +56,10 @@ int main(int argc, char * argv[]) {
 
       xmlNodePtr node = getRealCurrentNode(reader);
 
-      if(node->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, "old") == 0) {
+      if(strcmp((const char *)node->name, "old") == 0) {
+
+        if(node->type == XML_READER_TYPE_ELEMENT)
+          continue;
 
         if(in_out_diff)
           exited_out_diff = true;
@@ -67,6 +70,11 @@ int main(int argc, char * argv[]) {
 
       if(in_out_diff)
         buffer.push_back(node);
+
+      if(exited_out_diff) {
+
+        buffer = std::vector<xmlNode *>();
+      }
       
       outputNode(*node, writer);
     }
