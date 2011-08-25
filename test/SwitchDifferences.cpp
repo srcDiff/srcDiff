@@ -57,6 +57,9 @@ int main(int argc, char * argv[]) {
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
 
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
+
   return 0;
 }
 

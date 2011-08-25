@@ -56,6 +56,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
     xmlTextWriterWriteAttribute(data->writer, attributes[index], (const xmlChar *)value);
   }
+
 }
 
 void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
