@@ -69,6 +69,7 @@ int main(int argc, char * argv[]) {
 
       if(wait_out_diff && strcmp((const char *)node->name, "new") == 0) {
 
+        node->name = (const xmlChar *)"old";
 
         wait_out_diff = false;
         end_wait_diff = true;
