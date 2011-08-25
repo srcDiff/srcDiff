@@ -4,6 +4,7 @@
 <unit>
 <diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{<diff:old status="end"/>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}}</block></then></if></unit>
+<diff:old status="start"/>}</block></then></if><diff:old status="end"/>
+</unit>
 
 </unit>
