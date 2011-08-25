@@ -59,7 +59,7 @@ int main(int argc, char * argv[]) {
 
     while(xmlTextReaderRead(reader) == 1) {
 
-      xmlNodePtr node = getCurrentNode(reader);
+      xmlNodePtr node = getRealCurrentNode(reader);
       outputNode(*node, writer);
     }
 
