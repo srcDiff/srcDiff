@@ -67,12 +67,17 @@ int main(int argc, char * argv[]) {
         continue;
       }
 
-      if(wait_out_diff && strcmp((const char *)node->name, "new") == 0) {
+      if(strcmp((const char *)node->name, "new") == 0) {
+
+        node->name = (const xmlChar *)"old";
+
+        if(wait_out_diff) {
 
         wait_out_diff = false;
         end_wait_diff = true;
         outputNode(*node, writer);
         continue;
+        }
       }
 
       if(in_out_diff) {
