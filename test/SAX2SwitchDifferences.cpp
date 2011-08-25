@@ -41,20 +41,25 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		     const xmlChar** attributes) {
 
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  struct source_switch * data = (source_switch *)ctxt->_private;
+
+  xmlTextWriterStartElement(data->writer, localname);
+
+  int index;
+  for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+
+    int end = attributes[index + 4] - attributes[index + 3];
+    const char * value = strndup((const char *)attributes[index + 3], end);
+
+    xmlTextWriterWriteAttribute(data->writer, attributes[index], (const xmlChar *)value);
+  }
 }
 
 void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_switch * data = (source_switch *)ctxt->_private;
-
-/*
-  if((data->op == DELETE && strcmp((const char *)localname, "new") == 0)
-     || (data->op == INSERT && strcmp((const char *)localname, "old") == 0)) {
-
-    data->in_diff = !data->in_diff;
-  }
-*/
 
 }
 
