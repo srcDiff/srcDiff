@@ -68,14 +68,18 @@ int main(int argc, char * argv[]) {
         continue;
       }
 
-      if(in_out_diff)
-        buffer.push_back(node);
-
       if(exited_out_diff) {
 
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+
+        for(int i = 0; i < buffer.size(); ++i)
+          outputNode(*buffer[i], writer);
+
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
         buffer = std::vector<xmlNode *>();
-      }
-      
+      } else if(in_out_diff)
+        buffer.push_back(node);
+
       outputNode(*node, writer);
     }
 
