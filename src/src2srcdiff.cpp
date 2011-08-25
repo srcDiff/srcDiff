@@ -687,7 +687,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   int diff_end;
   int close_count;
-  for(diff_end = rbuf->buffer->size(); diff_end > 0 && close_count < in_diff_count; --diff_end) {
+  for(diff_end = rbuf->buffer->size() - 1; diff_end > 0 && close_count < in_diff_count; --diff_end) {
 
     xmlNodePtr node = (*rbuf->buffer)[diff_end];
 
@@ -697,7 +697,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   }
   
   // output diff
-  for(unsigned int i = 0; i < diff_end; ++i)
+  for(unsigned int i = 0; i <= diff_end; ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
   fprintf(stderr, "%d\n", in_diff_count);
@@ -715,7 +715,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
   // output diff
-  for(unsigned int i = diff_end; i < rbuf->buffer->size(); ++i)
+  for(unsigned int i = diff_end + 1; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
   //if(in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
