@@ -67,17 +67,13 @@ int main(int argc, char * argv[]) {
         continue;
       }
 
-      if(strcmp((const char *)node->name, "new") == 0) {
+      if(wait_out_diff && strcmp((const char *)node->name, "new") == 0) {
 
-        node->name = (const xmlChar *)"old";
-
-        if(wait_out_diff) {
 
         wait_out_diff = false;
         end_wait_diff = true;
         outputNode(*node, writer);
         continue;
-        }
       }
 
       if(in_out_diff) {
@@ -114,6 +110,9 @@ int main(int argc, char * argv[]) {
         end_wait_diff = false;
         buffer = std::vector<xmlNode *>();
       }
+
+      if(strcmp((const char *)node->name, "new") == 0)
+        node->name = (const xmlChar *)"old";
 
       outputNode(*node, writer);
     }
