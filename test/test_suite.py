@@ -431,6 +431,7 @@ try:
 						# total count of test cases
 						total_count = total_count + 1
 
+                                                # switch order of differenes
                                                 unitxml = switch_differences(unitxml)
 
 						# convert the unit in xml to text
