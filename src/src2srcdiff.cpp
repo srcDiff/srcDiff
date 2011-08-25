@@ -670,7 +670,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
-  
+
+ 
+  fprintf(stderr, "HERE: %d\n", rbuf->context->size());
   if(rbuf->context->size() > 0)
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
@@ -784,6 +786,9 @@ void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
     rbuf->context->push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
+    if(rbuf->context->size() == 0)
+      return;
+
     rbuf->context->pop_back();
   }
 }
@@ -795,6 +800,9 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool i
 
     rbuf->in_diff->push_back(indiff);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if(rbuf->context->size() == 0)
+      return;
 
     rbuf->in_diff->pop_back();
   }
