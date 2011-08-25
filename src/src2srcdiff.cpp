@@ -654,8 +654,16 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-  //  for(int i = rbuf->in_diff->size() - rbuf->buffer->size(); i > 0 && (*rbuf->in_diff)[i]; --i)
-  //    fprintf(stderr, "%s - %d", (const xmlChar *)(*rbuf->context)[i], (*rbuf->in_diff)[i]);
+  // count open elements in buffer
+  int open_count = 0;
+  for(int i = 0; i < rbuf->buffer->size(); ++i) {
+
+    xmlNodePtr node = (*rbuf->buffer)[i];
+
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT)
+    ++open_count;
+    
+  }
 
   // output diff
   for(unsigned int i = 0; i < rbuf->buffer->size() ; ++i)
