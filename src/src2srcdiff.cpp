@@ -665,11 +665,12 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   }
 
+  int in_diff_count = 0;
   for(int i = rbuf->in_diff->size() - open_count; i > 0 && (*rbuf->in_diff)[i]; --i)
-    fprintf(stderr, "HERE\n");
+    ++in_diff_count;
 
   // output diff
-  for(unsigned int i = 0; i < rbuf->buffer->size() ; ++i)
+  for(unsigned int i = 0; i < rbuf->buffer->size() - in_diff_count; ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
   // output diff tags and elements after match on delete
