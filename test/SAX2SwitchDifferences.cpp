@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <string>
 #include "SAX2SwitchDifferences.hpp"
 
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
@@ -46,7 +47,16 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_switch * data = (source_switch *)ctxt->_private;
 
-  xmlTextWriterStartElement(data->writer, localname);
+  std::string name = "";
+  if(prefix) {
+
+    name += (const char *)prefix;
+    name += ":";
+  }
+
+  name += (const char *)localname;
+
+  xmlTextWriterStartElement(data->writer, (const xmlChar *)name.c_str());
 
   int index;
   for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
