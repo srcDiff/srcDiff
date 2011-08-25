@@ -200,9 +200,6 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
 
       xmlTextWriterStartElement(writer, node.name);
 
-    if (xmlHasProp(&node, BAD_CAST "type"))
-      xmlTextWriterWriteAttribute(writer, BAD_CAST "type", xmlGetProp(&node, BAD_CAST "type"));
-
     // copy all the namespaces
     static bool first = true;
     if(first) {
