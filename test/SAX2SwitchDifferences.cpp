@@ -9,6 +9,8 @@
 #include <string.h>
 #include "SAX2SwitchDifferences.hpp"
 
+#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
+
 xmlSAXHandler factory() {
 
   xmlSAXHandler sax = { 0 };
@@ -61,6 +63,7 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_switch * data = (source_switch *)ctxt->_private;
 
+  xmlTextWriterEndElement(data->writer);
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
@@ -68,13 +71,18 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_switch * data = (source_switch *)ctxt->_private;
 
-  /*
-  if(!data->in_diff) {
+  for (int i = 0; i < len; ++i) {
 
-    for(int i = 0; i < len; ++i)
-      fprintf(stdout, "%c", (char)ch[i]);
-      }
-  */
+    // escape characters or print out character
+    if (ch[i] == '&')
+      xmlTextWriterWriteRawLen(data->writer, LITERALPLUSSIZE("&amp;"));
+    else if (ch[i] == '<')
+      xmlTextWriterWriteRawLen(data->writer, LITERALPLUSSIZE("&lt;"));
+    else if (ch[i] == '>')
+      xmlTextWriterWriteRawLen(data->writer, LITERALPLUSSIZE("&gt;"));
+    else
+      xmlTextWriterWriteRawLen(data->writer, &ch[i], 1);
+  }
 
 }
 
