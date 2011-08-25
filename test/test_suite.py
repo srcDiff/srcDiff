@@ -427,6 +427,40 @@ try:
 						elif number != 0:
 							# part of list of nested unit number in output
 							print "\033[0;33m" + str(count) + "\033[0m",
+
+						# total count of test cases
+						total_count = total_count + 1
+
+                                                unitxml = switch_differences(unitxml)
+
+						# convert the unit in xml to text
+						unit_text_old = extract_source(unitxml, "0")
+						unit_text_new = extract_source(unitxml, "1")
+
+						# convert the unit in xml to text (if needed)
+                                                if doseol:
+                                                        unittext = unix2dos(unittext)
+
+						# convert the text to srcML
+						unitsrcmlraw = src2srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+
+						# additional, later stage processing
+						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
+						
+						# find the difference
+						result = xmldiff(unitxml, unitsrcml)
+						if count == MAX_COUNT:
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
+						if result != "":
+							error_count += 1
+							
+							errorlist.append((directory + " " + language, count, result))
+
+							# part of list of nested unit number in output
+							print "\033[0;31m" + str(count) + "\033[0m",
+						elif number != 0:
+							# part of list of nested unit number in output
+							print "\033[0;33m" + str(count) + "\033[0m",
 	
 					except OSError, (errornum, strerror):
 						continue
