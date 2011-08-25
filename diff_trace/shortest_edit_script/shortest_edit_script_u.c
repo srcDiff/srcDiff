@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
   }
 
   if(*buffer != "")
-    lines2.push_back((const char *)buffer->c_str());
+    lines1.push_back((const char *)buffer->c_str());
 
   file1.close();
 
