@@ -49,8 +49,9 @@ int main(int argc, char * argv[]) {
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
-    bool in_out_diff;
-    bool exited_out_diff;
+    bool in_out_diff = false;
+    bool exited_out_diff = false;
+    bool wait_out_diff = false;
     std::vector<xmlNode *> buffer;
     while(xmlTextReaderRead(reader) == 1) {
 
