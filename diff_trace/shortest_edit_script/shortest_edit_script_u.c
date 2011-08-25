@@ -60,7 +60,6 @@ int main(int argc, char **argv) {
 
   getline(file2, *buffer);
   while(!file2.eof()) {
-    fprintf(stderr, "%s\n", buffer->c_str());
     lines2.push_back((const char *)buffer->c_str());
     buffer = new std::string();
     getline(file2, *buffer);
