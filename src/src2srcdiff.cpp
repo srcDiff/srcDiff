@@ -140,6 +140,7 @@ int main(int argc, char * argv[]) {
 
     has_end_nl1 = false;
     lines1.push_back((char *)buffer->c_str());
+    buffer = new std::string();
   }
 
   file1.close();
@@ -153,6 +154,7 @@ int main(int argc, char * argv[]) {
     lines2.push_back((char *)buffer->c_str());
     buffer = new std::string();
     getline(file2, *buffer);
+    buffer = new std::string();
   }
 
   if(*buffer != "") {
@@ -589,6 +591,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     bnode = (*rbuf->buffer)[i];
     if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
 
+      fprintf(stderr, "HERE\n");
       ++i;
       outputNode(*bnode, writer);
     }
