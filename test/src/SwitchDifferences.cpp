@@ -13,8 +13,8 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include "../src/xmlrw.h"
-#include "../src/diffrw.h"
+#include "../../src/xmlrw.h"
+#include "../../src/diffrw.h"
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
