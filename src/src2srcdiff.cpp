@@ -681,12 +681,18 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   }
 
+  fprintf(stderr, "%d\n", open_count);
+
+  int in_diff_count = 0;
+  for(int i = rbuf->in_diff->size() - open_count; i > 0 && (*rbuf->in_diff)[i]; --i)
+    ++in_diff_count;
+
+
+  if(in_diff_count) {
   unsigned int j = 0;
   for(int i = rbuf->in_diff->size() - open_count; i > 0 && (*rbuf->in_diff)[i]; --i) {
 
     xmlNodePtr node = (*rbuf->context)[i];
-
-    
 
   // output diff
     for(; j < rbuf->buffer->size(); ++j) {
@@ -702,7 +708,12 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       }
     }
   }
+  } else {
 
+    for(int i = 0; i < rbuf->buffer->size(); ++i)
+      outputNode(*(*rbuf->buffer)[j], writer);
+
+  }
   //if(!in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
   //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 
