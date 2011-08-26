@@ -25,7 +25,7 @@
 #ifndef __INCLUDED_XMLRW_CPP
 #define __INCLUDED_XMLRW_CPP
 
-#include "xmlrw.h"
+#include "../../src/xmlrw.h"
 #include <iostream>
 #include <cstring>
 
