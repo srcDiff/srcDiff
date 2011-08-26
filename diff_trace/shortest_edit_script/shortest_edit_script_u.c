@@ -50,9 +50,11 @@ int main(int argc, char **argv) {
     getline(file1, *buffer);
   }
 
-  if(*buffer != "")
-    lines1.push_back((const char *)buffer->c_str());
+  if(*buffer != ""){
 
+    lines1.push_back((const char *)buffer->c_str());
+    buffer = new std::string();
+  }
   file1.close();
 
   std::ifstream file2;
@@ -65,9 +67,11 @@ int main(int argc, char **argv) {
     getline(file2, *buffer);
   }
 
-  if(*buffer != "")
-    lines2.push_back((const char *)buffer->c_str());
+  if(*buffer != "") {
 
+    lines2.push_back((const char *)buffer->c_str());
+    buffer = new std::string();
+  }
   file2.close();
 
   {
