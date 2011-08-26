@@ -735,9 +735,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
-  for(; j < rbuf->buffer->size(); ++j) {
-    update_context(rbuf, reader);
-    update_in_diff(rbuf, reader, true);
+  for(int i = 0; i < rbuf->buffer->size(); ++i) {
+    update_context(rbuf, (*rbuf->buffer)[i]);
+    update_in_diff(rbuf, (*rbuf->buffer)[i], true);
   }
 
   // output diff
