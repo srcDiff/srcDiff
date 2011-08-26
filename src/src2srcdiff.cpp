@@ -693,10 +693,13 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
       xmlNodePtr bnode = (*rbuf->buffer)[j];
 
-      if(bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp(node->name, bnode->name))
-        break;
-
       outputNode(*(*rbuf->buffer)[j], writer);
+
+      if(bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
+
+        ++j;
+        break;
+      }
     }
   }
 
