@@ -142,7 +142,6 @@ int main(int argc, char * argv[]) {
     lines1.push_back((char *)buffer->c_str());
     buffer = new std::string();
   }
-
   file1.close();
 
   // gather file 2
