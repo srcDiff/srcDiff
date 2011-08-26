@@ -510,7 +510,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
             text->name = (const xmlChar *)"text";
 
 
-            const char * content = strndup((const char *)characters_start, (rbuf->characters - characters_start) - 1);
+            const char * content = strndup((const char *)characters_start, rbuf->characters - characters_start);
             text->content = (xmlChar *)content;
             rbuf->buffer->push_back(text);
             return;
@@ -588,13 +588,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       }
 
       bnode = (*rbuf->buffer)[i];
-      if(i == rbuf->buffer->size()) {
-
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
-      } else if(bnode && bnode->type == XML_READER_TYPE_TEXT) {
+      if(bnode && bnode->type == XML_READER_TYPE_TEXT) {
 
         outputNode(*bnode, writer);
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
       }
 
   // output diff tags and elements after match on delete
@@ -678,7 +674,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   for(unsigned int i = (rbuf_old->buffer->size() - end) + 1; i < rbuf_old->buffer->size(); ++i)
     outputNode(*(*rbuf_old->buffer)[i], writer);
 
-  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 }
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
