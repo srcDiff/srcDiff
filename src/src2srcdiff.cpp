@@ -713,10 +713,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     for(int i = 0; i < rbuf->buffer->size(); ++i)
       outputNode(*(*rbuf->buffer)[i], writer);
 
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
   }
 
-  if(!in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+  //if(!in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
+  //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 
   // output diff tags and elements after match on delete
   if(edit->operation == DELETE)
