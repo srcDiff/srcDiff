@@ -574,24 +574,26 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   // output diff
   xmlNodePtr bnode = NULL;
   unsigned int i;
-      for(i = 0; i < rbuf->buffer->size(); ++i) {
+  for(i = 0; i < rbuf->buffer->size(); ++i) {
 
-        bnode = (*rbuf->buffer)[i];
+    bnode = (*rbuf->buffer)[i];
 
-        outputNode(*bnode, writer);
+    outputNode(*bnode, writer);
 
-        if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
+    if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
-          ++i;
-          break;
-        }
-      }
+      ++i;
+      break;
+    }
+  }
 
-      bnode = (*rbuf->buffer)[i];
-      if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
+  if(i < rbuf->buffer->size()) {
+    bnode = (*rbuf->buffer)[i];
+    if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
 
-        outputNode(*bnode, writer);
-      }
+      outputNode(*bnode, writer);
+    }
+  }
 
   // output diff tags and elements after match on delete
   if(edit->operation == DELETE)
