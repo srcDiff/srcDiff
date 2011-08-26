@@ -674,9 +674,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   int last_open;
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
-  if(!(*rbuf->in_diff)[rbuf->in_diff->size() - 1])
-    --last_open;
-
   //last_open;
   xmlNodePtr node = (*rbuf->context)[last_open];
 
@@ -701,6 +698,10 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       if(i == rbuf->buffer->size()) {
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+      } else if(bnode && bnode->type == XML_READER_TYPE_TEXT) {
+
+        bnode = (*rbuf->buffer)[i];
+        outputNode(*bnode, writer);
       }
   /*
   if(in_diff_count) {
