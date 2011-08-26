@@ -4,7 +4,6 @@
 OBJ_DIR=obj/
 BIN_DIR=bin/
 
-
 all: $(BIN_DIR)ExtractSource $(BIN_DIR)SwitchDifferences
 	./test_suite.py
 
