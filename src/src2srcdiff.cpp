@@ -674,7 +674,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   int last_open;
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
-  ++last_open;
+  //last_open;
   xmlNodePtr node = (*rbuf->context)[last_open];
 
   fprintf(stderr, "%s\n", (const char *)node->name);
