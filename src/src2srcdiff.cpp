@@ -585,7 +585,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     }
   }
 
-  if(i < rbuf->buffer->size()) {
+  if(i == (rbuf->buffer->size() - 1)) {
     bnode = (*rbuf->buffer)[i];
     if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
 
