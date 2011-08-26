@@ -79,6 +79,10 @@ void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
 void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff);
 
+void update_context(struct reader_buffer * rbuf, xmlNodePtr node);
+
+void update_in_diff(struct reader_buffer * rbuf, xmlNodePtr node, bool indiff);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
