@@ -153,7 +153,6 @@ int main(int argc, char * argv[]) {
     lines2.push_back((char *)buffer->c_str());
     buffer = new std::string();
     getline(file2, *buffer);
-    buffer = new std::string();
   }
 
   if(*buffer != "") {
@@ -278,7 +277,7 @@ int main(int argc, char * argv[]) {
       struct edit * edit_next = edits->next;
       if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
-        fprintf(stderr, "HERE1\n");
+
         collect_difference(&rbuf_old, reader_old, edits);
 
         for(; rbuf_new.line_number < edits->next->offset_sequence_two; ++rbuf_new.line_number)
