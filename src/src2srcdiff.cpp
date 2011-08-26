@@ -690,7 +690,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
         if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
-          fprintf(stderr, "HERE\n");
           ++i;
           break;
         }
@@ -703,6 +702,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       } else if(bnode && bnode->type == XML_READER_TYPE_TEXT) {
 
         outputNode(*bnode, writer);
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
       }
   /*
   if(in_diff_count) {
