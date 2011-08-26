@@ -21,8 +21,8 @@ MAX_COUNT = 29
 sperrorlist = []
 
 srcmlutility = "srcml2src"
-extractutility = "./ExtractSource"
-switchutility = "./SwitchDifferences"
+extractutility = "bin/ExtractSource"
+switchutility = "bin/SwitchDifferences"
 src2srcdiffutility = "../bin/src2srcdiff"
 
 # extracts a particular unit from a srcML file
