@@ -711,7 +711,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   } else {
 
     for(int i = 0; i < rbuf->buffer->size(); ++i)
-      outputNode(*(*rbuf->buffer)[j], writer);
+      outputNode(*(*rbuf->buffer)[i], writer);
 
   }
   //if(!in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
