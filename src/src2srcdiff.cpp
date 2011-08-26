@@ -705,6 +705,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
           ++i;
           break;
         }
+      }
   /*
   if(in_diff_count) {
     fprintf(stderr, "HERE\n");
