@@ -535,8 +535,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
     }
     else {
 
-      update_context(rbuf, reader);
-      update_in_diff(rbuf, reader, true);
+      //update_context(rbuf, reader);
+      //update_in_diff(rbuf, reader, true);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getCurrentNode(reader));
@@ -692,6 +692,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     unsigned int j = 0;
     for(int i = rbuf->in_diff->size() - open_count; i > 0 && (*rbuf->in_diff)[i]; --i) {
 
+      fprintf(stderr, "HERE\n");
+
       xmlNodePtr node = (*rbuf->context)[i];
 
       // output diff
@@ -728,6 +730,13 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+  }
+
+  for(unsigned int i = 0; i < start; ++i) {
+    update_context(rbuf, reader);
+    update_in_diff(rbuf, reader, true);
+  }
 
   // output diff
   //  for(unsigned int i = j; i < rbuf->buffer->size(); ++i)
@@ -856,6 +865,34 @@ void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff) {
 
   xmlNodePtr node = getCurrentNode(reader);
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    rbuf->in_diff->push_back(indiff);
+  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if(rbuf->context->size() == 0)
+      return;
+
+    rbuf->in_diff->pop_back();
+  }
+}
+
+void update_context(struct reader_buffer * rbuf, xmlNodePtr node) {
+
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    rbuf->context->push_back(node);
+  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if(rbuf->context->size() == 0)
+      return;
+
+    rbuf->context->pop_back();
+  }
+}
+
+void update_in_diff(struct reader_buffer * rbuf, xmlNodePtr node, bool indiff) {
+
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     rbuf->in_diff->push_back(indiff);
