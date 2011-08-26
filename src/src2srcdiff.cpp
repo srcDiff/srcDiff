@@ -687,10 +687,10 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   fprintf(stderr, "%d\n", open_count);
 
-  int in_diff_count = 0;
-  for(int i = (rbuf->in_diff->size() - 1) - open_count; i > 0 && (*rbuf->in_diff)[i]; --i)
-    ++in_diff_count;
+  int last_open;
+  for(last_open = (rbuf->in_diff->size() - 1) - open_count; last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
+  /*
   if(in_diff_count) {
     fprintf(stderr, "HERE\n");
 
@@ -720,7 +720,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
   }
-
+  */
   //if(!in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
   //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 
