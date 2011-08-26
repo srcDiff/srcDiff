@@ -539,8 +539,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
     }
     else {
 
-      //update_context(rbuf, reader);
-      //update_in_diff(rbuf, reader, true);
+      update_context(rbuf, reader);
+      update_in_diff(rbuf, reader, true);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getCurrentNode(reader));
@@ -671,30 +671,14 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-  // count open elements in buffer
-  int open_count = 0;
-  int other_count = 0;
-  for(int i = 0; i < rbuf->buffer->size(); ++i) {
-
-    xmlNodePtr node = (*rbuf->buffer)[i];
-
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT)
-      ++open_count;
-    else
-      ++other_count;
-
-  }
-
-  fprintf(stderr, "%d\n", open_count);
-
   int last_open;
-  for(last_open = (rbuf->in_diff->size() - 1) - open_count; last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
+  for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   ++last_open;
-      xmlNodePtr node = (*rbuf->context)[last_open];
+  xmlNodePtr node = (*rbuf->context)[last_open];
 
       // output diff
-      for(unsigned int i; i < rbuf->buffer->size(); ++i) {
+      for(unsigned int i = 0; i < rbuf->buffer->size(); ++i) {
 
         xmlNodePtr bnode = (*rbuf->buffer)[i];
 
@@ -749,11 +733,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
-
-  for(int i = 0; i < rbuf->buffer->size(); ++i) {
-    update_context(rbuf, (*rbuf->buffer)[i]);
-    update_in_diff(rbuf, (*rbuf->buffer)[i], true);
-  }
 
   // output diff
   //  for(unsigned int i = j; i < rbuf->buffer->size(); ++i)
