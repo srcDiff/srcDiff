@@ -677,6 +677,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   ++last_open;
   xmlNodePtr node = (*rbuf->context)[last_open];
 
+  fprintf(stderr, "%s\n", (const char *)node->name);
+
   // output diff
   xmlNodePtr bnode = NULL;
   unsigned int i;
