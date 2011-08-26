@@ -30,7 +30,6 @@
 <diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </block></then></if>
-<diff:old status="end"/>
-</unit>
+<diff:old status="end"/></unit>
 
 </unit>
