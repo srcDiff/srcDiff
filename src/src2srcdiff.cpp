@@ -554,7 +554,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer) {
 
-  // output correct diff tag and on delete output elements before matching tag and diff element
+  // output starting diff tag
   if(edit->operation == DELETE)
 
     // output diff tag start
@@ -564,13 +564,14 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
+  // find the last open tag that needs to be closed
   int last_open;
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   //last_open;
   xmlNodePtr node = (*rbuf->context)[last_open];
 
-  // output diff
+  // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
   unsigned int i;
   for(i = 0; i < rbuf->buffer->size(); ++i) {
@@ -586,6 +587,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     }
   }
 
+  // may need to be output until close
+  // check if last node is text node and output
   if(i == (rbuf->buffer->size() - 1)) {
     bnode = (*rbuf->buffer)[i];
     if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
@@ -595,7 +598,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     }
   }
 
-  // output diff tags and elements after match on delete
+  // output ending diff tags
   if(edit->operation == DELETE)
 
     // output diff tag
@@ -605,6 +608,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
+  // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 }
