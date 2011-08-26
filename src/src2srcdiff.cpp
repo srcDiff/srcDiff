@@ -589,6 +589,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     bnode = (*rbuf->buffer)[i];
     if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
 
+      ++i;
       outputNode(*bnode, writer);
     }
   }
@@ -603,6 +604,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
+  for(; i < rbuf->buffer->size(); ++i)
+    outputNode(*(*rbuf->buffer)[i], writer);
 }
 
 // output a change
