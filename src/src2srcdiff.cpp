@@ -681,12 +681,14 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   }
 
+  unsigned int j = 0;
   for(int i = rbuf->in_diff->size() - open_count; i > 0 && (*rbuf->in_diff)[i]; --i) {
 
-    xmlNodePtr node = (*rbuf->buffer)[i];
+    xmlNodePtr node = (*rbuf->context)[i];
+
   // output diff
-  for(unsigned int i = 0; i < diff_end; ++i)
-    outputNode(*(*rbuf->buffer)[i], writer);
+    for(; j < rbuf->buffer->size(); ++j)
+    outputNode(*(*rbuf->buffer)[j], writer);
   }
 
 
