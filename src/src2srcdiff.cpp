@@ -695,7 +695,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
       outputNode(*(*rbuf->buffer)[j], writer);
 
-      if(bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
+      if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
         ++j;
         break;
@@ -703,9 +703,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     }
   }
 
-
-  if(!in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
+  //if(!in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
+  //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n"));
 
   // output diff tags and elements after match on delete
   if(edit->operation == DELETE)
@@ -718,7 +717,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
   // output diff
-  for(unsigned int i = diff_end; i < rbuf->buffer->size(); ++i)
+  for(unsigned int i = j; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
 
   //if(in_diff_count && ((rbuf->has_end_nl && rbuf->line_number == rbuf->num_lines) || (rbuf->line_number != rbuf->num_lines)))
