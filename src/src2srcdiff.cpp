@@ -66,6 +66,9 @@ void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTe
 // advances to next line of xml (used for new file)
 void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
+// compares a line supposed to be the same and output the correrct elements
+void compare_same_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer);
+
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct edit * edit);
 
@@ -469,6 +472,59 @@ void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
       update_in_diff(rbuf, reader, false);
 
       // get next node
+      not_done = xmlTextReaderRead(reader);
+    }
+}
+
+// compares a line supposed to be the same and output the correrct elements
+void compare_same_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
+
+  int not_done = 1;
+  while(not_done)
+
+    // look if in text node
+    if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
+
+      // allocate character buffer if empty
+      if(!rbuf->characters)
+        rbuf->characters = (unsigned char *)xmlTextReaderConstValue(reader);
+
+      // cycle through characters
+      for (; *rbuf->characters != 0; ++rbuf->characters) {
+
+        // escape characters or print out character
+        if (*rbuf->characters == '&')
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&amp;"));
+        else if (*rbuf->characters == '<')
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&lt;"));
+        else if (*rbuf->characters == '>')
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&gt;"));
+        else
+          xmlTextWriterWriteRawLen(writer, rbuf->characters, 1);
+
+        // increase new line count and exit
+        if((*rbuf->characters) == '\n') {
+
+          ++rbuf->characters;
+          return;
+        }
+      }
+
+      // end text node if finished and get next node
+      if(!(*rbuf->characters)) {
+
+        rbuf->characters = NULL;
+
+        not_done = xmlTextReaderRead(reader);
+      }
+    }
+    else {
+
+      update_context(rbuf, reader);
+      update_in_diff(rbuf, reader, false);
+
+      // output non-text node and get next node
+      outputXML(reader, writer);
       not_done = xmlTextReaderRead(reader);
     }
 }
