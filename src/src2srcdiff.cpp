@@ -270,10 +270,10 @@ int main(int argc, char * argv[]) {
 
       // add preceeding unchanged
       if(edits->operation == DELETE)
-        for(int j = last_diff; j < edits->offset_sequence_one; ++rbuf_old.line_number, ++j)
+        for(int j = last_diff; j < edits->offset_sequence_one; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
           compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
       else
-        for(int j = last_diff; j < edits->offset_sequence_one + 1; ++rbuf_old.line_number, ++j)
+        for(int j = last_diff; j < edits->offset_sequence_one + 1; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
           compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
 
       // detect and change
