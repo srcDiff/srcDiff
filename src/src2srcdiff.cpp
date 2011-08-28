@@ -480,7 +480,7 @@ void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer) {
 
   int not_done = 1;
-  while(not_done)
+  while(not_done) {
 
     if(!(*getCurrentNode(reader_old) == *getCurrentNode(reader_new)))
       fprintf(stderr, "Correct\n");
@@ -538,6 +538,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       not_done = xmlTextReaderRead(reader_old);
       xmlTextReaderRead(reader_new);
     }
+  }
 }
 
 // collect the differnces
