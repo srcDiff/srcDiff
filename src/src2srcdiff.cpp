@@ -67,7 +67,7 @@ void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTe
 void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
 // compares a line supposed to be the same and output the correrct elements
-void compare_same_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer);
+void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct edit * edit);
