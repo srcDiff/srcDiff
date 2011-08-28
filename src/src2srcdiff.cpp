@@ -482,7 +482,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int not_done = 1;
   while(not_done)
 
-    if(!(getCurrentNode(reader_old) == getCurrent(reader_new)));
+    if(!(getCurrentNode(reader_old) == getCurrent(reader_new)))
+      fprintf("Correct\n");
 
     // look if in text node
     if(xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_TEXT) {
