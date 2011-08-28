@@ -486,8 +486,10 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     if(xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_TEXT) {
 
       // allocate character buffer if empty
-      if(!rbuf_old->characters)
+      if(!rbuf_old->characters) {
         rbuf_old->characters = (unsigned char *)xmlTextReaderConstValue(reader_old);
+        rbuf_new->characters = (unsigned char *)xmlTextReaderConstValue(reader_new);
+      }
 
       // cycle through characters
       for (; *rbuf_old->characters != 0; ++rbuf_old->characters) {
@@ -506,6 +508,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         if((*rbuf_old->characters) == '\n') {
 
           ++rbuf_old->characters;
+          ++rbuf_new->characters;
           return;
         }
       }
@@ -514,6 +517,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       if(!(*rbuf_old->characters)) {
 
         rbuf_old->characters = NULL;
+        rbuf_new->characters = NULL;
 
         not_done = xmlTextReaderRead(reader_old);
         xmlTextReaderRead(reader_new);
