@@ -516,16 +516,20 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         rbuf_old->characters = NULL;
 
         not_done = xmlTextReaderRead(reader_old);
+        xmlTextReaderRead(reader_new);
       }
     }
     else {
 
       update_context(rbuf_old, reader_old);
       update_in_diff(rbuf_old, reader_old, false);
+      update_context(rbuf_new, reader_new);
+      update_in_diff(rbuf_new, reader_new, false);
 
       // output non-text node and get next node
       outputXML(reader_old, writer);
       not_done = xmlTextReaderRead(reader_old);
+      xmlTextReaderRead(reader_new);
     }
 }
 
