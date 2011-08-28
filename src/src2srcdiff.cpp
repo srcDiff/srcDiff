@@ -482,7 +482,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int not_done = 1;
   while(not_done) {
 
-    if(!(*getCurrentNode(reader_old) == *getCurrentNode(reader_new)))
+    if(strcmp((const char *)getCurrentNode(reader_old), (const char *)getCurrentNode(reader_new)) != 0)
       fprintf(stderr, "Correct\n");
 
     // look if in text node
