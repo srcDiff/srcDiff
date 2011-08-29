@@ -486,7 +486,15 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       // check close in old
       if((xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
+        
+        while(not_done && (xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
 
+          
+      update_context(rbuf_old, reader_old);
+      update_in_diff(rbuf_old, reader_old, false);
+      not_done = xmlTextReaderRead(reader_old);
+      xmlTextReaderRead(reader_new);
+        }
       }
 
       // check close in new
