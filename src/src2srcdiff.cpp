@@ -477,18 +477,18 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int not_done = 1;
   while(not_done) {
 
-    if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
+    if(strcmp((const char *)getCurrentNode(reader_old)->name, (const char *)getCurrentNode(reader_new)->name) != 0) {
 
       // check close in old
-      if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") != 0) {
+      if((xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getCurrentNode(reader_old)->name, "unit") != 0) {
 
         // output diff tag start
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
         // may need to check if is open in diff
-        while(not_done && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") != 0) {
+        while(not_done && (xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getCurrentNode(reader_old)->name, "unit") != 0) {
 
-          outputNode(*getRealCurrentNode(reader_old), writer);
+          outputNode(*getCurrentNode(reader_old), writer);
 
           update_context(rbuf_old, reader_old);
           update_in_diff(rbuf_old, reader_old, false);
@@ -500,15 +500,15 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       }
 
       // check close in new
-      if((xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_new)->name, "unit") != 0) {
+      if((xmlReaderTypes)getCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getCurrentNode(reader_new)->name, "unit") != 0) {
 
         // output diff tag start
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
         // may need to check if is open in diff
-        while(not_done && (xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_new)->name, "unit") != 0) {
+        while(not_done && (xmlReaderTypes)getCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getCurrentNode(reader_new)->name, "unit") != 0) {
 
-          outputNode(*getRealCurrentNode(reader_new), writer);
+          outputNode(*getCurrentNode(reader_new), writer);
 
           update_context(rbuf_new, reader_new);
           update_in_diff(rbuf_new, reader_new, false);
@@ -648,7 +648,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       update_in_diff(rbuf, reader, true);
 
       // save non-text node and get next node
-      rbuf->buffer->push_back(getRealCurrentNode(reader));
+      rbuf->buffer->push_back(getCurrentNode(reader));
 
       not_done = xmlTextReaderRead(reader);
     }
@@ -794,8 +794,8 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new) {
 
   // get units from source code
-  xmlNodePtr unit = getRealCurrentNode(reader_old);
-  xmlNodePtr unit_new = getRealCurrentNode(reader_old);
+  xmlNodePtr unit = getCurrentNode(reader_old);
+  xmlNodePtr unit_new = getCurrentNode(reader_old);
 
   // add diff namespace
   addNamespace(&unit->nsDef, &diff);
@@ -819,7 +819,7 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
-  xmlNodePtr node = getRealCurrentNode(reader);
+  xmlNodePtr node = getCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     rbuf->context->push_back(node);
@@ -834,7 +834,7 @@ void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
 void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff) {
 
-  xmlNodePtr node = getRealCurrentNode(reader);
+  xmlNodePtr node = getCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     rbuf->in_diff->push_back(indiff);
