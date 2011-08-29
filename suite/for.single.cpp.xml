@@ -7,19 +7,19 @@
 <diff:old status="start"/>}</block></for><diff:old status="end"/></unit>
 
 <unit>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="start"/>}</block></for>
 <diff:old status="end"/></unit>
 
 <unit>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="start"/>}</block></for>
 <diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 <unit>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="start"/>}</block></for>
 <diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -27,24 +27,24 @@
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></for><diff:old status="end"/></unit>
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></for>
 <diff:old status="end"/></unit>
 
 <unit>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
+<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></for><diff:old status="end"/>
 </unit>
 
 <unit>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
+<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></for><diff:old status="end"/></unit>
 
 </unit>
