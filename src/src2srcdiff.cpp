@@ -319,7 +319,7 @@ int main(int argc, char * argv[]) {
     }
 
     for(unsigned int j = last_diff; j < lines1.size(); ++rbuf_old.line_number, ++j)
-      output_xml_line(&rbuf_old, reader_old, writer);
+      compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
 
   }
 
