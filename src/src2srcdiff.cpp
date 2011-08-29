@@ -493,6 +493,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         // may need to check if is open in diff
         while(not_done && (xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
 
+          outputNode(*getCurrentNode(reader_old), writer);
+
           update_context(rbuf_old, reader_old);
           update_in_diff(rbuf_old, reader_old, false);
           not_done = xmlTextReaderRead(reader_old);
@@ -510,6 +512,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
         // may need to check if is open in diff
         while(not_done && (xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
+
+          outputNode(*getCurrentNode(reader_new), writer);
 
           update_context(rbuf_new, reader_new);
           update_in_diff(rbuf_new, reader_new, false);
