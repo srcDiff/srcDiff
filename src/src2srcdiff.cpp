@@ -283,9 +283,6 @@ int main(int argc, char * argv[]) {
 
         collect_difference(&rbuf_old, reader_old, edits);
 
-        for(; rbuf_new.line_number < edits->next->offset_sequence_two; ++rbuf_new.line_number)
-          next_xml_line(&rbuf_new, reader_new);
-
         collect_difference(&rbuf_new, reader_new, edits->next);
 
         output_double(&rbuf_old, &rbuf_new, edits, writer);
@@ -299,8 +296,6 @@ int main(int argc, char * argv[]) {
       switch (edits->operation) {
 
       case INSERT:
-        for(; rbuf_new.line_number < edits->offset_sequence_two; ++rbuf_new.line_number)
-          next_xml_line(&rbuf_new, reader_new);
 
         collect_difference(&rbuf_new, reader_new, edits);
         output_single(&rbuf_new, edits, writer);
