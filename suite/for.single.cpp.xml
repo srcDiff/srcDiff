@@ -2,24 +2,24 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="for.single">
 
 <unit>
-<diff:old status="start"/><for>for<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="start"/>}</block></for><diff:old status="end"/></unit>
 
 <unit>
-<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="start"/>}</block></for>
 <diff:old status="end"/></unit>
 
 <unit>
-<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="start"/>}</block></for>
 <diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 <unit>
-<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="start"/>}</block></for>
 <diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -27,24 +27,24 @@
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></for><diff:old status="end"/></unit>
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>) <block>{
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></for>
 <diff:old status="end"/></unit>
 
 <unit>
-<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></for><diff:old status="end"/>
 </unit>
 
 <unit>
-<diff:old status="start"/><for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
+<diff:old status="start"/><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></for><diff:old status="end"/></unit>
 
 </unit>
