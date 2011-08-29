@@ -480,7 +480,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     if(strcmp((const char *)getCurrentNode(reader_old)->name, (const char *)getCurrentNode(reader_new)->name) != 0) {
 
       // check close in old
-      if((xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
+      if((xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getCurrentNode(reader_old)->name, "unit") != 0) {
 
         // output diff tag start
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -500,7 +500,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       }
 
       // check close in new
-      if((xmlReaderTypes)getCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
+      if((xmlReaderTypes)getCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getCurrentNode(reader_old)->name, "unit") != 0) {
 
         // output diff tag start
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
