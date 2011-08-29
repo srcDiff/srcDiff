@@ -455,7 +455,7 @@ try:
 						if result != "":
 							error_count += 1
 							
-							errorlist.append((directory + " " + language, count * 2 + 1, result))
+							errorlist.append((directory + " " + language, count * 2, result))
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(count * 2) + "\033[0m",
