@@ -485,12 +485,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     if(strcmp((const char *)getCurrentNode(reader_old), (const char *)getCurrentNode(reader_new)) != 0) {
 
       // check close in old
-      if(getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
+      if((xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
 
       }
 
       // check close in new
-      if(getCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
+      if((xmlReaderTypes)getCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
       }
 
     }
