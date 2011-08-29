@@ -43,4 +43,8 @@
 <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></then></if><diff:old status="end"/>
 </unit>
 
+<unit>
+<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></then></if><diff:old status="end"/></unit>
+
 </unit>
