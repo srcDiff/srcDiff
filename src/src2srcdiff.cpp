@@ -506,7 +506,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
         // may need to check if is open in diff
-        while(not_done && (xmlReaderTypes)getCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
+        while(not_done && (xmlReaderTypes)getCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
 
           outputNode(*getCurrentNode(reader_new), writer);
 
