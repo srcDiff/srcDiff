@@ -98,22 +98,6 @@ int main(int argc, char * argv[]) {
 
   const char * srcdiff_file;
   srcdiff_file = "/dev/stdout";
-  /*
-    if(argc < 4) {
-
-    srcdiff_file = "/dev/stdout";
-    }
-    else {
-
-    if(strcmp(argv[1], argv[3]) == 0 || strcmp(argv[2], argv[3]) == 0) {
-
-    fprintf(stderr, "Input and output file must be different\n");
-    return 1;
-    }
-
-    srcdiff_file = argv[3];
-    }
-  */
 
   /*
     Compute the differences between the two source files
