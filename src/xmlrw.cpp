@@ -185,7 +185,7 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
   case XML_READER_TYPE_ELEMENT:
 
     // record if this is an empty element since it will be erased by the attribute copying
-    isemptyelement = node.extra & 0x1;
+    isemptyelement = node.extra > 1;
 
     // start the element
     if (node.ns && node.ns->prefix) {
