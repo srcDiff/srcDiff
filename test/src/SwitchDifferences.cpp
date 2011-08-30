@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
 
       xmlNodePtr node = getRealCurrentNode(reader);
 
-      if(strcmp((const char *)node->name, "old") == 0) {
+      if(!exited_out_diff && strcmp((const char *)node->name, "old") == 0) {
 
         if(in_out_diff)
           exited_out_diff = true;
@@ -99,6 +99,16 @@ int main(int argc, char * argv[]) {
           wait_out_diff = true;
 
         exited_out_diff = false;
+        
+        if(strcmp((const char *)node->name, "old") == 0) {
+
+          if(in_out_diff)
+            exited_out_diff = true;
+
+          in_out_diff = !in_out_diff;
+          continue;
+        }
+
       } else if(end_wait_diff) {
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
