@@ -22,6 +22,9 @@
   Useful xml Reader Writer functions
 */
 
+#ifndef __INCLUDED_XMLRW_CPP
+#define __INCLUDED_XMLRW_CPP
+
 #include "xmlrw.h"
 #include <iostream>
 #include <cstring>
@@ -182,7 +185,7 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
   case XML_READER_TYPE_ELEMENT:
 
     // record if this is an empty element since it will be erased by the attribute copying
-    isemptyelement = node.extra > 1;
+    isemptyelement = node.extra & 0x1;
 
     // start the element
     if (node.ns && node.ns->prefix) {
@@ -264,3 +267,5 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
     break;
   }
 }
+
+#endif
