@@ -5,4 +5,7 @@
 <diff:old status="start"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old status="end"/></unit>
 
+<unit>
+<diff:old status="start"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="end"/></unit>
+
 </unit>
