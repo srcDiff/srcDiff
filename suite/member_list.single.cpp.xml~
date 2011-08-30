@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="constuctor.single">
+
+<unit>
+<diff:old status="start"/><constructor><name><name>Object</name><op:operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+<diff:old status="end"/></unit>
+
+<unit>
+<diff:old status="start"/><constructor><name><name>Object</name><op:operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+<diff:old status="end"/></unit>
+
+</unit>
