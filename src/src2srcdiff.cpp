@@ -25,7 +25,7 @@
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
 // constant template for temporary file names
-char * srcdiff_template = (char *)"srcdifftemp.XXX";
+char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
 xmlNs diff =  { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", NULL};
 
 // diff accessor function
