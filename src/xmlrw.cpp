@@ -22,9 +22,6 @@
   Useful xml Reader Writer functions
 */
 
-#ifndef __INCLUDED_XMLRW_CPP
-#define __INCLUDED_XMLRW_CPP
-
 #include "xmlrw.h"
 #include <iostream>
 #include <cstring>
@@ -267,5 +264,3 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
     break;
   }
 }
-
-#endif
