@@ -788,7 +788,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   */
 
   struct edit * edit_script;
-  //int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
+  int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
 
 }
 
