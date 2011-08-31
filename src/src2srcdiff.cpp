@@ -838,8 +838,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-    for(int j = 0; j < edits->length; ++j)
-          outputNode(*(*rbuf_old->buffer)[edits->offset_sequence_one + j], writer);
+    for(int j = 0; j < edit_next->length; ++j)
+          outputNode(*(*rbuf_new->buffer)[edit_next->offset_sequence_one + j], writer);
 
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
@@ -852,8 +852,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
-    for(int j = 0; j < edit_next->length; ++j)
-          outputNode(*(*rbuf_new->buffer)[edit_next->offset_sequence_one + j], writer);
+    for(int j = 0; j < edits->length; ++j)
+          outputNode(*(*rbuf_old->buffer)[edits->offset_sequence_one + j], writer);
 
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
