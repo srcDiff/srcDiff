@@ -44,8 +44,8 @@ int line_compare(const void * e1, const void * e2) {
 
 // diff node accessor function
 const void * node_index(int idx, const void *s) {
-  std::vector<xmlNode *> & nodess = *(std::vector<xmlNode *> *)s;
-  return nodess[idx];
+  std::vector<xmlNode *> & nodes = *(std::vector<xmlNode *> *)s;
+  return nodes[idx];
 }
 
 // diff node comparison function
