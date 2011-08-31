@@ -796,11 +796,12 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       // add preceeding unchanged
       if(edits->operation == DELETE)
-        for(int j = last_diff; j < edits->offset_sequence_one; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
-          ;
+        for(int j = last_diff; j < edits->offset_sequence_one; ++j)
+          outputNode(*(*rbuf_old->buffer)[i], writer);
+
       else
-        for(int j = last_diff; j < edits->offset_sequence_one + 1; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
-          ;
+        for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j)
+          outputNode(*(*rbuf_old->buffer)[i], writer);
 
       // detect and change
       struct edit * edit_next = edits->next;
