@@ -787,6 +787,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     outputNode(*(*rbuf_old->buffer)[i], writer);
   */
 
+  struct edit * edit_script;
+  //int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
+
 }
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
