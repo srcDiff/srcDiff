@@ -815,6 +815,9 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
     *nsDef = ns;
     */
 
+  struct edit * edit_script;
+  //  int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
+
 }
 
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
