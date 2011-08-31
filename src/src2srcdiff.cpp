@@ -826,9 +826,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         break;
       }
 
-    for(unsigned int j = last_diff; j < rbuf_old->size(); ++j)
+      for(unsigned int j = last_diff; j < rbuf_old->size(); ++j)
           outputNode(*(*rbuf_old->buffer)[j], writer);
-
 }
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
