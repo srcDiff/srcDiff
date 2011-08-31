@@ -790,6 +790,40 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
 
+  int last_diff = 0;
+    struct edit * edits = edit_script;
+    for (; edits; edits = edits->next) {
+
+      // add preceeding unchanged
+      if(edits->operation == DELETE)
+        for(int j = last_diff; j < edits->offset_sequence_one; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
+          ;
+      else
+        for(int j = last_diff; j < edits->offset_sequence_one + 1; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
+          ;
+
+      // detect and change
+      struct edit * edit_next = edits->next;
+      if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
+         && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
+
+        last_diff = edits->offset_sequence_one + edits->length;
+        edits = edits->next;
+        continue;
+      }
+
+      // handle pure delete or insert
+      switch (edits->operation) {
+
+      case INSERT:
+
+        last_diff = edits->offset_sequence_one + 1;
+        break;
+      case DELETE:
+
+        last_diff = edits->offset_sequence_one + edits->length;
+        break;
+      }
 }
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
