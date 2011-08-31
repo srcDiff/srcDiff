@@ -42,20 +42,6 @@ int line_compare(const void * e1, const void * e2) {
   return strcmp(str1, str2);
 }
 
-// diff node accessor function
-const void * node_index(int idx, const void *s) {
-  std::vector<xmlNode *> & lines = *(std::vector<xmlNode *> *)s;
-  return lines[idx];
-}
-
-// diff node comparison function
-int node_compare(const void * e1, const void * e2) {
-  xmlNode * node1 = (xmlNode *)e1;
-  xmlNode * node2 = (xmlNode *)e2;
-
-  return node1 == node2;
-}
-
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
@@ -718,7 +704,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 // output a change
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new,  struct edit * edit, xmlTextWriterPtr writer) {
 
-  /*
   // move left change pointer
   unsigned int start = 0;
   for(; start < rbuf_old->buffer->size() && start < rbuf_new->buffer->size() && (*rbuf_old->buffer)[start]->type == (*rbuf_new->buffer)[start]->type && strcmp((const char *)(*rbuf_old->buffer)[start]->name, (const char *)(*rbuf_new->buffer)[start]->name) == 0; ++start)
@@ -813,10 +798,6 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
   }
   else
     *nsDef = ns;
-    */
-
-  struct edit * edit_script;
-  int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
 
 }
 
