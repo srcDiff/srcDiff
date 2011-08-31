@@ -797,11 +797,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // add preceeding unchanged
       if(edits->operation == DELETE)
         for(int j = last_diff; j < edits->offset_sequence_one; ++j)
-          outputNode(*(*rbuf_old->buffer)[i], writer);
+          outputNode(*(*rbuf_old->buffer)[j], writer);
 
       else
         for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j)
-          outputNode(*(*rbuf_old->buffer)[i], writer);
+          outputNode(*(*rbuf_old->buffer)[j], writer);
 
       // detect and change
       struct edit * edit_next = edits->next;
@@ -825,6 +825,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         last_diff = edits->offset_sequence_one + edits->length;
         break;
       }
+
+    for(unsigned int j = last_diff; j < rbuf_old->size(); ++j)
+          outputNode(*(*rbuf_old->buffer)[j], writer);
 }
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
