@@ -42,6 +42,20 @@ int line_compare(const void * e1, const void * e2) {
   return strcmp(str1, str2);
 }
 
+// diff node accessor function
+const void * node_index(int idx, const void *s) {
+  std::vector<xmlNode *> & nodess = *(std::vector<xmlNode *> *)s;
+  return nodess[idx];
+}
+
+// diff node comparison function
+int node_compare(const void * e1, const void * e2) {
+  xmlNode * node1 = (xmlNode *)e1;
+  xmlNode * node2 = (xmlNode *)e2;
+
+  return node1 == node2;
+}
+
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
