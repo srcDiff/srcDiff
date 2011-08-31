@@ -53,7 +53,7 @@ int node_compare(const void * e1, const void * e2) {
   xmlNode * node1 = (xmlNode *)e1;
   xmlNode * node2 = (xmlNode *)e2;
 
-  return node1 == node2
+  return node1 == node2;
 }
 
 // converts source code to srcML
