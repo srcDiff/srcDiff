@@ -786,6 +786,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     outputNode(*(*rbuf_old->buffer)[i], writer);
   */
 
+  struct edit * edit_script;
+
 }
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
