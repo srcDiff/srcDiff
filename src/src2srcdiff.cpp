@@ -44,7 +44,7 @@ int line_compare(const void * e1, const void * e2) {
 
 // diff node accessor function
 const void * node_index(int idx, const void *s) {
-  std::vector<xmlNode *> & lines = *(std::vector<const char *> *)s;
+  std::vector<xmlNode *> & lines = *(std::vector<xmlNode *> *)s;
   return lines[idx];
 }
 
@@ -816,7 +816,7 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
     */
 
   struct edit * edit_script;
-  int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, line_compare, line_index, &edit_script);
+  int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
 
 }
 
