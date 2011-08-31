@@ -53,7 +53,16 @@ int node_compare(const void * e1, const void * e2) {
   xmlNode * node1 = (xmlNode *)e1;
   xmlNode * node2 = (xmlNode *)e2;
 
-  return node1 == node2;
+  if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
+
+    // end if text node contents differ
+    if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
+      return strcmp((const char *)node1->content, (const char *)node2->content) == 0;
+    else
+      return 1;
+  }
+
+  return 0;
 }
 
 // converts source code to srcML
