@@ -719,6 +719,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 // output a change
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new,  struct edit * edit, xmlTextWriterPtr writer) {
 
+  /*
   // move left change pointer
   unsigned int start = 0;
   for(; start < rbuf_old->buffer->size() && start < rbuf_new->buffer->size() && (*rbuf_old->buffer)[start]->type == (*rbuf_new->buffer)[start]->type && strcmp((const char *)(*rbuf_old->buffer)[start]->name, (const char *)(*rbuf_new->buffer)[start]->name) == 0; ++start)
@@ -784,6 +785,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   // output nodes after change from old
   for(unsigned int i = (rbuf_old->buffer->size() - end) + 1; i < rbuf_old->buffer->size(); ++i)
     outputNode(*(*rbuf_old->buffer)[i], writer);
+  */
 
 }
 
