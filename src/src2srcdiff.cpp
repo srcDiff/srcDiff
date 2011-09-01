@@ -633,7 +633,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
         }
       }
 
-
       // end and save text node if finished and get next node
       if(!(*rbuf->characters)) {
 
