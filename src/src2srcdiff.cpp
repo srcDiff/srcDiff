@@ -622,7 +622,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
         // increase new line count and check if end of diff
         if((*rbuf->characters) == '\n') {
 
-          ++rbuf->characters;
           ++rbuf->line_number;
 
             xmlNode * text = new xmlNode;
@@ -637,6 +636,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 
             // check if end of diff and create text node for text fragment
             if(rbuf->line_number == (edit->operation == DELETE ? edit->offset_sequence_one : edit->offset_sequence_two) + edit->length) {
+
+              ++rbuf->characters;
 
             return;
           }
