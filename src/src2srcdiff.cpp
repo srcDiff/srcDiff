@@ -608,6 +608,11 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       // cycle through characters
       for (; *rbuf->characters != 0; ++rbuf->characters) {
 
+        // separte non whitespace
+        if((*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\n') {
+
+        }
+
         // increase new line count and check if end of diff
         if((*rbuf->characters) == '\n') {
 
