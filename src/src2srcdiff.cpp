@@ -749,9 +749,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
       // look for pure whitespace change
-      if(1) {
-
-      }
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
