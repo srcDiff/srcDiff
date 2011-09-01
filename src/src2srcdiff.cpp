@@ -756,6 +756,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
          && edits->length == 1 && edit_next->length == 1) {
 
         int whitespace_length_old = strspn((const char *)(*rbuf_old->buffer)[edits->offset_sequence_one]->content, " \t\r\n");
+        int whitespace_length_new = strspn((const char *)(*rbuf_new->buffer)[edit_next->offset_sequence_two]->content, " \t\r\n");
 
       }
 
