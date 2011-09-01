@@ -628,12 +628,11 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
             text->type = (xmlElementType)XML_READER_TYPE_TEXT;
             text->name = (const xmlChar *)"text";
 
-            const char * content = strndup((const char *)characters_start, rbuf->characters - characters_start);
+            const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
             text->content = (xmlChar *)content;
             rbuf->buffer->push_back(text);
 
-            characters_start = rbuf->characters;
-            --rbuf->characters;
+            characters_start = rbuf->characters + 1;
 
             // check if end of diff and create text node for text fragment
             if(rbuf->line_number == (edit->operation == DELETE ? edit->offset_sequence_one : edit->offset_sequence_two) + edit->length) {
