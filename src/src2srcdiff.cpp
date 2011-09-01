@@ -633,10 +633,11 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
             rbuf->buffer->push_back(text);
 
             characters_start = rbuf->characters;
+            --rbuf->characters;
 
             // check if end of diff and create text node for text fragment
             if(rbuf->line_number == (edit->operation == DELETE ? edit->offset_sequence_one : edit->offset_sequence_two) + edit->length) {
-
+              
               ++rbuf->characters;
 
             return;
