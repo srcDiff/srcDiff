@@ -755,6 +755,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
          && (xmlReaderTypes)(*rbuf_old->buffer)[edits->offset_sequence_one]->type == XML_READER_TYPE_TEXT
          && edits->length == 1 && edit_next->length == 1) {
 
+        int whitespace_length_one = strspn((*rbuf_old->buffer)[edits->offset_sequence_one]->contents, " \t\r\n");
+
       }
 
       // output diff tag
