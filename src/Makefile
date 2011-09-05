@@ -50,16 +50,26 @@ LIBSRCML_LIB = ../bin/
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
+ifdef MINGW32
+EXE = $(EXE_DIR)src2srcdiff.exe
+else
 EXE = $(EXE_DIR)src2srcdiff
+endif
 
 
 all : ${EXE}
+
+mingw32 : 
+	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
 
 $(OBJ_DIR)src2srcdiff.o : src2srcdiff.cpp shortest_edit_script.h xmlrw.h diffrw.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(EXE_DIR)src2srcdiff : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.a $(LDFLAGS) ${XML_LIB_SRC2SRCDIFF} ${XML_IO_LIB} -o $@
+
+$(EXE_DIR)src2srcdiff.exe : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.dll $(LDFLAGS) ${XML_LIB_SRC2SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
 	g++ -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@

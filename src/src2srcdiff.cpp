@@ -17,6 +17,11 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#ifdef __MINGW32__ 
+#include <string.h>
+#include <io.h>
+#endif
+
 #include "xmlrw.h"
 #include "diffrw.h"
 
