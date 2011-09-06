@@ -821,7 +821,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           int end_old = size_old - 1;
           int end_new = size_new - 1;
 
-          while(content_old[end_old] == content_new[end_new]) {
+          while(end_old >= 0 && end_new >= 0 && content_old[end_old] == content_new[end_new]) {
 
             --end_old;
             --end_new;
