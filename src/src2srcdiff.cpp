@@ -815,6 +815,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         int size_old = strlen((const char *)(*rbuf_old->buffer)[edits->offset_sequence_one]->content);
         int size_new = strlen((const char *)(*rbuf_new->buffer)[edit_next->offset_sequence_two]->content);
+
+        if(whitespace_length_old = size_old && whitespace_length_new = size_new) {
+        }
       }
 
       // output diff tag
