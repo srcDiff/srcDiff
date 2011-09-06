@@ -17,7 +17,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#ifdef __MINGW32__ 
+#ifdef __MINGW32__
 #include <string.h>
 #include <io.h>
 
@@ -821,6 +821,31 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           int end_old = size_old - 1;
           int end_new = size_new - 1;
 
+          while(content_old[end_old] == content_new[end_new]) {
+
+            --end_old;
+            --end_new;
+          }
+
+
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+          last_diff = edits->offset_sequence_one + edits->length;
+          edits = edits->next;
+          continue;
         }
       }
 
