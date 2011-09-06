@@ -821,6 +821,24 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
             --end_new;
           }
 
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+          last_diff = edits->offset_sequence_one + edits->length;
+          edits = edits->next;
+          continue;
         }
 
       }
