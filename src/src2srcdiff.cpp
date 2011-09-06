@@ -812,7 +812,15 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         if(whitespace_length_old == rbuf_old->buffer->size() && whitespace_length_new == rbuf_new->buffer->size()) {
 
-          
+          int end_old = rbuf_old->buffer->size() - 1;
+          int end_new = rbuf_new->buffer->size() - 1;
+
+          while((*rbuf_old->buffer)[end_old] == (*rbuf_new->buffer)[end_new]) {
+
+            --end_old;
+            --end_new;
+          }
+
         }
 
       }
