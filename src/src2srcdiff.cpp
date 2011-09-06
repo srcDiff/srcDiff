@@ -817,6 +817,10 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         int size_new = strlen((const char *)(*rbuf_new->buffer)[edit_next->offset_sequence_two]->content);
 
         if(whitespace_length_old = size_old && whitespace_length_new = size_new) {
+
+          int end_old = size_old - 1;
+          int end_new = size_new - 1;
+
         }
       }
 
