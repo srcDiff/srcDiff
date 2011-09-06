@@ -1,4 +1,4 @@
-# set compiler version to match that of antlr library
+0;136;0c# set compiler version to match that of antlr library
 CXX=/usr/bin/g++
 
 # associated text tools
@@ -72,10 +72,10 @@ $(EXE_DIR)src2srcdiff.exe : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_scr
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.dll $(LDFLAGS) ${XML_LIB_SRC2SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
-	g++ -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@
+	${CXX} -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@
 
 $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h
-	g++ -c $< -o $@
+	${CXX} -c $< -o $@
 
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*
