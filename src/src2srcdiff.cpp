@@ -827,23 +827,31 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
             --end_new;
           }
 
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+          if(end_old > 0) {
 
-          xmlTextWriterWriteRawLen(writer, content_old, end_old + 1);
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+            xmlTextWriterWriteRawLen(writer, content_old, end_old + 1);
 
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
-          xmlTextWriterWriteRawLen(writer, content_new, end_new + 1);
+          }
 
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+          if(end_new > 0) {
 
-          xmlTextWriterWriteRawLen(writer, content_old + end_old + 1, size_old - (end_old + 1));
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+
+            xmlTextWriterWriteRawLen(writer, content_new, end_new + 1);
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+            xmlTextWriterWriteRawLen(writer, content_old + end_old + 1, size_old - (end_old + 1));
+
+          }
 
           last_diff = edits->offset_sequence_one + edits->length;
           edits = edits->next;
