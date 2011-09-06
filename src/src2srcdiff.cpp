@@ -812,6 +812,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         xmlChar * content_old = (*rbuf_old->buffer)[edits->offset_sequence_one]->content;
         xmlChar * content_new = (*rbuf_new->buffer)[edit_next->offset_sequence_two]->content;
+
+        int size_old = strlen((const char *)(*rbuf_old->buffer)[edits->offset_sequence_one]->content);
+        int size_new = strlen((const char *)(*rbuf_new->buffer)[edit_next->offset_sequence_two]->content);
       }
 
       // output diff tag
