@@ -827,7 +827,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
             --end_new;
           }
 
-          if(end_old > 0) {
+          if(end_old >= 0) {
 
             // output diff tag
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -839,7 +839,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
           }
 
-          if(end_new > 0) {
+          if(end_new >= 0) {
 
             // output diff tag
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
