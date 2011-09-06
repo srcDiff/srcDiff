@@ -639,7 +639,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 
           }
 
-          while(*rbuf->characters != 0 && (*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\n')
+          while(*rbuf->characters != 0 && (*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\r' && (*rbuf->characters) != '\n')
             ++rbuf->characters;
 
           // output other
