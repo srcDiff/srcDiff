@@ -20,6 +20,13 @@
 #ifdef __MINGW32__ 
 #include <string.h>
 #include <io.h>
+
+char * strndup(const char * s1, size_t n) {
+
+  char * dest = (char *)malloc(n * sizeof(char) + 1);
+
+
+}
 #endif
 
 #include "xmlrw.h"
