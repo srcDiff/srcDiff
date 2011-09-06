@@ -623,7 +623,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       for (; *rbuf->characters != 0; ++rbuf->characters) {
 
         // separte non whitespace
-        if((*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\n') {
+        if((*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\r' && (*rbuf->characters) != '\n') {
 
           // output previous whitespace
           if(rbuf->characters != characters_start) {
