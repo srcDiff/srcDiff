@@ -1,4 +1,4 @@
-0;136;0c# set compiler version to match that of antlr library
+# set compiler version to match that of antlr library
 CXX=/usr/bin/g++
 
 # associated text tools
