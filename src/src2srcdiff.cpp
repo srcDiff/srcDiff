@@ -982,7 +982,7 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool i
     rbuf->in_diff->push_back(indiff);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(rbuf->context->size() == 0)
+    if(rbuf->in_diff->size() == 0)
       return;
 
     rbuf->in_diff->pop_back();
