@@ -455,7 +455,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       }
 
       // cycle through characters
-      for (; *rbuf_old->characters != 0; ++rbuf_old->characters) {
+      for (; *rbuf_old->characters != 0; ++rbuf_old->characters, ++rbuf_new->characters) {
 
         // escape characters or print out character
         if (*rbuf_old->characters == '&')
@@ -617,7 +617,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       update_context(rbuf, reader);
       update_in_diff(rbuf, reader, true);
 
-      //      fprintf(stderr, "HERE: %s\n", (const char *)getRealCurrentNode(reader)->name);
+      fprintf(stderr, "HERE: %s\n", (const char *)getRealCurrentNode(reader)->name);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getRealCurrentNode(reader));
