@@ -399,7 +399,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int not_done = 1;
   while(not_done) {
 
-    if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
+    if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
       // check close in old
       if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") != 0) {
@@ -702,7 +702,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
       // look for pure whitespace change
-      if((*rbuf_old->buffer)[edits->offset_sequence_one]->type == (*rbuf_new->buffer)[edit_next->offset_sequence_two]->type
+      if(0 && (*rbuf_old->buffer)[edits->offset_sequence_one]->type == (*rbuf_new->buffer)[edit_next->offset_sequence_two]->type
          && (xmlReaderTypes)(*rbuf_old->buffer)[edits->offset_sequence_one]->type == XML_READER_TYPE_TEXT
          && edits->length == 1 && edit_next->length == 1) {
 
@@ -786,7 +786,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     switch (edits->operation) {
 
     case INSERT:
-
+      //      fprintf(stderr, "HERE\n");
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
@@ -800,6 +800,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       last_diff = edits->offset_sequence_one + 1;
       break;
     case DELETE:
+      //      fprintf(stderr, "HERE\n");
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
