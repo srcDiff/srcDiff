@@ -533,7 +533,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
             text->name = (const xmlChar *)"text";
 
             const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
-            //fprintf(stderr, "HERE: '%s'\n", content);
             text->content = (xmlChar *)content;
             rbuf->buffer->push_back(text);
 
@@ -550,7 +549,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
           text->name = (const xmlChar *)"text";
 
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
-          //fprintf(stderr, "HERE: '%s'\n", content);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
 
@@ -571,7 +569,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
           text->name = (const xmlChar *)"text";
 
           const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
-          //fprintf(stderr, "HERE: '%s'\n", content);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
 
@@ -599,7 +596,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
           text->name = (const xmlChar *)"text";
 
           const char * content = strdup((const char *)characters_start);
-          //       fprintf(stderr, "HERE: '%s'\n", content);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
 
@@ -614,8 +610,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 
       update_context(rbuf, reader);
       update_in_diff(rbuf, reader, true);
-
-      //      fprintf(stderr, "HERE: %s\n", (const char *)getRealCurrentNode(reader)->name);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getRealCurrentNode(reader));
