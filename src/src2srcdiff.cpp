@@ -592,14 +592,18 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       if(!(*rbuf->characters)) {
 
         // create new node and buffer it
-        xmlNode * text = new xmlNode;
-        text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-        text->name = (const xmlChar *)"text";
+        if(rbuf->characters != characters_start) {
 
-        const char * content = strdup((const char *)characters_start);
-        fprintf(stderr, "HERE: '%s'\n", content);
-        text->content = (xmlChar *)content;
-        rbuf->buffer->push_back(text);
+          xmlNode * text = new xmlNode;
+          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
+          text->name = (const xmlChar *)"text";
+
+          const char * content = strdup((const char *)characters_start);
+          fprintf(stderr, "HERE: '%s'\n", content);
+          text->content = (xmlChar *)content;
+          rbuf->buffer->push_back(text);
+
+        }
 
         rbuf->characters = NULL;
 
