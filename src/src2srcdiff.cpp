@@ -301,8 +301,6 @@ int main(int argc, char * argv[]) {
 
         collect_difference(&rbuf_old, reader_old, edits);
 
-        fprintf(stderr, "HERE\n");
-
         collect_difference(&rbuf_new, reader_new, edits->next);
 
         output_double(&rbuf_old, &rbuf_new, edits, writer);
@@ -617,7 +615,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       update_context(rbuf, reader);
       update_in_diff(rbuf, reader, true);
 
-      fprintf(stderr, "HERE: %s\n", (const char *)getRealCurrentNode(reader)->name);
+      //      fprintf(stderr, "HERE: %s\n", (const char *)getRealCurrentNode(reader)->name);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getRealCurrentNode(reader));
