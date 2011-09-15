@@ -455,7 +455,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       }
 
       // cycle through characters
-      for (; *rbuf_old->characters != 0; ++rbuf_old->characters, ++rbuf_new->characters) {
+      for (; *rbuf_old->characters != 0; ++rbuf_old->characters) {
 
         // escape characters or print out character
         if (*rbuf_old->characters == '&')
