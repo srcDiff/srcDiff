@@ -607,6 +607,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
       update_context(rbuf, reader);
       update_in_diff(rbuf, reader, true);
 
+      //      fprintf(stderr, "HERE: %s\n", (const char *)getRealCurrentNode(reader)->name);
+
       // save non-text node and get next node
       rbuf->buffer->push_back(getRealCurrentNode(reader));
 
