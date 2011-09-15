@@ -595,7 +595,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 
         const char * content = strdup((const char *)characters_start);
         text->content = (xmlChar *)content;
-        fprintf(stderr, "HERE: '%s'\n", content);
         rbuf->buffer->push_back(text);
 
         rbuf->characters = NULL;
