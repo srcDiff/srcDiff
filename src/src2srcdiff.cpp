@@ -703,6 +703,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
+      //      fprintf(stderr, "HERE\n");
+
       // look for pure whitespace change
       if(0 && (*rbuf_old->buffer)[edits->offset_sequence_one]->type == (*rbuf_new->buffer)[edit_next->offset_sequence_two]->type
          && (xmlReaderTypes)(*rbuf_old->buffer)[edits->offset_sequence_one]->type == XML_READER_TYPE_TEXT
