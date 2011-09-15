@@ -99,12 +99,6 @@ struct reader_buffer {
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
-// outputs a line of xml (used for old file)
-void output_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer);
-
-// advances to next line of xml (used for new file)
-void next_xml_line(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
-
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
@@ -120,10 +114,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
 void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff);
-
-void update_context(struct reader_buffer * rbuf, xmlNodePtr node);
-
-void update_in_diff(struct reader_buffer * rbuf, xmlNodePtr node, bool indiff);
 
 int main(int argc, char * argv[]) {
 
