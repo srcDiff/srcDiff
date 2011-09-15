@@ -399,7 +399,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int not_done = 1;
   while(not_done) {
 
-    if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
+    if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
       // check close in old
       if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") != 0) {
