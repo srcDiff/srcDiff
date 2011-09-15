@@ -961,9 +961,6 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
-  if(xmlTextReaderIsEmptyElement(reader))
-    return;
-
   xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
@@ -978,9 +975,6 @@ void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 }
 
 void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff) {
-
-  if(xmlTextReaderIsEmptyElement(reader))
-    return;
 
   xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
