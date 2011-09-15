@@ -301,6 +301,8 @@ int main(int argc, char * argv[]) {
 
         collect_difference(&rbuf_old, reader_old, edits);
 
+        fprintf(stderr, "HERE\n");
+
         collect_difference(&rbuf_new, reader_new, edits->next);
 
         output_double(&rbuf_old, &rbuf_new, edits, writer);
