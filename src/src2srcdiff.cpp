@@ -837,7 +837,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 
   // get units from source code
   xmlNodePtr unit = getRealCurrentNode(reader_old);
-  xmlNodePtr unit_new = getRealCurrentNode(reader_old);
+  xmlNodePtr unit_new = getRealCurrentNode(reader_new);
 
   // add diff namespace
   addNamespace(&unit->nsDef, &diff);
