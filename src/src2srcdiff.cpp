@@ -427,6 +427,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         // output diff tag start
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
+        not_done = 1;
+
         // may need to check if is open in diff
         while(not_done && (xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_new)->name, "unit") != 0) {
 
