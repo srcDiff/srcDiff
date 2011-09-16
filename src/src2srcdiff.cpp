@@ -758,7 +758,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
           xmlTextWriterWriteRawLen(writer, content_old + end_old + 1, size_old - (end_old + 1));
 
-
           last_diff = edits->offset_sequence_one + edits->length;
           edits = edits->next;
           continue;
@@ -801,7 +800,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
-
 
       last_diff = edits->offset_sequence_one + 1;
       break;
