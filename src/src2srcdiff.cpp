@@ -107,7 +107,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer);
 
 // output a change
-void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new,  struct edit * edit, xmlTextWriterPtr writer);
+void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
 
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
@@ -293,7 +293,7 @@ int main(int argc, char * argv[]) {
 
         collect_difference(&rbuf_new, reader_new, edits->next);
 
-        output_double(&rbuf_old, &rbuf_new, edits, writer);
+        output_double(&rbuf_old, &rbuf_new, writer);
 
         last_diff = edits->offset_sequence_one + edits->length;
         edits = edits->next;
@@ -674,7 +674,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 }
 
 // output a change
-void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new,  struct edit * edit, xmlTextWriterPtr writer) {
+void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer) {
 
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
