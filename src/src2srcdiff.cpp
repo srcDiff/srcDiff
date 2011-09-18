@@ -101,7 +101,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct edit * edit);
+void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int end_line);
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer);
@@ -289,9 +289,9 @@ int main(int argc, char * argv[]) {
       if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
-        collect_difference(&rbuf_old, reader_old, edits);
+        collect_difference(&rbuf_old, reader_old, edits->offset_sequence_one + edits->length);
 
-        collect_difference(&rbuf_new, reader_new, edits->next);
+        collect_difference(&rbuf_new, reader_new, edits->next->offset_sequence_two + edits->next->length);
 
         output_double(&rbuf_old, &rbuf_new, writer);
 
@@ -305,14 +305,14 @@ int main(int argc, char * argv[]) {
 
       case INSERT:
 
-        collect_difference(&rbuf_new, reader_new, edits);
+        collect_difference(&rbuf_new, reader_new, edits->offset_sequence_two + edits->length);
         output_single(&rbuf_new, edits, writer);
 
         last_diff = edits->offset_sequence_one + 1;
         break;
       case DELETE:
 
-        collect_difference(&rbuf_old, reader_old, edits);
+        collect_difference(&rbuf_old, reader_old, edits->offset_sequence_one + edits->length);
         output_single(&rbuf_old, edits, writer);
 
         last_diff = edits->offset_sequence_one + edits->length;
@@ -492,7 +492,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 }
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct edit * edit) {
+void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int end_line) {
 
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
@@ -567,7 +567,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, st
           characters_start = rbuf->characters + 1;
 
           // check if end of diff and create text node for text fragment
-          if(rbuf->line_number == (edit->operation == DELETE ? edit->offset_sequence_one : edit->offset_sequence_two) + edit->length) {
+          if(rbuf->line_number == end_line) {
 
             ++rbuf->characters;
 
