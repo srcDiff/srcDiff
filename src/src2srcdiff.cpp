@@ -399,52 +399,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
         return;
 
-      // check close in old
-      if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") != 0) {
-
-        // collect output
-
-        // compute difference
-
-        // output diff tag start
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
-
-        // may need to check if is open in diff
-        while(not_done && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") != 0) {
-
-          outputNode(*getRealCurrentNode(reader_old), writer);
-
-          update_context(rbuf_old, reader_old);
-          update_in_diff(rbuf_old, reader_old, false);
-          not_done = xmlTextReaderRead(reader_old);
-        }
-
-        // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
-      }
-
-      // check close in new
-      if((xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_new)->name, "unit") != 0) {
-
-        // output diff tag start
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
-
-        not_done = 1;
-
-        // may need to check if is open in diff
-        while(not_done && (xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_new)->name, "unit") != 0) {
-
-          outputNode(*getRealCurrentNode(reader_new), writer);
-
-          update_context(rbuf_new, reader_new);
-          update_in_diff(rbuf_new, reader_new, false);
-          not_done = xmlTextReaderRead(reader_new);
-        }
-
-        // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
-      }
-
     }
 
     // look if in text node
