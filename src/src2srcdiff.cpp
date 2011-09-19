@@ -391,6 +391,14 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
+        collect_difference(rbuf_old, reader_old, rbuf_old->line_number + 1);
+
+        collect_difference(rbuf_new, reader_new, rbuf_new->line_number + 1);
+
+        output_double(rbuf_old, rbuf_new, writer);
+
+        return;
+
       // check close in old
       if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") != 0) {
 
