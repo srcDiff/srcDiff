@@ -3,8 +3,8 @@
 
 <unit>
 <constructor><name><name>Object</name><op:operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list>
-<diff:old status="start"/><member_list>: <call><name>a</name><argument_list>()</argument_list></call>
-<diff:old status="end"/><diff:old status="start"/></member_list><diff:old status="end"/><block>{}</block></constructor>
+<diff:old status="start"/><member_list>: <call><name>a</name><argument_list>()</argument_list></call></member_list><diff:old status="end"/>
+<block>{}</block></constructor>
 </unit>
 
 </unit>
