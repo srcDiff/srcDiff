@@ -245,7 +245,7 @@ int main(int argc, char * argv[]) {
     }
 
     // issue the xml declaration
-    xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+    xmlTextWriterStartDocument(writer, "1.0", output_encoding, "yes");
 
     // run through diffs adding markup
     int last_diff = 0;
