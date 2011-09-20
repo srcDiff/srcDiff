@@ -34,7 +34,6 @@ char * strndup(const char * s1, size_t n) {
 #endif
 
 #include "xmlrw.h"
-#include "diffrw.h"
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
@@ -245,7 +244,7 @@ int main(int argc, char * argv[]) {
     }
 
     // issue the xml declaration
-    xmlTextWriterStartDocument(writer, "1.0", output_encoding, "yes");
+    xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
     // run through diffs adding markup
     int last_diff = 0;
