@@ -450,7 +450,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     }
     else {
 
-      if(strcmp((const char *)getRealCurentNode(reader_old)->name, "unit"))
+      if(strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit"))
         return;
 
       update_context(rbuf_old, reader_old);
@@ -575,7 +575,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
     }
     else {
 
-      if(strcmp((const char *)getRealCurentNode(reader)->name, "unit"))
+      if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit"))
         return;
 
       update_context(rbuf, reader);
