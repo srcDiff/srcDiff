@@ -327,7 +327,7 @@ int main(int argc, char * argv[]) {
   }
 
   // output srcdiff unit
-  outputNode(getRealCurrentNode(reader_old), writer);
+  outputNode(*getRealCurrentNode(reader_old), writer);
 
   // cleanup everything
  cleanup:
