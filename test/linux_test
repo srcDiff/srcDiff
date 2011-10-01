@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cat files | gxargs -I% bash -c "../bin/src2srcdiff old/% new/% > %.xml"
 cat files | gxargs -I% bash -c "bin/ExtractSrc old/%.xml 0 | cmp old/% /dev/stdin"
 cat files | gxargs -I% bash -c "bin/ExtractSrc new/%.xml 1 | cmp new/% /dev/stdin"
