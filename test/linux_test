@@ -1,1 +1,2 @@
 cat files | gxargs -I% bash -c "../bin/src2srcdiff old/% new/% > %.xml"
+cat files | gxargs -I% bash -c "../bin/src2srcdiff old/% new/% > %.xml"
