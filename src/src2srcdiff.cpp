@@ -576,7 +576,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
     else {
 
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
-        return;
+        break;
 
       update_context(rbuf, reader);
       update_in_diff(rbuf, reader, true);
@@ -586,6 +586,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
       not_done = xmlTextReaderRead(reader);
     }
+
+          ++rbuf->line_number;
 
 }
 
