@@ -587,7 +587,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
       not_done = xmlTextReaderRead(reader);
     }
 
-          ++rbuf->line_number;
+  ++rbuf->line_number;
 
 }
 
