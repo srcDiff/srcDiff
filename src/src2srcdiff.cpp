@@ -310,6 +310,7 @@ int main(int argc, char * argv[]) {
 
         last_diff = edits->offset_sequence_one + 1;
         break;
+
       case DELETE:
 
         collect_difference(&rbuf_old, reader_old, edits->offset_sequence_one + edits->length);
