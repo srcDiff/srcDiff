@@ -569,6 +569,9 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
     }
     else {
 
+      if(strcmp((const char *)getRealCurentNode(reader)->name, "unit"))
+        return;
+
       update_context(rbuf, reader);
       update_in_diff(rbuf, reader, true);
 
