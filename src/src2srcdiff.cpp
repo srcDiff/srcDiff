@@ -124,7 +124,7 @@ int main(int argc, char * argv[]) {
   }
 
   const char * srcdiff_file;
-  srcdiff_file = "/dev/stdout";
+  srcdiff_file = "-";
 
   /*
     Compute the differences between the two source files
