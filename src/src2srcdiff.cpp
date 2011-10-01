@@ -326,6 +326,8 @@ int main(int argc, char * argv[]) {
 
   }
 
+  compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
+
   // output srcdiff unit
   outputNode(*getRealCurrentNode(reader_old), writer);
 
