@@ -51,7 +51,6 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         int end = attributes[index + 4] - attributes[index + 3];
         char * value = strndup((const char *)attributes[index + 3], end);
 
-        fprintf(stderr, "%s", value);
         fprintf(stdout, "%c", (char)atoi(value));
       }
 
