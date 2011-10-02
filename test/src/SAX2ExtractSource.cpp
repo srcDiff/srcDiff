@@ -41,7 +41,9 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		     const xmlChar** attributes) {
 
-  if(strcmp((const char *)localname, "escape");
+  if(strcmp((const char *)localname, "escape") == 0) {
+
+  }
 
 }
 
