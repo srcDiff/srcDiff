@@ -48,6 +48,9 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
       if(strcmp((const char *)attributes[index], "char") == 0) {
 
+        int end = attributes[index + 4] - attributes[index + 3];
+        char * value = strndup((const char *)attributes[index + 3], end);
+
       }
 
     }
