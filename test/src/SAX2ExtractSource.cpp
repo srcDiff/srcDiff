@@ -43,6 +43,11 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
   if(strcmp((const char *)localname, "escape") == 0) {
 
+    int index;
+    for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+
+    }
+
   }
 
 }
