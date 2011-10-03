@@ -658,6 +658,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
+  // check if in common may need to issue new common
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
     outputNode(*(*rbuf->buffer)[i], writer);
