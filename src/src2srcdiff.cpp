@@ -624,7 +624,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     ++last_open;
 
   if(issued_diff)
-    (*rbuf->issued_diff)[last_open + 1] = true;
+    (*rbuf->issued_diff)[last_open] = true;
 
   // output starting diff tag
   if(issued_diff && edit->operation == DELETE)
