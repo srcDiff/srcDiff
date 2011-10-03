@@ -404,6 +404,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
   if(last_open == rbuf_old->in_diff->size() - 1) {
 
+    int find_open = true;
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
   }
 
