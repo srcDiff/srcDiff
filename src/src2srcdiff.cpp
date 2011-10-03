@@ -648,14 +648,15 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   */
 
   // output ending diff tags
-  if(edit->operation == DELETE)
+  if(i != rbuf->buffer->size())
+    if(edit->operation == DELETE)
 
-    // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
-  else
+      // output diff tag
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+    else
 
-    // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+      // output diff tag
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
