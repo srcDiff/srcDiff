@@ -622,7 +622,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
-  else
+  else if(issued_diff)
 
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
