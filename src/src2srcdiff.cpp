@@ -590,9 +590,14 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         break;
 
-      update_context(rbuf, reader);
-      update_in_diff(rbuf, reader, operation);
-      update_issued_diff(rbuf, reader);
+      // do not update closes.
+      if((xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_ELEMENT) {
+
+        update_context(rbuf, reader);
+        update_in_diff(rbuf, reader, operation);
+        update_issued_diff(rbuf, reader);
+
+      }
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getRealCurrentNode(reader));
@@ -640,12 +645,14 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     bnode = (*rbuf->buffer)[i];
 
+    outputNode(*bnode, writer);
+
     if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
+
+      ++i;
 
       break;
     }
-
-    outputNode(*bnode, writer);
 
   }
 
