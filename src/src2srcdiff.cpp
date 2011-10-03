@@ -406,7 +406,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   for(last_open_new = (rbuf_new->in_diff->size() - 1); last_open_new > 0 && (*rbuf_new->in_diff)[last_open_new] == -1; --last_open_new);
 
   bool find_open = false;
-  int output_end = -1;
   if((last_open_old > 0 && last_open_old == rbuf_old->in_diff->size() - 1)
      || (last_open_new > 0 && last_open_new == rbuf_new->in_diff->size() - 1)) {
 
@@ -415,6 +414,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   }
 
   int not_done = 1;
+  int output_end = -1;
   while(not_done) {
 
     if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
