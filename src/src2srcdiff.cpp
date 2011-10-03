@@ -598,7 +598,9 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer) {
 
   // find if in same diff type or find open tag
-  
+  // find the last open tag that needs to be closed
+  int last_open;
+  for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open] == edit->operation; --last_open);
 
   // output starting diff tag
   if(edit->operation == DELETE)
@@ -611,7 +613,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
   // find the last open tag that needs to be closed
-  int last_open;
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   //last_open;
