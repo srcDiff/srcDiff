@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#tar xf old.tar.bz2
-#tar xf new.tar.bz2
+tar xf old.tar.bz2
+tar xf new.tar.bz2
 cd old
 find . -name "*.h" -o -name "*.c" -o -name "*.cc" > files 
 cd ..
