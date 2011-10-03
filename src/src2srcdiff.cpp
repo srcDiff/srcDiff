@@ -654,7 +654,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   }
 
-  /*
+
   // may need to be output until close
   // check if last node is text node and output
   if(i == (rbuf->buffer->size() - 1)) {
@@ -665,7 +665,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       outputNode(*bnode, writer);
     }
   }
-  */
 
   // output ending diff tags
   if(i != rbuf->buffer->size())
