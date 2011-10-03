@@ -632,9 +632,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
-  // find the last open tag that needs to be closed
-  for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
-
   //last_open;
   xmlNodePtr node = (*rbuf->context)[last_open];
 
