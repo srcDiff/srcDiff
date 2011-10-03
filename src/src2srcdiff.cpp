@@ -597,6 +597,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer) {
 
+  // find if in same diff type or find open tag
+
   // output starting diff tag
   if(edit->operation == DELETE)
 
