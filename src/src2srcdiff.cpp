@@ -406,7 +406,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   for(last_open_new = (rbuf_new->in_diff->size() - 1); last_open_new > 0 && (*rbuf_new->in_diff)[last_open_new] == -1; --last_open_new);
 
   bool find_open = false;
-  if((last_open_old > 0 && last_open_old == rbuf_old->in_diff->size() - 1) || (last_open_old > 0 && last_open_old == rbuf_old->in_diff->size() - 1)) {
+  if((last_open_old > 0 && last_open_old == rbuf_old->in_diff->size() - 1)
+     || (last_open_new > 0 && last_open_new == rbuf_new->in_diff->size() - 1)) {
 
     find_open = true;
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
