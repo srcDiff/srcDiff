@@ -1,15 +1,15 @@
 #!/bin/bash
 
-tar xf linux-2.6.39.4.tar.bz2
-tar xf linux-3.0.4.tar.bz2
-mv linux-2.6.39.4/ old
-mv linux-3.0.4/ new
-cd old
-find . -name "*.h" -o -name "*.c" -o -name "*.cc" > files 
-cd ..
-cd new
-cat ../old/files | gxargs -I% bash -c "[[ -e % ]] && echo %" > ../files
-cd ..
+#tar xf linux-2.6.39.4.tar.bz2
+#tar xf linux-3.0.4.tar.bz2
+#mv linux-2.6.39.4/ old
+#mv linux-3.0.4/ new
+#cd old
+#find . -name "*.h" -o -name "*.c" -o -name "*.cc" > files 
+#cd ..
+#cd new
+#cat ../old/files | gxargs -I% bash -c "[[ -e % ]] && echo %" > ../files
+#cd ..
 #cat files | gxargs -I% -P 10 bash -c "../bin/src2srcdiff old/% new/% > new/%.xml"
-#cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 0 | cmp old/% /dev/stdin"
-#cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 1 | cmp new/% /dev/stdin"
+cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 0 | cmp old/% /dev/stdin"
+cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 1 | cmp new/% /dev/stdin"
