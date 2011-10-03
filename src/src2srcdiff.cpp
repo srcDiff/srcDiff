@@ -114,6 +114,8 @@ void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
 void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff);
 
+void update_issued_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
@@ -888,5 +890,23 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool i
       return;
 
     rbuf->in_diff->pop_back();
+  }
+}
+
+void update_issued_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
+
+  if(xmlTextReaderIsEmptyElement(reader))
+    return;
+
+  xmlNodePtr node = getRealCurrentNode(reader);
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    rbuf->context->push_back(node);
+  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if(rbuf->context->size() == 1)
+      return;
+
+    rbuf->context->pop_back();
   }
 }
