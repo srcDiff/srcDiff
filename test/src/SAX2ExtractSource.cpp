@@ -41,6 +41,13 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		     const xmlChar** attributes) {
 
+  if((data->op == DELETE && strcmp((const char *)localname, "new") == 0)
+     || (data->op == INSERT && strcmp((const char *)localname, "old") == 0)) {
+
+    
+    data->in_diff = true;
+  }
+
   if(strcmp((const char *)localname, "escape") == 0) {
 
     int index;
@@ -69,7 +76,7 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   if((data->op == DELETE && strcmp((const char *)localname, "new") == 0)
      || (data->op == INSERT && strcmp((const char *)localname, "old") == 0)) {
 
-    data->in_diff = !data->in_diff;
+    data->in_diff = false;
   }
 }
 
