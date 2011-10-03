@@ -402,6 +402,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int last_open;
   for(last_open = (rbuf_old->in_diff->size() - 1); last_open > 0 && (*rbuf_old->in_diff)[last_open] == -1; --last_open);
 
+  if(last_open == rbuf_old->in_diff->size() - 1);
+
   int not_done = 1;
   while(not_done) {
 
