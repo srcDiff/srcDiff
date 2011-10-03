@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#tar xf old.tar.bz2
+#tar xf new.tar.bz2
 #cat files | gxargs -I% -P 10 bash -c "../bin/src2srcdiff old/% new/% > new/%.xml"
 cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 0 | cmp old/% /dev/stdin"
 cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 1 | cmp new/% /dev/stdin"
