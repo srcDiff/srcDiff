@@ -690,6 +690,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       if((xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END-ELEMENT) {
 
         rbuf->context->pop_back();
+        rbuf->in_diff->pop_back();
+        rbuf->issued_diff->pop_back();
 
       }
 }
