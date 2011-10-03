@@ -582,7 +582,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
         break;
 
       update_context(rbuf, reader);
-      update_in_diff(rbuf, reader, true);
+      update_in_diff(rbuf, reader, operation);
 
       // save non-text node and get next node
       rbuf->buffer->push_back(getRealCurrentNode(reader));
