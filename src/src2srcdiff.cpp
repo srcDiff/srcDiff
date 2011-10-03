@@ -479,7 +479,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       update_in_diff(rbuf_new, reader_new, -1);
       update_issued_diff(rbuf_new, reader_new);
 
-      if((xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_ELEMENT) {
+      if(find_open && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_ELEMENT) {
 
         (*rbuf->issued_diff)[last_open] = true;
       }
