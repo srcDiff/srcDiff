@@ -41,6 +41,9 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		     const xmlChar** attributes) {
 
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  struct source_diff * data = (source_diff *)ctxt->_private;
+
   if((data->op == DELETE && strcmp((const char *)localname, "new") == 0)
      || (data->op == INSERT && strcmp((const char *)localname, "old") == 0)) {
 
