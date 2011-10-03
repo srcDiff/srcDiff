@@ -272,8 +272,10 @@ int main(int argc, char * argv[]) {
 
     update_context(&rbuf_old, reader_old);
     update_in_diff(&rbuf_old, reader_old, -1);
+    update_issued_diff(&rbuf_old, reader_old);
     update_context(&rbuf_new, reader_new);
     update_in_diff(&rbuf_new, reader_new, -1);
+    update_issued_diff(&rbuf_new, reader_new);
 
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
