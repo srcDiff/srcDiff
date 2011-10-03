@@ -305,7 +305,7 @@ int main(int argc, char * argv[]) {
 
       case INSERT:
 
-        collect_difference(&rbuf_new, reader_new, DELETE, edits->offset_sequence_two + edits->length);
+        collect_difference(&rbuf_new, reader_new, INSERT, edits->offset_sequence_two + edits->length);
         output_single(&rbuf_new, edits, writer);
 
         last_diff = edits->offset_sequence_one + 1;
@@ -313,7 +313,7 @@ int main(int argc, char * argv[]) {
 
       case DELETE:
 
-        collect_difference(&rbuf_old, reader_old, INSERT, edits->offset_sequence_one + edits->length);
+        collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
         output_single(&rbuf_old, edits, writer);
 
         last_diff = edits->offset_sequence_one + edits->length;
