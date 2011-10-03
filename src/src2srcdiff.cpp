@@ -266,9 +266,9 @@ int main(int argc, char * argv[]) {
     outputNode(*unit, writer);
 
     update_context(&rbuf_old, reader_old);
-    update_in_diff(&rbuf_old, reader_old, false);
+    update_in_diff(&rbuf_old, reader_old, -1);
     update_context(&rbuf_new, reader_new);
-    update_in_diff(&rbuf_new, reader_new, false);
+    update_in_diff(&rbuf_new, reader_new, -1);
 
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
@@ -598,6 +598,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer) {
 
   // find if in same diff type or find open tag
+  
 
   // output starting diff tag
   if(edit->operation == DELETE)
