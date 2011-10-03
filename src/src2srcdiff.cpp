@@ -91,6 +91,7 @@ struct reader_buffer {
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
   std::vector<int> * in_diff;
+  std::vector<bool> * issued_diff;
   std::vector<xmlNode *> * context;
 };
 
@@ -252,11 +253,13 @@ int main(int argc, char * argv[]) {
     struct reader_buffer rbuf_old = { NULL };
     rbuf_old.context = new std::vector<xmlNode *>;
     rbuf_old.in_diff = new std::vector<int>;
+    rbuf_old.issued_diff = new std::vector<bool>;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
     rbuf_new.context = new std::vector<xmlNode *>;
     rbuf_new.in_diff = new std::vector<int>;
+    rbuf_new.issued_diff = new std::vector<bool>;
     xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
