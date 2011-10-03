@@ -657,7 +657,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   }
 
-
   // may need to be output until close
   // check if last node is text node and output
   if(i == (rbuf->buffer->size() - 1)) {
@@ -687,7 +686,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
 
   for(i = 0; i < rbuf->buffer->size(); ++i)
-      if((xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT) {
+    if((xmlReaderTypes)(*rbuf->buffer)[i]->type == XML_READER_TYPE_END_ELEMENT) {
 
         rbuf->context->pop_back();
         rbuf->in_diff->pop_back();
