@@ -901,12 +901,12 @@ void update_issued_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
   xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    rbuf->context->push_back(node);
+    rbuf->issued_diff->push_back(false);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(rbuf->context->size() == 1)
+    if(rbuf->issued_diff->size() == 1)
       return;
 
-    rbuf->context->pop_back();
+    rbuf->issued_diff->pop_back();
   }
 }
