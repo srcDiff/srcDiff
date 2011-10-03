@@ -612,6 +612,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer) {
 
+  // may be complete whitespace need to check for that
   // find if in same diff type
   // find the last open tag that needs to be closed
   int last_open;
