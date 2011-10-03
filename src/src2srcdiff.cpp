@@ -459,6 +459,10 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
           ++rbuf_old->characters;
           ++rbuf_new->characters;
+
+          if(output_end != -1)
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+
           return;
         }
       }
