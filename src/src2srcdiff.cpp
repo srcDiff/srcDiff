@@ -482,7 +482,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       if(find_open && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
 
-        (*rbuf->issued_diff)[rbuf->issued_diff->size() - 1] = true;
+        (*rbuf_old->issued_diff)[rbuf_old->issued_diff->size() - 1] = true;
       }
 
       // output non-text node and get next node
