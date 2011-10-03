@@ -687,7 +687,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
 
   for(i = 0; i < rbuf->buffer->size(); ++i)
-      if((xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_ELEMENT) {
+      if((xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END-ELEMENT) {
 
         update_context(rbuf, reader);
         update_in_diff(rbuf, reader, operation);
