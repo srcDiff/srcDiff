@@ -457,9 +457,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         return;
 
       update_context(rbuf_old, reader_old);
-      update_in_diff(rbuf_old, reader_old, false);
+      update_in_diff(rbuf_old, reader_old, 3);
       update_context(rbuf_new, reader_new);
-      update_in_diff(rbuf_new, reader_new, false);
+      update_in_diff(rbuf_new, reader_new, 3);
 
       // output non-text node and get next node
       outputXML(reader_old, writer);
