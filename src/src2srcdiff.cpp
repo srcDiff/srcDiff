@@ -101,7 +101,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int end_line);
+void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer);
@@ -470,7 +470,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 }
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int end_line) {
+void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line) {
 
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
