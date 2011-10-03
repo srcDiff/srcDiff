@@ -400,7 +400,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer) {
 
   int last_open;
-  for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open] == -1; --last_open);
+  for(last_open = (rbuf_old->in_diff->size() - 1); last_open > 0 && (*rbuf_old->in_diff)[last_open] == -1; --last_open);
 
   int not_done = 1;
   while(not_done) {
