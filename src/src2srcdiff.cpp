@@ -493,14 +493,13 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         (*rbuf_old->issued_diff)[rbuf_old->issued_diff->size() - 1] = true;
       }
 
+      if(output_end)
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+
       // output non-text node and get next node
       outputXML(reader_old, writer);
       not_done = xmlTextReaderRead(reader_old);
       xmlTextReaderRead(reader_new);
-
-      if(output_end)
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
-
     }
   }
 }
