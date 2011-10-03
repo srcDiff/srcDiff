@@ -398,7 +398,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   int last_open_old;
   for(last_open_old = (rbuf_old->in_diff->size() - 1); last_open_old > 0 && (*rbuf_old->in_diff)[last_open_old] == -1; --last_open_old);
 
@@ -528,7 +528,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
     // look if in text node
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       // allocate character buffer if empty and set start of characters
       if(!rbuf->characters) {
 
@@ -577,7 +577,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
         // increase new line count and check if end of diff
         if((*rbuf->characters) == '\n') {
-
           ++rbuf->line_number;
 
           xmlNode * text = new xmlNode;
@@ -594,6 +593,12 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           if(rbuf->line_number == end_line) {
 
             ++rbuf->characters;
+
+            if(!(*rbuf->characters)) {
+
+              rbuf->characters = NULL;
+              not_done = xmlTextReaderRead(reader);
+            }
 
             return;
           }
