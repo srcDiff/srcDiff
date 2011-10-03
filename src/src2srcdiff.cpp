@@ -601,11 +601,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   if(edit->operation == DELETE)
 
     // output diff tag start
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
   else
 
     // output diff tag start
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
   // find the last open tag that needs to be closed
   int last_open;
@@ -645,11 +645,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   if(edit->operation == DELETE)
 
     // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
   else
 
     // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
