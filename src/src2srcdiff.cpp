@@ -403,7 +403,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   for(last_open = (rbuf_old->in_diff->size() - 1); last_open > 0 && (*rbuf_old->in_diff)[last_open] == -1; --last_open);
 
   bool find_open = false;
-  if(last_open != 0 && last_open == rbuf_old->in_diff->size() - 1) {
+  if(last_open > 0 && last_open == rbuf_old->in_diff->size() - 1) {
 
     find_open = true;
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
