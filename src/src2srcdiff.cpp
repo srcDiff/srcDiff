@@ -410,8 +410,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   ++last_open_new;
 
   bool mark_open = false;
-  if((last_open_old != 0 && last_open_old == rbuf_old->in_diff->size())
-     || (last_open_new != 0 && last_open_new == rbuf_new->in_diff->size())) {
+  if((last_open_old > 1 && last_open_old == rbuf_old->in_diff->size())
+     || (last_open_new > 1 && last_open_new == rbuf_new->in_diff->size())) {
 
     mark_open = true;
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
