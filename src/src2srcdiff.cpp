@@ -679,7 +679,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
   //last_open;
-  xmlNodePtr node = (*rbuf->context)[last_open];
 
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
@@ -698,12 +697,13 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
 
       ++i;
-
+      
       if(j == last_open)
         break;
+      else
+        --j;
     }
 
-  }
   }
 
   // may need to be output until close
