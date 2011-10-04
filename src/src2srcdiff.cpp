@@ -684,6 +684,10 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
   unsigned int i;
+
+  int j = rbuf->in_diff->size() - 1;
+  xmlNodePtr node = (*rbuf->context)[j];
+
   for(i = 0; i < rbuf->buffer->size(); ++i) {
 
     bnode = (*rbuf->buffer)[i];
@@ -692,11 +696,14 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
+
       ++i;
 
-      break;
+      if(j == last_open)
+        break;
     }
 
+  }
   }
 
   // may need to be output until close
