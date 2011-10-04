@@ -695,8 +695,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   }
 
+  if(j > 0)
+    j = rbuf->buffer->size();
+
   unsigned int i;
-  for(i = 0; i < i; ++i) {
+  for(i = 0; i < j; ++i) {
 
     bnode = (*rbuf->buffer)[i];
 
