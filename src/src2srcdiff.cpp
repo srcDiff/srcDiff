@@ -679,13 +679,13 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
   //last_open;
+  xmlNodePtr node = (*rbuf->context)[last_open];
 
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
   unsigned int i;
 
   int j = rbuf->in_diff->size() - 1;
-  xmlNodePtr node = (*rbuf->context)[j];
   bool output_diff = false;
 
   for(i = 0; i < rbuf->buffer->size(); ++i) {
