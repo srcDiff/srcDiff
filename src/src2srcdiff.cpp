@@ -686,6 +686,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   int j = rbuf->in_diff->size() - 1;
   xmlNodePtr node = (*rbuf->context)[j];
+  bool output_diff = false;
 
   for(i = 0; i < rbuf->buffer->size(); ++i) {
 
@@ -698,6 +699,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       if(j == last_open) {
 
         ++i;
+        output_diff = true;
         break;
       }
       else
@@ -715,7 +717,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
 
       ++i;
-      output_diff = true;
       outputNode(*bnode, writer);
     }
   }
