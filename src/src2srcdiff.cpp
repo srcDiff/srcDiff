@@ -681,11 +681,12 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   //last_open;
   xmlNodePtr node = (*rbuf->context)[last_open];
 
+  // count number same open
+
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
   unsigned int i;
 
-  int j = rbuf->in_diff->size() - 1;
   bool output_diff = false;
 
   for(i = 0; i < rbuf->buffer->size(); ++i) {
@@ -705,7 +706,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       else {
 
         --j;
-        node = (*rbuf->context)[j];
       }
 
     }
