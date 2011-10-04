@@ -697,6 +697,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
       if(j == last_open) {
 
+        ++i;
         break;
       }
       else
