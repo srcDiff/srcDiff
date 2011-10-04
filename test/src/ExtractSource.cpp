@@ -42,7 +42,7 @@ int main(int argc, char * argv[]) {
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
 
-  struct source_diff data = { diff ? INSERT : DELETE, false};
+  struct source_diff data = { diff ? INSERT : DELETE, false, false};
 
   ctxt->_private = &data;
 

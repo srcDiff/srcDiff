@@ -16,6 +16,7 @@ struct source_diff {
 
   operation op;
   bool in_diff;
+  bool in_other_diff;
 };
 
 xmlSAXHandler factory();
