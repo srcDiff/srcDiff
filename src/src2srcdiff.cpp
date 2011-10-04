@@ -503,6 +503,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
         mark_open = false;
         (*rbuf_old->issued_diff)[rbuf_old->issued_diff->size() - 1] = true;
+        output_end = -2;
       }
 
       // output non-text node and get next node
