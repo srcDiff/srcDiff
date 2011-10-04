@@ -702,8 +702,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
         output_diff = true;
         break;
       }
-      else
+      else {
+
         --j;
+        xmlNodePtr node = (*rbuf->context)[j];
+      }
 
     }
 
