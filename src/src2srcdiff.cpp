@@ -414,7 +414,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   }
 
   int not_done = 1;
-  int output_end = -2;
+  int output_end = -1;
   while(not_done) {
 
     if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
@@ -508,7 +508,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       if(output_end == (rbuf_old->issued_diff->size() - 2)) {
 
-        output_end = -2;
+        output_end = -1;
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
       }
     }
