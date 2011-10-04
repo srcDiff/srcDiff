@@ -687,7 +687,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     xmlNodePtr bnode = (*rbuf->context)[i];
   
-    if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0);
+    if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0)
+      ++count;
 
   }
 
