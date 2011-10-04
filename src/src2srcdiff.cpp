@@ -695,8 +695,10 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
-      if(j == last_open)
+      if(j == last_open) {
+
         break;
+      }
       else
         --j;
 
