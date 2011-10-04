@@ -702,6 +702,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
         break;
       else
         --j;
+
     }
 
   }
