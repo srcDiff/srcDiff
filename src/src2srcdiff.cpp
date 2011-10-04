@@ -1,4 +1,4 @@
-/*
+1;2c/*
   Create srcdiff format from two src files.
 
   Michael J. Decker
@@ -405,11 +405,11 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int last_open_new;
   for(last_open_new = (rbuf_new->in_diff->size() - 1); last_open_new > 0 && (*rbuf_new->in_diff)[last_open_new] == -1; --last_open_new);
 
-  bool find_open = false;
+  bool mark_open = false;
   if((last_open_old > 0 && last_open_old == rbuf_old->in_diff->size() - 1)
      || (last_open_new > 0 && last_open_new == rbuf_new->in_diff->size() - 1)) {
 
-    find_open = true;
+    mark_open = true;
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
   }
 
@@ -460,7 +460,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
           ++rbuf_old->characters;
           ++rbuf_new->characters;
 
-          if(output_end != -2)
+          if(mark_open || output_end != -2)
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
           return;
@@ -495,9 +495,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       update_in_diff(rbuf_new, reader_new, -1);
       update_issued_diff(rbuf_new, reader_new);
 
-      if(find_open && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
+      if(mark_open && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
 
-        find_open = false;
+        mark_open = false;
         (*rbuf_old->issued_diff)[rbuf_old->issued_diff->size() - 1] = true;
       }
 
