@@ -396,7 +396,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
   translator.close();
 }
 
-// compares a line supposed to be the same and output the correrct elements
+// compares a line supposed to be the same and output the correct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer) {
 
   int last_open_old;
