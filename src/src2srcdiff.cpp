@@ -464,7 +464,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
           ++rbuf_old->characters;
           ++rbuf_new->characters;
 
-          if(mark_open || output_end != -2)
+          if(mark_open)
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
           return;
@@ -513,6 +513,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       if(output_end == (rbuf_old->issued_diff->size() - 2)) {
 
+        mark_open = false;
         output_end = -2;
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
       }
