@@ -536,9 +536,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         output_type = rbuf_old->in_diff->back();
         output_end = rbuf_old->issued_diff->size() - 2;
 
-      }
-
-      if(rbuf_new->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
+      } else if(rbuf_new->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
 
         mark_open = true;
         output_type = rbuf_new->in_diff->back();
