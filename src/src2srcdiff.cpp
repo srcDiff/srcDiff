@@ -453,7 +453,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&lt;"));
         else if (*rbuf_old->characters == '>')
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&gt;"));
-        else
+        else 
           xmlTextWriterWriteRawLen(writer, rbuf_old->characters, 1);
 
         // increase new line count and check if done
