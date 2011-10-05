@@ -548,8 +548,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
           mark_open = true;
           output_end = rbuf_new->issued_diff->size() - 2;
         } 
-        else
+        else {
+
+          mark_open = false;
+          output_end = -2;
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+        }
 
       }
 
