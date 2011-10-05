@@ -588,12 +588,10 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
         if((*rbuf->characters) == '\n') {
 
           ++rbuf->line_number;
-          ++rbuf_new->line_number;
 
           if(rbuf->line_number == end_line) {
 
             ++rbuf->characters;
-            ++rbuf_new->characters;
 
             if(!(*rbuf->characters)) {
 
