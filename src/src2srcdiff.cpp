@@ -678,7 +678,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
         mark_open = false;
         output_end = -2;
-v
+
         if(output_type == DELETE)
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
         else if(output_type == INSERT)
@@ -700,8 +700,12 @@ v
           mark_open = true;
           output_end = rbuf_new->issued_diff->size() - 2;
         } 
-        else
+        else {
+
+          mark_open = false;
+          output_end = -2;
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+        }
 
       }
 
