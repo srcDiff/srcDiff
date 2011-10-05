@@ -556,7 +556,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   if(last_open > 1 && last_open == rbuf->in_diff->size() {
 
     mark_open = true;
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
   }
 
   int not_done = 1;
@@ -601,7 +601,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
             }
 
             if(mark_open)
-              xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+              xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
             return;
           }
@@ -650,7 +650,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
         mark_open = false;
         output_end = -2;
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
       }
     }
