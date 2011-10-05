@@ -330,7 +330,7 @@ int main(int argc, char * argv[]) {
 
     compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, lines1.size());
 
-    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, lines1.size() + 1);
+    //    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, lines1.size() + 1);
 
   }
 
