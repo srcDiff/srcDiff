@@ -660,7 +660,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       }
 
       update_context(rbuf, reader);
-      update_in_diff(rbuf, reader, operation);
+      update_in_diff(rbuf, reader, -1);
       update_issued_diff(rbuf, reader);
 
       if(mark_open && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_ELEMENT) {
