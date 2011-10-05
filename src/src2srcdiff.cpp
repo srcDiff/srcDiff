@@ -597,8 +597,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
               rbuf->characters = NULL;
               not_done = xmlTextReaderRead(reader);
-              rbuf_new->characters = NULL;
-              xmlTextReaderRead(reader_new);
 
             }
 
