@@ -569,7 +569,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       // allocate character buffer if empty
       if(!rbuf->characters) {
         rbuf->characters = (unsigned char *)xmlTextReaderConstValue(reader);
-        rbuf_new->characters = (unsigned char *)xmlTextReaderConstValue(reader_new);
       }
 
       // cycle through characters
