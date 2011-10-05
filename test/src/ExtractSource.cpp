@@ -43,7 +43,7 @@ int main(int argc, char * argv[]) {
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
 
-  std::vector<int>() stack = new std::vector<int>();
+  std::vector<int> * stack = new std::vector<int>();
   stack->push_back(COMMON);
 
   struct source_diff data = { diff ? INSERT : DELETE,  stack };
