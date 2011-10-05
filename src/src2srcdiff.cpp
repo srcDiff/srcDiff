@@ -537,6 +537,10 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       }
     }
   }
+
+  ++rbuf_old->line_number;
+  ++rbuf_new->line_number;
+
 }
 
 // collect the differnces
