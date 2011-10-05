@@ -560,7 +560,12 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   if(last_open == rbuf->in_diff->size()) {
 
     mark_open = true;
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+
+    if(operation == DELTE)
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+    else
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+
   }
 
   int not_done = 1;
