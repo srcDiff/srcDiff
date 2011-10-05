@@ -545,6 +545,11 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
 }
 
+void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line) {
+
+}
+
+
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line) {
 
