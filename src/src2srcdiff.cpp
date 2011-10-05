@@ -114,7 +114,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
-void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff);
+void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int indiff);
 
 void update_issued_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
@@ -1137,7 +1137,7 @@ void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
   }
 }
 
-void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff) {
+void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int indiff) {
 
   if(xmlTextReaderIsEmptyElement(reader))
     return;
