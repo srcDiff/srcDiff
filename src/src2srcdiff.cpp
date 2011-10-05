@@ -330,9 +330,9 @@ int main(int argc, char * argv[]) {
 
     compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size());
 
-  }
+    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size() + 1);
 
-  compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size() + 1);
+  }
 
   // output srcdiff unit
   outputNode(*getRealCurrentNode(reader_old), writer);
@@ -460,7 +460,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         if((*rbuf_old->characters) == '\n') {
 
           ++rbuf_old->line_number;
-            ++rbuf_new->line_number;
+          ++rbuf_new->line_number;
 
           if(rbuf_old->line_number == end_line) {
 
