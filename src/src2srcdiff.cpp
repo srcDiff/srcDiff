@@ -553,7 +553,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   ++last_open;
 
   bool mark_open = false;
-  if((last_open_old > 1 && last_open_old == rbuf_old->in_diff->size())
+  if((last_open > 1 && last_open == rbuf->in_diff->size())
      || (last_open_new > 1 && last_open_new == rbuf_new->in_diff->size())) {
 
     mark_open = true;
@@ -564,15 +564,15 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   int output_end = -2;
   while(not_done) {
 
-    if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
+    if(0 && strcmp((const char *)getRealCurrentNode(reader)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
-      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+      collect_difference(rbuf, reader, DELETE, rbuf->line_number + 1);
 
       collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
 
-      output_double(rbuf_old, rbuf_new, writer);
+      output_double(rbuf, rbuf_new, writer);
 
-      --rbuf_old->line_number;
+      --rbuf->line_number;
       --rbuf_new->line_number;
 
       return;
@@ -580,42 +580,42 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
     }
 
     // look if in text node
-    if(xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_TEXT) {
+    if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
 
       // allocate character buffer if empty
-      if(!rbuf_old->characters) {
-        rbuf_old->characters = (unsigned char *)xmlTextReaderConstValue(reader_old);
+      if(!rbuf->characters) {
+        rbuf->characters = (unsigned char *)xmlTextReaderConstValue(reader);
         rbuf_new->characters = (unsigned char *)xmlTextReaderConstValue(reader_new);
       }
 
       // cycle through characters
-      for (; *rbuf_old->characters != 0; ++rbuf_old->characters, ++rbuf_new->characters) {
+      for (; *rbuf->characters != 0; ++rbuf->characters, ++rbuf_new->characters) {
 
         // escape characters or print out character
-        if (*rbuf_old->characters == '&')
+        if (*rbuf->characters == '&')
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&amp;"));
-        else if (*rbuf_old->characters == '<')
+        else if (*rbuf->characters == '<')
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&lt;"));
-        else if (*rbuf_old->characters == '>')
+        else if (*rbuf->characters == '>')
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&gt;"));
         else 
-          xmlTextWriterWriteRawLen(writer, rbuf_old->characters, 1);
+          xmlTextWriterWriteRawLen(writer, rbuf->characters, 1);
 
         // increase new line count and check if done
-        if((*rbuf_old->characters) == '\n') {
+        if((*rbuf->characters) == '\n') {
 
-          ++rbuf_old->line_number;
+          ++rbuf->line_number;
           ++rbuf_new->line_number;
 
-          if(rbuf_old->line_number == end_line) {
+          if(rbuf->line_number == end_line) {
 
-            ++rbuf_old->characters;
+            ++rbuf->characters;
             ++rbuf_new->characters;
 
-            if(!(*rbuf_old->characters)) {
+            if(!(*rbuf->characters)) {
 
-              rbuf_old->characters = NULL;
-              not_done = xmlTextReaderRead(reader_old);
+              rbuf->characters = NULL;
+              not_done = xmlTextReaderRead(reader);
               rbuf_new->characters = NULL;
               xmlTextReaderRead(reader_new);
 
@@ -632,48 +632,48 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       }
 
       // end text node if finished and get next node
-      if(!(*rbuf_old->characters)) {
+      if(!(*rbuf->characters)) {
 
-        rbuf_old->characters = NULL;
+        rbuf->characters = NULL;
         rbuf_new->characters = NULL;
 
-        not_done = xmlTextReaderRead(reader_old);
+        not_done = xmlTextReaderRead(reader);
         xmlTextReaderRead(reader_new);
       }
     }
     else {
 
-      if(strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") == 0)
+      if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         return;
 
-      if(rbuf_old->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
+      if(rbuf->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT) {
 
         mark_open = true;
-        output_end = rbuf_old->issued_diff->size() - 2;
+        output_end = rbuf->issued_diff->size() - 2;
 
       }
 
-      update_context(rbuf_old, reader_old);
-      update_in_diff(rbuf_old, reader_old, -1);
-      update_issued_diff(rbuf_old, reader_old);
+      update_context(rbuf, reader);
+      update_in_diff(rbuf, reader, -1);
+      update_issued_diff(rbuf, reader);
       update_context(rbuf_new, reader_new);
       update_in_diff(rbuf_new, reader_new, -1);
       update_issued_diff(rbuf_new, reader_new);
 
-      if(mark_open && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
+      if(mark_open && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_ELEMENT) {
 
         mark_open = false;
-        (*rbuf_old->issued_diff)[rbuf_old->issued_diff->size() - 1] = true;
+        (*rbuf->issued_diff)[rbuf->issued_diff->size() - 1] = true;
         output_end = -2;
 
       }
 
       // output non-text node and get next node
-      outputXML(reader_old, writer);
-      not_done = xmlTextReaderRead(reader_old);
+      outputXML(reader, writer);
+      not_done = xmlTextReaderRead(reader);
       xmlTextReaderRead(reader_new);
 
-      if(output_end == (rbuf_old->issued_diff->size() - 2)) {
+      if(output_end == (rbuf->issued_diff->size() - 2)) {
 
         mark_open = false;
         output_end = -2;
@@ -683,7 +683,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
     }
   }
 
-  ++rbuf_old->line_number;
+  ++rbuf->line_number;
   ++rbuf_new->line_number;
 
 }
