@@ -645,7 +645,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       // output non-text node and get next node
       outputXML(reader, writer);
       not_done = xmlTextReaderRead(reader);
-      xmlTextReaderRead(reader_new);
 
       if(output_end == (rbuf->issued_diff->size() - 2)) {
 
@@ -658,7 +657,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   }
 
   ++rbuf->line_number;
-  ++rbuf_new->line_number;
 
 }
 
