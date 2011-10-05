@@ -10,7 +10,7 @@
 
 #include <libxml/parser.h>
 
-enum operation { DELETE, INSERT };
+enum operation { COMMON, DELETE, INSERT };
 
 struct source_diff {
 
