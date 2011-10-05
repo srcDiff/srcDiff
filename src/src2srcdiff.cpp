@@ -648,6 +648,18 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
     }
     else {
 
+      if(output_end == rbuf->issued_diff->size() - 1) {
+
+        mark_open = false;
+        output_end = -2;
+
+        if(output_type == DELETE)
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+        else if(output_type == INSERT)
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+        else
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         return;
 
@@ -674,18 +686,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       // output non-text node and get next node
       outputXML(reader, writer);
       not_done = xmlTextReaderRead(reader);
-
-      if(output_end == rbuf->issued_diff->size() - 1) {
-
-        mark_open = false;
-        output_end = -2;
-
-        if(output_type == DELETE)
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
-        else if(output_type == INSERT)
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
-        else
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
       }
     }
