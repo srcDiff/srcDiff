@@ -286,10 +286,11 @@ int main(int argc, char * argv[]) {
     for (; edits; edits = edits->next) {
 
       // add preceeding unchanged
-      if(edits->operation == DELETE)
-        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one);
-      else
-        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one + 1);
+      if(last_diff != 0)
+        if(edits->operation == DELETE)
+          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one);
+        else
+          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one + 1);
 
 
       // detect and change
