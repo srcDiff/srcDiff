@@ -675,7 +675,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       outputXML(reader, writer);
       not_done = xmlTextReaderRead(reader);
 
-      if(output_end == (rbuf->issued_diff->size() - 2)) {
+      if(output_end == rbuf->issued_diff->size()) {
 
         mark_open = false;
         output_end = -2;
