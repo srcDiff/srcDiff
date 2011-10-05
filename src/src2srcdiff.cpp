@@ -456,16 +456,27 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         else
           xmlTextWriterWriteRawLen(writer, rbuf_old->characters, 1);
 
-        // increase new line count and exit
+        // increase new line count and check if done
         if((*rbuf_old->characters) == '\n') {
 
           ++rbuf_old->characters;
           ++rbuf_new->characters;
 
+          if(rbuf->line_number == end_line) {
+
+
+
+          if(!(*rbuf->characters)) {
+
+            rbuf->characters = NULL;
+            not_done = xmlTextReaderRead(reader);
+          }
+
           if(mark_open)
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
           return;
+        }
         }
       }
 
