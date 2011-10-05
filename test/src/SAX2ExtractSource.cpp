@@ -48,10 +48,10 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     in_diff->push_back(COMMON);
 
   if(strcmp((const char *)localname, "old") == 0)
-    in_diff->push_back(COMMON);
+    in_diff->push_back(DELTE);
 
-    if(strcmp((const char *)localname, "new") == 0)
-    in_diff->push_back(COMMON);
+  if(strcmp((const char *)localname, "new") == 0)
+    in_diff->push_back(INSERT);
 
 
   if(strcmp((const char *)localname, "escape") == 0) {
