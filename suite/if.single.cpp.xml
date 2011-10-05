@@ -39,14 +39,12 @@
 </diff:old></unit>
 
 <unit>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>a</diff:common></then></if></diff:old></unit>
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:old></unit>
 
 <unit>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>a</diff:common></then></if>
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if>
 </diff:old></unit>
 
 </unit>
