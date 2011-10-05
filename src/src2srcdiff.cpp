@@ -569,7 +569,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   }
 
   int not_done = 1;
-  int output_type;
+  int output_type = operation;
   int output_end = -2;
   while(not_done) {
 
@@ -611,7 +611,12 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
             }
 
             if(mark_open)
-              xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+              if(output_type == DELETE)
+                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+              else if(output_type == INSERT)
+                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+              else
+                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
             return;
           }
