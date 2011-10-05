@@ -693,12 +693,12 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
       if(rbuf->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT) {
 
-        output_type = rbuf_new->in_diff->back();
+        output_type = rbuf->in_diff->back();
 
         if(output_type != -1) {
 
           mark_open = true;
-          output_end = rbuf_new->issued_diff->size() - 2;
+          output_end = rbuf->issued_diff->size() - 2;
         } 
         else {
 
