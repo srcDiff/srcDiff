@@ -419,6 +419,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   }
 
   int not_done = 1;
+  int output_type = -1;
   int output_end = -2;
   while(not_done) {
 
