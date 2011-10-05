@@ -48,7 +48,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     in_diff->push_back(COMMON);
 
   if(strcmp((const char *)localname, "old") == 0)
-    in_diff->push_back(DELTE);
+    in_diff->push_back(DELETE);
 
   if(strcmp((const char *)localname, "new") == 0)
     in_diff->push_back(INSERT);
@@ -91,7 +91,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(!data->in_diff) {
+  if(in_diff->back() == op || in_diff->back() == COMMON) {
 
     for(int i = 0; i < len; ++i)
       fprintf(stdout, "%c", (char)ch[i]);
