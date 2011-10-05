@@ -519,6 +519,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         else
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
+      }
+
       if(strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") == 0)
         return;
 
@@ -550,7 +552,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       not_done = xmlTextReaderRead(reader_old);
       xmlTextReaderRead(reader_new);
 
-      }
     }
   }
 
@@ -660,6 +661,8 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
         else
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
+      }
+
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         return;
 
@@ -687,7 +690,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       outputXML(reader, writer);
       not_done = xmlTextReaderRead(reader);
 
-      }
     }
   }
 
