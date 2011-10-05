@@ -320,7 +320,7 @@ int main(int argc, char * argv[]) {
 
       case DELETE:
 
-        output_single(&rbuf_old, reader_old, writer, DELETE, edits->offset_sequence_one + edits->length);
+        output_single(&rbuf_old, reader_old, writeDELETE, edits->offset_sequence_one + edits->length);
 
         last_diff = edits->offset_sequence_one + edits->length;
         break;
