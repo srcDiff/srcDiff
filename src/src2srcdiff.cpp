@@ -553,8 +553,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   ++last_open;
 
   bool mark_open = false;
-  if((last_open > 1 && last_open == rbuf->in_diff->size())
-     || (last_open_new > 1 && last_open_new == rbuf_new->in_diff->size())) {
+  if(last_open > 1 && last_open == rbuf->in_diff->size() {
 
     mark_open = true;
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
