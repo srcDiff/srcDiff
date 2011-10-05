@@ -82,7 +82,7 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   if(strcmp((const char *)localname, "common") == 0
      || strcmp((const char *)localname, "old") == 0
      || strcmp((const char *)localname, "new") == 0)
-    in_diff->pop_back();
+    data->in_diff->pop_back();
 
 }
 
