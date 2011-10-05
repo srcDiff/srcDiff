@@ -533,10 +533,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
           mark_open = true;
           output_end = rbuf_old->issued_diff->size() - 2;
-        } else if(output_type == DELETE)
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+        } 
         else
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
 
 
       }
