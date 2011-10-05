@@ -662,10 +662,10 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
         mark_open = false;
         output_end = -2;
 
-    if(operation == DELETE)
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
-    else if(operation == INSERT)
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+        if(operation == DELETE)
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+        else if(operation == INSERT)
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
       }
     }
