@@ -44,7 +44,9 @@
 <diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>a</diff:common></then></if></diff:old></unit>
 
 <unit>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></then></if><diff:old status="end"/></unit>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>a</diff:common></then></if>
+</diff:old></unit>
 
 </unit>
