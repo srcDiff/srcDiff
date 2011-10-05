@@ -313,14 +313,14 @@ int main(int argc, char * argv[]) {
 
       case INSERT:
 
-        output_single(&rbuf_new, reader_new, INSERT, edits->offset_sequence_two + edits->length);
+        output_single(&rbuf_new, reader_new, writer, INSERT, edits->offset_sequence_two + edits->length);
 
         last_diff = edits->offset_sequence_one + 1;
         break;
 
       case DELETE:
 
-        output_single(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
+        output_single(&rbuf_old, reader_old, writer, DELETE, edits->offset_sequence_one + edits->length);
 
         last_diff = edits->offset_sequence_one + edits->length;
         break;
