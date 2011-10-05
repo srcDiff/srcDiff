@@ -101,7 +101,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, int end_line);
 
-void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reade, xmlTextWriterPtr writer, int end_line);
+void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reade, xmlTextWriterPtr writer, int operation, int end_line);
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
