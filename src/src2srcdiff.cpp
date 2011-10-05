@@ -569,6 +569,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   }
 
   int not_done = 1;
+  int output_type;
   int output_end = -2;
   while(not_done) {
 
