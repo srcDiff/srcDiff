@@ -486,11 +486,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
             }
 
             if(mark_open)
-              if(output_type == DELETE)
-                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
-              else if(output_type == INSERT)
-                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
-              else
                 xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
             return;
@@ -532,9 +527,13 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       if(rbuf_old->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
 
-        mark_open = true;
         output_type = rbuf_old->in_diff->back();
-        output_end = rbuf_old->issued_diff->size() - 2;
+
+        if(output_type == -1) {
+
+          mark_open = true;
+          output_end = rbuf_old->issued_diff->size() - 2;
+        } else;
 
       }
 
@@ -562,7 +561,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       }
 
-      // output non-text node and get next node
       outputXML(reader_old, writer);
       not_done = xmlTextReaderRead(reader_old);
       xmlTextReaderRead(reader_new);
