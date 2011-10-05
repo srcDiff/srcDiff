@@ -547,10 +547,10 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
 void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line) {
 
-  int last_open_old;
-  for(last_open_old = (rbuf_old->in_diff->size() - 1); last_open_old > 0 && (*rbuf_old->in_diff)[last_open_old] == -1; --last_open_old);
+  int last_open_ol;
+  for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open] == -1; --last_open);
 
-  ++last_open_old;
+  ++last_open;
 
   bool mark_open = false;
   if((last_open_old > 1 && last_open_old == rbuf_old->in_diff->size())
