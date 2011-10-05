@@ -538,7 +538,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       not_done = xmlTextReaderRead(reader_old);
       xmlTextReaderRead(reader_new);
 
-      if(output_end == rbuf_old->issued_diff->size() - 1) {
+      if(output_end == rbuf_old->issued_diff->size()) {
 
         mark_open = false;
         output_end = -2;
@@ -675,7 +675,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       outputXML(reader, writer);
       not_done = xmlTextReaderRead(reader);
 
-      if(output_end == rbuf->issued_diff->size() - 1) {
+      if(output_end == rbuf->issued_diff->size()) {
 
         mark_open = false;
         output_end = -2;
