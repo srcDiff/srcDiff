@@ -459,10 +459,13 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         // increase new line count and check if done
         if((*rbuf_old->characters) == '\n') {
 
-          ++rbuf_old->characters;
-          ++rbuf_new->characters;
+          ++rbuf_old->line_number;
+            ++rbuf_new->line_number;
 
-          if(rbuf->line_number == end_line) {
+          if(rbuf_old->line_number == end_line) {
+
+            ++rbuf_old->characters;
+            ++rbuf_new->characters;
 
             if(!(*rbuf->characters)) {
 
