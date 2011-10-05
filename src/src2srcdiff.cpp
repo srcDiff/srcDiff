@@ -562,7 +562,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
     mark_open = true;
 
     if(operation == DELTE)
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
     else
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
