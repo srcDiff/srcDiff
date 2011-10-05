@@ -285,9 +285,9 @@ int main(int argc, char * argv[]) {
 
       // add preceeding unchanged
       if(edits->operation == DELETE)
-        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + edits->offset_sequence_one);
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one);
       else
-        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + edits->offset_sequence_one + 1);
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one + 1);
 
 
       // detect and change
@@ -328,9 +328,9 @@ int main(int argc, char * argv[]) {
 
     }
 
-    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size());
+    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, lines1.size());
 
-    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size() + 1);
+    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, lines1.size() + 1);
 
   }
 
