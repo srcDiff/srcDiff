@@ -471,6 +471,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
               rbuf_old->characters = NULL;
               not_done = xmlTextReaderRead(reader_old);
+              rbuf_new->characters = NULL;
+              xmlTextReaderRead(reader_new);
+
             }
 
             if(mark_open)
