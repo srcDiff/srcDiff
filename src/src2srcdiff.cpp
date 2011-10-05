@@ -563,21 +563,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   int output_end = -2;
   while(not_done) {
 
-    if(0 && strcmp((const char *)getRealCurrentNode(reader)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
-
-      collect_difference(rbuf, reader, DELETE, rbuf->line_number + 1);
-
-      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
-
-      output_double(rbuf, rbuf_new, writer);
-
-      --rbuf->line_number;
-      --rbuf_new->line_number;
-
-      return;
-
-    }
-
     // look if in text node
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
 
