@@ -481,7 +481,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
             }
 
             if(mark_open)
-              xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+              if(output_type == DELETE)
+                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+              else if(output_type == INSERT)
+                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+              else
+                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
             return;
           }
@@ -536,7 +541,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
         mark_open = false;
         output_end = -2;
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+        if(output_type == DELETE)
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+        else if(output_type == INSERT)
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+        else
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
       }
     }
