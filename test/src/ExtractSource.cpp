@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 #include <libxml/parserInternals.h>
 #include "SAX2ExtractSource.hpp"
 
