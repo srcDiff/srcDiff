@@ -91,7 +91,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(in_diff->back() == op || in_diff->back() == COMMON) {
+  if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
 
     for(int i = 0; i < len; ++i)
       fprintf(stdout, "%c", (char)ch[i]);
