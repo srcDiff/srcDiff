@@ -572,7 +572,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       }
 
       // cycle through characters
-      for (; *rbuf->characters != 0; ++rbuf->characters, ++rbuf_new->characters) {
+      for (; *rbuf->characters != 0; ++rbuf->characters) {
 
         // escape characters or print out character
         if (*rbuf->characters == '&')
