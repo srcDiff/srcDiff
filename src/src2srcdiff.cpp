@@ -329,7 +329,7 @@ int main(int argc, char * argv[]) {
     }
 
     for(unsigned int j = last_diff; j < lines1.size(); ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
-      compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
+      compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size());
 
     compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
   
