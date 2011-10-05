@@ -99,7 +99,7 @@ struct reader_buffer {
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
 // compares a line supposed to be the same and output the correrct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
+void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, int end_line);
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
@@ -397,7 +397,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 }
 
 // compares a line supposed to be the same and output the correct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer) {
+void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, int end_line) {
 
   int last_open_old;
   for(last_open_old = (rbuf_old->in_diff->size() - 1); last_open_old > 0 && (*rbuf_old->in_diff)[last_open_old] == -1; --last_open_old);
