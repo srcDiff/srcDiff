@@ -285,9 +285,9 @@ int main(int argc, char * argv[]) {
 
       // add preceeding unchanged
       if(edits->operation == DELETE)
-          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + edits->offset_sequence_one);
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + edits->offset_sequence_one);
       else
-          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + edits->offset_sequence_one + 1);
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + edits->offset_sequence_one + 1);
 
 
       // detect and change
@@ -328,8 +328,8 @@ int main(int argc, char * argv[]) {
 
     }
 
-      compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size());
-  
+    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size());
+
   }
 
   compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, last_diff + lines1.size() + 1);
@@ -464,20 +464,20 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
           if(rbuf->line_number == end_line) {
 
+            if(!(*rbuf->characters)) {
 
+              rbuf->characters = NULL;
+              not_done = xmlTextReaderRead(reader);
+            }
 
-          if(!(*rbuf->characters)) {
+            if(mark_open)
+              xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
-            rbuf->characters = NULL;
-            not_done = xmlTextReaderRead(reader);
+            return;
           }
 
-          if(mark_open)
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+        }
 
-          return;
-        }
-        }
       }
 
       // end text node if finished and get next node
@@ -704,7 +704,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(int i = last_open + 1; i < rbuf->context->size(); ++i) {
 
     xmlNodePtr bnode = (*rbuf->context)[i];
-  
+
     if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0)
       ++count;
 
@@ -767,11 +767,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(i = 0; i < rbuf->buffer->size(); ++i)
     if((xmlReaderTypes)(*rbuf->buffer)[i]->type == XML_READER_TYPE_END_ELEMENT) {
 
-        rbuf->context->pop_back();
-        rbuf->in_diff->pop_back();
-        rbuf->issued_diff->pop_back();
+      rbuf->context->pop_back();
+      rbuf->in_diff->pop_back();
+      rbuf->issued_diff->pop_back();
 
-      }
+    }
 }
 
 // output a change
