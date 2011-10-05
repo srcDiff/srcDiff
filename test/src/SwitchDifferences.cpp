@@ -39,7 +39,7 @@ int main(int argc, char * argv[]) {
     }
 
     // create the writer
- = xmlNewTextWriterFilename("/dev/stdout", 0);
+    writer = xmlNewTextWriterFilename("/dev/stdout", 0);
     if (writer == NULL) {
       fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdout");
 
@@ -117,6 +117,7 @@ int main(int argc, char * argv[]) {
           outputNode(*buffer[i], writer);
         
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+
 
         end_wait_diff = false;
         buffer = std::vector<xmlNode *>();
