@@ -286,11 +286,10 @@ int main(int argc, char * argv[]) {
     for (; edits; edits = edits->next) {
 
       // add preceeding unchanged
-      if(last_diff != 0)
-        if(edits->operation == DELETE)
-          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one);
-        else
-          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one + 1);
+      if(edits->operation == DELETE)
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one);
+      else
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one + 1);
 
 
       // detect and change
@@ -397,6 +396,9 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
 // compares a line supposed to be the same and output the correct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, int end_line) {
+
+  if(end_line == 0)
+    return;
 
   int last_open_old;
   for(last_open_old = (rbuf_old->in_diff->size() - 1); last_open_old > 0 && (*rbuf_old->in_diff)[last_open_old] == -1; --last_open_old);
