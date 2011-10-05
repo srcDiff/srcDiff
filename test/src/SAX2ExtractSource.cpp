@@ -79,11 +79,11 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if((data->op == DELETE && strcmp((const char *)localname, "new") == 0)
-     || (data->op == INSERT && strcmp((const char *)localname, "old") == 0)) {
+  if(strcmp((const char *)localname, "common") == 0
+     || strcmp((const char *)localname, "old") == 0
+     || strcmp((const char *)localname, "new") == 0)
+    in_diff->push_back(COMMON);
 
-    data->in_diff = false;
-  }
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
