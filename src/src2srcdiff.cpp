@@ -689,6 +689,9 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         return;
 
+     outputXML(reader, writer);
+
+
       if(rbuf->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT) {
 
         output_type = rbuf->in_diff->back();
@@ -720,8 +723,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       }
 
       // output non-text node and get next node
-      outputXML(reader, writer);
-      not_done = xmlTextReaderRead(reader);
+       not_done = xmlTextReaderRead(reader);
 
     }
   }
