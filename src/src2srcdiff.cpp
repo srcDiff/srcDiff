@@ -457,7 +457,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&lt;"));
         else if (*rbuf_old->characters == '>')
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&gt;"));
-        else
+        else 
           xmlTextWriterWriteRawLen(writer, rbuf_old->characters, 1);
 
         // increase new line count and check if done
@@ -486,7 +486,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
             }
 
             if(mark_open)
-              xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+                xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
             return;
           }
@@ -507,7 +507,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     }
     else {
 
-      if((output_type == -1 || output_type == DELETE) && output_end == rbuf_old->issued_diff->size() - 1
+      if((output_type == -1 || output_type == DELETE) && output_end == rbuf_old->issued_diff->size() - 1 
          || (output_type == -1 || output_type == INSERT) && output_end == rbuf_new->issued_diff->size() - 1) {
 
         mark_open = false;
@@ -525,8 +525,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       if(strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") == 0)
         return;
 
-      outputXML(reader_old, writer);
-
       if(rbuf_old->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
 
         output_type = rbuf_old->in_diff->back();
@@ -535,7 +533,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
           mark_open = true;
           output_end = rbuf_old->issued_diff->size() - 2;
-        }
+        } 
         else
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
 
@@ -549,7 +547,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
           mark_open = true;
           output_end = rbuf_new->issued_diff->size() - 2;
-        }
+        } 
         else {
 
           mark_open = false;
@@ -575,6 +573,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       }
 
+      outputXML(reader_old, writer);
       not_done = xmlTextReaderRead(reader_old);
       xmlTextReaderRead(reader_new);
 
@@ -631,7 +630,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&lt;"));
         else if (*rbuf->characters == '>')
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&gt;"));
-        else
+        else 
           xmlTextWriterWriteRawLen(writer, rbuf->characters, 1);
 
         // increase new line count and check if done
@@ -690,9 +689,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         return;
 
-      outputXML(reader, writer);
-
-
       if(rbuf->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT) {
 
         output_type = rbuf->in_diff->back();
@@ -701,7 +697,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
           mark_open = true;
           output_end = rbuf->issued_diff->size() - 2;
-        }
+        } 
         else {
 
           mark_open = false;
@@ -724,6 +720,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       }
 
       // output non-text node and get next node
+      outputXML(reader, writer);
       not_done = xmlTextReaderRead(reader);
 
     }
