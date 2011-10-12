@@ -18,6 +18,7 @@
 #include <libxml/xmlwriter.h>
 
 #ifdef __MINGW32__
+
 #include <string.h>
 #include <io.h>
 
@@ -31,6 +32,7 @@ char * strndup(const char * s1, size_t n) {
 
   return dest;
 }
+
 #endif
 
 #include "xmlrw.h"
