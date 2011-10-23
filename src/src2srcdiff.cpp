@@ -397,7 +397,8 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
   int language = Language::getLanguageFromFilename(source_file);
 
   // select basic options
-  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+  //OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_OPERATOR | OPTION_MODIFIER;
 
   // create translator object
   srcMLTranslator translator(language, srcml_file, options);
