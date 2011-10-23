@@ -38,6 +38,7 @@ char * strndup(const char * s1, size_t n) {
 #include "xmlrw.h"
 
 // macros
+#define COMMON -1
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
@@ -290,10 +291,10 @@ int main(int argc, char * argv[]) {
     outputNode(*unit, writer);
 
     update_context(&rbuf_old, reader_old);
-    update_in_diff(&rbuf_old, reader_old, -1);
+    update_in_diff(&rbuf_old, reader_old, COMMON);
     update_issued_diff(&rbuf_old, reader_old);
     update_context(&rbuf_new, reader_new);
-    update_in_diff(&rbuf_new, reader_new, -1);
+    update_in_diff(&rbuf_new, reader_new, COMMON);
     update_issued_diff(&rbuf_new, reader_new);
 
     xmlTextReaderRead(reader_old);
@@ -418,12 +419,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     return;
 
   int last_open_old;
-  for(last_open_old = (rbuf_old->in_diff->size() - 1); last_open_old > 0 && (*rbuf_old->in_diff)[last_open_old] == -1; --last_open_old);
+  for(last_open_old = (rbuf_old->in_diff->size() - 1); last_open_old > 0 && (*rbuf_old->in_diff)[last_open_old] == COMMON; --last_open_old);
 
   ++last_open_old;
 
   int last_open_new;
-  for(last_open_new = (rbuf_new->in_diff->size() - 1); last_open_new > 0 && (*rbuf_new->in_diff)[last_open_new] == -1; --last_open_new);
+  for(last_open_new = (rbuf_new->in_diff->size() - 1); last_open_new > 0 && (*rbuf_new->in_diff)[last_open_new] == COMMON; --last_open_new);
 
   ++last_open_new;
 
@@ -436,7 +437,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   }
 
   int not_done = 1;
-  int output_type = -1;
+  int output_type = COMMON;
   int output_end = -2;
   while(not_done) {
 
@@ -521,8 +522,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     }
     else {
 
-      if((output_type == -1 || output_type == DELETE) && output_end == rbuf_old->issued_diff->size() - 1
-         || (output_type == -1 || output_type == INSERT) && output_end == rbuf_new->issued_diff->size() - 1) {
+      if((output_type == COMMON || output_type == DELETE) && output_end == rbuf_old->issued_diff->size() - 1
+         || (output_type == COMMON || output_type == INSERT) && output_end == rbuf_new->issued_diff->size() - 1) {
 
         mark_open = false;
         output_end = -2;
@@ -545,7 +546,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
         output_type = rbuf_old->in_diff->back();
 
-        if(output_type == -1) {
+        if(output_type == COMMON) {
 
           mark_open = true;
           output_end = rbuf_old->issued_diff->size() - 2;
@@ -559,7 +560,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
         output_type = rbuf_new->in_diff->back();
 
-        if(output_type == -1) {
+        if(output_type == COMMON) {
 
           mark_open = true;
           output_end = rbuf_new->issued_diff->size() - 2;
@@ -574,10 +575,10 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       }
 
       update_context(rbuf_old, reader_old);
-      update_in_diff(rbuf_old, reader_old, -1);
+      update_in_diff(rbuf_old, reader_old, COMMON);
       update_issued_diff(rbuf_old, reader_old);
       update_context(rbuf_new, reader_new);
-      update_in_diff(rbuf_new, reader_new, -1);
+      update_in_diff(rbuf_new, reader_new, COMMON);
       update_issued_diff(rbuf_new, reader_new);
 
       if(mark_open && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
@@ -711,7 +712,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
         output_type = rbuf->in_diff->back();
 
-        if(output_type != -1) {
+        if(output_type != COMMON) {
 
           mark_open = true;
           output_end = rbuf->issued_diff->size() - 2;
