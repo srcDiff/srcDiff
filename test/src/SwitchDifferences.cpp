@@ -87,12 +87,12 @@ int main(int argc, char * argv[]) {
 
         if(strcmp((const char *)node->name, "new") != 0) {
 
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
           for(int i = 0; i < buffer.size(); ++i)
             outputNode(*buffer[i], writer);
 
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
           buffer = std::vector<xmlNode *>();
         } else 
@@ -111,12 +111,13 @@ int main(int argc, char * argv[]) {
 
       } else if(end_wait_diff) {
 
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
           
         for(int i = 0; i < buffer.size(); ++i)
           outputNode(*buffer[i], writer);
         
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+
 
         end_wait_diff = false;
         buffer = std::vector<xmlNode *>();
