@@ -39,6 +39,21 @@ char * strndup(const char * s1, size_t n) {
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
+const char* XML_DECLARATION_STANDALONE = "yes";
+const char* XML_VERSION = "1.0";
+
+const char* DIFF_PREFIX = "diff:";
+const char* DIFF_OLD = "diff:old";
+const char* DIFF_NEW = "diff:new";
+const char* DIFF_COMMON = "diff:common";
+
+const char* output_encoding = "UTF-8";
+
+const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
+
+const char* EDIFF_BEGIN = "start";
+const char* EDIFF_END = "end";
+
 // constant template for temporary file names
 char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
 
