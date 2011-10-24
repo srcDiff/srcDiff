@@ -119,7 +119,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, int end_line);
 
-void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line);
+void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line, struct reader_buffer * rbuf_other);
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
@@ -331,14 +331,14 @@ int main(int argc, char * argv[]) {
 
       case INSERT:
 
-        output_single(&rbuf_new, reader_new, writer, INSERT, edits->offset_sequence_two + edits->length);
+        output_single(&rbuf_new, reader_new, writer, INSERT, edits->offset_sequence_two + edits->length, &rbuf_old);
 
         last_diff = edits->offset_sequence_one + 1;
         break;
 
       case DELETE:
 
-        output_single(&rbuf_old, reader_old, writer, DELETE, edits->offset_sequence_one + edits->length);
+        output_single(&rbuf_old, reader_old, writer, DELETE, edits->offset_sequence_one + edits->length, &rbuf_new);
 
         last_diff = edits->offset_sequence_one + edits->length;
         break;
@@ -602,7 +602,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
 }
 
-void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line) {
+void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line, struct reader_buffer * rbuf_other) {
 
   if(end_line == 0)
     return;
