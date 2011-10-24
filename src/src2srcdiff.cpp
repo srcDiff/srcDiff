@@ -725,7 +725,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
         else {
 
           // must end both streams if common
-          if((*rbuf_other->issued_diff)[last_open_other] && strcmp((const char *)rbuf->context->back()->name, (const char *)rbuf_other->context->back()->name) == 0) {
+          if((*rbuf_other->issued_diff)[last_open_other] && strcmp((const char *)rbuf->context->back()->name, (const char *)(*rbuf_other->context)[last_open_other]->name) == 0) {
 
             mark_open = false;
             output_end = -2;
