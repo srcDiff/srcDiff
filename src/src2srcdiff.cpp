@@ -708,6 +708,12 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
 
+  struct edit * text_edit_script;
+  int distance = shortest_edit_script(rbuf_old->text->size(), (void *)rbuf_old->text, rbuf_new->text->size(), (void *)rbuf_new->text, node_compare, node_index, &text_edit_script);
+
+  struct edit * tag_edit_script;
+  int distance = shortest_edit_script(rbuf_old->tag->size(), (void *)rbuf_old->tag, rbuf_new->tag->size(), (void *)rbuf_new->tag, node_compare, node_index, &tag_edit_script);
+
   if(distance < 0) {
 
     fprintf(stderr, "Error with shortest edit script");
