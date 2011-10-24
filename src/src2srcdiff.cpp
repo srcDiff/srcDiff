@@ -443,6 +443,15 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   while(not_done) {
 
     if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
+ 
+      while(not_done && getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT
+            && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0)
+        not_done = xmlTextReaderRead(reader_old);        
+
+      not_done = 1;
+      while(not_done && getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT
+            && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0)
+        not_done = xmlTextReaderRead(reader_new);        
 
       /*
       collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
