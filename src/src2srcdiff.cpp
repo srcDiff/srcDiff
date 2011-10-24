@@ -553,6 +553,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
+          rbuf->text->push_back(text);
 
           characters_start = rbuf->characters;
 
@@ -573,6 +574,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
+          rbuf->text->push_back(text);
 
           characters_start = rbuf->characters + 1;
 
@@ -606,6 +608,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strdup((const char *)characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
+          rbuf->text->push_back(text);
 
         }
 
