@@ -105,6 +105,7 @@ struct reader_buffer {
   int line_number;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
+  std::vector<xmlNode *> * text;
   std::vector<bool> * in_diff;
   std::vector<xmlNode *> * context;
 };
@@ -506,6 +507,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
   // allocate new buffer
   rbuf->buffer = new std::vector<xmlNode *>;
+  rbuf->text = new std::vector<xmlNode *>;
   int not_done = 1;
   while(not_done)
 
@@ -534,6 +536,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
             const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
             text->content = (xmlChar *)content;
             rbuf->buffer->push_back(text);
+            rbuf->text->push_back(text);
 
             characters_start = rbuf->characters;
 
