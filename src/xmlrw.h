@@ -29,6 +29,21 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+const char* XML_DECLARATION_STANDALONE = "yes";
+const char* XML_VERSION = "1.0";
+
+const char* DIFF_PREFIX = "diff:";
+const char* DIFF_OLD = "diff:old";
+const char* DIFF_NEW = "diff:new";
+const char* DIFF_COMMON = "diff:common";
+
+const char* output_encoding = "UTF-8";
+
+const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
+
+const char* EDIFF_BEGIN = "start";
+const char* EDIFF_END = "end";
+
 bool operator==(const xmlNode& n1, const xmlNode& n2);
 
 xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
