@@ -738,7 +738,9 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
           }
         }
 
-        }else if(rbuf->in_diff->back() == COMMON){
+        }else if(rbuf->in_diff->back() == COMMON 
+                 && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT
+                 && strcmp((const char *)rbuf->context->back()->name, (const char *)rbuf_other->context->back()->name) == 0) {
         }
 
       update_context(rbuf, reader);
