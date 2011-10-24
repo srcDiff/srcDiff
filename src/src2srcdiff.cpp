@@ -34,7 +34,6 @@ char * strndup(const char * s1, size_t n) {
 #endif
 
 #include "xmlrw.h"
-#include "diffrw.h"
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
