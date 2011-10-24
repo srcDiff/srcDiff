@@ -444,6 +444,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
+      /*
       collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
 
       collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
@@ -451,7 +452,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       output_double(rbuf_old, rbuf_new, writer);
 
       return;
-
+      */
     }
 
     // look if in text node
