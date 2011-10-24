@@ -2,49 +2,49 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="if.single">
 
 <unit>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></then></if><diff:old status="end"/></unit>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</diff:common>}</block></then></if></diff:old></unit>
 
 <unit>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></then></if>
-<diff:old status="end"/></unit>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</diff:common>}</block></then></if>
+</diff:old></unit>
 
 <unit>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></then></if>
-<diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</diff:common>}</block></then></if>
+</diff:old><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 <unit>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></then></if>
-<diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</diff:common>}</block></then></if>
+</diff:old><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></then></if><diff:old status="end"/></unit>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</diff:common>}</block></then></if></diff:old></unit>
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></then></if>
-<diff:old status="end"/></unit>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</diff:common>}</block></then></if>
+</diff:old></unit>
 
 <unit>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></then></if><diff:old status="end"/>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:old></unit>
+
+<unit>
+<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:old>
 </unit>
-
-<unit>
-<diff:old status="start"/><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></then></if><diff:old status="end"/></unit>
 
 </unit>
