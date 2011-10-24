@@ -732,15 +732,25 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
             output_end = -2;
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
-            rbuf_other->context->pop_back();
-            rbuf_other->in_diff->pop_back();
-            rbuf_other->issued_diff->pop_back();
+            if(rbuf_other->context->size() != 1) {
+
+              rbuf_other->context->pop_back();
+              rbuf_other->in_diff->pop_back();
+              rbuf_other->issued_diff->pop_back();
+            }
           }
         }
 
         }else if(rbuf->in_diff->back() == COMMON 
                  && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT
                  && strcmp((const char *)rbuf->context->back()->name, (const char *)rbuf_other->context->back()->name) == 0) {
+
+          if(rbuf_other->context->size() != 1) {
+
+            rbuf_other->context->pop_back();
+            rbuf_other->in_diff->pop_back();
+            rbuf_other->issued_diff->pop_back();
+          }
         }
 
       update_context(rbuf, reader);
