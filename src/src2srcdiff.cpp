@@ -578,6 +578,12 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
             ++rbuf->characters;
 
+            if(!(*rbuf->characters)) {
+
+              rbuf->characters = NULL;
+              not_done = xmlTextReaderRead(reader);
+            }
+
             return;
           }
 
