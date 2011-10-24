@@ -689,7 +689,6 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
     }
     else {
 
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)getRealCurrentNode(reader)->name);
       if(output_end == rbuf->issued_diff->size() - 1) {
 
         mark_open = false;
@@ -1211,7 +1210,6 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int in
 
 void update_issued_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)getRealCurrentNode(reader)->name);
   if(xmlTextReaderIsEmptyElement(reader))
     return;
 
