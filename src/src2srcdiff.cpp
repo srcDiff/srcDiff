@@ -397,8 +397,8 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
   int language = Language::getLanguageFromFilename(source_file);
 
   // select basic options
-  //OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
-  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_OPERATOR | OPTION_MODIFIER;
+  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+  //OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_OPERATOR | OPTION_MODIFIER;
 
   // create translator object
   srcMLTranslator translator(language, srcml_file, options);
@@ -689,6 +689,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
     }
     else {
 
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)getRealCurrentNode(reader)->name);
       if(output_end == rbuf->issued_diff->size() - 1) {
 
         mark_open = false;
@@ -706,8 +707,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         return;
 
-      outputXML(reader, writer);
-
+      outputNode(*getRealCurrentNode(reader), writer);
 
       if(rbuf->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader)->type == XML_READER_TYPE_END_ELEMENT) {
 
@@ -1211,6 +1211,7 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int in
 
 void update_issued_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)getRealCurrentNode(reader)->name);
   if(xmlTextReaderIsEmptyElement(reader))
     return;
 
