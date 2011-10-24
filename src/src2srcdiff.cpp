@@ -719,9 +719,13 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
         }
         else {
 
-          mark_open = false;
-          output_end = -2;
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+          // must end both streams if common
+          if(rbuf_other->issued_diff->back() && strcmp((const char *)rbuf->context->back()->name, (const char *)rbuf_other->context->back()->name) == 0) {
+
+            mark_open = false;
+            output_end = -2;
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+          }
         }
 
       }
