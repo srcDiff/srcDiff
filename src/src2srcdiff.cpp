@@ -624,6 +624,11 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
   }
 
+  int last_open_other;
+  for(last_open_other = (rbuf_other->in_diff->size() - 1); last_open_other > 0 && (*rbuf_other->in_diff)[last_open_other] == COMMON; --last_open_other);
+
+  ++last_open_other;
+
   int not_done = 1;
   int output_type = operation;
   int output_end = -2;
@@ -720,11 +725,15 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
         else {
 
           // must end both streams if common
-          if(rbuf_other->issued_diff->back() && strcmp((const char *)rbuf->context->back()->name, (const char *)rbuf_other->context->back()->name) == 0) {
+          if((*rbuf_other->issued_diff)[last_open_other] && strcmp((const char *)rbuf->context->back()->name, (const char *)rbuf_other->context->back()->name) == 0) {
 
             mark_open = false;
             output_end = -2;
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+
+            rbuf_other->context->pop_back();
+            rbuf_other->in_diff->pop_back();
+            rbuf_other->issued_diff->pop_back();
           }
         }
 
