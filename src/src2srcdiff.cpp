@@ -677,10 +677,11 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
       not_done_new = xmlTextReaderRead(reader_new);
 
+    }
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
       open_diff->pop_back();
       
-    }
 
     // while in close and closing old or new element continue
     while(not_done_old && !rbuf_old->issued_diff->back() && rbuf_old->in_diff->back() == DELETE) {
@@ -694,14 +695,14 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
       not_done_old = xmlTextReaderRead(reader_old);
 
+    }
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
       open_diff->pop_back();
       
-    }
 
   } else {
 
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     // while in close and closing old or new element continue
     while(not_done_old && !rbuf_old->issued_diff->back() && rbuf_old->in_diff->back() == DELETE) {
 
@@ -714,10 +715,11 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
       not_done_old = xmlTextReaderRead(reader_old);
 
+    }
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
       open_diff->pop_back();
       
-    }
 
     // while in close and closing old or new element continue
     while(not_done_new && !rbuf_new->issued_diff->back() && rbuf_new->in_diff->back() == INSERT) {
@@ -731,10 +733,11 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
       not_done_new = xmlTextReaderRead(reader_new);
 
+    }
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
       open_diff->pop_back();
       
-    }
 
   }
 
