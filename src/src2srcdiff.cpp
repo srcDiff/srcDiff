@@ -693,7 +693,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
     }
     else {
 
-      if(output_end == rbuf->issued_diff->size() - 1) {
+      if(output_end == (signed)rbuf->issued_diff->size() - 1) {
 
         mark_open = false;
         output_end = -2;
