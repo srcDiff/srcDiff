@@ -424,7 +424,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
   ++last_open_old;
 
-  unsignedint last_open_new;
+  unsigned int last_open_new;
   for(last_open_new = (rbuf_new->in_diff->size() - 1); last_open_new > 0 && (*rbuf_new->in_diff)[last_open_new] == COMMON; --last_open_new);
 
   ++last_open_new;
