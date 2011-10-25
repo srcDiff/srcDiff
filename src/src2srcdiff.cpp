@@ -648,6 +648,12 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
   }
 
+  // check if that open corrected and they now match if do return
+  if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) == 0)
+    return;
+
+  // check last open diff and use to decide which goes first
+  // while in close and closing old or new element continue
 }
 
 
