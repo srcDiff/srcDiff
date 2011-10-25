@@ -662,6 +662,9 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
   if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) == 0)
     return;
 
+  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+  open_diff->pop_back();
+
   // check last open diff and use to decide which goes first
   if(open_diff->back() == INSERT) {
 
