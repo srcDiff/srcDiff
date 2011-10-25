@@ -121,7 +121,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
 
-void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
+int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
 
 void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct reader_buffer * rbuf_other, xmlTextWriterPtr writer, std::vector<int> * open_diff, int operation, int end_line);
 
@@ -616,7 +616,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
 }
 
-void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
+int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
 
   int not_done_old = 1;
   if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
@@ -660,7 +660,7 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
   // check if that open corrected and they now match if do return
   if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) == 0)
-    return;
+    return 0;
 
   xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
   open_diff->pop_back();
@@ -795,6 +795,8 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
     }
 
   }
+
+  return 1;
 
 }
 
