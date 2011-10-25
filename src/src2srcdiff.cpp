@@ -419,12 +419,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   if(end_line == 0)
     return;
 
-  int last_open_old;
+  unsigned int last_open_old;
   for(last_open_old = (rbuf_old->in_diff->size() - 1); last_open_old > 0 && (*rbuf_old->in_diff)[last_open_old] == COMMON; --last_open_old);
 
   ++last_open_old;
 
-  int last_open_new;
+  unsignedint last_open_new;
   for(last_open_new = (rbuf_new->in_diff->size() - 1); last_open_new > 0 && (*rbuf_new->in_diff)[last_open_new] == COMMON; --last_open_new);
 
   ++last_open_new;
