@@ -301,6 +301,8 @@ int main(int argc, char * argv[]) {
     update_in_diff(&rbuf_new, reader_new, COMMON);
     update_issued_diff(&rbuf_new, reader_new);
 
+    open_diff.push_back(COMMON);
+
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
@@ -437,6 +439,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     mark_open = true;
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
+    open_diff->push_back(COMMON);
   }
 
   int not_done = 1;
@@ -505,6 +508,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
             if(mark_open)
               xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
+            open_diff->pop_back();
+
             return;
           }
 
@@ -537,6 +542,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         else
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
+        open_diff->pop_back();
+
       }
 
       if(strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") == 0)
@@ -553,9 +560,14 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
           mark_open = true;
           output_end = rbuf_old->issued_diff->size() - 2;
         }
-        else
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+        else {
 
+          // first two lines were not here not sure why not
+          mark_open = false;
+          output_end = -2;
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+          open_diff->pop_back();
+        }
       }
 
       if(rbuf_new->issued_diff->back() && (xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
@@ -572,6 +584,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
           mark_open = false;
           output_end = -2;
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+          open_diff->pop_back();
         }
 
       }
@@ -623,6 +636,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct 
     else
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
+    open_diff->push_back(operation);
   }
 
   unsigned int last_open_other;
@@ -678,6 +692,8 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct 
               else
                 xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
+            open_diff->pop_back();
+    
             return;
           }
 
@@ -707,6 +723,8 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct 
         else
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
 
+            open_diff->pop_back();
+
       }
 
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
@@ -732,6 +750,8 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct 
             mark_open = false;
             output_end = -2;
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+
+            open_diff->pop_back();
 
             if(rbuf_other->context->size() != 1) {
 
