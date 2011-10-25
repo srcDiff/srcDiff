@@ -534,7 +534,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       if(((output_type == COMMON && rbuf_old->issued_diff->size() != 1) 
           || output_type == DELETE) && output_end == (signed)rbuf_old->issued_diff->size() - 1
-         || ((output_type == COMMON && rbuf_old->issued_diff->size() != 1)
+         || ((output_type == COMMON && rbuf_new->issued_diff->size() != 1)
               || output_type == INSERT) && output_end == (signed)rbuf_new->issued_diff->size() - 1) {
 
         mark_open = false;
