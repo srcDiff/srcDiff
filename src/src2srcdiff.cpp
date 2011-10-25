@@ -619,13 +619,18 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
 
   int not_done_old = 1;
-  if(getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
+  if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
 
     // Output old then node then common
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
     open_diff->push_back(DELETE);
 
     outputNode(*getRealCurrentNode(reader_old), writer);
+
+    update_context(rbuf_old, reader_old);
+    update_in_diff(rbuf_old, reader_old, DELETE);
+    update_issued_diff(rbuf_old, reader_old);
+
     not_done_old = xmlTextReaderRead(reader_old);
     
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
@@ -633,14 +638,19 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
   }
 
-  int not_done_n3w = 1;
-  if(getRealCurrentNode(reader_new)->type == XML_READER_TYPE_ELEMENT) {
+  int not_done_new = 1;
+  if((xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_ELEMENT) {
 
     // Output new then node then common
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
     open_diff->push_back(INSERT);
 
     outputNode(*getRealCurrentNode(reader_new), writer);
+
+    update_context(rbuf_new, reader_new);
+    update_in_diff(rbuf_new, reader_new, INSERT);
+    update_issued_diff(rbuf_new, reader_new);
+
     not_done_new = xmlTextReaderRead(reader_new);
     
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
@@ -653,7 +663,81 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
     return;
 
   // check last open diff and use to decide which goes first
-  // while in close and closing old or new element continue
+  if(open_diff->back() == INSERT) {
+
+    // while in close and closing old or new element continue
+    while(not_done_new && !rbuf_new->issued_diff->back() && rbuf_new->in_diff->back() == INSERT) {
+
+      // update and output stuff
+      outputNode(*getRealCurrentNode(reader_new), writer);
+
+      update_context(rbuf_new, reader_new);
+      update_in_diff(rbuf_new, reader_new, INSERT);
+      update_issued_diff(rbuf_new, reader_new);
+
+      not_done_new = xmlTextReaderRead(reader_new);
+
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+      open_diff->pop_back();
+      
+    }
+
+    // while in close and closing old or new element continue
+    while(not_done_old && !rbuf_old->issued_diff->back() && rbuf_old->in_diff->back() == INSERT) {
+
+      // update and output stuff
+      outputNode(*getRealCurrentNode(reader_old), writer);
+
+      update_context(rbuf_old, reader_old);
+      update_in_diff(rbuf_old, reader_old, INSERT);
+      update_issued_diff(rbuf_old, reader_old);
+
+      not_done_old = xmlTextReaderRead(reader_old);
+
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+      open_diff->pop_back();
+      
+    }
+
+  } else {
+
+    // while in close and closing old or new element continue
+    while(not_done_old && !rbuf_old->issued_diff->back() && rbuf_old->in_diff->back() == INSERT) {
+
+      // update and output stuff
+      outputNode(*getRealCurrentNode(reader_old), writer);
+
+      update_context(rbuf_old, reader_old);
+      update_in_diff(rbuf_old, reader_old, INSERT);
+      update_issued_diff(rbuf_old, reader_old);
+
+      not_done_old = xmlTextReaderRead(reader_old);
+
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+      open_diff->pop_back();
+      
+    }
+
+    // while in close and closing old or new element continue
+    while(not_done_new && !rbuf_new->issued_diff->back() && rbuf_new->in_diff->back() == INSERT) {
+
+      // update and output stuff
+      outputNode(*getRealCurrentNode(reader_new), writer);
+
+      update_context(rbuf_new, reader_new);
+      update_in_diff(rbuf_new, reader_new, INSERT);
+      update_issued_diff(rbuf_new, reader_new);
+
+      not_done_new = xmlTextReaderRead(reader_new);
+
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+      open_diff->pop_back();
+      
+    }
+
+  }
+
+
 }
 
 
