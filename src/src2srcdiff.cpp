@@ -943,7 +943,8 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   // count number same open
   int count = 1;
-  for(unsigned int i = last_open + 1; i < rbuf->context->size(); ++i) {
+  for(unsigned 
+int i = last_open + 1; i < rbuf->context->size(); ++i) {
 
     xmlNodePtr bnode = (*rbuf->context)[i];
 
