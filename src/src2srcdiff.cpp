@@ -121,6 +121,8 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
 
+void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
+
 void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct reader_buffer * rbuf_other, xmlTextWriterPtr writer, std::vector<int> * open_diff, int operation, int end_line);
 
 // collect the differnces
@@ -318,14 +320,18 @@ int main(int argc, char * argv[]) {
 
       // detect and change
       struct edit * edit_next = edits->next;
-      if(0 && edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
+      if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
-        collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
+        if(open_diff.back() == INSERT) {
 
-        collect_difference(&rbuf_new, reader_new, INSERT, edits->next->offset_sequence_two + edits->next->length);
+          output_single(&rbuf_new, reader_new, &rbuf_old, writer, &open_diff, INSERT, edit_next->offset_sequence_two + edits->length);
+          output_single(&rbuf_old, reader_old, &rbuf_new, writer, &open_diff, DELETE, edits->offset_sequence_one + edits->length);
+        } else {
 
-        output_double(&rbuf_old, &rbuf_new, writer);
+          output_single(&rbuf_old, reader_old, &rbuf_new, writer, &open_diff, DELETE, edits->offset_sequence_one + edits->length);
+          output_single(&rbuf_new, reader_new, &rbuf_old, writer, &open_diff, INSERT, edit_next->offset_sequence_two + edits->length);
+        }
 
         last_diff = edits->offset_sequence_one + edits->length;
         edits = edits->next;
@@ -402,7 +408,6 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
   // select basic options
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
-  //OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_OPERATOR | OPTION_MODIFIER;
 
   // create translator object
   srcMLTranslator translator(language, srcml_file, options);
