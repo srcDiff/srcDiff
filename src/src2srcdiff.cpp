@@ -680,9 +680,20 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
     }
 
+    if(rbuf_new->issued_diff->back()) {
+
+      outputNode(*getRealCurrentNode(reader_new), writer);
+
+      update_context(rbuf_new, reader_new);
+      update_in_diff(rbuf_new, reader_new, INSERT);
+      update_issued_diff(rbuf_new, reader_new);
+
+      not_done_new = xmlTextReaderRead(reader_new);
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
       open_diff->pop_back();
-      
+
+    }
 
     // while in close and closing old or new element continue
     while(not_done_old && !rbuf_old->issued_diff->back() && rbuf_old->in_diff->back() == DELETE
@@ -693,16 +704,26 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
       outputNode(*getRealCurrentNode(reader_old), writer);
 
       update_context(rbuf_old, reader_old);
-      update_in_diff(rbuf_old, reader_old, INSERT);
+      update_in_diff(rbuf_old, reader_old, DELETE);
       update_issued_diff(rbuf_old, reader_old);
 
       not_done_old = xmlTextReaderRead(reader_old);
 
     }
 
+    if(rbuf_old->issued_diff->back()) {
+
+      outputNode(*getRealCurrentNode(reader_old), writer);
+
+      update_context(rbuf_old, reader_old);
+      update_in_diff(rbuf_old, reader_old, DELETE);
+      update_issued_diff(rbuf_old, reader_old);
+
+      not_done_old = xmlTextReaderRead(reader_old);
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
       open_diff->pop_back();
-      
+    }
 
   } else {
 
@@ -722,8 +743,22 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
     }
 
+    if(rbuf_old->issued_diff->back()) {
+
+      outputNode(*getRealCurrentNode(reader_old), writer);
+
+      update_context(rbuf_old, reader_old);
+      update_in_diff(rbuf_old, reader_old, DELETE);
+      update_issued_diff(rbuf_old, reader_old);
+
+      not_done_old = xmlTextReaderRead(reader_old);
+
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
       open_diff->pop_back();
+
+    }
+
       
 
     // while in close and closing old or new element continue
@@ -741,9 +776,20 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
 
     }
 
+    if(rbuf_new->issued_diff->back()) {
+
+      outputNode(*getRealCurrentNode(reader_new), writer);
+
+      update_context(rbuf_new, reader_new);
+      update_in_diff(rbuf_new, reader_new, INSERT);
+      update_issued_diff(rbuf_new, reader_new);
+
+      not_done_new = xmlTextReaderRead(reader_new);
+
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
       open_diff->pop_back();
-      
+
+    }
 
   }
 
