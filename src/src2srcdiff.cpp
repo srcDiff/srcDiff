@@ -1,4 +1,3 @@
-
 /*
   Create srcdiff format from two src files.
 
