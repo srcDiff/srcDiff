@@ -606,7 +606,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
   if(end_line == 0)
     return;
 
-  int last_open;
+  unsigned int last_open;
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open] == operation; --last_open);
 
   ++last_open;
@@ -623,7 +623,7 @@ void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlText
 
   }
 
-  int last_open_other;
+  unsigned int last_open_other;
   for(last_open_other = (rbuf_other->in_diff->size() - 1); last_open_other > 0 && (*rbuf_other->in_diff)[last_open_other] == COMMON; --last_open_other);
 
   ++last_open_other;
