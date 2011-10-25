@@ -456,6 +456,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
  
       if(merge_same_line(rbuf_old, reader_old, rbuf_new, reader_new, writer, open_diff, rbuf_old->line_number + 1)) {
 
+        mark_open = false;
         output_end = -2;
       }
 
@@ -532,10 +533,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     }
     else {
 
-      if(((output_type == COMMON && rbuf_old->issued_diff->size() != 1) 
-          || output_type == DELETE) && output_end == (signed)rbuf_old->issued_diff->size() - 1
-         || ((output_type == COMMON && rbuf_new->issued_diff->size() != 1)
-              || output_type == INSERT) && output_end == (signed)rbuf_new->issued_diff->size() - 1) {
+      if((output_type == COMMON || output_type == DELETE) && output_end == (signed)rbuf_old->issued_diff->size() - 1
+         || (output_type == COMMON || output_type == INSERT) && output_end == (signed)rbuf_new->issued_diff->size() - 1) {
 
         mark_open = false;
         output_end = -2;
