@@ -917,7 +917,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   // may be complete whitespace need to check for that
   // find if in same diff type
   // find the last open tag that needs to be closed
-  int last_open;
+  unsigned int last_open;
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open] == edit->operation; --last_open);
 
   bool issued_diff = (last_open + 1) != rbuf->in_diff->size() && !(*rbuf->issued_diff)[last_open + 1];
