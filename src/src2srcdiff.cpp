@@ -707,7 +707,9 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
   } else {
 
     // while in close and closing old or new element continue
-    while(not_done_old && !rbuf_old->issued_diff->back() && rbuf_old->in_diff->back() == DELETE) {
+    while(not_done_old && !rbuf_old->issued_diff->back() && rbuf_old->in_diff->back() == DELETE
+                    && (xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT) {
+
 
       // update and output stuff
       outputNode(*getRealCurrentNode(reader_old), writer);
@@ -725,7 +727,8 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
       
 
     // while in close and closing old or new element continue
-    while(not_done_new && !rbuf_new->issued_diff->back() && rbuf_new->in_diff->back() == INSERT) {
+    while(not_done_new && !rbuf_new->issued_diff->back() && rbuf_new->in_diff->back() == INSERT
+                    && (xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT) {
 
       // update and output stuff
       outputNode(*getRealCurrentNode(reader_new), writer);
