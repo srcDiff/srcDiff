@@ -452,7 +452,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   int output_end = -2;
   while(not_done) {
 
-    if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
+    if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
  
       merge_same_line(rbuf_old, reader_old, rbuf_new, reader_new, writer, open_diff, rbuf_old->line_number + 1);
 
@@ -736,7 +736,6 @@ void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_ol
     }
 
   }
-
 
 }
 
