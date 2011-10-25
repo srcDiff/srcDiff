@@ -119,9 +119,9 @@ struct reader_buffer {
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
 // compares a line supposed to be the same and output the correrct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
+void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
 
-void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
+void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
 
 void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct reader_buffer * rbuf_other, xmlTextWriterPtr writer, std::vector<int> * open_diff, int operation, int end_line);
 
@@ -423,7 +423,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 }
 
 // compares a line supposed to be the same and output the correct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
+void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
 
   if(end_line == 0)
     return;
@@ -454,13 +454,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(0 && strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
  
-      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+      merge_same_line(rbuf_old, reader_old, rbuf_new, reader_new, writer, open_diff, rbuf_old->line_number + 1);
 
-      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
-
-      output_double(rbuf_old, rbuf_new, writer);
-
-      return;
     }
 
     // look if in text node
@@ -620,6 +615,41 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
   ++rbuf_new->line_number;
 
 }
+
+void merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
+
+  int not_done_old = 1;
+  if(getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
+
+    // Output old then node then common
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+    open_diff->push_back(DELETE);
+
+    outputNode(*getRealCurrentNode(reader_old), writer);
+    not_done_old = xmlTextReaderRead(reader_old);
+    
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
+    open_diff->push_back(COMMON);
+
+  }
+
+  int not_done_n3w = 1;
+  if(getRealCurrentNode(reader_new)->type == XML_READER_TYPE_ELEMENT) {
+
+    // Output new then node then common
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+    open_diff->push_back(INSERT);
+
+    outputNode(*getRealCurrentNode(reader_new), writer);
+    not_done_new = xmlTextReaderRead(reader_new);
+    
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
+    open_diff->push_back(COMMON);
+
+  }
+
+}
+
 
 void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct reader_buffer * rbuf_other, xmlTextWriterPtr writer, std::vector<int> * open_diff, int operation, int end_line) {
 
