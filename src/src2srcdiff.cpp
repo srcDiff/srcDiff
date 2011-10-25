@@ -119,9 +119,9 @@ struct reader_buffer {
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
 // compares a line supposed to be the same and output the correrct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, int end_line);
+void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
 
-void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line, struct reader_buffer * rbuf_other);
+void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct reader_buffer * rbuf_other, xmlTextWriterPtr writer, std::vector<int> * open_diff, int operation, int end_line);
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
@@ -272,6 +272,8 @@ int main(int argc, char * argv[]) {
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+    std::vector<int> open_diff;
+
     // run through diffs adding markup
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
@@ -307,9 +309,9 @@ int main(int argc, char * argv[]) {
 
       // add preceeding unchanged
       if(edits->operation == DELETE)
-        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one);
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, &open_diff, edits->offset_sequence_one);
       else
-        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, edits->offset_sequence_one + 1);
+        compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, &open_diff, edits->offset_sequence_one + 1);
 
 
       // detect and change
@@ -333,14 +335,14 @@ int main(int argc, char * argv[]) {
 
       case INSERT:
 
-        output_single(&rbuf_new, reader_new, writer, INSERT, edits->offset_sequence_two + edits->length, &rbuf_old);
+        output_single(&rbuf_new, reader_new, &rbuf_old, writer, &open_diff, INSERT, edits->offset_sequence_two + edits->length);
 
         last_diff = edits->offset_sequence_one + 1;
         break;
 
       case DELETE:
 
-        output_single(&rbuf_old, reader_old, writer, DELETE, edits->offset_sequence_one + edits->length, &rbuf_new);
+        output_single(&rbuf_old, reader_old, &rbuf_new, writer, &open_diff, DELETE, edits->offset_sequence_one + edits->length);
 
         last_diff = edits->offset_sequence_one + edits->length;
         break;
@@ -348,9 +350,7 @@ int main(int argc, char * argv[]) {
 
     }
 
-    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, lines1.size());
-
-    //    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, lines1.size() + 1);
+    compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer, &open_diff, lines1.size());
 
   }
 
@@ -416,7 +416,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 }
 
 // compares a line supposed to be the same and output the correct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, int end_line) {
+void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
 
   if(end_line == 0)
     return;
@@ -603,7 +603,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
 }
 
-void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, xmlTextWriterPtr writer, int operation, int end_line, struct reader_buffer * rbuf_other) {
+void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct reader_buffer * rbuf_other, xmlTextWriterPtr writer, std::vector<int> * open_diff, int operation, int end_line) {
 
   if(end_line == 0)
     return;
