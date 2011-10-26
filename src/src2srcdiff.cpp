@@ -1388,19 +1388,19 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diff, xmlTextReade
     new_diff->operation = operation;
     new_diff->open_elements = new std::vector<xmlNode *>;
 
-    open_diff->push_back(open_diff);
+    open_diff->back()->push_back(open_diff);
   }
 
   xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    open_diff->open_elements->push_back(node);
+    open_diff->back()->open_elements->push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(open_diff->size() == 1)
       return;
 
-    open_diff->open_elements->push_back(node);
+    open_diff->back()->open_elements->push_back(node);
   }
 
   if(open_diff->open_elements->size() == 0)
