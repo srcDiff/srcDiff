@@ -912,9 +912,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
+      int num_open = 0;
       for(int j = 0; j < edits->length; ++j) {
         
-        int num_open = 0;
         while((xmlReaderTypes)(*rbuf_new->buffer)[new_offset]->type == XML_READER_TYPE_ELEMENT) {
 
           outputNode(*(*rbuf_new->buffer)[new_offset], writer);
@@ -946,9 +946,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
+      int num_open = 0;
       for(int j = 0; j < edits->length; ++j) {
 
-        int num_open = 0;
         while((xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_ELEMENT) {
 
           outputNode(*(*rbuf_old->buffer)[old_offset], writer);
