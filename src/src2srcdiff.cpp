@@ -655,9 +655,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   // find the last open tag that needs to be closed
   int last_open;
-  for(last_open = (rbuf->in_diff->size() - 1); last_open != 0 && (*rbuf->in_diff)[last_open]; --last_open);
+  for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
-  ++last_open;
+  //last_open;
   xmlNodePtr node = (*rbuf->context)[last_open];
 
   // output diff outputting until identified open tag
