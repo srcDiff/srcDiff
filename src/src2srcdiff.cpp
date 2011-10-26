@@ -535,7 +535,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       update_diff_stack(rbuf_new->open_diff, reader_old, COMMON);
 
       update_diff_stack(rbuf_old->output_diff, reader_old, COMMON);
-
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)getRealCurrentNode(reader_old)->name);
       // output non-text node and get next node
       outputXML(reader_old, writer);
       not_done = xmlTextReaderRead(reader_old);
