@@ -109,6 +109,9 @@ struct reader_buffer {
   std::vector<xmlNode *> * tags;
   std::vector<bool> * in_diff;
   std::vector<xmlNode *> * context;
+  std::vector<struct opendiff *> * open_diffs;
+  std::vector<struct opendiff *> * output_diffs;
+
 };
 
 struct open_diff {
