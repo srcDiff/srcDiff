@@ -324,7 +324,7 @@ int main(int argc, char * argv[]) {
     update_diff_stack(rbuf_old.open_diff, reader_old, COMMON);
     update_context(&rbuf_new, reader_new);
     update_in_diff(&rbuf_new, reader_new, false);
-    update_diff_stack(rbuf_new.open_diff, reader_old, COMMON);
+    update_diff_stack(rbuf_new.open_diff, reader_new, COMMON);
 
     update_diff_stack(rbuf_old.output_diff, reader_old, COMMON);
     xmlTextReaderRead(reader_old);
@@ -1426,6 +1426,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
   if(xmlTextReaderIsEmptyElement(reader))
     return;
 
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(open_diffs->back()->operation != operation) {
 
     struct open_diff * new_diff = new struct open_diff;
@@ -1449,4 +1450,5 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
 
   if(open_diffs->back()->open_elements->size() == 0)
     open_diffs->pop_back();
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 }
