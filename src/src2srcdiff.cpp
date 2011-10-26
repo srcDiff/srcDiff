@@ -723,6 +723,16 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   int old_offset = 0;
   int new_offset = 0;
 
+  //output nontext until reach a text node also while they are the same
+  while(strcmp((const char *)(*rbuf_old->buffer)[old_offset]->name, (const char *)(*rbuf_new->buffer)[new_offset]->name) == 0
+        && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
+        && (xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type != XML_READER_TYPE_TEXT) {
+
+    outputNode(*(*rbuf_old->buffer)[old_offset], writer);
+    ++old_offset;
+    ++new_offset;
+
+  }
 
   int last_diff = 0;
   struct edit * edits = text_edit_script;
