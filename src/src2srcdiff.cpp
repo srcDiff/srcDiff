@@ -296,7 +296,7 @@ int main(int argc, char * argv[]) {
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
     new_diff->open_elements = new std::vector<xmlNode *>;
-    rbuf_old.open_diff->push_back(new_diff);
+    rbuf_new.open_diff->push_back(new_diff);
 
     rbuf_old.output_diff = &output_diff;
     xmlTextReaderRead(reader_old);
