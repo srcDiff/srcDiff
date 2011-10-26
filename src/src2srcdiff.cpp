@@ -733,22 +733,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       for(int j = last_diff; j < edits->offset_sequence_one; ++j) {
 
         //output nontext until reach a text node also while they are the same
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        while((*rbuf_old->buffer)[old_offset] == (*rbuf_new->buffer)[new_offset]
-=======
         while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
               && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
->>>>>>> working
-=======
-        while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
-              && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
->>>>>>> working
-=======
-        while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
-              && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
->>>>>>> working
               && (xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type != XML_READER_TYPE_TEXT) {
 
           outputNode(*(*rbuf_old->buffer)[old_offset], writer);
@@ -758,41 +744,15 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         }
 
         outputNode(*(*rbuf_old->text)[j], writer);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
           ++old_offset;
           ++new_offset;
->>>>>>> working
-=======
-          ++old_offset;
-          ++new_offset;
->>>>>>> working
-=======
-          ++old_offset;
-          ++new_offset;
->>>>>>> working
       }
 
     else
       for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        while((*rbuf_old->buffer)[old_offset] == (*rbuf_new->buffer)[new_offset]
-=======
+
         while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
               && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
->>>>>>> working
-=======
-        while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
-              && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
->>>>>>> working
-=======
-        while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
-              && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
->>>>>>> working
               && (xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type != XML_READER_TYPE_TEXT) {
 
           outputNode(*(*rbuf_old->buffer)[old_offset], writer);
@@ -802,21 +762,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         }
 
         outputNode(*(*rbuf_old->text)[j], writer);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
           ++old_offset;
           ++new_offset;
->>>>>>> working
-=======
-          ++old_offset;
-          ++new_offset;
->>>>>>> working
-=======
-          ++old_offset;
-          ++new_offset;
->>>>>>> working
       }
 
     // detect and change
