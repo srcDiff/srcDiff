@@ -709,10 +709,10 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
 
   struct edit * text_edit_script;
-  int distance = shortest_edit_script(rbuf_old->text->size(), (void *)rbuf_old->text, rbuf_new->text->size(), (void *)rbuf_new->text, node_compare, node_index, &text_edit_script);
+  int distance_text = shortest_edit_script(rbuf_old->text->size(), (void *)rbuf_old->text, rbuf_new->text->size(), (void *)rbuf_new->text, node_compare, node_index, &text_edit_script);
 
   struct edit * tags_edit_script;
-  int distance = shortest_edit_script(rbuf_old->tags->size(), (void *)rbuf_old->tags, rbuf_new->tags->size(), (void *)rbuf_new->tags, node_compare, node_index, &tags_edit_script);
+  int distance_tags = shortest_edit_script(rbuf_old->tags->size(), (void *)rbuf_old->tags, rbuf_new->tags->size(), (void *)rbuf_new->tags, node_compare, node_index, &tags_edit_script);
 
   if(distance < 0) {
 
