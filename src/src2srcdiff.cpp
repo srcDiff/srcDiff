@@ -121,7 +121,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
 
-int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line);
+int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, bool * mark_open);
 
 void output_single(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct reader_buffer * rbuf_other, xmlTextWriterPtr writer, std::vector<int> * open_diff, int operation, int end_line);
 
@@ -454,9 +454,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
  
-      if(merge_same_line(rbuf_old, reader_old, rbuf_new, reader_new, writer, open_diff, rbuf_old->line_number + 1)) {
+      if(merge_same_line(rbuf_old, reader_old, rbuf_new, reader_new, writer, open_diff, &mark_open)) {
 
-        mark_open = false;
         output_end = -2;
       }
 
@@ -620,7 +619,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
 }
 
-int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, int end_line) {
+int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, bool * mark_open) {
+
+ *mark_open = false;
 
   int not_done_old = 1;
   if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
@@ -636,9 +637,14 @@ int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old
     update_issued_diff(rbuf_old, reader_old);
 
     not_done_old = xmlTextReaderRead(reader_old);
-    
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
-    open_diff->push_back(COMMON);
+
+    if((rbuf_old->in_diff->size() != 1)
+       || (rbuf_new->in_diff->size() != 1)) {
+
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
+      open_diff->push_back(COMMON);
+      *mark_open = true;
+    }
 
   }
 
@@ -657,8 +663,13 @@ int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old
 
     not_done_new = xmlTextReaderRead(reader_new);
     
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
-    open_diff->push_back(COMMON);
+    if((rbuf_old->in_diff->size() != 1)
+       || (rbuf_new->in_diff->size() != 1)) {
+    
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
+      open_diff->push_back(COMMON);
+      *mark_open = true;
+    }
 
   }
 
@@ -666,8 +677,11 @@ int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old
   if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) == 0)
     return 0;
 
-  xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
-  open_diff->pop_back();
+  if(*mark_open && open_diff->back() == COMMON) {
+
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
+    open_diff->pop_back();
+  }
 
   // check last open diff and use to decide which goes first
   if(open_diff->back() == INSERT) {
@@ -799,6 +813,15 @@ int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old
     }
 
   }
+
+  if((rbuf_old->in_diff->size() != 1)
+     || (rbuf_new->in_diff->size() != 1)  && open_diff->back() != COMMON) {
+
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:common>"));
+    open_diff->push_back(COMMON);
+    *mark_open = true;
+    }
+
 
   return 1;
 
