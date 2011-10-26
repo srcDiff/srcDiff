@@ -704,7 +704,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   xmlNodePtr node;
-  if(rbuf->open_diff->size() > 1 && rbuf->open_diff->oeration == edit->operation)
+  if(rbuf->open_diff->size() > 1 && rbuf->open_diff->operation == edit->operation)
     node = (*rbuf->open_diff)[rbuf->open_diff->size() - 2]->open_elements->back();
   else
     node = rbuf->open_diff->back()->open_elements->back();
