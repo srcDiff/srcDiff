@@ -111,6 +111,13 @@ struct reader_buffer {
   std::vector<xmlNode *> * context;
 };
 
+struct open_diff {
+
+  int operation;
+  std::vector<xmlNode *> * open_elements;
+
+};
+
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
