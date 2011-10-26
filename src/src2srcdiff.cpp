@@ -899,13 +899,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  for(unsigned int j = last_diff; j < rbuf_old->text->size(); ++j)
-    outputNode(*(*rbuf_old->text)[j], writer);
-=======
-=======
->>>>>>> working
   for(unsigned int j = last_diff; j < rbuf_old->text->size(); ++j) {
 
     while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
@@ -922,10 +915,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     ++old_offset;
     ++new_offset;
   }
-<<<<<<< HEAD
->>>>>>> working
-=======
->>>>>>> working
 
   free_shortest_edit_script(text_edit_script);
 
