@@ -666,7 +666,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(i = 0; i < rbuf->buffer->size(); ++i) {
 
     bnode = (*rbuf->buffer)[i];
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (char *)bnode->name);
     if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
       break;
@@ -1145,7 +1144,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 // merge same line
 void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer) {
-  fprintf(stderr, "HERE\n");
+
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
 
