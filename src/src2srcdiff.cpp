@@ -704,11 +704,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   xmlNodePtr node;
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (char *)(*rbuf->context)[last_open]->name);
-  if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation) {
+  if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation)
     node = (*rbuf->open_diff)[rbuf->open_diff->size() - 2]->open_elements->back();
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (char *)node->name);
-  }  else
+  else
     node = rbuf->open_diff->back()->open_elements->back();
 
   // output diff outputting until identified open tag
