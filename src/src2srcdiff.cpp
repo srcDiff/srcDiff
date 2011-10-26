@@ -1426,7 +1426,6 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
   if(xmlTextReaderIsEmptyElement(reader))
     return;
 
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(open_diffs->back()->operation != operation) {
 
     struct open_diff * new_diff = new struct open_diff;
@@ -1450,5 +1449,5 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
 
   if(open_diffs->back()->open_elements->size() == 0)
     open_diffs->pop_back();
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
