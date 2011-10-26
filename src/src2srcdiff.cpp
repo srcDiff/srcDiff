@@ -734,7 +734,12 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         //output nontext until reach a text node also while they are the same
 <<<<<<< HEAD
+<<<<<<< HEAD
         while((*rbuf_old->buffer)[old_offset] == (*rbuf_new->buffer)[new_offset]
+=======
+        while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
+              && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
+>>>>>>> working
 =======
         while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
               && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
@@ -749,6 +754,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         outputNode(*(*rbuf_old->text)[j], writer);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+          ++old_offset;
+          ++new_offset;
+>>>>>>> working
 =======
           ++old_offset;
           ++new_offset;
@@ -758,7 +768,12 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     else
       for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         while((*rbuf_old->buffer)[old_offset] == (*rbuf_new->buffer)[new_offset]
+=======
+        while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
+              && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
+>>>>>>> working
 =======
         while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
               && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
@@ -773,6 +788,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         outputNode(*(*rbuf_old->text)[j], writer);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+          ++old_offset;
+          ++new_offset;
+>>>>>>> working
 =======
           ++old_offset;
           ++new_offset;
@@ -835,6 +855,12 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
           xmlTextWriterWriteRawLen(writer, content_old + end_old + 1, size_old - (end_old + 1));
 
+<<<<<<< HEAD
+=======
+          ++old_offset;
+          ++new_offset;
+
+>>>>>>> working
           last_diff = edits->offset_sequence_one + edits->length;
           edits = edits->next;
           continue;
@@ -844,8 +870,16 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
+<<<<<<< HEAD
       for(int j = 0; j < edits->length; ++j)
         outputNode(*(*rbuf_old->text)[edits->offset_sequence_one + j], writer);
+=======
+      for(int j = 0; j < edits->length; ++j) {
+
+        outputNode(*(*rbuf_old->text)[edits->offset_sequence_one + j], writer);
+        ++old_offset;
+      }
+>>>>>>> working
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
@@ -853,8 +887,16 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
+<<<<<<< HEAD
       for(int j = 0; j < edit_next->length; ++j)
         outputNode(*(*rbuf_new->text)[edit_next->offset_sequence_two + j], writer);
+=======
+      for(int j = 0; j < edit_next->length; ++j) {
+
+        outputNode(*(*rbuf_new->text)[edit_next->offset_sequence_two + j], writer);
+        ++new_offset;
+      }
+>>>>>>> working
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
@@ -872,8 +914,16 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
+<<<<<<< HEAD
       for(int j = 0; j < edits->length; ++j)
         outputNode(*(*rbuf_new->text)[edits->offset_sequence_two + j], writer);
+=======
+      for(int j = 0; j < edits->length; ++j) {
+
+        outputNode(*(*rbuf_new->text)[edits->offset_sequence_two + j], writer);
+        ++new_offset;
+      }
+>>>>>>> working
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
@@ -885,8 +935,16 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
+<<<<<<< HEAD
       for(int j = 0; j < edits->length; ++j)
         outputNode(*(*rbuf_old->text)[edits->offset_sequence_one + j], writer);
+=======
+      for(int j = 0; j < edits->length; ++j) {
+
+        outputNode(*(*rbuf_old->text)[edits->offset_sequence_one + j], writer);
+        ++old_offset;
+      }
+>>>>>>> working
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
@@ -897,8 +955,27 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   }
 
+<<<<<<< HEAD
   for(unsigned int j = last_diff; j < rbuf_old->text->size(); ++j)
     outputNode(*(*rbuf_old->text)[j], writer);
+=======
+  for(unsigned int j = last_diff; j < rbuf_old->text->size(); ++j) {
+
+    while(strcmp((*rbuf_old->buffer)[old_offset]->name, (*rbuf_new->buffer)[new_offset]->name) == 0
+          && (*rbuf_old->buffer)[old_offset]->type == (*rbuf_new->buffer)[new_offset]->type
+          && (xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type != XML_READER_TYPE_TEXT) {
+
+      outputNode(*(*rbuf_old->buffer)[old_offset], writer);
+      ++old_offset;
+      ++new_offset;
+
+    }
+
+    outputNode(*(*rbuf_old->text)[j], writer);
+    ++old_offset;
+    ++new_offset;
+  }
+>>>>>>> working
 
   free_shortest_edit_script(text_edit_script);
 
