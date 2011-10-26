@@ -1376,3 +1376,25 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool i
     rbuf->in_diff->pop_back();
   }
 }
+
+void update_diff_stack(struct open_diff * open_diff, xmlTextReaderPtr reader, int operation) {
+
+  if(xmlTextReaderIsEmptyElement(reader))
+    return;
+
+  if(open_diff->back()->operation != operation) {
+    open_diff
+      }
+
+  xmlNodePtr node = getRealCurrentNode(reader);
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    rbuf->in_diff->push_back(indiff);
+  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if(rbuf->in_diff->size() == 1)
+      return;
+
+    rbuf->in_diff->pop_back();
+  }
+}
