@@ -846,8 +846,23 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       for(int j = 0; j < edits->length; ++j) {
 
-        outputNode(*(*rbuf_old->text)[edits->offset_sequence_one + j], writer);
+        while((xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_ELEMENT) {
+
+          outputNode(*(*rbuf_old->buffer)[old_offset], writer);
+          ++old_offset;
+    
+        }
+
+        outputNode(*(*rbuf_new->text)[edits->offset_sequence_two + j], writer);
         ++old_offset;
+
+        while((xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_END_ELEMENT) {
+
+          outputNode(*(*rbuf_old->buffer)[old_offset], writer);
+          ++old_offset;
+    
+        }
+
       }
 
       // output diff tag
@@ -858,8 +873,23 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       for(int j = 0; j < edit_next->length; ++j) {
 
+        while((xmlReaderTypes)(*rbuf_new->buffer)[new_offset]->type == XML_READER_TYPE_ELEMENT) {
+
+          outputNode(*(*rbuf_new->buffer)[new_offset], writer);
+          ++new_offset;
+    
+        }
+
         outputNode(*(*rbuf_new->text)[edit_next->offset_sequence_two + j], writer);
         ++new_offset;
+
+        while((xmlReaderTypes)(*rbuf_new->buffer)[new_offset]->type == XML_READER_TYPE_END_ELEMENT) {
+
+          outputNode(*(*rbuf_new->buffer)[new_offset], writer);
+          ++new_offset;
+    
+        }
+
       }
 
       // output diff tag
@@ -880,20 +910,20 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       for(int j = 0; j < edits->length; ++j) {
         
-        while((xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_ELEMENT) {
+        while((xmlReaderTypes)(*rbuf_new->buffer)[new_offset]->type == XML_READER_TYPE_ELEMENT) {
 
-          outputNode(*(*rbuf_old->buffer)[old_offset], writer);
-          ++old_offset;
+          outputNode(*(*rbuf_new->buffer)[new_offset], writer);
+          ++new_offset;
     
         }
 
         outputNode(*(*rbuf_new->text)[edits->offset_sequence_two + j], writer);
         ++new_offset;
 
-        while((xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_END_ELEMENT) {
+        while((xmlReaderTypes)(*rbuf_new->buffer)[new_offset]->type == XML_READER_TYPE_END_ELEMENT) {
 
-          outputNode(*(*rbuf_old->buffer)[old_offset], writer);
-          ++old_offset;
+          outputNode(*(*rbuf_new->buffer)[new_offset], writer);
+          ++new_offset;
     
         }
 
