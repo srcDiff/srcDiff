@@ -854,7 +854,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           ++num_open;
         }
 
-        outputNode(*(*rbuf_new->text)[edits->offset_sequence_one + j], writer);
+        outputNode(*(*rbuf_old->text)[edits->offset_sequence_one + j], writer);
         ++old_offset;
 
         while(num_open && (xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_END_ELEMENT) {
