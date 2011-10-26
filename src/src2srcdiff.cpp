@@ -675,11 +675,27 @@ int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old
   if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) == 0)
     return 0;
 
-  if(*mark_open && open_diff->back() == COMMON) {
-
+  if(*mark_open && open_diff->back() == COMMON
+     && strcmp((const char *)rbuf_old->context->back()->name, (const char *)rbuf_new->context->back()->name) == 0) {
+    fprintf(stderr, "HERE\n");
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
     open_diff->pop_back();
     *mark_open = false;
+
+  } else {
+
+    // chew up common and exit
+    int offset = 0;
+    if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_END_ELEMENT)
+      while(strcmp((const char *)rbuf_old->context->back()->name, (const char *)rbuf_new->context->back()->name) == 0) {
+
+        not_done_old = xmlTextReaderRead(reader_old);
+      } else if((xmlReaderTypes)getRealCurrentNode(reader_new)->type == XML_READER_TYPE_END_ELEMENT)
+
+      while(strcmp((const char *)rbuf_new->context->back()->name, (const char *)rbuf_new->context->back()->name) == 0) {
+
+        not_done_new = xmlTextReaderRead(reader_new);
+      }
 
   }
 
