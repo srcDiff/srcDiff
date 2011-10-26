@@ -1384,10 +1384,12 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diff, xmlTextReade
 
   if(open_diff->back()->operation != operation) {
 
-    struct open_diff * new_diff;
+    struct open_diff * new_diff = new open_diff;
+    new_diff->operation = operation;
+    new_diff
 
     open_diff->push_back(open_diff);
-      }
+  }
 
   xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
