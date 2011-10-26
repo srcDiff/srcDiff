@@ -621,8 +621,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
 int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old, struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer, std::vector<int> * open_diff, bool * mark_open) {
 
- *mark_open = false;
-
   int not_done_old = 1;
   if((xmlReaderTypes)getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
 
@@ -681,6 +679,8 @@ int merge_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old
 
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:common>"));
     open_diff->pop_back();
+    *mark_open = false;
+
   }
 
   // check last open diff and use to decide which goes first
