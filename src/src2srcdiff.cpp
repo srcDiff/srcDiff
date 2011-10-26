@@ -1377,13 +1377,16 @@ void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool i
   }
 }
 
-void update_diff_stack(struct open_diff * open_diff, xmlTextReaderPtr reader, int operation) {
+void update_diff_stack(std::vector<struct open_diff *> * open_diff, xmlTextReaderPtr reader, int operation) {
 
   if(xmlTextReaderIsEmptyElement(reader))
     return;
 
   if(open_diff->back()->operation != operation) {
-    open_diff
+
+    struct open_diff * new_diff;
+
+    open_diff->push_back(open_diff);
       }
 
   xmlNodePtr node = getRealCurrentNode(reader);
