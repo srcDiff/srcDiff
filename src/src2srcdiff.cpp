@@ -708,7 +708,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   if(rbuf->open_diff->size() > 1)
     node = (*rbuf->open_diff)[rbuf->open_diff->size() - 2]->open_elements->back();
   else
-    node = rbuf->open_diff->back()->open_elements->front();
+    node = rbuf->open_diff->back()->open_elements->back();
 
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
