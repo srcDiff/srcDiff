@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <vector>
 #include "SAX2ExtractSource.hpp"
 
 xmlSAXHandler factory() {
@@ -42,19 +41,6 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		     const xmlChar** attributes) {
 
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
-
-  if(strcmp((const char *)localname, "common") == 0)
-    data->in_diff->push_back(COMMON);
-
-  if(strcmp((const char *)localname, "old") == 0)
-    data->in_diff->push_back(DELETE);
-
-  if(strcmp((const char *)localname, "new") == 0)
-    data->in_diff->push_back(INSERT);
-
-
   if(strcmp((const char *)localname, "escape") == 0) {
 
     int index;
@@ -80,11 +66,11 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(strcmp((const char *)localname, "common") == 0
-     || strcmp((const char *)localname, "old") == 0
-     || strcmp((const char *)localname, "new") == 0)
-    data->in_diff->pop_back();
+  if((data->op == DELETE && strcmp((const char *)localname, "new") == 0)
+     || (data->op == INSERT && strcmp((const char *)localname, "old") == 0)) {
 
+    data->in_diff = !data->in_diff;
+  }
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
@@ -92,7 +78,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
+  if(!data->in_diff) {
 
     for(int i = 0; i < len; ++i)
       fprintf(stdout, "%c", (char)ch[i]);
