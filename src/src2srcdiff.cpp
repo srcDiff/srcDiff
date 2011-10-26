@@ -1441,7 +1441,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
     open_diffs->back()->open_elements->push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(open_diffs->size() == 1 && open_diffs->back()->open_elements->size() == 1))
+    if(open_diffs->size() == 1 && open_diffs->back()->open_elements->size() == 1)
       return;
 
     open_diffs->back()->open_elements->push_back(node);
