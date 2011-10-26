@@ -1394,15 +1394,15 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diff, xmlTextReade
   xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    rbuf->open_diff->open_elements->push_back(indiff);
+    open_diff->open_elements->push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(rbuf->open_diff->size() == 1)
+    if(open_diff->size() == 1)
       return;
 
-    rbuf->open_diff->open_elements->push_back(indiff);
+    open_diff->open_elements->push_back(node);
   }
 
-  if(rbuf->open_diff->open_elements->size() == 0)
+  if(open_diff->open_elements->size() == 0)
     open_diff->pop_back();
 }
