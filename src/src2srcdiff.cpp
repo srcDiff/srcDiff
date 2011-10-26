@@ -949,20 +949,23 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       for(int j = 0; j < edits->length; ++j) {
 
+        int num_open = 0;
         while((xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_ELEMENT) {
 
           outputNode(*(*rbuf_old->buffer)[old_offset], writer);
           ++old_offset;
+          ++num_open;
     
         }
 
         outputNode(*(*rbuf_old->text)[edits->offset_sequence_one + j], writer);
         ++old_offset;
 
-        while((xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_END_ELEMENT) {
+        while(num_open && (xmlReaderTypes)(*rbuf_old->buffer)[old_offset]->type == XML_READER_TYPE_END_ELEMENT) {
 
           outputNode(*(*rbuf_old->buffer)[old_offset], writer);
           ++old_offset;
+          --num_open;
     
         }
 
