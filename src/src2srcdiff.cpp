@@ -39,6 +39,8 @@ char * strndup(const char * s1, size_t n) {
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
+#define COMMON -1
+
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
@@ -109,8 +111,8 @@ struct reader_buffer {
   std::vector<xmlNode *> * tags;
   std::vector<bool> * in_diff;
   std::vector<xmlNode *> * context;
-  std::vector<struct opendiff *> * open_diffs;
-  std::vector<struct opendiff *> * output_diffs;
+  std::vector<struct open_diff *> * open_diff;
+  std::vector<struct open_diff *> * output_diff;
 
 };
 
@@ -128,7 +130,8 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int end_line);
+void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
+
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWriterPtr writer);
@@ -140,6 +143,8 @@ void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new
 void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
 
 void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff);
+
+void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextReaderPtr reader, int operation);
 
 int main(int argc, char * argv[]) {
 
@@ -275,16 +280,22 @@ int main(int argc, char * argv[]) {
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+    std::vector<struct open_diff *> output_diff;
+
     // run through diffs adding markup
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
     rbuf_old.context = new std::vector<xmlNode *>;
     rbuf_old.in_diff = new std::vector<bool>;
+    rbuf_old.open_diff = new std::vector<struct open_diff *>;
+    rbuf_old.output_diff = &output_diff;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
     rbuf_new.context = new std::vector<xmlNode *>;
     rbuf_new.in_diff = new std::vector<bool>;
+    rbuf_new.open_diff = new std::vector<struct open_diff *>;
+    rbuf_new.output_diff = &output_diff;
     xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
@@ -295,8 +306,12 @@ int main(int argc, char * argv[]) {
 
     update_context(&rbuf_old, reader_old);
     update_in_diff(&rbuf_old, reader_old, false);
+    update_diff_stack(rbuf_old.open_diff, reader_old, COMMON);
     update_context(&rbuf_new, reader_new);
     update_in_diff(&rbuf_new, reader_new, false);
+    update_diff_stack(rbuf_new.open_diff, reader_old, COMMON);
+
+    update_diff_stack(rbuf_old.output_diff, reader_old, COMMON);
 
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
@@ -317,9 +332,9 @@ int main(int argc, char * argv[]) {
       if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
-        collect_difference(&rbuf_old, reader_old, edits->offset_sequence_one + edits->length);
+        collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
 
-        collect_difference(&rbuf_new, reader_new, edits->next->offset_sequence_two + edits->next->length);
+        collect_difference(&rbuf_new, reader_new, INSERT, edits->next->offset_sequence_two + edits->next->length);
 
         output_double(&rbuf_old, &rbuf_new, writer);
 
@@ -333,7 +348,7 @@ int main(int argc, char * argv[]) {
 
       case INSERT:
 
-        collect_difference(&rbuf_new, reader_new, edits->offset_sequence_two + edits->length);
+        collect_difference(&rbuf_new, reader_new, INSERT, edits->offset_sequence_two + edits->length);
         output_single(&rbuf_new, edits, writer);
 
         last_diff = edits->offset_sequence_one + 1;
@@ -341,7 +356,7 @@ int main(int argc, char * argv[]) {
 
       case DELETE:
 
-        collect_difference(&rbuf_old, reader_old, edits->offset_sequence_one + edits->length);
+        collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
         output_single(&rbuf_old, edits, writer);
 
         last_diff = edits->offset_sequence_one + edits->length;
@@ -425,17 +440,17 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
-        collect_difference(rbuf_old, reader_old, rbuf_old->line_number + 1);
+      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
 
-        collect_difference(rbuf_new, reader_new, rbuf_new->line_number + 1);
+      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
 
-        merge_same(rbuf_old, rbuf_new, writer);
+      merge_same(rbuf_old, rbuf_new, writer);
 
-        --rbuf_old->line_number;
-        --rbuf_new->line_number;
-
-        return;
-
+      --rbuf_old->line_number;
+      --rbuf_new->line_number;
+      
+      return;
+        
     }
 
     // look if in text node
@@ -500,8 +515,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       update_context(rbuf_old, reader_old);
       update_in_diff(rbuf_old, reader_old, false);
+      update_diff_stack(rbuf_old->open_diff, reader_old, COMMON);
       update_context(rbuf_new, reader_new);
       update_in_diff(rbuf_new, reader_new, false);
+      update_diff_stack(rbuf_new->open_diff, reader_old, COMMON);
+
+      update_diff_stack(rbuf_old->output_diff, reader_old, COMMON);
 
       // output non-text node and get next node
       outputXML(reader_old, writer);
@@ -512,7 +531,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 }
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int end_line) {
+void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line) {
 
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
@@ -637,6 +656,9 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
       update_context(rbuf, reader);
       update_in_diff(rbuf, reader, true);
+      update_diff_stack(rbuf->open_diff, reader, operation);
+
+      update_diff_stack(rbuf->output_diff, reader, operation);
 
       // save non-text node and get next node
       xmlNodePtr node = getRealCurrentNode(reader);
