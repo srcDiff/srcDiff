@@ -281,6 +281,10 @@ int main(int argc, char * argv[]) {
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
     std::vector<struct open_diff *> output_diff;
+    struct open_diff * new_diff = new struct open_diff;
+    new_diff->operation = COMMON;
+    new_diff->open_elements = new std::vector<xmlNode *>;
+    output_diff.push_back(new_diff);
 
     // run through diffs adding markup
     int last_diff = 0;
@@ -288,6 +292,12 @@ int main(int argc, char * argv[]) {
     rbuf_old.context = new std::vector<xmlNode *>;
     rbuf_old.in_diff = new std::vector<bool>;
     rbuf_old.open_diff = new std::vector<struct open_diff *>;
+    
+    new_diff = new struct open_diff;
+    new_diff->operation = COMMON;
+    new_diff->open_elements = new std::vector<xmlNode *>;
+    rbuf_old.open_diff->push_back(new_diff);
+
     rbuf_old.output_diff = &output_diff;
     xmlTextReaderRead(reader_old);
 
@@ -295,15 +305,19 @@ int main(int argc, char * argv[]) {
     rbuf_new.context = new std::vector<xmlNode *>;
     rbuf_new.in_diff = new std::vector<bool>;
     rbuf_new.open_diff = new std::vector<struct open_diff *>;
+
+    new_diff = new struct open_diff;
+    new_diff->operation = COMMON;
+    new_diff->open_elements = new std::vector<xmlNode *>;
+    rbuf_old.open_diff->push_back(new_diff);
+
     rbuf_new.output_diff = &output_diff;
     xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
     xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
-
     // output srcdiff unit
     outputNode(*unit, writer);
-
     update_context(&rbuf_old, reader_old);
     update_in_diff(&rbuf_old, reader_old, false);
     update_diff_stack(rbuf_old.open_diff, reader_old, COMMON);
@@ -312,7 +326,6 @@ int main(int argc, char * argv[]) {
     update_diff_stack(rbuf_new.open_diff, reader_old, COMMON);
 
     update_diff_stack(rbuf_old.output_diff, reader_old, COMMON);
-
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
@@ -690,7 +703,12 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   //last_open;
-  xmlNodePtr node = (*rbuf->context)[last_open];
+  xmlNodePtr node;
+  if(rbuf->open_diff->size() <= 1)
+    node = (*rbuf->open_diff)[rbuf->open_diff->size() - 1]->open_elements->back();
+  else
+    node = rbuf->open_diff->back()->open_elements->front();
+
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
   unsigned int i;
