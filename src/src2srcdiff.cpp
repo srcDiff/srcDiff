@@ -1403,6 +1403,6 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diff, xmlTextReade
     open_diff->back()->open_elements->push_back(node);
   }
 
-  if(open_diff->open_elements->size() == 0)
+  if(open_diff->back()->open_elements->size() == 0)
     open_diff->pop_back();
 }
