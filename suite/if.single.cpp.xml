@@ -47,4 +47,17 @@
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:old>
 </unit>
 
+<unit>
+<if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:old><block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</diff:common>}</block></diff:old></then></if></unit>
+
+<unit>
+<if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:old><block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</diff:common>}</block></diff:old></then></if>
+</unit>
+
 </unit>
