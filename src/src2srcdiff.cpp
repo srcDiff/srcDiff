@@ -1388,7 +1388,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
     new_diff->operation = operation;
     new_diff->open_elements = new std::vector<xmlNode *>;
 
-    open_diffs->push_back(open_diff);
+    open_diffs->push_back(new_diff);
   }
 
   xmlNodePtr node = getRealCurrentNode(reader);
