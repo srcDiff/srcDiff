@@ -704,9 +704,11 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
   for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   xmlNodePtr node;
-  if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation)
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (char *)(*rbuf->context)[last_open]->name);
+  if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation) {
     node = (*rbuf->open_diff)[rbuf->open_diff->size() - 2]->open_elements->back();
-  else
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (char *)node->name);
+  }  else
     node = rbuf->open_diff->back()->open_elements->back();
 
   // output diff outputting until identified open tag
@@ -1443,7 +1445,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
     if(open_diffs->size() == 1 && open_diffs->back()->open_elements->size() == 1)
       return;
 
-    open_diffs->back()->open_elements->push_back(node);
+    open_diffs->back()->open_elements->pop_back();
   }
 
   if(open_diffs->back()->open_elements->size() == 0)
