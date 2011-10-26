@@ -316,6 +316,7 @@ int main(int argc, char * argv[]) {
 
     // create srcdiff unit
     xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
+
     // output srcdiff unit
     outputNode(*unit, writer);
     update_context(&rbuf_old, reader_old);
