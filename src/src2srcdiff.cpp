@@ -1165,7 +1165,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       output_handler(rbuf_old, rbuf_new, output_buffer[i], save_type, writer);
 
     // output ending diff tag
-    if(wait_type == DELETE)
+    if(save_type == DELETE)
 
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
