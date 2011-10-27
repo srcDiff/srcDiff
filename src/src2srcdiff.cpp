@@ -911,7 +911,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
            && (*rbuf_old->buffer)[edits->offset_sequence_one + j]->type == XML_READER_TYPE_END_ELEMENT)
 
 
-          bool output_end = false;
+          output_end = false;
           
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
