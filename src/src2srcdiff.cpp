@@ -989,13 +989,13 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
   }
 
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_elements->size());
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_elements->size());
   if(open_diffs->back()->open_elements->size() == 0) {
     open_diffs->pop_back();
 
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_elements->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_elements->size());
   }
   fprintf(stderr, "HERE\n");
 
@@ -1047,10 +1047,15 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if(rbuf_old->output_diff->back()->operation == COMMON) {
     fprintf(stderr, "HERE OUTPUT COMMON\n");
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->open_diff->back()->open_elements->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->output_diff->back()->open_elements->size());
     update_diff_stack(rbuf_old->open_diff, node, COMMON);
     update_diff_stack(rbuf_new->open_diff, node, COMMON);
 
     update_diff_stack(rbuf_old->output_diff, node, operation);
+
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->open_diff->back()->open_elements->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->output_diff->back()->open_elements->size());
 
   }
   else if(rbuf_old->output_diff->back()->operation == DELETE) {
