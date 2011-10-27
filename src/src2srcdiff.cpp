@@ -440,9 +440,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
-      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+      //collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
 
-      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
+      //collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
 
       merge_same(rbuf_old, rbuf_new, writer);
 
@@ -1180,6 +1180,16 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 // merge same line
 void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer) {
+
+  // test if really should end (maybe move into edit script stuff (can not use collect, think need open queue to mitigate)
+  if(((xmlReaderTypes)(*rbuf_old->buffer)[0]->type == XML_READER_TYPE_END_ELEMENT 
+      || (xmlReaderTypes)(*rbuf_new->buffer)[0]->type == XML_READER_TYPE_END_ELEMENT)
+     && (*rbuf_old->buffer)[0]->type != (*rbuf_new->buffer)[0]->type) {
+
+ }
+
+  // need to fix so this code above handles open (wrapped with diff) and closses using reading in tag (should not collect)
+  return;
 
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
