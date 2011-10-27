@@ -1417,12 +1417,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "CHECK 2\n");
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_elements->back()->name);
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
-    } else if(rbuf_old->output_diff->back()->operation == DELETE
+    } else if(rbuf_old->output_diff->back()->operation == COMMON
               && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
-
+      fprintf(stderr, "HERE\n");
       return;
     }
 
@@ -1432,7 +1432,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   // output non-text node and get next node
   outputNode(*node, writer);
 
-  if(operation == COMMON) {
+  if(rbuf_old->output_diff->back()->operation == COMMON) {
     update_diff_stack(rbuf_old->open_diff, node, operation);
     update_diff_stack(rbuf_new->open_diff, node, operation);
 
