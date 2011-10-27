@@ -1156,7 +1156,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       for(int j = 0; j < edits->length; ++j)
         output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer);
-        outputNode(*(*rbuf_old->buffer)[edits->offset_sequence_one + j], writer);
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
@@ -1171,7 +1170,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[j], COMMON, writer);
 
   free_shortest_edit_script(edit_script);
-  */
+
 
 }
 
