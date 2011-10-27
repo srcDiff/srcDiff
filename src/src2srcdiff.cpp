@@ -1094,8 +1094,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if(rbuf_old->output_diff->back()->operation == COMMON) {
 
-    fprintf(stderr, "HERE OUTPUT COMMON\n");
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+    //fprintf(stderr, "HERE OUTPUT COMMON\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_old->open_diff, node, COMMON);
     update_diff_stack(rbuf_new->open_diff, node, COMMON);
@@ -1130,8 +1130,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if(operation == COMMON) {
 
-    fprintf(stderr, "HERE OUTPUT COMMON\n");
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+    //fprintf(stderr, "HERE OUTPUT COMMON\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_old->open_diff, node, operation);
     update_diff_stack(rbuf_new->open_diff, node, operation);
