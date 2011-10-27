@@ -962,7 +962,7 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation) {
 
-  if(node.extra & 0x1)
+  if(node->extra & 0x1)
     return;
 
   if(open_diffs->back()->operation != operation) {
