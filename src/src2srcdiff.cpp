@@ -895,6 +895,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         fprintf(stderr, "HERE\n");
 
       bool output_start = false;
+      bool output_end = true;
 
       for(int j = 0; j < edits->length; ++j) {
 
@@ -906,8 +907,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
           }
 
-        if(rbuf_old->open_diff->back()->operation == COMMON 
+        if(!output_start && output_end && rbuf_old->open_diff->back()->operation == COMMON 
            && (*rbuf_old->buffer)[edits->offset_sequence_one + j]->type == XML_READER_TYPE_END_ELEMENT)
+
+
+          bool output_end = false;
           
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
@@ -915,7 +919,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       }
 
-        if(output_start)
+        if(output_start && output_end)
           
           // output diff tag
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
