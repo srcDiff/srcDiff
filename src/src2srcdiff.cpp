@@ -440,9 +440,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
-      //collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
 
-      //collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
+      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
 
       merge_same(rbuf_old, rbuf_new, writer);
 
@@ -691,7 +691,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       break;
     }
 
-    output_handler(rbuf, rbuf, node, edit->operation, writer);
+    output_handler(rbuf, rbuf, bnode, edit->operation, writer);
 
   }
 
