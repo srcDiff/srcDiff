@@ -892,7 +892,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       {
 
-      //      fprintf(stderr, "HERE\n");
+        fprintf(stderr, "HERE\n");
 
       bool output_start = false;
 
@@ -906,8 +906,13 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
           }
 
+        if(rbuf_old->open_diff->back()->operation == COMMON 
+           && (*rbuf_old->buffer)[edits->offset_sequence_one + j]->type == XML_READER_TYPE_END_ELEMENT)
+          
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
         output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer);
+
       }
 
         if(output_start)
