@@ -1434,6 +1434,10 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       return;
     }
 
+  // output non-text node and get next node
+  outputNode(*node, writer);
+
+
   if(rbuf_old->output_diff->back()->operation == COMMON) {
 
     update_diff_stack(rbuf_old->open_diff, node, operation);
@@ -1454,7 +1458,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     update_diff_stack(rbuf_new->output_diff, node, operation);
   }
 
-
+  return;
   }
 
   // output non-text node and get next node
