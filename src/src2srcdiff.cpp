@@ -1149,7 +1149,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       last_diff = edits->offset_sequence_one + 1;
       break;
     case DELETE:
-            fprintf(stderr, "HERE\n");
+      //      fprintf(stderr, "HERE\n");
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -1399,7 +1399,6 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(operation == DELETE
