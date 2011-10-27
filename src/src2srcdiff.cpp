@@ -1095,7 +1095,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   if(rbuf_old->output_diff->back()->operation == COMMON) {
 
     fprintf(stderr, "HERE OUTPUT COMMON\n");
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_old->open_diff, node, COMMON);
     update_diff_stack(rbuf_new->open_diff, node, COMMON);
@@ -1105,16 +1105,21 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   }
   else if(rbuf_old->output_diff->back()->operation == DELETE) {
 
+    fprintf(stderr, "HERE OUTPUT DELETE\n");
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
     update_diff_stack(rbuf_old->open_diff, node, DELETE);
 
     update_diff_stack(rbuf_old->output_diff, node, DELETE);
 
   } else {
-    fprintf(stderr, "HERE\n");
+
+    fprintf(stderr, "HERE OUTPUT DELETE\n");
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
     update_diff_stack(rbuf_new->open_diff, node, INSERT);
 
     update_diff_stack(rbuf_new->output_diff, node, INSERT);
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   }
 
   return;
