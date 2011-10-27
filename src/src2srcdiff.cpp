@@ -1410,7 +1410,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
       exit(1);
-    } else if(rbuf_old->output_diff->back()->operation == INSERT  && operation == INSERT
+    } else if(rbuf_new->output_diff->back()->operation == INSERT  && operation == INSERT
               && (strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
 
@@ -1428,7 +1428,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_elements->back()->name);
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
 
-      fprintf(stderr, "HERE\n");
+      //fprintf(stderr, "HERE\n");
       return;
     }
 
@@ -1470,7 +1470,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     update_diff_stack(rbuf_old->output_diff, node, operation);
   }
   else if(operation == DELETE) {
-    fprintf(stderr, "HERE\n");
+    //fprintf(stderr, "HERE\n");
 
     update_diff_stack(rbuf_old->open_diff, node, operation);
 
