@@ -1069,9 +1069,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
       exit(1);
-      } else */
-    
-    if((operation == INSERT && (rbuf_new->open_diff->back()->operation == INSERT && rbuf_old->output_diff->back()->operation == INSERT))
+      } else if((operation == INSERT && (rbuf_new->open_diff->back()->operation == INSERT && rbuf_old->output_diff->back()->operation == INSERT))
               && (strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
 
@@ -1080,7 +1078,18 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_elements->back()->name);
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
-    } else if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
+    } else */
+
+    if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
+       != (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation)) {
+
+      wait_type = operation;
+      output_buffer.push_back(node);
+
+      return;
+    }
+
+    if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
               && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
