@@ -109,8 +109,6 @@ struct reader_buffer {
   std::vector<xmlNode *> * buffer;
   std::vector<xmlNode *> * text;
   std::vector<xmlNode *> * tags;
-  std::vector<bool> * in_diff;
-  std::vector<xmlNode *> * context;
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
 
@@ -289,8 +287,6 @@ int main(int argc, char * argv[]) {
     // run through diffs adding markup
     int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
-    rbuf_old.context = new std::vector<xmlNode *>;
-    rbuf_old.in_diff = new std::vector<bool>;
     rbuf_old.open_diff = new std::vector<struct open_diff *>;
     
     new_diff = new struct open_diff;
@@ -302,8 +298,6 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { NULL };
-    rbuf_new.context = new std::vector<xmlNode *>;
-    rbuf_new.in_diff = new std::vector<bool>;
     rbuf_new.open_diff = new std::vector<struct open_diff *>;
 
     new_diff = new struct open_diff;
@@ -319,11 +313,7 @@ int main(int argc, char * argv[]) {
 
     // output srcdiff unit
     outputNode(*unit, writer);
-    update_context(&rbuf_old, reader_old);
-    update_in_diff(&rbuf_old, reader_old, false);
     update_diff_stack(rbuf_old.open_diff, reader_old, COMMON);
-    update_context(&rbuf_new, reader_new);
-    update_in_diff(&rbuf_new, reader_new, false);
     update_diff_stack(rbuf_new.open_diff, reader_new, COMMON);
 
     update_diff_stack(rbuf_old.output_diff, reader_old, COMMON);
@@ -527,11 +517,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       if(strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") == 0)
         return;
 
-      update_context(rbuf_old, reader_old);
-      update_in_diff(rbuf_old, reader_old, false);
       update_diff_stack(rbuf_old->open_diff, reader_old, COMMON);
-      update_context(rbuf_new, reader_new);
-      update_in_diff(rbuf_new, reader_new, false);
       update_diff_stack(rbuf_new->open_diff, reader_old, COMMON);
 
       update_diff_stack(rbuf_old->output_diff, reader_old, COMMON);
@@ -668,8 +654,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
       if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
         break;
 
-      update_context(rbuf, reader);
-      update_in_diff(rbuf, reader, true);
       update_diff_stack(rbuf->open_diff, reader, operation);
 
       update_diff_stack(rbuf->output_diff, reader, operation);
@@ -698,10 +682,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
-
-  // find the last open tag that needs to be closed
-  int last_open;
-  for(last_open = (rbuf->in_diff->size() - 1); last_open > 0 && (*rbuf->in_diff)[last_open]; --last_open);
 
   xmlNodePtr node;
   if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation)
@@ -1382,42 +1362,6 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
   else
     *nsDef = ns;
 
-}
-
-void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
-
-  if(xmlTextReaderIsEmptyElement(reader))
-    return;
-
-  xmlNodePtr node = getRealCurrentNode(reader);
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
-
-    rbuf->context->push_back(node);
-  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-
-    if(rbuf->context->size() == 1)
-      return;
-
-    rbuf->context->pop_back();
-  }
-}
-
-void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff) {
-
-  if(xmlTextReaderIsEmptyElement(reader))
-    return;
-
-  xmlNodePtr node = getRealCurrentNode(reader);
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
-
-    rbuf->in_diff->push_back(indiff);
-  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-
-    if(rbuf->in_diff->size() == 1)
-      return;
-
-    rbuf->in_diff->pop_back();
-  }
 }
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextReaderPtr reader, int operation) {
