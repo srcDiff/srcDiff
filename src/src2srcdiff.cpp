@@ -311,11 +311,8 @@ int main(int argc, char * argv[]) {
     xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
 
     // output srcdiff unit
-    outputNode(*unit, writer);
-    update_diff_stack(rbuf_old.open_diff, unit, COMMON);
-    update_diff_stack(rbuf_new.open_diff, unit, COMMON);
+    output_handler(rbuf_old, rbuf_new, unit, COMMON, writer);
 
-    update_diff_stack(rbuf_old.output_diff, unit, COMMON);
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
@@ -521,7 +518,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       output_handler(rbuf_old, rbuf_new, node, COMMON, writer);
 
       // output non-text node and get next node
-      outputXML(reader_old, writer);
       not_done = xmlTextReaderRead(reader_old);
       xmlTextReaderRead(reader_new);
     }
@@ -707,7 +703,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
     if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
 
       ++i;
-      outputNode(*bnode, writer);
+      output_handler(rbuf, rbuf, bnode, edit->operation, writer);
     }
   }
 
@@ -723,7 +719,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
-    outputNode(*(*rbuf->buffer)[i], writer);
+    output_handler(rbuf, rbuf, (*rbuf->buffer)[i], edit->operation, writer);
 }
 
 // output a change
