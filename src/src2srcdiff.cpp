@@ -1046,7 +1046,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   outputNode(*node, writer);
 
   if(rbuf_old->output_diff->back()->operation == COMMON) {
-
+    fprintf(stderr, "HERE OUTPUT COMMON\n");
     update_diff_stack(rbuf_old->open_diff, node, COMMON);
     update_diff_stack(rbuf_new->open_diff, node, COMMON);
 
