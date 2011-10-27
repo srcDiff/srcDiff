@@ -691,7 +691,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       break;
     }
 
-    output_handler(rbuf, rbuf, bnode, edit->operation, writer);
+    fprintf(stderr, "HERE\n");
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)bnode->name);
+  fprintf(stderr, "HERE\n");    output_handler(rbuf, rbuf, bnode, edit->operation, writer);
 
   }
 
@@ -1432,19 +1434,40 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       return;
     }
 
-
-  }
-
-  // output non-text node and get next node
-  outputNode(*node, writer);
-
   if(rbuf_old->output_diff->back()->operation == COMMON) {
+
     update_diff_stack(rbuf_old->open_diff, node, operation);
     update_diff_stack(rbuf_new->open_diff, node, operation);
 
     update_diff_stack(rbuf_old->output_diff, node, operation);
   }
   else if(rbuf_old->output_diff->back()->operation == DELETE) {
+
+    update_diff_stack(rbuf_old->open_diff, node, operation);
+
+    update_diff_stack(rbuf_old->output_diff, node, operation);
+
+  } else {
+
+    update_diff_stack(rbuf_new->open_diff, node, operation);
+
+    update_diff_stack(rbuf_new->output_diff, node, operation);
+  }
+
+
+  }
+
+  // output non-text node and get next node
+  outputNode(*node, writer);
+
+  if(operation == COMMON) {
+
+    update_diff_stack(rbuf_old->open_diff, node, operation);
+    update_diff_stack(rbuf_new->open_diff, node, operation);
+
+    update_diff_stack(rbuf_old->output_diff, node, operation);
+  }
+  else if(operation == DELETE) {
 
     update_diff_stack(rbuf_old->open_diff, node, operation);
 
