@@ -138,10 +138,6 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
 void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
 
-void update_context(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
-
-void update_in_diff(struct reader_buffer * rbuf, xmlTextReaderPtr reader, bool indiff);
-
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextReaderPtr reader, int operation);
 
 int main(int argc, char * argv[]) {
