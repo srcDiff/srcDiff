@@ -138,7 +138,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
 void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
 
-void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextReaderPtr reader, int operation);
+void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
 int main(int argc, char * argv[]) {
 
@@ -309,10 +309,10 @@ int main(int argc, char * argv[]) {
 
     // output srcdiff unit
     outputNode(*unit, writer);
-    update_diff_stack(rbuf_old.open_diff, reader_old, COMMON);
-    update_diff_stack(rbuf_new.open_diff, reader_new, COMMON);
+    update_diff_stack(rbuf_old.open_diff, unit, COMMON);
+    update_diff_stack(rbuf_new.open_diff, unit, COMMON);
 
-    update_diff_stack(rbuf_old.output_diff, reader_old, COMMON);
+    update_diff_stack(rbuf_old.output_diff, unit, COMMON);
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
@@ -510,13 +510,15 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
     }
     else {
 
-      if(strcmp((const char *)getRealCurrentNode(reader_old)->name, "unit") == 0)
+      xmlNodePtr node = getRealCurrentNode(reader_old);
+
+      if(strcmp((const char *)node->name, "unit") == 0)
         return;
 
-      update_diff_stack(rbuf_old->open_diff, reader_old, COMMON);
-      update_diff_stack(rbuf_new->open_diff, reader_old, COMMON);
+      update_diff_stack(rbuf_old->open_diff, node, COMMON);
+      update_diff_stack(rbuf_new->open_diff, node, COMMON);
 
-      update_diff_stack(rbuf_old->output_diff, reader_old, COMMON);
+      update_diff_stack(rbuf_old->output_diff, node, COMMON);
 
       // output non-text node and get next node
       outputXML(reader_old, writer);
@@ -647,15 +649,12 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
     }
     else {
 
-      if(strcmp((const char *)getRealCurrentNode(reader)->name, "unit") == 0)
-        break;
+      xmlNodePtr node = getRealCurrentNode(reader);
 
-      update_diff_stack(rbuf->open_diff, reader, operation);
-
-      update_diff_stack(rbuf->output_diff, reader, operation);
+      if(strcmp((const char *)node->name, "unit") == 0)
+        return;
 
       // save non-text node and get next node
-      xmlNodePtr node = getRealCurrentNode(reader);
       rbuf->buffer->push_back(node);
       rbuf->tags->push_back(node);
 
@@ -1370,10 +1369,10 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 }
 
-void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextReaderPtr reader, int operation) {
+void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation) {
 
-  if(xmlTextReaderIsEmptyElement(reader))
-    return;
+  //if(xmlTextReaderIsEmptyElement(reader))
+  //return;
 
   if(open_diffs->back()->operation != operation) {
 
@@ -1384,7 +1383,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlTextRead
     open_diffs->push_back(new_diff);
   }
 
-  xmlNodePtr node = getRealCurrentNode(reader);
+  //xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     open_diffs->back()->open_elements->push_back(node);
