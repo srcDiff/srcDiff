@@ -663,7 +663,9 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer) {
-  fprintf(stderr, "HERE\n");
+
+  //fprintf(stderr, "HERE\n");
+
   // output starting diff tag
   if(edit->operation == DELETE)
 
@@ -723,7 +725,8 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
       output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
-  fprintf(stderr, "HERE\n");
+
+  //fprintf(stderr, "HERE\n");
 }
 
 // output a change
