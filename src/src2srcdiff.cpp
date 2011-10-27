@@ -136,6 +136,9 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
 
 // output a change
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
+
+void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer);
+
 void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
@@ -515,10 +518,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       if(strcmp((const char *)node->name, "unit") == 0)
         return;
 
-      update_diff_stack(rbuf_old->open_diff, node, COMMON);
-      update_diff_stack(rbuf_new->open_diff, node, COMMON);
-
-      update_diff_stack(rbuf_old->output_diff, node, COMMON);
+      output_handler(rbuf_old, rbuf_new, node, COMMON, writer);
 
       // output non-text node and get next node
       outputXML(reader_old, writer);
@@ -695,9 +695,7 @@ void output_single(struct reader_buffer * rbuf, struct edit * edit, xmlTextWrite
       break;
     }
 
-    outputNode(*bnode, writer);
-    update_diff_stack(rbuf->open_diff, node, edit->operation);
-    update_diff_stack(rbuf->output_diff, node, edit->operation);
+    output_handler(rbuf, rbuf, node, edit->operation, writer);
 
   }
 
@@ -1399,5 +1397,31 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
   if(open_diffs->back()->open_elements->size() == 0)
     open_diffs->pop_back();
+
+}
+
+void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
+
+  if(operation == COMMON) {
+    update_diff_stack(rbuf_old->open_diff, node, operation);
+    update_diff_stack(rbuf_new->open_diff, node, operation);
+
+    update_diff_stack(rbuf_old->output_diff, node, operation);
+  }
+  else if(operation == DELETE) {
+
+    update_diff_stack(rbuf_old->open_diff, node, operation);
+
+    update_diff_stack(rbuf_old->output_diff, node, operation);
+
+  } else {
+
+    update_diff_stack(rbuf_new->open_diff, node, operation);
+
+    update_diff_stack(rbuf_new->output_diff, node, operation);
+  }
+
+  // output non-text node and get next node
+  outputNode(*node, writer);
 
 }
