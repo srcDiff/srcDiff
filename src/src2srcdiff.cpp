@@ -311,7 +311,7 @@ int main(int argc, char * argv[]) {
     xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
 
     // output srcdiff unit
-    output_handler(rbuf_old, rbuf_new, unit, COMMON, writer);
+    output_handler(&rbuf_old, &rbuf_new, unit, COMMON, writer);
 
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
