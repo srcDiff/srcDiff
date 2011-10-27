@@ -1148,7 +1148,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   // check if need to void output_buffer
   if(wait_type != COMMON && wait_type == rbuf_old->output_diff->back()->operation) {
 
-    wait_type == COMMON;
+    wait_type = COMMON;
     for(int i = 0; i < output_buffer.size(); ++i)
       output_handler(rbuf_old, rbuf_new, output_buffer[i], rbuf_old->output_diff->back()->operation, writer);
 
