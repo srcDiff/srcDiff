@@ -1149,7 +1149,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       last_diff = edits->offset_sequence_one + 1;
       break;
     case DELETE:
-      //      fprintf(stderr, "HERE\n");
+            fprintf(stderr, "HERE\n");
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -1399,6 +1399,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(operation == DELETE
@@ -1406,6 +1407,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
            || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
 
       fprintf(stderr, "CHECK 1\n");
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
       exit(1);
     } else if(operation == INSERT 
               && (strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
@@ -1413,10 +1416,10 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       fprintf(stderr, "CHECK 2\n");
       exit(2);
-    } else if(strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
+    } else if(operation == COMMON && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
               || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
               || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
-              || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0) {
+                                      || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
 
       return;
     }
