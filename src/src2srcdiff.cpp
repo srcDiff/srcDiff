@@ -856,15 +856,28 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     switch (edits->operation) {
 
     case INSERT:
+
       //      fprintf(stderr, "HERE\n");
-      // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
       for(int j = 0; j < edits->length; ++j)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edits->offset_sequence_two + j], INSERT, writer);
 
-      // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+        if(!output_start && output_peek(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer)) {
+
+            output_start = true;
+
+           // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+          }
+
+
+        output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edits->offset_sequence_two + j], INSERT, writer);
+      }
+
+        if(output_start)
+          
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
 
       last_diff = edits->offset_sequence_one + 1;
       break;
