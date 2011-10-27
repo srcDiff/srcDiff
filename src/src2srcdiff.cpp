@@ -1398,6 +1398,34 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if(operation == DELETE
+       && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
+           || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
+
+      fprintf(stderr, "CHECK 1\n");
+      exit(1);
+    } else if(operation == INSERT 
+              && (strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
+                  || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
+
+      fprintf(stderr, "CHECK 2\n");
+      exit(2);
+    } else if(strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
+              || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
+              || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
+              || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0) {
+
+      return;
+    }
+
+
+  }
+
+  // output non-text node and get next node
+  outputNode(*node, writer);
+
   if(operation == COMMON) {
     update_diff_stack(rbuf_old->open_diff, node, operation);
     update_diff_stack(rbuf_new->open_diff, node, operation);
@@ -1416,8 +1444,5 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     update_diff_stack(rbuf_new->output_diff, node, operation);
   }
-
-  // output non-text node and get next node
-  outputNode(*node, writer);
 
 }
