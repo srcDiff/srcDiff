@@ -139,6 +139,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer);
 
+bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer);
+
 void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
