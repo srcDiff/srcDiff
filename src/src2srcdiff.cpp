@@ -857,6 +857,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
     case INSERT:
 
+      {
+
       //      fprintf(stderr, "HERE\n");
 
       bool output_start = false;
@@ -882,9 +884,15 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 
       last_diff = edits->offset_sequence_one + 1;
+
+      }
+
       break;
 
     case DELETE:
+
+      {
+
       //      fprintf(stderr, "HERE\n");
 
       bool output_start = false;
@@ -909,6 +917,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
       last_diff = edits->offset_sequence_one + edits->length;
+
+      }
+
       break;
     }
 
