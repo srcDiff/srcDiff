@@ -868,17 +868,31 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       last_diff = edits->offset_sequence_one + 1;
       break;
+
     case DELETE:
       //      fprintf(stderr, "HERE\n");
 
-      // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+      bool output_start = false;
 
-      for(int j = 0; j < edits->length; ++j)
+
+      for(int j = 0; j < edits->length; ++j) {
+
+        if(!output_start && output_peek(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer) {
+
+            output_start = true;
+
+           // output diff tag
+           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+          }
+
+
         output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer);
+      }
 
-      // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+        if(output_start)
+          
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
       last_diff = edits->offset_sequence_one + edits->length;
       break;
@@ -1032,14 +1046,17 @@ void merge_same(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new
 
       last_diff = edits->offset_sequence_one + 1;
       break;
+
     case DELETE:
       //      fprintf(stderr, "HERE\n");
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
-      for(int j = 0; j < edits->length; ++j)
+      for(int j = 0; j < edits->length; ++j) {
+
         outputNode(*(*rbuf_old->buffer)[edits->offset_sequence_one + j], writer);
+      }
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
