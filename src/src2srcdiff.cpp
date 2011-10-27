@@ -878,6 +878,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
           output_end = false;
 
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
         }
 
         output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edits->offset_sequence_two + j], INSERT, writer);
