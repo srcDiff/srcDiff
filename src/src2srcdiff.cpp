@@ -1152,7 +1152,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     for(int i = 0; i < output_buffer.size(); ++i)
       output_handler(rbuf_old, rbuf_new, output_buffer[i], rbuf_old->output_diff->back()->operation, writer);
 
-    output_buffer.clear()
+    output_buffer.clear();
 
   }
 
