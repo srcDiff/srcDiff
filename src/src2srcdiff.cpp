@@ -1422,7 +1422,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
                   || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
-      fprintf(stderr, "HERE\n");
+
       return;
     }
 
@@ -1438,7 +1438,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     update_diff_stack(rbuf_old->output_diff, node, operation);
   }
-  else if(operation == DELETE) {
+  else if(rbuf_old->output_diff->back()->operation == DELETE) {
 
     update_diff_stack(rbuf_old->open_diff, node, operation);
 
