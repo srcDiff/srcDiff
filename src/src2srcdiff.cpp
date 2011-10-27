@@ -1114,7 +1114,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   } else {
 
-    fprintf(stderr, "HERE OUTPUT DELETE\n");
+    fprintf(stderr, "HERE OUTPUT INSERT\n");
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_new->open_diff, node, INSERT);
