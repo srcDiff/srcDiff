@@ -663,7 +663,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer) {
-
+  fprintf(stderr, "HERE\n");
   // output starting diff tag
   if(edit->operation == DELETE)
 
@@ -723,7 +723,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
       output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
-
+  fprintf(stderr, "HERE\n");
 }
 
 // output a change
@@ -1390,31 +1390,33 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
     open_diffs->back()->open_elements->push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(open_diffs->size() == 1 && open_diffs->back()->open_elements->size() == 1) {
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
+    if(open_diffs->size() == 1 && open_diffs->back()->open_elements->size() == 1)
       return;
-    }
+
 
     open_diffs->back()->open_elements->pop_back();
   }
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
 
-  if(open_diffs->back()->open_elements->size() == 0)
+  if(open_diffs->back()->open_elements->size() == 0) {
     open_diffs->pop_back();
+
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_elements->size());
+
+  }
 
 }
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
   fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-    fprintf(stderr, "HERE\n");
 
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->open_diff->back()->open_elements->size());
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->output_diff->back()->open_elements->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->open_diff->back()->open_elements->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->output_diff->back()->open_elements->size());
 
     if((operation == DELETE && (rbuf_old->open_diff->back()->operation == DELETE && rbuf_old->output_diff->back()->operation == DELETE))
        && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
@@ -1450,23 +1452,29 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   outputNode(*node, writer);
 
   if(rbuf_old->output_diff->back()->operation == COMMON) {
-
-    update_diff_stack(rbuf_old->open_diff, node, operation);
-    update_diff_stack(rbuf_new->open_diff, node, operation);
+    fprintf(stderr, "HERE1\n");
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->open_diff->size());
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->open_diff->back()->open_elements->size());
+    update_diff_stack(rbuf_old->open_diff, node, COMMON);
+    update_diff_stack(rbuf_new->open_diff, node, COMMON);
 
     update_diff_stack(rbuf_old->output_diff, node, operation);
+
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->open_diff->size());
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->open_diff->back()->open_elements->size());
+
   }
   else if(rbuf_old->output_diff->back()->operation == DELETE) {
 
-    update_diff_stack(rbuf_old->open_diff, node, operation);
+    update_diff_stack(rbuf_old->open_diff, node, DELETE);
 
-    update_diff_stack(rbuf_old->output_diff, node, operation);
+    update_diff_stack(rbuf_old->output_diff, node, DELETE);
 
   } else {
 
-    update_diff_stack(rbuf_new->open_diff, node, operation);
+    update_diff_stack(rbuf_new->open_diff, node, INSERT);
 
-    update_diff_stack(rbuf_new->output_diff, node, operation);
+    update_diff_stack(rbuf_new->output_diff, node, INSERT);
   }
 
   return;
