@@ -674,17 +674,13 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
+  struct reader_buffer rbuf;
+
   xmlNodePtr node;
-  if(edit->operation == DELETE)
-    if(rbuf_old->open_diff->size() > 1 && rbuf_old->open_diff->back()->operation == edit->operation)
-      node = (*rbuf_old->open_diff)[rbuf_old->open_diff->size() - 2]->open_elements->back();
-    else
-      node = rbuf_old->open_diff->back()->open_elements->back();
-  else 
-    if(rbuf_new->open_diff->size() > 1 && rbuf_new->open_diff->back()->operation == edit->operation)
-      node = (*rbuf_new->open_diff)[rbuf_new->open_diff->size() - 2]->open_elements->back();
-    else
-      node = rbuf_new->open_diff->back()->open_elements->back();
+  if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation)
+    node = (*rbuf->open_diff)[rbuf->open_diff->size() - 2]->open_elements->back();
+  else
+    node = rbuf->open_diff->back()->open_elements->back();
 
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
