@@ -1148,9 +1148,31 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   // check if need to void output_buffer
   if(wait_type != COMMON && wait_type == rbuf_old->output_diff->back()->operation) {
 
+    int save_type = wait_type;
+
+    // output starting diff tag
+    if(wait_type == DELETE)
+
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+  else
+
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+
     wait_type = COMMON;
     for(int i = 0; i < output_buffer.size(); ++i)
-      output_handler(rbuf_old, rbuf_new, output_buffer[i], rbuf_old->output_diff->back()->operation, writer);
+      output_handler(rbuf_old, rbuf_new, output_buffer[i], save_type, writer);
+
+    // output ending diff tag
+    if(wait_type == DELETE)
+
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+  else
+
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
     output_buffer.clear();
 
