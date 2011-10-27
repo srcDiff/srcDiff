@@ -674,7 +674,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-  struct reader_buffer rbuf;
+  struct reader_buffer rbuf = edit->operation == DELETE ? rbuf_old : rbuf_new;
 
   xmlNodePtr node;
   if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation)
