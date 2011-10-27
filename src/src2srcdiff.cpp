@@ -1142,7 +1142,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "CHECK 2\n");
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_elements->back()->name);
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
-    } if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
+    } else if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
               && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
@@ -1210,96 +1210,19 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
 }
 
-void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
-
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->open_diff->back()->open_elements->size());
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->output_diff->back()->open_elements->size());
-
-    if((operation == DELETE && (rbuf_old->open_diff->back()->operation == DELETE && rbuf_old->output_diff->back()->operation == DELETE))
-       && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
-           || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
-
-      fprintf(stderr, "CHECK 1\n");
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
-      exit(1);
-    } else if((operation == INSERT && (rbuf_new->open_diff->back()->operation == INSERT && rbuf_old->output_diff->back()->operation == INSERT))
-              && (strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
-                  || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
-
-      fprintf(stderr, "CHECK 2\n");
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_elements->back()->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
-    } if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
+    if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
               && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
 
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_elements->back()->name);
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
-
-      //fprintf(stderr, "HERE\n");
       return;
     }
 
-  // output non-text node and get next node
-  outputNode(*node, writer);
-
-  if(rbuf_old->output_diff->back()->operation == COMMON) {
-
-    update_diff_stack(rbuf_old->open_diff, node, COMMON);
-    update_diff_stack(rbuf_new->open_diff, node, COMMON);
-
-    update_diff_stack(rbuf_old->output_diff, node, operation);
-
-  }
-  else if(rbuf_old->output_diff->back()->operation == DELETE) {
-
-    update_diff_stack(rbuf_old->open_diff, node, DELETE);
-
-    update_diff_stack(rbuf_old->output_diff, node, DELETE);
-
-  } else {
-
-    update_diff_stack(rbuf_new->open_diff, node, INSERT);
-
-    update_diff_stack(rbuf_new->output_diff, node, INSERT);
-  }
-
-  return;
-  }
-
-  // output non-text node and get next node
-  outputNode(*node, writer);
-
-  if(operation == COMMON) {
-
-    update_diff_stack(rbuf_old->open_diff, node, operation);
-    update_diff_stack(rbuf_new->open_diff, node, operation);
-
-    update_diff_stack(rbuf_old->output_diff, node, operation);
-  }
-  else if(operation == DELETE) {
-    //fprintf(stderr, "HERE\n");
-
-    update_diff_stack(rbuf_old->open_diff, node, operation);
-
-    update_diff_stack(rbuf_old->output_diff, node, operation);
-
-  } else {
-
-    update_diff_stack(rbuf_new->open_diff, node, operation);
-
-    update_diff_stack(rbuf_new->output_diff, node, operation);
   }
 
 }
