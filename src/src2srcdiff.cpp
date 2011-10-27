@@ -1097,7 +1097,7 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
                   || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
-
+      fprintf(stderr, "HERE1\n");
       return false;
     }
 
