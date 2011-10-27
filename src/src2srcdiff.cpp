@@ -859,6 +859,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       //      fprintf(stderr, "HERE\n");
 
+      bool output_start = false;
+
       for(int j = 0; j < edits->length; ++j) {
 
         if(!output_start && output_peek(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer)) {
@@ -886,7 +888,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       //      fprintf(stderr, "HERE\n");
 
       bool output_start = false;
-
 
       for(int j = 0; j < edits->length; ++j) {
 
