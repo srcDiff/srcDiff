@@ -1046,7 +1046,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
-  static int wait_type;
+  static int wait_type == COMMON;
   static std::vector<xmlNodePtr> output_buffer;
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -1144,6 +1144,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     update_diff_stack(rbuf_new->output_diff, node, INSERT);
   }
+
+  // check if need to void output_buffer
+  if(wait_output != COMMON &&  wait_output == rbuf_old->output_diff->back()->operation){
+
+  }
+
 
   return;
   }
