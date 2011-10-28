@@ -1100,11 +1100,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
             || (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                 || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                 || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
-                || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))))
-        
-       || ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
-           && (rbuf_old->output_diff->back()->operation != COMMON || operation != COMMON))) {
+                || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))))) { 
 
+      return;
+
+    } else if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
+              && (rbuf_old->output_diff->back()->operation != COMMON || operation != COMMON)) {
 
       if(operation != COMMON && (skipped_close.empty() || strcmp((const char *)node->name, (const char *)skip_close_node.back()->name))) {
 
@@ -1133,7 +1134,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
           skip_close_node.pop_back();
       } else
         return;
-
     }
 
     if(rbuf_old->output_diff->back()->operation != COMMON &&
