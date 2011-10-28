@@ -1102,6 +1102,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
                 || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                 || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))))) { 
 
+      fprintf(stderr, "HERE COMMON\n");
+
       return;
 
     } else if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
