@@ -1051,9 +1051,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   static std::vector<xmlNodePtr> output_buffer;
 
   static std::vector<bool> skipped_close;
-  static std::vector<int[2]> skip_close_node;
+  static std::vector<int *> skip_close_node;
   
-  struct reader_buffer rbuf = operation == DELETE ? rbuf_old : rbuf_new;
+  struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
   fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
@@ -1116,19 +1116,41 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       // use iterator
       bool found = false;
       int position = -1;
-      for(int i = 0; i < rbuf->ouput_elements->size(); ++i)
-        if(rbuf->output_elements->size() - 1 == skip_close_node[i][0]
-           && rbuf->output_elements->back()->size() - 1 == skip_close_node[i][1]) {
+      for(int i = 0; i < rbuf->output_diff->size(); ++i)
+        if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
+           && (rbuf->output_diff->back()->open_elements->size() - 1) == skip_close_node[i][1]) {
           position = i;
 
-          if(strcmp((const char *)rbuf->ouput_diff->back()->open_elements->back()->name, (const char *)node->name) == 0) {
+          if(strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0) {
 
-            found == true;
+            found = true;
             break;
           }
         }
 
       if(!found) {
+
+        if(position != rbuf->output_diff->size()) {
+          // find name down list
+          for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
+            if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
+
+              int * temp = new int[2];
+              temp[0] = position;
+              temp[1] = i;
+
+              skip_close_node.push_back(temp);
+            }
+
+        } else {
+
+          int * temp = new int[2];
+          temp[0] = rbuf->output_diff->size();
+          temp[1] = rbuf->output_diff->back()->open_elements->size() - 1;
+
+          skip_close_node.push_back(temp);
+        }
+
 
         fprintf(stderr, "HERE COMMON\n");
 
