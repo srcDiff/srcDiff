@@ -1125,7 +1125,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         return;
       }
 
-    } else if(rbuf_old->output_diff->back()->operation != COMMON
+    } else if(rbuf->output_diff->back()->operation != COMMON
               && rbuf->open_diff->back()->operation == COMMON) {
       /*
 
@@ -1158,7 +1158,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
           }
         }
 
-      fprintf(stderr, "HERE\n");
       if(!found) {
 
         if(position != -1) {
@@ -1240,7 +1239,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         }
 
 
-        fprintf(stderr, "HERE COMMON\n");
+        //fprintf(stderr, "HERE COMMON\n");
 
         return;
       }
