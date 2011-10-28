@@ -1118,12 +1118,13 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       fprintf(stderr, "HERE COMMON\n");
 
-      if(skipped_close.empty() || strcmp((const char *)node->back()->name, (const char *)skip_close_node.back()->name) {
+      if(skipped_close.empty() || strcmp((const char *)node->name, (const char *)skip_close_node.back()->name) {
 
-        skipped_close.push_back(true);
-        skip_close_node.push_back(node);
+          skipped_close.push_back(true);
+          skip_close_node.push_back(node);
 
-        return;
+          return;
+
         } else {
 
           skipped_close.pop_back();
