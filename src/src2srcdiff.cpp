@@ -1124,7 +1124,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         return;
       }
 
-        fprintf(stderr, "HERE COMMON\n");
+      //fprintf(stderr, "HERE COMMON\n");
 
     } else if(rbuf->output_diff->back()->operation != COMMON
               && rbuf->open_diff->back()->operation == COMMON) {
@@ -1210,7 +1210,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
           position = i;
 
           if(strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0) {
-            fprintf(stderr, "HERE\n");
+
             found = true;
             break;
           }
@@ -1245,7 +1245,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         return;
       }
 
-        fprintf(stderr, "HERE COMMON\n");
     }
 
     if(rbuf_old->output_diff->back()->operation != COMMON &&
