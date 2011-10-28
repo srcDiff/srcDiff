@@ -1091,7 +1091,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
     } else */
     
-    if((operation == COMMON && (rbuf_old->output_diff->back()->operation == COMMON
+    if((operation != COMMON && (rbuf_old->output_diff->back()->operation == COMMON
         && ((rbuf_old->open_diff->back()->operation != COMMON
             || rbuf_new->open_diff->back()->operation != COMMON)
 
