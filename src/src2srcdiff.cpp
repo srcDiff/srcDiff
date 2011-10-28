@@ -1051,6 +1051,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   static int wait_type = COMMON;
   static std::vector<xmlNodePtr> output_buffer;
 
+  static std::vector<int> skip_close_count;
+  static std::vector<xmlNodePtr> skip_close_node;
+
   fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
   fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
@@ -1101,7 +1104,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
                 || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))))
         
        || ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
-           && rbuf_old->output_diff->back()->operation != COMMON)) {
+           && (rbuf_old->output_diff->back()->operation != COMMON || operation != COMMON))) {
 
       fprintf(stderr, "HERE COMMON\n");
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
