@@ -1106,6 +1106,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
        || ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
            && (rbuf_old->output_diff->back()->operation != COMMON || operation != COMMON))) {
 
+
+      if(skipped_close.empty() || strcmp((const char *)node->name, (const char *)skip_close_node.back()->name) {
+
+          skipped_close.push_back(true);
+          skip_close_node.push_back(node);
+
       fprintf(stderr, "HERE COMMON\n");
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
@@ -1118,10 +1124,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       fprintf(stderr, "HERE COMMON\n");
 
-      if(skipped_close.empty() || strcmp((const char *)node->name, (const char *)skip_close_node.back()->name) {
-
-          skipped_close.push_back(true);
-          skip_close_node.push_back(node);
 
           return;
 
