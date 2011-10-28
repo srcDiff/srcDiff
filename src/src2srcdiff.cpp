@@ -695,7 +695,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       break;
     }
 
-      output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
+    output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
 
   }
 
@@ -707,6 +707,8 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
 
       ++i;
+
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)bnode->name);
       output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
 
     }
@@ -724,7 +726,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
-    output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
+    output_handler(rbuf_old, rbuf_new, (*rbuf->buffer)[i], edit->operation, writer);
 
   //fprintf(stderr, "HERE\n");
 }
@@ -1128,8 +1130,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if(rbuf_old->output_diff->back()->operation == COMMON) {
 
-    fprintf(stderr, "HERE OUTPUT COMMON\n");
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+    //fprintf(stderr, "HERE OUTPUT COMMON\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_old->open_diff, node, COMMON);
     update_diff_stack(rbuf_new->open_diff, node, COMMON);
