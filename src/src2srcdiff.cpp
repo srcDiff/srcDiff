@@ -1093,12 +1093,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     
     if((((operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation) == COMMON 
          && (rbuf_old->open_diff->back()->operation != COMMON
-             || rbuf_new->open_diff->back()->operation != COMMON))
+             || rbuf_new->open_diff->back()->operation != COMMON)))
         
-        || (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
+        /*|| (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
             || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
             || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
-            || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))
+            || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))*/
        
        || ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
            && (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation) != COMMON)) {
