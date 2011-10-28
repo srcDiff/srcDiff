@@ -329,7 +329,7 @@ int main(int argc, char * argv[]) {
 
       // detect and change
       struct edit * edit_next = edits->next;
-      if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
+      if(0 && edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
         collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
