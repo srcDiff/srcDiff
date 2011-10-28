@@ -1081,6 +1081,27 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       fprintf(stderr, "HERE COMMON\n");
 
+        if(position != rbuf->output_diff->size()) {
+          // find name down list
+          for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
+            if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
+
+              int * temp = new int[2];
+              temp[0] = position;
+              temp[1] = i;
+
+              skip_close_node.push_back(temp);
+            }
+
+        } else {
+
+          int * temp = new int[2];
+          temp[0] = rbuf->output_diff->size();
+          temp[1] = rbuf->output_diff->back()->open_elements->size() - 1;
+
+          skip_close_node.push_back(temp);
+        }
+
       return;
 
     } else if(rbuf_old->output_diff->back()->operation != COMMON
@@ -1100,7 +1121,31 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         fprintf(stderr, "HERE COMMON\n");
       */
 
-      return;
+        if(position != rbuf->output_diff->size()) {
+          // find name down list
+          for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
+            if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
+
+              int * temp = new int[2];
+              temp[0] = position;
+              temp[1] = i;
+
+              skip_close_node.push_back(temp);
+            }
+
+        } else {
+
+          int * temp = new int[2];
+          temp[0] = rbuf->output_diff->size();
+          temp[1] = rbuf->output_diff->back()->open_elements->size() - 1;
+
+          skip_close_node.push_back(temp);
+        }
+
+
+        fprintf(stderr, "HERE COMMON\n");
+
+        return;
 
     }
     else if(operation != COMMON && (rbuf_old->output_diff->back()->operation == COMMON
