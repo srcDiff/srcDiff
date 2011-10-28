@@ -1106,13 +1106,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       return;
 
-    } else if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
-              && (rbuf_old->output_diff->back()->operation != COMMON || operation != COMMON)) {
-
-      if(operation != COMMON && (skipped_close.empty() || strcmp((const char *)node->name, (const char *)skip_close_node.back()->name))) {
-
-          skipped_close.push_back(true);
-          skip_close_node.push_back(node);
+    } else if(rbuf_old->output_diff->back()->operation != COMMON
+              (operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
           /*
 
       fprintf(stderr, "HERE COMMON\n");
@@ -1130,12 +1125,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
           return;
 
-      } else if(operation != COMMON) {
-
-          skipped_close.pop_back();
-          skip_close_node.pop_back();
-      } else
-        return;
     }
 
     if(rbuf_old->output_diff->back()->operation != COMMON &&
