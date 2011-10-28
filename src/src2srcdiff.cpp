@@ -329,7 +329,7 @@ int main(int argc, char * argv[]) {
 
       // detect and change
       struct edit * edit_next = edits->next;
-      if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
+      if(0 && edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
         collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
@@ -1113,22 +1113,23 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         } else {
 
           int * temp = new int[2];
-          temp[0] = rbuf->output_diff->size();
+          temp[0] = rbuf->output_diff->size() - 1;
           temp[1] = rbuf->output_diff->back()->open_elements->size() - 1;
 
           skip_close_node.push_back(temp);
         }
 
 
-        //fprintf(stderr, "HERE COMMON\n");
 
         return;
       }
 
+        fprintf(stderr, "HERE COMMON\n");
+
     } else if(rbuf->output_diff->back()->operation != COMMON
               && rbuf->open_diff->back()->operation == COMMON) {
-      /*
 
+      /*
         fprintf(stderr, "HERE COMMON\n");
         fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
         fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
@@ -1142,7 +1143,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         fprintf(stderr, "HERE COMMON\n");
       */
 
-      fprintf(stderr, "HERE COMMON\n");
+          //      fprintf(stderr, "HERE COMMON\n");
 
       bool found = false;
       int position = -1;
@@ -1175,7 +1176,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         } else {
 
           int * temp = new int[2];
-          temp[0] = rbuf->output_diff->size();
+          temp[0] = rbuf->output_diff->size() - 1;
           temp[1] = rbuf->output_diff->back()->open_elements->size() - 1;
 
           skip_close_node.push_back(temp);
@@ -1197,7 +1198,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
                    && strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) == 0
                    && strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0)))) {
 
-      //fprintf(stderr, "HERE COMMON\n");
+      fprintf(stderr, "HERE COMMON\n");
 
       // match position
       // use iterator
@@ -1209,7 +1210,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
           position = i;
 
           if(strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0) {
-
+            fprintf(stderr, "HERE\n");
             found = true;
             break;
           }
@@ -1232,7 +1233,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         } else {
 
           int * temp = new int[2];
-          temp[0] = rbuf->output_diff->size();
+          temp[0] = rbuf->output_diff->size() - 1;
           temp[1] = rbuf->output_diff->back()->open_elements->size() - 1;
 
           skip_close_node.push_back(temp);
@@ -1244,6 +1245,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         return;
       }
 
+        fprintf(stderr, "HERE COMMON\n");
     }
 
     if(rbuf_old->output_diff->back()->operation != COMMON &&
