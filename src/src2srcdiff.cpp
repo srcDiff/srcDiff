@@ -1100,7 +1100,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         if(position != -1) {
 
           // find name down list
-          for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
+          for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
             if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
 
               int * temp = new int[2];
@@ -1109,6 +1109,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
               skip_close_node.push_back(temp);
             }
+
 
         } else {
 
@@ -1162,8 +1163,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       if(!found) {
 
         if(position != -1) {
+
           // find name down list
-          for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
+          for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
             if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
 
               int * temp = new int[2];
@@ -1198,7 +1200,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
                    && strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) == 0
                    && strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0)))) {
 
-      fprintf(stderr, "HERE COMMON\n");
+      //      fprintf(stderr, "HERE COMMON\n");
 
       // match position
       // use iterator
@@ -1219,8 +1221,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       if(!found) {
 
         if(position != -1) {
+
           // find name down list
-          for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
+           for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
             if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
 
               int * temp = new int[2];
