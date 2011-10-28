@@ -1290,6 +1290,18 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if(operation == COMMON) {
 
+    for(int i = 0; i < rbuf->output_diff->size(); ++i)
+      if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
+         && (rbuf->output_diff->back()->open_elements->size() - 1) == skip_close_node[i][1]) {
+
+        if(strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0) {
+          
+          skip_close_node.erase(i);
+
+          break;
+        }
+      }
+
     //fprintf(stderr, "HERE OUTPUT COMMON\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
