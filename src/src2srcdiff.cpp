@@ -1053,8 +1053,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-  if(((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
-     && (operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) != COMMON
+  if(operation != common && ((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
      && ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
         != (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation))) {
     fprintf(stderr, "HERE\n");
