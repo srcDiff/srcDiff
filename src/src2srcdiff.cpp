@@ -1093,9 +1093,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
     } else */
     
-    if(operation == COMMON && ((rbuf_old->output_diff->back()->operation != COMMON
-                                || rbuf_old->open_diff->back()->operation != COMMON
-                                || rbuf_new->open_diff->back()->operation != COMMON)
+    if(rbuf_old->output_diff->back()->operation == COMMON
+       && ((rbuf_old->open_diff->back()->operation != COMMON
+            || rbuf_new->open_diff->back()->operation != COMMON)
 
             || (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                 || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
@@ -1109,12 +1109,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     } else if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
               && (rbuf_old->output_diff->back()->operation != COMMON || operation != COMMON)) {
 
-      int found = false;
-      for(int i = 0; i < skip_close_node.size(); ++i)
-        if(strcmp((const char *)node->name, (const char *)skip_close_node.back()->name == 0)
-           found == true;
-
-      if(operation != COMMON && (skipped_close.empty() || !found) {
+      if(operation != COMMON && (skipped_close.empty() || strcmp((const char *)node->name, (const char *)skip_close_node.back()->name))) {
 
           skipped_close.push_back(true);
           skip_close_node.push_back(node);
