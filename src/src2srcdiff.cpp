@@ -1051,7 +1051,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   static int wait_type = COMMON;
   static std::vector<xmlNodePtr> output_buffer;
 
-  static std::vector<int> skip_close_count;
+  static std::vector<bool> skipped_close;
   static std::vector<xmlNodePtr> skip_close_node;
 
   fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -1117,6 +1117,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new->open_diff->back()->operation);
 
       fprintf(stderr, "HERE COMMON\n");
+
+      if(skipped_close.empty() || strcmp((const char *)node->back()->name, (const char *)skip_close_node.back()->name) {
+
+        skipped_close.push_back(true);
+        skip_close_node.push_back(node);
+      }
 
       return;
     }
