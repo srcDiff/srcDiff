@@ -1079,7 +1079,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
                || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))) {
 
-      fprintf(stderr, "HERE COMMON\n");
+      //fprintf(stderr, "HERE COMMON\n");
 
       bool found = false;
       int position = -1;
@@ -1097,7 +1097,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       if(!found) {
 
-        if(position != rbuf->output_diff->size()) {
+        if(position != -1) {
+
           // find name down list
           for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
             if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
@@ -1119,7 +1120,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         }
 
 
-        fprintf(stderr, "HERE COMMON\n");
+        //fprintf(stderr, "HERE COMMON\n");
 
         return;
       }
@@ -1141,6 +1142,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         fprintf(stderr, "HERE COMMON\n");
       */
 
+      fprintf(stderr, "HERE COMMON\n");
+
       bool found = false;
       int position = -1;
       for(int i = 0; i < rbuf->output_diff->size(); ++i)
@@ -1157,7 +1160,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       if(!found) {
 
-        if(position != rbuf->output_diff->size()) {
+        if(position != -1) {
           // find name down list
           for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
             if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
@@ -1179,7 +1182,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         }
 
 
-        fprintf(stderr, "HERE COMMON\n");
+        //fprintf(stderr, "HERE COMMON\n");
 
         return;
       }
@@ -1193,6 +1196,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
                    && strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0
                    && strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) == 0
                    && strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) == 0)))) {
+
+      fprintf(stderr, "HERE COMMON\n");
 
       // match position
       // use iterator
@@ -1212,7 +1217,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       if(!found) {
 
-        if(position != rbuf->output_diff->size()) {
+        if(position != -1) {
           // find name down list
           for(int i =  skip_close_node[position][1] - 1; (rbuf->output_diff->back()->open_elements->size() - i) >= 0; ++i)
             if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_elements[0][i]->name, (const char *)node->name) == 0) {
