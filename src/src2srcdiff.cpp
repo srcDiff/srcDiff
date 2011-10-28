@@ -1109,14 +1109,17 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       return;
     }
 
-   if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
+    /*
+    if(rbuf_old->output_diff->back()->operation != COMMON &&
+       (operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
        != (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation)) {
 
       wait_type = operation;
       output_buffer.push_back(node);
 
       return;
-    }
+      }
+    */
 
 
 
