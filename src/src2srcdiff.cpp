@@ -1056,7 +1056,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   if(operation != COMMON && ((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
      && ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
         != (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation))) {
-    fprintf(stderr, "HERE\n");
+
       wait_type = operation;
       output_buffer.push_back(node);
       return;
