@@ -1091,7 +1091,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
     } else */
     
-    if((((operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation) == COMMON 
+    if(((rbuf_old->output_diff->back()->operation == COMMON
          && (rbuf_old->open_diff->back()->operation != COMMON
              || rbuf_new->open_diff->back()->operation != COMMON)))
         
@@ -1101,7 +1101,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
             || strcmp((const char *)rbuf_new->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0))*/
        
        || ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
-           && (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation) != COMMON)) {
+           && rbuf_old->output_diff->back()->operation == COMMON)) {
 
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_elements->back()->name);
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_elements->back()->name);
