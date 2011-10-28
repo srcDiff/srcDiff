@@ -827,7 +827,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       }
 
-      //      if(rbuf_old->output_diff->back()->operation == DELETE) {
+      if(rbuf_old->output_diff->back()->operation == DELETE || rbuf_old->output_diff->back()->operation == COMMON) {
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -847,7 +847,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
-      /*      } else {
+      } else {
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
@@ -870,7 +870,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 
       }
-       */
+
 
       last_diff = edits->offset_sequence_one + edits->length;
       edits = edits->next;
