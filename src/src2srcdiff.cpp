@@ -827,7 +827,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       }
 
-      if(rbuf_old->output_diff->back()->operation == DELETE) {
+      //      if(rbuf_old->output_diff->back()->operation == DELETE) {
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -847,7 +847,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
-      } else {
+      /*      } else {
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
@@ -870,7 +870,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
 
       }
-
+       */
 
       last_diff = edits->offset_sequence_one + edits->length;
       edits = edits->next;
@@ -1051,7 +1051,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   if(operation != COMMON && ((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
      && ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
