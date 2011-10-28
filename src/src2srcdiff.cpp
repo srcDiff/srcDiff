@@ -1122,9 +1122,14 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
         skipped_close.push_back(true);
         skip_close_node.push_back(node);
-      }
 
-      return;
+        return;
+        } else {
+
+          skipped_close.pop_back();
+          skipe_close_node.pop_back();
+        }
+
     }
 
     if(rbuf_old->output_diff->back()->operation != COMMON &&
