@@ -708,7 +708,6 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       ++i;
 
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)bnode->name);
       output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
 
     }
