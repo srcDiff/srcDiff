@@ -1049,9 +1049,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   static int wait_type = COMMON;
   static std::vector<xmlNodePtr> output_buffer;
 
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   if(0 && operation != COMMON && ((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
      && ((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
@@ -1060,7 +1060,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       wait_type = operation;
       output_buffer.push_back(node);
       return;
-}
+  }
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
@@ -1089,16 +1089,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
     } else */
 
-    if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
-       != (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation)) {
-
-      wait_type = operation;
-      output_buffer.push_back(node);
-
-      return;
-    }
-
-    if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
+     if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
               && (strcmp((const char *)rbuf_old->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_old->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
                   || strcmp((const char *)rbuf_new->open_diff->back()->open_elements->back()->name, (const char *)node->name) != 0
@@ -1109,9 +1100,20 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_elements->back()->name);
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_elements->back()->name);   exit(2);
 
-      //fprintf(stderr, "HERE COMMON\n");
+      fprintf(stderr, "HERE COMMON\n");
       return;
     }
+
+   if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation)
+       != (operation == DELETE ? rbuf_old->output_diff->back()->operation : rbuf_new->output_diff->back()->operation)) {
+
+      wait_type = operation;
+      output_buffer.push_back(node);
+
+      return;
+    }
+
+
 
   // output non-text node and get next node
   outputNode(*node, writer);
