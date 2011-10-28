@@ -1083,7 +1083,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       bool found = false;
       int position = -1;
-      for(int i = 0; i < rbuf->skip_close_node.size(); ++i)
+     for(int i = 0; i < skip_close_node.size(); ++i)
         if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
            && (rbuf->output_diff->back()->open_elements->size() - 1) == skip_close_node[i][1]) {
           position = i;
@@ -1146,7 +1146,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       bool found = false;
       int position = -1;
-      for(int i = 0; i < rbuf->skip_close_node.size(); ++i)
+      for(int i = 0; i < skip_close_node.size(); ++i)
         if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
            && (rbuf->output_diff->back()->open_elements->size() - 1) == skip_close_node[i][1]) {
           position = i;
@@ -1204,7 +1204,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       // use iterator
       bool found = false;
       int position = -1;
-      for(int i = 0; i < rbuf->skip_close_node.size(); ++i)
+     for(int i = 0; i < skip_close_node.size(); ++i)
         if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
            && (rbuf->output_diff->back()->open_elements->size() - 1) == skip_close_node[i][1]) {
           position = i;
