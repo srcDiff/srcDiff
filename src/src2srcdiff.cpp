@@ -1059,6 +1059,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       wait_type = operation;
       output_buffer.push_back(node);
+      return;
 }
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
