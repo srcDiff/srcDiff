@@ -1109,7 +1109,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     } else if((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON
               && (rbuf_old->output_diff->back()->operation != COMMON || operation != COMMON)) {
 
-      if(operation != COMMON && (skipped_close.empty() || strcmp((const char *)node->name, (const char *)skip_close_node.back()->name))) {
+      int found = false;
+      for(int i = 0; i < skip_close_node.size(); ++i)
+        if(strcmp((const char *)node->name, (const char *)skip_close_node.back()->name == 0)
+           found == true;
+
+      if(operation != COMMON && (skipped_close.empty() || !found) {
 
           skipped_close.push_back(true);
           skip_close_node.push_back(node);
