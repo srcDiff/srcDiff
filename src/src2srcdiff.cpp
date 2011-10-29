@@ -940,6 +940,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         //fprintf(stderr, "HERE\n");
 
+        /*
         bool output_start = false;
         bool output_end = true;
 
@@ -969,6 +970,15 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
           // output diff tag
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+        */
+
+        // output diff tag
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+        
+        output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edits->offset_sequence_two + j], INSERT, writer);
+
+        // output diff tag
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
         last_diff = edits->offset_sequence_one + edits->length;
 
