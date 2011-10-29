@@ -685,9 +685,9 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     node = rbuf->open_diff->back()->open_elements->back();
 
   // output diff outputting until identified open tag
-  xmlNodePtr bnode = NULL;
   */
 
+  xmlNodePtr bnode = NULL;
   unsigned int i;
   for(i = 0; i < rbuf->buffer->size(); ++i) {
 
