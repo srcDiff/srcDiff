@@ -107,8 +107,6 @@ struct reader_buffer {
   int line_number;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
-  std::vector<xmlNode *> * text;
-  std::vector<xmlNode *> * tags;
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
 
@@ -532,8 +530,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
   // allocate new buffer
   rbuf->buffer = new std::vector<xmlNode *>;
-  rbuf->text = new std::vector<xmlNode *>;
-  rbuf->tags = new std::vector<xmlNode *>;
+  
   int not_done = 1;
   while(not_done)
 
@@ -562,7 +559,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
             const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
             text->content = (xmlChar *)content;
             rbuf->buffer->push_back(text);
-            rbuf->text->push_back(text);
 
             characters_start = rbuf->characters;
 
@@ -579,7 +575,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
-          rbuf->text->push_back(text);
 
           characters_start = rbuf->characters;
 
@@ -600,7 +595,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
-          rbuf->text->push_back(text);
 
           characters_start = rbuf->characters + 1;
 
@@ -634,7 +628,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strdup((const char *)characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
-          rbuf->text->push_back(text);
 
         }
 
@@ -652,7 +645,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
       // save non-text node and get next node
       rbuf->buffer->push_back(node);
-      rbuf->tags->push_back(node);
 
       not_done = xmlTextReaderRead(reader);
     }
@@ -1262,7 +1254,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     if((rbuf->open_diff->back()->operation != COMMON
        && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
-           || strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) != 0)) {
+           || strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) != 0))) {
 
       fprintf(stderr, "HERE OTHER\n");
       wait_type = operation;
