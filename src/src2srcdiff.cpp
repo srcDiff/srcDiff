@@ -1261,9 +1261,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     }
 
     if((rbuf->open_diff->back()->operation != COMMON
-        && strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) == 0)
        && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
-           || strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) == 0)) {
+           || strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) != 0)) {
 
       fprintf(stderr, "HERE OTHER\n");
       wait_type = operation;
