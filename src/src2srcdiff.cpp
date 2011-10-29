@@ -329,7 +329,7 @@ int main(int argc, char * argv[]) {
 
       // detect and change
       struct edit * edit_next = edits->next;
-      if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
+      if(0 && edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
         collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
@@ -678,7 +678,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   struct reader_buffer * rbuf = edit->operation == DELETE ? rbuf_old : rbuf_new;
 
-  xmlNodePtr node;
+  /*  xmlNodePtr node;
   if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation)
     node = (*rbuf->open_diff)[rbuf->open_diff->size() - 2]->open_elements->back();
   else
@@ -686,19 +686,24 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   // output diff outputting until identified open tag
   xmlNodePtr bnode = NULL;
+  */
+
   unsigned int i;
   for(i = 0; i < rbuf->buffer->size(); ++i) {
 
+    /*
     bnode = (*rbuf->buffer)[i];
     if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
       break;
     }
+    */
 
     output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
 
   }
 
+  /*
   // may need to be output until close
   // check if last node is text node and output
   if(i == (rbuf->buffer->size() - 1)) {
@@ -712,6 +717,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
     }
   }
+  */
 
   // output ending diff tags
   if(edit->operation == DELETE)
