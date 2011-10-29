@@ -974,13 +974,13 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         */
 
         // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
         
         for(int j = 0; j < edits->length; ++j)
-          output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edits->offset_sequence_two + j], INSERT, writer);
+          output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer);
 
         // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
         last_diff = edits->offset_sequence_one + edits->length;
 
