@@ -1252,14 +1252,16 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     }
 
-    /*    if((rbuf->open_diff->back()->operation != COMMON
+    /*
+      if((rbuf->open_diff->back()->operation != COMMON
         && strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) == 0)
-       && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
-           || strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) == 0)) {
+        && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
+        || strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) == 0)) {
+    */
 
-    if((rbuf->open_diff->back()->operation != COMMON
-       && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
-           || strcmp((const char *)rbuf->open_diff->back()->open_elements->back(), (const char *)node->name) != 0))) {
+    if(rbuf->open_diff->back()->operation != COMMON
+        && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
+            || strcmp((const char *)rbuf->output_diff->back()->open_elements->back(), (const char *)node->name) != 0)) {
 
       fprintf(stderr, "HERE OTHER\n");
       wait_type = operation;
@@ -1267,7 +1269,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       return;
     }
-    */
+
 
     // output non-text node and get next node
     outputNode(*node, writer);
