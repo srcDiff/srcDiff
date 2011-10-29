@@ -691,8 +691,10 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   unsigned int i;
   for(i = 0; i < rbuf->buffer->size(); ++i) {
 
-    /*
+
     bnode = (*rbuf->buffer)[i];
+
+    /*
     if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
 
       break;
