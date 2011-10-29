@@ -729,9 +729,11 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     // output diff tag
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
+  /*
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
     output_handler(rbuf_old, rbuf_new, (*rbuf->buffer)[i], edit->operation, writer);
+  */
 
   //fprintf(stderr, "HERE\n");
 }
