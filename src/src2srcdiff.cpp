@@ -689,32 +689,9 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
     bnode = (*rbuf->buffer)[i];
 
-    /*
-    if((xmlReaderTypes)bnode->type == XML_READER_TYPE_END_ELEMENT && strcmp((const char *)node->name, (const char *)bnode->name) == 0) {
-
-      break;
-    }
-    */
-
     output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
 
   }
-
-  /*
-  // may need to be output until close
-  // check if last node is text node and output
-  if(i == (rbuf->buffer->size() - 1)) {
-
-    bnode = (*rbuf->buffer)[i];
-    if(bnode && (xmlReaderTypes)bnode->type == XML_READER_TYPE_TEXT) {
-
-      ++i;
-
-      output_handler(rbuf_old, rbuf_new, bnode, edit->operation, writer);
-
-    }
-  }
-  */
 
   // output ending diff tags
   if(edit->operation == DELETE)
