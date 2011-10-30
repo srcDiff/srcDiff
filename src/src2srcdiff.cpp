@@ -101,6 +101,13 @@ int node_compare(const void * e1, const void * e2) {
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
+struct open_diff {
+
+  int operation;
+  std::vector<xmlNode *> * open_elements;
+
+};
+
 // stores information during xml Text Reader processing
 struct reader_buffer {
 
@@ -110,12 +117,11 @@ struct reader_buffer {
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
 
+  std::vector<std::vector<xmlNodePtr> > delay_close;
+
 };
 
-struct open_diff {
-
-  int operation;
-  std::vector<xmlNode *> * open_elements;
+struct writer_buffer {
 
 };
 
