@@ -1272,7 +1272,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     }
 
-    if((rbuf->open_diff->back()->operation != COMMON
+    if(0 && (rbuf->open_diff->back()->operation != COMMON
         && strcmp((const char *)rbuf->open_diff->back()->open_elements->back()->name, (const char *)node->name) == 0)
        && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
            || strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
@@ -1340,6 +1340,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       update_diff_stack(rbuf_new->output_diff, node, INSERT);
     }
 
+    /*
     // check if need to void output_buffer
     if(!rbuf_old->delay_close->empty() && rbuf_old->delay_close->back()->operation == (rbuf->output_diff->size() - 1)) {
 
@@ -1370,6 +1371,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       rbuf_new->delay_close->pop_back();
 
     }
+    */
 
     return;
   }
