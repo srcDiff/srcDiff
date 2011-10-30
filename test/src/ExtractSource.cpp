@@ -61,7 +61,7 @@ int main(int argc, char * argv[]) {
 // create the ctxt
 static xmlParserCtxtPtr createURLParserCtxt(const char * infile) {
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_HUGE | XML_PARSE_COMPACT);
   if (ctxt == NULL) {
 
     // report error
