@@ -1,5 +1,5 @@
 # set compiler version to match that of antlr library
-CXX=/usr/bin/g++ -g
+CXX=/usr/bin/g++
 
 # associated text tools
 SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
