@@ -1270,7 +1270,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
        && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
            || strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)node->name) != 0)) {
 
-      fprintf(stderr, "HERE OTHER\n");
+      //fprintf(stderr, "HERE OTHER\n");
 
       // locate last stream
       if(rbuf->delay_close->empty() || rbuf->delay_close->back()->operation != rbuf->open_diff->size() - 1) {
