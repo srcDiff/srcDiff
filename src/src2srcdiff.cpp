@@ -1288,7 +1288,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         rbuf->delay_close->push_back(new_diff);
       }
 
-      rbuf->delay_close->back()->push_back(node);
+      rbuf->delay_close->back()->open_elements->push_back(node);
 
       return;
     }
@@ -1340,13 +1340,13 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     }
 
     // check if need to void output_buffer
-    if(!rbuf_old->delay_close->empty() && rbuf_old->delay_close_diff->back()->operation == (rbuf->output_diff->size() - 1) {
-
+    if(!rbuf_old->delay_close->empty() && rbuf_old->delay_close->back()->operation == (rbuf->output_diff->size() - 1)) {
+        
         // output diff tag start
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
-        for(int i = 0; i < rbuf_old->delay_close_diff->back()->size(); ++i)
-          output_handler(rbuf_old, rbuf_new, (*rbuf_old->delay_close_diff->back())[i], DELETE, writer);
+        for(int i = 0; i < rbuf_old->delay_close->back()->open_elements->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, (*rbuf_old->delay_close->back()->open_elements)[i], DELETE, writer);
 
         // output diff tag start
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
@@ -1355,13 +1355,13 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       }
 
-      else if(!rbuf_new->delay_close->empty() && rbuf_new->delay_close_diff->back()->operation == (rbuf->output_diff->size() - 1) {
+    else if(!rbuf_new->delay_close->empty() && rbuf_new->delay_close->back()->operation == (rbuf->output_diff->size() - 1)) {
 
           // output diff tag start
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-          for(int i = 0; i < rbuf_new->delay_close_diff->back()->size(); ++i)
-            output_handler(rbuf_old, rbuf_new, (*rbuf_new->delay_close_diff->back())[i], INSERT, writer);
+          for(int i = 0; i < rbuf_new->delay_close->back()->open_elements->size(); ++i)
+            output_handler(rbuf_old, rbuf_new, (*rbuf_new->delay_close->back()->open_elements)[i], INSERT, writer);
 
           // output diff tag start
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
