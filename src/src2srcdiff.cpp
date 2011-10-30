@@ -327,7 +327,7 @@ int main(int argc, char * argv[]) {
 
       // detect and change
       struct edit * edit_next = edits->next;
-      if(0 && edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
+      if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
          && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
         collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
@@ -466,8 +466,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
       if(strlen((const char *)rbuf_old->characters) != strlen((const char *)rbuf_new->characters)) {
 
         collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
-
-        //output_double(rbuf_old, rbuf_new, writer);
 
         struct edit edit;
         edit.operation = DELETE;
