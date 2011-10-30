@@ -550,9 +550,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line) {
 
-  if(operation == INSERT)
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
 
@@ -603,13 +600,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
-
-          if(strcmp(content, "ral") == 0) {
-
-            fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, getRealCurrentNode(reader)->content);
-            fprintf(stderr, "HERE: %s %s %d %x\n", __FILE__, __FUNCTION__, __LINE__, rbuf->characters);
-
-          }
 
           characters_start = rbuf->characters;
 
@@ -1092,13 +1082,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   static std::vector<int *> skip_close_node;
   
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
-  if(operation == INSERT || operation == COMMON) {
-
-    if(node->type == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || node->type == XML_READER_TYPE_TEXT)
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
-      else
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  }
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
