@@ -448,12 +448,12 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         //output_double(rbuf_old, rbuf_new, writer);
 
         struct edit edit;
-        edit->operation = DELETE;
+        edit.operation = DELETE;
 
-        output_single(rbuf_old, rbuf_new, edit, writer);
+        output_single(rbuf_old, rbuf_new, &edit, writer);
 
-        edit->operation = INSERT;
-        output_single(rbuf_old, rbuf_new, edit, writer);
+        edit.operation = INSERT;
+        output_single(rbuf_old, rbuf_new, &edit, writer);
 
         --rbuf_old->line_number;
         --rbuf_new->line_number;
