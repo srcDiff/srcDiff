@@ -471,8 +471,31 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
         rbuf_new->characters = (unsigned char *)xmlTextReaderConstValue(reader_new);
       }
 
+      if(strlen((const char *)rbuf_old->characters) != strlen((const char *)rbuf_new->characters)) {
+
+        collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+
+        //output_double(rbuf_old, rbuf_new, writer);
+
+        struct edit edit;
+        edit.operation = DELETE;
+
+        output_single(rbuf_old, rbuf_new, &edit, writer);
+
+        edit.operation = INSERT;
+        collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
+
+        output_single(rbuf_old, rbuf_new, &edit, writer);
+
+        --rbuf_old->line_number;
+        --rbuf_new->line_number;
+
+        return;
+
+      }
+
       // cycle through characters
-      for (; *rbuf_old->characters != 0; ++rbuf_old->characters, ++rbuf_new->characters) {
+      for (; (*rbuf_old->characters) != 0; ++rbuf_old->characters, ++rbuf_new->characters) {
 
         // escape characters or print out character
         if (*rbuf_old->characters == '&')
@@ -489,6 +512,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
           ++rbuf_old->characters;
           ++rbuf_new->characters;
+
           if(!(*rbuf_old->characters)) {
 
             rbuf_old->characters = NULL;
@@ -536,6 +560,9 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line) {
 
+  if(operation == INSERT)
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
 
@@ -556,7 +583,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
       }
 
       // cycle through characters
-      for (; *rbuf->characters != 0; ++rbuf->characters) {
+      for (; (*rbuf->characters) != 0; ++rbuf->characters) {
 
         // separte non whitespace
         if((*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\r' && (*rbuf->characters) != '\n') {
@@ -575,7 +602,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
           }
 
-          while(*rbuf->characters != 0 && (*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\r' && (*rbuf->characters) != '\n')
+          while((*rbuf->characters) != 0 && (*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\r' && (*rbuf->characters) != '\n')
             ++rbuf->characters;
 
           // output other
@@ -586,6 +613,13 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
           text->content = (xmlChar *)content;
           rbuf->buffer->push_back(text);
+
+          if(strcmp(content, "ral") == 0) {
+
+            fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, getRealCurrentNode(reader)->content);
+            fprintf(stderr, "HERE: %s %s %d %x\n", __FILE__, __FUNCTION__, __LINE__, rbuf->characters);
+
+          }
 
           characters_start = rbuf->characters;
 
@@ -1068,6 +1102,13 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   static std::vector<int *> skip_close_node;
   
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
+  if(operation == INSERT || operation == COMMON) {
+
+    if(node->type == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || node->type == XML_READER_TYPE_TEXT)
+        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
+      else
+        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  }
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->output_diff->back()->operation);
