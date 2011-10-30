@@ -445,7 +445,15 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
         collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
 
-        output_double(rbuf_old, rbuf_new, writer);
+        //output_double(rbuf_old, rbuf_new, writer);
+
+        struct edit edit;
+        edit->operation = DELETE;
+
+        output_single(rbuf_old, rbuf_new, edit, writer);
+
+        edit->operation = INSERT;
+        output_single(rbuf_old, rbuf_new, edit, writer);
 
         --rbuf_old->line_number;
         --rbuf_new->line_number;
