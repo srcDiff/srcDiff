@@ -438,6 +438,8 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
 
         collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
@@ -735,7 +737,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 // output a change
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer) {
 
-  //fprintf(stderr, "HERE_DOUBLE\n");
+  fprintf(stderr, "HERE_DOUBLE\n");
 
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->buffer->size(), (void *)rbuf_old->buffer, rbuf_new->buffer->size(), (void *)rbuf_new->buffer, node_compare, node_index, &edit_script);
