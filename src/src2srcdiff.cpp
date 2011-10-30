@@ -440,7 +440,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       int done = 0;
 
-      if(getRealCurrentNode(reader_old)->name->XML_READER_TYPE_ELEMENT) {
+      if(getRealCurrentNode(reader_old)->type == XML_READER_TYPE_ELEMENT) {
 
         output_handler(rbuf_old, rbuf_new, node, DELETE, writer);
         not_done = xmlTextReaderRead(reader_old);
@@ -450,7 +450,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       }
 
-      if(getRealCurrentNode(reader_new)->name->XML_READER_TYPE_ELEMENT) {
+      if(getRealCurrentNode(reader_new)->type == XML_READER_TYPE_ELEMENT) {
 
         output_handler(rbuf_old, rbuf_new, node, INSERT, writer);
         not_done = xmlTextReaderRead(reader_new);
