@@ -438,14 +438,41 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
     if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
 
-      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+      int done = 0;
 
-      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
+      if(getRealCurrentNode(reader_old)->name->XML_READER_TYPE_ELEMENT) {
 
-      output_double(rbuf_old, rbuf_new, writer);
+        output_handler(rbuf_old, rbuf_new, node, DELETE, writer);
+        not_done = xmlTextReaderRead(reader_old);
 
-      --rbuf_old->line_number;
-      --rbuf_new->line_number;
+        if(!not_done)
+          done = 1;
+
+      }
+
+      if(getRealCurrentNode(reader_new)->name->XML_READER_TYPE_ELEMENT) {
+
+        output_handler(rbuf_old, rbuf_new, node, INSERT, writer);
+        not_done = xmlTextReaderRead(reader_old);
+
+        if(!not_done)
+          done = 1;
+      }
+
+      if(done)
+        return;
+
+      if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
+
+        collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+
+        collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
+
+        output_double(rbuf_old, rbuf_new, writer);
+
+        --rbuf_old->line_number;
+        --rbuf_new->line_number;
+      }
 
       return;
 
@@ -1344,7 +1371,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     }
 
     // check if need to void output_buffer
-    if(wait_type != COMMON && wait_type == rbuf_old->output_diff->back()->operation) {
+    if(0 && wait_type != COMMON && wait_type == rbuf_old->output_diff->back()->operation) {
 
       int save_type = wait_type;
 
