@@ -1295,7 +1295,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   } else {
 
-    if(operation == DELETE)
+    if(operation != INSERT)
       if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
 
@@ -1311,7 +1311,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   } else {
 
-    if(operation == INSERT)
+    if(operation != DELETE)
       if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked = true;
 
