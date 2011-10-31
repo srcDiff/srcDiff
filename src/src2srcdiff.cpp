@@ -1324,11 +1324,11 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
           return;
 
         if(rbuf->output_diff->back()->operation == DELETE
-           && !rbuf_old->open_diff->back()->open_tags->back()->marked))
+           && !rbuf_old->open_diff->back()->open_tags->back()->marked)
         return;
 
         if(rbuf->output_diff->back()->operation == INSERT
-           && !rbuf_new->open_diff->back()->open_tags->back()->marked))
+           && !rbuf_new->open_diff->back()->open_tags->back()->marked)
       return;
 
       // output non-text node and get next node
