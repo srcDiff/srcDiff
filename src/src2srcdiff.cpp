@@ -1287,15 +1287,35 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   int unmarked;
   for(unmarked = rbuf_old->open_diff->back()->open_tags->size() - 1; unmarked > 0 
         && (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
- 
+
+  if(rbuf->output_diff->back()->operation != COMMON) {
+
       if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
+
+  } else {
+
+    if(operation == DELETE)
+      if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
+        (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
+
+  }
 
       for(unmarked = rbuf_new->open_diff->back()->open_tags->size() - 1; unmarked > 0 
             && (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
 
+  if(rbuf->output_diff->back()->operation != COMMON) {
+
       if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked = true;
+
+  } else {
+
+    if(operation == INSERT)
+      if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
+        (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked = true;
+
+  }
 
     /*
     if(rbuf->output_diff->back()->operation != COMMON
