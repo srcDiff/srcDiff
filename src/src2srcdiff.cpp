@@ -1412,7 +1412,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   }
 
     // check if need to void output_buffer
-    if(!rbuf_old->delay_close->empty() && rbuf_old->delay_close->back()->operation == (rbuf->output_diff->size() - 1)) {
+    if(!rbuf_old->delay_close->empty() 
+       && rbuf_old->delay_close->back()->operation == rbuf->output_diff->back()->operation
+       && strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)rbuf_old->delay_close->back()->open_elements->front()) == 0) {
 
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
@@ -1427,7 +1429,10 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     }
 
-    else if(!rbuf_new->delay_close->empty() && rbuf_new->delay_close->back()->operation == (rbuf->output_diff->size() - 1)) {
+    else if(!rbuf_new->delay_close->empty()
+       && rbuf_new->delay_close->back()->operation == rbuf->output_diff->back()->operation
+       && strcmp((const char *)rbuf->output_diff->back()->open_elements->back()->name, (const char *)rbuf_new->delay_close->back()->open_elements->front()) == 0) {
+
 
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
