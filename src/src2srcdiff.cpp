@@ -1400,6 +1400,37 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     update_diff_stack(rbuf_new->output_diff, node, operation);
   }
 
+    // check if need to void output_buffer
+    if(!rbuf_old->delay_close->empty() && rbuf_old->delay_close->back()->operation == (rbuf->output_diff->size() - 1)) {
+
+      // output diff tag start
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+
+      for(int i = 0; i < rbuf_old->delay_close->back()->open_elements->size(); ++i)
+        output_handler(rbuf_old, rbuf_new, (*rbuf_old->delay_close->back()->open_elements)[i], DELETE, writer);
+
+      // output diff tag start
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+
+      rbuf_old->delay_close->pop_back();
+
+    }
+
+    else if(!rbuf_new->delay_close->empty() && rbuf_new->delay_close->back()->operation == (rbuf->output_diff->size() - 1)) {
+
+      // output diff tag start
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+
+      for(int i = 0; i < rbuf_new->delay_close->back()->open_elements->size(); ++i)
+        output_handler(rbuf_old, rbuf_new, (*rbuf_new->delay_close->back()->open_elements)[i], INSERT, writer);
+
+      // output diff tag start
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+      rbuf_new->delay_close->pop_back();
+
+    }
+
 }
 
 bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
