@@ -1049,7 +1049,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
     xmlNodePtr anode = new xmlNode;
    
     anode->name = (xmlChar *)"DIFF";
-    new_diff->push_back(anode);
+    new_diff->open_tags->push_back(anode);
 
     open_diffs->push_back(new_diff);
   }
