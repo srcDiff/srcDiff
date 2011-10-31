@@ -707,20 +707,24 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   //fprintf(stderr, "HERE_SINGLE\n");
 
+  struct reader_buffer * rbuf = edit->operation == DELETE ? rbuf_old : rbuf_new;
+
   // output starting diff tag
   if(edit->operation == DELETE) {
 
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
-    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+    if(rbuf->open_diff->back()->operation != DELETE)
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+
   }else {
 
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+    if(rbuf->open_diff->back()->operation != INSERT)
     output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, writer);
-  }
 
-  struct reader_buffer * rbuf = edit->operation == DELETE ? rbuf_old : rbuf_new;
+  }
 
   /*  xmlNodePtr node;
       if(rbuf->open_diff->size() > 1 && rbuf->open_diff->back()->operation == edit->operation)
@@ -743,15 +747,23 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   }
 
   // output ending diff tags
+  // output starting diff tag
   if(edit->operation == DELETE) {
 
-    // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
-  } else {
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+    if(rbuf->open_diff->back()->operation != DELETE)
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
 
-    // output diff tag
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+  }else {
+
+    // output diff tag start
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+    if(rbuf->open_diff->back()->operation != INSERT)
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, writer);
+
   }
+
   /*
   // output remaining nodes on line
   for(; i < rbuf->buffer->size(); ++i)
