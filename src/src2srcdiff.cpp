@@ -169,8 +169,8 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  std::string * dold = new std::string("dold");
-  std::string * dnew = new std::string("dnew");
+  std::string * dold = new std::string("diff:old");
+  std::string * dnew = new std::string("diff:new");
 
   diff_old_start = new xmlNode;
   diff_old_start->name = (xmlChar *)dold->c_str();
@@ -1157,6 +1157,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
@@ -1491,6 +1492,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   return;
 }
 
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 // output non-text node and get next node
 outputNode(*node, writer);
 
