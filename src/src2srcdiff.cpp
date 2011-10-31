@@ -433,22 +433,25 @@ int main(int argc, char * argv[]) {
       }
 
     }
-
+    
+    /*
       // output diff tag start
       //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
       if(rbuf_old.open_diff->back()->operation != COMMON)
         output_handler(&rbuf_old, &rbuf_new, diff_common_start, COMMON, writer);
 
       rbuf_old.open_diff->back()->open_tags->front()->marked = false;
+    */
 
       for(unsigned int j = last_diff; j < lines1.size(); ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
         compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
 
+      /*
       if(rbuf_old.open_diff->back()->operation == COMMON && rbuf_old.open_diff->size() > 1)
       rbuf_old.open_diff->back()->open_tags->front()->marked = true;
       
       output_handler(&rbuf_old, &rbuf_new, diff_common_end, COMMON, writer);
-
+      */
   }
 
   // output srcdiff unit
@@ -807,20 +810,24 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   if(edit->operation == DELETE) {
 
     // output diff tag start
-    //    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+    /*
     if(rbuf->open_diff->back()->operation == DELETE)
       rbuf->open_diff->back()->open_tags->front()->marked = true;
       
     output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+    */
 
   }else {
 
     // output diff tag start
-    //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+    /*
     if(rbuf->open_diff->back()->operation == INSERT)
       rbuf->open_diff->back()->open_tags->front()->marked = true;
 
     output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+    */
 
   }
 
@@ -851,12 +858,14 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
+    /*
       // output diff tag start
       //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+    */
 
     // add preceeding unchanged
     if(edits->operation == DELETE)
@@ -867,10 +876,12 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j)
         output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[j], COMMON, writer);
 
+    /*
       if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
       rbuf_old->open_diff->back()->open_tags->front()->marked = true;
-      
+
       output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
+    */
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -907,24 +918,28 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           if(end_old >= 0) {
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
 
             xmlTextWriterWriteRawLen(writer, content_old, end_old + 1);
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
 
           }
 
           if(end_new >= 0) {
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
             xmlTextWriterWriteRawLen(writer, content_new, end_new + 1);
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("/<diff:new>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("/<diff:new>"));
 
           }
 
@@ -942,37 +957,45 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       */
 
       // output diff tag start
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+      /*
       if(rbuf_old->open_diff->back()->operation != DELETE)
         output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+      */
 
       for(int j = 0; j < edits->length; ++j)
         output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer);
 
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+      /*
       // output diff tag start
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
       if(rbuf_old->open_diff->back()->operation == DELETE)
         rbuf_old->open_diff->back()->open_tags->front()->marked = true;
       output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+      */
 
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+      /*
       // output diff tag
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
       if(rbuf_new->open_diff->back()->operation != INSERT)
         output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
 
       rbuf_new->open_diff->back()->open_tags->front()->marked = false;
+        */
 
       for(int j = 0; j < edit_next->length; ++j)
         output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edit_next->offset_sequence_two + j], INSERT, writer);
 
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+    /*
     // output diff tag start
-    //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
     if(rbuf_new->open_diff->back()->operation == INSERT)
       rbuf_new->open_diff->back()->open_tags->front()->marked = true;
     output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
-
+    */
       /*
         } else {
 
@@ -1045,21 +1068,27 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         */
       
       // output diff tag
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+
+      /*
       if(rbuf_new->open_diff->back()->operation != INSERT)
         output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
 
       rbuf_new->open_diff->back()->open_tags->front()->marked = false;
-        
+      */
+
         for(int j = 0; j < edits->length; ++j)
           output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edits->offset_sequence_two + j], INSERT, writer);
 
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+        /*
         // output diff tag
-        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
         if(rbuf_new->open_diff->back()->operation == INSERT)
           rbuf_new->open_diff->back()->open_tags->front()->marked = true;
         output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
-        
+        */
+ 
         last_diff = edits->offset_sequence_one + 1;
 
       }
@@ -1104,22 +1133,27 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
         */
 
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+
+      /*
       // output diff tag start
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
       if(rbuf_old->open_diff->back()->operation != DELETE)
         output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+      */
 
         for(int j = 0; j < edits->length; ++j)
           output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[edits->offset_sequence_one + j], DELETE, writer);
 
-        // output diff tag
-        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
+        /*
+        // output diff tag
         if(rbuf_old->open_diff->back()->operation == DELETE)
           rbuf_old->open_diff->back()->open_tags->front()->marked = true;
         output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+        */
 
         last_diff = edits->offset_sequence_one + edits->length;
 
