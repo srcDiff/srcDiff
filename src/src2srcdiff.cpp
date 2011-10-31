@@ -479,14 +479,14 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 
       if(strlen((const char *)rbuf_old->characters) != strlen((const char *)rbuf_new->characters)) {
 
-      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
+        collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
 
-      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
+        collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
 
-      output_double(rbuf_old, rbuf_new, writer);
+        output_double(rbuf_old, rbuf_new, writer);
 
-      --rbuf_old->line_number;
-      --rbuf_new->line_number;
+        --rbuf_old->line_number;
+        --rbuf_new->line_number;
 
         return;
 
@@ -1082,15 +1082,15 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
   /*
-  static std::vector<bool> skipped_close;
-  static std::vector<int *> skip_close_node;
+    static std::vector<bool> skipped_close;
+    static std::vector<int *> skip_close_node;
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
 
-  if(node->type == XML_READER_TYPE_TEXT)
+    if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
-  else
+    else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
 
@@ -1104,78 +1104,76 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       rbuf->open_diff->back()->open_tags->back()->marked = true;
     else if(rbuf->output_diff->back()->operation == COMMON) {
 
-    if(rbuf_old->output_diff->back()->operation == COMMON
-       && strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
-      rbuf_old->open_diff->back()->open_tags->back()->marked = true;
+      if(rbuf_old->output_diff->back()->operation == COMMON
+         && strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
+        rbuf_old->open_diff->back()->open_tags->back()->marked = true;
 
-    if(rbuf_new->output_diff->back()->operation == COMMON
-       && strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
-      rbuf_new->open_diff->back()->open_tags->back()->marked = true;
+      if(rbuf_new->output_diff->back()->operation == COMMON
+         && strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
+        rbuf_new->open_diff->back()->open_tags->back()->marked = true;
 
-    }
+      /*
+        if(rbuf_old->output_diff->back()->operation == COMMON
+        && ((rbuf_old->open_diff->back()->operation != COMMON
+        || rbuf_new->open_diff->back()->operation != COMMON)
 
-    /*
-    if(rbuf_old->output_diff->back()->operation == COMMON
-       && ((rbuf_old->open_diff->back()->operation != COMMON
-            || rbuf_new->open_diff->back()->operation != COMMON)
+        || (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
+        || strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
+        || strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
+        || strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0))) {
 
-           || (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-               || strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-               || strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-               || strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0))) {
+        //fprintf(stderr, "HERE COMMON\n");
 
-      //fprintf(stderr, "HERE COMMON\n");
-
-      bool found = false;
-      int position = -1;
-      for(int i = 0; i < skip_close_node.size(); ++i)
+        bool found = false;
+        int position = -1;
+        for(int i = 0; i < skip_close_node.size(); ++i)
         if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
-           && (rbuf->output_diff->back()->open_tags->size() - 1) == skip_close_node[i][1]) {
-          position = i;
+        && (rbuf->output_diff->back()->open_tags->size() - 1) == skip_close_node[i][1]) {
+        position = i;
 
-          if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
+        if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
 
-            found = true;
-            break;
-          }
+        found = true;
+        break;
+        }
         }
 
-      if(!found) {
+        if(!found) {
 
         if(position != -1) {
 
-          // find name down list
-          for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
-            if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_tags[0][i]->name, (const char *)node->name) == 0) {
+        // find name down list
+        for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
+        if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_tags[0][i]->name, (const char *)node->name) == 0) {
 
-              int * temp = new int[2];
-              temp[0] = position;
-              temp[1] = i;
+        int * temp = new int[2];
+        temp[0] = position;
+        temp[1] = i;
 
-              skip_close_node.push_back(temp);
-            }
+        skip_close_node.push_back(temp);
+        }
 
 
         } else {
 
-          int * temp = new int[2];
-          temp[0] = rbuf->output_diff->size() - 1;
-          temp[1] = rbuf->output_diff->back()->open_tags->size() - 1;
+        int * temp = new int[2];
+        temp[0] = rbuf->output_diff->size() - 1;
+        temp[1] = rbuf->output_diff->back()->open_tags->size() - 1;
 
-          skip_close_node.push_back(temp);
+        skip_close_node.push_back(temp);
         }
 
 
 
         return;
-      }
+        }
 
-      //fprintf(stderr, "HERE COMMON\n");
+        //fprintf(stderr, "HERE COMMON\n");
 
-    } else if(rbuf->output_diff->back()->operation != COMMON
-              && rbuf->open_diff->back()->operation == COMMON) {
+        } else if(rbuf->output_diff->back()->operation != COMMON
+        && rbuf->open_diff->back()->operation == COMMON) {
 
-      /*
+        /*
         fprintf(stderr, "HERE COMMON\n");
         fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_tags->back()->name);
         fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_tags->back()->name);
@@ -1188,121 +1186,121 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
         fprintf(stderr, "HERE COMMON\n");
 
-      //      fprintf(stderr, "HERE COMMON\n");
+        //      fprintf(stderr, "HERE COMMON\n");
 
-      bool found = false;
-      int position = -1;
-      for(int i = 0; i < skip_close_node.size(); ++i)
+        bool found = false;
+        int position = -1;
+        for(int i = 0; i < skip_close_node.size(); ++i)
         if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
-           && (rbuf->output_diff->back()->open_tags->size() - 1) == skip_close_node[i][1]) {
-          position = i;
+        && (rbuf->output_diff->back()->open_tags->size() - 1) == skip_close_node[i][1]) {
+        position = i;
 
-          if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
+        if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
 
-            found = true;
-            break;
-          }
+        found = true;
+        break;
+        }
         }
 
-      if(!found) {
+        if(!found) {
 
         if(position != -1) {
 
-          // find name down list
-          for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
-            if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_tags[0][i]->name, (const char *)node->name) == 0) {
+        // find name down list
+        for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
+        if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_tags[0][i]->name, (const char *)node->name) == 0) {
 
-              int * temp = new int[2];
-              temp[0] = position;
-              temp[1] = i;
+        int * temp = new int[2];
+        temp[0] = position;
+        temp[1] = i;
 
-              skip_close_node.push_back(temp);
-            }
+        skip_close_node.push_back(temp);
+        }
 
         } else {
 
-          int * temp = new int[2];
-          temp[0] = rbuf->output_diff->size() - 1;
-          temp[1] = rbuf->output_diff->back()->open_tags->size() - 1;
+        int * temp = new int[2];
+        temp[0] = rbuf->output_diff->size() - 1;
+        temp[1] = rbuf->output_diff->back()->open_tags->size() - 1;
 
-          skip_close_node.push_back(temp);
+        skip_close_node.push_back(temp);
         }
 
 
         //fprintf(stderr, "HERE COMMON\n");
 
         return;
-      }
-
-    }
-    else if(operation != COMMON && (rbuf_old->output_diff->back()->operation == COMMON
-                                    && ((rbuf_old->open_diff->back()->operation == COMMON
-                                         && rbuf_new->open_diff->back()->operation == COMMON)
-
-                                        && (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) == 0
-                                            && strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0
-                                            && strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) == 0
-                                            && strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0)))) {
-
-      //      fprintf(stderr, "HERE COMMON\n");
-
-      // match position
-      // use iterator
-      bool found = false;
-      int position = -1;
-      for(int i = 0; i < skip_close_node.size(); ++i)
-        if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
-           && (rbuf->output_diff->back()->open_tags->size() - 1) == skip_close_node[i][1]) {
-          position = i;
-
-          if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
-
-            found = true;
-            break;
-          }
         }
 
-      if(!found) {
+        }
+        else if(operation != COMMON && (rbuf_old->output_diff->back()->operation == COMMON
+        && ((rbuf_old->open_diff->back()->operation == COMMON
+        && rbuf_new->open_diff->back()->operation == COMMON)
+
+        && (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) == 0
+        && strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0
+        && strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) == 0
+        && strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0)))) {
+
+        //      fprintf(stderr, "HERE COMMON\n");
+
+        // match position
+        // use iterator
+        bool found = false;
+        int position = -1;
+        for(int i = 0; i < skip_close_node.size(); ++i)
+        if(rbuf->output_diff->size() - 1 == skip_close_node[i][0]
+        && (rbuf->output_diff->back()->open_tags->size() - 1) == skip_close_node[i][1]) {
+        position = i;
+
+        if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
+
+        found = true;
+        break;
+        }
+        }
+
+        if(!found) {
 
         if(position != -1) {
 
-          // find name down list
-          for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
-            if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_tags[0][i]->name, (const char *)node->name) == 0) {
+        // find name down list
+        for(int i =  skip_close_node[position][1] - 1; i >= 0; --i)
+        if(strcmp((const char *)(*rbuf->output_diff)[skip_close_node[position][0]]->open_tags[0][i]->name, (const char *)node->name) == 0) {
 
-              int * temp = new int[2];
-              temp[0] = position;
-              temp[1] = i;
+        int * temp = new int[2];
+        temp[0] = position;
+        temp[1] = i;
 
-              skip_close_node.push_back(temp);
-            }
+        skip_close_node.push_back(temp);
+        }
 
         } else {
 
-          int * temp = new int[2];
-          temp[0] = rbuf->output_diff->size() - 1;
-          temp[1] = rbuf->output_diff->back()->open_tags->size() - 1;
+        int * temp = new int[2];
+        temp[0] = rbuf->output_diff->size() - 1;
+        temp[1] = rbuf->output_diff->back()->open_tags->size() - 1;
 
-          skip_close_node.push_back(temp);
+        skip_close_node.push_back(temp);
         }
 
 
         //fprintf(stderr, "HERE COMMON\n");
 
         return;
-      }
+        }
 
-    }
+        }
 
-    if((rbuf->open_diff->back()->operation != COMMON
+        if((rbuf->open_diff->back()->operation != COMMON
         && strcmp((const char *)rbuf->open_diff->back()->open_tags->back()->name, (const char *)node->name) == 0)
-       && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
-           || strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)) {
+        && (rbuf->open_diff->back()->operation != rbuf->output_diff->back()->operation
+        || strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)) {
 
-      //fprintf(stderr, "HERE OTHER\n");
+        //fprintf(stderr, "HERE OTHER\n");
 
-      // locate last stream
-      if(rbuf->delay_close->empty() || rbuf->delay_close->back()->operation != rbuf->open_diff->size() - 1) {
+        // locate last stream
+        if(rbuf->delay_close->empty() || rbuf->delay_close->back()->operation != rbuf->open_diff->size() - 1) {
 
         struct open_diff * new_diff = new struct open_diff;
         new_diff->offset = rbuf->open_diff->size() - 1;
@@ -1310,171 +1308,187 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         new_diff->open_tags = new std::vector<xmlNode *>;
 
         rbuf->delay_close->push_back(new_diff);
-      }
+        }
 
-      rbuf->delay_close->back()->open_tags->push_back(node);
+        rbuf->delay_close->back()->open_tags->push_back(node);
 
-      return;
-    }
-    */
-
-    // output non-text node and get next node
-    outputNode(*node, writer);
-
-    if(rbuf_old->output_diff->back()->operation == COMMON) {
-
-      //fprintf(stderr, "HERE OUTPUT COMMON\n");
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-      /*
-      for(std::vector<int *>::iterator p = skip_close_node.begin();  p < skip_close_node.end(); ++p)
-        if(rbuf->output_diff->size() - 1 == (*p)[0]
-           && (rbuf->output_diff->back()->open_tags->size() - 1) == (*p)[1]) {
-
-          if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
-
-            skip_close_node.erase(p);
-
-            break;
-          }
+        return;
         }
       */
 
-      update_diff_stack(rbuf_old->open_diff, node, COMMON);
-      update_diff_stack(rbuf_new->open_diff, node, COMMON);
+      while(1) {
 
-      update_diff_stack(rbuf_old->output_diff, node, COMMON);
+        if(rbuf->output_diff->back()->operation == COMMON
+           && (!rbuf_old->open_diff->back()->open_tags->back()->marked
+               && !rbuf_new->open_diff->back()->open_tags->back()->marked))
+          return;
 
-    }
-    else if(rbuf_old->output_diff->back()->operation == DELETE) {
+        if(rbuf->output_diff->back()->operation == DELETE
+           && !rbuf_old->open_diff->back()->open_tags->back()->marked))
+        return;
 
-      //fprintf(stderr, "HERE OUTPUT DELETE\n");
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+        if(rbuf->output_diff->back()->operation == INSERT
+           && !rbuf_new->open_diff->back()->open_tags->back()->marked))
+      return;
 
-      update_diff_stack(rbuf_old->open_diff, node, DELETE);
+      // output non-text node and get next node
+      outputNode(*node, writer);
 
-      update_diff_stack(rbuf_old->output_diff, node, DELETE);
+      if(rbuf->output_diff->back()->operation == COMMON) {
 
-    } else {
+        //fprintf(stderr, "HERE OUTPUT COMMON\n");
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-      //fprintf(stderr, "HERE OUTPUT INSERT\n");
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+        /*
+          for(std::vector<int *>::iterator p = skip_close_node.begin();  p < skip_close_node.end(); ++p)
+          if(rbuf->output_diff->size() - 1 == (*p)[0]
+          && (rbuf->output_diff->back()->open_tags->size() - 1) == (*p)[1]) {
 
-      update_diff_stack(rbuf_new->open_diff, node, INSERT);
+          if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) == 0) {
 
-      update_diff_stack(rbuf_new->output_diff, node, INSERT);
-    }
+          skip_close_node.erase(p);
 
-    /*
-    // check if need to void output_buffer
-    if(!rbuf_old->delay_close->empty() 
-       && rbuf_old->delay_close->back()->operation == rbuf->output_diff->back()->operation
-       && strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_old->delay_close->back()->open_tags->front()) == 0) {
+          break;
+          }
+          }
+        */
+
+        update_diff_stack(rbuf_old->open_diff, node, COMMON);
+        update_diff_stack(rbuf_new->open_diff, node, COMMON);
+
+        update_diff_stack(rbuf_old->output_diff, node, COMMON);
+
+      }
+      else if(rbuf->output_diff->back()->operation == DELETE) {
+
+        //fprintf(stderr, "HERE OUTPUT DELETE\n");
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+        update_diff_stack(rbuf_old->open_diff, node, DELETE);
+
+        update_diff_stack(rbuf_old->output_diff, node, DELETE);
+
+      } else {
+
+        //fprintf(stderr, "HERE OUTPUT INSERT\n");
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+        update_diff_stack(rbuf_new->open_diff, node, INSERT);
+
+        update_diff_stack(rbuf_new->output_diff, node, INSERT);
+      }
+
+      /*
+      // check if need to void output_buffer
+      if(!rbuf_old->delay_close->empty()
+      && rbuf_old->delay_close->back()->operation == rbuf->output_diff->back()->operation
+      && strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_old->delay_close->back()->open_tags->front()) == 0) {
 
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
       for(int i = 0; i < rbuf_old->delay_close->back()->open_tags->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_old->delay_close->back()->open_tags)[i], DELETE, writer);
+      output_handler(rbuf_old, rbuf_new, (*rbuf_old->delay_close->back()->open_tags)[i], DELETE, writer);
 
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
       rbuf_old->delay_close->pop_back();
 
-    }
+      }
 
-    else if(!rbuf_new->delay_close->empty()
-       && rbuf_new->delay_close->back()->operation == rbuf->output_diff->back()->operation
-       && strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_new->delay_close->back()->open_tags->front()) == 0) {
+      else if(!rbuf_new->delay_close->empty()
+      && rbuf_new->delay_close->back()->operation == rbuf->output_diff->back()->operation
+      && strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_new->delay_close->back()->open_tags->front()) == 0) {
 
 
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
       for(int i = 0; i < rbuf_new->delay_close->back()->open_tags->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_new->delay_close->back()->open_tags)[i], INSERT, writer);
+      output_handler(rbuf_old, rbuf_new, (*rbuf_new->delay_close->back()->open_tags)[i], INSERT, writer);
 
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
       rbuf_new->delay_close->pop_back();
 
-    }
-    */
-
-    return;
+      }
+      */
   }
 
-  // output non-text node and get next node
-  outputNode(*node, writer);
+  return;
+}
 
-  if(operation == COMMON) {
+// output non-text node and get next node
+outputNode(*node, writer);
 
-    //fprintf(stderr, "HERE OUTPUT COMMON\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+if(operation == COMMON) {
 
-    update_diff_stack(rbuf_old->open_diff, node, operation);
-    update_diff_stack(rbuf_new->open_diff, node, operation);
+  //fprintf(stderr, "HERE OUTPUT COMMON\n");
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-    update_diff_stack(rbuf_old->output_diff, node, operation);
+  update_diff_stack(rbuf_old->open_diff, node, operation);
+  update_diff_stack(rbuf_new->open_diff, node, operation);
 
-  }
-  else if(operation == DELETE) {
+  update_diff_stack(rbuf_old->output_diff, node, operation);
 
-    //fprintf(stderr, "HERE OUTPUT DELETE\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+ }
+ else if(operation == DELETE) {
 
-    update_diff_stack(rbuf_old->open_diff, node, operation);
+   //fprintf(stderr, "HERE OUTPUT DELETE\n");
+   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-    update_diff_stack(rbuf_old->output_diff, node, operation);
+   update_diff_stack(rbuf_old->open_diff, node, operation);
 
-  } else {
+   update_diff_stack(rbuf_old->output_diff, node, operation);
 
-    //fprintf(stderr, "HERE OUTPUT INSERT\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+ } else {
 
-    update_diff_stack(rbuf_new->open_diff, node, operation);
+   //fprintf(stderr, "HERE OUTPUT INSERT\n");
+   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-    update_diff_stack(rbuf_new->output_diff, node, operation);
-  }
+   update_diff_stack(rbuf_new->open_diff, node, operation);
+
+   update_diff_stack(rbuf_new->output_diff, node, operation);
+ }
 
 /*
-    // check if need to void output_buffer
-    if(!rbuf_old->delay_close->empty() 
-       && rbuf_old->delay_close->back()->operation == rbuf->output_diff->back()->operation
-       && strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_old->delay_close->back()->open_tags->front()) == 0) {
+// check if need to void output_buffer
+if(!rbuf_old->delay_close->empty()
+&& rbuf_old->delay_close->back()->operation == rbuf->output_diff->back()->operation
+&& strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_old->delay_close->back()->open_tags->front()) == 0) {
 
-      // output diff tag start
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+// output diff tag start
+xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
 
-      for(int i = 0; i < rbuf_old->delay_close->back()->open_tags->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_old->delay_close->back()->open_tags)[i], DELETE, writer);
+for(int i = 0; i < rbuf_old->delay_close->back()->open_tags->size(); ++i)
+output_handler(rbuf_old, rbuf_new, (*rbuf_old->delay_close->back()->open_tags)[i], DELETE, writer);
 
-      // output diff tag start
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
+// output diff tag start
+xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
-      rbuf_old->delay_close->pop_back();
+rbuf_old->delay_close->pop_back();
 
-    }
+}
 
-    else if(!rbuf_new->delay_close->empty()
-       && rbuf_new->delay_close->back()->operation == rbuf->output_diff->back()->operation
-       && strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_new->delay_close->back()->open_tags->front()) == 0) {
+else if(!rbuf_new->delay_close->empty()
+&& rbuf_new->delay_close->back()->operation == rbuf->output_diff->back()->operation
+&& strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)rbuf_new->delay_close->back()->open_tags->front()) == 0) {
 
 
-      // output diff tag start
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
+// output diff tag start
+xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
 
-      for(int i = 0; i < rbuf_new->delay_close->back()->open_tags->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_new->delay_close->back()->open_tags)[i], INSERT, writer);
+for(int i = 0; i < rbuf_new->delay_close->back()->open_tags->size(); ++i)
+output_handler(rbuf_old, rbuf_new, (*rbuf_new->delay_close->back()->open_tags)[i], INSERT, writer);
 
-      // output diff tag start
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+// output diff tag start
+xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
-      rbuf_new->delay_close->pop_back();
+rbuf_new->delay_close->pop_back();
 
-    }
+}
 */
 
 }
@@ -1483,18 +1497,18 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
   //fprintf(stderr, "HERE PEAK\n");
   /*
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
-       && (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-           || strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-           || strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-           || strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)) {
+    && (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
+    || strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
+    || strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
+    || strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)) {
 
-      return false;
+    return false;
     }
 
-  }
+    }
   */
   return true;
 
