@@ -1276,12 +1276,10 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-  fprintf(stderr, "HERE\n");
 
   int unmarked;
   for(unmarked = rbuf_old->open_diff->back()->open_tags->size() - 1; unmarked > 0 
@@ -1635,7 +1633,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   return;
 }
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 // output non-text node and get next node
 outputNode(*node, writer);
 
