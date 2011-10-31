@@ -1164,22 +1164,25 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   }
 
+  /*
       // output diff tag start
       //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
-
+  */
 
   for(unsigned int j = last_diff; j < rbuf_old->buffer->size(); ++j)
     output_handler(rbuf_old, rbuf_new, (*rbuf_old->buffer)[j], COMMON, writer);
 
-      if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
+
+  /*    
+  if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
       rbuf_old->open_diff->back()->open_tags->front()->marked = true;
       
       output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
-
+  */
 
   free_shortest_edit_script(edit_script);
 
