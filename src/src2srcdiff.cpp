@@ -1053,7 +1053,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
     new_tag->marked = false;
     new_tag->node = node;
 
-    new_diff->open_tags->node->push_back(new_tag);
+    new_diff->open_tags->push_back(new_tag);
 
     open_diffs->push_back(new_diff);
   }
