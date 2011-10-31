@@ -1179,7 +1179,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         && (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
  
       if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
-        (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;;
+        (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
 
       for(unmarked = rbuf_new->open_diff->back()->open_tags->size() - 1; unmarked > 0 
             && (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
