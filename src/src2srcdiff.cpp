@@ -169,20 +169,16 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-diff_old_start = { 0 };
-diff_old_start.name = "old";
+  diff_old_start.name = (xmlChar *)"old";
 diff_old_start.type = XML_READER_TYPE_ELEMENT;
 
-diff_old_end = { 0 };
-diff_old_end.name = "old";
+diff_old_end.name = (xmlChar *)"old";
 diff_old_end.type = XML_READER_TYPE_END_ELEMENT;
 
-diff_new_start = { 0 };
-diff_new_start.name = "new";
+diff_new_start.name = (xmlChar *)"new";
 diff_new_start.type = XML_READER_TYPE_ELEMENT;
 
-diff_new_end = { 0 };
-diff_new_end.name = "new";
+diff_new_end.name = (xmlChar *)"new";
 diff_new_end.type = XML_READER_TYPE_END_ELEMENT;
 
   /*
