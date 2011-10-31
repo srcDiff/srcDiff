@@ -104,6 +104,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 struct open_diff {
 
   int operation;
+  int offset;
   std::vector<xmlNode *> * open_elements;
 
 };
@@ -1280,7 +1281,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       if(rbuf->delay_close->empty() || rbuf->delay_close->back()->operation != rbuf->open_diff->size() - 1) {
 
         struct open_diff * new_diff = new struct open_diff;
-        new_diff->operation = rbuf->open_diff->size() - 1;
+        new_diff->offset = rbuf->open_diff->size() - 1;
+        new_diff->operation = rbuf->stream_source;
         new_diff->open_elements = new std::vector<xmlNode *>;
 
         rbuf->delay_close->push_back(new_diff);
