@@ -1561,7 +1561,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         return;
 
         if(rbuf->output_diff->back()->operation == INSERT
-           && rbuf_new->open_diff->back()->operation == DELETE
+           && rbuf_new->open_diff->back()->operation == INSERT
            && !rbuf_new->open_diff->back()->open_tags->back()->marked)
           return;
 
@@ -1578,6 +1578,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         }
 
         fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)output_node->name);
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new->open_diff->back()->open_tags->back()->marked);
         outputNode(*output_node, writer);
 
       if(rbuf->output_diff->back()->operation == COMMON) {
