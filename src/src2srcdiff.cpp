@@ -755,7 +755,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     if(rbuf->open_diff->back()->operation == DELETE)
       rbuf->open_diff->back()->open_tags->marked = true;
       
-    output_handler(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+    output_handler(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
 
   }else {
 
@@ -764,7 +764,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     if(rbuf->open_diff->back()->operation == INSERT)
       rbuf->open_diff->back()->open_tags->marked = true;
 
-    output_handler(rbuf_old, rbuf_new, &diff_new_start, INSERT, writer);
+    output_handler(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
 
   }
 
@@ -885,6 +885,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
       if(rbuf_old->open_diff->back()->operation == DELETE)
         rbuf_old->open_diff->back()->open_tags->marked = true;
+      output_handler(rbuf_old, rbuf_new, &diff_old_end, INSERT, writer);
 
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
@@ -898,6 +899,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
     if(rbuf_new->open_diff->back()->operation == INSERT)
       rbuf_new->open_diff->back()->open_tags->marked = true;
+    output_handler(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
 
       /*
         } else {
@@ -980,6 +982,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
         // output diff tag
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
+
+      // output diff tag start
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+      if(rbuf_old->open_diff->back()->operation == DELETE)
+        rbuf_old->open_diff->back()->open_tags->marked = true;
 
         last_diff = edits->offset_sequence_one + 1;
 
