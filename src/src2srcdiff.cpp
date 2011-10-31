@@ -175,18 +175,22 @@ int main(int argc, char * argv[]) {
   diff_old_start = new xmlNode;
   diff_old_start->name = (xmlChar *)dold->c_str();
   diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_old_start->extra = 0;
 
   diff_old_end = new xmlNode;
   diff_old_end->name = (xmlChar *)dold->c_str();
   diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_old_end->extra = 0;
   
   diff_new_start = new xmlNode;
   diff_new_start->name = (xmlChar *)dnew->c_str();
   diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_new_start->extra = 0;
 
   diff_new_end = new xmlNode;
   diff_new_end->name = (xmlChar *)dnew->c_str();
   diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_new_end->extra = 0;
 
   /*
     Compute the differences between the two source files
@@ -897,9 +901,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       // output diff tag
       //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
-      if(rbuf_new->open_diff->back()->operation != INSERT)
-        output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
+      if(rbuf_new->open_diff->back()->operation != INSERT) {
 
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+        output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
+      }
       for(int j = 0; j < edit_next->length; ++j)
         output_handler(rbuf_old, rbuf_new, (*rbuf_new->buffer)[edit_next->offset_sequence_two + j], INSERT, writer);
 
@@ -1157,12 +1163,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
-
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+  fprintf(stderr, "HERE\n");
 
     if(rbuf->output_diff->back()->operation != COMMON
        && strcmp((const char *)rbuf->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
