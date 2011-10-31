@@ -1174,11 +1174,18 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
   fprintf(stderr, "HERE\n");
 
-      if(strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
-        rbuf_old->open_diff->back()->open_tags->back()->marked = true;
+  int unmarked;
+  for(unmarked = rbuf_old->open_diff->back()->open_tags->size() - 1; unmarked > 0 
+        && (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
+ 
+      if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
+        (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked;
 
-      if(strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
-        rbuf_new->open_diff->back()->open_tags->back()->marked = true;
+      for(unmarked = rbuf_new->open_diff->back()->open_tags->size() - 1; unmarked > 0 
+            && (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
+
+      if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
+        (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked;
 
     /*
     if(rbuf->output_diff->back()->operation != COMMON
