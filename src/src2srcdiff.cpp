@@ -903,7 +903,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
       if(rbuf_new->open_diff->back()->operation != INSERT) {
 
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, diff_old_start->type);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, diff_new_start->type);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, diff_old_end->type);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, diff_new_end->type);
+
         output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
       }
       for(int j = 0; j < edit_next->length; ++j)
@@ -1408,8 +1412,17 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
           return;
 
       // output non-text node and get next node
-        xmlNodePtr output_node = rbuf->output_diff->back()->open_tags->back()->node;
-        output_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+        xmlNodePtr output_node;
+        if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node, "diff:old") == 0)
+          output_node = diff_old_end;
+        else if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node, "diff:new") == 0)
+          output_node = diff_new_end;
+        else {
+
+          output_node = rbuf->output_diff->back()->open_tags->back()->node;
+          output_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+        }
+
         outputNode(*output_node, writer);
 
       if(rbuf->output_diff->back()->operation == COMMON) {
