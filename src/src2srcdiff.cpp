@@ -1321,15 +1321,19 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
       while(1) {
 
         if(rbuf->output_diff->back()->operation == COMMON
+           && (rbuf_old->open_diff->back()->operation == COMMON
+               && rbuf_new->open_diff->back()->operation == COMMON)
            && (!rbuf_old->open_diff->back()->open_tags->back()->marked
                && !rbuf_new->open_diff->back()->open_tags->back()->marked))
           return;
 
         if(rbuf->output_diff->back()->operation == DELETE
+           && rbuf_old->open_diff->back()->operation == DELETE
            && !rbuf_old->open_diff->back()->open_tags->back()->marked)
         return;
 
         if(rbuf->output_diff->back()->operation == INSERT
+           && rbuf_new->open_diff->back()->operation == DELETE
            && !rbuf_new->open_diff->back()->open_tags->back()->marked)
       return;
 
