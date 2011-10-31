@@ -1133,7 +1133,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags->size());
-  if(open_diffs->back()->open_tags->size() == 1) {
+  if(open_diffs->back()->open_tags->size() == 0) {
     open_diffs->pop_back();
 
     //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
@@ -1160,6 +1160,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
+
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
