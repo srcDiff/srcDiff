@@ -171,8 +171,19 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
+  std::string * dcommon = new std::string("diff:common");
   std::string * dold = new std::string("diff:old");
   std::string * dnew = new std::string("diff:new");
+
+  diff_common_start = new xmlNode;
+  diff_common_start->name = (xmlChar *)dcommon->c_str();
+  diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_common_start->extra = 0;
+
+  diff_common_end = new xmlNode;
+  diff_common_end->name = (xmlChar *)dcommon->c_str();
+  diff_common_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_common_end->extra = 0;
 
   diff_old_start = new xmlNode;
   diff_old_start->name = (xmlChar *)dold->c_str();
