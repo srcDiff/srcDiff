@@ -171,7 +171,7 @@ int main(int argc, char * argv[]) {
 
   diff_old_start = new xmlNode;
   diff_old_start->name = (xmlChar *)"dold";
-  diff_old_start-.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
 
   diff_old_end = new xmlNode;
   diff_old_end->name = (xmlChar *)"dold";
