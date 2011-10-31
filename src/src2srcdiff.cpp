@@ -1291,18 +1291,14 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if(rbuf->output_diff->back()->operation != COMMON) {
 
-    if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0) {
+    if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
-    fprintf(stderr, "HERE: %s %s %d %s\n\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-    }
 
   } else {
 
     if(operation != INSERT)
-      if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0) {
+      if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
-    fprintf(stderr, "HERE: %s %s %d %s\n\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-      }
 
   }
 
@@ -1311,18 +1307,14 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if(rbuf->output_diff->back()->operation != COMMON) {
 
-    if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0) {
+    if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked = true;
-    fprintf(stderr, "HERE: %s %s %d %s\n\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-    }
 
   } else {
 
     if(operation != DELETE)
-      if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0) {
+      if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
         (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked = true;
-    fprintf(stderr, "HERE: %s %s %d %s\n\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-      }
 
   }
 
