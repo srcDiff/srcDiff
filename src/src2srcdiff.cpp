@@ -175,15 +175,14 @@ int main(int argc, char * argv[]) {
   diff_old_start = new xmlNode;
   diff_old_start->name = (xmlChar *)dold->c_str();
   diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  fprintf(stderr, "%s\n", (char *)diff_old_start->name);
 
   diff_old_end = new xmlNode;
   diff_old_end->name = (xmlChar *)dold->c_str();
   diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-
- diff_new_start = new xmlNode;
- diff_new_start->name = (xmlChar *)dnew->c_str();
- diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  
+  diff_new_start = new xmlNode;
+  diff_new_start->name = (xmlChar *)dnew->c_str();
+  diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
 
   diff_new_end = new xmlNode;
   diff_new_end->name = (xmlChar *)dnew->c_str();
@@ -1158,7 +1157,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
