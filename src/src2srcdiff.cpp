@@ -1112,6 +1112,8 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
          && strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->node->name, (const char *)node->name) == 0)
         rbuf_new->open_diff->back()->open_tags->back()->marked = true;
 
+    }
+
       /*
         if(rbuf_old->output_diff->back()->operation == COMMON
         && ((rbuf_old->open_diff->back()->operation != COMMON
