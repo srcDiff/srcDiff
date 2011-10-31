@@ -56,19 +56,19 @@ const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
 const char* EDIFF_BEGIN = "start";
 const char* EDIFF_END = "end";
 
-xmlNode diff_old_start;
+xmlNode diff_old_start = { 0 };
 diff_old_start.name = "old";
 diff_old_start.type = XML_READER_TYPE_ELEMENT;
 
-xmlNode diff_old_end;
+xmlNode diff_old_end = { 0 };
 diff_old_end.name = "old";
 diff_old_end.type = XML_READER_TYPE_END_ELEMENT;
 
-xmlNode diff_new_start;
+xmlNode diff_new_start = { 0 };
 diff_new_start.name = "new";
 diff_new_start.type = XML_READER_TYPE_ELEMENT;
 
-xmlNode diff_new_end;
+xmlNode diff_new_end = { 0 };
 diff_new_end.name = "new";
 diff_new_end.type = XML_READER_TYPE_END_ELEMENT;
 
