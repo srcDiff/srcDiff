@@ -173,20 +173,20 @@ int main(int argc, char * argv[]) {
   std::string * dnew = new std::string("dnew");
 
   diff_old_start = new xmlNode;
-  diff_old_start->name = (xmlChar *)dold.c_str();
+  diff_old_start->name = (xmlChar *)dold->c_str();
   diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   fprintf(stderr, "%s\n", (char *)diff_old_start->name);
 
   diff_old_end = new xmlNode;
-  diff_old_end->name = (xmlChar *)dold.c_str();
+  diff_old_end->name = (xmlChar *)dold->c_str();
   diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
 
  diff_new_start = new xmlNode;
- diff_new_start->name = (xmlChar *)dnew.c_str();
+ diff_new_start->name = (xmlChar *)dnew->c_str();
  diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
 
   diff_new_end = new xmlNode;
-  diff_new_end->name = (xmlChar *)dnew.c_str();
+  diff_new_end->name = (xmlChar *)dnew->c_str();
   diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
 
   /*
