@@ -885,7 +885,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
       if(rbuf_old->open_diff->back()->operation == DELETE)
-        rbuf_old->open_diff->back()->open_tags->marked = true;
+        rbuf_old->open_diff->back()->open_tags->front()->marked = true;
       output_handler(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
 
       // output diff tag
@@ -899,7 +899,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
     if(rbuf_new->open_diff->back()->operation == INSERT)
-      rbuf_new->open_diff->back()->open_tags->marked = true;
+      rbuf_new->open_diff->back()->open_tags->front()->marked = true;
     output_handler(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
 
       /*
