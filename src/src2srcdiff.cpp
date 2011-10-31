@@ -1409,7 +1409,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         }
 
       // output non-text node and get next node
-        outputNode(*rbuf->output_diff->back()->open_tags->back(), writer);
+        outputNode(*rbuf->output_diff->back()->open_tags->back()->node, writer);
 
       if(rbuf->output_diff->back()->operation == COMMON) {
 
