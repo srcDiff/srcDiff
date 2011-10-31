@@ -768,10 +768,13 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
     // output diff tag start
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
+
+    /*
     if(rbuf->open_diff->back()->operation != DELETE)
       output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
     rbuf->open_diff->back()->open_tags->front()->marked = false;
+    */
 
   }else {
 
