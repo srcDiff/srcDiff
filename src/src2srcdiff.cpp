@@ -1569,8 +1569,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
           output_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
         }
 
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)output_node->name);
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new->open_diff->back()->open_tags->back()->marked);
         outputNode(*output_node, writer);
 
       if(rbuf->output_diff->back()->operation == COMMON) {
