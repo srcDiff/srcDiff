@@ -1385,6 +1385,10 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       while(1) {
 
+        if(rbuf_old->open_diff->back()->open_tags->back()->marked
+           && rbuf_new->open_diff->back()->open_tags->back()->marked) {
+
+
         if(rbuf->output_diff->back()->operation == COMMON
            && (rbuf_old->open_diff->back()->operation == COMMON
                && rbuf_new->open_diff->back()->operation == COMMON)
@@ -1402,8 +1406,10 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
            && !rbuf_new->open_diff->back()->open_tags->back()->marked)
           return;
 
+        }
+
       // output non-text node and get next node
-      outputNode(*node, writer);
+        outputNode(*rbuf->output_diff->back->open_tags->back(), writer);
 
       if(rbuf->output_diff->back()->operation == COMMON) {
 
