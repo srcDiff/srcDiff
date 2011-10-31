@@ -169,8 +169,8 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  std::string dold = new std::string("dold");
-  std::string dmew = new std::string("dnew");
+  std::string * dold = new std::string("dold");
+  std::string * dnew = new std::string("dnew");
 
   diff_old_start = new xmlNode;
   diff_old_start->name = (xmlChar *)dold.c_str();
