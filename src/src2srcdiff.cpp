@@ -1402,7 +1402,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
       // output non-text node and get next node
         xmlNodePtr output_node = rbuf->output_diff->back()->open_tags->back()->node;
-        output_node->type = XML_READER_TYPE_END_ELEMENT;
+        output_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
         outputNode(*output_node, writer);
 
       if(rbuf->output_diff->back()->operation == COMMON) {
