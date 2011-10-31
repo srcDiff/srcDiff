@@ -1411,11 +1411,11 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
            && !rbuf_new->open_diff->back()->open_tags->back()->marked)
           return;
 
-      // output non-text node and get next node
+        // output non-text node and get next node
         xmlNodePtr output_node;
-        if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node, "diff:old") == 0)
+        if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, "diff:old") == 0)
           output_node = diff_old_end;
-        else if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node, "diff:new") == 0)
+        else if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, "diff:new") == 0)
           output_node = diff_new_end;
         else {
 
