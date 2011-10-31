@@ -1046,15 +1046,6 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
     new_diff->operation = operation;
     new_diff->open_tags = new std::vector<struct tag *>;
 
-    xmlNodePtr anode = new xmlNode;
-    anode->name = (xmlChar *)"DIFF";
-
-    struct tag * new_tag = new struct tag;
-    new_tag->marked = false;
-    new_tag->node = node;
-
-    new_diff->open_tags->push_back(new_tag);
-
     open_diffs->push_back(new_diff);
   }
 
@@ -1078,7 +1069,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags->size());
-  if(open_diffs->size() != 1 && open_diffs->back()->open_tags->size() == 1) {
+  if(open_diffs->back()->open_tags->size() == 1) {
     open_diffs->pop_back();
 
     //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
