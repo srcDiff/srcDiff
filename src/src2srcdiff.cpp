@@ -56,6 +56,8 @@ const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
 const char* EDIFF_BEGIN = "start";
 const char* EDIFF_END = "end";
 
+xmlNodePtr diff_common_start;
+xmlNodePtr diff_common_end;
 xmlNodePtr diff_old_start;
 xmlNodePtr diff_old_end;
 xmlNodePtr diff_new_start;
@@ -729,6 +731,8 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     if(rbuf->open_diff->back()->operation != DELETE)
       output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
+    rbuf->open_diff->back()->open_tags->front()->marked = false;
+
   }else {
 
     // output diff tag start
@@ -736,6 +740,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     if(rbuf->open_diff->back()->operation != INSERT)
       output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
 
+    rbuf->open_diff->back()->open_tags->front()->marked = false;
   }
 
   /*  xmlNodePtr node;
