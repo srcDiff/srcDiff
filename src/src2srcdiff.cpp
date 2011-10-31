@@ -56,6 +56,22 @@ const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
 const char* EDIFF_BEGIN = "start";
 const char* EDIFF_END = "end";
 
+xmlNode diff_old_start;
+diff_old_start.name = "old";
+diff_old_start.type = XML_READER_TYPE_ELEMENT;
+
+xmlNode diff_old_end;
+diff_old_end.name = "old";
+diff_old_end.type = XML_READER_TYPE_END_ELEMENT;
+
+xmlNode diff_new_start;
+diff_new_start.name = "new";
+diff_new_start.type = XML_READER_TYPE_ELEMENT;
+
+xmlNode diff_new_end;
+diff_new_end.name = "new";
+diff_new_end.type = XML_READER_TYPE_END_ELEMENT;
+
 // constant template for temporary file names
 char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
 
