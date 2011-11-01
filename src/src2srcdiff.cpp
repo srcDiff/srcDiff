@@ -39,7 +39,7 @@ char * strndup(const char * s1, size_t n) {
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
-v#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
+#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
 #define COMMON -1
 
