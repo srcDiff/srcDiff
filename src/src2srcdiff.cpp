@@ -857,11 +857,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
        && strcmp((const char *)(*rbuf_old->diff_nodes)[i + 2]->name, "name") == 0) {
 
       std::string * full_name = new std::string;
-      full_name += "<name>";
-      full_name += (char *)(*rbuf_old->diff_nodes)[i + 1]->content;
-      full_name += "</name>";
+      (*full_name) += "<name>";
+      (*full_name) += (char *)(*rbuf_old->diff_nodes)[i + 1]->content;
+      (*full_name) += "</name>";
 
-      (*rbuf_old->diff_nodes)[i + 1]->content = (xmlChar *)full_name.c_str();
+      (*rbuf_old->diff_nodes)[i + 1]->content = (xmlChar *)full_name->c_str();
 
       (*rbuf_old->diff_nodes)[i]->type = XML_READER_TYPE_TEXT;
       (*rbuf_old->diff_nodes)[i + 2]->type = XML_READER_TYPE_TEXT;
