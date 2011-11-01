@@ -39,7 +39,7 @@ char * strndup(const char * s1, size_t n) {
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
-#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
+v#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
 #define COMMON -1
 
@@ -851,24 +851,22 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  for(std::vector<xmlNode *>::iterator p = rbuf_old->buffer->begin(); p < rbuf_old->buffer->end(); ++p)
-    if((p + 2) < rbuf_old->buffer->end()
+  for(std::vector<xmlNode *>::iterator p = rbuf_old->diff_nodes->begin(); p < rbuf_old->diff_nodes->end(); ++p)
+    if((p + 2) < rbuf_old->diff_nodes->end()
        && (xmlReaderTypes)(*p)->type == XML_READER_TYPE_ELEMENT
        && (xmlReaderTypes)(*(p + 2))->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)(*p)[i]->name, "name") == 0
+       && strcmp((const char *)(*p)->name, "name") == 0
        && strcmp((const char *)(*(p + 2))->name, "name") == 0) {
 
       std::string * full_name = new std::string;
       (*full_name) += "<name>";
-      (*full_name) += (char *)(*rbuf_old->diff_nodes)[i + 1]->content;
+      (*full_name) += (char *)(*(p + 1))->content;
       (*full_name) += "</name>";
 
-      (*rbuf_old->diff_nodes)[i + 1]->content = (xmlChar *)full_name->c_str();
+      (*rbuf_old->diff_nodes)(*(p + 1))->content = (xmlChar *)full_name->c_str();
 
-      (*rbuf_old->diff_nodes)[i]->type = (xmlElementType)XML_READER_TYPE_TEXT;
-      (*rbuf_old->diff_nodes)[i]->content = NULL;
-      (*rbuf_old->diff_nodes)[i + 2]->type = (xmlElementType)XML_READER_TYPE_TEXT;
-      (*rbuf_old->diff_nodes)[i + 2]->content = NULL;
+      rbuf->diff_nodes->erase(p);
+      rbuf->diff_nodes->erase(p + 2);
 
       i += 2;
     }
