@@ -865,8 +865,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       (*(p + 1))->content = (xmlChar *)full_name->c_str();
 
-      rbuf->diff_nodes->erase(p);
-      rbuf->diff_nodes->erase(p + 2);
+      rbuf_old->diff_nodes->erase(p);
+      rbuf_old->diff_nodes->erase(p + 2);
 
       i += 2;
     }
