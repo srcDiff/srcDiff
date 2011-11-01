@@ -1530,29 +1530,3 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
   return true;
 
 }
-
-//fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->open_diff->back()->open_tags->size());
-//fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, (int)rbuf_old->output_diff->back()->open_tags->size());
-
-
-/*    if((operation == DELETE && (rbuf_old->open_diff->back()->operation == DELETE && rbuf_old->output_diff->back()->operation == DELETE))
-      && (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-      || strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)) {
-
-      fprintf(stderr, "CHECK 1\n");
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->line_number);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->open_diff->back()->open_tags->back()->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->output_diff->back()->open_tags->back()->name);
-      exit(1);
-      } else if((operation == INSERT && (rbuf_new->open_diff->back()->operation == INSERT && rbuf_old->output_diff->back()->operation == INSERT))
-      && (strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-      || strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)) {
-
-      fprintf(stderr, "CHECK 2\n");
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new->line_number);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->open_diff->back()->open_tags->back()->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->output_diff->back()->open_tags->back()->name);   exit(2);
-      } else */
-
