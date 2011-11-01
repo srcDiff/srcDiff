@@ -880,52 +880,44 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
     if((i + 2) < rbuf->diff_nodes->size()
        && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "name") == 0
-       && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "name") == 0) {
+       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT) {
 
-      node_set->push_back(rbuf->diff_nodes->at(i));
-      node_set->push_back(rbuf->diff_nodes->at(i + 1));
-      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+      if(strcmp((const char *)rbuf->diff_nodes->at(i)->name, "name") == 0
+         && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "name") == 0) {
 
-       i += 2;
+        node_set->push_back(rbuf->diff_nodes->at(i));
+        node_set->push_back(rbuf->diff_nodes->at(i + 1));
+        node_set->push_back(rbuf->diff_nodes->at(i + 2));
 
-    } else if((i + 2) < rbuf->diff_nodes->size()
-       && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "operator") == 0
-       && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "operator") == 0) {
+        i += 2;
 
-      node_set->push_back(rbuf->diff_nodes->at(i));
-      node_set->push_back(rbuf->diff_nodes->at(i + 1));
-      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+      } else if(strcmp((const char *)rbuf->diff_nodes->at(i)->name, "operator") == 0
+                && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "operator") == 0) {
 
-       i += 2;
+        node_set->push_back(rbuf->diff_nodes->at(i));
+        node_set->push_back(rbuf->diff_nodes->at(i + 1));
+        node_set->push_back(rbuf->diff_nodes->at(i + 2));
 
-    } else if((i + 2) < rbuf->diff_nodes->size()
-       && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "modifier") == 0
-       && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "modifier") == 0) {
+        i += 2;
 
-      node_set->push_back(rbuf->diff_nodes->at(i));
-      node_set->push_back(rbuf->diff_nodes->at(i + 1));
-      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+      } else if(strcmp((const char *)rbuf->diff_nodes->at(i)->name, "modifier") == 0
+                && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "modifier") == 0) {
 
-       i += 2;
+        node_set->push_back(rbuf->diff_nodes->at(i));
+        node_set->push_back(rbuf->diff_nodes->at(i + 1));
+        node_set->push_back(rbuf->diff_nodes->at(i + 2));
 
-    } else if((i + 2) < rbuf->diff_nodes->size()
-       && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "literal") == 0
-       && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "literal") == 0) {
+        i += 2;
 
-      node_set->push_back(rbuf->diff_nodes->at(i));
-      node_set->push_back(rbuf->diff_nodes->at(i + 1));
-      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+      } else if(strcmp((const char *)rbuf->diff_nodes->at(i)->name, "literal") == 0
+                && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "literal") == 0) {
 
-       i += 2;
+        node_set->push_back(rbuf->diff_nodes->at(i));
+        node_set->push_back(rbuf->diff_nodes->at(i + 1));
+        node_set->push_back(rbuf->diff_nodes->at(i + 2));
 
+        i += 2;
+      }
     } else {
 
       node_set->push_back(rbuf->diff_nodes->at(i));
@@ -1183,9 +1175,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           rbuf_new->open_diff->back()->open_tags->front()->marked = false;
         */
 
-      for(int j = 0; j < edits->length; ++j)
-        for(int i = 0; i < node_sets_new->at(edits->offset_sequence_two + j)->size(); ++i)
-          output_handler(rbuf_old, rbuf_new, node_sets_new->at(edits->offset_sequence_two + j)->at(i), INSERT, writer);
+        for(int j = 0; j < edits->length; ++j)
+          for(int i = 0; i < node_sets_new->at(edits->offset_sequence_two + j)->size(); ++i)
+            output_handler(rbuf_old, rbuf_new, node_sets_new->at(edits->offset_sequence_two + j)->at(i), INSERT, writer);
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
@@ -1250,9 +1242,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         rbuf_old->open_diff->back()->open_tags->front()->marked = false;
         */
 
-      for(int j = 0; j < edits->length; ++j)
-        for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + j)->size(); ++i)
-          output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + j)->at(i), DELETE, writer);
+        for(int j = 0; j < edits->length; ++j)
+          for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + j)->size(); ++i)
+            output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + j)->at(i), DELETE, writer);
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
