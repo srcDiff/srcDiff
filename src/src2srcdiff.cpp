@@ -875,7 +875,10 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  for(std::vector<xmlNode *>::iterator p = rbuf_old->diff_nodes->begin(); p < rbuf_old->diff_nodes->end(); ++p)
+  for(std::vector<xmlNode *>::iterator p = rbuf_old->diff_nodes->begin(); p < rbuf_old->diff_nodes->end(); ++p) {
+
+    std::vector <xmlNode *> * = new std::Vector <xmlNode *>;
+
     if((p + 2) < rbuf_old->diff_nodes->end()
        && (xmlReaderTypes)(*p)->type == XML_READER_TYPE_ELEMENT
        && (xmlReaderTypes)(*(p + 2))->type == XML_READER_TYPE_END_ELEMENT
@@ -895,7 +898,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       */
 
       p += 2;
+    } else {
+
     }
+
+  }
 
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->diff_nodes->size(), (void *)rbuf_old->diff_nodes, rbuf_new->diff_nodes->size(), (void *)rbuf_new->diff_nodes, node_compare, node_index, &edit_script);
