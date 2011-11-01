@@ -62,7 +62,7 @@ all : ${EXE}
 mingw32 : 
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
 
-$(OBJ_DIR)src2srcdiff.o : srcdiff.cpp shortest_edit_script.h xmlrw.h
+$(OBJ_DIR)src2srcdiff.o : src2srcdiff.cpp shortest_edit_script.h xmlrw.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(EXE_DIR)src2srcdiff : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
