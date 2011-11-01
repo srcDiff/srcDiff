@@ -90,19 +90,10 @@ const void * node_index(int idx, const void *s) {
   return nodes[idx];
 }
 
-// diff node comparison function
-int node_set_compare(const void * e1, const void * e2) {
-  std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
-  std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
-
-  if(node_set1->size() != node_set2->size())
-    return 1;
-  else
-    for(int i = 0; i < node_set1->size(); ++i)
-      if(node_compare(node_set1->at(i), node_set2->at(i)))
-        return 1;
-
-  return 0;
+// diff node accessor function
+const void * node_set_index(int idx, const void *s) {
+  std::vector<std::vector<xmlNode *> * > & node_sets = *(std::vector<std::vector<xmlNode *> > *)s;
+  return node_sets[idx];
 }
 
 // diff node comparison function
@@ -122,6 +113,23 @@ int node_compare(const void * e1, const void * e2) {
 
   return 1;
 }
+
+// diff node comparison function
+int node_set_compare(const void * e1, const void * e2) {
+  std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
+  std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
+
+  if(node_set1->size() != node_set2->size())
+    return 1;
+  else
+    for(int i = 0; i < node_set1->size(); ++i)
+      if(node_compare(node_set1->at(i), node_set2->at(i)))
+        return 1;
+
+  return 0;
+}
+
+
 
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
