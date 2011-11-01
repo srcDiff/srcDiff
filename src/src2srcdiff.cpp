@@ -99,7 +99,7 @@ int node_set_compare(const void * e1, const void * e2) {
     return 1;
   else
     for(int i = 0; i < node_set1->size(); ++i)
-      if(node_compare(node_set->at(i), node_set2->at(i)))
+      if(node_compare(node_set1->at(i), node_set2->at(i)))
         return 1;
 
   return 0;
@@ -107,8 +107,8 @@ int node_set_compare(const void * e1, const void * e2) {
 
 // diff node comparison function
 int node_compare(const void * e1, const void * e2) {
-  xmlNode * node_set1 = (xmlNode *)e1;
-  xmlNode * node_set2 = (xmlNode *)e2;
+  xmlNode * node1 = (xmlNode *)e1;
+  xmlNode * node2 = (xmlNode *)e2;
 
 
   if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
