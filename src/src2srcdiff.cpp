@@ -1150,7 +1150,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       for(int j = 0; j < edits->length; ++j)
         for(int i = 0; i < node_sets_new->at(edits->offset_sequence_two + j)->size(); ++i)
-          output_handler(rbuf_new, rbuf_new, node_sets_new->at(edits->offset_sequence_two + j)->at(i), INSERT, writer);
+          output_handler(rbuf_old, rbuf_new, node_sets_new->at(edits->offset_sequence_two + j)->at(i), INSERT, writer);
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
