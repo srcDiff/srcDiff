@@ -1,4 +1,6 @@
 /*
+  src2srcdiff.cpp
+
   Create srcdiff format from two src files.
 
   Michael J. Decker
