@@ -905,7 +905,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 // output a change
 void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer) {
 
-  fprintf(stderr, "HERE_DOUBLE\n");
+  //fprintf(stderr, "HERE_DOUBLE\n");
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets_old = create_node_set(rbuf_old);
   std::vector<std::vector<xmlNodePtr> *> * node_sets_new = create_node_set(rbuf_new);
