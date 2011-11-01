@@ -126,6 +126,7 @@ struct open_diff {
 struct reader_buffer {
 
   int stream_source;
+  int num_lines;
   int line_number;
   unsigned char * characters;
   std::vector<xmlNode *> * buffer;
@@ -157,6 +158,8 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
+void create_single_diff_document(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct edit * edits);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
@@ -170,7 +173,6 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  /*
     std::string * dcommon = new std::string("diff:common");
     std::string * dold = new std::string("diff:old");
     std::string * dnew = new std::string("diff:new");
@@ -204,7 +206,6 @@ int main(int argc, char * argv[]) {
     diff_new_end->name = (xmlChar *)dnew->c_str();
     diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
     diff_new_end->extra = 0;
-  */
 
   /*
     Compute the differences between the two source files
@@ -334,9 +335,9 @@ int main(int argc, char * argv[]) {
     output_diff.push_back(new_diff);
 
     // run through diffs adding markup
-    int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
     rbuf_old.stream_source = DELETE;
+    rbuf_old.num_lines = lines1.size();
     rbuf_old.open_diff = new std::vector<struct open_diff *>;
 
     new_diff = new struct open_diff;
@@ -350,6 +351,7 @@ int main(int argc, char * argv[]) {
 
     struct reader_buffer rbuf_new = { NULL };
     rbuf_new.stream_source = INSERT;
+    rbuf_new.num_lines = lines2.size();
     rbuf_new.open_diff = new std::vector<struct open_diff *>;
 
     new_diff = new struct open_diff;
@@ -369,6 +371,8 @@ int main(int argc, char * argv[]) {
 
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
+
+    create_single_diff_document(&rbuf_old, reader_old, edit_script);
 
   }
 
@@ -1346,80 +1350,87 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 }
 
-void create_single_diff_document(struct reader_buffer * rbuf, struct reader_buffer) {
+void add_lines(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
+void buffer_handler(struct reader_buffer * rbuf, xmlNodePtr node, int operation);
+
+void create_single_diff_document(struct reader_buffer * rbuf, xmlTextReaderPtr reader, struct edit * edits) {
 
   // allocate new buffer
   rbuf->buffer = new std::vector<xmlNode *>;
 
-  struct edit * edits = edit_script;
+  xmlNodePtr op_start = rbuf->stream_source == DELETE ? diff_old_start : diff_new_start;
+  xmlNodePtr op_end = rbuf->stream_source == DELETE ? diff_old_end : diff_new_end;
+
+  int last_diff = 0;
+
   for (; edits; edits = edits->next) {
 
     // output diff tag start
-    if(rbuf.open_diff->back()->operation != COMMON)
-     buffer_handler(rbuf, diff_common_start, COMMON, writer);
+    if(rbuf->open_diff->back()->operation != COMMON)
+     buffer_handler(rbuf, diff_common_start, COMMON);
 
-    rbuf.open_diff->back()->open_tags->front()->marked = false;
+    rbuf->open_diff->back()->open_tags->front()->marked = false;
 
     // add preceeding unchanged
     if(edits->operation == DELETE)
-        add_lines(rbuf_old, reader, COMMON, edits->offset_sequence_one);
+        add_lines(rbuf, reader, COMMON, edits->offset_sequence_one);
     else
-        add_lines(rbuf_old, reader, COMMON, edits->offset_sequence_one + 1);
+        add_lines(rbuf, reader, COMMON, edits->offset_sequence_one + 1);
 
-    if(rbuf.open_diff->back()->operation == COMMON && rbuf.open_diff->size() > 1)
-      rbuf.open_diff->back()->open_tags->front()->marked = true;
+    if(rbuf->open_diff->back()->operation == COMMON && rbuf->open_diff->size() > 1)
+      rbuf->open_diff->back()->open_tags->front()->marked = true;
 
-    buffer_handler(rbuf, diff_common_end, COMMON, writer);
+    buffer_handler(rbuf, diff_common_end, COMMON);
 
-    if(edit->operation != rbuf->stream_source)
+    if(edits->operation != rbuf->stream_source)
       continue;
 
-    if(rbuf.open_diff->back()->operation == COMMON)
-      buffer_handler(rbuf, diff_common_start, rbuf->stream_source, writer);
+    if(rbuf->open_diff->back()->operation == COMMON)
+      buffer_handler(rbuf, op_start, rbuf->stream_source);
 
-    rbuf.open_diff->back()->open_tags->front()->marked = false;
+    rbuf->open_diff->back()->open_tags->front()->marked = false;
 
     // handle pure delete or insert
     switch (edits->operation) {
 
     case INSERT:
 
-      add_lines(&rbuf, reader, INSERT, edits->offset_sequence_two + edits->length);
+      add_lines(rbuf, reader, INSERT, edits->offset_sequence_two + edits->length);
 
       last_diff = edits->offset_sequence_one + 1;
       break;
 
     case DELETE:
 
-      add_lines(&rbuf, reader, DELETE, edits->offset_sequence_one + edits->length);
+      add_lines(rbuf, reader, DELETE, edits->offset_sequence_one + edits->length);
 
       last_diff = edits->offset_sequence_one + edits->length;
       break;
     }
 
-    if(rbuf.open_diff->back()->operation != COMMON)
-      rbuf.open_diff->back()->open_tags->front()->marked = true;
+    if(rbuf->open_diff->back()->operation != COMMON)
+      rbuf->open_diff->back()->open_tags->front()->marked = true;
 
-    buffer_handler(rbuf, diff_common_end, COMMON, writer);
+    buffer_handler(rbuf, diff_common_end, COMMON);
 
   }
 
   // output diff tag start
-  if(rbuf.open_diff->back()->operation != COMMON)
-    buffer_handler(rbuf_old, diff_common_start, COMMON);
+  if(rbuf->open_diff->back()->operation != COMMON)
+    buffer_handler(rbuf, diff_common_start, COMMON);
 
-  rbuf.open_diff->back()->open_tags->front()->marked = false;
+  rbuf->open_diff->back()->open_tags->front()->marked = false;
 
-  add_lines(rbuf, reader, INSERT, rbuf.num_lines);
+  add_lines(rbuf, reader, INSERT, rbuf->num_lines);
 
-  if(rbuf.open_diff->back()->operation == COMMON && rbuf.open_diff->size() > 1)
-    rbuf.open_diff->back()->open_tags->front()->marked = true;
+  if(rbuf->open_diff->back()->operation == COMMON && rbuf->open_diff->size() > 1)
+    rbuf->open_diff->back()->open_tags->front()->marked = true;
 
-  buffer_handler(rbuf, diff_common_end, COMMON);
+  buffer_handler(rbuf, op_end, COMMON);
 
 }
 
-void buffer_handler(struct reader_buffer * rbuf, xmlNodePtr node) {
+void buffer_handler(struct reader_buffer * rbuf, xmlNodePtr node, int operation) {
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
@@ -1442,7 +1453,7 @@ void buffer_handler(struct reader_buffer * rbuf, xmlNodePtr node) {
       // output non-text node and get next node
       xmlNodePtr output_node;
       if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, "diff:old") == 0)
-        output_node = diff_end;
+        output_node = diff_old_end;
       else if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, "diff:new") == 0)
         output_node = diff_new_end;
       else if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, "diff:common") == 0)
@@ -1465,7 +1476,7 @@ void buffer_handler(struct reader_buffer * rbuf, xmlNodePtr node) {
   }
 
   // output non-text node and get next node
-      rbuf->buffer->push_back(output_node);
+  rbuf->buffer->push_back(node);
 
   update_diff_stack(rbuf->open_diff, node, operation);
 
@@ -1506,7 +1517,7 @@ void add_lines(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operati
 
             const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
             text->content = (xmlChar *)content;
-            buffer_node(text);
+            buffer_handler(rbuf, text, operation);
 
             characters_start = rbuf->characters;
 
@@ -1522,7 +1533,7 @@ void add_lines(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operati
 
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
           text->content = (xmlChar *)content;
-            buffer_node(text);
+            buffer_handler(rbuf, text, operation);
 
           characters_start = rbuf->characters;
 
@@ -1542,7 +1553,7 @@ void add_lines(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operati
 
           const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
           text->content = (xmlChar *)content;
-            buffer_node(text);
+            buffer_handler(rbuf, text, operation);
 
           characters_start = rbuf->characters + 1;
 
@@ -1575,7 +1586,7 @@ void add_lines(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operati
 
           const char * content = strdup((const char *)characters_start);
           text->content = (xmlChar *)content;
-            buffer_node(text);
+            buffer_handler(rbuf, text, operation);
 
         }
 
@@ -1592,7 +1603,7 @@ void add_lines(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operati
         return;
 
       // save non-text node and get next node
-      buffer_node(text);
+      buffer_handler(rbuf, node, operation);
 
       not_done = xmlTextReaderRead(reader);
     }
