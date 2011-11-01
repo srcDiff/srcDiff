@@ -926,7 +926,23 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
         i += 2;
 
-      } else if(0) {
+      } else if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
+                && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "param") == 0) {
+
+        for(;i < rbuf->diff_nodes->size() 
+              && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type != XML_READER_TYPE_END_ELEMENT
+              && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "param") == 0;
+            ++i)
+          node_set->push_back(rbuf->diff_nodes->at(i));
+
+      } else else if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
+                && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "param") == 0) {
+
+        for(;i < rbuf->diff_nodes->size() 
+              && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type != XML_READER_TYPE_END_ELEMENT
+              && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "param") == 0;
+            ++i)
+          node_set->push_back(rbuf->diff_nodes->at(i));
 
       } else {
         
