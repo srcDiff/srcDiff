@@ -1284,6 +1284,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     //    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     // heavily relaxed condition.  Tighten when fix diff to contain necessary elements
+    // mark nodes for output
     int unmarked;
     for(unmarked = rbuf_old->open_diff->back()->open_tags->size() - 1; unmarked > 0
           && (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
@@ -1317,6 +1318,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     }
 
+    // output marked nodes
     while(1) {
 
       if(rbuf->output_diff->back()->operation == COMMON
