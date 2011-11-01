@@ -917,8 +917,11 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
         node_set->push_back(rbuf->diff_nodes->at(i + 2));
 
         i += 2;
+      } else {
+        
+        node_set->push_back(rbuf->diff_nodes->at(i));
       }
-      
+ 
     } else {
 
       node_set->push_back(rbuf->diff_nodes->at(i));
