@@ -92,7 +92,7 @@ const void * node_index(int idx, const void *s) {
 
 // diff node accessor function
 const void * node_set_index(int idx, const void *s) {
-  std::vector<std::vector<xmlNode *> * > & node_sets = *(std::vector<std::vector<xmlNode *> > *)s;
+  std::vector<std::vector<xmlNode *> *> & node_sets = *(std::vector<std::vector<xmlNode *> *> *)s;
   return node_sets[idx];
 }
 
