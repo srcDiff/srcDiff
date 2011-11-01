@@ -853,7 +853,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     if((i + 2) < rbuf_old->diff_nodes->size()
        && (xmlReaderTypes)(*rbuf_old->diff_nodes)[i]->type == XML_READER_TYPE_ELEMENT
        && (xmlReaderTypes)(*rbuf_old->diff_nodes)[i + 2]->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)(*rbuf_old->diff_nodes)[i]->name, "name") == 0;
+       && strcmp((const char *)(*rbuf_old->diff_nodes)[i]->name, "name") == 0
        && strcmp((const char *)(*rbuf_old->diff_nodes)[i + 2]->name, "name") == 0) {
 
       std::string * full_name = new std::string;
