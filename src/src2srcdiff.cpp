@@ -942,6 +942,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j)
         for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
           output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
+
     /*
       if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
       rbuf_old->open_diff->back()->open_tags->front()->marked = true;
@@ -1055,9 +1056,6 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       for(int j = 0; j < edit_next->length; ++j)
         for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two + j)->size(); ++i)
           output_handler(rbuf_old, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->at(i), INSERT, writer);
-
-        fprintf(stderr, "HERE\n");
-      }
 
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
