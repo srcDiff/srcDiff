@@ -1268,9 +1268,6 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
   /*
-    static std::vector<bool> skipped_close;
-    static std::vector<int *> skip_close_node;
-
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
 
