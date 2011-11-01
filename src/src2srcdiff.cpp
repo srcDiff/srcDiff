@@ -110,7 +110,7 @@ int node_compare(const void * e1, const void * e2) {
 
 
 // diff node comparison function
-int node_compare(const void * e1, const void * e2) {
+int node_set_compare(const void * e1, const void * e2) {
   xmlNode * node_set1 = (xmlNode *)e1;
   xmlNode * node_set2 = (xmlNode *)e2;
 
