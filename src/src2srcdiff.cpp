@@ -889,6 +889,43 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
       node_set->push_back(rbuf->diff_nodes->at(i + 2));
 
        i += 2;
+
+    } else if((i + 2) < rbuf->diff_nodes->size()
+       && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
+       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
+       && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "operator") == 0
+       && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "operator") == 0) {
+
+      node_set->push_back(rbuf->diff_nodes->at(i));
+      node_set->push_back(rbuf->diff_nodes->at(i + 1));
+      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+
+       i += 2;
+
+    } else if((i + 2) < rbuf->diff_nodes->size()
+       && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
+       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
+       && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "modifier") == 0
+       && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "modifier") == 0) {
+
+      node_set->push_back(rbuf->diff_nodes->at(i));
+      node_set->push_back(rbuf->diff_nodes->at(i + 1));
+      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+
+       i += 2;
+
+    } else if((i + 2) < rbuf->diff_nodes->size()
+       && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
+       && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
+       && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "literal") == 0
+       && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "literal") == 0) {
+
+      node_set->push_back(rbuf->diff_nodes->at(i));
+      node_set->push_back(rbuf->diff_nodes->at(i + 1));
+      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+
+       i += 2;
+
     } else {
 
       node_set->push_back(rbuf->diff_nodes->at(i));
