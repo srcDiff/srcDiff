@@ -911,7 +911,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   std::vector<std::vector<xmlNodePtr> *> * node_sets_new = create_node_set(rbuf_new);
 
   struct edit * edit_script;
-  int distance = shortest_edit_script(rbuf_old->diff_nodes->size(), (void *)rbuf_old->diff_nodes, rbuf_new->diff_nodes->size(), (void *)rbuf_new->diff_nodes, node_compare, node_index, &edit_script);
+  int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
+                                      (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
