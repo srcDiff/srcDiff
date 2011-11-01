@@ -874,7 +874,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
 
-  for(int i = rbuf->diff_nodes->size(); i < rbuf->diff_nodes->size(); ++i) {
+  for(int i = 0; i < rbuf->diff_nodes->size(); ++i) {
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
@@ -936,11 +936,13 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
     // add preceeding unchanged
     if(edits->operation == DELETE)
       for(int j = last_diff; j < edits->offset_sequence_one; ++j)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_old->diff_nodes)[j], COMMON, writer);
+        for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
 
     else
       for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_old->diff_nodes)[j], COMMON, writer);
+        for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
 
     /*
       if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
@@ -957,7 +959,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       //      fprintf(stderr, "HERE\n");
 
       // look for pure whitespace change
-      if((*rbuf_old->diff_nodes)[edits->offset_sequence_one]->type == (*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->type
+      if( 0 && (*rbuf_old->diff_nodes)[edits->offset_sequence_one]->type == (*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->type
          && (xmlReaderTypes)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->type == XML_READER_TYPE_TEXT
          && edits->length == 1 && edit_next->length == 1) {
 
@@ -1032,7 +1034,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       */
 
       for(int j = 0; j < edits->length; ++j)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_old->diff_nodes)[edits->offset_sequence_one + j], DELETE, writer);
+        for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + j)->at(i), DELETE, writer);
 
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
       /*
@@ -1052,7 +1055,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       */
 
       for(int j = 0; j < edit_next->length; ++j)
-        output_handler(rbuf_old, rbuf_new, (*rbuf_new->diff_nodes)[edit_next->offset_sequence_two + j], INSERT, writer);
+        for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two + j)->size(); ++i)
+          output_handler(rbuf_new, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->at(i), INSERT, writer);
 
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
@@ -1143,8 +1147,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
           rbuf_new->open_diff->back()->open_tags->front()->marked = false;
         */
 
-        for(int j = 0; j < edits->length; ++j)
-          output_handler(rbuf_old, rbuf_new, (*rbuf_new->diff_nodes)[edits->offset_sequence_two + j], INSERT, writer);
+      for(int j = 0; j < edits->length; ++j)
+        for(int i = 0; i < node_sets_new->at(edits->offset_sequence_two + j)->size(); ++i)
+          output_handler(rbuf_new, rbuf_new, node_sets_new->at(edits->offset_sequence_two + j)->at(i), INSERT, writer);
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
 
@@ -1209,8 +1214,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
         rbuf_old->open_diff->back()->open_tags->front()->marked = false;
         */
 
-        for(int j = 0; j < edits->length; ++j)
-          output_handler(rbuf_old, rbuf_new, (*rbuf_old->diff_nodes)[edits->offset_sequence_one + j], DELETE, writer);
+      for(int j = 0; j < edits->length; ++j)
+        for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + j)->at(i), DELETE, writer);
 
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
 
@@ -1239,9 +1245,10 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
   */
 
-  for(unsigned int j = last_diff; j < rbuf_old->diff_nodes->size(); ++j)
-    output_handler(rbuf_old, rbuf_new, (*rbuf_old->diff_nodes)[j], COMMON, writer);
 
+  for(int j = last_diff; j < node_sets_old->size(); ++j)
+    for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
+      output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
 
   /*
     if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
