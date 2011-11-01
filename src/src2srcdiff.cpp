@@ -850,9 +850,11 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   //fprintf(stderr, "HERE_DOUBLE\n");
 
   for(int i = 0; i < rbuf_old->diff_nodes->size(); ++i)
-    if((xmlReaderTypes)(*rbuf_old)[i]->type == XML_READER_TYPE_ELEMENT
-       && strcmp((const char *)(*rbuf_old)[i]->name, "name") == 0
-       && (i + 2) < rbuf_old->diff_nodes->size());
+    if((i + 2) < rbuf_old->diff_nodes->size()) 
+      && (xmlReaderTypes)(*rbuf_old)[i]->type == XML_READER_TYPE_ELEMENT
+      && (xmlReaderTypes)(*rbuf_old)[i + 2]->type == XML_READER_TYPE_END_ELEMENT
+       && strcmp((const char *)(*rbuf_old)[i]->name, "name") == 0;
+       && strcmp((const char *)(*rbuf_old)[i + 2]->name, "name") == 0;
 
   struct edit * edit_script;
   int distance = shortest_edit_script(rbuf_old->diff_nodes->size(), (void *)rbuf_old->diff_nodes, rbuf_new->diff_nodes->size(), (void *)rbuf_new->diff_nodes, node_compare, node_index, &edit_script);
