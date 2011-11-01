@@ -99,12 +99,11 @@ int node_set_compare(const void * e1, const void * e2) {
     return 1;
   else
     for(int i = 0; i < node_set1->size(); ++i)
-      if(node_compare(node_set1.at(i), node_set2.at(i)))
+      if(node_compare(node_set->at(i), node_set2->at(i)))
         return 1;
 
   return 0;
 }
-
 
 // diff node comparison function
 int node_compare(const void * e1, const void * e2) {
