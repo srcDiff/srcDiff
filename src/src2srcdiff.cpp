@@ -858,6 +858,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
        && strcmp((const char *)(*p)->name, "name") == 0
        && strcmp((const char *)(*(p + 2))->name, "name") == 0) {
 
+      /*
       std::string * full_name = new std::string;
       (*full_name) += "<name>";
       (*full_name) += (char *)(*(p + 1))->content;
@@ -867,7 +868,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       rbuf_old->diff_nodes->erase(p);
       rbuf_old->diff_nodes->erase(p + 2);
-
+      */
       p += 2;
     }
 
