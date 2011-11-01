@@ -1052,17 +1052,10 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       rbuf_new->open_diff->back()->open_tags->front()->marked = false;
       */
 
-      for(int j = 0; j < edit_next->length; ++j) {
-        fprintf(stderr, "HERE\n");
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, node_sets_new->size());
-        for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two + j)->size(); ++i) {
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__,  node_sets_new->at(edit_next->offset_sequence_two + j)->size());
+      for(int j = 0; j < edit_next->length; ++j)
+        for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two + j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->at(i), INSERT, writer);
 
-          output_handler(rbuf_new, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->at(i), INSERT, writer);
-       
-        }
         fprintf(stderr, "HERE\n");
       }
 
