@@ -145,7 +145,6 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
 
-
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer);
 
@@ -171,6 +170,7 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
+  /*
   std::string * dcommon = new std::string("diff:common");
   std::string * dold = new std::string("diff:old");
   std::string * dnew = new std::string("diff:new");
@@ -204,6 +204,7 @@ int main(int argc, char * argv[]) {
   diff_new_end->name = (xmlChar *)dnew->c_str();
   diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end->extra = 0;
+  */
 
   /*
     Compute the differences between the two source files
@@ -1282,6 +1283,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
     //    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
+    // heavily relaxed condition.  Tighten when fix diff to contain necessary elements
   int unmarked;
   for(unmarked = rbuf_old->open_diff->back()->open_tags->size() - 1; unmarked > 0 
         && (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
