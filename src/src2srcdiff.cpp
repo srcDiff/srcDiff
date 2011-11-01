@@ -92,8 +92,28 @@ const void * node_index(int idx, const void *s) {
 
 // diff node comparison function
 int node_compare(const void * e1, const void * e2) {
-  xmlNode * node1 = (xmlNode *)e1;
-  xmlNode * node2 = (xmlNode *)e2;
+  std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
+  std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
+
+
+  if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
+
+    // end if text node contents differ
+    if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
+      return strcmp((const char *)node1->content, (const char *)node2->content);
+    else
+      return 0;
+  }
+
+  return 1;
+}
+
+
+// diff node comparison function
+int node_compare(const void * e1, const void * e2) {
+  xmlNode * node_set1 = (xmlNode *)e1;
+  xmlNode * node_set2 = (xmlNode *)e2;
+
 
   if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
 
@@ -869,6 +889,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       rbuf_old->diff_nodes->erase(p);
       rbuf_old->diff_nodes->erase(p + 2);
       */
+
       p += 2;
     }
 
