@@ -863,8 +863,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
       (*rbuf_old->diff_nodes)[i + 1]->content = (xmlChar *)full_name->c_str();
 
-      (*rbuf_old->diff_nodes)[i]->type = XML_READER_TYPE_TEXT;
-      (*rbuf_old->diff_nodes)[i + 2]->type = XML_READER_TYPE_TEXT;
+      (*rbuf_old->diff_nodes)[i]->type = (xmlElementType)XML_READER_TYPE_TEXT;
+      (*rbuf_old->diff_nodes)[i + 2]->type = (xmlElementType)XML_READER_TYPE_TEXT;
     }
 
   struct edit * edit_script;
