@@ -1513,20 +1513,7 @@ rbuf_new->delay_close->pop_back();
 bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
 
   //fprintf(stderr, "HERE PEAK\n");
-  /*
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(((operation == DELETE ? rbuf_old->open_diff->back()->operation : rbuf_new->open_diff->back()->operation) == COMMON)
-    && (strcmp((const char *)rbuf_old->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-    || strcmp((const char *)rbuf_old->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-    || strcmp((const char *)rbuf_new->open_diff->back()->open_tags->back()->name, (const char *)node->name) != 0
-    || strcmp((const char *)rbuf_new->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)) {
-
-    return false;
-    }
-
-    }
-  */
   return true;
 
 }
