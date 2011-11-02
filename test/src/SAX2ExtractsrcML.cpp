@@ -92,7 +92,7 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
      || strcmp((const char *)localname, "old") == 0
      || strcmp((const char *)localname, "new") == 0)
     data->in_diff->pop_back();
-  else if(isempty)
+  else if(!isempty)
       output_end_node(ctx, localname, prefix, URI);
 
   isempty = false;
