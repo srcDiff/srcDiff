@@ -282,14 +282,14 @@ int main(int argc, char * argv[]) {
   // calculate the differences
   struct edit * edit_script;
 
-  int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
+  /*  int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
 
   if(distance < 0) {
 
     fprintf(stderr, "Error with shortest edit script");
     return distance;
   }
-
+  */
   /*
     Translate both files to srcML separately.
   */
@@ -396,6 +396,14 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
+    collect_difference(rbuf_old, reader_old, DELETE, lines1.size());
+
+    collect_difference(rbuf_new, reader_new, INSERT, lines2.size());
+
+    output_double(&rbuf_old, &rbuf_new, writer);
+
+
+    /*
     struct edit * edits = edit_script;
     for (; edits; edits = edits->next) {
 
@@ -406,7 +414,7 @@ int main(int argc, char * argv[]) {
       output_handler(&rbuf_old, &rbuf_new, diff_common_start, COMMON, writer);
 
       rbuf_old.open_diff->back()->open_tags->front()->marked = false;
-      */
+      
 
       // add preceeding unchanged
       if(edits->operation == DELETE)
@@ -421,7 +429,7 @@ int main(int argc, char * argv[]) {
         rbuf_old.open_diff->back()->open_tags->front()->marked = true;
 
         output_handler(&rbuf_old, &rbuf_new, diff_common_end, COMMON, writer);
-      */
+      
 
       // detect and change
       struct edit * edit_next = edits->next;
@@ -468,7 +476,7 @@ int main(int argc, char * argv[]) {
     output_handler(&rbuf_old, &rbuf_new, diff_common_start, COMMON, writer);
 
     rbuf_old.open_diff->back()->open_tags->front()->marked = false;
-    */
+    
 
     for(unsigned int j = last_diff; j < lines1.size(); ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
       compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
@@ -478,9 +486,9 @@ int main(int argc, char * argv[]) {
       rbuf_old.open_diff->back()->open_tags->front()->marked = true;
 
       output_handler(&rbuf_old, &rbuf_new, diff_common_end, COMMON, writer);
-    */
+    
   }
-
+*/
   // output srcdiff unit
   outputNode(*getRealCurrentNode(reader_old), writer);
 
