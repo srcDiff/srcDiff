@@ -43,6 +43,8 @@ void startDocument(void* ctx) {
 void endDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
+
+  fprintf(stdout, "\n");
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
