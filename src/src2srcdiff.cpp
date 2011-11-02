@@ -1014,19 +1014,19 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       //      fprintf(stderr, "HERE\n");
 
       // look for pure whitespace change
-      if(0 && node_sets_old->at(edits->offset_sequence_one)->at(0)->type == node_sets_new->at(edit_next->offset_sequence_two)->at(0)->type
+      if(node_sets_old->at(edits->offset_sequence_one)->at(0)->type == node_sets_new->at(edit_next->offset_sequence_two)->at(0)->type
          && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type == XML_READER_TYPE_TEXT
          && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
          && edits->length == 1 && edit_next->length == 1) {
 
-        int whitespace_length_old = strspn((const char *)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content, " \t\r\n");
-        int whitespace_length_new = strspn((const char *)(*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->content, " \t\r\n");
+        int whitespace_length_old = strspn((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content, " \t\r\n");
+        int whitespace_length_new = strspn((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content, " \t\r\n");
 
-        xmlChar * content_old = (*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content;
-        xmlChar * content_new = (*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->content;
+        xmlChar * content_old = node_sets_old->at(edits->offset_sequence_one)->at(0)->content;
+        xmlChar * content_new = node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content;
 
-        int size_old = strlen((const char *)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content);
-        int size_new = strlen((const char *)(*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->content);
+        int size_old = strlen((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content);
+        int size_new = strlen((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content);
 
         if(whitespace_length_old == size_old && whitespace_length_new == size_new) {
 
