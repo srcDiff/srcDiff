@@ -282,14 +282,14 @@ int main(int argc, char * argv[]) {
   // calculate the differences
   struct edit * edit_script;
 
-  /*  int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
+  int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
 
   if(distance < 0) {
 
     fprintf(stderr, "Error with shortest edit script");
     return distance;
   }
-  */
+
   /*
     Translate both files to srcML separately.
   */
@@ -396,14 +396,6 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
-    collect_difference(rbuf_old, reader_old, DELETE, lines1.size());
-
-    collect_difference(rbuf_new, reader_new, INSERT, lines2.size());
-
-    output_double(&rbuf_old, &rbuf_new, writer);
-
-
-    /*
     struct edit * edits = edit_script;
     for (; edits; edits = edits->next) {
 
@@ -414,7 +406,7 @@ int main(int argc, char * argv[]) {
       output_handler(&rbuf_old, &rbuf_new, diff_common_start, COMMON, writer);
 
       rbuf_old.open_diff->back()->open_tags->front()->marked = false;
-      
+      */
 
       // add preceeding unchanged
       if(edits->operation == DELETE)
@@ -429,7 +421,7 @@ int main(int argc, char * argv[]) {
         rbuf_old.open_diff->back()->open_tags->front()->marked = true;
 
         output_handler(&rbuf_old, &rbuf_new, diff_common_end, COMMON, writer);
-      
+      */
 
       // detect and change
       struct edit * edit_next = edits->next;
@@ -476,7 +468,7 @@ int main(int argc, char * argv[]) {
     output_handler(&rbuf_old, &rbuf_new, diff_common_start, COMMON, writer);
 
     rbuf_old.open_diff->back()->open_tags->front()->marked = false;
-    
+    */
 
     for(unsigned int j = last_diff; j < lines1.size(); ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
       compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
@@ -486,9 +478,9 @@ int main(int argc, char * argv[]) {
       rbuf_old.open_diff->back()->open_tags->front()->marked = true;
 
       output_handler(&rbuf_old, &rbuf_new, diff_common_end, COMMON, writer);
-    
+    */
   }
-*/
+
   // output srcdiff unit
   outputNode(*getRealCurrentNode(reader_old), writer);
 
@@ -895,6 +887,9 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
         node_set->push_back(rbuf->diff_nodes->at(i));
         node_set->push_back(rbuf->diff_nodes->at(i + 1));
         node_set->push_back(rbuf->diff_nodes->at(i + 2));
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i));
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 1));
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 2));
 
         i += 2;
 
@@ -944,7 +939,8 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
           node_set->push_back(rbuf->diff_nodes->at(i));
 
       } else
-        /* if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
+        /*
+        if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
                 && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "expr") == 0) {
 
         for(;i < rbuf->diff_nodes->size() 
@@ -1022,18 +1018,19 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       //      fprintf(stderr, "HERE\n");
 
       // look for pure whitespace change
-      if(0 && (*rbuf_old->diff_nodes)[edits->offset_sequence_one]->type == (*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->type
-         && (xmlReaderTypes)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->type == XML_READER_TYPE_TEXT
+      if(node_sets_old->at(edits->offset_sequence_one)->at(0)->type == node_sets_new->at(edit_next->offset_sequence_two)->at(0)->type
+         && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type == XML_READER_TYPE_TEXT
+         && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
          && edits->length == 1 && edit_next->length == 1) {
 
-        int whitespace_length_old = strspn((const char *)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content, " \t\r\n");
-        int whitespace_length_new = strspn((const char *)(*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->content, " \t\r\n");
+        int whitespace_length_old = strspn((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content, " \t\r\n");
+        int whitespace_length_new = strspn((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content, " \t\r\n");
 
-        xmlChar * content_old = (*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content;
-        xmlChar * content_new = (*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->content;
+        xmlChar * content_old = node_sets_old->at(edits->offset_sequence_one)->at(0)->content;
+        xmlChar * content_new = node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content;
 
-        int size_old = strlen((const char *)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content);
-        int size_new = strlen((const char *)(*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->content);
+        int size_old = strlen((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content);
+        int size_new = strlen((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content);
 
         if(whitespace_length_old == size_old && whitespace_length_new == size_new) {
 
@@ -1457,7 +1454,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
          && (rbuf_old->open_diff->back()->operation == COMMON
              && rbuf_new->open_diff->back()->operation == COMMON)
          && (!rbuf_old->open_diff->back()->open_tags->back()->marked
-             && !rbuf_new->open_diff->back()->open_tags->back()->marked))
+             || !rbuf_new->open_diff->back()->open_tags->back()->marked))
         return;
 
       if(rbuf->output_diff->back()->operation == DELETE
