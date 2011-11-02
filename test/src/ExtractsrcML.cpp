@@ -1,5 +1,5 @@
 /*
-  ExtractSource.cpp
+  ExtractsrcML.cpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu
@@ -9,7 +9,7 @@
 #include <string.h>
 #include <vector>
 #include <libxml/parserInternals.h>
-#include "SAX2ExtractSource.hpp"
+#include "SAX2ExtractsrcML.hpp"
 
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * infile);
