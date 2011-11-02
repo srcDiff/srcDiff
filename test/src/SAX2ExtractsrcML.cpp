@@ -113,8 +113,16 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
 
-    for(int i = 0; i < len; ++i)
-      fprintf(stdout, "%c", (char)ch[i]);
+    for (int i = 0; i < len; ++i) {
+
+      if ((char)ch[i] == '&')
+        fprintf(stdout,"&amp;");
+      else if ((char)ch[i] == '<')
+        fprintf(stdout, "&lt;");
+      else if ((char)ch[i] == '>')
+        fprintf(stdout, "&gt;");
+      else
+        fprintf(stdout, "%c", (char)ch[i]);
   }
 }
 
