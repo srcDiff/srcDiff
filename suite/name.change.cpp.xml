@@ -2,23 +2,23 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="name.change">
 
 <unit>
-<expr_stmt><expr><name><diff:old status="start"/>a<diff:old status="end"/><diff:new status="start"/>b<diff:new status="end"/></name></expr>;</expr_stmt>
+<expr_stmt><expr><diff:old status="start"/><name>a</name><diff:old status="end"/><diff:new status="start"/><name>b</name><diff:new status="end"/></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>aba<diff:new status="end"/></name></expr>;</expr_stmt>
+<expr_stmt><expr><diff:old status="start"/><name>aaa</name><diff:old status="end"/><diff:new status="start"/><name>aba</name><diff:new status="end"/></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>aab<diff:new status="end"/></name></expr>;</expr_stmt>
+<expr_stmt><expr><diff:old status="start"/><name>aaa</name><diff:old status="end"/><diff:new status="start"/><name>aab</name><diff:new status="end"/></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>aba<diff:new status="end"/></name></expr>;</expr_stmt>
+<expr_stmt><expr><diff:old status="start"/><name>aaa</name><diff:old status="end"/><diff:new status="start"/><name>aba</name><diff:new status="end"/></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><diff:old status="start"/>aaa<diff:old status="end"/><diff:new status="start"/>baa<diff:new status="end"/></name></expr>;</expr_stmt>
+<expr_stmt><expr><diff:old status="start"/><name>aaa</name><diff:old status="end"/><diff:new status="start"/><name>baa</name><diff:new status="end"/></expr>;</expr_stmt>
 </unit>
 
 </unit>
