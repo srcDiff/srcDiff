@@ -14,6 +14,7 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                        const xmlChar** attributes);
 
+void output_end_node(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *UR);
 
 xmlSAXHandler factory() {
 
@@ -60,7 +61,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   if(strcmp((const char *)localname, "new") == 0)
     data->in_diff->push_back(INSERT);
   else
-  output_start_node(ctx, localname, prefix, URI, nb_namespaces, namepsaces, nb_attributes, nb_defaulted, attributes);
+    output_start_node(ctx, localname, prefix, URI, nb_namespaces, namepspaces, nb_attributes, nb_defaulted, attributes);
 
 }
 
@@ -74,7 +75,7 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
      || strcmp((const char *)localname, "new") == 0)
     data->in_diff->pop_back();
   else
-    output_close_node(ctx, localname, prefix, URI);
+    output_end_node(ctx, localname, prefix, URI);
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
