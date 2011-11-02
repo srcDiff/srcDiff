@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <string>
 #include <vector>
 #include "SAX2ExtractSource.hpp"
 
@@ -61,7 +62,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   if(strcmp((const char *)localname, "new") == 0)
     data->in_diff->push_back(INSERT);
   else
-    output_start_node(ctx, localname, prefix, URI, nb_namespaces, namepspaces, nb_attributes, nb_defaulted, attributes);
+    output_start_node(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
 }
 
@@ -158,6 +159,8 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
 
       node += (const char *)">";
 
+      fprintf(stdout, "%s", node.c_str());
+
 }
 
 void output_end_node(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *UR) {
@@ -173,5 +176,7 @@ void output_end_node(void *ctx, const xmlChar *localname, const xmlChar *prefix,
   node += (const char *)localname;
 
   node += (const char *)">";
+
+  fprintf(stdout, "%s", node.c_str());
 
 }
