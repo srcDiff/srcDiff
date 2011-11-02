@@ -77,13 +77,13 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(isempty)
+  if(outputend && isempty)
     fprintf(stdout, "/>");
-  else if(!output_end)
+  else if(!outputend)
     fprintf(stdout, ">");
 
   isempty = false;
-  output_end = true;
+  outputend = true;
 
   if(strcmp((const char *)localname, "common") == 0
      || strcmp((const char *)localname, "old") == 0
@@ -102,7 +102,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
     fprintf(stdout, ">");
 
   isempty = false;
-  output_end = true;
+  outputend = true;
 
   if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
 
