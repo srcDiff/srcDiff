@@ -58,6 +58,12 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
+  if(outputend)
+    fprintf(stdout, ">");
+
+  isempty = false;
+  outputend = false;
+
   if(strcmp((const char *)localname, "common") == 0)
     data->in_diff->push_back(COMMON);
   else if(strcmp((const char *)localname, "old") == 0)
