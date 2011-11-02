@@ -123,7 +123,11 @@ void characters(void* ctx, const xmlChar* ch, int len) {
         fprintf(stdout, "&gt;");
       else
         fprintf(stdout, "%c", (char)ch[i]);
+
+    }
+
   }
+
 }
 
 void comments(void* ctx, const xmlChar* ch) {
