@@ -887,9 +887,9 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
         node_set->push_back(rbuf->diff_nodes->at(i));
         node_set->push_back(rbuf->diff_nodes->at(i + 1));
         node_set->push_back(rbuf->diff_nodes->at(i + 2));
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i));
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 1));
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 2));
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i));
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 1));
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 2));
 
         i += 2;
 
