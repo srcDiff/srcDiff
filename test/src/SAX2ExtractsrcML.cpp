@@ -11,6 +11,8 @@
 #include <vector>
 #include "SAX2ExtractSource.hpp"
 
+bool isempty = false; 
+
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                        const xmlChar** attributes);
@@ -61,8 +63,10 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
       data->in_diff->push_back(DELETE);
   else if(strcmp((const char *)localname, "new") == 0)
     data->in_diff->push_back(INSERT);
-  else
+  else {
+    bool isempty = true;
     output_start_node(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+  }
 
 }
 
@@ -70,6 +74,13 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
+
+  if(isempty)
+    fprintf(stdout, "/>");
+  else
+    fprintf(stdout, ">");
+
+  isempty = false;
 
   if(strcmp((const char *)localname, "common") == 0
      || strcmp((const char *)localname, "old") == 0
@@ -83,6 +94,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
+
+  isempty = false;
 
   if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
 
@@ -165,7 +178,7 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
 
   }
 
-      node += (const char *)">";
+      node += (const char *)"";
 
       fprintf(stdout, "%s", node.c_str());
 
