@@ -999,28 +999,24 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
           if(end_old >= 0) {
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
-            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
 
             xmlTextWriterWriteRawLen(writer, content_old, end_old + 1);
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"end\"/>"));
-            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
 
           }
 
           if(end_new >= 0) {
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"start\"/>"));
-            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
             xmlTextWriterWriteRawLen(writer, content_new, end_new + 1);
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new status=\"end\"/>"));
-            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("/<diff:new>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("/<diff:new>"));
 
           }
 
@@ -1032,10 +1028,6 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
         }
 
       }
-
-      /*
-        if(rbuf_old->output_diff->back()->operation == DELETE || rbuf_old->output_diff->back()->operation == COMMON) {
-      */
 
       // output diff tag start
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
