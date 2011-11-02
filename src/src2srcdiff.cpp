@@ -168,6 +168,9 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 // compares a line supposed to be the same and output the correrct elements
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
+// create sets of nodes
+std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf, int start);
+
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
 
@@ -462,117 +465,6 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
   // close the input file
   translator.close();
-}
-
-// compares a line supposed to be the same and output the correrct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer) {
-
-  int not_done = 1;
-  while(not_done) {
-
-    if(strcmp((const char *)getRealCurrentNode(reader_old)->name, (const char *)getRealCurrentNode(reader_new)->name) != 0) {
-
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->line_number);
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new->line_number);
-
-      collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
-
-      collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
-
-      output_double(rbuf_old, rbuf_new, writer);
-
-      --rbuf_old->line_number;
-      --rbuf_new->line_number;
-
-      return;
-
-    }
-
-    // look if in text node
-    if(xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader_old) == XML_READER_TYPE_TEXT) {
-
-      // allocate character buffer if empty
-      if(!rbuf_old->characters) {
-        rbuf_old->characters = (unsigned char *)xmlTextReaderConstValue(reader_old);
-        rbuf_new->characters = (unsigned char *)xmlTextReaderConstValue(reader_new);
-      }
-
-      if(strlen((const char *)rbuf_old->characters) != strlen((const char *)rbuf_new->characters)) {
-
-        collect_difference(rbuf_old, reader_old, DELETE, rbuf_old->line_number + 1);
-
-        collect_difference(rbuf_new, reader_new, INSERT, rbuf_new->line_number + 1);
-
-        output_double(rbuf_old, rbuf_new, writer);
-
-        --rbuf_old->line_number;
-        --rbuf_new->line_number;
-
-        return;
-
-      }
-
-      // cycle through characters
-      for (; (*rbuf_old->characters) != 0; ++rbuf_old->characters, ++rbuf_new->characters) {
-
-        // escape characters or print out character
-        if (*rbuf_old->characters == '&')
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&amp;"));
-        else if (*rbuf_old->characters == '<')
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&lt;"));
-        else if (*rbuf_old->characters == '>')
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("&gt;"));
-        else
-          xmlTextWriterWriteRawLen(writer, rbuf_old->characters, 1);
-
-        // increase new line count and exit
-        if((*rbuf_old->characters) == '\n') {
-
-          ++rbuf_old->characters;
-          ++rbuf_new->characters;
-
-          if(!(*rbuf_old->characters)) {
-
-            rbuf_old->characters = NULL;
-            not_done = xmlTextReaderRead(reader_old);
-
-          }
-
-          if(!(*rbuf_new->characters)) {
-
-            rbuf_new->characters = NULL;
-            xmlTextReaderRead(reader_new);
-
-          }
-
-          return;
-        }
-      }
-
-      // end text node if finished and get next node
-      if(!(*rbuf_old->characters)) {
-
-        rbuf_old->characters = NULL;
-        rbuf_new->characters = NULL;
-
-        not_done = xmlTextReaderRead(reader_old);
-        xmlTextReaderRead(reader_new);
-      }
-    }
-    else {
-
-      xmlNodePtr node = getRealCurrentNode(reader_old);
-
-      if(strcmp((const char *)node->name, "unit") == 0)
-        return;
-
-      output_handler(rbuf_old, rbuf_new, node, COMMON, writer);
-
-      // output non-text node and get next node
-      not_done = xmlTextReaderRead(reader_old);
-      xmlTextReaderRead(reader_new);
-    }
-  }
 }
 
 // collect the differnces
