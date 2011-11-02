@@ -1016,7 +1016,7 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       // look for pure whitespace change
       if(0 && node_sets_old->at(edits->offset_sequence_one)->at(0)->type == node_sets_new->at(edit_next->offset_sequence_two)->at(0)->type
          && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type == XML_READER_TYPE_TEXT
-         && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
+         && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 0
          && edits->length == 1 && edit_next->length == 1) {
 
         int whitespace_length_old = strspn((const char *)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content, " \t\r\n");
