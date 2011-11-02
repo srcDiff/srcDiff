@@ -1051,6 +1051,9 @@ void group_nodes(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set
   const char * open_node = (const char *)rbuf->diff_nodes->at(*start);
 
   node_set->push_back(rbuf->diff_nodes->at(*start));
+  if(rbuf->diff_nodes->at(*start)->extra & 0x1)
+    return;
+
   ++(*start);
 
   std::vector<bool> is_open;
