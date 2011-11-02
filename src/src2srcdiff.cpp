@@ -1046,7 +1046,7 @@ bool is_preprocessor_related(struct reader_buffer * rbuf, int start) {
 
 }
 
-void group_nodes(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set, int * start) {
+void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set, int * start) {
 
   const char * open_node = (const char *)rbuf->diff_nodes->at(*start);
 
@@ -1077,7 +1077,7 @@ void group_nodes(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set
   --(*start);
 }
 
-std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf) {
+std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf, int start) {
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
 
@@ -1102,7 +1102,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
     } else if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-      group_nodes(rbuf, node_set, &i);
+      collect_entire_tag(rbuf, node_set, &i);
 
     } else {
 
@@ -1122,8 +1122,8 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  std::vector<std::vector<xmlNodePtr> *> * node_sets_old = create_node_set(rbuf_old);
-  std::vector<std::vector<xmlNodePtr> *> * node_sets_new = create_node_set(rbuf_new);
+  std::vector<std::vector<xmlNodePtr> *> * node_sets_old = create_node_set(rbuf_old, 0);
+  std::vector<std::vector<xmlNodePtr> *> * node_sets_new = create_node_set(rbuf_new, 0);
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
