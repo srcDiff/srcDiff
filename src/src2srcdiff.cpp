@@ -936,7 +936,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
           node_set->push_back(rbuf->diff_nodes->at(i));
 
       } else
-        /* if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
+        if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
                 && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "expr") == 0) {
 
         for(;i < rbuf->diff_nodes->size() 
@@ -945,7 +945,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
             ++i)
           node_set->push_back(rbuf->diff_nodes->at(i));
 
-          } else*/ {
+          } else {
         
         node_set->push_back(rbuf->diff_nodes->at(i));
       }
@@ -1014,8 +1014,9 @@ void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
       //      fprintf(stderr, "HERE\n");
 
       // look for pure whitespace change
-      if(0 && (*rbuf_old->diff_nodes)[edits->offset_sequence_one]->type == (*rbuf_new->diff_nodes)[edit_next->offset_sequence_two]->type
-         && (xmlReaderTypes)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->type == XML_READER_TYPE_TEXT
+      if(0 && node_sets_old->at(edits->offset_sequence_one)->at(0)->type == node_sets_new->at(edit_next->offset_sequence_two)->at(0)->type
+         && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type == XML_READER_TYPE_TEXT
+         && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
          && edits->length == 1 && edit_next->length == 1) {
 
         int whitespace_length_old = strspn((const char *)(*rbuf_old->diff_nodes)[edits->offset_sequence_one]->content, " \t\r\n");
