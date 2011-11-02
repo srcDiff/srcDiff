@@ -1063,7 +1063,6 @@ void group_nodes(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set
 
   for(; !is_open.empty(); ++(*start)) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(*start)->name);
     node_set->push_back(rbuf->diff_nodes->at(*start));
 
     if((xmlReaderTypes)rbuf->diff_nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
@@ -1075,7 +1074,7 @@ void group_nodes(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set
 
   }
 
-  //  ++(*start);
+  --(*start);
 }
 
 std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf) {
@@ -1085,9 +1084,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
   for(int i = 0; i < rbuf->diff_nodes->size(); ++i) {
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
-    fprintf(stderr, "HERE\n");
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i)->name);
-    fprintf(stderr, "HERE\n");
+
     if(is_whitespace(rbuf, i)) {
 
       node_set->push_back(rbuf->diff_nodes->at(i));
