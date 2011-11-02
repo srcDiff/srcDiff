@@ -122,8 +122,9 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
         node += (const char *)namespaces[index];
       }
 
-      node += (const char *)"=";
+      node += (const char *)"=\"";
       node += (const char *)namespaces[index + 1];
+      node += (const char *)"\"";
     }
 
   }
