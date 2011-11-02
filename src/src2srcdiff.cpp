@@ -396,93 +396,16 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
-    struct edit * edits = edit_script;
-    for (; edits; edits = edits->next) {
+    collect_difference(&rbuf_old, reader_old, DELETE, lines1.size());
 
-      /*
-      // output diff tag start
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
-      if(rbuf_old.open_diff->back()->operation != COMMON)
-      output_handler(&rbuf_old, &rbuf_new, diff_common_start, COMMON, writer);
+    collect_difference(&rbuf_new, reader_new, INSERT, lines2.size());
 
-      rbuf_old.open_diff->back()->open_tags->front()->marked = false;
-      */
+    output_double(&rbuf_old, &rbuf_new, writer);
 
-      // add preceeding unchanged
-      if(edits->operation == DELETE)
-        for(int j = last_diff; j < edits->offset_sequence_one; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
-          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
-      else
-        for(int j = last_diff; j < edits->offset_sequence_one + 1; ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
-          compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
+    // output srcdiff unit
+    outputNode(*getRealCurrentNode(reader_old), writer);
 
-      /*
-        if(rbuf_old.open_diff->back()->operation == COMMON && rbuf_old.open_diff->size() > 1)
-        rbuf_old.open_diff->back()->open_tags->front()->marked = true;
-
-        output_handler(&rbuf_old, &rbuf_new, diff_common_end, COMMON, writer);
-      */
-
-      // detect and change
-      struct edit * edit_next = edits->next;
-      if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
-         && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
-
-        collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
-
-        collect_difference(&rbuf_new, reader_new, INSERT, edits->next->offset_sequence_two + edits->next->length);
-
-        output_double(&rbuf_old, &rbuf_new, writer);
-
-        last_diff = edits->offset_sequence_one + edits->length;
-        edits = edits->next;
-        continue;
-      }
-
-      // handle pure delete or insert
-      switch (edits->operation) {
-
-      case INSERT:
-
-        collect_difference(&rbuf_new, reader_new, INSERT, edits->offset_sequence_two + edits->length);
-        output_single(&rbuf_old, &rbuf_new, edits, writer);
-
-        last_diff = edits->offset_sequence_one + 1;
-        break;
-
-      case DELETE:
-
-        collect_difference(&rbuf_old, reader_old, DELETE, edits->offset_sequence_one + edits->length);
-        output_single(&rbuf_old, &rbuf_new, edits, writer);
-
-        last_diff = edits->offset_sequence_one + edits->length;
-        break;
-      }
-
-    }
-
-    /*
-    // output diff tag start
-    //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old status=\"start\"/>"));
-    if(rbuf_old.open_diff->back()->operation != COMMON)
-    output_handler(&rbuf_old, &rbuf_new, diff_common_start, COMMON, writer);
-
-    rbuf_old.open_diff->back()->open_tags->front()->marked = false;
-    */
-
-    for(unsigned int j = last_diff; j < lines1.size(); ++rbuf_old.line_number, ++rbuf_new.line_number, ++j)
-      compare_same_line(&rbuf_old, reader_old, &rbuf_new, reader_new, writer);
-
-    /*
-      if(rbuf_old.open_diff->back()->operation == COMMON && rbuf_old.open_diff->size() > 1)
-      rbuf_old.open_diff->back()->open_tags->front()->marked = true;
-
-      output_handler(&rbuf_old, &rbuf_new, diff_common_end, COMMON, writer);
-    */
   }
-
-  // output srcdiff unit
-  outputNode(*getRealCurrentNode(reader_old), writer);
 
   // cleanup everything
  cleanup:
@@ -870,6 +793,74 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
   //fprintf(stderr, "HERE\n");
 }
 
+bool is_whitespace(struct reader_buffer * rbuf, int start) {
+
+  if(rbuf->diff_nodes->at(start)->type != XML_READER_TYPE_TEXT)
+    return false;
+
+  if(strspn((const char *)rbuf->diff_nodes->at(start)->content, " \t\r\n") != strlen((const char *)rbuf->diff_nodes->at(start)))
+    return false;
+
+  return true;
+
+
+}
+
+bool is_atomic_srcml(struct reader_buffer * rbuf, int start) {
+
+  if((start + 2) >= rbuf->diff_nodes->size())
+    return false;
+
+  if((xmlReaderTypes)rbuf->diff_nodes->at(start)->type != XML_READER_TYPE_ELEMENT)
+    return false;
+
+  if((xmlReaderTypes)rbuf->diff_nodes->at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
+    return false;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, (const char *)rbuf->diff_nodes->at(start + 2)->name) != 0)
+    return false;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "name") == 0)
+    return true;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "operator") == 0)
+    return true;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "literal") == 0)
+    return true;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "modifier") == 0)
+    return true;
+
+
+}
+
+bool is_sub_expression(struct reader_buffer * rbuf, int start) {
+
+  if((xmlReaderTypes)rbuf->diff_nodes->at(start)->type != XML_READER_TYPE_ELEMENT)
+    return false;
+
+  if((xmlReaderTypes)rbuf->diff_nodes->at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
+    return false;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, (const char *)rbuf->diff_nodes->at(start + 2)->name) != 0)
+    return false;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "name") == 0)
+    return true;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "operator") == 0)
+    return true;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "literal") == 0)
+    return true;
+
+  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "modifier") == 0)
+    return true;
+
+
+}
+
 std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf) {
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
@@ -878,83 +869,27 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-      if((i + 2) < rbuf->diff_nodes->size()
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-         && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "name") == 0
-         && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "name") == 0) {
+    if(is_white_space(rbuf, i)) {
 
-        node_set->push_back(rbuf->diff_nodes->at(i));
-        node_set->push_back(rbuf->diff_nodes->at(i + 1));
-        node_set->push_back(rbuf->diff_nodes->at(i + 2));
-        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i));
-        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 1));
-        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 2));
+      node_set->push_back(rbuf->diff_nodes->at(i));
 
-        i += 2;
+    } else if(is_atomic_srcml(rbuf, i)) {
 
-      } else if((i + 2) < rbuf->diff_nodes->size()
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-         && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "operator") == 0
-         && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "operator") == 0) {
+      node_set->push_back(rbuf->diff_nodes->at(i));
+      node_set->push_back(rbuf->diff_nodes->at(i + 1));
+      node_set->push_back(rbuf->diff_nodes->at(i + 2));
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i));
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 1));
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 2));
 
-        node_set->push_back(rbuf->diff_nodes->at(i));
-        node_set->push_back(rbuf->diff_nodes->at(i + 1));
-        node_set->push_back(rbuf->diff_nodes->at(i + 2));
+      i += 2;
 
-        i += 2;
+    } else {
 
-      } else if((i + 2) < rbuf->diff_nodes->size()
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-         && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "modifier") == 0
-         && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "modifier") == 0) {
+      node_set->push_back(rbuf->diff_nodes->at(i));
+    }
 
-        node_set->push_back(rbuf->diff_nodes->at(i));
-        node_set->push_back(rbuf->diff_nodes->at(i + 1));
-        node_set->push_back(rbuf->diff_nodes->at(i + 2));
-
-        i += 2;
-
-      } else if((i + 2) < rbuf->diff_nodes->size()
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-         && (xmlReaderTypes)rbuf->diff_nodes->at(i + 2)->type == XML_READER_TYPE_END_ELEMENT
-         && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "literal") == 0
-         && strcmp((const char *)rbuf->diff_nodes->at(i + 2)->name, "literal") == 0) {
-
-        node_set->push_back(rbuf->diff_nodes->at(i));
-        node_set->push_back(rbuf->diff_nodes->at(i + 1));
-        node_set->push_back(rbuf->diff_nodes->at(i + 2));
-
-        i += 2;
-
-      } else if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-                && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "param") == 0) {
-
-        for(;i < rbuf->diff_nodes->size() 
-              && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type != XML_READER_TYPE_END_ELEMENT
-              && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "param") == 0;
-            ++i)
-          node_set->push_back(rbuf->diff_nodes->at(i));
-
-      } else
-        /*
-        if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT
-                && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "expr") == 0) {
-
-        for(;i < rbuf->diff_nodes->size() 
-              && (xmlReaderTypes)rbuf->diff_nodes->at(i)->type != XML_READER_TYPE_END_ELEMENT
-              && strcmp((const char *)rbuf->diff_nodes->at(i)->name, "expr") == 0;
-            ++i)
-          node_set->push_back(rbuf->diff_nodes->at(i));
-
-          } else*/ {
-        
-        node_set->push_back(rbuf->diff_nodes->at(i));
-      }
-
-      node_sets->push_back(node_set);
+    node_sets->push_back(node_set);
 
   }
 
