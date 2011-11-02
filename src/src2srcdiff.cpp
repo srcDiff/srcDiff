@@ -1051,28 +1051,31 @@ void group_nodes(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set
   const char * open_node = (const char *)rbuf->diff_nodes->at(*start);
 
   node_set->push_back(rbuf->diff_nodes->at(*start));
-  if(rbuf->diff_nodes->at(*start)->extra & 0x1)
-    return;
 
   ++(*start);
+
+  if(rbuf->diff_nodes->at((*start) - 1)->extra & 0x1)
+    return;
 
   std::vector<bool> is_open;
 
   is_open.push_back(false);
 
   for(; !is_open.empty(); ++(*start)) {
+
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(*start)->name);
     node_set->push_back(rbuf->diff_nodes->at(*start));
 
     if((xmlReaderTypes)rbuf->diff_nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
        && !(rbuf->diff_nodes->at(*start)->extra & 0x1))
       is_open.push_back(false);
+
     else if((xmlReaderTypes)rbuf->diff_nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
       is_open.pop_back();
 
   }
 
-  ++(*start);
+  //  ++(*start);
 }
 
 std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf) {
