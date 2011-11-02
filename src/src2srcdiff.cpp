@@ -177,8 +177,8 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer);
 
-// output a change
-void output_double(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
+// output file level info
+void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer);
 
@@ -404,7 +404,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(&rbuf_old, 0);
     std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(&rbuf_new, 0);
 
-    output_double(&rbuf_old, node_set_old, &rbuf_new, node_set_new, writer);
+    output_file_level(&rbuf_old, node_set_old, &rbuf_new, node_set_new, writer);
 
     // output srcdiff unit
     outputNode(*getRealCurrentNode(reader_old), writer);
