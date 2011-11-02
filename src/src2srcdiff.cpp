@@ -397,9 +397,9 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
-    collect_difference(&rbuf_old, reader_old, DELETE, lines1.size());
+    collect_difference(&rbuf_old, reader_old, DELETE, lines1.size() + 1);
 
-    collect_difference(&rbuf_new, reader_new, INSERT, lines2.size());
+    collect_difference(&rbuf_new, reader_new, INSERT, lines2.size() + 1);
 
     std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(&rbuf_old, 0);
     std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(&rbuf_new, 0);
@@ -470,7 +470,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line) {
-
+  fprintf(stderr, "HERE\n");
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
 
@@ -590,6 +590,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
         return;
 
       // save non-text node and get next node
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
       rbuf->diff_nodes->push_back(node);
 
       not_done = xmlTextReaderRead(reader);
