@@ -156,7 +156,7 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
     }
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(nb_attributes) {
 
     int index;
