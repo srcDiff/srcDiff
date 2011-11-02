@@ -178,7 +178,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer);
 
 // output a change
-void output_double(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlTextWriterPtr writer);
+void output_double(std::vector<std::vector<xmlNodePtr> *> * node_sets_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer);
 
@@ -926,9 +926,6 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 void output_double(std::vector<std::vector<xmlNodePtr> *> * node_sets_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
-
-  std::vector<std::vector<xmlNodePtr> *> * node_sets_old = create_node_set(rbuf_old, 0);
-  std::vector<std::vector<xmlNodePtr> *> * node_sets_new = create_node_set(rbuf_new, 0);
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
