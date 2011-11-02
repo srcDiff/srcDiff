@@ -88,15 +88,16 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   else if(outputend)
     fprintf(stdout, ">");
 
-  isempty = false;
-  outputend = false;
-
   if(strcmp((const char *)localname, "common") == 0
      || strcmp((const char *)localname, "old") == 0
      || strcmp((const char *)localname, "new") == 0)
     data->in_diff->pop_back();
-  else
-    output_end_node(ctx, localname, prefix, URI);
+  else if(isempty)
+      output_end_node(ctx, localname, prefix, URI);
+
+  isempty = false;
+  outputend = false;
+
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
