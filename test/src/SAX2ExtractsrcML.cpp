@@ -104,7 +104,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(isempty)
+  if(outputend)
     fprintf(stdout, ">");
 
   isempty = false;
