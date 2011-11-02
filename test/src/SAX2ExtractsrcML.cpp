@@ -54,12 +54,9 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
   if(strcmp((const char *)localname, "common") == 0)
     data->in_diff->push_back(COMMON);
-  else
-
-  if(strcmp((const char *)localname, "old") == 0)
-    data->in_diff->push_back(DELETE);
-  else
-  if(strcmp((const char *)localname, "new") == 0)
+  else if(strcmp((const char *)localname, "old") == 0)
+      data->in_diff->push_back(DELETE);
+  else if(strcmp((const char *)localname, "new") == 0)
     data->in_diff->push_back(INSERT);
   else
     output_start_node(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
@@ -109,21 +106,22 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
   }
 
   node += (const char *)localname;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(strcmp((const char *)localname, "unit") == 0 && nb_namespaces) {
 
     int index;
-    for(int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
+    for(int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
       if(namespaces[i]) {
 
         node += (const char *)namespaces[index];
         node += ":";
       }
 
-    node += (const char *)namespaces[index + 1];
+      node += (const char *)namespaces[index + 1];
+    }
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(nb_attributes) {
 
     int index;
