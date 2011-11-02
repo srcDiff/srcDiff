@@ -109,6 +109,8 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(strcmp((const char *)localname, "unit") == 0 && nb_namespaces) {
 
+    node += (const char *)" ";
+
     int index;
     for(int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
       if(namespaces[i]) {
@@ -126,6 +128,8 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
 
     int index;
     for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+
+      node += (const char *)" ";
 
       int end = attributes[index + 4] - attributes[index + 3];
       char * value = strndup((const char *)attributes[index + 3], end);
