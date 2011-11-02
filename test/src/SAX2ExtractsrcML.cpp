@@ -54,6 +54,8 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   if(strcmp((const char *)localname, "new") == 0)
     data->in_diff->push_back(INSERT);
 
+  }
+
 
   if(strcmp((const char *)localname, "escape") == 0) {
 
@@ -102,4 +104,12 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 void comments(void* ctx, const xmlChar* ch) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
+}
+
+void output_start_node() {
+
+  if(prefix)
+    fprintf(stderr, "%s:\t%s:%s\t%s\n", __FUNCTION__, prefix, localname, URI);
+  else
+    fprintf(stderr, "%s:\t%s\t%s\n", __FUNCTION__, localname, URI);
 }
