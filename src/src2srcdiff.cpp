@@ -470,7 +470,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line) {
-  fprintf(stderr, "HERE\n");
+
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
 
@@ -590,7 +590,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
         return;
 
       // save non-text node and get next node
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
       rbuf->diff_nodes->push_back(node);
 
       not_done = xmlTextReaderRead(reader);
