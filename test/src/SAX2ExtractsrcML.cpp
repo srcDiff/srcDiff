@@ -85,11 +85,11 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
 
   if(outputend && isempty)
     fprintf(stdout, "/>");
-  else if(!outputend)
+  else if(outputend)
     fprintf(stdout, ">");
 
   isempty = false;
-  outputend = true;
+  outputend = false;
 
   if(strcmp((const char *)localname, "common") == 0
      || strcmp((const char *)localname, "old") == 0
@@ -108,7 +108,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
     fprintf(stdout, ">");
 
   isempty = false;
-  outputend = true;
+  outputend = false;
 
   if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
 
