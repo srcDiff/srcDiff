@@ -10,12 +10,12 @@
 
 #include <libxml/parser.h>
 
-enum operation { DELETE, INSERT };
+enum operation { COMMON, DELETE, INSERT };
 
 struct source_diff {
 
   operation op;
-  bool in_diff;
+  std::vector<int> * in_diff;
 };
 
 xmlSAXHandler factory();

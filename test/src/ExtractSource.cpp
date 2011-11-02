@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 #include <libxml/parserInternals.h>
 #include "SAX2ExtractSource.hpp"
 
@@ -42,7 +43,10 @@ int main(int argc, char * argv[]) {
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
 
-  struct source_diff data = { diff ? INSERT : DELETE, false};
+  std::vector<int> * stack = new std::vector<int>();
+  stack->push_back(COMMON);
+
+  struct source_diff data = { diff ? INSERT : DELETE,  stack };
 
   ctxt->_private = &data;
 
@@ -61,12 +65,12 @@ int main(int argc, char * argv[]) {
 // create the ctxt
 static xmlParserCtxtPtr createURLParserCtxt(const char * infile) {
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_HUGE | XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) {
 
     // report error
     xmlErrorPtr ep = xmlGetLastError();
-    fprintf(stderr, "%s: %s", "ElementInfo", ep->message);
+    fprintf(stderr, "%s: %s", "ExtractSource", ep->message);
     exit(1);
   }
 
@@ -86,7 +90,7 @@ static void parseDocument(xmlParserCtxtPtr ctxt) {
     char* partmsg = strdup(ep->message);
     partmsg[strlen(partmsg) - 1] = '\0';
 
-    fprintf(stderr, "%s: %s in '%s'\n", "ElementInfo", partmsg, ep->file);
+    fprintf(stderr, "%s: %s in '%s'\n", "ExtractSource", partmsg, ep->file);
     exit(1);
   }
 
