@@ -6,8 +6,7 @@ OBJ_DIR=obj/
 BIN_DIR=bin/
 
 
-all: $(BIN_DIR)ExtractSource $(BIN_DIR)SwitchDifferences
-	./test_suite.py
+all: $(BIN_DIR)ExtractSource $(BIN_DIR)ExtractsrcML $(BIN_DIR)SwitchDifferences
 
 $(BIN_DIR)ExtractSource: $(OBJ_DIR)ExtractSource.o $(OBJ_DIR)SAX2ExtractSource.o
 	g++ -I /usr/include/libxml2 -lxml2 $^ -o $@ 
