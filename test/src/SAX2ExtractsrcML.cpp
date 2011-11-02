@@ -72,7 +72,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     data->in_diff->push_back(INSERT);
   else {
     isempty = true;
-    outputend = false;
+    outputend = true;
     output_start_node(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
