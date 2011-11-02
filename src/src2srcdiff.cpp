@@ -1031,6 +1031,7 @@ bool is_structure_related(struct reader_buffer * rbuf, int start) {
 
   return false;
 }
+
 bool is_preprocessor_related(struct reader_buffer * rbuf, int start) {
 
   /* 
@@ -1045,6 +1046,31 @@ bool is_preprocessor_related(struct reader_buffer * rbuf, int start) {
 
 }
 
+void group_nodes(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set, int * start) {
+
+  const char * open_node = (const char *)rbuf->diff_nodes->at(*start);
+
+  node_set->push_back(rbuf->diff_nodes->at(*start));
+  ++(*start);
+
+  std::vector<bool> is_open;
+
+  is_open.push_back(false);
+
+  for(; !is_open.empty(); ++(*start)) {
+
+    node_set->push_back(rbuf->diff_nodes->at(*start));
+
+    if((xmlReaderTypes)rbuf->diff_nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
+       && !(rbuf->diff_nodes->at(*start)->extra & 0x1))
+      is_open.push_back(false);
+    else if((xmlReaderTypes)rbuf->diff_nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
+      is_open.pop_back();
+
+  }
+
+}
+
 std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf) {
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
@@ -1053,7 +1079,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if(is_white_space(rbuf, i)) {
+    if(is_whitespace(rbuf, i)) {
 
       node_set->push_back(rbuf->diff_nodes->at(i));
 
@@ -1068,7 +1094,9 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
       i += 2;
 
-    } else if((xmlReaderTypes)rbuf->diff_nodes->at(start)->type == XML_READER_TYPE_ELEMENT) {
+    } else if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
+
+      group_nodes(rbuf, node_set, &i);
 
     } else {
 
