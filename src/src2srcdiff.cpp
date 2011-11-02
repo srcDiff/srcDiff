@@ -199,41 +199,39 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  /*
-    std::string * dcommon = new std::string("diff:common");
-    std::string * dold = new std::string("diff:old");
-    std::string * dnew = new std::string("diff:new");
+  std::string * dcommon = new std::string("diff:common");
+  std::string * dold = new std::string("diff:old");
+  std::string * dnew = new std::string("diff:new");
 
-    diff_common_start = new xmlNode;
-    diff_common_start->name = (xmlChar *)dcommon->c_str();
-    diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-    diff_common_start->extra = 0;
+  diff_common_start = new xmlNode;
+  diff_common_start->name = (xmlChar *)dcommon->c_str();
+  diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_common_start->extra = 0;
 
-    diff_common_end = new xmlNode;
-    diff_common_end->name = (xmlChar *)dcommon->c_str();
-    diff_common_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-    diff_common_end->extra = 0;
+  diff_common_end = new xmlNode;
+  diff_common_end->name = (xmlChar *)dcommon->c_str();
+  diff_common_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_common_end->extra = 0;
 
-    diff_old_start = new xmlNode;
-    diff_old_start->name = (xmlChar *)dold->c_str();
-    diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-    diff_old_start->extra = 0;
+  diff_old_start = new xmlNode;
+  diff_old_start->name = (xmlChar *)dold->c_str();
+  diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_old_start->extra = 0;
 
-    diff_old_end = new xmlNode;
-    diff_old_end->name = (xmlChar *)dold->c_str();
-    diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-    diff_old_end->extra = 0;
+  diff_old_end = new xmlNode;
+  diff_old_end->name = (xmlChar *)dold->c_str();
+  diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_old_end->extra = 0;
 
-    diff_new_start = new xmlNode;
-    diff_new_start->name = (xmlChar *)dnew->c_str();
-    diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-    diff_new_start->extra = 0;
+  diff_new_start = new xmlNode;
+  diff_new_start->name = (xmlChar *)dnew->c_str();
+  diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_new_start->extra = 0;
 
-    diff_new_end = new xmlNode;
-    diff_new_end->name = (xmlChar *)dnew->c_str();
-    diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-    diff_new_end->extra = 0;
-  */
+  diff_new_end = new xmlNode;
+  diff_new_end->name = (xmlChar *)dnew->c_str();
+  diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_new_end->extra = 0;
 
   /*
     Compute the differences between the two source files
@@ -403,7 +401,7 @@ int main(int argc, char * argv[]) {
 
     collect_difference(&rbuf_new, reader_new, INSERT, lines2.size());
 
-    std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(&rbuf_old, 0);    
+    std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(&rbuf_old, 0);
     std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(&rbuf_new, 0);
 
     output_double(&rbuf_old, node_set_old, &rbuf_new, node_set_new, writer);
@@ -648,9 +646,9 @@ bool is_atomic_srcml(struct reader_buffer * rbuf, int start) {
 // check if sub statement
 bool is_sub_statement(struct reader_buffer * rbuf, int start) {
 
-  /* 
-C-Preprocessor
-                         cpp:directive, cpp:file, cpp:include, cpp:define, cpp:undef, cpp:line, cpp:if, cpp:ifdef, cpp:ifndef, cpp:else, cpp:elif, cpp:endif, cpp:then, cpp:pragma, cpp:error
+  /*
+    C-Preprocessor
+    cpp:directive, cpp:file, cpp:include, cpp:define, cpp:undef, cpp:line, cpp:if, cpp:ifdef, cpp:ifndef, cpp:else, cpp:elif, cpp:endif, cpp:then, cpp:pragma, cpp:error
   */
   return false;
 
@@ -780,7 +778,7 @@ bool is_statement(struct reader_buffer * rbuf, int start) {
 bool is_function_related(struct reader_buffer * rbuf, int start) {
 
   /*
-  function, function_decl, specifier, return, call, parameter_list, param, argument_list, argument
+    function, function_decl, specifier, return, call, parameter_list, param, argument_list, argument
   */
 
   if((xmlReaderTypes)rbuf->diff_nodes->at(start)->type != XML_READER_TYPE_ELEMENT)
@@ -818,7 +816,7 @@ bool is_function_related(struct reader_buffer * rbuf, int start) {
 
 bool is_structure_related(struct reader_buffer * rbuf, int start) {
 
-  /* 
+  /*
     struct, struct_decl, union, union_decl
   */
 
@@ -842,9 +840,9 @@ bool is_structure_related(struct reader_buffer * rbuf, int start) {
 
 bool is_preprocessor_related(struct reader_buffer * rbuf, int start) {
 
-  /* 
-     cpp:directive, cpp:file, cpp:include, cpp:define, cpp:undef, cpp:line,
-     cpp:if, cpp:ifdef, cpp:ifndef, cpp:else, cpp:elif, cpp:endif, cpp:then, cpp:pragma, cpp:error
+  /*
+    cpp:directive, cpp:file, cpp:include, cpp:define, cpp:undef, cpp:line,
+    cpp:if, cpp:ifdef, cpp:ifndef, cpp:else, cpp:elif, cpp:endif, cpp:then, cpp:pragma, cpp:error
   */
   if((xmlReaderTypes)rbuf->diff_nodes->at(start)->type != XML_READER_TYPE_ELEMENT)
     return false;
