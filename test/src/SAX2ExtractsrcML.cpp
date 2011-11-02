@@ -38,7 +38,7 @@ xmlSAXHandler factory() {
 void startDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
-  fprintf(stdout, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
+  fprintf(stdout, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
 }
 
 void endDocument(void* ctx) {
