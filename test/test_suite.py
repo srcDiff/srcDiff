@@ -82,12 +82,12 @@ def name2filestr(src_filename):
 # converts a srcML file back to text
 def extract_source(srcDiff, operation):
 
-	# run the srcml processor
+	# run the srcML extractor
 	command = [extractutility, operation]
-
         srcML = safe_communicate(command, srcDiff)
+        
+        # extract text
         command = [srcmlutility, srcML]
-
 	return safe_communicate(command, srcML)
 
 # switch diff order
