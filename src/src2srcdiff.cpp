@@ -904,7 +904,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
 
-  for(int i = 0; i < rbuf->diff_nodes->size(); ++i) {
+  for(int i = start; i < rbuf->diff_nodes->size(); ++i) {
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
