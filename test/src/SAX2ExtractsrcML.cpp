@@ -75,7 +75,8 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     outputend = true;
     if(strcmp((const char *)localname, "unit") == 0)
       fprintf(stdout, "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" xmlns:op=\"http://www.sdml.info/srcML/operator\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" language=\"C\">");
-    output_start_node(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+    else
+      output_start_node(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
 }
