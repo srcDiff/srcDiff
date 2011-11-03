@@ -986,15 +986,21 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
       //      fprintf(stderr, "HERE\n");
-
+ 
       // look for pure whitespace change
+      int whitespace_length_old = 0;
+      int whitespace_length_new = 0;
       if(node_sets_old->at(edits->offset_sequence_one)->at(0)->type == node_sets_new->at(edit_next->offset_sequence_two)->at(0)->type
-         && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type == XML_READER_TYPE_TEXT
-         && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
-         && edits->length == 1 && edit_next->length == 1) {
+         && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type == XML_READER_TYPE_TEXT) {
 
-        int whitespace_length_old = strspn((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content, " \t\r\n");
-        int whitespace_length_new = strspn((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content, " \t\r\n");
+        strspn((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content, " \t\r\n");
+        strspn((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content, " \t\r\n");
+
+      }
+
+      if(whitespace_length_old != 0 && whitespace_length_new != 0 
+          && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
+         && edits->length == 1 && edit_next->length == 1) {
 
         xmlChar * content_old = node_sets_old->at(edits->offset_sequence_one)->at(0)->content;
         xmlChar * content_new = node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content;
