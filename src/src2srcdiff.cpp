@@ -147,7 +147,7 @@ int node_set_compare(const void * e1, const void * e2) {
   return 0;
 }
 
-// diff node comparison function
+// diff node comparison function (incomplete)
 int node_set_syntax_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
   std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
@@ -161,8 +161,6 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
   return 0;
 }
-
-
 
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
