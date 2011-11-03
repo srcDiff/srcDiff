@@ -87,7 +87,7 @@ def extract_source(srcDiff, operation):
         srcML = safe_communicate(command, srcDiff)
         
         # extract text
-        command = [srcmlutility, srcML]
+        command = [srcmlutility]
 	return safe_communicate(command, srcML)
 
 # switch diff order
