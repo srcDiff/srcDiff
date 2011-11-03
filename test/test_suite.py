@@ -86,7 +86,7 @@ def extract_source(srcDiff, operation):
 	command = [extractutility, operation]
 
         srcML = safe_communicate(command, srcDiff)
-        command = [srcmlutility srcML]
+        command = [srcmlutility, srcML]
 
 	return safe_communicate(command, srcML)
 
