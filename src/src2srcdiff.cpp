@@ -455,7 +455,7 @@ int main(int argc, char * argv[]) {
     status = 1;
   }
 
-  free_shortest_edit_script(edit_script);
+  //free_shortest_edit_script(edit_script);
 
   return status;
 }
@@ -1222,15 +1222,12 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
     for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
       output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
 
-
-
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
   output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
 
   free_shortest_edit_script(edit_script);
-
 
 }
 
