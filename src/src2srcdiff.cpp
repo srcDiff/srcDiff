@@ -858,10 +858,10 @@ void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * n
 
   node_set->push_back(rbuf->diff_nodes->at(*start));
 
-  ++(*start);
-
   if(rbuf->diff_nodes->at((*start) - 1)->extra & 0x1)
     return;
+
+  ++(*start);
 
   std::vector<bool> is_open;
 
