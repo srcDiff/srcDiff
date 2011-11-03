@@ -15,8 +15,8 @@
 #cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 0 | cmp old/% /dev/stdin"
 #cat files | gxargs -I% bash -c "bin/ExtractSource new/%.xml 1 | cmp new/% /dev/stdin"
 
-cat files | gxargs -I% -P 10 bash -c ".src2srcml --literal --operator --modifier old/% > old/%.1.xml"
-cat files | gxargs -I% -P 10 bash -c ".src2srcml --literal --operator --modifier new/% > new/%.1.xml"
+cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier old/% > old/%.1.xml"
+cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier new/% > new/%.1.xml"
 
 #cat files | gxargs -I% bash -c "bin/ExtractsrcML new/%.xml 0 | cmp old/%.1.xml /dev/stdin"
 
