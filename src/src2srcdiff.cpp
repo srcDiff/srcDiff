@@ -871,7 +871,7 @@ bool is_preprocessor_related(struct reader_buffer * rbuf, int start) {
 
 void collect_entire_tag(std::vector<xmlNodePtr> * diff_nodes, std::vector <xmlNode *> * node_set, int * start) {
 
-  const char * open_node = (const char *)diff_nodes->at(*start);
+  const char * open_node = (const char *)diff_nodes->at(*start)->name;
 
   node_set->push_back(diff_nodes->at(*start));
 
@@ -924,7 +924,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr>
       i += 2;
 
     } else if((xmlReaderTypes)diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
-
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)diff_nodes->at(i)->name);
       collect_entire_tag(diff_nodes, node_set, &i);
 
     } else {
