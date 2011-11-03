@@ -20,10 +20,10 @@ FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
 
-srcmlutility = "srcml2src"
-extractutility = "bin/ExtractsrcML"
-switchutility = "bin/SwitchDifferences"
-src2srcdiffutility = "../bin/src2srcdiff"
+srcml_utility = "srcml2src"
+extract_utility = "bin/ExtractsrcML"
+switch_utility = "bin/SwitchDifferences"
+src2srcdiff_utility = "../bin/src2srcdiff"
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
@@ -70,7 +70,7 @@ def safe_communicate_two_files(command, filename_one, filename_two, directory):
 # extracts a particular unit from a srcML file
 def extract_unit(src, count):
 
-	command = [srcmlutility, "--unit=" + str(count), "--xml"]
+	command = [srcml_utility, "--unit=" + str(count), "--xml"]
 
 	return safe_communicate(command, src)
 
@@ -83,18 +83,18 @@ def name2filestr(src_filename):
 def extract_source(srcDiff, operation):
 
 	# run the srcML extractor
-	command = [extractutility, operation]
+	command = [extract_utility, operation]
         srcML = safe_communicate(command, srcDiff)
         
         # extract text
-        command = [srcmlutility]
+        command = [srcml_utility]
 	return safe_communicate(command, srcML)
 
 # switch diff order
 def switch_differences(srcML):
 
 	# run the srcml processor
-	command = [switchutility]
+	command = [switch_utility]
 
 	return safe_communicate(command, srcML)
 
@@ -117,7 +117,7 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist):
 
-        command = [globals()["src2srcdiffutility"]]
+        command = [globals()["src2srcdiff_utility"]]
 
         temp_file = open("temp_file_one.cpp", "w")
         temp_file.write(source_file_old)
@@ -159,13 +159,13 @@ def srcML2srcMLStages(srcmlfile, otherxmlns):
 #
 def getsrcmlattribute(xml_file, command):
 
-	last_line = safe_communicate([srcmlutility, command], xml_file)
+	last_line = safe_communicate([srcml_utility, command], xml_file)
 
 	return last_line.strip()
 
 def getsrcmlattributefile(xml_file, command):
 
-	last_line = safe_communicate_file([srcmlutility, command], xml_file)
+	last_line = safe_communicate_file([srcml_utility, command], xml_file)
 
 	return last_line.strip()
 
@@ -226,14 +226,14 @@ def nondefaultxmlns(l):
 # version of srcml2src
 def srcml2srcversion():
 
-	last_line = safe_communicate([srcmlutility, "-V"], "")
+	last_line = safe_communicate([srcml_utility, "-V"], "")
 
 	return last_line.splitlines()[0].strip()
 
 # number of nested units
 def getnested(xml_file):
 
-	snumber = safe_communicate([srcmlutility, "-n"], xml_file)
+	snumber = safe_communicate([srcml_utility, "-n"], xml_file)
 
 	if snumber != "":
 		return int(snumber)
@@ -554,6 +554,6 @@ os.remove("temp_file_two.cpp")
 
 # output tool version
 print
-print srcml2srcversion(), srcmlutility
+print srcml2srcversion(), srcml_utility
 
 exit
