@@ -1016,7 +1016,7 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
             xmlTextWriterWriteRawLen(writer, content_new, end_new + 1);
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("/<diff:new>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
           }
 
