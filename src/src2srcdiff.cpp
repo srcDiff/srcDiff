@@ -884,7 +884,7 @@ void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * n
 
   is_open.push_back(false);
 
-  for(; end && !is_open.empty(); ++(*start)) {
+  for(; !is_open.empty(); ++(*start)) {
 
     node_set->push_back(rbuf->diff_nodes->at(*start));
 
