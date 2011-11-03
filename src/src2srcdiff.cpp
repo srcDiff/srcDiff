@@ -418,8 +418,8 @@ int main(int argc, char * argv[]) {
 
     collect_difference(&rbuf_new, reader_new, INSERT, lines2.size() + 1);
 
-    std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(&rbuf_old, 0, rbuf_old.diff_nodes->size());
-  std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(&rbuf_new, 0, rbuf_new.diff_nodes->size());
+    std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(rbuf_old.diff_nodes, 0, rbuf_old.diff_nodes->size());
+  std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(rbuf_new.diff_nodes, 0, rbuf_new.diff_nodes->size());
 
     output_file_level(&rbuf_old, node_set_old, &rbuf_new, node_set_new, writer);
 
