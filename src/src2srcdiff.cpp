@@ -1053,7 +1053,7 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
             rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
             output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(0), COMMON, writer);
-            fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *) node_sets_old->at(edits->offset_sequence_one)->at(0)->name);
+
             // collect subset of nodes
             std::vector<std::vector<xmlNodePtr> *> * next_node_set_old = create_node_set(node_sets_old->at(edits->offset_sequence_one), 1
                                                                                          , node_sets_old->at(edits->offset_sequence_one)->size() - 1);
