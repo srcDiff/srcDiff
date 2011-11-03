@@ -869,7 +869,7 @@ bool is_preprocessor_related(struct reader_buffer * rbuf, int start) {
 
 }
 
-void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set, int * start, int end) {
+void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set, int * start) {
 
   const char * open_node = (const char *)rbuf->diff_nodes->at(*start);
 
@@ -884,7 +884,7 @@ void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * n
 
   is_open.push_back(false);
 
-  for(; (*start) < end && !is_open.empty(); ++(*start)) {
+  for(; end && !is_open.empty(); ++(*start)) {
 
     node_set->push_back(rbuf->diff_nodes->at(*start));
 
@@ -904,7 +904,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
 
-  for(int i = start; i < rbuf->diff_nodes->size(); ++i) {
+  for(int i = start; i < end; ++i) {
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
@@ -925,7 +925,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
     } else if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-      collect_entire_tag(rbuf, node_set, &i, end);
+      collect_entire_tag(rbuf, node_set, &i);
 
     } else {
 
