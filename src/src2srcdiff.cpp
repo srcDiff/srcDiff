@@ -617,12 +617,12 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 }
 
 // check if node is whitespace
-bool is_whitespace(struct reader_buffer * rbuf, int start) {
+bool is_whitespace(std::vector<xmlNodePtr> * diff_nodes, int start) {
 
-  if(rbuf->diff_nodes->at(start)->type != XML_READER_TYPE_TEXT)
+  if(diff_nodes->at(start)->type != XML_READER_TYPE_TEXT)
     return false;
 
-  if(strspn((const char *)rbuf->diff_nodes->at(start)->content, " \t\r\n") != strlen((const char *)rbuf->diff_nodes->at(start)))
+  if(strspn((const char *)diff_nodes->at(start)->content, " \t\r\n") != strlen((const char *)diff_nodes->at(start)))
     return false;
 
   return true;
@@ -631,30 +631,30 @@ bool is_whitespace(struct reader_buffer * rbuf, int start) {
 }
 
 // check if node is a indivisable group of three (atomic)
-bool is_atomic_srcml(struct reader_buffer * rbuf, int start) {
+bool is_atomic_srcml(std::vector<xmlNodePtr> * diff_nodes, int start) {
 
-  if((start + 2) >= rbuf->diff_nodes->size())
+  if((start + 2) >= diff_nodes->size())
     return false;
 
-  if((xmlReaderTypes)rbuf->diff_nodes->at(start)->type != XML_READER_TYPE_ELEMENT)
+  if((xmlReaderTypes)diff_nodes->at(start)->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-  if((xmlReaderTypes)rbuf->diff_nodes->at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
+  if((xmlReaderTypes)diff_nodes->at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
     return false;
 
-  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, (const char *)rbuf->diff_nodes->at(start + 2)->name) != 0)
+  if(strcmp((const char *)diff_nodes->at(start)->name, (const char *)diff_nodes->at(start + 2)->name) != 0)
     return false;
 
-  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "name") == 0)
+  if(strcmp((const char *)diff_nodes->at(start)->name, "name") == 0)
     return true;
 
-  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "operator") == 0)
+  if(strcmp((const char *)diff_nodes->at(start)->name, "operator") == 0)
     return true;
 
-  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "literal") == 0)
+  if(strcmp((const char *)diff_nodes->at(start)->name, "literal") == 0)
     return true;
 
-  if(strcmp((const char *)rbuf->diff_nodes->at(start)->name, "modifier") == 0)
+  if(strcmp((const char *)diff_nodes->at(start)->name, "modifier") == 0)
     return true;
 
   return false;
@@ -869,13 +869,13 @@ bool is_preprocessor_related(struct reader_buffer * rbuf, int start) {
 
 }
 
-void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * node_set, int * start) {
+void collect_entire_tag(std::vector<xmlNodePtr> * diff_nodes, std::vector <xmlNode *> * node_set, int * start) {
 
-  const char * open_node = (const char *)rbuf->diff_nodes->at(*start);
+  const char * open_node = (const char *)diff_nodes->at(*start);
 
-  node_set->push_back(rbuf->diff_nodes->at(*start));
+  node_set->push_back(diff_nodes->at(*start));
 
-  if(rbuf->diff_nodes->at(*start)->extra & 0x1)
+  if(diff_nodes->at(*start)->extra & 0x1)
     return;
 
   ++(*start);
@@ -886,13 +886,13 @@ void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * n
 
   for(; !is_open.empty(); ++(*start)) {
 
-    node_set->push_back(rbuf->diff_nodes->at(*start));
+    node_set->push_back(diff_nodes->at(*start));
 
-    if((xmlReaderTypes)rbuf->diff_nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
-       && !(rbuf->diff_nodes->at(*start)->extra & 0x1))
+    if((xmlReaderTypes)diff_nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
+       && !(diff_nodes->at(*start)->extra & 0x1))
       is_open.push_back(false);
 
-    else if((xmlReaderTypes)rbuf->diff_nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
+    else if((xmlReaderTypes)diff_nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
       is_open.pop_back();
 
   }
@@ -900,7 +900,7 @@ void collect_entire_tag(struct reader_buffer * rbuf, std::vector <xmlNode *> * n
   --(*start);
 }
 
-std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf, int start, int end) {
+std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end) {
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
 
@@ -908,28 +908,28 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * 
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if(is_whitespace(rbuf, i)) {
+    if(is_whitespace(diff_nodes, i)) {
 
-      node_set->push_back(rbuf->diff_nodes->at(i));
+      node_set->push_back(diff_nodes->at(i));
 
-    } else if(is_atomic_srcml(rbuf, i)) {
+    } else if(is_atomic_srcml(diff_nodes, i)) {
 
-      node_set->push_back(rbuf->diff_nodes->at(i));
-      node_set->push_back(rbuf->diff_nodes->at(i + 1));
-      node_set->push_back(rbuf->diff_nodes->at(i + 2));
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i));
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 1));
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf->diff_nodes->at(i + 2));
+      node_set->push_back(diff_nodes->at(i));
+      node_set->push_back(diff_nodes->at(i + 1));
+      node_set->push_back(diff_nodes->at(i + 2));
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)diff_nodes->at(i));
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)diff_nodes->at(i + 1));
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)diff_nodes->at(i + 2));
 
       i += 2;
 
-    } else if((xmlReaderTypes)rbuf->diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
+    } else if((xmlReaderTypes)diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-      collect_entire_tag(rbuf, node_set, &i);
+      collect_entire_tag(diff_nodes, node_set, &i);
 
     } else {
 
-      node_set->push_back(rbuf->diff_nodes->at(i));
+      node_set->push_back(diff_nodes->at(i));
     }
 
     node_sets->push_back(node_set);
