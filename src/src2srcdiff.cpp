@@ -419,7 +419,7 @@ int main(int argc, char * argv[]) {
     collect_difference(&rbuf_new, reader_new, INSERT, lines2.size() + 1);
 
     std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(rbuf_old.diff_nodes, 0, rbuf_old.diff_nodes->size());
-  std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(rbuf_new.diff_nodes, 0, rbuf_new.diff_nodes->size());
+    std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(rbuf_new.diff_nodes, 0, rbuf_new.diff_nodes->size());
 
     output_file_level(&rbuf_old, node_set_old, &rbuf_new, node_set_new, writer);
 
@@ -908,7 +908,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr>
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if(is_whitespace(diff_nodes, i)) {
+    if(is_whitespace(diff_nodes, i) || diff_nodes->at(i)->type == XML_READER_TYPE_TEXT) {
 
       node_set->push_back(diff_nodes->at(i));
 
@@ -1053,7 +1053,7 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
             rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
             output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(0), COMMON, writer);
-
+            fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *) node_sets_old->at(edits->offset_sequence_one)->at(0)->name);
             // collect subset of nodes
             std::vector<std::vector<xmlNodePtr> *> * next_node_set_old = create_node_set(node_sets_old->at(edits->offset_sequence_one), 1
                                                                                          , node_sets_old->at(edits->offset_sequence_one)->size() - 1);
