@@ -1057,8 +1057,8 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
             // collect subset of nodes
             std::vector<std::vector<xmlNodePtr> *> * next_node_set_old = create_node_set(node_sets_old->at(edits->offset_sequence_one), 1
                                                                                          , node_sets_old->at(edits->offset_sequence_one)->size() - 1);
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new = create_node_set(node_sets_new->at(edits->offset_sequence_two), 1
-                                                                                   , node_sets_new->at(edits->offset_sequence_two)->size() - 1);
+      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 1
+                                                                                   , node_sets_new->at(edit_next->offset_sequence_two)->size() - 1);
 
             // compare subset of nodes
             output_next_level(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
