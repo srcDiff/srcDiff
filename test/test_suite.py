@@ -21,7 +21,7 @@ MAX_COUNT = 29
 sperrorlist = []
 
 srcmlutility = "srcml2src"
-extractutility = "bin/ExtractSource"
+extractutility = "bin/ExtractsrcML"
 switchutility = "bin/SwitchDifferences"
 src2srcdiffutility = "../bin/src2srcdiff"
 
@@ -80,10 +80,13 @@ def name2filestr(src_filename):
 	return file
 
 # converts a srcML file back to text
-def extract_source(srcML, operation):
+def extract_source(srcDiff, operation):
 
 	# run the srcml processor
 	command = [extractutility, operation]
+
+        srcML = safe_communicate(command, srcDiff)
+        command = [srcmlutility srcML]
 
 	return safe_communicate(command, srcML)
 
