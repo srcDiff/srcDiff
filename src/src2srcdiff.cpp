@@ -182,7 +182,7 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
 // create sets of nodes
-std::vector<std::vector<xmlNodePtr> *> * create_node_set(struct reader_buffer * rbuf, int start, int end);
+std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end);
 
 // collect the differnces
 void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int operation, int end_line);
