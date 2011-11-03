@@ -73,6 +73,8 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   else if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
     isempty = true;
     outputend = true;
+    if(strcmp((const char *)localname, "unit") == 0)
+      fprintf(stdout, "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" xmlns:op=\"http://www.sdml.info/srcML/operator\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" language=\"C\">"
     output_start_node(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
