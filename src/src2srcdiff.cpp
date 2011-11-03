@@ -1041,9 +1041,9 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
         }
 
-      } else if(edits->length == edit_next->length && edits->length == 1/*
-                && (node_sets_old->at(edits->offset_sequence_one)->at(0)->size() > 1
-                || node_sets_old->at(edits->offset_sequence_one)->at(0)->size() > 1)*/) {
+      } else if(edits->length == edit_next->length && edits->length == 1
+                && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
+                || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
           if(node_compare(node_sets_old->at(edits->offset_sequence_one)->at(0)
                           , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
@@ -1063,7 +1063,7 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
                                                                                    , node_sets_new->at(edit_next->offset_sequence_two)->size() - 1);
 
             // compare subset of nodes
-            output_next_level(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+            output_file_level(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
             output_handler(rbuf_old, rbuf_new, 
                            node_sets_old->at(edits->offset_sequence_one)->
