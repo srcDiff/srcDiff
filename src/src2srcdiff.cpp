@@ -1146,7 +1146,7 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       } else {
 
-        compare_many2man(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
 
       }
 
