@@ -1733,7 +1733,7 @@ struct offset_pair {
   struct offset_pair * next;
 };
 
-#define MIN -1;
+#define MIN -1
 
 int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNodePtr> * node_set_new) {
 
@@ -1805,7 +1805,12 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     if(matches->similarity == MIN)
       output_file_level(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->offset_old)
-                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->offset_new);
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->offset_new, writer));
+    
+    else {
+      
+    }
+
   }
 
   return;
