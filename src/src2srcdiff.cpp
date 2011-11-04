@@ -1718,7 +1718,8 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
   for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(node_set_old->at(leftptr), node_set_new->at(leftptr)) == 0; ++leftptr);
 
   int rightptr;
-  for(rightptr = 0; rightptr < node_set_old->size() && rightptr < node_set_new->size() && node_compare(node_set_old->at(rightptr), node_set_new->at(rightptr)) == 0; ++rightptr);
+  for(rightptr = 1; rightptr < node_set_old->size() && rightptr < node_set_new->size()
+        && node_compare(node_set_old->at(node_set_old->size() - rightptr), node_set_new->at(node_set_new->size() - rightptr)) == 0; ++rightptr);
 
   return rightptr - leftptr;
 }
