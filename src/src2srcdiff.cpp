@@ -1729,6 +1729,7 @@ struct offset_pair {
 
   int old_offset;
   int new_offset;
+  int similarity;
   struct offset_pair * next;
 };
 
@@ -1775,6 +1776,7 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
       struct offset_pair * match = new struct offset_pair;
       match->old_offset = old_pos;
       match->new_offset = new_pos;
+      match->similarity = min_similarity;
       match->next = NULL;
 
       if(new_pos == 0)
