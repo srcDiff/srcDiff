@@ -1732,9 +1732,22 @@ struct offset_pair {
   struct offset_pair * next;
 };
 
+#define MIN -1;
+
 int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNodePtr> * node_set_new) {
 
-  return 0;
+  int length = node_set_new->size();
+
+  if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
+    return MIN;
+
+  int leftptr;
+  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(node_set_old->at(leftptr), node_set_new->at(leftptr)) == 0; ++leftptr);
+
+  int rightptr;
+  for(rightptr = 0; rightptr < node_set_old->size() && rightptr < node_set_new->size() && node_compare(node_set_old->at(rightptr), node_set_new->at(rightptr)) == 0; ++rightptr);
+
+  return rightptr - leftptr;
 }
 
 void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
@@ -1747,15 +1760,15 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
   int old_pos = 0;
   for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++new_pos) {
 
-    int max_similarity = 0;
+    int min_similarity = 0;
     for(int pos = old_pos; pos < edits->length; ++pos) {
 
       int similarity = 0;
       if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
-                                          , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) > max_similarity) {
+                                          , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
 
         old_pos = pos;
-        max_similarity = similarity;
+        min_similarity = similarity;
 
       }
 
