@@ -1373,39 +1373,7 @@ void output_next_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       } else {
 
-        // output diff tag start
-        if(rbuf_old->open_diff->back()->operation != DELETE)
-          output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
-
-        rbuf_old->open_diff->back()->open_tags->front()->marked = false;
-
-
-        for(int j = 0; j < edits->length; ++j)
-          for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + j)->size(); ++i)
-            output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + j)->at(i), DELETE, writer);
-
-        // output diff tag start
-        if(rbuf_old->open_diff->back()->operation == DELETE)
-          rbuf_old->open_diff->back()->open_tags->front()->marked = true;
-
-        output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
-
-
-        // output diff tag
-        if(rbuf_new->open_diff->back()->operation != INSERT)
-          output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
-
-        rbuf_new->open_diff->back()->open_tags->front()->marked = false;
-
-
-        for(int j = 0; j < edit_next->length; ++j)
-          for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two + j)->size(); ++i)
-            output_handler(rbuf_old, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->at(i), INSERT, writer);
-
-        // output diff tag start
-        if(rbuf_new->open_diff->back()->operation == INSERT)
-          rbuf_new->open_diff->back()->open_tags->front()->marked = true;
-        output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+        compare_many2man(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
 
       }
 
