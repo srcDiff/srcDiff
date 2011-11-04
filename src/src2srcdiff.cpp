@@ -1734,10 +1734,10 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
   int old_pos = 0;
   for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++new_pos) {
 
+    // TODO: set to first
     int min_similarity = 1000;
     for(int pos = old_pos; pos < edits->length; ++pos) {
 
-      // TODO: set to first
       int similarity = 0;
       if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
                                           , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
@@ -1747,6 +1747,7 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
 
       }
 
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, old_pos);
 
       struct offset_pair * match = new struct offset_pair;
