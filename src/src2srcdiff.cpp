@@ -1801,6 +1801,15 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
   match_differences(node_sets_old, node_sets_new, edit_script, &matches);
 
+  for(; matches; matches = matches->next) {
+
+    if(matches->similarity == MIN)
+      output_file_level(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->offset_old)
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->offset_new);
+  }
+
+  return;
+
   // output diff tag start
   if(rbuf_old->open_diff->back()->operation != DELETE)
     output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
