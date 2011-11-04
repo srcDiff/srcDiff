@@ -133,21 +133,37 @@ bool is_white_space(xmlNodePtr node) {
 
   if(node->type == XML_READER_TYPE_TEXT) {
 
-    
-  }
+    if(isspace((char)node->content[0]))
+      return true;
+    else
+      return false;
+
+  } else
+    return false;
 
 }
 
-// diff node comparison function (incomplete)
+// diff node comparison function
 int node_set_syntax_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
   std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
 
-  for(int i = 0, int j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j)
-      while(0 <node_set1->size() && node_set1->at(i)
+  for(int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
-      if(node_compare(node_set1->at(i), node_set2->at(i)))
-        return 1;
+    for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i);
+
+    for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j);
+
+    if(i >= node_set1->size() && j >= node_set2->size())
+      return 0;
+
+    if(i >= node_set1->size() || j >= node_set2->size())
+      return 1;
+
+    if(node_compare(node_set1->at(i), node_set2->at(j)))
+      return 1;
+
+  }
 
   return 0;
 }
@@ -307,13 +323,13 @@ int main(int argc, char * argv[]) {
   struct edit * edit_script;
 
   /*
-  int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
+    int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
 
-  if(distance < 0) {
+    if(distance < 0) {
 
     fprintf(stderr, "Error with shortest edit script");
     return distance;
-  }
+    }
   */
 
   /*
@@ -994,7 +1010,7 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
       //      fprintf(stderr, "HERE\n");
- 
+
       // look for pure whitespace change
       int whitespace_length_old = 0;
       int whitespace_length_new = 0;
@@ -1006,8 +1022,8 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       }
 
-      if(whitespace_length_old != 0 && whitespace_length_new != 0 
-          && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
+      if(whitespace_length_old != 0 && whitespace_length_new != 0
+         && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
          && edits->length == 1 && edit_next->length == 1) {
 
         xmlChar * content_old = node_sets_old->at(edits->offset_sequence_one)->at(0)->content;
@@ -1057,72 +1073,72 @@ void output_file_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       } else if(edits->length == edit_next->length && edits->length == 1
                 && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
-                || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
+                    || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
-          if(node_compare(node_sets_old->at(edits->offset_sequence_one)->at(0)
-                          , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
-             && node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
+        if(node_compare(node_sets_old->at(edits->offset_sequence_one)->at(0)
+                        , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
+           && node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
 
-            if(rbuf_old->open_diff->back()->operation != COMMON)
-              output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
+          if(rbuf_old->open_diff->back()->operation != COMMON)
+            output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
-            rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+          rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-            output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(0), COMMON, writer);
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(0), COMMON, writer);
 
-            // collect subset of nodes
-            std::vector<std::vector<xmlNodePtr> *> * next_node_set_old = create_node_set(node_sets_old->at(edits->offset_sequence_one), 1
-                                                                                         , node_sets_old->at(edits->offset_sequence_one)->size() - 1);
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 1
-                                                                                   , node_sets_new->at(edit_next->offset_sequence_two)->size() - 1);
+          // collect subset of nodes
+          std::vector<std::vector<xmlNodePtr> *> * next_node_set_old = create_node_set(node_sets_old->at(edits->offset_sequence_one), 1
+                                                                                       , node_sets_old->at(edits->offset_sequence_one)->size() - 1);
+          std::vector<std::vector<xmlNodePtr> *> * next_node_set_new = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 1
+                                                                                       , node_sets_new->at(edit_next->offset_sequence_two)->size() - 1);
 
-            // compare subset of nodes
-            output_file_level(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+          // compare subset of nodes
+          output_file_level(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
-            output_handler(rbuf_old, rbuf_new, 
-                           node_sets_old->at(edits->offset_sequence_one)->
-                           at(node_sets_old->at(edits->offset_sequence_one)->size() - 1)
-                           , COMMON, writer);
-            
-            if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
-              rbuf_old->open_diff->back()->open_tags->front()->marked = true;
-            
-            output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
+          output_handler(rbuf_old, rbuf_new,
+                         node_sets_old->at(edits->offset_sequence_one)->
+                         at(node_sets_old->at(edits->offset_sequence_one)->size() - 1)
+                         , COMMON, writer);
 
-          } else {
+          if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
+            rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
-            // output diff tag start
-            if(rbuf_old->open_diff->back()->operation != DELETE)
-              output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
+          output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
 
-            rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+        } else {
 
-            for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one)->size(); ++i)
-              output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(i), DELETE, writer);
+          // output diff tag start
+          if(rbuf_old->open_diff->back()->operation != DELETE)
+            output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
-            // output diff tag start
-            if(rbuf_old->open_diff->back()->operation == DELETE)
-              rbuf_old->open_diff->back()->open_tags->front()->marked = true;
+          rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-            output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+          for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one)->size(); ++i)
+            output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(i), DELETE, writer);
 
+          // output diff tag start
+          if(rbuf_old->open_diff->back()->operation == DELETE)
+            rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
-            // output diff tag
-            if(rbuf_new->open_diff->back()->operation != INSERT)
-              output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
-
-            rbuf_new->open_diff->back()->open_tags->front()->marked = false;
+          output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
 
-            for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two)->size(); ++i)
-              output_handler(rbuf_old, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->at(i), INSERT, writer);
+          // output diff tag
+          if(rbuf_new->open_diff->back()->operation != INSERT)
+            output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
 
-            // output diff tag start
-            if(rbuf_new->open_diff->back()->operation == INSERT)
-              rbuf_new->open_diff->back()->open_tags->front()->marked = true;
-            output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+          rbuf_new->open_diff->back()->open_tags->front()->marked = false;
 
-          }
+
+          for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two)->size(); ++i)
+            output_handler(rbuf_old, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->at(i), INSERT, writer);
+
+          // output diff tag start
+          if(rbuf_new->open_diff->back()->operation == INSERT)
+            rbuf_new->open_diff->back()->open_tags->front()->marked = true;
+          output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+
+        }
 
       } else {
 
@@ -1305,8 +1321,8 @@ void output_next_level(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       }
 
-      if(whitespace_length_old != 0 && whitespace_length_new != 0 
-          && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
+      if(whitespace_length_old != 0 && whitespace_length_new != 0
+         && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
          && edits->length == 1 && edit_next->length == 1) {
 
 
@@ -1706,6 +1722,102 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     update_diff_stack(rbuf_new->output_diff, node, operation);
   }
+
+}
+
+struct offset_pair {
+
+  int old_offset;
+  int new_offset;
+  struct offset_pair * next;
+};
+
+int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNodePtr> * node_set_new) {
+
+  return 0;
+}
+
+void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+                       , std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                       , struct edit * edit_script, struct offset_pair ** matches) {
+
+  struct edit * edits = edit_script;
+  struct edit * edit_next = edit_script->next;
+
+  int old_pos = 0;
+  for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++new_pos) {
+
+    int max_similarity = 0;
+    for(int pos = old_pos; pos < edits->length; ++pos) {
+
+      int similarity = 0;
+      if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
+                                          , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) > max_similarity) {
+
+        old_pos = pos;
+        max_similarity = similarity;
+
+      }
+
+      struct offset_pair * match = new struct offset_pair;
+      match->old_offset = old_pos;
+      match->new_offset = new_pos;
+      match->next = NULL;
+
+      if(new_pos == 0)
+        *matches = match;
+      else
+        (*matches)->next = match;
+
+    }
+    
+  }
+  
+}
+
+void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+                       , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                       , struct edit * edit_script, xmlTextWriterPtr writer) {
+
+  struct edit * edits = edit_script;
+  struct edit * edit_next = edit_script->next;
+
+  struct offset_pair * matches;
+
+  match_differences(node_sets_old, node_sets_new, edit_script, &matches);
+
+  // output diff tag start
+  if(rbuf_old->open_diff->back()->operation != DELETE)
+    output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
+
+  rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+
+  for(int j = 0; j < edits->length; ++j)
+    for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + j)->size(); ++i)
+      output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + j)->at(i), DELETE, writer);
+
+  // output diff tag start
+  if(rbuf_old->open_diff->back()->operation == DELETE)
+    rbuf_old->open_diff->back()->open_tags->front()->marked = true;
+
+  output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+
+
+  // output diff tag
+  if(rbuf_new->open_diff->back()->operation != INSERT)
+    output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
+
+  rbuf_new->open_diff->back()->open_tags->front()->marked = false;
+
+
+  for(int j = 0; j < edit_next->length; ++j)
+    for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two + j)->size(); ++i)
+      output_handler(rbuf_old, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->at(i), INSERT, writer);
+
+  // output diff tag start
+  if(rbuf_new->open_diff->back()->operation == INSERT)
+    rbuf_new->open_diff->back()->open_tags->front()->marked = true;
+  output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
 
 }
 
