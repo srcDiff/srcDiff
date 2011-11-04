@@ -1734,11 +1734,11 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
   int old_pos = 0;
   for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++new_pos) {
 
-    int min_similarity = 0;
+    int min_similarity = 1000;
     for(int pos = old_pos; pos < edits->length; ++pos) {
 
       // TODO: set to first
-      int similarity = 1000;
+      int similarity = 0;
       if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
                                           , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
 
