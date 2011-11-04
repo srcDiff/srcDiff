@@ -1775,6 +1775,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
   for(; matches; matches = matches->next) {
 
+    // correct could only be whitespace
     if(matches->similarity == MIN) {
 
       if(rbuf_old->open_diff->back()->operation != COMMON)
