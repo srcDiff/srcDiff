@@ -1814,7 +1814,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-      for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + match->old_offset)->size(); ++i)
+      for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->size(); ++i)
         output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(i), DELETE, writer);
 
       // output diff tag start
