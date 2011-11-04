@@ -1805,7 +1805,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     if(matches->similarity == MIN)
       output_file_level(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
-                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset, writer));
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), writer);
     
     else {
       
