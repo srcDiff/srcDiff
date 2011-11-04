@@ -1756,6 +1756,8 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
       else
         (*matches)->next = match;
 
+      ++old_pos;
+
     }
 
   }
