@@ -129,15 +129,23 @@ int node_set_compare(const void * e1, const void * e2) {
   return 0;
 }
 
+bool is_white_space(xmlNodePtr node) {
+
+  if(node->type == XML_READER_TYPE_TEXT) {
+
+    
+  }
+
+}
+
 // diff node comparison function (incomplete)
 int node_set_syntax_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
   std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
 
-  if(node_set1->size() != node_set2->size())
-    return 1;
-  else
-    for(int i = 0; i < node_set1->size(); ++i)
+  for(int i = 0, int j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j)
+      while(0 <node_set1->size() && node_set1->at(i)
+
       if(node_compare(node_set1->at(i), node_set2->at(i)))
         return 1;
 
