@@ -1755,10 +1755,10 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
 void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
                    , int start_old, int length_old
-                   , std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                   , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
                    , int start_new, int length_new
                    , xmlTextWriterPtr writer) {
-
+  
   if(length_old > 0) {
 
       // output diff tag start
@@ -1780,7 +1780,6 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 }
 
 if(length_new > 0) {
-
 
       // output diff tag
       if(rbuf_new->open_diff->back()->operation != INSERT)
