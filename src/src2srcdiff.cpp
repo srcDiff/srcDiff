@@ -1027,21 +1027,24 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
     rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
+    /*
     // add preceeding unchanged
     if(edits->operation == DELETE)
       for(int j = last_diff; j < edits->offset_sequence_one; ++j)
         for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
           output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
-
+    */
     else
       for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j)
         for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
           output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
 
+    /*
     if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
       rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
     output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
+    */
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -1118,12 +1121,14 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
                         , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
            && node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
 
+          /*
           if(rbuf_old->open_diff->back()->operation != COMMON)
             output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
           rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
           output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(0), COMMON, writer);
+          */
 
           // collect subset of nodes
           std::vector<std::vector<xmlNodePtr> *> * next_node_set_old = create_node_set(node_sets_old->at(edits->offset_sequence_one), 1
@@ -1139,10 +1144,12 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
                          at(node_sets_old->at(edits->offset_sequence_one)->size() - 1)
                          , COMMON, writer);
 
+          /*
           if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
             rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
           output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
+          */
 
         } else {
 
@@ -1302,7 +1309,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
-  /*
+
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
     //    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
@@ -1407,7 +1414,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
     return;
   }
-  */
 
   // output non-text node and get next node
   outputNode(*node, writer);
