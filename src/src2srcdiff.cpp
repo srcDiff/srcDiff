@@ -1884,7 +1884,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
         output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
 
          else if(is_white_space(node_set_old->at(i)) && is_white_space(node_set_new->at(j))) {
-           fprintf(stderr, "HERE\n");
+
             // output diff tag
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
 
@@ -1931,7 +1931,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
            } else {
 
              // handle () and ( ) first is one text node, other is three
-             if(strlen((const char *)node_set_old->at(i)) < strlen((const char *)node_set_new->at(j))) {
+             if(strlen((const char *)node_set_old->at(i)->content) < strlen((const char *)node_set_new->at(j)->content)) {
 
                output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
 
