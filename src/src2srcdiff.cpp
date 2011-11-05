@@ -1870,6 +1870,22 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
          output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
          else if(is_white_space(node_set_old->at(i)) && is_white_space(node_set_new->at(j))) {
 
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+
+            output_handler(rbuf_old, rbuf_new, node_set_old->at(i), DELETE, writer);
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+
+            output_handler(rbuf_old, rbuf_new, node_set_new->at(j), INSERT, writer);
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+
            // whitespace change
          } else if(is_white_space(node_set_old->at(i))) {
            
