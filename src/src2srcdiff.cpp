@@ -1393,7 +1393,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
         // output diff tag
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
-v
+
         ++i;
 
         output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
