@@ -229,6 +229,8 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
+void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer); 
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
