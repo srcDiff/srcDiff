@@ -1272,7 +1272,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
           rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-          output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one)->at(0), COMMON, writer);
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0), COMMON, writer);
 
           // collect subset of nodes
           std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
@@ -1287,8 +1287,8 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
           output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
           output_handler(rbuf_old, rbuf_new,
-                         node_sets_old->at(edits->offset_sequence_one)->
-                         at(node_sets_old->at(edits->offset_sequence_one)->size() - 1)
+                         node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->
+                         at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->size() - 1)
                          , COMMON, writer);
 
           if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
