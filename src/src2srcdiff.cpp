@@ -229,7 +229,7 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
-void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer); 
+void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer);
 
 int main(int argc, char * argv[]) {
 
@@ -1858,5 +1858,13 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
   //fprintf(stderr, "HERE PEAK\n");
 
   return true;
+
+}
+
+
+void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer) {
+
+  for(int i = 0, j = 0; i < node_set_old->size(), j < node_set_new->size(); ++i, ++j)
+    output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
 
 }
