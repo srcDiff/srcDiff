@@ -1638,36 +1638,6 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     else {
 
-      // output diff tag start
-      if(rbuf_old->open_diff->back()->operation != DELETE)
-        output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
-
-      rbuf_old->open_diff->back()->open_tags->front()->marked = false;
-
-      for(int i = 0; i < node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(i), DELETE, writer);
-
-      // output diff tag start
-      if(rbuf_old->open_diff->back()->operation == DELETE)
-        rbuf_old->open_diff->back()->open_tags->front()->marked = true;
-
-      output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
-
-
-      // output diff tag
-      if(rbuf_new->open_diff->back()->operation != INSERT)
-        output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
-
-      rbuf_new->open_diff->back()->open_tags->front()->marked = false;
-
-      for(int i = 0; i < node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(i), INSERT, writer);
-
-      // output diff tag start
-      if(rbuf_new->open_diff->back()->operation == INSERT)
-        rbuf_new->open_diff->back()->open_tags->front()->marked = true;
-      output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
-
     }
 
   }
@@ -1783,7 +1753,50 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
 }
 
-void output_change(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> *node_set_old, int start_old, int length_old
-                       , struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, int start_new, int length_new
-                       , xmlTextWriterPtr writer) {
+void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+                   , int start_old, int length_old
+                   , std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                   , int start_new, int length_new
+                   , xmlTextWriterPtr writer) {
+
+  if(length_old > 0) {
+
+      // output diff tag start
+      if(rbuf_old->open_diff->back()->operation != DELETE)
+        output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
+
+      rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+
+      for(int j = 0; j < length_old; ++j)
+        for(int i = 0; i < node_sets_old->at(start_old + j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(start_old + j)->at(i), DELETE, writer);
+      
+      // output diff tag start
+      if(rbuf_old->open_diff->back()->operation == DELETE)
+        rbuf_old->open_diff->back()->open_tags->front()->marked = true;
+      
+      output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+
+}
+
+if(length_new > 0) {
+
+
+      // output diff tag
+      if(rbuf_new->open_diff->back()->operation != INSERT)
+        output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
+
+      rbuf_new->open_diff->back()->open_tags->front()->marked = false;
+
+      for(int j = 0; j < length_new; ++j)
+        for(int i = 0; i < node_sets_new->at(start_new + j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_new->at(start_new + j)->at(i), INSERT, writer);
+
+      // output diff tag start
+      if(rbuf_new->open_diff->back()->operation == INSERT)
+        rbuf_new->open_diff->back()->open_tags->front()->marked = true;
+      output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+
+                   }
+
 }
