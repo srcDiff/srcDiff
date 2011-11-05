@@ -1639,8 +1639,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
         update_diff_stack(rbuf_old->output_diff, node, COMMON);
 
-      }
-      else if(rbuf->output_diff->back()->operation == DELETE) {
+      } else if(rbuf->output_diff->back()->operation == DELETE) {
 
         //fprintf(stderr, "HERE OUTPUT DELETE\n");
         //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
