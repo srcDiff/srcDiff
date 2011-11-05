@@ -1818,21 +1818,8 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-      output_handler(rbuf_old, rbuf_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0), COMMON, writer);
-
-      // collect subset of nodes
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_old = create_node_set(node_sets_old->at(edits->offset_sequence_one + matches->old_offset), 1
-                                                                                   , node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->size() - 1);
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new = create_node_set(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), 1
-                                                                                   , node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->size() - 1);
-
-      // compare subset of nodes
-      output_file_level(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
-
-      output_handler(rbuf_old, rbuf_new,
-                     node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->
-                     at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->size() - 1)
-                     , COMMON, writer);
+      markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->offset_old)
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->offset_new), writer) {      
 
       if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
         rbuf_old->open_diff->back()->open_tags->front()->marked = true;
