@@ -1974,3 +1974,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
    }
 
 }
+
+void output_change(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> *node_set_old
+                       , struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new
+                       , xmlTextWriterPtr writer) {
+}
