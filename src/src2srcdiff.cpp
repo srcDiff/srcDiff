@@ -1094,76 +1094,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-    //    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-    /*
-    // heavily relaxed condition.  Tighten when fix diff to contain necessary elements
-    // mark nodes for output
-    int unmarked;
-    for(unmarked = rbuf_old->open_diff->back()->open_tags->size() - 1; unmarked > 0
-          && (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
-
-    if(rbuf->output_diff->back()->operation != COMMON) {
-
-      if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
-        (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
-
-    } else {
-
-      if(operation != INSERT)
-        if(strcmp((const char *)(*rbuf_old->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
-          (*rbuf_old->open_diff->back()->open_tags)[unmarked]->marked = true;
-
-    }
-
-    for(unmarked = rbuf_new->open_diff->back()->open_tags->size() - 1; unmarked > 0
-          && (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked; --unmarked);
-
-    if(rbuf->output_diff->back()->operation != COMMON) {
-
-      if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
-        (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked = true;
-
-    } else {
-
-      if(operation != DELETE)
-        if(strcmp((const char *)(*rbuf_new->open_diff->back()->open_tags)[unmarked]->node->name, (const char *)node->name) == 0)
-          (*rbuf_new->open_diff->back()->open_tags)[unmarked]->marked = true;
-
-    }
-
-    // output marked nodes
-    while(1) {
-
-      if(rbuf->output_diff->back()->operation == COMMON
-         && (rbuf_old->open_diff->back()->operation == COMMON
-             && rbuf_new->open_diff->back()->operation == COMMON)
-         && (!rbuf_old->open_diff->back()->open_tags->back()->marked
-             || !rbuf_new->open_diff->back()->open_tags->back()->marked))
-        return;
-
-      if(rbuf->output_diff->back()->operation == DELETE
-         && rbuf_old->open_diff->back()->operation == DELETE
-         && !rbuf_old->open_diff->back()->open_tags->back()->marked)
-        return;
-
-      if(rbuf->output_diff->back()->operation == INSERT
-         && rbuf_new->open_diff->back()->operation == INSERT
-         && !rbuf_new->open_diff->back()->open_tags->back()->marked)
-        return;
-
-      // output non-text node and get next node
-      xmlNodePtr output_node;
-      if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, "diff:old") == 0)
-        output_node = diff_old_end;
-      else if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, "diff:new") == 0)
-        output_node = diff_new_end;
-      else {
-
-        output_node = rbuf->output_diff->back()->open_tags->back()->node;
-        output_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-      }
-    */
     if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, (const char *)node->name) != 0)
       return;
 
@@ -1196,8 +1127,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
         update_diff_stack(rbuf_new->output_diff, node, INSERT);
       }
-
-      //    }
 
     return;
   }
