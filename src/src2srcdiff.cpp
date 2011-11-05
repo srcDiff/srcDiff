@@ -959,27 +959,19 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
     case INSERT:
 
-      {
+      //fprintf(stderr, "HERE\n");
+      output_change(rbuf_old, node_sets_old, 0, 0, rbuf_new, node_sets_new, edits->offset_sequence_two, edits->length, writer);
 
-        //      fprintf(stderr, "HERE\n");
-
-        output_change(rbuf_old, node_sets_old, 0, 0, rbuf_new, node_sets_new, edits->offset_sequence_two, edits->length, writer);
-
-        last_diff = edits->offset_sequence_one + 1;
-
-      }
+      last_diff = edits->offset_sequence_one + 1;
 
       break;
 
     case DELETE:
 
-      {
+      //fprintf(stderr, "HERE\n");
+      output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length, rbuf_new, node_sets_new, 0, 0, writer);
 
-        //fprintf(stderr, "HERE\n");
-        output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length, rbuf_new, node_sets_new, 0, 0, writer);
-
-        last_diff = edits->offset_sequence_one + edits->length;
-      }
+      last_diff = edits->offset_sequence_one + edits->length;
 
       break;
     }
@@ -1098,35 +1090,35 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, (const char *)node->name) != 0)
       return;
 
-      outputNode(*node, writer);
+    outputNode(*node, writer);
 
-      if(rbuf->output_diff->back()->operation == COMMON) {
+    if(rbuf->output_diff->back()->operation == COMMON) {
 
-        //fprintf(stderr, "HERE OUTPUT COMMON\n");
+      //fprintf(stderr, "HERE OUTPUT COMMON\n");
 
-        update_diff_stack(rbuf_old->open_diff, node, COMMON);
-        update_diff_stack(rbuf_new->open_diff, node, COMMON);
+      update_diff_stack(rbuf_old->open_diff, node, COMMON);
+      update_diff_stack(rbuf_new->open_diff, node, COMMON);
 
-        update_diff_stack(rbuf_old->output_diff, node, COMMON);
+      update_diff_stack(rbuf_old->output_diff, node, COMMON);
 
-      } else if(rbuf->output_diff->back()->operation == DELETE) {
+    } else if(rbuf->output_diff->back()->operation == DELETE) {
 
-        //fprintf(stderr, "HERE OUTPUT DELETE\n");
-        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+      //fprintf(stderr, "HERE OUTPUT DELETE\n");
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-        update_diff_stack(rbuf_old->open_diff, node, DELETE);
+      update_diff_stack(rbuf_old->open_diff, node, DELETE);
 
-        update_diff_stack(rbuf_old->output_diff, node, DELETE);
+      update_diff_stack(rbuf_old->output_diff, node, DELETE);
 
-      } else {
+    } else {
 
-        //fprintf(stderr, "HERE OUTPUT INSERT\n");
-        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+      //fprintf(stderr, "HERE OUTPUT INSERT\n");
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-        update_diff_stack(rbuf_new->open_diff, node, INSERT);
+      update_diff_stack(rbuf_new->open_diff, node, INSERT);
 
-        update_diff_stack(rbuf_new->output_diff, node, INSERT);
-      }
+      update_diff_stack(rbuf_new->output_diff, node, INSERT);
+    }
 
     return;
   }
@@ -1182,7 +1174,7 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
 
   if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
-  
+
 
   int leftptr;
   for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(node_set_old->at(leftptr), node_set_new->at(leftptr)) == 0; ++leftptr);
@@ -1257,7 +1249,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
-      
+
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
