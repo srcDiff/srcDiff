@@ -1808,6 +1808,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
   match_differences(node_sets_old, node_sets_new, edit_script, &matches);
 
+  // TODO:  not yet handling different sizes
   for(; matches; matches = matches->next) {
 
     // correct could only be whitespace
