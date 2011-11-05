@@ -1152,7 +1152,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
       } else {
 
-        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+        //compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+        output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
+                      , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
 
       }
 
