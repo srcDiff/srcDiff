@@ -1735,7 +1735,7 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
   int old_pos = 0;
   for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++new_pos) {
 
-    // TODO: set to first
+    // TODO: set to first or positive infinity
     int min_similarity = 1000;
     for(int pos = old_pos; pos < edits->length; ++pos) {
 
@@ -1865,7 +1865,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
   for(int i = 0, j = 0; i < node_set_old->size(), j < node_set_new->size(); ++i, ++j) {
 
-      if(node_compare(node_set_old->at(i), node_set_new->at(j) == 0)
+      if(node_compare(node_set_old->at(i), node_set_new->at(j)) == 0)
          output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
          else if(is_white_space(node_set_old->at(i)) && is_white_space(node_set_new->at(j))) {
 
