@@ -1197,7 +1197,7 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
   for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
     // TODO: set to first or positive infinity or MAX_INT or whatever it is called
-    int min_similarity = 1000;
+    int min_similarity = 65535;
     for(int pos = old_pos; pos < edits->length; ++pos) {
 
       int similarity = 0;
