@@ -1303,7 +1303,6 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-    //    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     // heavily relaxed condition.  Tighten when fix diff to contain necessary elements
     // mark nodes for output
@@ -1344,20 +1343,20 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     while(1) {
 
       if(rbuf->output_diff->back()->operation == COMMON
-         && (rbuf_old->open_diff->back()->operation == COMMON
-             && rbuf_new->open_diff->back()->operation == COMMON)
-         && (!rbuf_old->open_diff->back()->open_tags->back()->marked
+         && (rbuf_old->open_diff->back()->operation != COMMON
+             || rbuf_new->open_diff->back()->operation != COMMON
+             || !rbuf_old->open_diff->back()->open_tags->back()->marked
              || !rbuf_new->open_diff->back()->open_tags->back()->marked))
         return;
 
       if(rbuf->output_diff->back()->operation == DELETE
-         && rbuf_old->open_diff->back()->operation == DELETE
-         && !rbuf_old->open_diff->back()->open_tags->back()->marked)
+         && (rbuf_old->open_diff->back()->operation != DELETE
+             || !rbuf_old->open_diff->back()->open_tags->back()->marked))
         return;
 
       if(rbuf->output_diff->back()->operation == INSERT
-         && rbuf_new->open_diff->back()->operation == INSERT
-         && !rbuf_new->open_diff->back()->open_tags->back()->marked)
+         && (rbuf_new->open_diff->back()->operation != INSERT
+             || !rbuf_new->open_diff->back()->open_tags->back()->marked))
         return;
 
       // output non-text node and get next node
