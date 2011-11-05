@@ -1537,7 +1537,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
-
+      
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
@@ -1561,7 +1561,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
     }
 
     last_old = matches->old_offset + 1;
-    last_new = matches->new_offset + 2;
+    last_new = matches->new_offset + 1;
 
   }
 
