@@ -164,7 +164,25 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
     for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j);
 
     //string consecutive non whitespace text nodes
-    if(is_text(node_set1->at(i)) && is_text(node_set2->at(j)));
+    if(is_text(node_set1->at(i)) && is_text(node_set2->at(j))) {
+
+      std::string text1 = "";
+      for(; i < node_set1->size() && is_text(node_set1->at(i)); ++i) 
+        if(!is_white_space(node_set1->at(i)))
+          text1 += (const char *)node_set1->at(i)->content;
+
+      std::string text1 = "";
+      for(; j < node_set2->size() && is_text(node_set2->at(j)); ++j) 
+        if(!is_white_space(node_set2->at(j)))
+          text2 += (const char *)node_set2->at(2)->content;
+
+      if(text1 != text2)
+        return 1;
+
+      --i;
+      --j;
+
+    }
 
     if(i >= node_set1->size() && j >= node_set2->size())
       return 0;
