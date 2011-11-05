@@ -1880,7 +1880,9 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
   for(int i = 0, j = 0; i < node_set_old->size(), j < node_set_new->size(); ++i, ++j) {
 
       if(node_compare(node_set_old->at(i), node_set_new->at(j)) == 0)
+
          output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
+
          else if(is_white_space(node_set_old->at(i)) && is_white_space(node_set_new->at(j))) {
 
             // output diff tag
@@ -1913,7 +1915,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
             --j;
 
-         } else {
+         } else if(is_white_space(node_set_new->at(j)){
 
            //whitespace insert
            // output diff tag
@@ -1926,7 +1928,11 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
            --i;
 
-         }
+           } else {
+
+             // handle () and ( ) first is one text node, other is three
+             
+           }
 
    }
 
