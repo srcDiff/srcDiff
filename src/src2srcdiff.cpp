@@ -1915,7 +1915,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
             --j;
 
-         } else if(is_white_space(node_set_new->at(j)){
+         } else if(is_white_space(node_set_new->at(j))) {
 
            //whitespace insert
            // output diff tag
