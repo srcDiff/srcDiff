@@ -1733,7 +1733,7 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
   struct edit * edit_next = edit_script->next;
 
   int old_pos = 0;
-  for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++new_pos) {
+  for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
     // TODO: set to first or positive infinity
     int min_similarity = 1000;
@@ -1761,8 +1761,6 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
         *matches = match;
       else
         (*matches)->next = match;
-
-      ++old_pos;
 
     }
 
