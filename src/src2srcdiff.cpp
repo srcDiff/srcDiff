@@ -1818,8 +1818,8 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-      markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->offset_old)
-                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->offset_new), writer) {      
+      markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), writer);
 
       if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
         rbuf_old->open_diff->back()->open_tags->front()->marked = true;
