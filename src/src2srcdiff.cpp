@@ -163,6 +163,12 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
     for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j);
 
+    if(i >= node_set1->size() && j >= node_set2->size())
+      return 0;
+
+    if(i >= node_set1->size() || j >= node_set2->size())
+      return 1;
+
     //string consecutive non whitespace text nodes
     if(is_text(node_set1->at(i)) && is_text(node_set2->at(j))) {
 
@@ -185,12 +191,6 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       continue;
 
     }
-
-    if(i >= node_set1->size() && j >= node_set2->size())
-      return 0;
-
-    if(i >= node_set1->size() || j >= node_set2->size())
-      return 1;
 
     if(node_compare(node_set1->at(i), node_set2->at(j)))
       return 1;
@@ -1455,6 +1455,7 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
 
   if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
+  
 
   int leftptr;
   for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(node_set_old->at(leftptr), node_set_new->at(leftptr)) == 0; ++leftptr);
@@ -1482,6 +1483,7 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
       int similarity = 0;
       if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
                                           , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
+
 
         old_pos = pos;
         min_similarity = similarity;
@@ -1525,7 +1527,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
     // output diffs until match
     output_change(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old, matches->old_offset - last_old,
                   rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new, matches->new_offset - last_new, writer);
-    
+
     // correct could only be whitespace
     if(matches->similarity == MIN) {
 
@@ -1542,7 +1544,6 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
 
-
     }
 
     else {
@@ -1558,8 +1559,8 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
   }
 
   // output diffs until match
-  output_change(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old, edits->length,
-                rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new, edit_next->length, writer);
+  output_change(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old, (edits->length - last_old),
+                rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new, (edit_next->length - last_new), writer);
 
 
 }
