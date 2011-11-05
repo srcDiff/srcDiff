@@ -1376,7 +1376,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, (const char *)node->name) != 0)
       return;
 
-      outputNode(*output_node, writer);
+      outputNode(*node, writer);
 
       if(rbuf->output_diff->back()->operation == COMMON) {
 
