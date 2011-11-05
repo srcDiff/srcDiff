@@ -1764,10 +1764,9 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
   struct edit * edits = edit_script;
   struct edit * edit_next = edit_script->next;
 
-  int old_pos = 0;
-  for(int new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
+  for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
-    // TODO: set to first or positive infinity
+    // TODO: set to first or positive infinity or MAX_INT or whatever it is called
     int min_similarity = 1000;
     for(int pos = old_pos; pos < edits->length; ++pos) {
 
@@ -1812,7 +1811,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
   for(; matches; matches = matches->next) {
 
     // correct could only be whitespace
-    if(matches->similarity <= MIN) {
+    if(matches->similarity == MIN) {
 
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
