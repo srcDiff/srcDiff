@@ -841,6 +841,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
       //      fprintf(stderr, "HERE\n");
 
+      // TODO:  maybe replace with markup_whitespace
       // look for pure whitespace change
       int whitespace_length_old = 0;
       int whitespace_length_new = 0;
@@ -1240,7 +1241,6 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
   int last_old = 0;
   int last_new = 0;
 
-  // TODO:  not yet handling different sizes
   for(; matches; matches = matches->next) {
 
     // output diffs until match
