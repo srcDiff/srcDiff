@@ -1305,6 +1305,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
     //    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
+    /*
     // heavily relaxed condition.  Tighten when fix diff to contain necessary elements
     // mark nodes for output
     int unmarked;
@@ -1371,6 +1372,9 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         output_node = rbuf->output_diff->back()->open_tags->back()->node;
         output_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
       }
+    */
+    if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, (const char *)node->name) != 0)
+      return;
 
       outputNode(*output_node, writer);
 
@@ -1402,7 +1406,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         update_diff_stack(rbuf_new->output_diff, node, INSERT);
       }
 
-    }
+      //    }
 
     return;
   }
