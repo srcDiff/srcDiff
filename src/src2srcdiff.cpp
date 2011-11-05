@@ -174,7 +174,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       std::string text2 = "";
       for(; j < node_set2->size() && is_text(node_set2->at(j)); ++j) 
         if(!is_white_space(node_set2->at(j)))
-          text2 += (const char *)node_set2->at(2)->content;
+          text2 += (const char *)node_set2->at(j)->content;
 
       if(text1 != text2)
         return 1;
