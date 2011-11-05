@@ -133,7 +133,7 @@ bool is_white_space(xmlNodePtr node) {
 
   if(node->type == XML_READER_TYPE_TEXT) {
 
-    if(isspace((char)node->content[0]))
+    if(isspace((int)node->content[0]))
       return true;
     else
       return false;
@@ -153,6 +153,9 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
     for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i);
 
     for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j);
+    
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node_set1->at(i)->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node_set2->at(j)->name);
 
     if(i >= node_set1->size() && j >= node_set2->size())
       return 0;
