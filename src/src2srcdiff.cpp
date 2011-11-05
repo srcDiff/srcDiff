@@ -1864,7 +1864,22 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer) {
 
-  for(int i = 0, j = 0; i < node_set_old->size(), j < node_set_new->size(); ++i, ++j)
-    output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
+  for(int i = 0, j = 0; i < node_set_old->size(), j < node_set_new->size(); ++i, ++j) {
+
+      if(node_compare(node_set_old->at(i), node_set_new->at(j) == 0)
+         output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
+         else if(is_white_space(node_set_old->at(i)) && is_white_space(node_set_new->at(j))) {
+
+           // whitespace change
+         } else if(is_white_space(node_set_old->at(i))) {
+           
+           // whitespace delete
+         } else {
+
+           //whitespace insert
+
+         }
+
+   }
 
 }
