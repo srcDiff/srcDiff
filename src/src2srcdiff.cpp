@@ -1968,9 +1968,9 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
                output_handler(rbuf_old, rbuf_new, node_set_new->at(j), COMMON, writer);
 
              }
-                 
-           }
-
+             
+         }
+      
    }
 
 }
