@@ -176,9 +176,6 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
         if(!is_white_space(node_set2->at(j)))
           text2 += (const char *)node_set2->at(j)->content;
 
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text1.c_str());
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text2.c_str());
-
       if(text1 != text2)
         return 1;
 
