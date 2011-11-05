@@ -179,11 +179,13 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text1.c_str());
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text2.c_str());
 
-      if(text1.compare(text2))
+      if(text1 != text2)
         return 1;
 
       --i;
       --j;
+
+      continue;
 
     }
 
