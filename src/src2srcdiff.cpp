@@ -1341,7 +1341,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
     }
 
     // output marked nodes
-    while(1) {
+    //    while(1) {
 
       if(rbuf->output_diff->back()->operation == COMMON
          && (rbuf_old->open_diff->back()->operation == COMMON
@@ -1402,7 +1402,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
         update_diff_stack(rbuf_new->output_diff, node, INSERT);
       }
 
-    }
+      //    }
 
     return;
   }
