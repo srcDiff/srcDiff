@@ -1185,6 +1185,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
         //fprintf(stderr, "HERE\n");
         output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length, rbuf_new, node_sets_new, 0, 0, writer);
 
+        last_diff = edits->offset_sequence_one + edits->length;
       }
 
       break;
