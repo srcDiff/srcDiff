@@ -1022,18 +1022,18 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
+    /*
     if(rbuf_old->open_diff->back()->operation != COMMON)
       output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
     rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+    */
 
-    /*
     // add preceeding unchanged
     if(edits->operation == DELETE)
       for(int j = last_diff; j < edits->offset_sequence_one; ++j)
         for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
           output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
-    */
     else
       for(int j = last_diff; j < edits->offset_sequence_one + 1; ++j)
         for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
