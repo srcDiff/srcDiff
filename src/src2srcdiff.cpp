@@ -143,6 +143,15 @@ bool is_white_space(xmlNodePtr node) {
 
 }
 
+bool is_text(xmlNodePtr node) {
+
+  if(node->type == XML_READER_TYPE_TEXT)
+    return true;
+  else
+    return false;
+
+}
+
 // diff node comparison function
 int node_set_syntax_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
@@ -153,6 +162,9 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
     for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i);
 
     for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j);
+
+    //string consecutive non whitespace text nodes
+    if(is_text(node_set1->at(i)) && is_text(node_set2->at(j)));
 
     if(i >= node_set1->size() && j >= node_set2->size())
       return 0;
