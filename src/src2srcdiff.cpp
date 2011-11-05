@@ -1931,7 +1931,44 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
            } else {
 
              // handle () and ( ) first is one text node, other is three
-             
+             if(strlen((const char *)node_set_old->at(i)) < strlen((const char *)node_set_old->at(i))) {
+
+               output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
+
+               ++i;
+
+               // output diff tag
+               xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+
+               output_handler(rbuf_old, rbuf_new, node_set_old->at(i), DELETE, writer);
+
+               // output diff tag
+               xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+
+               ++i;
+                   
+               output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
+
+             } else {
+
+               output_handler(rbuf_old, rbuf_new, node_set_new->at(j), COMMON, writer);
+
+               ++j;
+
+               // output diff tag
+               xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+
+               output_handler(rbuf_old, rbuf_new, node_set_new->at(j), INSERT, writer);
+
+               // output diff tag
+               xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+
+               ++j;
+                   
+               output_handler(rbuf_old, rbuf_new, node_set_new->at(j), COMMON, writer);
+
+             }
+                 
            }
 
    }
