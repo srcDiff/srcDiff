@@ -103,7 +103,10 @@ bool attribute_compare(xmlAttrPtr attr_old, xmlAttrPtr attr_new) {
         && strcmp((const char *)attr_old->children->content, (const char *)attr_new->children->content) == 0;
       attr_old = attr_old->next, attr_new = attr_new->next);
 
-      xmlTextWriterWriteAttribute(writer, attribute->name, attribute->children->content);
+  if(attr_old || attr_new)
+    return 1;
+
+  return 0;
 
 }
 
