@@ -824,7 +824,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
     // add preceeding unchanged
     if(edits->operation == DELETE)
       for(int j = last_diff_old, k = last_diff_new; j < edits->offset_sequence_one; ++j, ++k)
-        markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_old->at(k), writer)
+        markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_new->at(k), writer);
     /*        for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
           output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
     */
