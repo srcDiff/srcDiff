@@ -952,7 +952,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
       }
 
       last_diff_old = edits->offset_sequence_one + edits->length;
-      last_diff_new = edit_next->offset_sequence_two + edits->length;
+      last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
       continue;
     }
