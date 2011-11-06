@@ -684,7 +684,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 // check if node is whitespace
 bool is_whitespace(std::vector<xmlNodePtr> * diff_nodes, int start) {
 
-  if(diff_nodes->at(start)->type != XML_READER_TYPE_TEXT)
+  if((xmlReaderTypes)diff_nodes->at(start)->type != XML_READER_TYPE_TEXT)
     return false;
 
   if(strspn((const char *)diff_nodes->at(start)->content, " \t\r\n") != strlen((const char *)diff_nodes->at(start)))
@@ -696,7 +696,7 @@ bool is_whitespace(std::vector<xmlNodePtr> * diff_nodes, int start) {
 }
 
 // check if node is a indivisable group of three (atomic)
-bool is_atomic_srcml(std::vector<xmlNodePtr> * diff_nodes, int start) {
+bool is_atomic_srcml(std::vector<xmlNodePtr> * diff_nodes, unsigned start) {
 
   if((start + 2) >= diff_nodes->size())
     return false;
@@ -727,7 +727,7 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * diff_nodes, int start) {
 
 void collect_entire_tag(std::vector<xmlNodePtr> * diff_nodes, std::vector <xmlNode *> * node_set, int * start) {
 
-  const char * open_node = (const char *)diff_nodes->at(*start)->name;
+  //const char * open_node = (const char *)diff_nodes->at(*start)->name;
 
   node_set->push_back(diff_nodes->at(*start));
 
@@ -764,7 +764,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr>
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if(is_whitespace(diff_nodes, i) || diff_nodes->at(i)->type == XML_READER_TYPE_TEXT) {
+    if(is_whitespace(diff_nodes, i) || (xmlReaderTypes)diff_nodes->at(i)->type == XML_READER_TYPE_TEXT) {
 
       node_set->push_back(diff_nodes->at(i));
 
@@ -913,7 +913,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
         if(node_compare(node_sets_old->at(edits->offset_sequence_one)->at(0)
                         , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
-           && node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
+           && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
 
           if(rbuf_old->open_diff->back()->operation != COMMON)
             output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
@@ -992,7 +992,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
 
-  for(int j = last_diff_old, k = last_diff_new; j < node_sets_old->size(); ++j, ++k)
+  for(unsigned int j = last_diff_old, k = last_diff_new; j < node_sets_old->size(); ++j, ++k)
     markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_new->at(k), writer);
 
   //for(int j = last_diff_old; j < node_sets_old->size(); ++j)
@@ -1181,21 +1181,21 @@ struct offset_pair {
 
 int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNodePtr> * node_set_new) {
 
-  int length = node_set_new->size();
+  //unsigned int length = node_set_new->size();
 
   if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
 
 
-  int leftptr;
+  unsigned int leftptr;
   for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(node_set_old->at(leftptr), node_set_new->at(leftptr)) == 0; ++leftptr);
 
-  int rightptr;
+  unsigned int rightptr;
   for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
         && node_compare(node_set_old->at(node_set_old->size() - rightptr), node_set_new->at(node_set_new->size() - rightptr)) == 0; ++rightptr);
 
-  int old_diff = (node_set_old->size() - rightptr) - leftptr;
-  int new_diff = (node_set_new->size() - rightptr) - leftptr;
+  int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
+  int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
 
   return old_diff > new_diff ? old_diff : new_diff;
 }
@@ -1278,7 +1278,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     } else if(node_compare(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0)
                            , node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0)) == 0
-              && node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0)->type != XML_READER_TYPE_TEXT) {
+              && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0)->type != XML_READER_TYPE_TEXT) {
 
           if(rbuf_old->open_diff->back()->operation != COMMON)
             output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
@@ -1339,7 +1339,7 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer) {
 
-  for(int i = 0, j = 0; i < node_set_old->size(), j < node_set_new->size(); ++i, ++j) {
+  for(unsigned int i = 0, j = 0; i < node_set_old->size() && j < node_set_new->size(); ++i, ++j) {
 
     if(node_compare(node_set_old->at(i), node_set_new->at(j)) == 0)
 
@@ -1452,7 +1452,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
     rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
     for(int j = 0; j < length_old; ++j)
-      for(int i = 0; i < node_sets_old->at(start_old + j)->size(); ++i)
+      for(unsigned int i = 0; i < node_sets_old->at(start_old + j)->size(); ++i)
         output_handler(rbuf_old, rbuf_new, node_sets_old->at(start_old + j)->at(i), DELETE, writer);
 
     // output diff tag start
@@ -1472,7 +1472,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
     rbuf_new->open_diff->back()->open_tags->front()->marked = false;
 
     for(int j = 0; j < length_new; ++j)
-      for(int i = 0; i < node_sets_new->at(start_new + j)->size(); ++i)
+      for(unsigned int i = 0; i < node_sets_new->at(start_new + j)->size(); ++i)
         output_handler(rbuf_old, rbuf_new, node_sets_new->at(start_new + j)->at(i), INSERT, writer);
 
     // output diff tag start
