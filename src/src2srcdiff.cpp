@@ -824,6 +824,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
   }
 
   int last_diff_old = 0;
+  int last_diff_new = 0;
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
@@ -965,6 +966,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
       }
 
       last_diff_old = edits->offset_sequence_one + edits->length;
+      last_diff_new = edits->offset_sequence_two + 1;
       edits = edits->next;
       continue;
     }
@@ -978,6 +980,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
       output_change(rbuf_old, node_sets_old, 0, 0, rbuf_new, node_sets_new, edits->offset_sequence_two, edits->length, writer);
 
       last_diff_old = edits->offset_sequence_one + 1;
+      last_diff_new = edits->offset_sequence_two + edits->length;
 
       break;
 
@@ -987,6 +990,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
       output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length, rbuf_new, node_sets_new, 0, 0, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
+      last_diff_new = edits->offset_sequence_two + 1;
 
       break;
     }
