@@ -798,7 +798,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr>
 void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__); 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
@@ -996,7 +996,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
   output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
 
   free_shortest_edit_script(edit_script);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__); 
 }
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
@@ -1077,12 +1077,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
@@ -1184,7 +1184,10 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
   for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
         && node_compare(node_set_old->at(node_set_old->size() - rightptr), node_set_new->at(node_set_new->size() - rightptr)) == 0; ++rightptr);
 
-  return (node_set_old->size() - rightptr) - leftptr;
+  int old_diff = (node_set_old->size() - rightptr) - leftptr;
+  int new_diff = (node_set_old->size() - rightptr) - leftptr;
+
+  return old_diff > new_diff ? old_diff, new_diff;
 }
 
 void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
@@ -1231,6 +1234,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
                        , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
                        , struct edit * edit_script, xmlTextWriterPtr writer) {
 
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);   
   struct edit * edits = edit_script;
   struct edit * edit_next = edit_script->next;
 
@@ -1312,7 +1316,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
   output_change(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old, (edits->length - last_old),
                 rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new, (edit_next->length - last_new), writer);
 
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__); 
 }
 
 bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer) {
