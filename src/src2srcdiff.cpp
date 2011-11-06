@@ -1185,7 +1185,7 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
         && node_compare(node_set_old->at(node_set_old->size() - rightptr), node_set_new->at(node_set_new->size() - rightptr)) == 0; ++rightptr);
 
   int old_diff = (node_set_old->size() - rightptr) - leftptr;
-  int new_diff = (node_set_old->size() - rightptr) - leftptr;
+  int new_diff = (node_set_new->size() - rightptr) - leftptr;
 
   return old_diff > new_diff ? old_diff : new_diff;
 }
@@ -1253,7 +1253,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);   
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
