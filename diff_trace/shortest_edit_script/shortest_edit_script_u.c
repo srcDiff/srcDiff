@@ -114,6 +114,7 @@ int main(int argc, char **argv) {
           fprintf(stdout, "Deleted line %d:\n", e->offset_sequence_one + 1);
         else
           fprintf(stdout, "Deleted lines %d-%d:\n", e->offset_sequence_one + 1, e->offset_sequence_one + e->length);
+        fprintf(stdout, "HERE: %d\n",  e->offset_sequence_two + 1);
         for(int j = 0; j < e->length; ++j)
           fprintf(stdout, " %s\n", lines1[e->offset_sequence_one + j]);
         break;
