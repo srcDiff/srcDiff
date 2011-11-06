@@ -1,5 +1,5 @@
 /*
-  src2srcdiff.cpp
+  srcdiff.cpp
 
   Create srcdiff format from two src files.
 
