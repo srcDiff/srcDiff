@@ -136,7 +136,7 @@ int node_set_compare(const void * e1, const void * e2) {
   if(node_set1->size() != node_set2->size())
     return 1;
   else
-    for(int i = 0; i < node_set1->size(); ++i)
+    for(unsigned int i = 0; i < node_set1->size(); ++i)
       if(node_compare(node_set1->at(i), node_set2->at(i)))
         return 1;
 
@@ -145,7 +145,7 @@ int node_set_compare(const void * e1, const void * e2) {
 
 bool is_white_space(xmlNodePtr node) {
 
-  if(node->type == XML_READER_TYPE_TEXT) {
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT) {
 
     if(isspace((char)node->content[0]))
       return true;
@@ -159,7 +159,7 @@ bool is_white_space(xmlNodePtr node) {
 
 bool is_text(xmlNodePtr node) {
 
-  if(node->type == XML_READER_TYPE_TEXT)
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
     return true;
   else
     return false;
@@ -171,7 +171,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
   std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
 
-  for(int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
+  for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
     for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i);
 
@@ -376,8 +376,6 @@ int main(int argc, char * argv[]) {
   file2.close();
 
   // calculate the differences
-  struct edit * edit_script;
-
   /*
     Translate both files to srcML separately.
   */
@@ -448,7 +446,6 @@ int main(int argc, char * argv[]) {
     output_diff.push_back(new_diff);
 
     // run through diffs adding markup
-    int last_diff = 0;
     struct reader_buffer rbuf_old = { NULL };
     rbuf_old.stream_source = DELETE;
     rbuf_old.open_diff = new std::vector<struct open_diff *>;
