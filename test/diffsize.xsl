@@ -12,6 +12,7 @@ itervar.xsl Fixes "iterator-variables are local"
 
 Michael L. Collard collard@cs.kent.edu
 -->
+
 <xsl:template match="node()"><xsl:apply-templates/></xsl:template>
 
 <xsl:template match="diff:*">
