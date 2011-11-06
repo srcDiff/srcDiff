@@ -37,9 +37,9 @@ LDFLAGS=$(ANTLR_LIB)
 LIBXML_INCLUDE=-I/usr/include/libxml2
 
 ifndef MINGW32
-XML_LIB_SRC2SRCDIFF=-lxml2
+XML_LIB_SRCDIFF=-lxml2
 else
-XML_LIB_SRC2SRCDIFF=-lxml2 -lregex -liberty
+XML_LIB_SRCDIFF=-lxml2 -lregex -liberty
 endif
 
 #libsrcml include
@@ -51,9 +51,9 @@ EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
 ifdef MINGW32
-EXE = $(EXE_DIR)src2srcdiff.exe
+EXE = $(EXE_DIR)srcdiff.exe
 else
-EXE = $(EXE_DIR)src2srcdiff
+EXE = $(EXE_DIR)srcdiff
 endif
 
 
@@ -62,14 +62,14 @@ all : ${EXE}
 mingw32 : 
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
 
-$(OBJ_DIR)src2srcdiff.o : src2srcdiff.cpp shortest_edit_script.h xmlrw.h
+$(OBJ_DIR)srcdiff.o : srcdiff.cpp shortest_edit_script.h xmlrw.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(EXE_DIR)src2srcdiff : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.a $(LDFLAGS) ${XML_LIB_SRC2SRCDIFF} ${XML_IO_LIB} -o $@
+$(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.a $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
-$(EXE_DIR)src2srcdiff.exe : $(OBJ_DIR)src2srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.dll $(LDFLAGS) ${XML_LIB_SRC2SRCDIFF} ${XML_IO_LIB} -o $@
+$(EXE_DIR)srcdiff.exe : $(OBJ_DIR)srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.dll $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
 	${CXX} -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@
