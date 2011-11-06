@@ -379,16 +379,6 @@ int main(int argc, char * argv[]) {
   struct edit * edit_script;
 
   /*
-    int distance = shortest_edit_script(lines1.size(), (void *)&lines1, lines2.size(), (void *)&lines2, line_compare, line_index, &edit_script);
-
-    if(distance < 0) {
-
-    fprintf(stderr, "Error with shortest edit script");
-    return distance;
-    }
-  */
-
-  /*
     Translate both files to srcML separately.
   */
 
@@ -534,8 +524,6 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "Remove temp file two failed\n");
     status = 1;
   }
-
-  //free_shortest_edit_script(edit_script);
 
   return status;
 }
