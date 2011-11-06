@@ -122,7 +122,7 @@ int node_compare(const void * e1, const void * e2) {
     if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
       return strcmp((const char *)node1->content, (const char *)node2->content);
     else
-      return 0;
+      return attribute_compare(node1->properties, node2->properties);
   }
 
   return 1;
