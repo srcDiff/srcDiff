@@ -823,14 +823,19 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
     // add preceeding unchanged
     if(edits->operation == DELETE)
-      for(int j = last_diff_old; j < edits->offset_sequence_one; ++j)
-        for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
-          output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
+      for(int j = last_diff_old, k = last_diff_new; j < edits->offset_sequence_one; ++j, ++k)
+        markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_new->at(k), writer);
+        //for(int j = last_diff_old; j < edits->offset_sequence_one; ++j)
+        //for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
+        //output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
 
     else
-      for(int j = last_diff_old; j < edits->offset_sequence_one + 1; ++j)
-        for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
-          output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
+      for(int j = last_diff_old, k = last_diff_new; j < edits->offset_sequence_one + 1; ++j, ++k)
+        markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_new->at(k), writer);
+        //for(int j = last_diff_old; j < edits->offset_sequence_one + 1; ++j)
+        //for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
+        //output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
+
 
     if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
       rbuf_old->open_diff->back()->open_tags->front()->marked = true;
