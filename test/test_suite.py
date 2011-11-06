@@ -21,7 +21,6 @@ MAX_COUNT = 29
 sperrorlist = []
 
 srcml_utility = "srcml2src"
-extract_utility = "bin/ExtractsrcML"
 switch_utility = "bin/SwitchDifferences"
 src2srcdiff_utility = "../bin/src2srcdiff"
 
@@ -83,12 +82,9 @@ def name2filestr(src_filename):
 def extract_source(srcDiff, operation):
 
 	# run the srcML extractor
-	command = [extract_utility, operation]
-        srcML = safe_communicate(command, srcDiff)
+	command = [srcml_utility, "--diff", operation]
         
-        # extract text
-        command = [srcml_utility]
-	return safe_communicate(command, srcML)
+	return safe_communicate(command, srcDiff)
 
 # switch diff order
 def switch_differences(srcML):
@@ -403,8 +399,8 @@ try:
 						total_count = total_count + 1
 
 						# convert the unit in xml to text
-						unit_text_old = extract_source(unitxml, "0")
-						unit_text_new = extract_source(unitxml, "1")
+						unit_text_old = extract_source(unitxml, "1")
+						unit_text_new = extract_source(unitxml, "2")
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
