@@ -96,6 +96,14 @@ const void * node_set_index(int idx, const void *s) {
   return node_sets[idx];
 }
 
+bool attribute_compare(xmlAttrPtr attr_old, xmlAttrPtr attr_new) {
+
+  for(; attr_old && attr_new && strcmp((const char *)attr_old->name, (const char *)attr_old->name) == 0; attr_old = attr_old->next, attr_new = attr_new->next);
+
+      xmlTextWriterWriteAttribute(writer, attribute->name, attribute->children->content);
+
+}
+
 // diff node comparison function
 int node_compare(const void * e1, const void * e2) {
   xmlNode * node1 = (xmlNode *)e1;
