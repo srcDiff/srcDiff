@@ -768,15 +768,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
     exit(distance);
   }
 
-  // modify to group newlines
-  struct edit * edits = edit_script;
-  for (; edits; edits = edits->next) {
-
-  }
-
   int last_diff_old = 0;
   int last_diff_new = 0;
-  edits = edit_script;
+  struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     if(rbuf_old->open_diff->back()->operation != COMMON)
@@ -992,9 +986,36 @@ void output_comment(struct reader_buffer * rbuf_old, std::vector<std::vector<xml
     exit(distance);
   }
 
+  // modify to group newlines
+  struct edit * edits = edit_script;
+  for (; edits && edits->next; edits = edits->next) {
+
+    struct edit * edit_next = edits->next;
+
+    if(edits->operation == edit_next->operation) {
+
+      if(edits->operation == DELETE && (edits->offset_sequence_one + edits->length + 1) == edit_next->offset_sequence_one
+        && node_set_compare(node_sets_old->at(edits->offset_sequence_one + edits->length + 1)
+                            , node_sets_old->at(edit_next->offset_sequence_one)) == 0) {
+
+          ++edits->length;
+          edits->next = edit_next->next;
+        }
+      else if(edits->operation == INSERT && (edits->offset_sequence_two + edits->length + 1) == edit_next->offset_sequence_two
+        && node_set_compare(node_sets_new->at(edits->offset_sequence_two + edits->length + 1)
+                            , node_sets_new->at(edit_next->offset_sequence_two)) == 0) {
+
+          ++edits->length;
+          edits->next = edit_next->next;
+        }
+
+    }
+
+  }
+
   int last_diff_old = 0;
   int last_diff_new = 0;
-  struct edit * edits = edit_script;
+  edits = edit_script;
   for (; edits; edits = edits->next) {
 
     if(rbuf_old->open_diff->back()->operation != COMMON)
