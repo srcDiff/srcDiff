@@ -12,9 +12,9 @@
 #include <string>
 #include <vector>
 // TODO:  Change g++ command in Makefile to look in the proper directory
-#include "../bin/Options.hpp"
-#include "../bin/srcMLTranslator.hpp"
-#include "../bin/Language.hpp"
+#include <Options.hpp>
+#include <srcMLTranslator.hpp>
+#include <Language.hpp>
 #include "shortest_edit_script.h"
 
 #include <libxml/xmlreader.h>
