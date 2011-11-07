@@ -11,10 +11,10 @@
 #include <fstream>
 #include <string>
 #include <vector>
-// TODO:  Change g++ command in Makefile to look in the proper directory
 #include <Options.hpp>
 #include <srcMLTranslator.hpp>
 #include <Language.hpp>
+
 #include "shortest_edit_script.h"
 
 #include <libxml/xmlreader.h>
@@ -69,8 +69,7 @@ xmlNodePtr diff_new_end;
 // constant template for temporary file names
 char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
 
-// TODO:  Use 0 instead of NULL.  This is C++
-xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", NULL };
+xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
 
 // diff accessor function
 const void * line_index(int idx, const void *s) {
