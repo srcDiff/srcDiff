@@ -969,6 +969,106 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
 }
 
+void output_comment(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
+
+  struct edit * edit_script;
+  int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+
+  if(distance < 0) {
+
+    fprintf(stderr, "Error with shortest edit script");
+    exit(distance);
+  }
+
+  int last_diff_old = 0;
+  int last_diff_new = 0;
+  struct edit * edits = edit_script;
+  for (; edits; edits = edits->next) {
+
+    if(rbuf_old->open_diff->back()->operation != COMMON)
+      output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
+
+    rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+
+    // add preceeding unchanged
+    if(edits->operation == DELETE)
+      for(int j = last_diff_old, k = last_diff_new; j < edits->offset_sequence_one; ++j, ++k)
+        markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_new->at(k), writer);
+
+    else
+      for(int j = last_diff_old, k = last_diff_new; j < edits->offset_sequence_one + 1; ++j, ++k)
+        markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_new->at(k), writer);
+
+
+    if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
+      rbuf_old->open_diff->back()->open_tags->front()->marked = true;
+
+    output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
+
+    // detect and change
+    struct edit * edit_next = edits->next;
+    if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
+       && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
+
+          output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
+                        , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+
+      last_diff_old = edits->offset_sequence_one + edits->length;
+      last_diff_new = edit_next->offset_sequence_two + edit_next->length;
+      edits = edits->next;
+      continue;
+    }
+
+    // handle pure delete or insert
+    switch (edits->operation) {
+
+    case INSERT:
+
+      //fprintf(stderr, "HERE\n");
+      output_change(rbuf_old, node_sets_old, 0, 0, rbuf_new, node_sets_new, edits->offset_sequence_two, edits->length, writer);
+
+      last_diff_old = edits->offset_sequence_one + 1;
+      last_diff_new = edits->offset_sequence_two + edits->length;
+
+      break;
+
+    case DELETE:
+
+      //fprintf(stderr, "HERE\n");
+      output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length, rbuf_new, node_sets_new, 0, 0, writer);
+
+      last_diff_old = edits->offset_sequence_one + edits->length;
+      last_diff_new = edits->offset_sequence_two + 1;
+
+      break;
+    }
+
+  }
+
+  // output diff tag start
+  if(rbuf_old->open_diff->back()->operation != COMMON)
+    output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
+
+  rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+
+
+  for(unsigned int j = last_diff_old, k = last_diff_new; j < node_sets_old->size(); ++j, ++k)
+    markup_whitespace(rbuf_old, node_sets_old->at(j), rbuf_new, node_sets_new->at(k), writer);
+
+  //for(int j = last_diff_old; j < node_sets_old->size(); ++j)
+  //for(int i = 0; i < node_sets_old->at(j)->size(); ++i)
+  //output_handler(rbuf_old, rbuf_new, node_sets_old->at(j)->at(i), COMMON, writer);
+
+  if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
+    rbuf_old->open_diff->back()->open_tags->front()->marked = true;
+
+  output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
+
+  free_shortest_edit_script(edit_script);
+
+}
+
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 
 // create srcdiff unit
