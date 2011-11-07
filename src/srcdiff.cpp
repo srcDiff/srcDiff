@@ -151,21 +151,8 @@ int node_set_compare(const void * e1, const void * e2) {
 
 bool is_white_space(xmlNodePtr node) {
 
-  // TODO:  Rewrite as one boolean expression
-  //
-  //  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT) && isspace((char)node->content[0]);
-
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT) {
-
-    // TODO:  In the case of "   }", this is not only whitespace
-    if(isspace((char)node->content[0]))
-      return true;
-    else
-      return false;
-
-  } else
-    return false;
-
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0])
+         
 }
 
 bool is_text(xmlNodePtr node) {
