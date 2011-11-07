@@ -1126,7 +1126,21 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
     if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
-      output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
+      if(edits->length == 1 && edit_next->length == 1) {
+
+        // collect subset of nodes
+        std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
+          = create_node_set(node_sets_old->at(edits->offset_sequence_one), 0
+                                    , node_sets_old->at(edits->offset_sequence_one)->size());
+        
+        std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
+          = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 0
+                                    , node_sets_new->at(edit_next->offset_sequence_two)->size());
+        
+        output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+
+      } else
+        output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
