@@ -1020,7 +1020,10 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
         
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
-      }
+      } else
+        output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
+                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
