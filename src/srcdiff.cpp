@@ -322,47 +322,6 @@ int main(int argc, char * argv[]) {
   diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end->extra = 0;
 
-  /*
-    Compute the differences between the two source files
-
-  */
-
-  // files used for differences
-  std::vector<char *> lines1;
-  std::vector<char *> lines2;
-
-  // gather file one
-  std::ifstream file1;
-  file1.open(argv[1]);
-
-  std::string * buffer = new std::string();
-  std::getline(file1, *buffer);
-  while(!file1.eof()) {
-    lines1.push_back((char *)buffer->c_str());
-    buffer = new std::string();
-    std::getline(file1, *buffer);
-  }
-
-  if(*buffer != "")
-    lines1.push_back((char *)buffer->c_str());
-  file1.close();
-
-  // gather file 2
-  std::ifstream file2;
-  file2.open(argv[2]);
-
-  buffer = new std::string();
-  std::getline(file2, *buffer);
-  while(!file2.eof()) {
-    lines2.push_back((char *)buffer->c_str());
-    buffer = new std::string();
-    std::getline(file2, *buffer);
-  }
-
-  if(*buffer != "")
-    lines2.push_back((char *)buffer->c_str());
-  file2.close();
-
   // calculate the differences
   /*
     Translate both files to srcML separately.
