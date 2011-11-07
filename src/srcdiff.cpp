@@ -920,7 +920,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
     bool first_newline = false;
-    while(i < end) {
+    for(; i < end; ++i) {
 
       node_set->push_back(diff_nodes->at(i));
 
