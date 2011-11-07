@@ -293,11 +293,6 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  // TODO:  Delete
-  //  std::string * dcommon = new std::string("diff:common");
-  //  std::string * dold = new std::string("diff:old");
-  //  std::string * dnew = new std::string("diff:new");
-
   diff_common_start = new xmlNode;
   diff_common_start->name = (xmlChar *) DIFF_COMMON;
   diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
@@ -341,7 +336,6 @@ int main(int argc, char * argv[]) {
   std::ifstream file1;
   file1.open(argv[1]);
 
-  // TODO:  Fix all uses of getline() with namespace std::
   std::string * buffer = new std::string();
   std::getline(file1, *buffer);
   while(!file1.eof()) {
@@ -359,11 +353,11 @@ int main(int argc, char * argv[]) {
   file2.open(argv[2]);
 
   buffer = new std::string();
-  getline(file2, *buffer);
+  std::getline(file2, *buffer);
   while(!file2.eof()) {
     lines2.push_back((char *)buffer->c_str());
     buffer = new std::string();
-    getline(file2, *buffer);
+    std::getline(file2, *buffer);
   }
 
   if(*buffer != "")
