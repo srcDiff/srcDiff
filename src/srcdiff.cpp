@@ -69,7 +69,8 @@ xmlNodePtr diff_new_end;
 // constant template for temporary file names
 char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
 
-xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
+// TODO: Use 0 instead of NULL.  This is C++, thought C did not have NULL defined
+xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", NULL };
 
 // diff accessor function
 const void * line_index(int idx, const void *s) {
@@ -97,9 +98,11 @@ const void * node_set_index(int idx, const void *s) {
   return node_sets[idx];
 }
 
-bool attribute_compare(xmlAttrPtr attr_old, xmlAttrPtr attr_new) {
+bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 
-  // TODO:  Don't change input parameters
+  xmlAttrPtr attr_old = attr1;
+  xmlAttrPtr attr_new = attr2;
+
   for(; attr_old && attr_new 
         && strcmp((const char *)attr_old->name, (const char *)attr_new->name) == 0
         && strcmp((const char *)attr_old->children->content, (const char *)attr_new->children->content) == 0;
