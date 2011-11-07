@@ -1007,8 +1007,20 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
     if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
-      output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
-                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+      if(edits->length == 1 && edit_next->length == 1) {
+
+      // collect subset of nodes
+      std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
+        = create_comment_line_set(node_sets_old->at(edits->offset_sequence_one), 1
+                                     , node_sets_old->at(edits->offset_sequence_one)->size() - 1);
+
+      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
+        = create_comment_line_set(node_sets_new->at(edit_new->offset_sequence_two), 1
+                                     , node_sets_new->at(edit_new->offset_sequence_two)->size() - 1);
+
+      output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+
+      }
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
