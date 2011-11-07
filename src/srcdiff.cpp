@@ -214,7 +214,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 }
 
 // converts source code to srcML
-void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
+xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
 struct tag {
 
@@ -368,7 +368,7 @@ int main(int argc, char * argv[]) {
   /*
     Translate both files to srcML separately.
   */
-
+  /*
   // create temporary file for srcML file one
   char * srcml_file_one = mktemp(strdup(srcdiff_template));
   if(srcml_file_one == NULL) {
@@ -376,10 +376,10 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "Tempfile failed\n");
     return 1;
   }
-
+  */
   // translate file one
-  translate_to_srcML(argv[1], srcml_file_one, argv[3]);
-
+  xmlBuffer* output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
+  /*
   // create temporary file for srcML file two
   char * srcml_file_two = mktemp(strdup(srcdiff_template));
   if(srcml_file_two == NULL) {
@@ -387,9 +387,9 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "Tempfile failed\n");
     return 1;
   }
-
+  */
   // translate file two
-  translate_to_srcML(argv[2], srcml_file_two, argv[3]);
+  xmlBuffer* output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
 
   /*
     Create xmlreaders and the xmlwriter
@@ -399,20 +399,22 @@ int main(int argc, char * argv[]) {
   xmlTextReaderPtr reader_new = NULL;
 
   xmlTextWriterPtr writer = NULL;
-
   {
     // create the reader for the old file
-    reader_old = xmlNewTextReaderFilename(srcml_file_one);
+    reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
+    //    reader_old = xmlNewTextReaderFilename(srcml_file_one);
     if (reader_old == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML", srcml_file_one);
+      //      fprintf(stderr, "Unable to open file '%s' as XML", srcml_file_one);
 
       goto cleanup;
     }
 
     // create the reader for the new file
-    reader_new = xmlNewTextReaderFilename(srcml_file_two);
+    reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
+    //    reader_new = xmlNewTextReader(xmlBufferContent(output_file_two));
+    //    reader_new = xmlNewTextReaderFilename(srcml_file_two);
     if (reader_new == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML", srcml_file_two);
+      //      fprintf(stderr, "Unable to open file '%s' as XML", srcml_file_two);
 
       goto cleanup;
     }
@@ -499,6 +501,7 @@ int main(int argc, char * argv[]) {
     xmlFreeTextWriter(writer);
   }
   int status = 0;
+  /*
   if(remove(srcml_file_one) == -1) {
 
     fprintf(stderr, "Remove temp file one failed\n");
@@ -510,12 +513,13 @@ int main(int argc, char * argv[]) {
     fprintf(stderr, "Remove temp file two failed\n");
     status = 1;
   }
+  */
 
   return status;
 }
 
 // converts source code to srcML
-void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {
+xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {
 
   // register default language extensions
   Language::register_standard_file_extensions();
@@ -526,8 +530,10 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
   // select basic options
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
 
+  xmlBuffer* output_buffer = xmlBufferCreate();
+
   // create translator object
-  srcMLTranslator translator(language, srcml_file, options);
+  srcMLTranslator translator(language, output_buffer, options);
 
   // set input file (must be done)
   translator.setInput(source_file);
@@ -537,6 +543,8 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
   // close the input file
   translator.close();
+
+  return output_buffer;
 }
 
 // collect the differnces
