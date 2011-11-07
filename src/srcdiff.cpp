@@ -330,32 +330,11 @@ int main(int argc, char * argv[]) {
   diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end->extra = 0;
 
-  // calculate the differences
-  /*
-    Translate both files to srcML separately.
-  */
-  /*
-  // create temporary file for srcML file one
-  char * srcml_file_one = mktemp(strdup(srcdiff_template));
-  if(srcml_file_one == NULL) {
-
-  fprintf(stderr, "Tempfile failed\n");
-  return 1;
-  }
-  */
   // translate file one
-  xmlBuffer* output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
-  /*
-  // create temporary file for srcML file two
-  char * srcml_file_two = mktemp(strdup(srcdiff_template));
-  if(srcml_file_two == NULL) {
+  xmlBuffer * output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
 
-  fprintf(stderr, "Tempfile failed\n");
-  return 1;
-  }
-  */
   // translate file two
-  xmlBuffer* output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
+  xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
 
   /*
     Create xmlreaders and the xmlwriter
@@ -368,9 +347,7 @@ int main(int argc, char * argv[]) {
   {
     // create the reader for the old file
     reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
-    //    reader_old = xmlNewTextReaderFilename(srcml_file_one);
     if (reader_old == NULL) {
-      //      fprintf(stderr, "Unable to open file '%s' as XML", srcml_file_one);
 
       goto cleanup;
     }
@@ -380,7 +357,6 @@ int main(int argc, char * argv[]) {
     //    reader_new = xmlNewTextReader(xmlBufferContent(output_file_two));
     //    reader_new = xmlNewTextReaderFilename(srcml_file_two);
     if (reader_new == NULL) {
-      //      fprintf(stderr, "Unable to open file '%s' as XML", srcml_file_two);
 
       goto cleanup;
     }
@@ -442,6 +418,9 @@ int main(int argc, char * argv[]) {
 
     collect_difference(&rbuf_new, reader_new);
 
+    xmlBufferFree(output_file_one);
+    xmlBufferFree(output_file_two);
+
     std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(rbuf_old.diff_nodes, 0, rbuf_old.diff_nodes->size());
     std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(rbuf_new.diff_nodes, 0, rbuf_new.diff_nodes->size());
 
@@ -467,19 +446,6 @@ int main(int argc, char * argv[]) {
     xmlFreeTextWriter(writer);
   }
   int status = 0;
-  /*
-    if(remove(srcml_file_one) == -1) {
-
-    fprintf(stderr, "Remove temp file one failed\n");
-    status = 1;
-    }
-
-    if(remove(srcml_file_two) == -1) {
-
-    fprintf(stderr, "Remove temp file two failed\n");
-    status = 1;
-    }
-  */
 
   return status;
 }
