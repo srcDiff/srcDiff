@@ -567,6 +567,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
         }
 
         // increase new line count and check if end of diff
+        /*
         if((*rbuf->characters) == '\n') {
 
           ++rbuf->line_number;
@@ -595,9 +596,10 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
             return;
           }
-          */
 
         }
+          */
+
       }
 
       // end and save text node if finished and get next node
