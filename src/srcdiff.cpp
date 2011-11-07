@@ -167,23 +167,23 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
-    // TODO:  What is this doing?
+    // Bypassing whitespace
     for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i)
       ;
 
-    // TODO:  What is this doing?
+    // Bypassing whitespace
     for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j)
       ;
 
-    // TODO:  What is this doing?
+    // If end was all whitespace then the same
     if(i >= node_set1->size() && j >= node_set2->size())
       return 0;
 
-    // TODO:  What is this doing?
+    // If one had ending whitespace and other had something else then different
     if(i >= node_set1->size() || j >= node_set2->size())
       return 1;
 
-    //string consecutive non whitespace text nodes
+    // string consecutive non whitespace text nodes
     if(is_text(node_set1->at(i)) && is_text(node_set2->at(j))) {
 
       std::string text1 = "";
