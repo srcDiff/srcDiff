@@ -768,9 +768,15 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
     exit(distance);
   }
 
+  // modify to group newlines
+  struct edit * edits = edit_script;
+  for (; edits; edits = edits->next) {
+
+  }
+
   int last_diff_old = 0;
   int last_diff_new = 0;
-  struct edit * edits = edit_script;
+  edits = edit_script;
   for (; edits; edits = edits->next) {
 
     if(rbuf_old->open_diff->back()->operation != COMMON)
