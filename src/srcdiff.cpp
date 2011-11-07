@@ -285,8 +285,7 @@ int main(int argc, char * argv[]) {
   // test for correct input
   if(argc < 3) {
 
-    //    fprintf(stderr, "Usage: src2srcdiff oldFile newFile srcdiffFile\n");
-    fprintf(stderr, "Usage: src2srcdiff oldFile newFile dir\n");
+    fprintf(stderr, "Usage: srcdiff oldFile newFile dir\n");
     return 1;
   }
 
