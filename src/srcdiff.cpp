@@ -157,13 +157,7 @@ bool is_white_space(xmlNodePtr node) {
 
 bool is_text(xmlNodePtr node) {
 
-  // TODO:  Rewrite as one boolean expression
-  //
-  //  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
-    return true;
-  else
-    return false;
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
 }
 
 // diff node comparison function
