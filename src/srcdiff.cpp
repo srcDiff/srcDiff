@@ -265,9 +265,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 void output_comment(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
 
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
-                   , int start_old, int length_old
+                   , int start_old
                    , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
-                   , int start_new, int length_new
+                   , int start_new
                       , xmlTextWriterPtr writer);
 
 void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
@@ -1398,9 +1398,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<x
                    , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
                    , int start_new
                    , xmlTextWriterPtr writer) {
-
-  struct edit * edits = edit_script;
-  struct edit * edit_next = edit_script->next;
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
