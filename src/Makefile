@@ -43,7 +43,7 @@ XML_LIB_SRCDIFF=-lxml2 -lregex -liberty
 endif
 
 #libsrcml include
-LIBSRCML_INCLUDE = -I ../bin/
+LIBSRCML_INCLUDE = -I ../include/
 LIBSRCML_LIB = ../bin/
 
 # project dirs
