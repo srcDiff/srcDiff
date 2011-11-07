@@ -44,7 +44,7 @@ endif
 
 #libsrcml include
 LIBSRCML_INCLUDE = -I ../include/
-LIBSRCML_LIB = ../bin/
+LIBSRCML_LIB = -L ../bin/ -lsrcml
 
 # project dirs
 EXE_DIR = ../bin/
@@ -66,10 +66,10 @@ $(OBJ_DIR)srcdiff.o : srcdiff.cpp shortest_edit_script.h xmlrw.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.a $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(EXE_DIR)srcdiff.exe : $(OBJ_DIR)srcdiff.o  $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB)libsrcml.dll $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) libsrcml.dll $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
 	${CXX} -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@
