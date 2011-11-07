@@ -262,7 +262,7 @@ void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_
 // output file level info
 void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
 
-void output_comment(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
 
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
                    , int start_old
@@ -902,7 +902,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 
 }
 
-void output_comment(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
+void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
@@ -1360,7 +1360,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<x
 
   // compare subset of nodes
   if(strcmp((const char *)node_sets_old->at(start_old)->at(0)->name, "comment") == 0)
-    output_comment(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+    output_comment_paragraph(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
   else
     output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
