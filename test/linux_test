@@ -10,7 +10,7 @@
 #cd new
 #cat ../old/files | gxargs -I% bash -c "[[ -e % ]] && echo %" > ../files
 #cd ..
-head -1000 files | gxargs -I% -P 10 bash -c "../bin/src2srcdiff old/% new/% > new/%.xml"
+head -1000 files | gxargs -I% -P 10 bash -c "../bin/srcdiff old/% new/% > new/%.xml"
 
 #cat files | gxargs -I% -P 10 bash -c "cat old/% | src2srcml -l C --literal --operator --modifier > old/%.1.xml"
 #cat files | gxargs -I% -P 10 bash -c "cat new/% | src2srcml -l C --literal --operator --modifier > new/%.1.xml"
