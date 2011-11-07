@@ -934,9 +934,11 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
         if(!first_newline && contains_new_line(diff_nodes->at(i)))
           first_newline = true;
 
-      }
-      
-    }
+      }      
+
+    } else
+          node_set->push_back(diff_nodes->at(i));
+
 
     node_sets->push_back(node_set);
 
