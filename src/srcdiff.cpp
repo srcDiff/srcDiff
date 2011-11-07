@@ -921,20 +921,22 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
     if(i + 1 < end && !is_white_space(diff_nodes->at(i + 1))) {
 
-    bool first_newline = false;
-    for(; i < end; ++i) {
+      bool first_newline = false;
+      for(; i < end; ++i) {
 
-      node_set->push_back(diff_nodes->at(i));
+        node_set->push_back(diff_nodes->at(i));
 
-      if(first_newline && contains_new_line(diff_nodes->at(i)))
-        break;
-      else
-        first_newline = false;
+        if(first_newline && contains_new_line(diff_nodes->at(i)))
+          break;
+        else
+          first_newline = false;
 
-      if(!first_newline && contains_new_line(diff_nodes->at(i)))
-        first_newline = true;
-    }
+        if(!first_newline && contains_new_line(diff_nodes->at(i)))
+          first_newline = true;
+
       }
+      
+    }
 
     node_sets->push_back(node_set);
 
