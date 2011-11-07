@@ -623,6 +623,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
           characters_start = rbuf->characters + 1;
 
           // check if end of diff and create text node for text fragment
+          /*
           if(rbuf->line_number == end_line) {
 
             ++rbuf->characters;
@@ -635,6 +636,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
             return;
           }
+          */
 
         }
       }
