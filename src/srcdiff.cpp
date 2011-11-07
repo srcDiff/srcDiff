@@ -265,8 +265,10 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
 void output_comment(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
 
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
-                      , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
-                      , struct edit * edit_script, xmlTextWriterPtr writer);
+                   , int start_old, int length_old
+                   , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                   , int start_new, int length_new
+                      , xmlTextWriterPtr writer);
 
 void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
                    , int start_old, int length_old
@@ -863,9 +865,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
                         , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
            && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
 
-          output_recursive(rbuf_old, node_sets_old
-                      , rbuf_new, node_sets_new
-                           , edits, writer);
+          output_recursive(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
 
         } else {
 
@@ -1393,8 +1393,10 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 }
 
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
-                      , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
-                      , struct edit * edit_script, xmlTextWriterPtr writer) {
+                   , int start_old, int length_old
+                   , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                   , int start_new, int length_new
+                   , xmlTextWriterPtr writer) {
 
   struct edit * edits = edit_script;
   struct edit * edit_next = edit_script->next;
