@@ -595,9 +595,9 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 
             return;
           }
+          */
 
         }
-          */
 
       }
 
