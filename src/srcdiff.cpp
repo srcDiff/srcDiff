@@ -1361,7 +1361,10 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
                               , node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->size() - 1);
 
           // compare subset of nodes
-          output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+          if(strcmp((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->name, "comment") == 0)
+            output_comment(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+          else
+            output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
           output_handler(rbuf_old, rbuf_new,
                          node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->
