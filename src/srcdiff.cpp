@@ -865,7 +865,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
                         , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
            && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
 
-          output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one,
+          output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
                            , rbuf_new, node_sets_new, edit_next->offset_sequence_two, writer);
 
         } else {
