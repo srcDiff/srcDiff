@@ -68,6 +68,7 @@ xmlNodePtr diff_new_end;
 // constant template for temporary file names
 char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
 
+// TODO:  Use 0 instead of NULL.  This is C++
 xmlNs diff = { NULL, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", NULL };
 
 // diff accessor function
@@ -98,10 +99,12 @@ const void * node_set_index(int idx, const void *s) {
 
 bool attribute_compare(xmlAttrPtr attr_old, xmlAttrPtr attr_new) {
 
+  // TODO:  Don't change input parameters
   for(; attr_old && attr_new 
         && strcmp((const char *)attr_old->name, (const char *)attr_new->name) == 0
         && strcmp((const char *)attr_old->children->content, (const char *)attr_new->children->content) == 0;
-      attr_old = attr_old->next, attr_new = attr_new->next);
+      attr_old = attr_old->next, attr_new = attr_new->next)
+    ;
 
   if(attr_old || attr_new)
     return 1;
@@ -145,8 +148,13 @@ int node_set_compare(const void * e1, const void * e2) {
 
 bool is_white_space(xmlNodePtr node) {
 
+  // TODO:  Rewrite as one boolean expression
+  //
+  //  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT) && isspace((char)node->content[0]);
+
   if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT) {
 
+    // TODO:  In the case of "   }", this is not only whitespace
     if(isspace((char)node->content[0]))
       return true;
     else
@@ -159,11 +167,13 @@ bool is_white_space(xmlNodePtr node) {
 
 bool is_text(xmlNodePtr node) {
 
+  // TODO:  Rewrite as one boolean expression
+  //
+  //  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
   if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
     return true;
   else
     return false;
-
 }
 
 // diff node comparison function
@@ -173,13 +183,19 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
-    for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i);
+    // TODO:  What is this doing?
+    for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i)
+      ;
 
-    for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j);
+    // TODO:  What is this doing?
+    for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j)
+      ;
 
+    // TODO:  What is this doing?
     if(i >= node_set1->size() && j >= node_set2->size())
       return 0;
 
+    // TODO:  What is this doing?
     if(i >= node_set1->size() || j >= node_set2->size())
       return 1;
 
@@ -208,7 +224,6 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
     if(node_compare(node_set1->at(i), node_set2->at(j)))
       return 1;
-
   }
 
   return 0;
@@ -294,37 +309,38 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  std::string * dcommon = new std::string("diff:common");
-  std::string * dold = new std::string("diff:old");
-  std::string * dnew = new std::string("diff:new");
+  // TODO:  Delete
+  //  std::string * dcommon = new std::string("diff:common");
+  //  std::string * dold = new std::string("diff:old");
+  //  std::string * dnew = new std::string("diff:new");
 
   diff_common_start = new xmlNode;
-  diff_common_start->name = (xmlChar *)dcommon->c_str();
+  diff_common_start->name = (xmlChar *) DIFF_COMMON;
   diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start->extra = 0;
 
   diff_common_end = new xmlNode;
-  diff_common_end->name = (xmlChar *)dcommon->c_str();
+  diff_common_end->name = (xmlChar *) DIFF_COMMON;
   diff_common_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_common_end->extra = 0;
 
   diff_old_start = new xmlNode;
-  diff_old_start->name = (xmlChar *)dold->c_str();
+  diff_old_start->name = (xmlChar *) DIFF_OLD;
   diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_old_start->extra = 0;
 
   diff_old_end = new xmlNode;
-  diff_old_end->name = (xmlChar *)dold->c_str();
+  diff_old_end->name = (xmlChar *) DIFF_OLD;
   diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_old_end->extra = 0;
 
   diff_new_start = new xmlNode;
-  diff_new_start->name = (xmlChar *)dnew->c_str();
+  diff_new_start->name = (xmlChar *) DIFF_NEW;
   diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_new_start->extra = 0;
 
   diff_new_end = new xmlNode;
-  diff_new_end->name = (xmlChar *)dnew->c_str();
+  diff_new_end->name = (xmlChar *) DIFF_NEW;
   diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end->extra = 0;
 
@@ -337,30 +353,28 @@ int main(int argc, char * argv[]) {
   std::vector<char *> lines1;
   std::vector<char *> lines2;
 
-  std::string * buffer = new std::string();
-
   // gather file one
   std::ifstream file1;
   file1.open(argv[1]);
 
-  getline(file1, *buffer);
+  // TODO:  Fix all uses of getline() with namespace std::
+  std::string * buffer = new std::string();
+  std::getline(file1, *buffer);
   while(!file1.eof()) {
     lines1.push_back((char *)buffer->c_str());
     buffer = new std::string();
-    getline(file1, *buffer);
+    std::getline(file1, *buffer);
   }
 
-  if(*buffer != "") {
-
+  if(*buffer != "")
     lines1.push_back((char *)buffer->c_str());
-    buffer = new std::string();
-  }
   file1.close();
 
   // gather file 2
   std::ifstream file2;
   file2.open(argv[2]);
 
+  buffer = new std::string();
   getline(file2, *buffer);
   while(!file2.eof()) {
     lines2.push_back((char *)buffer->c_str());
@@ -368,11 +382,8 @@ int main(int argc, char * argv[]) {
     getline(file2, *buffer);
   }
 
-  if(*buffer != "") {
-
+  if(*buffer != "")
     lines2.push_back((char *)buffer->c_str());
-    buffer = new std::string();
-  }
   file2.close();
 
   // calculate the differences
@@ -446,7 +457,7 @@ int main(int argc, char * argv[]) {
     output_diff.push_back(new_diff);
 
     // run through diffs adding markup
-    struct reader_buffer rbuf_old = { NULL };
+    struct reader_buffer rbuf_old = { 0 };
     rbuf_old.stream_source = DELETE;
     rbuf_old.open_diff = new std::vector<struct open_diff *>;
 
@@ -459,7 +470,7 @@ int main(int argc, char * argv[]) {
     rbuf_old.delay_close = new std::vector<struct open_diff *>;
     xmlTextReaderRead(reader_old);
 
-    struct reader_buffer rbuf_new = { NULL };
+    struct reader_buffer rbuf_new = { 0 };
     rbuf_new.stream_source = INSERT;
     rbuf_new.open_diff = new std::vector<struct open_diff *>;
 
