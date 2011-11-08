@@ -1022,11 +1022,11 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
         // collect subset of nodes
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
           = create_comment_line_set(node_sets_old, edits->offset_sequence_one
-                                    , edits->offset_sequence_one + edits->length);
-
+          , edits->offset_sequence_one + edits->length);
+  
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
           = create_comment_line_set(node_sets_new, edit_next->offset_sequence_two
-                                    , edit_next->offset_sequence_two + edit_next->length;
+                                    , edit_next->offset_sequence_two + edit_next->length);
 
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
