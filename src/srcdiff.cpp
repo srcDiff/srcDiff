@@ -948,23 +948,28 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
 }
 
-std::vector<std::vector<xmlNodePtr> *> * create_comment_line_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end) {
+std::vector<std::vector<xmlNodePtr> *> * create_comment_line_set(std::vector<std::vector<xmlNodePtr> *> * diff_nodes, int start, int end) {
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
 
   for(int i = start; i < end; ++i) {
 
+    for(int j = 0; j < diff_nodes->at(i).size(); ++j) {
+      
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
+    
+    for(; j < end; ++j) {
 
-    for(; i < end; ++i) {
+      node_set->push_back(diff_nodes->at(i)->at(j));
 
-      node_set->push_back(diff_nodes->at(i));
-
-      if(contains_new_line(diff_nodes->at(i)))
+      if(contains_new_line(diff_nodes->at(i)->at(j)))
         break;
+
     }
 
     node_sets->push_back(node_set);
+
+    }
 
   }
 
