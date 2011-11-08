@@ -227,7 +227,7 @@ int node_set_comment_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
   std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
 
-  if(is_white_space_set(node_set1) && is_white_space_set(node_set2)
+  if(is_white_space_set(node_set1) && is_white_space_set(node_set2))
      return node_set_compare(node_set1, node_set2);
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
