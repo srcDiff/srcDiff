@@ -1781,9 +1781,11 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
   int begin_old = start_old;
   int begin_new = start_new;
+  int olength = length_old;
+  int nlength = length_new;
 
   // match beginning whitespace
-  if(length_old > 0 && length_new > 0) {
+  if(olength > 0 && nlength > 0) {
 
   if(is_white_space(node_sets_old->at(begin_old)->at(0)) && is_white_space(node_sets_new->at(begin_new)->at(0))) {
 
@@ -1809,7 +1811,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
           } else {
 
-            --length_old;
+            --olength;
             ++begin_old;
           }
 
@@ -1819,7 +1821,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
           } else {
 
-            --length_new;
+            --nlength;
             ++begin_new;
           }
 
@@ -1829,7 +1831,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
     }
 
 
-  if(length_old > 0) {
+  if(olength > 0) {
 
     // output diff tag begin
     if(rbuf_old->open_diff->back()->operation != DELETE)
@@ -1837,7 +1839,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
     rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-    for(int j = 0; j < length_old; ++j)
+    for(int j = 0; j < olength; ++j)
       for(unsigned int i = 0; i < node_sets_old->at(begin_old + j)->size(); ++i)
         output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old + j)->at(i), DELETE, writer);
 
@@ -1849,7 +1851,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
   }
 
-  if(length_new > 0) {
+  if(nlength > 0) {
 
     // output diff tag
     if(rbuf_new->open_diff->back()->operation != INSERT)
@@ -1857,7 +1859,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
     rbuf_new->open_diff->back()->open_tags->front()->marked = false;
 
-    for(int j = 0; j < length_new; ++j)
+    for(int j = 0; j < nlength; ++j)
       for(unsigned int i = 0; i < node_sets_new->at(begin_new + j)->size(); ++i)
         output_handler(rbuf_old, rbuf_new, node_sets_new->at(begin_new + j)->at(i), INSERT, writer);
 
