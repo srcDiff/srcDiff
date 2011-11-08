@@ -985,8 +985,8 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if((i != 0) && (!is_white_space(diff_nodes->at(i) && !contains_new_lines(diff_nodes->at(i))
-                                    || (i + 1 < end && is_white_space(diff_nodes->at(i) && !contains_new_lines(diff_nodes->at(i) && !is_white_space(diff_nodes->at(i + 1))))) {
+    if((i != 0) && (!is_white_space(diff_nodes->at(i)) && !contains_new_line(diff_nodes->at(i)))
+       || (i + 1 < end && is_white_space(diff_nodes->at(i)) && !contains_new_line(diff_nodes->at(i)) && !is_white_space(diff_nodes->at(i + 1)))) {
 
       bool first_newline = false;
       for(; i < end; ++i) {
