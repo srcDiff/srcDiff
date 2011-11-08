@@ -156,7 +156,7 @@ bool is_white_space(xmlNodePtr node) {
 
 bool is_white_space_set(std::vector<xmlNodePtr> * node_set) {
 
-  for(int i = 0; i < node_set->size(); ++i)
+  for(unsigned int i = 0; i < node_set->size(); ++i)
     if((xmlReaderTypes)node_set->at(i)->type != XML_READER_TYPE_TEXT || !isspace((char)node_set->at(i)->content[0]))
       return false;
 
@@ -1770,10 +1770,41 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
 }
 
-void group_changes(struct edit * edit_script) {
+bool is_change(struct edit * edit_script) {
 
+  return edit_script->operation == DELETE && edit_script->next != NULL && edit_script->next->operation == INSERT
+    && (edit_script->offset_sequence_one + edit_script->length - 1) == edit_script->next->offset_sequence_one;
+
+}
+
+bool only_white_space_between_change(struct edit * change_one, struct edit * change_two, std::vector<std::vector<xmlNodePtr> *> * node_sets_old) {
+
+  for(int set = change_one->offset_sequence_one + change_one->length; set < change_two->offset_sequence_one; ++set)
+    if(!is_white_space_set(node_sets_old->at(set)))
+      return false;
+
+  return true;
+}
+
+void group_changes(struct edit * edit_script, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+                   , std::vector<std::vector<xmlNodePtr> *> * node_sets_new) {
+  
   struct edit * edits = edit_script;
 
-  for(; edits; edits = edit->next);
+  for(; edits; edits = edits->next) {
+
+    if(is_change(edits)) {
+
+      struct edit * next_pair = edits->next->next;
+      while(next_pair && next_pair->next && is_change(next_pair) && only_white_space_between_change(edits, next_pair, node_sets_old)) {
+
+        edits->length = next_pair->offset_sequence_one + next_pair->length - edits->offset_sequence_one;
+        edits->next->length = next_pair->next->offset_sequence_two + next_pair->next->length - edits->next->offset_sequence_two;
+        next_pair = edits->next->next;
+      }
+
+    }
+
+  }
 
 }
