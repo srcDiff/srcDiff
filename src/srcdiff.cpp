@@ -1684,7 +1684,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
       // whitespace change
     } else if(is_white_space(node_set_old->at(i))) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       // whitespace delete
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
@@ -1711,51 +1711,21 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
     } else {
 
-      // collect all adjacen text nodes and insert whitespace differences
+      // collect all adjacent text nodes character arrays and input difference
+      std::string text_old = "";
+      for(; i < node_set_old->size() && is_text(node_set_old->at(i)); ++i)
+          text_old += (const char *)node_set_old->at(i)->content;
 
-      // handle () and ( ) first is one text node, other is three
-      if(strlen((const char *)node_set_old->at(i)->content) < strlen((const char *)node_set_new->at(j)->content)) {
+      std::string text_new = "";
+      for(; j < node_set_new->size() && is_text(node_set_new->at(j)); ++j)
+          text_new += (const char *)node_set_new->at(j)->content;
 
-        output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
-
-        ++i;
-
-        // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
-
-        output_handler(rbuf_old, rbuf_new, node_set_old->at(i), DELETE, writer);
-
-        // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
-
-        ++i;
-
-        output_handler(rbuf_old, rbuf_new, node_set_old->at(i), COMMON, writer);
-
-      } else {
-
-        output_handler(rbuf_old, rbuf_new, node_set_new->at(j), COMMON, writer);
-
-        ++j;
-
-        // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
-
-        output_handler(rbuf_old, rbuf_new, node_set_new->at(j), INSERT, writer);
-
-        // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
-
-        ++j;
-
-        output_handler(rbuf_old, rbuf_new, node_set_new->at(j), COMMON, writer);
-
-      }
+      --i;
+      --j;
 
     }
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
 }
 
