@@ -954,7 +954,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_line_set(std::vector<std
 
   for(int i = start; i < end; ++i) {
 
-    for(int j = 0; j < diff_nodes->at(i).size(); ++j) {
+    for(int j = 0; j < diff_nodes->at(i)->size(); ++j) {
 
       std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
