@@ -976,7 +976,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
