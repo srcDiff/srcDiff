@@ -1657,7 +1657,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
           if(start_old < size_old) {
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
             xmlTextWriterWriteRawLen(writer, content_old + start_old, size_old - start_old);
 
@@ -1669,7 +1669,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
           if(start_new < size_new) {
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
             xmlTextWriterWriteRawLen(writer, content_new + start_new, size_new - start_new);
 
