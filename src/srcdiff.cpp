@@ -1723,6 +1723,53 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
       --i;
       --j;
 
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
+
+      for(int opos = 0, npos = 0; opos < text_old.size() && npos < text_new.size(); ++opos, ++npos) {
+
+        if(text_old[opos] == text_new[npos]) {
+          //          fprintf(stderr, "HERE: %s %s %d %c\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
+          xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_old[opos], 1);
+          continue;
+        }
+
+        if(isspace(text_old[opos])) {
+
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+          
+          for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
+
+            xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_old[opos], 1);
+          }
+
+          --opos;
+          --npos;
+          
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+
+        }
+
+        if(isspace(text_new[npos])) {
+
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+          
+          for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
+
+            xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_new[npos], 1);
+          }
+
+          --opos;
+          --npos;
+
+          // output diff tag
+          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+
+        }
+
+      }
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     }
 
   }
