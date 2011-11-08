@@ -919,7 +919,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if(i + 1 < end && !is_white_space(diff_nodes->at(i + 1))) {
+    if((i != 0 || i != end - 1) && !is_white_space(diff_nodes->at(i)) || i + 1 < end && !is_white_space(diff_nodes->at(i + 1))) {
 
       bool first_newline = false;
       for(; i < end; ++i) {
