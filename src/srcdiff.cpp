@@ -1214,7 +1214,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
           = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 0
                                     , node_sets_new->at(edit_next->offset_sequence_two)->size());
-        
+
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
@@ -1802,19 +1802,26 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
           if(offset_old < size_old) {
 
+
             // shrink 
             node_sets_old->at(begin_old)->at(0)->content = content_old + offset_old;
+            //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
 
+          } else {
 
-          } else
+            --length_old;
             ++begin_old;
+          }
 
           if(offset_new < size_new) {
 
             node_sets_new->at(begin_new)->at(0)->content = content_new + offset_new;
 
-          } else
+          } else {
+
+            --length_new;
             ++begin_new;
+          }
 
         
       }
