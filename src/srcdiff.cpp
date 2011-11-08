@@ -157,7 +157,7 @@ bool is_white_space(xmlNodePtr node) {
 bool is_white_space_set(std::vector<xmlNodePtr> * node_set) {
 
   for(int i = 0; i < node_set->size(); ++i)
-    if((xmlReaderTypes)node->type != XML_READER_TYPE_TEXT || !isspace((char)node->content[0]))
+    if((xmlReaderTypes)node_set->at(i)->type != XML_READER_TYPE_TEXT || !isspace((char)node_set->at(i)->content[0]))
       return false;
 
   return true;
