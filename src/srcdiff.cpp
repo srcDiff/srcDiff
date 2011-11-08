@@ -934,10 +934,10 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
         if(!first_newline && contains_new_line(diff_nodes->at(i)))
           first_newline = true;
 
-      }
+      }      
 
     } else
-      node_set->push_back(diff_nodes->at(i));
+          node_set->push_back(diff_nodes->at(i));
 
 
     node_sets->push_back(node_set);
@@ -948,28 +948,23 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
 }
 
-std::vector<std::vector<xmlNodePtr> *> * create_comment_line_set(std::vector<std::vector<xmlNodePtr> *> * diff_nodes, int start, int end) {
+std::vector<std::vector<xmlNodePtr> *> * create_comment_line_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end) {
 
   std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
 
   for(int i = start; i < end; ++i) {
 
-    for(int j = 0; j < diff_nodes->at(i)->size(); ++j) {
+    std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-      std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
+    for(; i < end; ++i) {
 
-      for(; j < end; ++j) {
+      node_set->push_back(diff_nodes->at(i));
 
-        node_set->push_back(diff_nodes->at(i)->at(j));
-
-        if(contains_new_line(diff_nodes->at(i)->at(j)))
-          break;
-
-      }
-
-      node_sets->push_back(node_set);
-
+      if(contains_new_line(diff_nodes->at(i)))
+        break;
     }
+
+    node_sets->push_back(node_set);
 
   }
 
@@ -1019,16 +1014,23 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
     if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
        && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
 
+      if(edits->length == 1 && edit_next->length == 1) {
+
         // collect subset of nodes
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
-          = create_comment_line_set(node_sets_old, edits->offset_sequence_one
-          , edits->offset_sequence_one + edits->length);
-  
+          = create_comment_line_set(node_sets_old->at(edits->offset_sequence_one), 0
+                                    , node_sets_old->at(edits->offset_sequence_one)->size());
+        
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
-          = create_comment_line_set(node_sets_new, edit_next->offset_sequence_two
-                                    , edit_next->offset_sequence_two + edit_next->length);
-
+          = create_comment_line_set(node_sets_new->at(edit_next->offset_sequence_two), 0
+                                    , node_sets_new->at(edit_next->offset_sequence_two)->size());
+        
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+
+      } else
+        output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
+                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -1129,17 +1131,17 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
         // collect subset of nodes
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
           = create_node_set(node_sets_old->at(edits->offset_sequence_one), 0
-                            , node_sets_old->at(edits->offset_sequence_one)->size());
-
+                                    , node_sets_old->at(edits->offset_sequence_one)->size());
+        
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
           = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 0
-                            , node_sets_new->at(edit_next->offset_sequence_two)->size());
-
+                                    , node_sets_new->at(edit_next->offset_sequence_two)->size());
+        
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
         output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
-                      , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
