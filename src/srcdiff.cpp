@@ -457,7 +457,7 @@ int main(int argc, char * argv[]) {
 
     rbuf_old.output_diff = &output_diff;
     rbuf_old.delay_close = new std::vector<struct open_diff *>;
-    xmlTextReaderRead(reader_old);
+    int is_old_done = xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { 0 };
     rbuf_new.stream_source = INSERT;
@@ -470,7 +470,7 @@ int main(int argc, char * argv[]) {
 
     rbuf_new.output_diff = &output_diff;
     rbuf_new.delay_close = new std::vector<struct open_diff *>;
-    xmlTextReaderRead(reader_new);
+    int is_new_done = xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
     xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
@@ -481,12 +481,15 @@ int main(int argc, char * argv[]) {
     xmlTextReaderRead(reader_old);
     xmlTextReaderRead(reader_new);
 
-    collect_difference(&rbuf_old, reader_old);
+    if(!is_old_done)
+      collect_difference(&rbuf_old, reader_old);
 
     xmlBufferFree(output_file_one);
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
+    if(!is_new_done)
     collect_difference(&rbuf_new, reader_new);
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     xmlBufferFree(output_file_two);
 
     std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(rbuf_old.diff_nodes, 0, rbuf_old.diff_nodes->size());
@@ -600,7 +603,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
           text->content = (xmlChar *)content;
           rbuf->diff_nodes->push_back(text);
-
           characters_start = rbuf->characters;
 
           if(!*rbuf->characters)
@@ -620,7 +622,6 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
           const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
           text->content = (xmlChar *)content;
           rbuf->diff_nodes->push_back(text);
-
           characters_start = rbuf->characters + 1;
 
         }
