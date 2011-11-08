@@ -666,7 +666,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader) {
 }
 
 // check if node is whitespace
-bool is_whitespace(std::vector<xmlNodePtr> * diff_nodes, int start) {
+bool is_white_space(std::vector<xmlNodePtr> * diff_nodes, int start) {
 
   if((xmlReaderTypes)diff_nodes->at(start)->type != XML_READER_TYPE_TEXT)
     return false;
@@ -748,7 +748,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr>
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if(is_whitespace(diff_nodes, i) || (xmlReaderTypes)diff_nodes->at(i)->type == XML_READER_TYPE_TEXT) {
+    if(is_white_space(diff_nodes, i) || (xmlReaderTypes)diff_nodes->at(i)->type == XML_READER_TYPE_TEXT) {
 
       node_set->push_back(diff_nodes->at(i));
 
@@ -1758,19 +1758,62 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
                    , int start_new, int length_new
                    , xmlTextWriterPtr writer) {
 
+  int begin_old = start_old;
+  int begin_new = start_new;
+
+  // match beginning whitespace
+  if(length_old > 0 && length_new > 0) {
+
+  if(is_white_space(node_sets_old->at(begin_old)->at(0)) && is_white_space(node_sets_new->at(begin_new)->at(0))) {
+
+    xmlChar * content_old = node_sets_old->at(begin_old)->at(0)->content;
+    xmlChar * content_new = node_sets_new->at(begin_new)->at(0)->content;
+
+    int size_old = strlen((const char *)node_sets_old->at(begin_old)->at(0)->content);
+    int size_new = strlen((const char *)node_sets_new->at(begin_new)->at(0)->content);
+
+        int offset_old = 0;
+        int offset_new = 0;
+
+        for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
+
+          xmlTextWriterWriteRawLen(writer, content_old, offset_old);
+
+          if(offset_old < size_old) {
+
+            // shrink 
+            node_sets_old->at(begin_old)->at(0)->content = content_old + offset_old;
+
+
+          } else
+            ++begin_old;
+
+          if(offset_new < size_new) {
+
+            node_sets_new->at(begin_new)->at(0)->content = content_new + offset_new;
+
+          } else
+            ++begin_new;
+
+        
+      }
+
+    }
+
+
   if(length_old > 0) {
 
-    // output diff tag start
+    // output diff tag begin
     if(rbuf_old->open_diff->back()->operation != DELETE)
       output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
     rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
     for(int j = 0; j < length_old; ++j)
-      for(unsigned int i = 0; i < node_sets_old->at(start_old + j)->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, node_sets_old->at(start_old + j)->at(i), DELETE, writer);
+      for(unsigned int i = 0; i < node_sets_old->at(begin_old + j)->size(); ++i)
+        output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old + j)->at(i), DELETE, writer);
 
-    // output diff tag start
+    // output diff tag begin
     if(rbuf_old->open_diff->back()->operation == DELETE)
       rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
@@ -1787,10 +1830,10 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
     rbuf_new->open_diff->back()->open_tags->front()->marked = false;
 
     for(int j = 0; j < length_new; ++j)
-      for(unsigned int i = 0; i < node_sets_new->at(start_new + j)->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, node_sets_new->at(start_new + j)->at(i), INSERT, writer);
+      for(unsigned int i = 0; i < node_sets_new->at(begin_new + j)->size(); ++i)
+        output_handler(rbuf_old, rbuf_new, node_sets_new->at(begin_new + j)->at(i), INSERT, writer);
 
-    // output diff tag start
+    // output diff tag begin
     if(rbuf_new->open_diff->back()->operation == INSERT)
       rbuf_new->open_diff->back()->open_tags->front()->marked = true;
     output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
