@@ -1723,9 +1723,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
       --i;
       --j;
 
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
-
       for(int opos = 0, npos = 0; opos < text_old.size() && npos < text_new.size(); ++opos, ++npos) {
 
         if(text_old[opos] == text_new[npos]) {
