@@ -478,15 +478,16 @@ int main(int argc, char * argv[]) {
     // output srcdiff unit
     output_handler(&rbuf_old, &rbuf_new, unit, COMMON, writer);
 
-    int is_old_done = xmlTextReaderRead(reader_old);
-    int is_new_done = xmlTextReaderRead(reader_new);
+    int is_old = xmlTextReaderRead(reader_old);
+    int is_new = xmlTextReaderRead(reader_new);
 
-    if(!is_old_done)
+    if(is_old)
       collect_difference(&rbuf_old, reader_old);
 
     xmlBufferFree(output_file_one);
 
-    if(!is_new_done)
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    if(is_new)
       collect_difference(&rbuf_new, reader_new);
 
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
