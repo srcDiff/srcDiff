@@ -154,6 +154,16 @@ bool is_white_space(xmlNodePtr node) {
 
 }
 
+bool is_white_space_set(std::vector<xmlNodePtr> * node_set) {
+
+  for(int i = 0; i < node_set->size(); ++i)
+    if((xmlReaderTypes)node->type != XML_READER_TYPE_TEXT || !isspace((char)node->content[0]))
+      return false;
+
+  return true;
+
+}
+
 bool is_text(xmlNodePtr node) {
 
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
@@ -163,6 +173,62 @@ bool is_text(xmlNodePtr node) {
 int node_set_syntax_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
   std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
+
+  for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
+
+    // Bypassing whitespace
+    for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i)
+      ;
+
+    // Bypassing whitespace
+    for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j)
+      ;
+
+    // If end was all whitespace then the same
+    if(i >= node_set1->size() && j >= node_set2->size())
+      return 0;
+
+    // If one had ending whitespace and other had something else then different
+    if(i >= node_set1->size() || j >= node_set2->size())
+      return 1;
+
+    // string consecutive non whitespace text nodes
+    if(is_text(node_set1->at(i)) && is_text(node_set2->at(j))) {
+
+      std::string text1 = "";
+      for(; i < node_set1->size() && is_text(node_set1->at(i)); ++i)
+        if(!is_white_space(node_set1->at(i)))
+          text1 += (const char *)node_set1->at(i)->content;
+
+      std::string text2 = "";
+      for(; j < node_set2->size() && is_text(node_set2->at(j)); ++j)
+        if(!is_white_space(node_set2->at(j)))
+          text2 += (const char *)node_set2->at(j)->content;
+
+      if(text1 != text2)
+        return 1;
+
+      --i;
+      --j;
+
+      continue;
+
+    }
+
+    if(node_compare(node_set1->at(i), node_set2->at(j)))
+      return 1;
+  }
+
+  return 0;
+}
+
+// diff node comparison function
+int node_set_comment_compare(const void * e1, const void * e2) {
+  std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
+  std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
+
+  if(is_whitespace_set(node_set1) && is_shitespace_set(node_set2)
+     return node_set_compare(node_set1, node_set2);
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
