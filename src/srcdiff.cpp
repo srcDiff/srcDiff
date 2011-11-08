@@ -1641,6 +1641,54 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
     else if(is_white_space(node_set_old->at(i)) && is_white_space(node_set_new->at(j))) {
 
+      /*
+
+        xmlChar * content_old = node_sets_old->at(edits->offset_sequence_one)->at(0)->content;
+        xmlChar * content_new = node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content;
+
+        int size_old = strlen((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content);
+        int size_new = strlen((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content);
+
+        if(whitespace_length_old == size_old && whitespace_length_new == size_new) {
+
+          int end_old = size_old - 1;
+          int end_new = size_new - 1;
+
+          while(end_old >= 0 && end_new >= 0 && content_old[end_old] == content_new[end_new]) {
+
+            --end_old;
+            --end_new;
+          }
+
+          if(end_old >= 0) {
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+
+            xmlTextWriterWriteRawLen(writer, content_old, end_old + 1);
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+
+          }
+
+          if(end_new >= 0) {
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+
+            xmlTextWriterWriteRawLen(writer, content_new, end_new + 1);
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+
+          }
+
+          xmlTextWriterWriteRawLen(writer, content_old + end_old + 1, size_old - (end_old + 1));
+
+        }
+      */
+
       // output diff tag
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
 
