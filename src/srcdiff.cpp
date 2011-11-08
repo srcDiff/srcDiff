@@ -985,8 +985,14 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
     std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
 
-    if((i != 0) && !is_white_space(diff_nodes->at(i))
-       || (i + 1 < end && is_white_space(diff_nodes->at(i)) && !contains_new_line(diff_nodes->at(i)) && !is_white_space(diff_nodes->at(i + 1)))) {
+    if(contains_new_line(diff_nodes->at(i))) {
+
+      for(; contains_new_line(diff_nodes->at(i)); ++i)
+        node_set->push_back(diff_nodes->at(i));
+
+      --i;
+
+    } else {
 
       bool first_newline = false;
       for(; i < end; ++i) {
@@ -995,8 +1001,8 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
           --i;
           break;
-        }
-        else
+
+        } else
           first_newline = false;
 
         node_set->push_back(diff_nodes->at(i));
@@ -1006,9 +1012,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
       }      
 
-    } else
-          node_set->push_back(diff_nodes->at(i));
-
+    }
 
     node_sets->push_back(node_set);
 
