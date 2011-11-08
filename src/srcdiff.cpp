@@ -1461,7 +1461,7 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
   int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
   int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
 
-  return (old_diff > new_diff ? old_diff : new_diff) + 1;
+  return ((old_diff > new_diff) ? old_diff : new_diff) + 1;
 }
 
 void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
