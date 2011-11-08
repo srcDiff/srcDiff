@@ -457,7 +457,7 @@ int main(int argc, char * argv[]) {
 
     rbuf_old.output_diff = &output_diff;
     rbuf_old.delay_close = new std::vector<struct open_diff *>;
-    int is_old_done = xmlTextReaderRead(reader_old);
+    xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { 0 };
     rbuf_new.stream_source = INSERT;
@@ -470,7 +470,7 @@ int main(int argc, char * argv[]) {
 
     rbuf_new.output_diff = &output_diff;
     rbuf_new.delay_close = new std::vector<struct open_diff *>;
-    int is_new_done = xmlTextReaderRead(reader_new);
+    xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
     xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
@@ -478,17 +478,17 @@ int main(int argc, char * argv[]) {
     // output srcdiff unit
     output_handler(&rbuf_old, &rbuf_new, unit, COMMON, writer);
 
-    xmlTextReaderRead(reader_old);
-    xmlTextReaderRead(reader_new);
+    int is_old_done = xmlTextReaderRead(reader_old);
+    int is_new_done = xmlTextReaderRead(reader_new);
 
     if(!is_old_done)
       collect_difference(&rbuf_old, reader_old);
 
     xmlBufferFree(output_file_one);
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     if(!is_new_done)
-    collect_difference(&rbuf_new, reader_new);
+      collect_difference(&rbuf_new, reader_new);
+
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     xmlBufferFree(output_file_two);
 
