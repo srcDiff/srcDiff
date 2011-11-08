@@ -1769,3 +1769,11 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
   }
 
 }
+
+void group_changes(struct edit * edit_script) {
+
+  struct edit * edits = edit_script;
+
+  for(; edits; edits = edit->next);
+
+}
