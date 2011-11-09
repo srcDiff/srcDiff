@@ -1663,39 +1663,50 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
       if(start_old < size_old) {
 
+
+      if(rbuf_old->open_diff->back()->operation != DELETE)
+        output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
+
         // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
+        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
         xmlTextWriterWriteRawLen(writer, content_old + start_old, size_old - start_old);
 
         // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+        output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
       }
 
       if(start_new < size_new) {
 
+      if(rbuf_old->open_diff->back()->operation != INSERT)
+        output_handler(rbuf_new, rbuf_new, diff_new_start, INSERT, writer);
         // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
+        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
         xmlTextWriterWriteRawLen(writer, content_new + start_new, size_new - start_new);
 
         // output diff tag
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+        // output diff tag
+        output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
       }
 
       // whitespace change
     } else if(is_white_space(node_set_old->at(i))) {
 
+      if(rbuf_old->open_diff->back()->operation != DELETE)
+        output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
       // whitespace delete
       // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
+      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
       output_handler(rbuf_old, rbuf_new, node_set_old->at(i), DELETE, writer);
 
       // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+      output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
       --j;
 
@@ -1742,7 +1753,9 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
           if(isspace(text_old[opos])) {
 
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
+                  if(rbuf_old->open_diff->back()->operation != DELETE)
+                    output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
+                  //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
             for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
@@ -1751,7 +1764,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
             }
 
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+            output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
           }
 
@@ -1837,7 +1851,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
   int olength = length_old;
   int nlength = length_new;
 
-  if(0 && is_nestable(node_sets_old, begin_old, olength, node_sets_new, begin_new, nlength)) {
+  if(1 && is_nestable(node_sets_old, begin_old, olength, node_sets_new, begin_new, nlength)) {
 
     if(is_block_type(node_sets_old, start_old, length_old)) {
 
@@ -1899,6 +1913,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
     // output diff tag begin
     if(rbuf_new->open_diff->back()->operation == INSERT)
       rbuf_new->open_diff->back()->open_tags->front()->marked = true;
+
     output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
 
     }
