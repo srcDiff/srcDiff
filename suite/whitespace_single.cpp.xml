@@ -2,11 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="whitespace.single">
 
 <unit>
-<diff:old status="start"/>  <diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:old type="whitespace">  </diff:old><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<diff:old status="start"/>  <diff:old status="end"/>  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+  <diff:old type="whitespace">  </diff:old><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
