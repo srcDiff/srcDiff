@@ -1687,7 +1687,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
         xmlTextWriterWriteRawLen(writer, content_new + start_new, size_new - start_new);
 
         // output diff tag
-        // output diff tag
         output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
         //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
@@ -1712,14 +1711,17 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
     } else if(is_white_space(node_set_new->at(j))) {
 
+      if(rbuf_old->open_diff->back()->operation != INSERT)
+        output_handler(rbuf_new, rbuf_new, diff_new_start, INSERT, writer);
       //whitespace insert
       // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
+      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
       output_handler(rbuf_old, rbuf_new, node_set_new->at(j), INSERT, writer);
 
       // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+        output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
       --i;
 
@@ -1771,6 +1773,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
           if(isspace(text_new[npos])) {
 
+      if(rbuf_old->open_diff->back()->operation != INSERT)
+        output_handler(rbuf_new, rbuf_new, diff_new_start, INSERT, writer);
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
             for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
@@ -1779,8 +1783,9 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
               output_char(text_new[npos], writer);
             }
 
+        output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
             // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
           }
 
