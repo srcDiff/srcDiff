@@ -1217,9 +1217,12 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
-      } else
+      } else {
+
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
                       , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+      }
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -1814,15 +1817,13 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
       if(offset_old < size_old) {
 
-
         // shrink
         node_sets_old->at(begin_old)->at(0)->content = content_old + offset_old;
         //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
 
       } else {
 
-        --olength;
-        ++begin_old;
+        node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)"";
       }
 
       if(offset_new < size_new) {
@@ -1831,15 +1832,13 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
       } else {
 
-        --nlength;
-        ++begin_new;
+        node_sets_new->at(begin_new)->at(0)->content = (xmlChar *)"";
       }
 
 
     }
 
   }
-
 
   if(olength > 0) {
 
