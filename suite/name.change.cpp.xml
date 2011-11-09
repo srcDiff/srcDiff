@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="name.change">
 
 <unit>
-<expr_stmt><expr><name><diff:old>a</diff:old><diff:new>a</diff:new></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><diff:old>a</diff:old><diff:new>b</diff:new></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
