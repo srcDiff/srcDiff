@@ -66,12 +66,9 @@ xmlNodePtr diff_old_end;
 xmlNodePtr diff_new_start;
 xmlNodePtr diff_new_end;
 
-// constant template for temporary file names
-char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
-
 xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
 
-// global structures
+// global structures to hold read in nodes
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
@@ -124,6 +121,21 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 int node_compare(const void * e1, const void * e2) {
   xmlNode * node1 = (xmlNode *)e1;
   xmlNode * node2 = (xmlNode *)e2;
+
+  if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
+
+    // end if text node contents differ
+    if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
+      return strcmp((const char *)node1->content, (const char *)node2->content);
+    else
+      return attribute_compare(node1->properties, node2->properties);
+  }
+
+  return 1;
+}
+
+// diff node comparison function
+int node_compare(xmlNode * node1, xmlNode * node2) {
 
   if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
 
