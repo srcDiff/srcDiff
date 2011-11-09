@@ -1096,14 +1096,14 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
         // collect subset of nodes
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
-          = create_comment_paragraph_set(node_sets_old->at(edits->offset_sequence_one), 0
+          = create_comment_line_set(node_sets_old->at(edits->offset_sequence_one), 0
                                     , node_sets_old->at(edits->offset_sequence_one)->size());
 
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
-          = create_comment_paragraph_set(node_sets_new->at(edit_next->offset_sequence_two), 0
+          = create_comment_line_set(node_sets_new->at(edit_next->offset_sequence_two), 0
                                     , node_sets_new->at(edit_next->offset_sequence_two)->size());
 
-        output_comment_paragraph(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+        output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
         output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
