@@ -1709,7 +1709,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
       --i;
 
-    } else {
+    } else if(is_text(node_set_old->at(i)) && is_text(node_set_new->at(j))) {
 
       // collect all adjacent text nodes character arrays and input difference
       std::string text_old = "";
@@ -1767,6 +1767,9 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
       }
 
+    } else {
+
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     }
 
   }
