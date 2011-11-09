@@ -358,6 +358,9 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
 void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer);
 
+void output_char(char character, xmlTextWriterPtr writer);
+
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
@@ -1731,7 +1734,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
         if(text_old[opos] == text_new[npos]) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_old[opos], 1);
+          output_char(text_old[opos], writer);
           continue;
         }
 
@@ -1744,7 +1747,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
             for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
               //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-              xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_old[opos], 1);
+              output_char(text_old[opos], writer);
             }
 
             // output diff tag
@@ -1759,7 +1762,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
             for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
               //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-              xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_new[npos], 1);
+              output_char(text_new[npos], writer);
             }
 
             // output diff tag
@@ -1913,6 +1916,24 @@ void group_changes(struct edit * edit_script, std::vector<std::vector<xmlNodePtr
 
     }
 
+  }
+
+}
+
+void output_char(char character, xmlTextWriterPtr writer) {
+
+    if(character == '&')
+      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+
+    else if (character == '<')
+      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+
+    else if (character == '>')
+
+      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+
+    else
+      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) &character, 1);
   }
 
 }
