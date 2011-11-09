@@ -1893,7 +1893,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
 
   }
 
-  if(1 && is_nestable(node_sets_old, begin_old, olength, node_sets_new, begin_new, nlength)) {
+  if(0 && is_nestable(node_sets_old, begin_old, olength, node_sets_new, begin_new, nlength)) {
 
     if(is_block_type(node_sets_old, start_old, length_old)) {
 
