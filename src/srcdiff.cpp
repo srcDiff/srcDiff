@@ -91,14 +91,8 @@ int line_compare(const void * e1, const void * e2) {
 }
 
 // diff node accessor function
-const void * node_index(int idx, const void *s) {
-  std::vector<xmlNode *> & nodes = *(std::vector<xmlNode *> *)s;
-  return nodes[idx];
-}
-
-// diff node accessor function
 const void * node_set_index(int idx, const void *s) {
-  std::vector<std::vector<xmlNode *> *> & node_sets = *(std::vector<std::vector<xmlNode *> *> *)s;
+  std::vector<std::vector<int> *> & node_sets = *(std::vector<std::vector<int> *> *)s;
   return node_sets[idx];
 }
 
@@ -139,14 +133,14 @@ int node_compare(const void * e1, const void * e2) {
 
 // diff node comparison function
 int node_set_compare(const void * e1, const void * e2) {
-  std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
-  std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
+  std::vector<int> * node_set1 = (std::vector<int> *)e1;
+  std::vector<int> * node_set2 = (std::vector<int> *)e2;
 
   if(node_set1->size() != node_set2->size())
     return 1;
   else
     for(unsigned int i = 0; i < node_set1->size(); ++i)
-      if(node_compare(node_set1->at(i), node_set2->at(i)))
+      if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(i))))
         return 1;
 
   return 0;
@@ -228,8 +222,8 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
 // diff node comparison function
 int node_set_comment_compare(const void * e1, const void * e2) {
-  std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
-  std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
+  std::vector<int> * node_set1 = (std::vector<int> *)e1;
+  std::vector<int> * node_set2 = (std::vector<int> *)e2;
 
   if(is_white_space_set(node_set1) && is_white_space_set(node_set2))
     return node_set_compare(node_set1, node_set2);
@@ -792,7 +786,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
@@ -913,7 +907,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
       } else {
 
-        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+        output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
+                      , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+        //compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
 
       }
 
@@ -1448,7 +1444,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
   //unsigned int length = node_set_new->size();
 
-  if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
+  if(node_set_compare(node_set_old, node_set_new) == 0)
     return MIN;
 
 
@@ -1602,11 +1598,11 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
       = create_comment_paragraph_set(&nodes_old, node_sets_old->at(start_old)->at(1) + 1
-                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 2));
+                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
   std::vector<std::vector<int> *> * next_node_set_new
     = create_comment_paragraph_set(&nodes_new, node_sets_new->at(start_new)->at(1)
-                      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 2));
+                      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_comment_paragraph(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
@@ -1616,11 +1612,11 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
       = create_node_set(&nodes_old, node_sets_old->at(start_old)->at(1)
-                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 2));
+                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
     std::vector<std::vector<int> *> * next_node_set_new
       = create_node_set(&nodes_new, node_sets_new->at(start_new)->at(1)
-      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 2));
+      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
