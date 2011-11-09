@@ -1220,7 +1220,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
-      } else 
+      } else
         output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
                       , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
 
@@ -1690,7 +1690,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
       // whitespace delete
       // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
       output_handler(rbuf_old, rbuf_new, node_set_old->at(i), DELETE, writer);
 
@@ -1703,7 +1703,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
       //whitespace insert
       // output diff tag
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
       output_handler(rbuf_old, rbuf_new, node_set_new->at(j), INSERT, writer);
 
@@ -1742,7 +1742,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
           if(isspace(text_old[opos])) {
 
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
             for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
@@ -1757,7 +1757,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
           if(isspace(text_new[npos])) {
 
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
             for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
@@ -1922,17 +1922,17 @@ void group_changes(struct edit * edit_script, std::vector<std::vector<xmlNodePtr
 
 void output_char(char character, xmlTextWriterPtr writer) {
 
-    if(character == '&')
-      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+  if(character == '&')
+    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
 
-    else if (character == '<')
-      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+  else if (character == '<')
+    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
 
-    else if (character == '>')
+  else if (character == '>')
 
-      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
 
-    else
-      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) &character, 1);
+  else
+    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) &character, 1);
 
 }
