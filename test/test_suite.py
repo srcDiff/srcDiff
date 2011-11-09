@@ -434,8 +434,8 @@ try:
                                                 unitxml = switch_differences(unitxml)
 
 						# convert the unit in xml to text
-						unit_text_old = extract_source(unitxml, "0")
-						unit_text_new = extract_source(unitxml, "1")
+						unit_text_old = extract_source(unitxml, "1")
+						unit_text_new = extract_source(unitxml, "2")
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
