@@ -71,6 +71,11 @@ char * srcdiff_template = (char *)"srcdifftemp.XXXXXX";
 
 xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
 
+// global structures
+std::vector<xmlNode *> nodes_old;
+std::vector<xmlNode *> nodes_new;
+
+
 // diff accessor function
 const void * line_index(int idx, const void *s) {
   std::vector<const char *> & lines = *(std::vector<const char *> *)s;
@@ -119,7 +124,6 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 int node_compare(const void * e1, const void * e2) {
   xmlNode * node1 = (xmlNode *)e1;
   xmlNode * node2 = (xmlNode *)e2;
-
 
   if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
 
@@ -301,7 +305,6 @@ struct reader_buffer {
   int stream_source;
   int line_number;
   unsigned char * characters;
-  std::vector<xmlNode *> * diff_nodes;
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
 
@@ -316,38 +319,35 @@ xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr rea
 void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
 
 // create sets of nodes
-std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end);
+std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader);
-
-// collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int reader_state);
+void collect_difference(struct reader_buffer * rbuf, std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state);
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer);
 
 // output file level info
-void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
 
-void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
 
-void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
 
-void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , int start_old
-                      , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                      , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                       , int start_new
                       , xmlTextWriterPtr writer);
 
-void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                    , int start_old, int length_old
-                   , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                   , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                    , int start_new, int length_new
                    , xmlTextWriterPtr writer);
 
-void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
-                       , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                       , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , struct edit * edit_script, xmlTextWriterPtr writer);
 
 void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer);
@@ -356,7 +356,7 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
-void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer);
+void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<int> * node_set_old, struct reader_buffer * rbuf_new, std::vector<int> * node_set_new, xmlTextWriterPtr writer);
 
 void output_char(char character, xmlTextWriterPtr writer);
 
@@ -487,16 +487,16 @@ int main(int argc, char * argv[]) {
     int is_old = xmlTextReaderRead(reader_old);
     int is_new = xmlTextReaderRead(reader_new);
 
-    collect_difference(&rbuf_old, reader_old, is_old);
+    collect_difference(&rbuf_old, &nodes_old, reader_old, is_old);
 
     xmlBufferFree(output_file_one);
 
-    collect_difference(&rbuf_new, reader_new, is_new);
+    collect_difference(&rbuf_new, &nodes_new, reader_new, is_new);
 
     xmlBufferFree(output_file_two);
 
-    std::vector<std::vector<xmlNodePtr> *> * node_set_old = create_node_set(rbuf_old.diff_nodes, 0, rbuf_old.diff_nodes->size());
-    std::vector<std::vector<xmlNodePtr> *> * node_set_new = create_node_set(rbuf_new.diff_nodes, 0, rbuf_new.diff_nodes->size());
+    std::vector<std::vector<int> *> * node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
+    std::vector<std::vector<int> *> * node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
     output_diffs(&rbuf_old, node_set_old, &rbuf_new, node_set_new, writer);
 
@@ -554,13 +554,10 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
 }
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, int reader_state) {
+void collect_difference(struct reader_buffer * rbuf, std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state) {
 
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
-
-  // allocate new buffer
-  rbuf->diff_nodes = new std::vector<xmlNode *>;
 
   if(!reader_state)
     return;
@@ -592,7 +589,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
             const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
             text->content = (xmlChar *)content;
-            rbuf->diff_nodes->push_back(text);
+            nodes->push_back(text);
 
             characters_start = rbuf->characters;
 
@@ -608,7 +605,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
           const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
           text->content = (xmlChar *)content;
-          rbuf->diff_nodes->push_back(text);
+          nodes->push_back(text);
           characters_start = rbuf->characters;
 
           if(!*rbuf->characters)
@@ -627,7 +624,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
           const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
           text->content = (xmlChar *)content;
-          rbuf->diff_nodes->push_back(text);
+          nodes->push_back(text);
           characters_start = rbuf->characters + 1;
 
         }
@@ -646,7 +643,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
 
           const char * content = strdup((const char *)characters_start);
           text->content = (xmlChar *)content;
-          rbuf->diff_nodes->push_back(text);
+          nodes->push_back(text);
 
         }
 
@@ -663,7 +660,7 @@ void collect_difference(struct reader_buffer * rbuf, xmlTextReaderPtr reader, in
         return;
 
       // save non-text node and get next node
-      rbuf->diff_nodes->push_back(node);
+      nodes->push_back(node);
 
       not_done = xmlTextReaderRead(reader);
     }
@@ -716,13 +713,13 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * diff_nodes, unsigned start) {
   return false;
 }
 
-void collect_entire_tag(std::vector<xmlNodePtr> * diff_nodes, std::vector <xmlNode *> * node_set, int * start) {
+void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node_set, int * start) {
 
-  //const char * open_node = (const char *)diff_nodes->at(*start)->name;
+  //const char * open_node = (const char *)nodes->at(*start)->name;
 
-  node_set->push_back(diff_nodes->at(*start));
+  node_set->push_back(*start);
 
-  if(diff_nodes->at(*start)->extra & 0x1)
+  if(nodes->at(*start)->extra & 0x1)
     return;
 
   ++(*start);
@@ -733,13 +730,13 @@ void collect_entire_tag(std::vector<xmlNodePtr> * diff_nodes, std::vector <xmlNo
 
   for(; !is_open.empty(); ++(*start)) {
 
-    node_set->push_back(diff_nodes->at(*start));
+    node_set->push_back(*start);
 
-    if((xmlReaderTypes)diff_nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
-       && !(diff_nodes->at(*start)->extra & 0x1))
+    if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
+       && !(nodes->at(*start)->extra & 0x1))
       is_open.push_back(false);
 
-    else if((xmlReaderTypes)diff_nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
+    else if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
       is_open.pop_back();
 
   }
@@ -747,33 +744,37 @@ void collect_entire_tag(std::vector<xmlNodePtr> * diff_nodes, std::vector <xmlNo
   --(*start);
 }
 
-std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end) {
+std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
+  std::vector<std::vector<int> *> * node_sets = new std::vector<std::vector<int> *>;
 
   for(int i = start; i < end; ++i) {
 
-    std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
+    std::vector <int> * node_set = new std::vector <int>;
 
-    if(is_white_space(diff_nodes, i) || (xmlReaderTypes)diff_nodes->at(i)->type == XML_READER_TYPE_TEXT) {
+    if(is_white_space(nodes, i))
 
-      node_set->push_back(diff_nodes->at(i));
+      node_set->push_back(i);
 
-    } else if(is_atomic_srcml(diff_nodes, i)) {
+    else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
 
-      node_set->push_back(diff_nodes->at(i));
-      node_set->push_back(diff_nodes->at(i + 1));
-      node_set->push_back(diff_nodes->at(i + 2));
+      node_set->push_back(i);
+
+    } else if(is_atomic_srcml(nodes, i)) {
+
+      node_set->push_back(i);
+      node_set->push_back(i + 1);
+      node_set->push_back(i + 2);
 
       i += 2;
 
-    } else if((xmlReaderTypes)diff_nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
+    } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-      collect_entire_tag(diff_nodes, node_set, &i);
+      collect_entire_tag(nodes, node_set, &i);
 
     } else {
 
-      node_set->push_back(diff_nodes->at(i));
+      node_set->push_back(i);
     }
 
     node_sets->push_back(node_set);
@@ -785,7 +786,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_node_set(std::vector<xmlNodePtr>
 }
 
 // output a change
-void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
+void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
@@ -834,11 +835,13 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
       // look for pure whitespace change
       int whitespace_length_old = 0;
       int whitespace_length_new = 0;
-      if(node_sets_old->at(edits->offset_sequence_one)->at(0)->type == node_sets_new->at(edit_next->offset_sequence_two)->at(0)->type
-         && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type == XML_READER_TYPE_TEXT) {
 
-        strspn((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content, " \t\r\n");
-        strspn((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content, " \t\r\n");
+      
+      if(nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type == nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))->type
+         && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type == XML_READER_TYPE_TEXT) {
+
+        strspn((const char *)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->content, " \t\r\n");
+        strspn((const char *)nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))->content, " \t\r\n");
 
       }
 
@@ -846,11 +849,11 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
          && node_sets_old->at(edits->offset_sequence_one)->size() == 1 && node_sets_new->at(edit_next->offset_sequence_two)->size() == 1
          && edits->length == 1 && edit_next->length == 1) {
 
-        xmlChar * content_old = node_sets_old->at(edits->offset_sequence_one)->at(0)->content;
-        xmlChar * content_new = node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content;
+        xmlChar * content_old = nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->content;
+        xmlChar * content_new = nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))->content;
 
-        int size_old = strlen((const char *)node_sets_old->at(edits->offset_sequence_one)->at(0)->content);
-        int size_new = strlen((const char *)node_sets_new->at(edit_next->offset_sequence_two)->at(0)->content);
+        int size_old = strlen((const char *)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->content);
+        int size_new = strlen((const char *)nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))->content);
 
         if(whitespace_length_old == size_old && whitespace_length_new == size_new) {
 
@@ -895,9 +898,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNo
                 && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
                     || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
-        if(node_compare(node_sets_old->at(edits->offset_sequence_one)->at(0)
-                        , node_sets_new->at(edit_next->offset_sequence_two)->at(0)) == 0
-           && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one)->at(0)->type != XML_READER_TYPE_TEXT) {
+        if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
+                        , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
+           && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
 
           output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
                            , rbuf_new, node_sets_new, edit_next->offset_sequence_two, writer);
@@ -977,18 +980,18 @@ bool contains_new_line(xmlNodePtr node) {
 
 }
 
-std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end) {
+std::vector<std::vector<int> *> * create_comment_paragraph_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
+  std::vector<std::vector<int> *> * node_sets = new std::vector<std::vector<int> *>;
 
   for(int i = start; i < end; ++i) {
 
-    std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
+    std::vector <int> * node_set = new std::vector <int>;
 
-    if(contains_new_line(diff_nodes->at(i))) {
+    if(contains_new_line(nodes->at(i))) {
 
-      for(; contains_new_line(diff_nodes->at(i)); ++i)
-        node_set->push_back(diff_nodes->at(i));
+      for(; contains_new_line(nodes->at(i)); ++i)
+        node_set->push_back(i);
 
       --i;
 
@@ -997,7 +1000,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
       bool first_newline = false;
       for(; i < end; ++i) {
 
-        if(first_newline && contains_new_line(diff_nodes->at(i))) {
+        if(first_newline && contains_new_line(nodes->at(i))) {
 
           --i;
           break;
@@ -1005,9 +1008,9 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
         } else
           first_newline = false;
 
-        node_set->push_back(diff_nodes->at(i));
+        node_set->push_back(i);
 
-        if(!first_newline && contains_new_line(diff_nodes->at(i)))
+        if(!first_newline && contains_new_line(nodes->at(i)))
           first_newline = true;
 
       }
@@ -1022,19 +1025,19 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
 
 }
 
-std::vector<std::vector<xmlNodePtr> *> * create_comment_line_set(std::vector<xmlNodePtr> * diff_nodes, int start, int end) {
+std::vector<std::vector<int> *> * create_comment_line_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<xmlNodePtr> *> * node_sets = new std::vector<std::vector<xmlNodePtr> *>;
+  std::vector<std::vector<int> *> * node_sets = new std::vector<std::vector<int> *>;
 
   for(int i = start; i < end; ++i) {
 
-    std::vector <xmlNode *> * node_set = new std::vector <xmlNode *>;
+    std::vector<int> * node_set = new std::vector <int>;
 
     for(; i < end; ++i) {
 
-      node_set->push_back(diff_nodes->at(i));
+      node_set->push_back(i);
 
-      if(contains_new_line(diff_nodes->at(i)))
+      if(contains_new_line(nodes->at(i)))
         break;
     }
 
@@ -1046,7 +1049,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_line_set(std::vector<xml
 
 }
 
-void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
+void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer) {
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
@@ -1091,13 +1094,13 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
-          = create_comment_line_set(node_sets_old->at(edits->offset_sequence_one), 0
-                                    , node_sets_old->at(edits->offset_sequence_one)->size());
+        std::vector<std::vector<int> *> * next_node_set_old
+          = create_comment_line_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+                  , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1));
 
-        std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
-          = create_comment_line_set(node_sets_new->at(edit_next->offset_sequence_two), 0
-                                    , node_sets_new->at(edit_next->offset_sequence_two)->size());
+        std::vector<std::vector<int> *> * next_node_set_new
+          = create_comment_line_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+                  , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1));
 
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
@@ -1158,7 +1161,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 }
 
 
-void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new, xmlTextWriterPtr writer) {
+void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer) {
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
@@ -1203,13 +1206,13 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
-          = create_node_set(node_sets_old->at(edits->offset_sequence_one), 0
-                            , node_sets_old->at(edits->offset_sequence_one)->size());
+        std::vector<std::vector<int> *> * next_node_set_old
+          = create_node_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+                  , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1));
 
-        std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
-          = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 0
-                            , node_sets_new->at(edit_next->offset_sequence_two)->size());
+        std::vector<std::vector<int> *> * next_node_set_new
+          = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+                  , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1));
 
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
@@ -1441,7 +1444,7 @@ struct offset_pair {
 
 #define MIN -1
 
-int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNodePtr> * node_set_new) {
+int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
   //unsigned int length = node_set_new->size();
 
@@ -1450,11 +1453,12 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
 
 
   unsigned int leftptr;
-  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(node_set_old->at(leftptr), node_set_new->at(leftptr)) == 0; ++leftptr);
+  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr);
 
   unsigned int rightptr;
   for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
-        && node_compare(node_set_old->at(node_set_old->size() - rightptr), node_set_new->at(node_set_new->size() - rightptr)) == 0; ++rightptr);
+        && node_compare(nodes_old.at(node_set_old->at(node_set_old->size() - rightptr)), 
+                        nodes_new.at(node_set_new->at(node_set_new->size() - rightptr))) == 0; ++rightptr);
 
   int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
   int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
@@ -1462,8 +1466,8 @@ int compute_similarity(std::vector<xmlNodePtr> * node_set_old, std::vector<xmlNo
   return ((old_diff > new_diff) ? old_diff : new_diff) + 1;
 }
 
-void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
-                       , std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+void match_differences(std::vector<std::vector<int> *> * node_sets_old
+                       , std::vector<std::vector<int> *> * node_sets_new
                        , struct edit * edit_script, struct offset_pair ** matches) {
 
   struct edit * edits = edit_script;
@@ -1502,8 +1506,8 @@ void match_differences(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
 
 }
 
-void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
-                       , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                       , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , struct edit * edit_script, xmlTextWriterPtr writer) {
 
   struct edit * edits = edit_script;
@@ -1538,9 +1542,9 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       output_handler(rbuf_old, rbuf_new, diff_common_end, COMMON, writer);
 
-    } else if(node_compare(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0)
-                           , node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0)) == 0
-              && (xmlReaderTypes)node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0)->type != XML_READER_TYPE_TEXT) {
+    } else if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
+                           , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
+              && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
 
       output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                        , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, writer);
@@ -1577,9 +1581,9 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 }
 
-void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , int start_old
-                      , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                      , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                       , int start_new
                       , xmlTextWriterPtr writer) {
 
@@ -1588,17 +1592,17 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<x
 
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-  output_handler(rbuf_old, rbuf_new, node_sets_old->at(start_old)->at(0), COMMON, writer);
+  output_handler(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, writer);
 
   // compare subset of nodes
-  if(strcmp((const char *)node_sets_old->at(start_old)->at(0)->name, "comment") == 0) {
+  if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
-    std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
+    std::vector<std::vector<int> *> * next_node_set_old
       = create_comment_paragraph_set(node_sets_old->at(start_old), 1
                                      , node_sets_old->at(start_old)->size() - 1);
 
-    std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
+    std::vector<std::vector<int> *> * next_node_set_new
       = create_comment_paragraph_set(node_sets_new->at(start_new), 1
                                      , node_sets_new->at(start_new)->size() - 1);
 
@@ -1608,11 +1612,11 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<x
   else {
 
     // collect subset of nodes
-    std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
+    std::vector<std::vector<int> *> * next_node_set_old
       = create_node_set(node_sets_old->at(start_old), 1
                         , node_sets_old->at(start_old)->size() - 1);
 
-    std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
+    std::vector<std::vector<int> *> * next_node_set_new
       = create_node_set(node_sets_new->at(start_new), 1
                         , node_sets_new->at(start_new)->size() - 1);
 
@@ -1633,7 +1637,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<x
 }
 
 
-void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> * node_set_old, struct reader_buffer * rbuf_new, std::vector<xmlNodePtr> * node_set_new, xmlTextWriterPtr writer) {
+void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<int> * node_set_old, struct reader_buffer * rbuf_new, std::vector<int> * node_set_new, xmlTextWriterPtr writer) {
 
   for(unsigned int i = 0, j = 0; i < node_set_old->size() && j < node_set_new->size(); ++i, ++j) {
 
@@ -1800,7 +1804,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
 
 }
 
-bool is_block_type(std::vector<std::vector<xmlNodePtr> *> * node_sets, int start, int length) {
+bool is_block_type(std::vector<std::vector<int> *> * node_sets, int start, int length) {
 
   if(length != 1)
     return false;
@@ -1815,7 +1819,7 @@ bool is_block_type(std::vector<std::vector<xmlNodePtr> *> * node_sets, int start
 
 }
 
-bool is_statement_type(std::vector<std::vector<xmlNodePtr> *> * node_sets, int start, int length) {
+bool is_statement_type(std::vector<std::vector<int> *> * node_sets, int start, int length) {
 
   if(length != 1)
     return false;
@@ -1830,9 +1834,9 @@ bool is_statement_type(std::vector<std::vector<xmlNodePtr> *> * node_sets, int s
 
 }
 
-bool is_nestable(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+bool is_nestable(std::vector<std::vector<int> *> * node_sets_old
                  , int start_old, int length_old
-                 , std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                 , std::vector<std::vector<int> *> * node_sets_new
                  , int start_new, int length_new) {
 
   return (is_block_type(node_sets_old, start_old, length_old) && is_statement_type(node_sets_new, start_new, length_new))
@@ -1840,9 +1844,9 @@ bool is_nestable(std::vector<std::vector<xmlNodePtr> *> * node_sets_old
 }
 
 
-void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
+void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                    , int start_old, int length_old
-                   , struct reader_buffer * rbuf_new, std::vector<std::vector<xmlNodePtr> *> * node_sets_new
+                   , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                    , int start_new, int length_new
                    , xmlTextWriterPtr writer) {
 
@@ -1907,11 +1911,11 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
       output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(1), DELETE, writer);
 
       // collect subset of nodes
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
+      std::vector<std::vector<int> *> * next_node_set_old
         = create_node_set(node_sets_old->at(begin_old), 2
                           , node_sets_old->at(begin_old)->size() - 2);
 
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
+      std::vector<std::vector<int> *> * next_node_set_new
         = create_node_set(node_sets_new->at(begin_new), 0
                           , node_sets_new->at(begin_new)->size());
 
@@ -1944,11 +1948,11 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
       output_handler(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(1), INSERT, writer);
 
       // collect subset of nodes
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
+      std::vector<std::vector<int> *> * next_node_set_old
         = create_node_set(node_sets_old->at(begin_old), 0
                           , node_sets_old->at(begin_old)->size());
 
-      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
+      std::vector<std::vector<int> *> * next_node_set_new
         = create_node_set(node_sets_new->at(begin_new), 2
                           , node_sets_new->at(begin_new)->size() - 2);
 
@@ -2022,7 +2026,7 @@ bool is_change(struct edit * edit_script) {
 
 }
 
-bool only_white_space_between_change(struct edit * change_one, struct edit * change_two, std::vector<std::vector<xmlNodePtr> *> * node_sets_old) {
+bool only_white_space_between_change(struct edit * change_one, struct edit * change_two, std::vector<std::vector<int> *> * node_sets_old) {
 
   for(int set = change_one->offset_sequence_one + change_one->length; set < change_two->offset_sequence_one; ++set)
     if(!is_white_space_set(node_sets_old->at(set)))
@@ -2031,8 +2035,8 @@ bool only_white_space_between_change(struct edit * change_one, struct edit * cha
   return true;
 }
 
-void group_changes(struct edit * edit_script, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
-                   , std::vector<std::vector<xmlNodePtr> *> * node_sets_new) {
+void group_changes(struct edit * edit_script, std::vector<std::vector<int> *> * node_sets_old
+                   , std::vector<std::vector<int> *> * node_sets_new) {
 
   struct edit * edits = edit_script;
 
