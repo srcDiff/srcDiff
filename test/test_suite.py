@@ -22,7 +22,7 @@ sperrorlist = []
 
 srcml_utility = "srcml2src"
 switch_utility = "bin/SwitchDifferences"
-src2srcdiff_utility = "../bin/src2srcdiff"
+src2srcdiff_utility = "../bin/srcdiff"
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
