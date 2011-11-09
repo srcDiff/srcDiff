@@ -1916,7 +1916,11 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
         = create_node_set(node_sets_old->at(begin_old), 2
                           , node_sets_old->at(begin_old)->size() - 2);
 
-      output_diffs(rbuf_old, next_node_set_old, rbuf_new, node_sets_new, writer);
+      std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
+        = create_node_set(node_sets_new->at(begin_new), 0
+                          , node_sets_new->at(begin_new)->size());
+
+      output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->
                      at(node_sets_old->at(begin_old)->size() - 1), DELETE, writer);
@@ -1945,6 +1949,10 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
       output_handler(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(1), INSERT, writer);
 
       // collect subset of nodes
+      std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
+        = create_node_set(node_sets_old->at(begin_old), 0
+                          , node_sets_old->at(begin_old)->size());
+
       std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
         = create_node_set(node_sets_new->at(begin_new), 2
                           , node_sets_new->at(begin_new)->size() - 2);
@@ -1964,8 +1972,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
       output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
 
     }
-
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   }
 
   // match beginning whitespace
