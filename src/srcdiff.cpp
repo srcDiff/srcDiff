@@ -295,7 +295,7 @@ int node_set_comment_compare(const void * e1, const void * e2) {
 }
 
 // converts source code to srcML
-xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
+xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
 struct tag {
 
@@ -334,7 +334,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state);
+void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state);
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer);
@@ -499,11 +499,11 @@ int main(int argc, char * argv[]) {
     int is_old = xmlTextReaderRead(reader_old);
     int is_new = xmlTextReaderRead(reader_new);
 
-    collect_difference(&rbuf_old, &nodes_old, reader_old, is_old);
+    collect_difference(&nodes_old, reader_old, is_old);
 
     xmlBufferFree(output_file_one);
 
-    collect_difference(&rbuf_new, &nodes_new, reader_new, is_new);
+    collect_difference(&nodes_new, reader_new, is_new);
 
     xmlBufferFree(output_file_two);
 
@@ -566,10 +566,11 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
 }
 
 // collect the differnces
-void collect_difference(struct reader_buffer * rbuf, std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state) {
+void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state) {
 
   // save beginning of characters
   unsigned char * characters_start = rbuf->characters;
+  unsigned char * characters = 0;
 
   if(!reader_state)
     return;
@@ -581,52 +582,52 @@ void collect_difference(struct reader_buffer * rbuf, std::vector<xmlNode *> * no
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
 
       // allocate character buffer if empty and set start of characters
-      if(!rbuf->characters) {
+      if(!characters) {
 
         characters_start = (unsigned char *)xmlTextReaderConstValue(reader);
-        rbuf->characters = characters_start;
+        characters = characters_start;
       }
 
       // cycle through characters
-      for (; (*rbuf->characters) != 0; ++rbuf->characters) {
+      for (; (*characters) != 0; ++characters) {
 
         // separte non whitespace
-        if((*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\r' && (*rbuf->characters) != '\n') {
+        if((*characters) != ' ' && (*characters) != '\t' && (*characters) != '\r' && (*characters) != '\n') {
 
           // output previous whitespace
-          if(rbuf->characters != characters_start) {
+          if(characters != characters_start) {
             xmlNode * text = new xmlNode;
             text->type = (xmlElementType)XML_READER_TYPE_TEXT;
             text->name = (const xmlChar *)"text";
 
-            const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
+            const char * content = strndup((const char *)characters_start, characters  - characters_start);
             text->content = (xmlChar *)content;
             nodes->push_back(text);
 
-            characters_start = rbuf->characters;
+            characters_start = characters;
 
           }
 
-          while((*rbuf->characters) != 0 && (*rbuf->characters) != ' ' && (*rbuf->characters) != '\t' && (*rbuf->characters) != '\r' && (*rbuf->characters) != '\n')
-            ++rbuf->characters;
+          while((*characters) != 0 && (*characters) != ' ' && (*characters) != '\t' && (*characters) != '\r' && (*characters) != '\n')
+            ++characters;
 
           // output other
           xmlNode * text = new xmlNode;
           text->type = (xmlElementType)XML_READER_TYPE_TEXT;
           text->name = (const xmlChar *)"text";
 
-          const char * content = strndup((const char *)characters_start, rbuf->characters  - characters_start);
+          const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
           nodes->push_back(text);
-          characters_start = rbuf->characters;
+          characters_start = characters;
 
-          if(!*rbuf->characters)
+          if(!*characters)
             break;
 
         }
 
         // increase new line count and check if end of diff
-        if((*rbuf->characters) == '\n') {
+        if((*characters) == '\n') {
 
           ++rbuf->line_number;
 
@@ -634,20 +635,20 @@ void collect_difference(struct reader_buffer * rbuf, std::vector<xmlNode *> * no
           text->type = (xmlElementType)XML_READER_TYPE_TEXT;
           text->name = (const xmlChar *)"text";
 
-          const char * content = strndup((const char *)characters_start, (rbuf->characters + 1) - characters_start);
+          const char * content = strndup((const char *)characters_start, (characters + 1) - characters_start);
           text->content = (xmlChar *)content;
           nodes->push_back(text);
-          characters_start = rbuf->characters + 1;
+          characters_start = characters + 1;
 
         }
 
       }
 
       // end and save text node if finished and get next node
-      if(!(*rbuf->characters)) {
+      if(!(*characters)) {
 
         // create new node and buffer it
-        if(rbuf->characters != characters_start) {
+        if(characters != characters_start) {
 
           xmlNode * text = new xmlNode;
           text->type = (xmlElementType)XML_READER_TYPE_TEXT;
@@ -659,7 +660,7 @@ void collect_difference(struct reader_buffer * rbuf, std::vector<xmlNode *> * no
 
         }
 
-        rbuf->characters = NULL;
+        characters = NULL;
 
         not_done = xmlTextReaderRead(reader);
       }
