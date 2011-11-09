@@ -152,10 +152,10 @@ bool is_white_space(xmlNodePtr node) {
 
 }
 
-bool is_white_space_set(std::vector<xmlNodePtr> * node_set) {
+bool is_white_space_set(std::vector<int> * node_set, std::vector<xmlNodePtr> * nodes) {
 
   for(unsigned int i = 0; i < node_set->size(); ++i)
-    if((xmlReaderTypes)node_set->at(i)->type != XML_READER_TYPE_TEXT || !isspace((char)node_set->at(i)->content[0]))
+    if((xmlReaderTypes)nodes->at(node_set->at(i))->type != XML_READER_TYPE_TEXT || !isspace((char)nodes->at(node_set->at(i))->content[0]))
       return false;
 
   return true;
@@ -225,17 +225,17 @@ int node_set_comment_compare(const void * e1, const void * e2) {
   std::vector<int> * node_set1 = (std::vector<int> *)e1;
   std::vector<int> * node_set2 = (std::vector<int> *)e2;
 
-  if(is_white_space_set(node_set1) && is_white_space_set(node_set2))
+  if(is_white_space_set(node_set1, &nodes_old) && is_white_space_set(node_set2, &nodes_new))
     return node_set_compare(node_set1, node_set2);
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
     // Bypassing whitespace
-    for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i)
+    for(; i < node_set1->size() && is_white_space(nodes_old.at(node_set1->at(i))); ++i)
       ;
 
     // Bypassing whitespace
-    for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j)
+    for(; j < node_set2->size() && is_white_space(nodes_new.at(node_set2->at(j))); ++j)
       ;
 
     // If end was all whitespace then the same
@@ -247,17 +247,17 @@ int node_set_comment_compare(const void * e1, const void * e2) {
       return 1;
 
     // string consecutive non whitespace text nodes
-    if(is_text(node_set1->at(i)) && is_text(node_set2->at(j))) {
+    if(is_text(nodes_old.at(node_set1->at(i))) && is_text(nodes_new.at(node_set2->at(j)))) {
 
       std::string text1 = "";
-      for(; i < node_set1->size() && is_text(node_set1->at(i)); ++i)
-        if(!is_white_space(node_set1->at(i)))
-          text1 += (const char *)node_set1->at(i)->content;
+      for(; i < node_set1->size() && is_text(nodes_old.at(node_set1->at(i))); ++i)
+        if(!is_white_space(nodes_old.at(node_set1->at(i))))
+          text1 += (const char *)nodes_old.at(node_set1->at(i))->content;
 
       std::string text2 = "";
-      for(; j < node_set2->size() && is_text(node_set2->at(j)); ++j)
-        if(!is_white_space(node_set2->at(j)))
-          text2 += (const char *)node_set2->at(j)->content;
+      for(; j < node_set2->size() && is_text(nodes_new.at(node_set2->at(j))); ++j)
+        if(!is_white_space(nodes_new.at(node_set2->at(j))))
+          text2 += (const char *)nodes_new.at(node_set2->at(j))->content;
 
       if(text1 != text2)
         return 1;
@@ -269,7 +269,7 @@ int node_set_comment_compare(const void * e1, const void * e2) {
 
     }
 
-    if(node_compare(node_set1->at(i), node_set2->at(j)))
+    if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(j))))
       return 1;
   }
 
@@ -1092,11 +1092,11 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
         // collect subset of nodes
         std::vector<std::vector<int> *> * next_node_set_old
           = create_comment_line_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                  , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1));
+                  , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         std::vector<std::vector<int> *> * next_node_set_new
           = create_comment_line_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
-                  , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1));
+                  , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
@@ -1204,11 +1204,11 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
         // collect subset of nodes
         std::vector<std::vector<int> *> * next_node_set_old
           = create_node_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                  , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1));
+                            , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         std::vector<std::vector<int> *> * next_node_set_new
           = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
-                  , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1));
+                            , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
@@ -1597,7 +1597,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
-      = create_comment_paragraph_set(&nodes_old, node_sets_old->at(start_old)->at(1) + 1
+      = create_comment_paragraph_set(&nodes_old, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
   std::vector<std::vector<int> *> * next_node_set_new
