@@ -569,7 +569,7 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
 void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state) {
 
   // save beginning of characters
-  unsigned char * characters_start = rbuf->characters;
+  unsigned char * characters_start = 0;
   unsigned char * characters = 0;
 
   if(!reader_state)
@@ -629,8 +629,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader,
         // increase new line count and check if end of diff
         if((*characters) == '\n') {
 
-          ++rbuf->line_number;
-
           xmlNode * text = new xmlNode;
           text->type = (xmlElementType)XML_READER_TYPE_TEXT;
           text->name = (const xmlChar *)"text";
@@ -677,8 +675,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader,
 
       not_done = xmlTextReaderRead(reader);
     }
-
-  ++rbuf->line_number;
 
 }
 
