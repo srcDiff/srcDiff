@@ -334,7 +334,7 @@ void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_
 std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
 
 // collect the differnces
-void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state);
+void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_new, struct edit * edit, xmlTextWriterPtr writer);
@@ -499,11 +499,13 @@ int main(int argc, char * argv[]) {
     int is_old = xmlTextReaderRead(reader_old);
     int is_new = xmlTextReaderRead(reader_new);
 
-    collect_difference(&nodes_old, reader_old, is_old);
+    if(is_old)
+      collect_difference(&nodes_old, reader_old);
 
     xmlBufferFree(output_file_one);
 
-    collect_difference(&nodes_new, reader_new, is_new);
+    if(is_new)
+      collect_difference(&nodes_new, reader_new);
 
     xmlBufferFree(output_file_two);
 
@@ -566,14 +568,11 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
 }
 
 // collect the differnces
-void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader, int reader_state) {
+void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 
   // save beginning of characters
   unsigned char * characters_start = 0;
   unsigned char * characters = 0;
-
-  if(!reader_state)
-    return;
 
   int not_done = 1;
   while(not_done)
