@@ -1856,7 +1856,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
   int olength = length_old;
   int nlength = length_new;
 
- if(olength > 0 && nlength > 0) {
+  if(olength > 0 && nlength > 0) {
 
     if(is_white_space(node_sets_old->at(begin_old)->at(0)) && is_white_space(node_sets_new->at(begin_new)->at(0))) {
 
@@ -1969,42 +1969,45 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
   }
 
   // match beginning whitespace
-  else if(olength > 0) {
+  else {
+    if(olength > 0) {
 
-    // output diff tag begin
-    if(rbuf_old->open_diff->back()->operation != DELETE)
-      output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
+      // output diff tag begin
+      if(rbuf_old->open_diff->back()->operation != DELETE)
+        output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
-    rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+      rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-    for(int j = 0; j < olength; ++j)
-      for(unsigned int i = 0; i < node_sets_old->at(begin_old + j)->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old + j)->at(i), DELETE, writer);
+      for(int j = 0; j < olength; ++j)
+        for(unsigned int i = 0; i < node_sets_old->at(begin_old + j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old + j)->at(i), DELETE, writer);
 
-    // output diff tag begin
-    if(rbuf_old->open_diff->back()->operation == DELETE)
-      rbuf_old->open_diff->back()->open_tags->front()->marked = true;
+      // output diff tag begin
+      if(rbuf_old->open_diff->back()->operation == DELETE)
+        rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
-    output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+      output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
-  }
+    }
 
-  if(nlength > 0) {
+    if(nlength > 0) {
 
-    // output diff tag
-    if(rbuf_new->open_diff->back()->operation != INSERT)
-      output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
+      // output diff tag
+      if(rbuf_new->open_diff->back()->operation != INSERT)
+        output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
 
-    rbuf_new->open_diff->back()->open_tags->front()->marked = false;
+      rbuf_new->open_diff->back()->open_tags->front()->marked = false;
 
-    for(int j = 0; j < nlength; ++j)
-      for(unsigned int i = 0; i < node_sets_new->at(begin_new + j)->size(); ++i)
-        output_handler(rbuf_old, rbuf_new, node_sets_new->at(begin_new + j)->at(i), INSERT, writer);
+      for(int j = 0; j < nlength; ++j)
+        for(unsigned int i = 0; i < node_sets_new->at(begin_new + j)->size(); ++i)
+          output_handler(rbuf_old, rbuf_new, node_sets_new->at(begin_new + j)->at(i), INSERT, writer);
 
-    // output diff tag begin
-    if(rbuf_new->open_diff->back()->operation == INSERT)
-      rbuf_new->open_diff->back()->open_tags->front()->marked = true;
-    output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+      // output diff tag begin
+      if(rbuf_new->open_diff->back()->operation == INSERT)
+        rbuf_new->open_diff->back()->open_tags->front()->marked = true;
+      output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+
+    }
 
   }
 
