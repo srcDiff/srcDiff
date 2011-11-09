@@ -228,7 +228,7 @@ int node_set_comment_compare(const void * e1, const void * e2) {
   std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
 
   if(is_white_space_set(node_set1) && is_white_space_set(node_set2))
-     return node_set_compare(node_set1, node_set2);
+    return node_set_compare(node_set1, node_set2);
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
@@ -1014,7 +1014,7 @@ std::vector<std::vector<xmlNodePtr> *> * create_comment_paragraph_set(std::vecto
         if(!first_newline && contains_new_line(diff_nodes->at(i)))
           first_newline = true;
 
-      }      
+      }
 
     }
 
@@ -1054,7 +1054,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                     (void *)node_sets_new, node_set_comment_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_comment_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
@@ -1098,16 +1098,16 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
           = create_comment_line_set(node_sets_old->at(edits->offset_sequence_one), 0
                                     , node_sets_old->at(edits->offset_sequence_one)->size());
-        
+
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
           = create_comment_line_set(node_sets_new->at(edit_next->offset_sequence_two), 0
                                     , node_sets_new->at(edit_next->offset_sequence_two)->size());
-        
+
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
         output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
-                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+                      , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
 
 
       last_diff_old = edits->offset_sequence_one + edits->length;
@@ -1209,17 +1209,17 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
         // collect subset of nodes
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_old
           = create_node_set(node_sets_old->at(edits->offset_sequence_one), 0
-                                    , node_sets_old->at(edits->offset_sequence_one)->size());
-        
+                            , node_sets_old->at(edits->offset_sequence_one)->size());
+
         std::vector<std::vector<xmlNodePtr> *> * next_node_set_new
           = create_node_set(node_sets_new->at(edit_next->offset_sequence_two), 0
-                                    , node_sets_new->at(edit_next->offset_sequence_two)->size());
+                            , node_sets_new->at(edit_next->offset_sequence_two)->size());
 
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
         output_change(rbuf_old, node_sets_old, edits->offset_sequence_one, edits->length
-                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
+                      , rbuf_new, node_sets_new, edit_next->offset_sequence_two, edit_next->length, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -1648,39 +1648,39 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
       xmlChar * content_old = node_set_old->at(i)->content;
       xmlChar * content_new = node_set_new->at(j)->content;
 
-        int size_old = strlen((const char *)node_set_old->at(i)->content);
-        int size_new = strlen((const char *)node_set_new->at(j)->content);
+      int size_old = strlen((const char *)node_set_old->at(i)->content);
+      int size_new = strlen((const char *)node_set_new->at(j)->content);
 
-        int start_old = 0;
-        int start_new = 0;
+      int start_old = 0;
+      int start_new = 0;
 
-        for(; start_old < size_old && start_new < size_new && content_old[start_old] == content_new[start_new]; ++start_old, ++start_new);
+      for(; start_old < size_old && start_new < size_new && content_old[start_old] == content_new[start_new]; ++start_old, ++start_new);
 
-          xmlTextWriterWriteRawLen(writer, content_old, start_old);
+      xmlTextWriterWriteRawLen(writer, content_old, start_old);
 
-          if(start_old < size_old) {
+      if(start_old < size_old) {
 
-            // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
+        // output diff tag
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
-            xmlTextWriterWriteRawLen(writer, content_old + start_old, size_old - start_old);
+        xmlTextWriterWriteRawLen(writer, content_old + start_old, size_old - start_old);
 
-            // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+        // output diff tag
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
 
-          }
+      }
 
-          if(start_new < size_new) {
+      if(start_new < size_new) {
 
-            // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
+        // output diff tag
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
-            xmlTextWriterWriteRawLen(writer, content_new + start_new, size_new - start_new);
+        xmlTextWriterWriteRawLen(writer, content_new + start_new, size_new - start_new);
 
-            // output diff tag
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+        // output diff tag
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
-          }
+      }
 
       // whitespace change
     } else if(is_white_space(node_set_old->at(i))) {
@@ -1714,11 +1714,11 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
       // collect all adjacent text nodes character arrays and input difference
       std::string text_old = "";
       for(; i < node_set_old->size() && is_text(node_set_old->at(i)); ++i)
-          text_old += (const char *)node_set_old->at(i)->content;
+        text_old += (const char *)node_set_old->at(i)->content;
 
       std::string text_new = "";
       for(; j < node_set_new->size() && is_text(node_set_new->at(j)); ++j)
-          text_new += (const char *)node_set_new->at(j)->content;
+        text_new += (const char *)node_set_new->at(j)->content;
 
       --i;
       --j;
@@ -1734,44 +1734,45 @@ void markup_whitespace(struct reader_buffer * rbuf_old, std::vector<xmlNodePtr> 
           continue;
         }
 
-        if(isspace(text_old[opos])) {
+        if(isspace(text_old[opos]) || isspace(text_new[npos])) {
 
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
-          
-          for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
+          if(isspace(text_old[opos])) {
 
-            fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-            xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_old[opos], 1);
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
+
+            for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
+
+              fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
+              xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_old[opos], 1);
+            }
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
+
+          }
+
+          if(isspace(text_new[npos])) {
+
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
+
+            for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
+
+              fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
+              xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_new[npos], 1);
+            }
+
+            // output diff tag
+            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+
           }
 
           --opos;
           --npos;
-          
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
-
-        }
-
-        if(isspace(text_new[npos])) {
-
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
-          
-          for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
-
-          fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-          xmlTextWriterWriteRawLen(writer, (const xmlChar *)&text_new[npos], 1);
-          }
-
-          --opos;
-          --npos;
-
-          // output diff tag
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
         }
 
       }
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     } else {
 
@@ -1796,48 +1797,48 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
   // match beginning whitespace
   if(olength > 0 && nlength > 0) {
 
-  if(is_white_space(node_sets_old->at(begin_old)->at(0)) && is_white_space(node_sets_new->at(begin_new)->at(0))) {
+    if(is_white_space(node_sets_old->at(begin_old)->at(0)) && is_white_space(node_sets_new->at(begin_new)->at(0))) {
 
-    xmlChar * content_old = node_sets_old->at(begin_old)->at(0)->content;
-    xmlChar * content_new = node_sets_new->at(begin_new)->at(0)->content;
+      xmlChar * content_old = node_sets_old->at(begin_old)->at(0)->content;
+      xmlChar * content_new = node_sets_new->at(begin_new)->at(0)->content;
 
-    int size_old = strlen((const char *)node_sets_old->at(begin_old)->at(0)->content);
-    int size_new = strlen((const char *)node_sets_new->at(begin_new)->at(0)->content);
+      int size_old = strlen((const char *)node_sets_old->at(begin_old)->at(0)->content);
+      int size_new = strlen((const char *)node_sets_new->at(begin_new)->at(0)->content);
 
-        int offset_old = 0;
-        int offset_new = 0;
+      int offset_old = 0;
+      int offset_new = 0;
 
-        for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
+      for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
 
-          xmlTextWriterWriteRawLen(writer, content_old, offset_old);
+      xmlTextWriterWriteRawLen(writer, content_old, offset_old);
 
-          if(offset_old < size_old) {
+      if(offset_old < size_old) {
 
 
-            // shrink 
-            node_sets_old->at(begin_old)->at(0)->content = content_old + offset_old;
-            //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
+        // shrink
+        node_sets_old->at(begin_old)->at(0)->content = content_old + offset_old;
+        //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
 
-          } else {
+      } else {
 
-            --olength;
-            ++begin_old;
-          }
-
-          if(offset_new < size_new) {
-
-            node_sets_new->at(begin_new)->at(0)->content = content_new + offset_new;
-
-          } else {
-
-            --nlength;
-            ++begin_new;
-          }
-
-        
+        --olength;
+        ++begin_old;
       }
 
+      if(offset_new < size_new) {
+
+        node_sets_new->at(begin_new)->at(0)->content = content_new + offset_new;
+
+      } else {
+
+        --nlength;
+        ++begin_new;
+      }
+
+
     }
+
+  }
 
 
   if(olength > 0) {
@@ -1899,7 +1900,7 @@ bool only_white_space_between_change(struct edit * change_one, struct edit * cha
 
 void group_changes(struct edit * edit_script, std::vector<std::vector<xmlNodePtr> *> * node_sets_old
                    , std::vector<std::vector<xmlNodePtr> *> * node_sets_new) {
-  
+
   struct edit * edits = edit_script;
 
   for(; edits; edits = edits->next) {
