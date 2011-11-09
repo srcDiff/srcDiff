@@ -1856,6 +1856,48 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
   int olength = length_old;
   int nlength = length_new;
 
+ if(olength > 0 && nlength > 0) {
+
+    if(is_white_space(node_sets_old->at(begin_old)->at(0)) && is_white_space(node_sets_new->at(begin_new)->at(0))) {
+
+      xmlChar * content_old = node_sets_old->at(begin_old)->at(0)->content;
+      xmlChar * content_new = node_sets_new->at(begin_new)->at(0)->content;
+
+      int size_old = strlen((const char *)node_sets_old->at(begin_old)->at(0)->content);
+      int size_new = strlen((const char *)node_sets_new->at(begin_new)->at(0)->content);
+
+      int offset_old = 0;
+      int offset_new = 0;
+
+      for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
+
+      xmlTextWriterWriteRawLen(writer, content_old, offset_old);
+
+      if(offset_old < size_old) {
+
+        // shrink
+        node_sets_old->at(begin_old)->at(0)->content = content_old + offset_old;
+        //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
+
+      } else {
+
+        node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)"";
+      }
+
+      if(offset_new < size_new) {
+
+        node_sets_new->at(begin_new)->at(0)->content = content_new + offset_new;
+
+      } else {
+
+        node_sets_new->at(begin_new)->at(0)->content = (xmlChar *)"";
+      }
+
+
+    }
+
+  }
+
   if(1 && is_nestable(node_sets_old, begin_old, olength, node_sets_new, begin_new, nlength)) {
 
     if(is_block_type(node_sets_old, start_old, length_old)) {
@@ -1927,49 +1969,7 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<xmlN
   }
 
   // match beginning whitespace
-  else if(olength > 0 && nlength > 0) {
-
-    if(is_white_space(node_sets_old->at(begin_old)->at(0)) && is_white_space(node_sets_new->at(begin_new)->at(0))) {
-
-      xmlChar * content_old = node_sets_old->at(begin_old)->at(0)->content;
-      xmlChar * content_new = node_sets_new->at(begin_new)->at(0)->content;
-
-      int size_old = strlen((const char *)node_sets_old->at(begin_old)->at(0)->content);
-      int size_new = strlen((const char *)node_sets_new->at(begin_new)->at(0)->content);
-
-      int offset_old = 0;
-      int offset_new = 0;
-
-      for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
-
-      xmlTextWriterWriteRawLen(writer, content_old, offset_old);
-
-      if(offset_old < size_old) {
-
-        // shrink
-        node_sets_old->at(begin_old)->at(0)->content = content_old + offset_old;
-        //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
-
-      } else {
-
-        node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)"";
-      }
-
-      if(offset_new < size_new) {
-
-        node_sets_new->at(begin_new)->at(0)->content = content_new + offset_new;
-
-      } else {
-
-        node_sets_new->at(begin_new)->at(0)->content = (xmlChar *)"";
-      }
-
-
-    }
-
-  }
-
-  if(olength > 0) {
+  else if(olength > 0) {
 
     // output diff tag begin
     if(rbuf_old->open_diff->back()->operation != DELETE)
