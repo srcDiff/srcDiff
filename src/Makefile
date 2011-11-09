@@ -33,13 +33,14 @@ ANTLR_LIB += -lantlr
 
 LDFLAGS=$(ANTLR_LIB)
 
+DLL_DIR=../dlls
 # libxml
 LIBXML_INCLUDE=-I/usr/include/libxml2
 
 ifndef MINGW32
 XML_LIB_SRCDIFF=-lxml2
 else
-XML_LIB_SRCDIFF=-lxml2 -lregex -liberty
+XML_LIB_SRCDIFF=${DLL_DIR}/libxml2.dll -lregex -liberty
 endif
 
 #libsrcml include
