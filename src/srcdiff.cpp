@@ -169,17 +169,17 @@ bool is_text(xmlNodePtr node) {
 
 // diff node comparison function
 int node_set_syntax_compare(const void * e1, const void * e2) {
-  std::vector<xmlNode *> * node_set1 = (std::vector<xmlNode *> *)e1;
-  std::vector<xmlNode *> * node_set2 = (std::vector<xmlNode *> *)e2;
+  std::vector<int> * node_set1 = (std::vector<int> *)e1;
+  std::vector<int> * node_set2 = (std::vector<int> *)e2;
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
     // Bypassing whitespace
-    for(; i < node_set1->size() && is_white_space(node_set1->at(i)); ++i)
+    for(; i < node_set1->size() && is_white_space(nodes_old.at(node_set1->at(i))); ++i)
       ;
 
     // Bypassing whitespace
-    for(; j < node_set2->size() && is_white_space(node_set2->at(j)); ++j)
+    for(; j < node_set2->size() && is_white_space(nodes_new.at(node_set2->at(j))); ++j)
       ;
 
     // If end was all whitespace then the same
@@ -191,17 +191,17 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       return 1;
 
     // string consecutive non whitespace text nodes
-    if(is_text(node_set1->at(i)) && is_text(node_set2->at(j))) {
+    if(is_text(nodes_old.at(node_set1->at(i))) && is_text(nodes_new.at(node_set2->at(j)))) {
 
       std::string text1 = "";
-      for(; i < node_set1->size() && is_text(node_set1->at(i)); ++i)
-        if(!is_white_space(node_set1->at(i)))
-          text1 += (const char *)node_set1->at(i)->content;
+      for(; i < node_set1->size() && is_text(nodes_old.at(node_set1->at(i))); ++i)
+        if(!is_white_space(nodes_old.at(node_set1->at(i))))
+          text1 += (const char *)nodes_old.at(node_set1->at(i))->content;
 
       std::string text2 = "";
-      for(; j < node_set2->size() && is_text(node_set2->at(j)); ++j)
-        if(!is_white_space(node_set2->at(j)))
-          text2 += (const char *)node_set2->at(j)->content;
+      for(; j < node_set2->size() && is_text(nodes_new.at(node_set2->at(j))); ++j)
+        if(!is_white_space(nodes_new.at(node_set2->at(j))))
+          text2 += (const char *)nodes_new.at(node_set2->at(j))->content;
 
       if(text1 != text2)
         return 1;
@@ -213,7 +213,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
     }
 
-    if(node_compare(node_set1->at(i), node_set2->at(j)))
+    if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(j))))
       return 1;
   }
 
@@ -786,7 +786,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
