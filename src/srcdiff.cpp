@@ -75,6 +75,12 @@ xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/sr
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
+bool is_change(struct edit * edit_script) {
+
+  return edit_script->operation == DELETE && edit_script->next != NULL && edit_script->next->operation == INSERT
+    && (edit_script->offset_sequence_one + edit_script->length - 1) == edit_script->next->offset_sequence_one;
+
+}
 
 // diff accessor function
 const void * line_index(int idx, const void *s) {
@@ -820,8 +826,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
     // detect and change
     struct edit * edit_next = edits->next;
-    if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
-       && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
+    if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");
 
@@ -1082,8 +1087,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
     // detect and change
     struct edit * edit_next = edits->next;
-    if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
-       && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
+    if(is_change(edits)) {
 
       if(edits->length == 1 && edit_next->length == 1) {
 
@@ -1194,8 +1198,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
     // detect and change
     struct edit * edit_next = edits->next;
-    if(edits->operation == DELETE && edits->next != NULL && edit_next->operation == INSERT
-       && (edits->offset_sequence_one + edits->length - 1) == edits->next->offset_sequence_one) {
+    if(is_change(edits)) {
 
       if(edits->length == 1 && edit_next->length == 1) {
 
@@ -2017,13 +2020,6 @@ void output_change(struct reader_buffer * rbuf_old, std::vector<std::vector<int>
     }
 
     //  }
-
-}
-
-bool is_change(struct edit * edit_script) {
-
-  return edit_script->operation == DELETE && edit_script->next != NULL && edit_script->next->operation == INSERT
-    && (edit_script->offset_sequence_one + edit_script->length - 1) == edit_script->next->offset_sequence_one;
 
 }
 
