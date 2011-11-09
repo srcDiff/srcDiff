@@ -1934,6 +1934,5 @@ void output_char(char character, xmlTextWriterPtr writer) {
 
     else
       xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) &character, 1);
-  }
 
 }
