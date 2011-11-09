@@ -315,12 +315,8 @@ struct open_diff {
 struct reader_buffer {
 
   int stream_source;
-  int line_number;
-  unsigned char * characters;
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
-
-  std::vector<struct open_diff *> * delay_close;
 
 };
 
@@ -474,7 +470,6 @@ int main(int argc, char * argv[]) {
     rbuf_old.open_diff->push_back(new_diff);
 
     rbuf_old.output_diff = &output_diff;
-    rbuf_old.delay_close = new std::vector<struct open_diff *>;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { 0 };
@@ -487,7 +482,6 @@ int main(int argc, char * argv[]) {
     rbuf_new.open_diff->push_back(new_diff);
 
     rbuf_new.output_diff = &output_diff;
-    rbuf_new.delay_close = new std::vector<struct open_diff *>;
     xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
