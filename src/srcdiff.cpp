@@ -1703,12 +1703,32 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 
 void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_old, struct reader_buffer * rbuf_new, int start_new, int end_new, xmlTextWriterPtr writer) {
+
+  int begin_old = start_old;
+  int begin_new = start_new;
+  int olength = end_old;
+  int nlength = end_new;
+
+  --begin_old;
+  for(; begin_old > 0 && is_white_space(nodes_old.at(begin_old)) && !contains_new_line(nodes_old.at(begin_old)); --begin_old);
+
+  ++begin_old;
+
+  for(; olength < nodes_old.size() && is_white_space(nodes_old.at(olength)) && contains_new_line(nodes_old.at(olength)); ++olength);
+
+  --begin_new;
+  for(; begin_new > 0 && is_white_space(nodes_new.at(begin_new)) && !contains_new_line(nodes_new.at(begin_new)); --begin_new);
+
+  ++begin_new;
+
+  for(; nlength < nodes_new.size() && is_white_space(nodes_new.at(nlength)) && contains_new_line(nodes_new.at(nlength)); ++nlength);
+
   //fprintf(stderr, "HERE\n");
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_old);
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_old);
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_new);
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_new);
-  for(unsigned int i = start_old, j = start_new; i < end_old && j < end_new; ++i, ++j) {
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, begin_old);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, olength);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, begin_new);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nlength);
+  for(unsigned int i = begin_old, j = begin_new; i < olength && j < nlength; ++i, ++j) {
 
       if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
 
@@ -1722,14 +1742,14 @@ void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_o
       int size_old = strlen((const char *)content_old);
       int size_new = strlen((const char *)content_new);
 
-      int begin_old = 0;
-      int begin_new = 0;
+      int ostart = 0;
+      int nstart = 0;
 
-      for(; begin_old < size_old && begin_new < size_new && content_old[begin_old] == content_new[begin_new]; ++begin_old, ++begin_new);
+      for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart);
 
-      xmlTextWriterWriteRawLen(writer, content_old, begin_old);
+      xmlTextWriterWriteRawLen(writer, content_old, ostart);
 
-      if(begin_old < size_old) {
+      if(ostart < size_old) {
 
 
         if(rbuf_old->open_diff->back()->operation != DELETE)
@@ -1738,21 +1758,21 @@ void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_o
         // output diff tag
         //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
-        xmlTextWriterWriteRawLen(writer, content_old + begin_old, size_old - begin_old);
+        xmlTextWriterWriteRawLen(writer, content_old + ostart, size_old - ostart);
 
         // output diff tag
         output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
       }
 
-      if(begin_new < size_new) {
+      if(nstart < size_new) {
 
         if(rbuf_old->open_diff->back()->operation != INSERT)
           output_handler(rbuf_new, rbuf_new, diff_new_start, INSERT, writer);
         // output diff tag
         //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
-        xmlTextWriterWriteRawLen(writer, content_new + begin_new, size_new - begin_new);
+        xmlTextWriterWriteRawLen(writer, content_new + nstart, size_new - nstart);
 
         // output diff tag
         output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
