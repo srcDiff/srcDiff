@@ -20,6 +20,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+// TODO:  Put this in a separate .hpp file called mingw32
 #ifdef __MINGW32__
 #include <string.h>
 #include <io.h>
@@ -166,10 +167,13 @@ int node_set_compare(const void * e1, const void * e2) {
 
 bool is_white_space(xmlNodePtr node) {
 
+  // TODO:  Comment on how checking the first character is enough to determine that a
+  // node is all whitespace
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
 
 }
 
+// TODO:  Rename to is_white_space
 bool is_white_space_set(std::vector<int> * node_set, std::vector<xmlNodePtr> * nodes) {
 
   for(unsigned int i = 0; i < node_set->size(); ++i)
@@ -192,6 +196,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
+    // TODO:  Won't there not be whitespace anymore in these?
     // Bypassing whitespace
     for(; i < node_set1->size() && is_white_space(nodes_old.at(node_set1->at(i))); ++i)
       ;
@@ -209,6 +214,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       return 1;
 
     // string consecutive non whitespace text nodes
+    // TODO:  Why create the string?  Just compare directly as you go through
     if(is_text(nodes_old.at(node_set1->at(i))) && is_text(nodes_new.at(node_set2->at(j)))) {
 
       std::string text1 = "";
@@ -227,6 +233,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       --i;
       --j;
 
+      // TODO:  Remove
       continue;
 
     }
@@ -265,6 +272,7 @@ int node_set_comment_compare(const void * e1, const void * e2) {
       return 1;
 
     // string consecutive non whitespace text nodes
+    // TODO:  Why create the string?  Just compare directly as you go through
     if(is_text(nodes_old.at(node_set1->at(i))) && is_text(nodes_new.at(node_set2->at(j)))) {
 
       std::string text1 = "";
