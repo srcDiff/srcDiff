@@ -956,8 +956,8 @@ std::vector<std::vector<int> *> * create_comment_paragraph_set(std::vector<xmlNo
 
     if(contains_new_line(nodes->at(i))) {
 
-      for(; contains_new_line(nodes->at(i)); ++i)
-        node_set->push_back(i);
+      for(; contains_new_line(nodes->at(i)); ++i);
+      //node_set->push_back(i);
 
       --i;
 
@@ -974,11 +974,14 @@ std::vector<std::vector<int> *> * create_comment_paragraph_set(std::vector<xmlNo
         } else
           first_newline = false;
 
-        node_set->push_back(i);
 
         if(!first_newline && contains_new_line(nodes->at(i)))
           first_newline = true;
 
+        if(is_white_space(nodes->at(i)))
+          continue;
+
+        node_set->push_back(i);
       }
 
     }
