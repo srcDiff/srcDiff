@@ -509,7 +509,7 @@ int main(int argc, char * argv[]) {
       collect_difference(&nodes_new, reader_new);
 
     xmlBufferFree(output_file_two);
-
+ 
     std::vector<std::vector<int> *> * node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
     std::vector<std::vector<int> *> * node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
@@ -602,6 +602,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
             text->name = (const xmlChar *)"text";
 
             const char * content = strndup((const char *)characters_start, characters  - characters_start);
+
             text->content = (xmlChar *)content;
             nodes->push_back(text);
 
@@ -753,7 +754,6 @@ std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * node
     std::vector <int> * node_set = new std::vector <int>;
 
     if(is_white_space(nodes->at(i))) {
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
 
       continue;
       //node_set->push_back(i);
@@ -823,27 +823,33 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
   int last_diff_old = 0;
   int last_diff_new = 0;
+  int diff_end_old;
+  int diff_end_new;
+
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
+    diff_end_old = last_diff_old;
+    diff_end_new = last_diff_new;
+
     // add preceeding unchanged
-      if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one)
-        output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                      , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
+    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
 
+      diff_end_old = edits->offset_sequence_one - 1;
+      diff_end_new = last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1;
+    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+
+      diff_end_old = edits->offset_sequence_one;
+      diff_end_new = last_diff_new + (edits->offset_sequence_one - last_diff_old);
+    }
+
+    output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
+                  , node_sets_old->at(diff_end_old)->back() + 1
+                  
                       , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                      ,  node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1
-
-                      , writer);
-
-      else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one)
-        output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                      , node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                      
-                      , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                      , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
-
-                      , writer);
+                  ,  node_sets_new->at(diff_end_new)->back() + 1
+                  
+                  , writer);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -982,7 +988,11 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
   }
 
-  if(last_diff_old < node_sets_old->size())
+  diff_end_old = last_diff_old;
+  diff_end_new = last_diff_new;
+
+  if(last_diff_old < node_sets_old->size()) {
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->back()->back() + 1
 
@@ -990,6 +1000,16 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
                     , node_sets_new->back()->back() + 1
 
                     , writer);
+  } else {
+
+    output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
+                  , node_sets_old->at(diff_end_old)->back() + 1
+                  
+                      , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
+                  ,  node_sets_new->at(diff_end_new)->back() + 1
+                  
+                  , writer);
+  }
 
   free_shortest_edit_script(edit_script);
 
@@ -1709,25 +1729,31 @@ void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_o
   int olength = end_old;
   int nlength = end_new;
 
+  //fprintf(stderr, "HERE\n");
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, begin_old);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, olength);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, begin_new);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nlength);
+
   --begin_old;
-  for(; begin_old > 0 && is_white_space(nodes_old.at(begin_old)) && !contains_new_line(nodes_old.at(begin_old)); --begin_old);
+  for(; begin_old >= 0 && is_white_space(nodes_old.at(begin_old)) && !contains_new_line(nodes_old.at(begin_old)); --begin_old);
 
   ++begin_old;
 
   for(; olength < nodes_old.size() && is_white_space(nodes_old.at(olength)) && contains_new_line(nodes_old.at(olength)); ++olength);
 
   --begin_new;
-  for(; begin_new > 0 && is_white_space(nodes_new.at(begin_new)) && !contains_new_line(nodes_new.at(begin_new)); --begin_new);
+  for(; begin_new >= 0 && is_white_space(nodes_new.at(begin_new)) && !contains_new_line(nodes_new.at(begin_new)); --begin_new);
 
   ++begin_new;
 
   for(; nlength < nodes_new.size() && is_white_space(nodes_new.at(nlength)) && contains_new_line(nodes_new.at(nlength)); ++nlength);
 
-  //fprintf(stderr, "HERE\n");
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, begin_old);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, olength);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, begin_new);
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nlength);
+
   for(unsigned int i = begin_old, j = begin_new; i < olength && j < nlength; ++i, ++j) {
 
       if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
@@ -1947,14 +1973,14 @@ void output_change(struct reader_buffer * rbuf_old
   int nlength = end_new;
 
   --begin_old;
-  for(; begin_old > 0 && is_white_space(nodes_old.at(begin_old)) && !contains_new_line(nodes_old.at(begin_old)); --begin_old);
+  for(; begin_old >= 0 && is_white_space(nodes_old.at(begin_old)) && !contains_new_line(nodes_old.at(begin_old)); --begin_old);
 
   ++begin_old;
 
   for(; olength < nodes_old.size() && is_white_space(nodes_old.at(olength)) && contains_new_line(nodes_old.at(olength)); ++olength);
 
   --begin_new;
-  for(; begin_new > 0 && is_white_space(nodes_new.at(begin_new)) && !contains_new_line(nodes_new.at(begin_new)); --begin_new);
+  for(; begin_new >= 0 && is_white_space(nodes_new.at(begin_new)) && !contains_new_line(nodes_new.at(begin_new)); --begin_new);
 
   ++begin_new;
 
