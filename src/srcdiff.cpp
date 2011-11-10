@@ -1112,9 +1112,9 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
       } else
           output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                        , node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                        , node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
-                        , node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
+                        , node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
 
 
       last_diff_old = edits->offset_sequence_one + edits->length;
