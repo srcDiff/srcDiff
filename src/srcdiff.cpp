@@ -1554,8 +1554,8 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   output_handler(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, writer);
 
-  rbuf_old->last_output = nodes_old.at(node_sets_old->at(start_old)->at(0)) + 1;
-  rbuf_new->last_output = nodes_new.at(node_sets_new->at(start_new)->at(0)) + 1;
+  rbuf_old->last_output = node_sets_old->at(start_old)->at(0) + 1;
+  rbuf_new->last_output = node_sets_new->at(start_new)->at(0) + 1;
 
   // compare subset of nodes
 
