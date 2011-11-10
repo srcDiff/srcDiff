@@ -1842,6 +1842,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_o
 
   }
 
+    rbuf_old->last_output = oend;
+    rbuf_new->last_output = nend;
 
 }
 
@@ -1939,9 +1941,6 @@ void output_change(struct reader_buffer * rbuf_old
 
     }
 
-    rbuf_old->last_output = oend;
-    rbuf_new->last_output = nend;
-
   }
 
   /*
@@ -2025,6 +2024,7 @@ void output_change(struct reader_buffer * rbuf_old
     // match beginning whitespace
     else {
   */
+
   if(oend > begin_old) {
 
     // output diff tag begin
@@ -2069,41 +2069,6 @@ void output_change(struct reader_buffer * rbuf_old
   //  }
 
 }
-
-/*
-
-  bool only_white_space_between_change(struct edit * change_one, struct edit * change_two, std::vector<std::vector<int> *> * node_sets_old) {
-
-  for(int set = change_one->offset_sequence_one + change_one->length; set < change_two->offset_sequence_one; ++set)
-  if(!is_white_space_set(node_sets_old->at(set)))
-  return false;
-
-  return true;
-  }
-
-  void group_changes(struct edit * edit_script, std::vector<std::vector<int> *> * node_sets_old
-  , std::vector<std::vector<int> *> * node_sets_new) {
-
-  struct edit * edits = edit_script;
-
-  for(; edits; edits = edits->next) {
-
-  if(is_change(edits)) {
-
-  struct edit * next_pair = edits->next->next;
-  while(next_pair && next_pair->next && is_change(next_pair) && only_white_space_between_change(edits, next_pair, node_sets_old)) {
-
-  edits->length = next_pair->offset_sequence_one + next_pair->length - edits->offset_sequence_one;
-  edits->next->length = next_pair->next->offset_sequence_two + next_pair->next->length - edits->next->offset_sequence_two;
-  next_pair = edits->next->next;
-  }
-
-  }
-
-  }
-
-  }
-*/
 
 void output_char(char character, xmlTextWriterPtr writer) {
 
