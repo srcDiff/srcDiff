@@ -810,7 +810,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
   for (; edits; edits = edits->next) {
 
     // add preceeding unchanged
-      if(edits->operation == DELETE && last_diff_old > edits->offset_sequence_one)
+      if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one)
         output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                       , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
@@ -819,7 +819,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
                       , writer);
 
-      else if(edits->operation == DELETE && last_diff_old >= edits->offset_sequence_one)
+      else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one)
         output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                       , node_sets_old->at(edits->offset_sequence_one)->back() + 1
                       
@@ -827,7 +827,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
                       , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
 
                       , writer);
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     // detect and change
     struct edit * edit_next = edits->next;
     if(is_change(edits)) {
@@ -1064,7 +1064,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
   for (; edits; edits = edits->next) {
 
     // add preceeding unchanged
-      if(edits->operation == DELETE && last_diff_old > edits->offset_sequence_one)
+      if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
@@ -1073,7 +1073,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
                     , writer);
 
-      else if(edits->operation == DELETE && last_diff_old >= edits->offset_sequence_one)
+      else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one)->back() + 1
 
@@ -1167,7 +1167,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
-      if(edits->operation == DELETE && last_diff_old > edits->offset_sequence_one)
+      if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
@@ -1176,7 +1176,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
                     , writer);
 
-      else if(edits->operation == DELETE && last_diff_old >= edits->offset_sequence_one)
+      else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one)->back() + 1
 
@@ -1327,12 +1327,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
-  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  */
 
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
@@ -1579,7 +1579,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   // compare subset of nodes
 
-  if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+  if(0 && strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1594,7 +1594,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   }
   else {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1614,7 +1613,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
                  nodes_old.at(node_sets_old->at(start_old)->
                              at(node_sets_old->at(start_old)->size() - 1))
                  , COMMON, writer);
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
@@ -1624,11 +1623,11 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 
 void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_old, struct reader_buffer * rbuf_new, int start_new, int end_new, xmlTextWriterPtr writer) {
-  fprintf(stderr, "HERE\n");
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_old);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_old);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_new);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_new);
+  //fprintf(stderr, "HERE\n");
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_old);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_old);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_new);
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_new);
   for(unsigned int i = start_old, j = start_new; i < end_old && j < end_new; ++i, ++j) {
 
       if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
