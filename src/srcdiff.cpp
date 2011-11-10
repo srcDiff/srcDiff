@@ -323,9 +323,6 @@ struct reader_buffer {
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
-// compares a line supposed to be the same and output the correrct elements
-void compare_same_line(struct reader_buffer * rbuf_old, xmlTextReaderPtr reader_old,struct reader_buffer * rbuf_new, xmlTextReaderPtr reader_new, xmlTextWriterPtr writer);
-
 // create sets of nodes
 std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
 
@@ -740,12 +737,12 @@ std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * node
 
     std::vector <int> * node_set = new std::vector <int>;
 
-    if(is_white_space(nodes->at(i)))
-
+    if(is_white_space(nodes->at(i))) {
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
       node_set->push_back(i);
 
-    else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
-
+    } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
       node_set->push_back(i);
 
     } else if(is_atomic_srcml(nodes, i)) {
@@ -813,8 +810,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
   for (; edits; edits = edits->next) {
 
     // add preceeding unchanged
-    if(last_diff_old > edits->offset_sequence_one)
-      if(edits->operation == DELETE)
+      if(edits->operation == DELETE && last_diff_old > edits->offset_sequence_one)
         output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                       , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
@@ -823,7 +819,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
                       , writer);
 
-      else
+      else if(edits->operation == DELETE && last_diff_old >= edits->offset_sequence_one)
         output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                       , node_sets_old->at(edits->offset_sequence_one)->back() + 1
                       
@@ -831,7 +827,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
                       , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
 
                       , writer);
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     // detect and change
     struct edit * edit_next = edits->next;
     if(is_change(edits)) {
@@ -920,7 +916,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
       } else {
 
-        //compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
 
       }
 
@@ -1068,8 +1064,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
   for (; edits; edits = edits->next) {
 
     // add preceeding unchanged
-    if(last_diff_old > edits->offset_sequence_one)
-    if(edits->operation == DELETE)
+      if(edits->operation == DELETE && last_diff_old > edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
@@ -1078,7 +1073,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
                     , writer);
 
-    else
+      else if(edits->operation == DELETE && last_diff_old >= edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one)->back() + 1
 
@@ -1172,8 +1167,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
-    if(last_diff_old > edits->offset_sequence_one)
-    if(edits->operation == DELETE)
+      if(edits->operation == DELETE && last_diff_old > edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
@@ -1182,7 +1176,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
                     , writer);
 
-    else
+      else if(edits->operation == DELETE && last_diff_old >= edits->offset_sequence_one)
       output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
                     , node_sets_old->at(edits->offset_sequence_one)->back() + 1
 
@@ -1333,12 +1327,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
@@ -1585,7 +1579,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   // compare subset of nodes
 
-  if(0 && strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+  if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1600,17 +1594,19 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   }
   else {
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
       = create_node_set(&nodes_old, node_sets_old->at(start_old)->at(1)
-                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
+                        , node_sets_old->at(start_old)->back());
 
     std::vector<std::vector<int> *> * next_node_set_new
       = create_node_set(&nodes_new, node_sets_new->at(start_new)->at(1)
-      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
+                        , node_sets_new->at(start_new)->back());
 
     output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+
 
   }
 
@@ -1618,7 +1614,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
                  nodes_old.at(node_sets_old->at(start_old)->
                              at(node_sets_old->at(start_old)->size() - 1))
                  , COMMON, writer);
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
@@ -1628,7 +1624,11 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 
 void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_old, struct reader_buffer * rbuf_new, int start_new, int end_new, xmlTextWriterPtr writer) {
-
+  fprintf(stderr, "HERE\n");
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_old);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_old);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_new);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_new);
   for(unsigned int i = start_old, j = start_new; i < end_old && j < end_new; ++i, ++j) {
 
       if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
