@@ -788,13 +788,19 @@ void output_common(struct reader_buffer * rbuf_old, int end_old
                    , struct reader_buffer * rbuf_new, int end_new
                    , xmlTextWriterPtr writer) {
 
+  int oend = end_old;
+  int nend = end_new;
+
+  //for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_lines(nodes_old.at(oend)); ++oend);
+  //for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_lines(nodes_new.at(nend)); ++nend; 
+
   if(rbuf_old->open_diff->back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
 
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
   // add preceeding unchanged
-  markup_whitespace(rbuf_old, end_old, rbuf_new, end_new, writer);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, writer);
 
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
@@ -1861,8 +1867,8 @@ void output_change(struct reader_buffer * rbuf_old, int end_old
   int oend = end_old;
   int nend = end_new;
 
-  //for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_lines(nodes_old.at(oend); ++oend); 
-  //for(; nend < nodes_new.size() && is_white_space(nodes_new.at(oend)) && contains_new_lines(nodes_new.at(nend); ++nend); 
+  //for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_lines(nodes_old.at(oend)); ++oend);
+  //for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_lines(nodes_new.at(nend)); ++nend; 
 
   if(oend > begin_old && nend > begin_new) {
 
