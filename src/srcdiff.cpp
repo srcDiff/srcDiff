@@ -1035,6 +1035,9 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   int last_diff_old = 0;
   int last_diff_new = 0;
+  int diff_end_old = rbuf_old->last_output;
+  int diff_end_new = rbuf_new->last_output;
+
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
@@ -1135,6 +1138,9 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
   int last_diff_old = 0;
   int last_diff_new = 0;
+  int diff_end_old = rbuf_old->last_output;
+  int diff_end_new = rbuf_new->last_output;
+
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
