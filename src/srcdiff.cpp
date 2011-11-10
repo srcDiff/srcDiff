@@ -323,6 +323,7 @@ struct open_diff {
 struct reader_buffer {
 
   int stream_source;
+  // TODO:  There is no reason that this the vector is a pointer.
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
 
@@ -440,6 +441,7 @@ int main(int argc, char * argv[]) {
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
+    // TODO:  Remove old reading code
     //    reader_new = xmlNewTextReader(xmlBufferContent(output_file_two));
     //    reader_new = xmlNewTextReaderFilename(srcml_file_two);
     if (reader_new == NULL) {
@@ -590,6 +592,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
       for (; (*characters) != 0; ++characters) {
 
         // separte non whitespace
+        // TODO:  Use isspace here
         if((*characters) != ' ' && (*characters) != '\t' && (*characters) != '\r' && (*characters) != '\n') {
 
           // output previous whitespace
@@ -606,6 +609,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           }
 
+          // TODO:  Use isspace here
           while((*characters) != 0 && (*characters) != ' ' && (*characters) != '\t' && (*characters) != '\r' && (*characters) != '\n')
             ++characters;
 
@@ -880,6 +884,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
           if(end_old >= 0) {
 
             // output diff tag
+            // TODO:  Why aren't the constants being used here?
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old>"));
 
             xmlTextWriterWriteRawLen(writer, content_old, end_old + 1);
@@ -892,6 +897,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
           if(end_new >= 0) {
 
             // output diff tag
+            // TODO:  Why aren't the constants being used here?
             xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
 
             xmlTextWriterWriteRawLen(writer, content_new, end_new + 1);
