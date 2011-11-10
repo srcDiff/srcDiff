@@ -1824,7 +1824,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_o
 
             if(rbuf_old->open_diff->back()->operation != INSERT)
               output_handler(rbuf_new, rbuf_new, diff_new_start, INSERT, writer);
-            xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
             for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
