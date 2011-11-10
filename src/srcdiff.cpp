@@ -1640,7 +1640,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   // compare subset of nodes
 
-  if(0 && strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+  if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1908,7 +1908,7 @@ void output_change(struct reader_buffer * rbuf_old
   int olength = end_old;
   int nlength = end_new;
 
-  if(0 && olength > 0 && nlength > 0) {
+  if(olength > 0 && nlength > 0) {
 
     if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
