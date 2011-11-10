@@ -184,6 +184,18 @@ bool is_white_space_set(std::vector<int> * node_set, std::vector<xmlNodePtr> * n
 
 }
 
+bool contains_new_line(xmlNodePtr node) {
+
+  unsigned int length = strlen((const char *)node->content);
+
+  for(unsigned int i = 0; i < length; ++i)
+    if(node->content[i] == '\n')
+      return true;
+
+  return false;
+
+}
+
 bool is_text(xmlNodePtr node) {
 
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
@@ -724,8 +736,8 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
 
   for(; !is_open.empty(); ++(*start)) {
 
-    //if(is_white_space(nodes->at(*start)))
-    //continue;
+    if(is_white_space(nodes->at(*start)))
+    continue;
 
     node_set->push_back(*start);
 
@@ -752,7 +764,7 @@ std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * node
     if(is_white_space(nodes->at(i))) {
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-      //continue;
+      continue;
       node_set->push_back(i);
 
     } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
@@ -791,8 +803,8 @@ void output_common(struct reader_buffer * rbuf_old, int end_old
   int oend = end_old;
   int nend = end_new;
 
-  //for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_lines(nodes_old.at(oend)); ++oend);
-  //for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_lines(nodes_new.at(nend)); ++nend; 
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
@@ -816,7 +828,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
@@ -931,18 +943,6 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
                   , writer);
 
   free_shortest_edit_script(edit_script);
-
-}
-
-bool contains_new_line(xmlNodePtr node) {
-
-  unsigned int length = strlen((const char *)node->content);
-
-  for(unsigned int i = 0; i < length; ++i)
-    if(node->content[i] == '\n')
-      return true;
-
-  return false;
 
 }
 
@@ -1867,8 +1867,8 @@ void output_change(struct reader_buffer * rbuf_old, int end_old
   int oend = end_old;
   int nend = end_new;
 
-  //for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_lines(nodes_old.at(oend)); ++oend);
-  //for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_lines(nodes_new.at(nend)); ++nend; 
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
 
   if(oend > begin_old && nend > begin_new) {
 
