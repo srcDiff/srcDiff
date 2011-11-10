@@ -911,6 +911,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
         } else {
 
           output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+
                         , node_sets_old->at(edits->offset_sequence_one)->back() + 1
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                         , node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
@@ -1510,6 +1511,33 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
 }
 
+void output_unmatched(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                      , int start_old, int end_old
+                      , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , int start_new, int end_new
+                      , xmlTextWriterPtr writer) {
+
+  int begin_old = 0;
+  int begin_new = 0;
+  int finish_old = 0;
+  int finish_new = 0;
+
+  if(start_old <= end_old && start_old >= 0 && end_old < node_sets_old->size()) {
+
+    begin_old = node_sets_old->at(start_old)->at(0);
+    finish_old = node_sets_old->at(end_old)->back() + 1;
+  }
+
+  if(start_new <= end_new && start_new >= 0 && end_new < node_sets_new->size()) {
+
+    begin_new = node_sets_new->at(start_new)->at(0);
+    finish_new = node_sets_new->at(end_new)->back() + 1;
+  }
+
+  output_change(rbuf_old, begin_old, finish_old, rbuf_new, begin_new, finish_new, writer);
+
+}
+
 void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , struct edit * edit_script, xmlTextWriterPtr writer) {
@@ -1527,10 +1555,10 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
   for(; matches; matches = matches->next) {
 
     // output diffs until match
-    output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + last_old)->at(0), 
-                  node_sets_old->at(edits->offset_sequence_one + matches->old_offset - 1)->back() + 1,
-                  rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + last_new)->at(0)
-                  , node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset - 1)->back() + 1, writer);
+    output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old,
+                  edits->offset_sequence_one + matches->old_offset - 1,
+                     rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
+                  , edit_next->offset_sequence_two + matches->new_offset - 1, writer);
 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
@@ -1580,10 +1608,10 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
   }
 
   // output diffs until match
-    output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + last_old)->at(0), 
-                  node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1,
-                  rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + last_new)->at(0)
-                  , node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
+  output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old, 
+                  edits->offset_sequence_one + edits->length - 1,
+                   rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
+                  , edit_next->offset_sequence_two + edit_next->length - 1, writer);
 
 
 }
@@ -1877,10 +1905,10 @@ void output_change(struct reader_buffer * rbuf_old
 
   int begin_old = start_old;
   int begin_new = start_new;
-  int olength = end_old - start_old;
-  int nlength = end_new - start_new;
+  int olength = end_old;
+  int nlength = end_new;
 
-  if(olength > 0 && nlength > 0) {
+  if(0 && olength > 0 && nlength > 0) {
 
     if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
@@ -2030,7 +2058,6 @@ void output_change(struct reader_buffer * rbuf_old
 
       rbuf_new->open_diff->back()->open_tags->front()->marked = false;
 
-      for(int j = 0; j < nlength; ++j)
         for(unsigned int i = begin_new; i < end_new; ++i)
           output_handler(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, writer);
 
