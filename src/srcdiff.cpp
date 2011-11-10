@@ -727,6 +727,9 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
 
   for(; !is_open.empty(); ++(*start)) {
 
+    if(is_white_space(nodes->at(*start)))
+      continue;
+
     node_set->push_back(*start);
 
     if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
@@ -751,7 +754,9 @@ std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * node
 
     if(is_white_space(nodes->at(i))) {
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-      node_set->push_back(i);
+
+      continue;
+      //node_set->push_back(i);
 
     } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
@@ -1654,7 +1659,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   // compare subset of nodes
 
-  if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+  if(0 && strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1920,6 +1925,20 @@ void output_change(struct reader_buffer * rbuf_old
   int begin_new = start_new;
   int olength = end_old;
   int nlength = end_new;
+
+  --begin_old;
+  for(; begin_old > 0 && is_white_space(nodes_old.at(begin_old)) && !contains_new_line(nodes_old.at(begin_old)); --begin_old);
+
+  ++begin_old;
+
+  for(; olength < nodes_old.size() && is_white_space(nodes_old.at(olength)) && contains_new_line(nodes_old.at(olength)); ++olength);
+
+  --begin_new;
+  for(; begin_new > 0 && is_white_space(nodes_new.at(begin_new)) && !contains_new_line(nodes_new.at(begin_new)); --begin_new);
+
+  ++begin_new;
+
+  for(; nlength < nodes_new.size() && is_white_space(nodes_new.at(nlength)) && contains_new_line(nodes_new.at(nlength)); ++nlength);
 
   if(olength > 0 && nlength > 0) {
 
