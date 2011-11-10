@@ -355,10 +355,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
                       , int start_new
                       , xmlTextWriterPtr writer);
 
-void output_change(struct reader_buffer * rbuf_old
-                   , int start_old, int end_old
-                   , struct reader_buffer * rbuf_new
-                   , int start_new, int end_new
+void output_change(struct reader_buffer * rbuf_old, int end_old, struct reader_buffer * rbuf_new, int end_new
                    , xmlTextWriterPtr writer);
 
 void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
@@ -371,7 +368,7 @@ bool output_peek(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf_ne
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
-void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_old, struct reader_buffer * rbuf_new, int start_new, int end_new, xmlTextWriterPtr writer);
+void markup_whitespace(struct reader_buffer * rbuf_old, int end_old, struct reader_buffer * rbuf_new, int end_new, xmlTextWriterPtr writer);
 
 void output_char(char character, xmlTextWriterPtr writer);
 
@@ -789,8 +786,8 @@ std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * node
 
 }
 
-void output_common(struct reader_buffer * rbuf_old, int start_old, int end_old
-                   , struct reader_buffer * rbuf_new, int start_new, int end_new
+void output_common(struct reader_buffer * rbuf_old, int end_old
+                   , struct reader_buffer * rbuf_new, int end_new
                    , xmlTextWriterPtr writer) {
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
@@ -799,7 +796,7 @@ void output_common(struct reader_buffer * rbuf_old, int start_old, int end_old
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
   // add preceeding unchanged
-  markup_whitespace(rbuf_old, start_old, end_old, rbuf_new, start_new, end_new, writer);
+  markup_whitespace(rbuf_old, end_old, rbuf_new, end_new, writer);
 
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
@@ -830,20 +827,16 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
   for (; edits; edits = edits->next) {
 
     if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one)
-      output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
-                    , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                    , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1
+                    , rbuf_new, node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1
 
                     , writer);
 
     else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one)
-      output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
 
-                    , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                    , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
+                    , rbuf_new, node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
 
                     , writer);
 
@@ -866,11 +859,8 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
         } else {
 
-          output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-
-                        , node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
-                        , node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
+          output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
 
         }
 
@@ -893,9 +883,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
       //fprintf(stderr, "HERE\n");
       output_change(rbuf_old, 0
-                    , 0
-                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two)->at(0)
-                    , node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
 
 
       last_diff_old = edits->offset_sequence_one + 1;
@@ -906,10 +894,8 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
     case DELETE:
 
       //fprintf(stderr, "HERE\n");
-      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                    , rbuf_new, 0
-                    , 0, writer);
+      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                    , rbuf_new, 0, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edits->offset_sequence_two + 1;
@@ -920,11 +906,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
   }
 
   if(last_diff_old < node_sets_old->size())
-    output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                  , node_sets_old->back()->back() + 1
+    output_common(rbuf_old, node_sets_old->back()->back() + 1
 
-                  , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                  , node_sets_new->back()->back() + 1
+                  , rbuf_new, node_sets_new->back()->back() + 1
 
                   , writer);
 
@@ -1032,20 +1016,16 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
     // add preceeding unchanged
     if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one)
-      output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
-                    , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                    , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1
+                    , rbuf_new, node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1
 
                     , writer);
 
     else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one)
-      output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
 
-                    , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                    , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
+                    , rbuf_new, node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
 
                     , writer);
 
@@ -1067,10 +1047,8 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
-        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                      , node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
-                      , node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
+        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
 
 
       last_diff_old = edits->offset_sequence_one + edits->length;
@@ -1086,9 +1064,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
       //fprintf(stderr, "HERE\n");
       output_change(rbuf_old, 0
-                    , 0
-                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two)->at(0)
-                    , node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
 
       last_diff_old = edits->offset_sequence_one + 1;
       last_diff_new = edits->offset_sequence_two + edits->length;
@@ -1098,10 +1074,8 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
     case DELETE:
 
       //fprintf(stderr, "HERE\n");
-      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                    , rbuf_new, 0
-                    , 0, writer);
+      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                    , rbuf_new, 0, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edits->offset_sequence_two + 1;
@@ -1112,11 +1086,9 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
   }
 
   if(last_diff_old < node_sets_old->size())
-    output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                  , node_sets_old->back()->back() + 1
+    output_common(rbuf_old, node_sets_old->back()->back() + 1
 
-                  , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                  , node_sets_new->back()->back() + 1
+                  , rbuf_new, node_sets_new->back()->back() + 1
 
                   , writer);
 
@@ -1143,20 +1115,16 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
   for (; edits; edits = edits->next) {
 
     if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one)
-      output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1
 
-                    , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                    , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1
+                    , rbuf_new, node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1
 
                     , writer);
 
     else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one)
-      output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
 
-                    , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                    , node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
+                    , rbuf_new, node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1
 
                     , writer);
 
@@ -1178,10 +1146,8 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
         output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
-        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                      , node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
-                      , node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
+        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -1196,9 +1162,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
       //fprintf(stderr, "HERE\n");
       output_change(rbuf_old, 0
-                    , 0
-                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two)->at(0)
-                    , node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
 
       last_diff_old = edits->offset_sequence_one + 1;
       last_diff_new = edits->offset_sequence_two + edits->length;
@@ -1208,10 +1172,8 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
     case DELETE:
 
       //fprintf(stderr, "HERE\n");
-      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
-                    , node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                    , rbuf_new, 0
-                    , 0, writer);
+      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                    , rbuf_new, 0, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edits->offset_sequence_two + 1;
@@ -1222,11 +1184,9 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
   }
 
   if(last_diff_old < node_sets_old->size())
-    output_common(rbuf_old, node_sets_old->at(last_diff_old)->at(0)
-                  , node_sets_old->back()->back() + 1
+    output_common(rbuf_old, node_sets_old->back()->back() + 1
 
-                  , rbuf_new, node_sets_new->at(last_diff_new)->at(0)
-                  , node_sets_new->back()->back() + 1
+                  , rbuf_new, node_sets_new->back()->back() + 1
 
                   , writer);
 
@@ -1479,17 +1439,15 @@ void output_unmatched(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   if(start_old <= end_old && start_old >= 0 && end_old < node_sets_old->size()) {
 
-    begin_old = node_sets_old->at(start_old)->at(0);
     finish_old = node_sets_old->at(end_old)->back() + 1;
   }
 
   if(start_new <= end_new && start_new >= 0 && end_new < node_sets_new->size()) {
 
-    begin_new = node_sets_new->at(start_new)->at(0);
     finish_new = node_sets_new->at(end_new)->back() + 1;
   }
 
-  output_change(rbuf_old, begin_old, finish_old, rbuf_new, begin_new, finish_new, writer);
+  output_change(rbuf_old, finish_old, rbuf_new, finish_new, writer);
 
 }
 
@@ -1523,11 +1481,9 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-      markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0),
-                        node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+      markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
-                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0)
-                        , node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
                         , writer);
 
       if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
@@ -1549,10 +1505,8 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     } else {
 
-      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0),
-                    node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1,
-                    rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0)
-                    , node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
+      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1,
+                    rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
                     , writer);
 
     }
@@ -1592,6 +1546,8 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   output_handler(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, writer);
 
+  ++rbuf_old->last_output;
+  ++rbuf_new->last_output;
 
   // compare subset of nodes
 
@@ -1630,6 +1586,9 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
                               at(node_sets_old->at(start_old)->size() - 1))
                  , COMMON, writer);
 
+  ++rbuf_old->last_output;
+  ++rbuf_new->last_output;
+
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
@@ -1638,10 +1597,11 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 }
 
 
-void markup_whitespace(struct reader_buffer * rbuf_old, int start_old, int end_old, struct reader_buffer * rbuf_new, int start_new, int end_new, xmlTextWriterPtr writer) {
+void markup_whitespace(struct reader_buffer * rbuf_old, int end_old, struct reader_buffer * rbuf_new, int end_new, xmlTextWriterPtr writer) {
 
-  int begin_old = start_old;
-  int begin_new = start_new;
+  int begin_old = rbuf_old->last_output;
+  int begin_new = rbuf_new->last_output;
+
   int oend = end_old;
   int nend = end_new;
 
@@ -1890,14 +1850,12 @@ return (is_block_type(node_sets_old, start_old, length_old) && is_statement_type
 }
 */
 
-void output_change(struct reader_buffer * rbuf_old
-                   , int start_old, int end_old
-                   , struct reader_buffer * rbuf_new
-                   , int start_new, int end_new
+void output_change(struct reader_buffer * rbuf_old, int end_old
+                   , struct reader_buffer * rbuf_new, int end_new
                    , xmlTextWriterPtr writer) {
 
-  int begin_old = start_old;
-  int begin_new = start_new;
+  int begin_old = rbuf_old->last_output;
+  int begin_new = rbuf_new->last_output;
   int oend = end_old;
   int nend = end_new;
 
