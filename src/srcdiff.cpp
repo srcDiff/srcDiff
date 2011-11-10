@@ -1552,6 +1552,8 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
+  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), writer);
+
   output_handler(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, writer);
 
   rbuf_old->last_output = node_sets_old->at(start_old)->at(0) + 1;
