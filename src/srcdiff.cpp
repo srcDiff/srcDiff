@@ -261,7 +261,7 @@ struct open_diff {
 struct reader_buffer {
 
   int stream_source;
-  int last_output;
+  unsigned int last_output;
   // TODO:  There is no reason that this the vector is a pointer.
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
@@ -288,12 +288,12 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
 
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                      , int start_old
+                      , unsigned int start_old
                       , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                      , int start_new
+                      , unsigned int start_new
                       , xmlTextWriterPtr writer);
 
-void output_change(struct reader_buffer * rbuf_old, int end_old, struct reader_buffer * rbuf_new, int end_new
+void output_change(struct reader_buffer * rbuf_old, unsigned int end_old, struct reader_buffer * rbuf_new, unsigned int end_new
                    , xmlTextWriterPtr writer);
 
 void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
@@ -304,7 +304,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
-void markup_whitespace(struct reader_buffer * rbuf_old, int end_old, struct reader_buffer * rbuf_new, int end_new, xmlTextWriterPtr writer);
+void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, struct reader_buffer * rbuf_new, unsigned int end_new, xmlTextWriterPtr writer);
 
 void output_char(char character, xmlTextWriterPtr writer);
 
@@ -722,12 +722,12 @@ std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * node
 
 }
 
-void output_common(struct reader_buffer * rbuf_old, int end_old
-                   , struct reader_buffer * rbuf_new, int end_new
+void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
+                   , struct reader_buffer * rbuf_new, unsigned int end_new
                    , xmlTextWriterPtr writer) {
 
-  int oend = end_old;
-  int nend = end_new;
+  unsigned int oend = end_old;
+  unsigned int nend = end_new;
 
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
@@ -762,22 +762,22 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
     exit(distance);
   }
 
-  int last_diff_old = 0;
-  int last_diff_new = 0;
-  int diff_end_old = rbuf_old->last_output;
-  int diff_end_new = rbuf_new->last_output;
+  unsigned int last_diff_old = 0;
+  unsigned int last_diff_new = 0;
+  unsigned int diff_end_old = rbuf_old->last_output;
+  unsigned int diff_end_new = rbuf_new->last_output;
 
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     diff_end_old = rbuf_old->last_output;
     diff_end_new = rbuf_new->last_output;
-    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
+    if(edits->operation == DELETE && last_diff_old < (unsigned)edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
 
-    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == INSERT && last_diff_old <= (unsigned)edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
@@ -960,10 +960,10 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
     exit(distance);
   }
 
-  int last_diff_old = 0;
-  int last_diff_new = 0;
-  int diff_end_old = rbuf_old->last_output;
-  int diff_end_new = rbuf_new->last_output;
+  unsigned int last_diff_old = 0;
+  unsigned int last_diff_new = 0;
+  unsigned int diff_end_old = rbuf_old->last_output;
+  unsigned int diff_end_new = rbuf_new->last_output;
 
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
@@ -973,12 +973,12 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
     // add preceeding unchanged
     diff_end_old = rbuf_old->last_output;
     diff_end_new = rbuf_new->last_output;
-    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
+    if(edits->operation == DELETE && last_diff_old < (unsigned)edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
 
-    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == INSERT && last_diff_old <= (unsigned)edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
@@ -1078,10 +1078,10 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
     exit(distance);
   }
 
-  int last_diff_old = 0;
-  int last_diff_new = 0;
-  int diff_end_old = rbuf_old->last_output;
-  int diff_end_new = rbuf_new->last_output;
+  unsigned int last_diff_old = 0;
+  unsigned int last_diff_new = 0;
+  unsigned int diff_end_old = rbuf_old->last_output;
+  unsigned int diff_end_new = rbuf_new->last_output;
 
   struct edit * edits = edit_script;
 
@@ -1090,12 +1090,12 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
     // add preceeding unchanged
     diff_end_old = rbuf_old->last_output;
     diff_end_new = rbuf_new->last_output;
-    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
+    if(edits->operation == DELETE && last_diff_old < (unsigned)edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
 
-    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == INSERT && last_diff_old <= (unsigned)edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
@@ -1413,13 +1413,13 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 }
 
 void output_unmatched(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                      , int start_old, int end_old
+                      , unsigned int start_old, unsigned int end_old
                       , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                      , int start_new, int end_new
+                      , unsigned int start_new, unsigned int end_new
                       , xmlTextWriterPtr writer) {
 
-  int finish_old = 0;
-  int finish_new = 0;
+  unsigned int finish_old = 0;
+  unsigned int finish_new = 0;
 
   if(start_old <= end_old && start_old >= 0 && end_old < node_sets_old->size()) {
 
@@ -1510,9 +1510,9 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 }
 
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                      , int start_old
+                      , unsigned int start_old
                       , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                      , int start_new
+                      , unsigned int start_new
                       , xmlTextWriterPtr writer) {
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
@@ -1577,13 +1577,13 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 }
 
 
-void markup_whitespace(struct reader_buffer * rbuf_old, int end_old, struct reader_buffer * rbuf_new, int end_new, xmlTextWriterPtr writer) {
+void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, struct reader_buffer * rbuf_new, unsigned int end_new, xmlTextWriterPtr writer) {
 
-  int begin_old = rbuf_old->last_output;
-  int begin_new = rbuf_new->last_output;
+  unsigned int begin_old = rbuf_old->last_output;
+  unsigned int begin_new = rbuf_new->last_output;
 
-  int oend = end_old;
-  int nend = end_new;
+  unsigned int oend = end_old;
+  unsigned int nend = end_new;
 
   unsigned int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
@@ -1830,14 +1830,14 @@ return (is_block_type(node_sets_old, start_old, length_old) && is_statement_type
 }
 */
 
-void output_change(struct reader_buffer * rbuf_old, int end_old
-                   , struct reader_buffer * rbuf_new, int end_new
+void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
+                   , struct reader_buffer * rbuf_new, unsigned int end_new
                    , xmlTextWriterPtr writer) {
 
-  int begin_old = rbuf_old->last_output;
-  int begin_new = rbuf_new->last_output;
-  int oend = end_old;
-  int nend = end_new;
+  unsigned int begin_old = rbuf_old->last_output;
+  unsigned int begin_new = rbuf_new->last_output;
+  unsigned int oend = end_old;
+  unsigned int nend = end_new;
 
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
