@@ -947,9 +947,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
 }
 
-std::vector<std::vector<int> *> * create_comment_paragraph_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
+std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> * node_sets = new std::vector<std::vector<int> *>;
+  std::vector<std::vector<int> *> node_sets = std::vector<std::vector<int> *>();
 
   for(int i = start; i < end; ++i) {
 
@@ -988,7 +988,7 @@ std::vector<std::vector<int> *> * create_comment_paragraph_set(std::vector<xmlNo
 
     }
 
-    node_sets->push_back(node_set);
+    node_sets.push_back(node_set);
 
   }
 
@@ -996,9 +996,9 @@ std::vector<std::vector<int> *> * create_comment_paragraph_set(std::vector<xmlNo
 
 }
 
-std::vector<std::vector<int> *> * create_comment_line_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
+std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> * node_sets = new std::vector<std::vector<int> *>;
+  std::vector<std::vector<int> *> node_sets = std::vector<std::vector<int> *>();
 
   for(int i = start; i < end; ++i) {
 
@@ -1015,7 +1015,7 @@ std::vector<std::vector<int> *> * create_comment_line_set(std::vector<xmlNodePtr
       node_set->push_back(i);
     }
 
-    node_sets->push_back(node_set);
+    node_sets.push_back(node_set);
 
   }
 
@@ -1072,15 +1072,15 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        std::vector<std::vector<int> *> * next_node_set_old
+        std::vector<std::vector<int> *> next_node_set_old
           = create_comment_line_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        std::vector<std::vector<int> *> * next_node_set_new
+        std::vector<std::vector<int> *> next_node_set_new
           = create_comment_line_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
-        output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+        output_comment_line(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
 
       } else {
 
@@ -1732,15 +1732,15 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
   if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
-    std::vector<std::vector<int> *> * next_node_set_old
+    std::vector<std::vector<int> *> next_node_set_old
       = create_comment_paragraph_set(&nodes_old, node_sets_old->at(start_old)->at(1)
                                      , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
-    std::vector<std::vector<int> *> * next_node_set_new
+    std::vector<std::vector<int> *> next_node_set_new
       = create_comment_paragraph_set(&nodes_new, node_sets_new->at(start_new)->at(1)
                                      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
-    output_comment_paragraph(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+    output_comment_paragraph(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
 
   }
   else {
