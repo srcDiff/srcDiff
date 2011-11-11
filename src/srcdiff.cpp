@@ -347,7 +347,7 @@ struct reader_buffer {
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
 // create sets of nodes
-std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
+std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
 
 // collect the differnces
 void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
@@ -519,10 +519,10 @@ int main(int argc, char * argv[]) {
 
     xmlBufferFree(output_file_two);
 
-    std::vector<std::vector<int> *> * node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
-    std::vector<std::vector<int> *> * node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+    std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
+    std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
-    output_diffs(&rbuf_old, node_set_old, &rbuf_new, node_set_new, writer);
+    output_diffs(&rbuf_old, &node_set_old, &rbuf_new, &node_set_new, writer);
 
     // output srcdiff unit
     outputNode(*getRealCurrentNode(reader_old), writer);
@@ -754,9 +754,9 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
   --(*start);
 }
 
-std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
+std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> * node_sets = new std::vector<std::vector<int> *>;
+  std::vector<std::vector<int> *> node_sets = std::vector<std::vector<int> *>();
 
   for(int i = start; i < end; ++i) {
 
@@ -789,7 +789,7 @@ std::vector<std::vector<int> *> * create_node_set(std::vector<xmlNodePtr> * node
       node_set->push_back(i);
     }
 
-    node_sets->push_back(node_set);
+    node_sets.push_back(node_set);
 
   }
 
@@ -1190,15 +1190,15 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        std::vector<std::vector<int> *> * next_node_set_old
+        std::vector<std::vector<int> *> next_node_set_old
           = create_node_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        std::vector<std::vector<int> *> * next_node_set_new
+        std::vector<std::vector<int> *> next_node_set_new
           = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
-        output_comment_word(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
 
       } else
         output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
@@ -1746,15 +1746,15 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
   else {
 
     // collect subset of nodes
-    std::vector<std::vector<int> *> * next_node_set_old
+    std::vector<std::vector<int> *> next_node_set_old
       = create_node_set(&nodes_old, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->back());
 
-    std::vector<std::vector<int> *> * next_node_set_new
+    std::vector<std::vector<int> *> next_node_set_new
       = create_node_set(&nodes_new, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->back());
 
-    output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
 
 
   }
