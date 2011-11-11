@@ -119,21 +119,6 @@ int node_compare(xmlNode * node1, xmlNode * node2) {
 }
 
 
-// diff node comparison function
-int node_set_compare(const void * e1, const void * e2) {
-  std::vector<int> * node_set1 = (std::vector<int> *)e1;
-  std::vector<int> * node_set2 = (std::vector<int> *)e2;
-
-  if(node_set1->size() != node_set2->size())
-    return 1;
-  else
-    for(unsigned int i = 0; i < node_set1->size(); ++i)
-      if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(i))))
-        return 1;
-
-  return 0;
-}
-
 bool is_white_space(xmlNodePtr node) {
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
@@ -1007,7 +992,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
@@ -1405,7 +1390,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
   //unsigned int length = node_set_new->size();
 
-  if(node_set_compare(node_set_old, node_set_new) == 0)
+  if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
 
 
