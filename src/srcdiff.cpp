@@ -201,17 +201,11 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 // converts source code to srcML
 xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
-struct tag {
-
-  int marked;
-  xmlNodePtr node;
-};
-
 struct open_diff {
 
   int operation;
   int offset;
-  std::vector<struct tag *> * open_tags;
+  std::vector<xmlNodePtr> * open_tags;
 
 };
 
@@ -356,7 +350,7 @@ int main(int argc, char * argv[]) {
     std::vector<struct open_diff *> output_diff;
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
     output_diff.push_back(new_diff);
 
     // run through diffs adding markup
@@ -366,7 +360,7 @@ int main(int argc, char * argv[]) {
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
     rbuf_old.open_diff.push_back(new_diff);
 
     rbuf_old.output_diff = output_diff;
@@ -378,7 +372,7 @@ int main(int argc, char * argv[]) {
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
     rbuf_new.open_diff.push_back(new_diff);
 
     rbuf_new.output_diff = output_diff;
@@ -694,13 +688,9 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   if(rbuf_old->open_diff.back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
-  rbuf_old->open_diff.back()->open_tags->front()->marked = false;
 
   // add preceeding unchanged
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, writer);
-
-  if(rbuf_old->open_diff.back()->operation == COMMON && rbuf_old->open_diff.size() > 1)
-    rbuf_old->open_diff.back()->open_tags->front()->marked = true;
 
   output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -1294,7 +1284,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = operation;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
 
     open_diffs->push_back(new_diff);
   }
@@ -1302,11 +1292,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
   //xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    struct tag * new_tag = new struct tag;
-    new_tag->marked = false;
-    new_tag->node = node;
-
-    open_diffs->back()->open_tags->push_back(new_tag);
+    open_diffs->back()->open_tags->push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(open_diffs->size() == 1 && open_diffs->back()->open_tags->size() == 1)
@@ -1345,7 +1331,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(strcmp((const char *)rbuf->output_diff.back()->open_tags->back()->node->name, (const char *)node->name) != 0)
+    if(strcmp((const char *)rbuf->output_diff.back()->open_tags->back()->name, (const char *)node->name) != 0)
       return;
 
     outputNode(*node, writer);
@@ -1547,15 +1533,10 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
       if(rbuf_old->open_diff.back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
-      rbuf_old->open_diff.back()->open_tags->front()->marked = false;
-
       markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
                         , writer);
-
-      if(rbuf_old->open_diff.back()->operation == COMMON && rbuf_old->open_diff.size() > 1)
-        rbuf_old->open_diff.back()->open_tags->front()->marked = true;
 
       output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -1565,9 +1546,6 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                        , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, writer);
-
-      if(rbuf_old->open_diff.back()->operation == COMMON && rbuf_old->open_diff.size() > 1)
-        rbuf_old->open_diff.back()->open_tags->front()->marked = true;
 
       output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -1601,8 +1579,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   if(rbuf_old->open_diff.back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
-
-  rbuf_old->open_diff.back()->open_tags->front()->marked = false;
 
   markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), writer);
 
@@ -1654,9 +1630,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
   ++rbuf_old->last_output;
   ++rbuf_new->last_output;
   */
-
-  if(rbuf_old->open_diff.back()->operation == COMMON && rbuf_old->open_diff.size() > 1)
-    rbuf_old->open_diff.back()->open_tags->front()->marked = true;
 
   output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -2054,14 +2027,10 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
     if(rbuf_old->open_diff.back()->operation != DELETE)
       output_handler(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
 
-    rbuf_old->open_diff.back()->open_tags->front()->marked = false;
-
     for(unsigned int i = begin_old; i < end_old; ++i)
       output_handler(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
 
     // output diff tag begin
-    if(rbuf_old->open_diff.back()->operation == DELETE)
-      rbuf_old->open_diff.back()->open_tags->front()->marked = true;
 
     output_handler(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
 
@@ -2075,14 +2044,11 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
     if(rbuf_new->open_diff.back()->operation != INSERT)
       output_handler(rbuf_old, rbuf_new, &diff_new_start, INSERT, writer);
 
-    rbuf_new->open_diff.back()->open_tags->front()->marked = false;
 
     for(unsigned int i = begin_new; i < end_new; ++i)
       output_handler(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, writer);
 
     // output diff tag begin
-    if(rbuf_new->open_diff.back()->operation == INSERT)
-      rbuf_new->open_diff.back()->open_tags->front()->marked = true;
     output_handler(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
 
     rbuf_new->last_output = end_new;
