@@ -1651,7 +1651,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
   ++rbuf_old->last_output;
   ++rbuf_new->last_output;
 
-  // may need to markup remaining whitespace here to be consistent
+  // may need to markup remaining whitespace here to be consistent could combine for ease with the otuput of end tag
 
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
