@@ -1626,7 +1626,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   }
   else {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1641,7 +1640,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 
   }
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), writer);
 
