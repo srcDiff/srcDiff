@@ -80,20 +80,6 @@ bool is_change(struct edit * edit_script) {
 
 }
 
-// diff accessor function
-const void * line_index(int idx, const void *s) {
-  std::vector<const char *> & lines = *(std::vector<const char *> *)s;
-  return lines[idx];
-}
-
-// diff comparison function
-int line_compare(const void * e1, const void * e2) {
-  const char * str1 = (const char *)e1;
-  const char * str2 = (const char *)e2;
-
-  return strcmp(str1, str2);
-}
-
 // diff node accessor function
 const void * node_set_index(int idx, const void *s) {
   std::vector<std::vector<int> *> & node_sets = *(std::vector<std::vector<int> *> *)s;
@@ -116,23 +102,6 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 
   return 0;
 
-}
-
-// diff node comparison function
-int node_compare(const void * e1, const void * e2) {
-  xmlNode * node1 = (xmlNode *)e1;
-  xmlNode * node2 = (xmlNode *)e2;
-
-  if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
-
-    // end if text node contents differ
-    if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
-      return strcmp((const char *)node1->content, (const char *)node2->content);
-    else
-      return attribute_compare(node1->properties, node2->properties);
-  }
-
-  return 1;
 }
 
 // diff node comparison function
@@ -170,17 +139,6 @@ bool is_white_space(xmlNodePtr node) {
   // TODO:  Comment on how checking the first character is enough to determine that a
   // node is all whitespace
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
-
-}
-
-// TODO:  Rename to is_white_space
-bool is_white_space_set(std::vector<int> * node_set, std::vector<xmlNodePtr> * nodes) {
-
-  for(unsigned int i = 0; i < node_set->size(); ++i)
-    if((xmlReaderTypes)nodes->at(node_set->at(i))->type != XML_READER_TYPE_TEXT || !isspace((char)nodes->at(node_set->at(i))->content[0]))
-      return false;
-
-  return true;
 
 }
 
@@ -229,63 +187,6 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       --j;
 
       // TODO:  Remove
-      continue;
-
-    }
-
-    if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(j))))
-      return 1;
-  }
-
-  return 0;
-}
-
-// diff node comparison function
-int node_set_comment_compare(const void * e1, const void * e2) {
-  std::vector<int> * node_set1 = (std::vector<int> *)e1;
-  std::vector<int> * node_set2 = (std::vector<int> *)e2;
-
-  if(is_white_space_set(node_set1, &nodes_old) && is_white_space_set(node_set2, &nodes_new))
-    return node_set_compare(node_set1, node_set2);
-
-  for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
-
-    // Bypassing whitespace
-    for(; i < node_set1->size() && is_white_space(nodes_old.at(node_set1->at(i))); ++i)
-      ;
-
-    // Bypassing whitespace
-    for(; j < node_set2->size() && is_white_space(nodes_new.at(node_set2->at(j))); ++j)
-      ;
-
-    // If end was all whitespace then the same
-    if(i >= node_set1->size() && j >= node_set2->size())
-      return 0;
-
-    // If one had ending whitespace and other had something else then different
-    if(i >= node_set1->size() || j >= node_set2->size())
-      return 1;
-
-    // string consecutive non whitespace text nodes
-    // TODO:  Why create the string?  Just compare directly as you go through
-    if(is_text(nodes_old.at(node_set1->at(i))) && is_text(nodes_new.at(node_set2->at(j)))) {
-
-      std::string text1 = "";
-      for(; i < node_set1->size() && is_text(nodes_old.at(node_set1->at(i))); ++i)
-        if(!is_white_space(nodes_old.at(node_set1->at(i))))
-          text1 += (const char *)nodes_old.at(node_set1->at(i))->content;
-
-      std::string text2 = "";
-      for(; j < node_set2->size() && is_text(nodes_new.at(node_set2->at(j))); ++j)
-        if(!is_white_space(nodes_new.at(node_set2->at(j))))
-          text2 += (const char *)nodes_new.at(node_set2->at(j))->content;
-
-      if(text1 != text2)
-        return 1;
-
-      --i;
-      --j;
-
       continue;
 
     }
