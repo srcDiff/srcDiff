@@ -49,8 +49,8 @@ const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
 const char* DIFF_PREFIX = "diff:";
-const char* DIFF_OLD = "diff:old";
-const char* DIFF_NEW = "diff:new";
+const char* DIFF_OLD = "diff:insert";
+const char* DIFF_NEW = "diff:delete";
 const char* DIFF_COMMON = "diff:common";
 
 const char* output_encoding = "UTF-8";
@@ -1698,8 +1698,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
           output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
         // output diff tag
-        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
-
         xmlTextWriterWriteRawLen(writer, content_old + ostart, size_old - ostart);
 
         // output diff tag
@@ -1712,13 +1710,11 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
         if(rbuf_old->open_diff->back()->operation != INSERT)
           output_handler(rbuf_new, rbuf_new, diff_new_start, INSERT, writer);
         // output diff tag
-        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
         xmlTextWriterWriteRawLen(writer, content_new + nstart, size_new - nstart);
 
         // output diff tag
         output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
-        //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
       }
 
@@ -1729,12 +1725,10 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
         output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
       // whitespace delete
       // output diff tag
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
       output_handler(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
 
       // output diff tag
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
       output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
       --j;
@@ -1745,13 +1739,11 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
         output_handler(rbuf_new, rbuf_new, diff_new_start, INSERT, writer);
       //whitespace insert
       // output diff tag
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
       output_handler(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, writer);
 
       // output diff tag
       output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
-      //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
       --i;
 
@@ -1787,7 +1779,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
             if(rbuf_old->open_diff->back()->operation != DELETE)
               output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
-            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
             for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
@@ -1796,7 +1787,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
             }
 
             // output diff tag
-            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
             output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
           }
@@ -1814,7 +1804,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
             output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
             // output diff tag
-            //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
           }
 
@@ -1841,13 +1830,11 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
       output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
     // whitespace delete
     // output diff tag
-    //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:old type=\"whitespace\">"));
 
     for( ; i < oend; ++i)
       output_handler(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
 
     // output diff tag
-    //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:old>"));
     output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
   } else if(j < nend) {
@@ -1856,13 +1843,11 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
       output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
     // whitespace delete
     // output diff tag
-    //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new type=\"whitespace\">"));
 
     for( ; j < nend; ++j)
       output_handler(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, writer);
 
     // output diff tag
-    //xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
     output_handler(rbuf_old, rbuf_new, diff_new_end, DELETE, writer);
 
   }
