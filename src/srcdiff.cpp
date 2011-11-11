@@ -107,14 +107,14 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 // diff node comparison function
 int node_compare(xmlNode * node1, xmlNode * node2) {
 
-  if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
+  if(node1->type != node2->type || strcmp((const char *)node1->name, (const char *)node2->name) != 0)
+    return 1;
 
-    // end if text node contents differ
-    if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
-      return strcmp((const char *)node1->content, (const char *)node2->content);
-    else
-      return attribute_compare(node1->properties, node2->properties);
-  }
+  // end if text node contents differ
+  if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
+    return strcmp((const char *)node1->content, (const char *)node2->content);
+  else
+    return attribute_compare(node1->properties, node2->properties);
 
   return 1;
 }
@@ -905,8 +905,6 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
-
-
 
     // add preceeding unchanged
     diff_end_old = rbuf_old->last_output;
