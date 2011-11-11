@@ -1407,15 +1407,15 @@ void output_unmatched(struct reader_buffer * rbuf_old, std::vector<std::vector<i
                       , int start_new, int end_new
                       , xmlTextWriterPtr writer) {
 
-  int finish_old = 0;
-  int finish_new = 0;
+  unsigned int finish_old = 0;
+  unsigned int finish_new = 0;
 
-  if(start_old <= end_old && start_old >= 0 && end_old < node_sets_old->size()) {
+  if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size()) {
 
     finish_old = node_sets_old->at(end_old)->back() + 1;
   }
 
-  if(start_new <= end_new && start_new >= 0 && end_new < node_sets_new->size()) {
+  if(start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size()) {
 
     finish_new = node_sets_new->at(end_new)->back() + 1;
   }
