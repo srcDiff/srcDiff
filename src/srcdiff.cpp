@@ -1827,7 +1827,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(i)->name);
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(i)->name);
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+      fprintf(stderr, "HERE: ERROR");
+      exit(1);
     }
 
   }
