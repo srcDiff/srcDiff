@@ -215,7 +215,6 @@ struct reader_buffer {
   int stream_source;
   int last_output;
 
-  // TODO:  There is no reason that this the vector is a pointer.
   std::vector<struct open_diff *> open_diff;
   std::vector<struct open_diff *> output_diff;
 
@@ -1546,8 +1545,6 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                        , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, writer);
-
-      output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
     } else {
 
