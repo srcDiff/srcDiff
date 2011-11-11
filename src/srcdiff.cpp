@@ -1407,8 +1407,8 @@ void output_unmatched(struct reader_buffer * rbuf_old, std::vector<std::vector<i
                       , int start_new, int end_new
                       , xmlTextWriterPtr writer) {
 
-  unsigned int finish_old = 0;
-  unsigned int finish_new = 0;
+  int finish_old = 0;
+  int finish_new = 0;
 
   if(start_old <= end_old && start_old >= 0 && end_old < node_sets_old->size()) {
 
