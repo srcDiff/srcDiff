@@ -486,7 +486,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
         // separte non whitespace
         // TODO:  Use isspace here
-        if((*characters) != ' ' && (*characters) != '\t' && (*characters) != '\r' && (*characters) != '\n') {
+        if(!isspace(*characters)) {
 
           // output previous whitespace
           if(characters != characters_start) {
@@ -504,7 +504,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
           }
 
           // TODO:  Use isspace here
-          while((*characters) != 0 && (*characters) != ' ' && (*characters) != '\t' && (*characters) != '\r' && (*characters) != '\n')
+          while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
           // output other
