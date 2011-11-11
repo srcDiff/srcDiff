@@ -1402,9 +1402,9 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 }
 
 void output_unmatched(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                      , unsigned int start_old, unsigned int end_old
+                      , int start_old, int end_old
                       , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                      , unsigned int start_new, unsigned int end_new
+                      , int start_new, int end_new
                       , xmlTextWriterPtr writer) {
 
   unsigned int finish_old = 0;
