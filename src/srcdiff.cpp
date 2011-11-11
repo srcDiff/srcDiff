@@ -1641,8 +1641,9 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   }
 
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), writer);
+  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back() + 1, writer);
 
+  /*
   output_handler(rbuf_old, rbuf_new,
                  nodes_old.at(node_sets_old->at(start_old)->
                               at(node_sets_old->at(start_old)->size() - 1))
@@ -1650,8 +1651,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   ++rbuf_old->last_output;
   ++rbuf_new->last_output;
-
-  // may need to markup remaining whitespace here to be consistent could combine for ease with the otuput of end tag
+  */
 
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
@@ -1829,7 +1829,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(i)->name);
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(i)->name);
-      fprintf(stderr, "HERE: ERROR");
+      fprintf(stderr, "ERROR");
       exit(1);
     }
 
