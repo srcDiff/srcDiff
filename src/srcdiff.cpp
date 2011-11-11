@@ -1540,7 +1540,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
@@ -1641,9 +1641,8 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   }
 
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back() + 1, writer);
+  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), writer);
 
-  /*
   output_handler(rbuf_old, rbuf_new,
                  nodes_old.at(node_sets_old->at(start_old)->
                               at(node_sets_old->at(start_old)->size() - 1))
@@ -1651,7 +1650,8 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   ++rbuf_old->last_output;
   ++rbuf_new->last_output;
-  */
+
+  // may need to markup remaining whitespace here to be consistent could combine for ease with the otuput of end tag
 
   if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
     rbuf_old->open_diff->back()->open_tags->front()->marked = true;
