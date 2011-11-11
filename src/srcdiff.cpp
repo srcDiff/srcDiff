@@ -450,7 +450,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
         text->name = (const xmlChar *)"text";
 
         // output previous whitespace
-        if(*characters != '\n') {
+        if(*characters == '\n') {
 
           text->content = (xmlChar *)"\n";
           ++characters;
