@@ -40,7 +40,7 @@ char * strndup(const char * s1, size_t n) {
 #include "xmlrw.h"
 
 // macros
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
+v#define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
 #define COMMON -1
@@ -369,6 +369,10 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 void output_change(struct reader_buffer * rbuf_old, unsigned int end_old, struct reader_buffer * rbuf_new, unsigned int end_new
                    , xmlTextWriterPtr writer);
+
+void output_change_white_space(struct reader_buffer * rbuf_old, unsigned int end_old
+                   , struct reader_buffer * rbuf_new, unsigned int end_new
+                               , xmlTextWriterPtr writer);
 
 void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
@@ -1904,13 +1908,14 @@ void output_change_white_space(struct reader_buffer * rbuf_old, unsigned int end
                    , struct reader_buffer * rbuf_new, unsigned int end_new
                    , xmlTextWriterPtr writer) {
 
-  output_change(rbuf_old, end_old, rbuf_new, end_new, writer);
-
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
+
+  output_change(rbuf_old, oend, rbuf_new, nend, writer);
+
 
 }
 
