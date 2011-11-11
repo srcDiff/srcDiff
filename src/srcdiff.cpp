@@ -490,9 +490,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
             nodes->push_back(text);
             characters_start = characters;
 
-            if(!*characters)
-              break;
-
           }
 
       }
