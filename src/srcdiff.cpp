@@ -1310,23 +1310,13 @@ void output_comment_words(struct reader_buffer * rbuf_old, std::vector<std::vect
                 && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
                     || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
-        if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
-                        , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
-           && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
-
-          output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
-                           , rbuf_new, node_sets_new, edit_next->offset_sequence_two, writer);
-
-        } else {
-
-          output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+          output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
-
-        }
 
       } else {
 
-        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
 
       }
 
@@ -1342,7 +1332,7 @@ void output_comment_words(struct reader_buffer * rbuf_old, std::vector<std::vect
     case INSERT:
 
       //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, 0
+      output_change(rbuf_old, 0
                     , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
 
 
@@ -1354,7 +1344,7 @@ void output_comment_words(struct reader_buffer * rbuf_old, std::vector<std::vect
     case DELETE:
 
       //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                     , rbuf_new, 0, writer);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
