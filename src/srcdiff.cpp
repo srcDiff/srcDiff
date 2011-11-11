@@ -452,30 +452,28 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
       // cycle through characters
       for (; (*characters) != 0; ++characters) {
 
+        xmlNode * text = new xmlNode;
+        text->type = (xmlElementType)XML_READER_TYPE_TEXT;
+        text->name = (const xmlChar *)"text";
+
         // output previous whitespace
         if(*charactesr != '\n') {
 
-          xmlNode * text = new xmlNode;
-          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-          text->name = (const xmlChar *)"text";
-          
           text->content = (xmlChar *)content = "\n";
           nodes->push_back(text);
           
           characters_start = characters;
             
         }
+   
+        else
 
-        // output previous whitespace
-        if(*charactesr != '\n' && isspace(*characters)){
+          // separate non-new line whitespace
+          if(*characters != '\n' && isspace(*characters)) {
 
           while((*characters) != 0 && *charactesr != '\n' && isspace(*characters))
             ++characters;
 
-          xmlNode * text = new xmlNode;
-          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-          text->name = (const xmlChar *)"text";
-          
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           
           text->content = (xmlChar *)content;
@@ -486,15 +484,10 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
         }
         
         // separte non whitespace
-        if(!isspace(*characters)) {
+        else if(!isspace(*characters)) {
           
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
-
-          // output other
-          xmlNode * text = new xmlNode;
-          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-          text->name = (const xmlChar *)"text";
 
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
@@ -505,43 +498,10 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
             break;
 
         }
-
-        // increase new line count and check if end of diff
-        if((*characters) == '\n') {
-
-          xmlNode * text = new xmlNode;
-          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-          text->name = (const xmlChar *)"text";
-
-          const char * content = strndup((const char *)characters_start, (characters + 1) - characters_start);
-          text->content = (xmlChar *)content;
-          nodes->push_back(text);
-          characters_start = characters + 1;
-
-        }
-
+        
       }
-
-      // end and save text node if finished and get next node
-      if(!(*characters)) {
-
-        // create new node and buffer it
-        if(characters != characters_start) {
-
-          xmlNode * text = new xmlNode;
-          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-          text->name = (const xmlChar *)"text";
-
-          const char * content = strdup((const char *)characters_start);
-          text->content = (xmlChar *)content;
-          nodes->push_back(text);
-
-        }
-
-        characters = NULL;
 
         not_done = xmlTextReaderRead(reader);
-      }
     }
     else {
 
