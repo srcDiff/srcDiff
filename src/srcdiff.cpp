@@ -456,7 +456,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
         if(*characters != '\n') {
 
           text->content = (xmlChar *)"\n";
-
         }
 
         // separate non-new line whitespace
@@ -467,10 +466,9 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
-
         }
 
-        // separte non whitespace
+        // separate non whitespace
         else {
 
           while((*characters) != 0 && !isspace(*characters))
@@ -478,7 +476,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
-
         }
 
         nodes->push_back(text);
