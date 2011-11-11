@@ -40,7 +40,7 @@ char * strndup(const char * s1, size_t n) {
 #include "xmlrw.h"
 
 // macros
-v#define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
+#define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
 #define COMMON -1
