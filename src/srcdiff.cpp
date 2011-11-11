@@ -1900,6 +1900,13 @@ return (is_block_type(node_sets_old, start_old, length_old) && is_statement_type
 }
 */
 
+void output_change_white_space(struct reader_buffer * rbuf_old, unsigned int end_old
+                   , struct reader_buffer * rbuf_new, unsigned int end_new
+                   , xmlTextWriterPtr writer) {
+
+  output_change(rbuf_old, end_old, rbuf_new, end_new, writer);
+}
+
 void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
                    , struct reader_buffer * rbuf_new, unsigned int end_new
                    , xmlTextWriterPtr writer) {
