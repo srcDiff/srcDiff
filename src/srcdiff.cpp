@@ -927,7 +927,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
     }
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   diff_end_old = rbuf_old->last_output;
   diff_end_new = rbuf_new->last_output;
   if(last_diff_old < (signed)node_sets_old->size()) {
