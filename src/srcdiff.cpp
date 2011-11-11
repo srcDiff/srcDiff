@@ -1905,6 +1905,13 @@ void output_change_white_space(struct reader_buffer * rbuf_old, unsigned int end
                    , xmlTextWriterPtr writer) {
 
   output_change(rbuf_old, end_old, rbuf_new, end_new, writer);
+
+  unsigned int oend = end_old;
+  unsigned int nend = end_new;
+
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
+
 }
 
 void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
@@ -1914,13 +1921,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
   unsigned int begin_old = rbuf_old->last_output;
   unsigned int begin_new = rbuf_new->last_output;
 
-  unsigned int oend = end_old;
-  unsigned int nend = end_new;
-
-  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
-  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
-
-  if(oend > begin_old && nend > begin_new) {
+  if(end_old > begin_old && end_new > begin_new) {
 
     if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
@@ -1963,7 +1964,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
   }
 
   /*
-    if(0 && is_nestable(node_sets_old, begin_old, oend, node_sets_new, begin_new, nend)) {
+    if(0 && is_nestable(node_sets_old, begin_old, end_old, node_sets_new, begin_new, end_new)) {
 
     if(is_block_type(node_sets_old, start_old, length_old)) {
 
@@ -2044,7 +2045,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
     else {
   */
 
-  if(oend > begin_old) {
+  if(end_old > begin_old) {
 
     // output diff tag begin
     if(rbuf_old->open_diff->back()->operation != DELETE)
@@ -2052,7 +2053,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
 
     rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
-    for(unsigned int i = begin_old; i < oend; ++i)
+    for(unsigned int i = begin_old; i < end_old; ++i)
       output_handler(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
 
     // output diff tag begin
@@ -2061,11 +2062,11 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
 
     output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
-    rbuf_old->last_output = oend;
+    rbuf_old->last_output = end_old;
 
   }
 
-  if(nend > begin_new) {
+  if(end_new > begin_new) {
 
     // output diff tag
     if(rbuf_new->open_diff->back()->operation != INSERT)
@@ -2073,7 +2074,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
 
     rbuf_new->open_diff->back()->open_tags->front()->marked = false;
 
-    for(unsigned int i = begin_new; i < nend; ++i)
+    for(unsigned int i = begin_new; i < end_new; ++i)
       output_handler(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, writer);
 
     // output diff tag begin
@@ -2081,7 +2082,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
       rbuf_new->open_diff->back()->open_tags->front()->marked = true;
     output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
 
-    rbuf_new->last_output = nend;
+    rbuf_new->last_output = end_new;
 
   }
 
