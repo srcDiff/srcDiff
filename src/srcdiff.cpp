@@ -128,11 +128,9 @@ bool is_white_space(xmlNodePtr node) {
 
 bool contains_new_line(xmlNodePtr node) {
 
-  unsigned int length = strlen((const char *)node->content);
-
-  for(unsigned int i = 0; i < length; ++i)
-    if(node->content[i] == '\n')
-      return true;
+  // assumes newlines is last character
+  if(node->content[strlen((const char *)node->content) - 1] == '\n')
+    return true;
 
   return false;
 
