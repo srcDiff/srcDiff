@@ -136,8 +136,7 @@ int node_set_compare(const void * e1, const void * e2) {
 
 bool is_white_space(xmlNodePtr node) {
 
-  // TODO:  Comment on how checking the first character is enough to determine that a
-  // node is all whitespace
+  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
 
 }
