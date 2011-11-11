@@ -361,6 +361,8 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
 void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
 
+void output_comment_words(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
+
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , unsigned int start_old
                       , struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
