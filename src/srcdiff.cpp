@@ -1332,12 +1332,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
-  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  */
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
@@ -1662,7 +1662,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 
 void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, struct reader_buffer * rbuf_new, unsigned int end_new, xmlTextWriterPtr writer) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   unsigned int begin_old = rbuf_old->last_output;
   unsigned int begin_new = rbuf_new->last_output;
 
@@ -1827,8 +1827,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
     } else {
 
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(i)->name);
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(i)->name);
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(i)->name);
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(i)->name);
       fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     }
 
@@ -1868,7 +1868,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
     rbuf_old->last_output = oend;
     rbuf_new->last_output = nend;
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 /*
