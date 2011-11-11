@@ -361,7 +361,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
 void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
 
-void output_comment_words(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_comment_word(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
 
 void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , unsigned int start_old
@@ -1203,7 +1203,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
           = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
-        output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+        output_comment_word(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
       } else
         output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
@@ -1261,7 +1261,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 }
 
 // output a change
-void output_comment_words(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer) {
+void output_comment_word(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
