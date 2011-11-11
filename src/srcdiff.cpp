@@ -623,7 +623,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
 
 std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> node_sets = std::vector<std::vector<int> *>();
+  std::vector<std::vector<int> *> node_sets;
 
   for(int i = start; i < end; ++i) {
 
@@ -812,7 +812,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
 std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> node_sets = std::vector<std::vector<int> *>();
+  std::vector<std::vector<int> *> node_sets;
 
   for(int i = start; i < end; ++i) {
 
@@ -861,7 +861,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 
 std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> node_sets = std::vector<std::vector<int> *>();
+  std::vector<std::vector<int> *> node_sets;
 
   for(int i = start; i < end; ++i) {
 
