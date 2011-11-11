@@ -60,7 +60,7 @@ const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
 const char* EDIFF_BEGIN = "start";
 const char* EDIFF_END = "end";
 
-xmlNodePtr diff_common_start;
+xmlNode diff_common_start;
 xmlNodePtr diff_common_end;
 xmlNodePtr diff_old_start;
 xmlNodePtr diff_old_end;
@@ -341,7 +341,9 @@ struct reader_buffer {
 
   int stream_source;
   int last_output;
+
   // TODO:  There is no reason that this the vector is a pointer.
+  // TODO: FIX THIS
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
 
@@ -406,10 +408,10 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  diff_common_start = new xmlNode;
-  diff_common_start->name = (xmlChar *) DIFF_COMMON;
-  diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_common_start->extra = 0;
+  //  diff_common_start = new xmlNode;
+  diff_common_start.name = (xmlChar *) DIFF_COMMON;
+  diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_common_start.extra = 0;
 
   diff_common_end = new xmlNode;
   diff_common_end->name = (xmlChar *) DIFF_COMMON;
@@ -818,7 +820,7 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend); 
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
-    output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
+    output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
@@ -1671,7 +1673,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
 
       if(rbuf_old->open_diff->back()->operation != COMMON)
-        output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
+        output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
       rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
@@ -1726,7 +1728,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
                       , xmlTextWriterPtr writer) {
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
-    output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
+    output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
   rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
