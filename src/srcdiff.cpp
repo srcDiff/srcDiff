@@ -438,12 +438,12 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
     // look if in text node
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
 
-      unsigned char * characters = (unsigned char *)xmlTextReaderConstValue(reader);
+      const char * characters = (const char *)xmlTextReaderConstValue(reader);
 
       // cycle through characters
       for (; (*characters) != 0;) {
 
-        unsigned char * characters_start = characters;
+        const char * characters_start = characters;
 
         xmlNode * text = new xmlNode;
         text->type = (xmlElementType)XML_READER_TYPE_TEXT;
@@ -481,8 +481,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
         nodes->push_back(text);
 
       }
-
-      not_done = xmlTextReaderRead(reader);
     }
     else {
 
@@ -494,8 +492,8 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
       // save non-text node and get next node
       nodes->push_back(node);
 
-      not_done = xmlTextReaderRead(reader);
     }
+      not_done = xmlTextReaderRead(reader);
 
   }
 
