@@ -324,9 +324,6 @@ int main(int argc, char * argv[]) {
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
-    // TODO:  Remove old reading code
-    //    reader_new = xmlNewTextReader(xmlBufferContent(output_file_two));
-    //    reader_new = xmlNewTextReaderFilename(srcml_file_two);
     if (reader_new == NULL) {
 
       goto cleanup;
@@ -473,7 +470,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
       for (; (*characters) != 0; ++characters) {
 
         // separte non whitespace
-        // TODO:  Use isspace here
         if(!isspace(*characters)) {
 
           // output previous whitespace
@@ -491,7 +487,6 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           }
 
-          // TODO:  Use isspace here
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
