@@ -1258,6 +1258,133 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
 }
 
+// output a change
+void output_comment_words(struct reader_buffer * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_buffer * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer) {
+
+  //fprintf(stderr, "HERE_DOUBLE\n");
+
+  struct edit * edit_script;
+  int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+
+  if(distance < 0) {
+
+    fprintf(stderr, "Error with shortest edit script");
+    exit(distance);
+  }
+
+  int last_diff_old = 0;
+  int last_diff_new = 0;
+  int diff_end_old = rbuf_old->last_output;
+  int diff_end_new = rbuf_new->last_output;
+
+  struct edit * edits = edit_script;
+  for (; edits; edits = edits->next) {
+
+    diff_end_old = rbuf_old->last_output;
+    diff_end_new = rbuf_new->last_output;
+    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
+
+      diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
+
+    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+
+      diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
+      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
+    }
+
+      output_common(rbuf_old, diff_end_old
+
+                    , rbuf_new, diff_end_new
+
+                    , writer);
+
+    // detect and change
+    struct edit * edit_next = edits->next;
+    if(is_change(edits)) {
+
+      //      fprintf(stderr, "HERE\n");
+
+      if(edits->length == edit_next->length && edits->length == 1
+                && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
+                    || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
+
+        if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
+                        , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
+           && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
+
+          output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
+                           , rbuf_new, node_sets_new, edit_next->offset_sequence_two, writer);
+
+        } else {
+
+          output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
+
+        }
+
+      } else {
+
+        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+
+      }
+
+      last_diff_old = edits->offset_sequence_one + edits->length;
+      last_diff_new = edit_next->offset_sequence_two + edit_next->length;
+      edits = edits->next;
+      continue;
+    }
+
+    // handle pure delete or insert
+    switch (edits->operation) {
+
+    case INSERT:
+
+      //fprintf(stderr, "HERE\n");
+      output_change_white_space(rbuf_old, 0
+                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+
+
+      last_diff_old = edits->offset_sequence_one + 1;
+      last_diff_new = edits->offset_sequence_two + edits->length;
+
+      break;
+
+    case DELETE:
+
+      //fprintf(stderr, "HERE\n");
+      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                    , rbuf_new, 0, writer);
+
+      last_diff_old = edits->offset_sequence_one + edits->length;
+      last_diff_new = edits->offset_sequence_two + 1;
+
+      break;
+    }
+
+  }
+
+  diff_end_old = rbuf_old->last_output;
+  diff_end_new = rbuf_new->last_output;
+  if(last_diff_old < (signed)node_sets_old->size()) {
+
+    diff_end_old = node_sets_old->back()->back() + 1;
+    diff_end_new = node_sets_new->back()->back() + 1;
+
+  }
+    output_common(rbuf_old, diff_end_old
+
+                  , rbuf_new, diff_end_new
+
+                  , writer);
+
+  free_shortest_edit_script(edit_script);
+
+}
+
+
+
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 
 // create srcdiff unit
