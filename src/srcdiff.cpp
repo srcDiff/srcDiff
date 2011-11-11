@@ -959,6 +959,7 @@ std::vector<std::vector<int> *> * create_comment_paragraph_set(std::vector<xmlNo
       for(; contains_new_line(nodes->at(i)); ++i);
       //node_set->push_back(i);
 
+      continue;
       --i;
 
     } else {
@@ -1025,7 +1026,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_comment_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
@@ -1040,6 +1041,8 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
+
+
 
     // add preceeding unchanged
     diff_end_old = rbuf_old->last_output;
@@ -1078,10 +1081,11 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
         output_comment_line(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
 
-      } else
+      } else {
+
         output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                       , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
-
+      }
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -1599,7 +1603,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   // compare subset of nodes
 
-  if(0 && strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+  if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
