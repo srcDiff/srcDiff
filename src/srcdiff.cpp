@@ -1332,12 +1332,12 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
   struct reader_buffer * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
 
@@ -1445,7 +1445,12 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
   int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
 
-  return ((old_diff > new_diff) ? old_diff : new_diff) + 1;
+  int value = ((old_diff > new_diff) ? old_diff : new_diff);
+
+  if(value < 0)
+    value = 0;
+
+  return 0;
 }
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
@@ -1535,6 +1540,7 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, diff_common_start, COMMON, writer);
@@ -1620,6 +1626,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
   }
   else {
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1634,6 +1641,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 
   }
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), writer);
 
@@ -1654,7 +1662,7 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
 
 
 void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, struct reader_buffer * rbuf_new, unsigned int end_new, xmlTextWriterPtr writer) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   unsigned int begin_old = rbuf_old->last_output;
   unsigned int begin_new = rbuf_new->last_output;
 
@@ -1819,8 +1827,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
     } else {
 
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(i)->name);
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(i)->name);
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(i)->name);
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(i)->name);
       fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     }
 
@@ -1860,7 +1868,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
     rbuf_old->last_output = oend;
     rbuf_new->last_output = nend;
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 }
 
 /*
