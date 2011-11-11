@@ -433,7 +433,6 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
 void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 
   // save beginning of characters
-  unsigned char * characters_start = 0;
   unsigned char * characters = 0;
 
   int not_done = 1;
@@ -442,11 +441,13 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
     // look if in text node
     if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_SIGNIFICANT_WHITESPACE || xmlTextReaderNodeType(reader) == XML_READER_TYPE_TEXT) {
 
-      characters_start = (unsigned char *)xmlTextReaderConstValue(reader);
-      characters = characters_start;
+      characters = (unsigned char *)xmlTextReaderConstValue(reader);
 
       // cycle through characters
+      unsigned char * characters_start = 0;
       for (; (*characters) != 0; ++characters) {
+
+        characters_start = characters;
 
         xmlNode * text = new xmlNode;
         text->type = (xmlElementType)XML_READER_TYPE_TEXT;
@@ -467,6 +468,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
+
         }
 
         // separate non whitespace
@@ -477,10 +479,10 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
+
         }
 
         nodes->push_back(text);
-        characters_start = characters;
 
       }
 
