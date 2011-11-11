@@ -927,7 +927,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
     }
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   diff_end_old = rbuf_old->last_output;
   diff_end_new = rbuf_new->last_output;
   if(last_diff_old < (signed)node_sets_old->size()) {
@@ -936,9 +936,9 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
-    output_common(rbuf_old, node_sets_old->back()->back() + 1
+    output_common(rbuf_old, diff_end_old
 
-                  , rbuf_new, node_sets_new->back()->back() + 1
+                  , rbuf_new, diff_end_new
 
                   , writer);
 
@@ -1129,9 +1129,10 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
-    output_common(rbuf_old, node_sets_old->back()->back() + 1
 
-                  , rbuf_new, node_sets_new->back()->back() + 1
+    output_common(rbuf_old, diff_end_old
+
+                  , rbuf_new, diff_end_new
 
                   , writer);
 
@@ -1244,11 +1245,12 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
-    output_common(rbuf_old, node_sets_old->back()->back() + 1
+    output_common(rbuf_old, diff_end_old
 
-                  , rbuf_new, node_sets_new->back()->back() + 1
+                  , rbuf_new, diff_end_new
 
                   , writer);
+
 
 }
 
