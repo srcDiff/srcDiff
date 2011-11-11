@@ -452,24 +452,42 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
       // cycle through characters
       for (; (*characters) != 0; ++characters) {
 
+        // output previous whitespace
+        if(*charactesr != '\n') {
+
+          xmlNode * text = new xmlNode;
+          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
+          text->name = (const xmlChar *)"text";
+          
+          text->content = (xmlChar *)content = "\n";
+          nodes->push_back(text);
+          
+          characters_start = characters;
+            
+        }
+
+        // output previous whitespace
+        if(*charactesr != '\n' && isspace(*characters)){
+
+          while((*characters) != 0 && *charactesr != '\n' && isspace(*characters))
+            ++characters;
+
+          xmlNode * text = new xmlNode;
+          text->type = (xmlElementType)XML_READER_TYPE_TEXT;
+          text->name = (const xmlChar *)"text";
+          
+          const char * content = strndup((const char *)characters_start, characters  - characters_start);
+          
+          text->content = (xmlChar *)content;
+          nodes->push_back(text);
+          
+          characters_start = characters;
+            
+        }
+        
         // separte non whitespace
         if(!isspace(*characters)) {
-
-          // output previous whitespace
-          if(characters != characters_start) {
-            xmlNode * text = new xmlNode;
-            text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-            text->name = (const xmlChar *)"text";
-
-            const char * content = strndup((const char *)characters_start, characters  - characters_start);
-
-            text->content = (xmlChar *)content;
-            nodes->push_back(text);
-
-            characters_start = characters;
-
-          }
-
+          
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
