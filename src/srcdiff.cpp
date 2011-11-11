@@ -209,6 +209,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
     // TODO:  Won't there not be whitespace anymore in these?
+    // TODO:  REMOVE
     // Bypassing whitespace
     for(; i < node_set1->size() && is_white_space(nodes_old.at(node_set1->at(i))); ++i)
       ;
@@ -268,18 +269,22 @@ int node_set_comment_compare(const void * e1, const void * e2) {
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
     // Bypassing whitespace
+    // TODO:  REMOVE
     for(; i < node_set1->size() && is_white_space(nodes_old.at(node_set1->at(i))); ++i)
       ;
 
     // Bypassing whitespace
+    // TODO:  REMOVE
     for(; j < node_set2->size() && is_white_space(nodes_new.at(node_set2->at(j))); ++j)
       ;
 
     // If end was all whitespace then the same
+    // TODO:  REMOVE
     if(i >= node_set1->size() && j >= node_set2->size())
       return 0;
 
     // If one had ending whitespace and other had something else then different
+    // TODO:  REMOVE
     if(i >= node_set1->size() || j >= node_set2->size())
       return 1;
 
