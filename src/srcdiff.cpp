@@ -482,26 +482,26 @@ int main(int argc, char * argv[]) {
     // run through diffs adding markup
     struct reader_buffer rbuf_old = { 0 };
     rbuf_old.stream_source = DELETE;
-    rbuf_old.open_diff = new std::vector<struct open_diff *>;
+    rbuf_old.open_diff = std::vector<struct open_diff *>();
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
     new_diff->open_tags = new std::vector<struct tag *>;
     rbuf_old.open_diff.push_back(new_diff);
 
-    rbuf_old.output_diff = &output_diff;
+    rbuf_old.output_diff = output_diff;
     xmlTextReaderRead(reader_old);
 
     struct reader_buffer rbuf_new = { 0 };
     rbuf_new.stream_source = INSERT;
-    rbuf_new.open_diff = new std::vector<struct open_diff *>;
+    rbuf_new.open_diff = std::vector<struct open_diff *>();
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
     new_diff->open_tags = new std::vector<struct tag *>;
     rbuf_new.open_diff.push_back(new_diff);
 
-    rbuf_new.output_diff = &output_diff;
+    rbuf_new.output_diff = output_diff;
     xmlTextReaderRead(reader_new);
 
     // create srcdiff unit
