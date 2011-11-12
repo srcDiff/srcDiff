@@ -613,8 +613,14 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && is_new_line(nodes_old.at(oend)); ++oend);
-  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && is_new_line(nodes_new.at(nend)); ++nend);
+  if(is_white_space(oend))
+    ++oend;
+
+  if(is_white_space(nend))
+    ++noend;
+
+  for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend);
+  for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend);
 
   if(rbuf_old->open_diff.back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
