@@ -179,7 +179,6 @@ xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file
 struct open_diff {
 
   int operation;
-  int offset;
   std::vector<xmlNodePtr> * open_tags;
 
 };
