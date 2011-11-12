@@ -840,8 +840,8 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
       for(; contains_new_line(nodes->at(i)); ++i);
       //node_set->push_back(i);
 
-      continue;
       --i;
+      continue;
 
     } else {
 
