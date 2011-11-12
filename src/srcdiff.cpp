@@ -184,17 +184,10 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 // converts source code to srcML
 xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
-struct tag {
-
-  int marked;
-  xmlNodePtr node;
-};
-
 struct open_diff {
 
   int operation;
-  int offset;
-  std::vector<struct tag *> * open_tags;
+  std::vector<xmlNodePtr> * open_tags;
 
 };
 
@@ -340,7 +333,7 @@ int main(int argc, char * argv[]) {
     std::vector<struct open_diff *> output_diff;
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
     output_diff.push_back(new_diff);
 
     // run through diffs adding markup
@@ -350,7 +343,7 @@ int main(int argc, char * argv[]) {
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
     rbuf_old.open_diff->push_back(new_diff);
 
     rbuf_old.output_diff = &output_diff;
@@ -362,7 +355,7 @@ int main(int argc, char * argv[]) {
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
     rbuf_new.open_diff->push_back(new_diff);
 
     rbuf_new.output_diff = &output_diff;
