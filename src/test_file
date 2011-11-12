@@ -1,0 +1,5 @@
+#!/bin/bash
+
+../bin/srcdiff $1 $2 > temp; srcml2src --xml --diff 1 temp -o old; srcml2src --xml --diff 2 temp -o new; diff old $1; diff new $2
+
+rm -f temp old new
