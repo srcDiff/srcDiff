@@ -613,11 +613,11 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  if(is_white_space(oend))
+  if(is_white_space(nodes_old.at(oend)))
     ++oend;
 
-  if(is_white_space(nend))
-    ++noend;
+  if(is_white_space(nodes_new.at(nend)))
+    ++nend;
 
   for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend);
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend);
@@ -1815,11 +1815,11 @@ void output_change_white_space(struct reader_buffer * rbuf_old, unsigned int end
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  if(is_white_space(oend))
+  if(is_white_space(nodes_old.at(oend)))
     ++oend;
 
-  if(is_white_space(nend))
-    ++noend;
+  if(is_white_space(nodes_new.at(nend)))
+    ++nend;
 
   for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend);
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend);
