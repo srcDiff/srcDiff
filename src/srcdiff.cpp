@@ -129,10 +129,7 @@ bool is_white_space(xmlNodePtr node) {
 bool is_new_line(xmlNodePtr node) {
 
   // assumes newlines is last character
-  if(node->content[0] == '\n')
-    return true;
-
-  return false;
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content[0] == '\n';
 
 }
 
