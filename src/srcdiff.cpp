@@ -187,6 +187,7 @@ xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file
 struct open_diff {
 
   int operation;
+  int offset;
   std::vector<xmlNodePtr> * open_tags;
 
 };
@@ -1271,7 +1272,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = operation;
-    new_diff->open_tags = new std::vector<struct tag *>;
+    new_diff->open_tags = new std::vector<xmlNodePtr>;
 
     open_diffs->push_back(new_diff);
   }
@@ -1279,11 +1280,7 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
   //xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    struct tag * new_tag = new struct tag;
-    new_tag->marked = false;
-    new_tag->node = node;
-
-    open_diffs->back()->open_tags->push_back(new_tag);
+    open_diffs->back()->open_tags->push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(open_diffs->size() == 1 && open_diffs->back()->open_tags->size() == 1)
