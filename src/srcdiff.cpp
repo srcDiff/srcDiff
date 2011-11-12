@@ -126,13 +126,7 @@ bool is_white_space(xmlNodePtr node) {
 
 bool is_new_line(xmlNodePtr node) {
 
-  unsigned int length = strlen((const char *)node->content);
-
-  for(unsigned int i = 0; i < length; ++i)
-    if(node->content[i] == '\n')
-      return true;
-
-  return false;
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content[0] == '\n';
 
 }
 
