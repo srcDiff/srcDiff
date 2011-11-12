@@ -672,13 +672,8 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   if(rbuf_old->open_diff->back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
-  rbuf_old->open_diff->back()->open_tags->front()->marked = false;
-
   // add preceeding unchanged
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, writer);
-
-  if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
-    rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
   output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -1521,15 +1516,11 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
       if(rbuf_old->open_diff->back()->operation != COMMON)
         output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
-      rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
       markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
                         , writer);
-
-      if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
-        rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
       output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -1539,9 +1530,6 @@ void compare_many2many(struct reader_buffer * rbuf_old, std::vector<std::vector<
 
       output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                        , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, writer);
-
-      if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
-        rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
       output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -1576,7 +1564,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
   if(rbuf_old->open_diff->back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
 
-  rbuf_old->open_diff->back()->open_tags->front()->marked = false;
 
   markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), writer);
 
@@ -1629,8 +1616,6 @@ void output_recursive(struct reader_buffer * rbuf_old, std::vector<std::vector<i
   ++rbuf_new->last_output;
   */
 
-  if(rbuf_old->open_diff->back()->operation == COMMON && rbuf_old->open_diff->size() > 1)
-    rbuf_old->open_diff->back()->open_tags->front()->marked = true;
 
   output_handler(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
 
@@ -2028,15 +2013,10 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
     if(rbuf_old->open_diff->back()->operation != DELETE)
       output_handler(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
 
-    rbuf_old->open_diff->back()->open_tags->front()->marked = false;
-
     for(unsigned int i = begin_old; i < end_old; ++i)
       output_handler(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
 
     // output diff tag begin
-    if(rbuf_old->open_diff->back()->operation == DELETE)
-      rbuf_old->open_diff->back()->open_tags->front()->marked = true;
-
     output_handler(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
 
     rbuf_old->last_output = end_old;
@@ -2049,14 +2029,10 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
     if(rbuf_new->open_diff->back()->operation != INSERT)
       output_handler(rbuf_old, rbuf_new, &diff_new_start, INSERT, writer);
 
-    rbuf_new->open_diff->back()->open_tags->front()->marked = false;
-
     for(unsigned int i = begin_new; i < end_new; ++i)
       output_handler(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, writer);
 
     // output diff tag begin
-    if(rbuf_new->open_diff->back()->operation == INSERT)
-      rbuf_new->open_diff->back()->open_tags->front()->marked = true;
     output_handler(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
 
     rbuf_new->last_output = end_new;
