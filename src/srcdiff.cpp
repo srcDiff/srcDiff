@@ -121,20 +121,8 @@ int node_compare(xmlNode * node1, xmlNode * node2) {
 
 bool is_white_space(xmlNodePtr node) {
 
-  // TODO:  Comment on how checking the first character is enough to determine that a
-  // node is all whitespace
+  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
-
-}
-
-// TODO:  Rename to is_white_space
-bool is_white_space_set(std::vector<int> * node_set, std::vector<xmlNodePtr> * nodes) {
-
-  for(unsigned int i = 0; i < node_set->size(); ++i)
-    if((xmlReaderTypes)nodes->at(node_set->at(i))->type != XML_READER_TYPE_TEXT || !isspace((char)nodes->at(node_set->at(i))->content[0]))
-      return false;
-
-  return true;
 
 }
 
