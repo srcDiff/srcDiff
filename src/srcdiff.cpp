@@ -80,20 +80,6 @@ bool is_change(struct edit * edit_script) {
 
 }
 
-// diff accessor function
-const void * line_index(int idx, const void *s) {
-  std::vector<const char *> & lines = *(std::vector<const char *> *)s;
-  return lines[idx];
-}
-
-// diff comparison function
-int line_compare(const void * e1, const void * e2) {
-  const char * str1 = (const char *)e1;
-  const char * str2 = (const char *)e2;
-
-  return strcmp(str1, str2);
-}
-
 // diff node accessor function
 const void * node_set_index(int idx, const void *s) {
   std::vector<std::vector<int> *> & node_sets = *(std::vector<std::vector<int> *> *)s;
@@ -119,23 +105,6 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 }
 
 // diff node comparison function
-int node_compare(const void * e1, const void * e2) {
-  xmlNode * node1 = (xmlNode *)e1;
-  xmlNode * node2 = (xmlNode *)e2;
-
-  if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
-
-    // end if text node contents differ
-    if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
-      return strcmp((const char *)node1->content, (const char *)node2->content);
-    else
-      return attribute_compare(node1->properties, node2->properties);
-  }
-
-  return 1;
-}
-
-// diff node comparison function
 int node_compare(xmlNode * node1, xmlNode * node2) {
 
   if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
@@ -148,21 +117,6 @@ int node_compare(xmlNode * node1, xmlNode * node2) {
   }
 
   return 1;
-}
-
-// diff node comparison function
-int node_set_compare(const void * e1, const void * e2) {
-  std::vector<int> * node_set1 = (std::vector<int> *)e1;
-  std::vector<int> * node_set2 = (std::vector<int> *)e2;
-
-  if(node_set1->size() != node_set2->size())
-    return 1;
-  else
-    for(unsigned int i = 0; i < node_set1->size(); ++i)
-      if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(i))))
-        return 1;
-
-  return 0;
 }
 
 bool is_white_space(xmlNodePtr node) {
@@ -264,7 +218,7 @@ int node_set_comment_compare(const void * e1, const void * e2) {
   std::vector<int> * node_set2 = (std::vector<int> *)e2;
 
   if(is_white_space_set(node_set1, &nodes_old) && is_white_space_set(node_set2, &nodes_new))
-    return node_set_compare(node_set1, node_set2);
+    return node_set_syntax_compare(node_set1, node_set2);
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
 
@@ -1152,7 +1106,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
   if(distance < 0) {
 
@@ -1554,7 +1508,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
   //unsigned int length = node_set_new->size();
 
-  if(node_set_compare(node_set_old, node_set_new) == 0)
+  if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
 
 
