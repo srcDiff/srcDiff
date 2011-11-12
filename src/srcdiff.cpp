@@ -126,10 +126,10 @@ bool is_white_space(xmlNodePtr node) {
 
 }
 
-bool contains_new_line(xmlNodePtr node) {
+bool is_new_line(xmlNodePtr node) {
 
   // assumes newlines is last character
-  if(node->content[strlen((const char *)node->content) - 1] == '\n')
+  if(node->content[0] == '\n')
     return true;
 
   return false;
@@ -613,8 +613,8 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
-  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend);
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && is_new_line(nodes_old.at(oend)); ++oend);
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && is_new_line(nodes_new.at(nend)); ++nend);
 
   if(rbuf_old->open_diff.back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
@@ -760,9 +760,9 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 
     std::vector <int> * node_set = new std::vector <int>;
 
-    if(contains_new_line(nodes->at(i))) {
+    if(is_new_line(nodes->at(i))) {
 
-      for(; contains_new_line(nodes->at(i)); ++i);
+      for(; is_new_line(nodes->at(i)); ++i);
       //node_set->push_back(i);
 
       --i;
@@ -773,7 +773,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
       bool first_newline = false;
       for(; i < end; ++i) {
 
-        if(first_newline && contains_new_line(nodes->at(i))) {
+        if(first_newline && is_new_line(nodes->at(i))) {
 
           --i;
           break;
@@ -782,7 +782,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
           first_newline = false;
 
 
-        if(!first_newline && contains_new_line(nodes->at(i)))
+        if(!first_newline && is_new_line(nodes->at(i)))
           first_newline = true;
 
         if(is_white_space(nodes->at(i)))
@@ -811,7 +811,7 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> 
 
     for(; i < end; ++i) {
 
-      if(contains_new_line(nodes->at(i)))
+      if(is_new_line(nodes->at(i)))
         break;
 
       if(is_white_space(nodes->at(i)))
@@ -1809,8 +1809,8 @@ void output_change_white_space(struct reader_buffer * rbuf_old, unsigned int end
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && contains_new_line(nodes_old.at(oend)); ++oend);
-  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && contains_new_line(nodes_new.at(nend)); ++nend);
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && is_new_line(nodes_old.at(oend)); ++oend);
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && is_new_line(nodes_new.at(nend)); ++nend);
 
   output_change(rbuf_old, oend, rbuf_new, nend, writer);
 
