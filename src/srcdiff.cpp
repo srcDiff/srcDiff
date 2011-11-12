@@ -1314,7 +1314,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->node->name, (const char *)node->name) != 0)
+    if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)
       return;
 
     outputNode(*node, writer);
