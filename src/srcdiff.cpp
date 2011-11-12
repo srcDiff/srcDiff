@@ -189,8 +189,7 @@ struct reader_buffer {
   int stream_source;
   int last_output;
 
-  // TODO:  There is no reason that this the vector is a pointer.
-  // TODO: FIX THIS
+  // TODO: FIX THIS Was crashing before so reverted need to convert back again
   std::vector<struct open_diff *> * open_diff;
   std::vector<struct open_diff *> * output_diff;
 
