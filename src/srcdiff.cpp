@@ -107,16 +107,14 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 // diff node comparison function
 int node_compare(xmlNode * node1, xmlNode * node2) {
 
-  if(node1->type == node2->type && strcmp((const char *)node1->name, (const char *)node2->name) == 0) {
+  if(node1->type != node2->type || strcmp((const char *)node1->name, (const char *)node2->name) != 0)
+    return false;
 
     // end if text node contents differ
     if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
       return strcmp((const char *)node1->content, (const char *)node2->content);
-    else
-      return attribute_compare(node1->properties, node2->properties);
-  }
-
-  return 1;
+    
+    return attribute_compare(node1->properties, node2->properties);
 }
 
 bool is_white_space(xmlNodePtr node) {
@@ -312,9 +310,6 @@ int main(int argc, char * argv[]) {
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
-    // TODO:  Remove old reading code
-    //    reader_new = xmlNewTextReader(xmlBufferContent(output_file_two));
-    //    reader_new = xmlNewTextReaderFilename(srcml_file_two);
     if (reader_new == NULL) {
 
       goto cleanup;
