@@ -1558,12 +1558,16 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
 
-      for(unsigned int opos = 0, npos = 0; opos < text_old.size() && npos < text_new.size(); ++opos, ++npos) {
+      for(unsigned int opos = 0, npos = 0; opos < text_old.size() && npos < text_new.size();) {
 
         if(text_old[opos] == text_new[npos]) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
           output_char(text_old[opos], writer);
+
+          ++opos;
+          ++npos;
+
           continue;
         }
 
@@ -1600,10 +1604,6 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
             // output diff tag
 
           }
-
-          // TODO:  Don't trick the loop.  Increment in the cases you need to, don't in the others
-          --opos;
-          --npos;
 
         }
 
