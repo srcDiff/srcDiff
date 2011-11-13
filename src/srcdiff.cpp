@@ -556,11 +556,9 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
   ++(*start);
 
   // TODO:  No stack is needed.  Just a count of open tags.
-  std::vector<bool> is_open;
+  int is_open = 1;
 
-  is_open.push_back(false);
-
-  for(; !is_open.empty(); ++(*start)) {
+  for(; is_open; ++(*start)) {
 
     if(is_white_space(nodes->at(*start)))
       continue;
@@ -569,10 +567,10 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
 
     if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
        && !(nodes->at(*start)->extra & 0x1))
-      is_open.push_back(false);
+      ++is_open;
 
     else if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
-      is_open.pop_back();
+      --is_open;
 
   }
 
