@@ -73,6 +73,7 @@ xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/sr
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
+// TODO:  Put all of these helper functions into a separate source file
 bool is_change(struct edit * edit_script) {
 
   return edit_script->operation == DELETE && edit_script->next != NULL && edit_script->next->operation == INSERT
@@ -179,6 +180,8 @@ xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file
 struct open_diff {
 
   int operation;
+
+  // TODO:  NO REASON TO NOT HAVE THIS ON THE STACK.
   std::vector<xmlNodePtr> * open_tags;
 
 };
@@ -294,6 +297,8 @@ int main(int argc, char * argv[]) {
   xmlTextReaderPtr reader_new = NULL;
 
   xmlTextWriterPtr writer = NULL;
+
+  // TODO:  get rid of goto.  Just output and error message and return
   {
     // create the reader for the old file
     reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
@@ -383,6 +388,7 @@ int main(int argc, char * argv[]) {
   }
 
   // cleanup everything
+  // TODO: Get rid of cleanup label.  This is lazy error handling.  This is NOT a device driver.
  cleanup:
 
   if(reader_old)
@@ -541,6 +547,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
 
   ++(*start);
 
+  // TODO:  No stack is needed.  Just a count of open tags.
   std::vector<bool> is_open;
 
   is_open.push_back(false);
@@ -575,6 +582,8 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
     if(is_white_space(nodes->at(i))) {
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
+
+      // TODO:  Why continue then have an action?  There is not whitespace, right?
       continue;
       node_set->push_back(i);
 
@@ -620,8 +629,11 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   if( nend < nodes_new.size() && is_white_space(nodes_new.at(nend)))
     ++nend;
 
-  for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend);
-  for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend);
+  // TODO:  Seriously.  Quit putting semicolon at end of for.
+  for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend)
+    ;
+  for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
+    ;
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
     output_handler(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
@@ -638,6 +650,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
+  // TODO:  Why is the edit_script not used?  Will it ever be used?
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
@@ -669,11 +682,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    output_common(rbuf_old, diff_end_old
-
-                  , rbuf_new, diff_end_new
-
-                  , writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -748,6 +757,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
+  // TODO:  What is up with this strange formatting?  FIX
   output_common(rbuf_old, diff_end_old
 
                 , rbuf_new, diff_end_new
@@ -768,12 +778,14 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 
     if(is_new_line(nodes->at(i))) {
 
+      // TODO:  Fix bad for loop formatting
       for(; is_new_line(nodes->at(i)); ++i);
       //node_set->push_back(i);
 
       --i;
       continue;
 
+      // TODO If you are going to continue, why the else?
     } else {
 
       bool first_newline = false;
@@ -854,7 +866,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
-
+    // TODO:  WHY ALL THE EMPTY LINES?
 
     // add preceeding unchanged
     diff_end_old = rbuf_old->last_output;
@@ -870,6 +882,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
+    // TODO:  FIX THIS FORMATTING
     output_common(rbuf_old, diff_end_old
 
                   , rbuf_new, diff_end_new
@@ -942,6 +955,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   }
 
+  // TODO:  FIX FORMATTING
   output_common(rbuf_old, diff_end_old
 
                 , rbuf_new, diff_end_new
@@ -988,6 +1002,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
+    // TODO:  FIX FORMATTING
     output_common(rbuf_old, diff_end_old
 
                   , rbuf_new, diff_end_new
@@ -1057,6 +1072,8 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
+
+  // TODO:  FIX FORMATTING
   output_common(rbuf_old, diff_end_old
 
                 , rbuf_new, diff_end_new
@@ -1102,6 +1119,7 @@ void output_comment_word(struct reader_buffer * rbuf_old, std::vector<std::vecto
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
+    // TODO:  FIX FORMATTING
     output_common(rbuf_old, diff_end_old
 
                   , rbuf_new, diff_end_new
@@ -1171,6 +1189,8 @@ void output_comment_word(struct reader_buffer * rbuf_old, std::vector<std::vecto
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
+
+  // TODO:  FIX FORMATTING
   output_common(rbuf_old, diff_end_old
 
                 , rbuf_new, diff_end_new
@@ -1203,6 +1223,8 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
   xmlNsPtr namespaces = *nsDef;
 
   if(namespaces) {
+
+    // TODO FIX BAD FOR LOOP FORMATTING
     for(; namespaces->next; namespaces = namespaces->next);
 
     namespaces->next = ns;
@@ -1214,6 +1236,7 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation) {
 
+  // TODO:  WHY?
   if(node->extra & 0x1)
     return;
 
