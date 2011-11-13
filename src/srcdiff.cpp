@@ -1700,6 +1700,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
           }
 
+          // TODO:  Don't trick the loop.  Increment in the cases you need to, don't in the others
           --opos;
           --npos;
 
