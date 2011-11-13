@@ -73,6 +73,7 @@ xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/sr
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
+/*
 // TODO:  Put all of these helper functions into a separate source file
 bool is_change(struct edit * edit_script) {
 
@@ -172,7 +173,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
 
   return 0;
 }
-
+*/
 
 // converts source code to srcML
 xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
