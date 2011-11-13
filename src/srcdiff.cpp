@@ -555,9 +555,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
 
   ++(*start);
 
-  // TODO:  No stack is needed.  Just a count of open tags.
   int is_open = 1;
-
   for(; is_open; ++(*start)) {
 
     if(is_white_space(nodes->at(*start)))
@@ -777,7 +775,6 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 
     if(is_new_line(nodes->at(i))) {
 
-      // TODO:  Fix bad for loop formatting
       for(; is_new_line(nodes->at(i)); ++i)
         ;
 
