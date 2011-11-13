@@ -191,6 +191,8 @@ struct reader_buffer {
 
   // TODO: FIX THIS Was crashing before so reverted need to convert back again
   std::vector<struct open_diff *> * open_diff;
+
+  // must be it is a shared resource
   std::vector<struct open_diff *> * output_diff;
 
 };
