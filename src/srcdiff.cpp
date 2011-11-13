@@ -1621,6 +1621,7 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
   }
 
+  // output leftover nodes
   if(i < oend) {
 
     if(rbuf_old->open_diff->back()->operation != DELETE)
