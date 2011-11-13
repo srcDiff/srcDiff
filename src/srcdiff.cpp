@@ -189,7 +189,7 @@ struct reader_buffer {
   int stream_source;
   int last_output;
 
-  // TODO: FIX THIS Was crashing before so reverted need to convert back again
+  // just a pointer not on stack
   std::vector<struct open_diff *> * open_diff;
 
   // must be it is a shared resource
@@ -329,7 +329,8 @@ int main(int argc, char * argv[]) {
     // run through diffs adding markup
     struct reader_buffer rbuf_old = { 0 };
     rbuf_old.stream_source = DELETE;
-    rbuf_old.open_diff = new std::vector<struct open_diff *>;
+    std::vector<struct open_diff *> open_diff_old;
+    rbuf_old.open_diff = &open_diff_old;
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
@@ -341,7 +342,8 @@ int main(int argc, char * argv[]) {
 
     struct reader_buffer rbuf_new = { 0 };
     rbuf_new.stream_source = INSERT;
-    rbuf_new.open_diff = new std::vector<struct open_diff *>;
+    std::vector<struct open_diff *> open_diff_new;
+    rbuf_new.open_diff = &open_diff_new;
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
