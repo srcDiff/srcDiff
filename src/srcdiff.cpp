@@ -1049,7 +1049,6 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
   }
 
-  // TODO:  FIX FORMATTING
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
 
@@ -1091,7 +1090,6 @@ void output_comment_word(struct reader_buffer * rbuf_old, std::vector<std::vecto
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    // TODO:  FIX FORMATTING
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
     // detect and change
