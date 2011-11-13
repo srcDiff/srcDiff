@@ -181,7 +181,7 @@ struct open_diff {
 
   int operation;
 
-  // TODO:  NO REASON TO NOT HAVE THIS ON THE STACK.
+  // TODO:  NO REASON TO NOT HAVE THIS ON THE STACK.  This is created in another function
   std::vector<xmlNodePtr> * open_tags;
 
 };
@@ -298,20 +298,26 @@ int main(int argc, char * argv[]) {
 
   xmlTextWriterPtr writer = NULL;
 
-  // TODO:  get rid of goto.  Just output and error message and return
   {
     // create the reader for the old file
     reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
     if (reader_old == NULL) {
 
-      goto cleanup;
+      fprintf(stderr, "Unable to open file '%s' as XML", output_file_one);
+      
+      exit(1);
     }
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
     if (reader_new == NULL) {
 
-      goto cleanup;
+      fprintf(stderr, "Unable to open file '%s' as XML", output_file_two);
+
+      if(reader_old)
+        xmlFreeTextReader(reader_old);
+
+      exit(1);
     }
 
     // create the writer
@@ -319,7 +325,13 @@ int main(int argc, char * argv[]) {
     if (writer == NULL) {
       fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
 
-      goto cleanup;
+      if(reader_old)
+        xmlFreeTextReader(reader_old);
+
+      if(reader_new)
+        xmlFreeTextReader(reader_new);
+
+      exit(1);
     }
 
     // issue the xml declaration
@@ -388,9 +400,6 @@ int main(int argc, char * argv[]) {
   }
 
   // cleanup everything
-  // TODO: Get rid of cleanup label.  This is lazy error handling.  This is NOT a device driver.
- cleanup:
-
   if(reader_old)
     xmlFreeTextReader(reader_old);
 
@@ -402,9 +411,8 @@ int main(int argc, char * argv[]) {
     xmlTextWriterEndDocument(writer);
     xmlFreeTextWriter(writer);
   }
-  int status = 0;
 
-  return status;
+  return 0;
 }
 
 // converts source code to srcML
@@ -1210,7 +1218,7 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation) {
 
-  // TODO:  WHY?
+  // Skip empty node
   if(node->extra & 0x1)
     return;
 
