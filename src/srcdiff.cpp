@@ -583,9 +583,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
 
-      // TODO:  Why continue then have an action?  There is not whitespace, right?
       continue;
-      node_set->push_back(i);
 
     } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
@@ -629,7 +627,6 @@ void output_common(struct reader_buffer * rbuf_old, unsigned int end_old
   if( nend < nodes_new.size() && is_white_space(nodes_new.at(nend)))
     ++nend;
 
-  // TODO:  Seriously.  Quit putting semicolon at end of for.
   for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend)
     ;
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
@@ -650,7 +647,7 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  // TODO:  Why is the edit_script not used?  Will it ever be used?
+  // It is used.  Look at the end of the file.  It is used to free memory
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
@@ -757,12 +754,8 @@ void output_diffs(struct reader_buffer * rbuf_old, std::vector<std::vector<int> 
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
-  // TODO:  What is up with this strange formatting?  FIX
-  output_common(rbuf_old, diff_end_old
-
-                , rbuf_new, diff_end_new
-
-                , writer);
+  // These were much longer before
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
   free_shortest_edit_script(edit_script);
 
@@ -779,8 +772,8 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
     if(is_new_line(nodes->at(i))) {
 
       // TODO:  Fix bad for loop formatting
-      for(; is_new_line(nodes->at(i)); ++i);
-      //node_set->push_back(i);
+      for(; is_new_line(nodes->at(i)); ++i)
+        ;
 
       --i;
       continue;
@@ -866,8 +859,6 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
   struct edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
-    // TODO:  WHY ALL THE EMPTY LINES?
-
     // add preceeding unchanged
     diff_end_old = rbuf_old->last_output;
     diff_end_new = rbuf_new->last_output;
@@ -883,11 +874,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
     }
 
     // TODO:  FIX THIS FORMATTING
-    output_common(rbuf_old, diff_end_old
-
-                  , rbuf_new, diff_end_new
-
-                  , writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -1074,11 +1061,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
   }
 
   // TODO:  FIX FORMATTING
-  output_common(rbuf_old, diff_end_old
-
-                , rbuf_new, diff_end_new
-
-                , writer);
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
 
 }
@@ -1120,11 +1103,7 @@ void output_comment_word(struct reader_buffer * rbuf_old, std::vector<std::vecto
     }
 
     // TODO:  FIX FORMATTING
-    output_common(rbuf_old, diff_end_old
-
-                  , rbuf_new, diff_end_new
-
-                  , writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -1190,12 +1169,7 @@ void output_comment_word(struct reader_buffer * rbuf_old, std::vector<std::vecto
 
   }
 
-  // TODO:  FIX FORMATTING
-  output_common(rbuf_old, diff_end_old
-
-                , rbuf_new, diff_end_new
-
-                , writer);
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
   free_shortest_edit_script(edit_script);
 
@@ -1224,8 +1198,8 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
   if(namespaces) {
 
-    // TODO FIX BAD FOR LOOP FORMATTING
-    for(; namespaces->next; namespaces = namespaces->next);
+    for(; namespaces->next; namespaces = namespaces->next)
+      ;
 
     namespaces->next = ns;
   }
