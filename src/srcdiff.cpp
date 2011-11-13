@@ -1600,8 +1600,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
               output_char(text_new[npos], writer);
             }
 
-            output_handler(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
             // output diff tag
+            output_handler(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
 
           }
 
@@ -1613,6 +1613,8 @@ void markup_whitespace(struct reader_buffer * rbuf_old, unsigned int end_old, st
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(i)->name);
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(i)->name);
+
+      // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
       fprintf(stderr, "ERROR");
       exit(1);
     }
