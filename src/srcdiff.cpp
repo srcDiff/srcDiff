@@ -781,8 +781,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
       --i;
       continue;
 
-      // TODO If you are going to continue, why the else?
-    } else {
+    }
 
       bool first_newline = false;
       for(; i < end; ++i) {
@@ -804,8 +803,6 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 
         node_set->push_back(i);
       }
-
-    }
 
     node_sets.push_back(node_set);
 
