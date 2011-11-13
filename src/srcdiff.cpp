@@ -16,6 +16,7 @@
 #include <Language.hpp>
 
 #include "shortest_edit_script.h"
+#include "srcDiffUtility.hpp"
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
