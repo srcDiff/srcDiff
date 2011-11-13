@@ -181,9 +181,7 @@ struct open_diff {
 
   int operation;
 
-  // TODO:  NO REASON TO NOT HAVE THIS ON THE STACK.  This is created in another function
-  std::vector<xmlNodePtr> * open_tags;
-
+  std::vector<xmlNodePtr> open_tags;
 };
 
 // stores information during xml Text Reader processing
@@ -340,7 +338,6 @@ int main(int argc, char * argv[]) {
     std::vector<struct open_diff *> output_diff;
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<xmlNodePtr>;
     output_diff.push_back(new_diff);
 
     // run through diffs adding markup
@@ -351,7 +348,6 @@ int main(int argc, char * argv[]) {
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<xmlNodePtr>;
     rbuf_old.open_diff->push_back(new_diff);
 
     rbuf_old.output_diff = &output_diff;
@@ -364,7 +360,6 @@ int main(int argc, char * argv[]) {
 
     new_diff = new struct open_diff;
     new_diff->operation = COMMON;
-    new_diff->open_tags = new std::vector<xmlNodePtr>;
     rbuf_new.open_diff->push_back(new_diff);
 
     rbuf_new.output_diff = &output_diff;
@@ -1205,7 +1200,6 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
 
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = operation;
-    new_diff->open_tags = new std::vector<xmlNodePtr>;
 
     open_diffs->push_back(new_diff);
   }
@@ -1213,24 +1207,24 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
   //xmlNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    open_diffs->back()->open_tags->push_back(node);
+    open_diffs->back()->open_tags.push_back(node);
   } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(open_diffs->size() == 1 && open_diffs->back()->open_tags->size() == 1)
+    if(open_diffs->size() == 1 && open_diffs->back()->open_tags.size() == 1)
       return;
 
 
-    open_diffs->back()->open_tags->pop_back();
+    open_diffs->back()->open_tags.pop_back();
   }
 
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags->size());
-  if(open_diffs->back()->open_tags->size() == 0) {
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags.size());
+  if(open_diffs->back()->open_tags.size() == 0) {
     open_diffs->pop_back();
 
     //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags->size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags.size());
   }
   //fprintf(stderr, "HERE\n");
 
@@ -1252,7 +1246,7 @@ void output_handler(struct reader_buffer * rbuf_old, struct reader_buffer * rbuf
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(strcmp((const char *)rbuf->output_diff->back()->open_tags->back()->name, (const char *)node->name) != 0)
+    if(strcmp((const char *)rbuf->output_diff->back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
 
     outputNode(*node, writer);
@@ -1878,7 +1872,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
     if(rbuf_old->open_diff->back()->operation != DELETE)
     output_handler(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
 
-    rbuf_old->open_diff->back()->open_tags->front()->marked = false;
+    rbuf_old->open_diff->back()->open_tags.front()->marked = false;
 
     output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(0), DELETE, writer);
     output_handler(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(1), DELETE, writer);
@@ -1902,7 +1896,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
 
     // output diff tag begin
     if(rbuf_old->open_diff->back()->operation == DELETE)
-    rbuf_old->open_diff->back()->open_tags->front()->marked = true;
+    rbuf_old->open_diff->back()->open_tags.front()->marked = true;
 
     output_handler(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
 
@@ -1912,7 +1906,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
     if(rbuf_new->open_diff->back()->operation != INSERT)
     output_handler(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
 
-    rbuf_new->open_diff->back()->open_tags->front()->marked = false;
+    rbuf_new->open_diff->back()->open_tags.front()->marked = false;
 
 
     // output diff tag begin
@@ -1939,7 +1933,7 @@ void output_change(struct reader_buffer * rbuf_old, unsigned int end_old
 
     // output diff tag begin
     if(rbuf_new->open_diff->back()->operation == INSERT)
-    rbuf_new->open_diff->back()->open_tags->front()->marked = true;
+    rbuf_new->open_diff->back()->open_tags.front()->marked = true;
 
     output_handler(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
 
