@@ -304,7 +304,7 @@ int main(int argc, char * argv[]) {
     if (reader_old == NULL) {
 
       fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
-      
+
       exit(1);
     }
 
@@ -783,26 +783,26 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 
     }
 
-      bool first_newline = false;
-      for(; i < end; ++i) {
+    bool first_newline = false;
+    for(; i < end; ++i) {
 
-        if(first_newline && is_new_line(nodes->at(i))) {
+      if(first_newline && is_new_line(nodes->at(i))) {
 
-          --i;
-          break;
+        --i;
+        break;
 
-        } else
-          first_newline = false;
+      } else
+        first_newline = false;
 
 
-        if(!first_newline && is_new_line(nodes->at(i)))
-          first_newline = true;
+      if(!first_newline && is_new_line(nodes->at(i)))
+        first_newline = true;
 
-        if(is_white_space(nodes->at(i)))
-          continue;
+      if(is_white_space(nodes->at(i)))
+        continue;
 
-        node_set->push_back(i);
-      }
+      node_set->push_back(i);
+    }
 
     node_sets.push_back(node_set);
 
@@ -873,7 +873,6 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    // TODO:  FIX THIS FORMATTING
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
     // detect and change
@@ -942,12 +941,7 @@ void output_comment_paragraph(struct reader_buffer * rbuf_old, std::vector<std::
 
   }
 
-  // TODO:  FIX FORMATTING
-  output_common(rbuf_old, diff_end_old
-
-                , rbuf_new, diff_end_new
-
-                , writer);
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
   free_shortest_edit_script(edit_script);
 
@@ -989,12 +983,7 @@ void output_comment_line(struct reader_buffer * rbuf_old, std::vector<std::vecto
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    // TODO:  FIX FORMATTING
-    output_common(rbuf_old, diff_end_old
-
-                  , rbuf_new, diff_end_new
-
-                  , writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
 
     // detect and change
     struct edit * edit_next = edits->next;
