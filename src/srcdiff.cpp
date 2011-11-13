@@ -182,6 +182,7 @@ struct open_diff {
   int operation;
 
   std::vector<xmlNodePtr> open_tags;
+
 };
 
 // stores information during xml Text Reader processing
