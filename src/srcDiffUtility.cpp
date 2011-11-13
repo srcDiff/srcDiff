@@ -1,4 +1,5 @@
 #include "srcDiffUtility.hpp"
+#include <vector>
 
 // global structures defined in main
 extern std::vector<xmlNode *> nodes_old;
