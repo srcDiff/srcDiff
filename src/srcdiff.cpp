@@ -2039,6 +2039,9 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
               && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "then") != 0; ++end)
           ;
 
+        start_pos = structure_old->at(start);
+        end_pos = structure_old->at(end);
+
       }
 
       else {
