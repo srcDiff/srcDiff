@@ -104,9 +104,9 @@ struct writer_state {
 
 };
 
-const char * block_types = { "block", "if", "while", "for", "function", "class", "struct", "union", 0 };
+const char block_types[] = { "block", "if", "while", "for", "function", "class", "struct", "union", 0 };
 
-const char * nest_types = { "block", "expr_stmt", "decl_stmt", 0 };
+const char nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
