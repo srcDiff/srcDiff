@@ -710,7 +710,8 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
     diff_end_new = node_sets_new->back()->back() + 1;
 
   }
-  // These were much longer before
+
+    // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
@@ -819,6 +820,7 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
+    // output area in common
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
@@ -890,6 +892,7 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
 
   }
 
+    // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
@@ -937,6 +940,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
+    // output area in common
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
@@ -1005,6 +1009,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
 
   }
 
+    // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
 
