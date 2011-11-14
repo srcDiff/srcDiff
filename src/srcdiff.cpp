@@ -85,7 +85,7 @@ struct open_diff {
 
 };
 
-// stores information during xml Text Reader processing
+// stores information on state of a single file
 struct reader_state {
 
   int stream_source;
@@ -94,12 +94,9 @@ struct reader_state {
   // just a pointer not on stack
   std::vector<struct open_diff *> * open_diff;
 
-  // must be it is a shared resource
-  //  std::vector<struct open_diff *> * output_diff;
-
 };
 
-// stores information during xml Text Reader processing
+// stores information during xml Text Writer processing
 struct writer_state {
 
   xmlTextWriterPtr writer;
