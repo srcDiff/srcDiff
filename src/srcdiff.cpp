@@ -300,10 +300,10 @@ int main(int argc, char * argv[]) {
     std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
     std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
-    output_diffs(&rbuf_old, &node_set_old, &rbuf_new, &node_set_new, wstate);
+    output_diffs(&rbuf_old, &node_set_old, &rbuf_new, &node_set_new, &wstate);
 
     // output srcdiff unit
-    outputNode(*getRealCurrentNode(reader_old), wstate->writer);
+    outputNode(*getRealCurrentNode(reader_old), &wstate);
 
   }
 
