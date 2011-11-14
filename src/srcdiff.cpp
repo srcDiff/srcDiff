@@ -2049,6 +2049,8 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       for(unsigned int i = 0; i < start_pos; ++i)
         output_node(rbuf_old, rbuf_new, nodes_old[i], DELETE, wstate);
 
+      rbuf_old.last_output = start_pos;
+
       // collect subset of nodes
       std::vector<std::vector<int> *> next_node_set_old
         = create_node_set(&nodes_old, start_pos
