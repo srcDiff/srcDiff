@@ -154,6 +154,11 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
 void output_char(char character, struct writer_state & wstate);
 
+bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
+                 , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
+
+bool has_interal_block(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
