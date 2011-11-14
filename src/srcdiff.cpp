@@ -1908,6 +1908,12 @@ void output_char(char character, struct writer_state & wstate) {
 
 }
 
+bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
+                 , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two) {
+
+  return false;
+}
+
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
