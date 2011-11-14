@@ -2058,13 +2058,14 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
+      //markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output - 1, wstate);
+
       for(unsigned int i = end_pos; i < structure_old->back() + 1; ++i)
         output_node(rbuf_old, rbuf_new, nodes_old[i], DELETE, wstate);
 
       rbuf_old.last_output = structure_old->back() + 1;
-      rbuf_new.last_output = structure_new->back() + 1;
 
-      markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
+      output_common(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
 
     //for(unsigned int i = begin_old; i < end_old; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
