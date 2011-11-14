@@ -1159,28 +1159,28 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(strcmp((const char *)rbuf->output_diff->back()->open_tags.back()->name, (const char *)node->name) != 0)
+    if(strcmp((const char *)wstate->output_diff->back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
 
     outputNode(*node, wstate->writer);
 
-    if(rbuf->output_diff->back()->operation == COMMON) {
+    if(wstate->output_diff->back()->operation == COMMON) {
 
       //fprintf(stderr, "HERE OUTPUT COMMON\n");
 
       update_diff_stack(rbuf_old->open_diff, node, COMMON);
       update_diff_stack(rbuf_new->open_diff, node, COMMON);
 
-      update_diff_stack(rbuf_old->output_diff, node, COMMON);
+      update_diff_stack(wstate->output_diff, node, COMMON);
 
-    } else if(rbuf->output_diff->back()->operation == DELETE) {
+    } else if(wstate->output_diff->back()->operation == DELETE) {
 
       //fprintf(stderr, "HERE OUTPUT DELETE\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
       update_diff_stack(rbuf_old->open_diff, node, DELETE);
 
-      update_diff_stack(rbuf_old->output_diff, node, DELETE);
+      update_diff_stack(wstate->output_diff, node, DELETE);
 
     } else {
 
@@ -1189,7 +1189,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
 
       update_diff_stack(rbuf_new->open_diff, node, INSERT);
 
-      update_diff_stack(rbuf_new->output_diff, node, INSERT);
+      update_diff_stack(wstate->output_diff, node, INSERT);
     }
 
     return;
@@ -1206,7 +1206,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
     update_diff_stack(rbuf_old->open_diff, node, operation);
     update_diff_stack(rbuf_new->open_diff, node, operation);
 
-    update_diff_stack(rbuf_old->output_diff, node, operation);
+    update_diff_stack(wstate->output_diff, node, operation);
 
   }
   else if(operation == DELETE) {
@@ -1216,7 +1216,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
 
     update_diff_stack(rbuf_old->open_diff, node, operation);
 
-    update_diff_stack(rbuf_old->output_diff, node, operation);
+    update_diff_stack(wstate->output_diff, node, operation);
 
   } else {
 
@@ -1225,7 +1225,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
 
     update_diff_stack(rbuf_new->open_diff, node, operation);
 
-    update_diff_stack(rbuf_new->output_diff, node, operation);
+    update_diff_stack(wstate->output_diff, node, operation);
   }
 
 }
