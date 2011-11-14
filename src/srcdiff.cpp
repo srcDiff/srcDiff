@@ -1091,6 +1091,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
 
       //      fprintf(stderr, "HERE\n");
 
+      // TODO: simplify unless plan to handle many to many different // 1-1
       if(edits->length == edit_next->length && edits->length == 1
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
              || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
@@ -1100,11 +1101,13 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
 
       } else {
 
+        // many to many
         output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                       , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
 
       }
 
+      // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
@@ -1120,7 +1123,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
         output_change(rbuf_old, 0
                       , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
-
+        // update for common
         last_diff_old = edits->offset_sequence_one + 1;
         last_diff_new = edits->offset_sequence_two + edits->length;
 
@@ -1132,6 +1135,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
         output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                       , rbuf_new, 0, wstate);
 
+        // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
         last_diff_new = edits->offset_sequence_two + 1;
 
