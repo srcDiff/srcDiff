@@ -100,7 +100,7 @@ struct reader_state {
 struct writer_state {
 
   xmlTextWriterPtr writer;
-  std::vector<struct open_diff *> * output_diff;
+  std::vector<struct open_diff *> output_diff;
 
 };
 
@@ -144,7 +144,7 @@ void compare_many2many(struct reader_state * rbuf_old, std::vector<std::vector<i
 
 void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new, xmlNodePtr node, int operation, struct writer_state * wstate);
 
-void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
+void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr node, int operation);
 
 void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, struct reader_state * rbuf_new, unsigned int end_new, struct writer_state * wstate);
 
@@ -1167,7 +1167,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff->back()->operation);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
@@ -1177,12 +1177,12 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(strcmp((const char *)wstate->output_diff->back()->open_tags.back()->name, (const char *)node->name) != 0)
+    if(strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
 
     outputNode(*node, wstate->writer);
 
-    if(wstate->output_diff->back()->operation == COMMON) {
+    if(wstate->output_diff.back()->operation == COMMON) {
 
       //fprintf(stderr, "HERE OUTPUT COMMON\n");
 
@@ -1191,7 +1191,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
 
       update_diff_stack(wstate->output_diff, node, COMMON);
 
-    } else if(wstate->output_diff->back()->operation == DELETE) {
+    } else if(wstate->output_diff.back()->operation == DELETE) {
 
       //fprintf(stderr, "HERE OUTPUT DELETE\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
