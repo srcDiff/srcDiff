@@ -1196,7 +1196,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
   }
 
   // output non-text node and get next node
-  outputNode(*node, writer);
+  outputNode(*node, wstate->writer);
 
   if(operation == COMMON) {
 
