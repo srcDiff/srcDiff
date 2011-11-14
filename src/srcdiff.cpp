@@ -484,33 +484,34 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
   for(int i = start; i < end; ++i) {
 
-    if(is_white_space(nodes->at(i)))
-      continue;
+    if(!is_white_space(nodes->at(i))) {
 
-    std::vector <int> * node_set = new std::vector <int>;
+      std::vector <int> * node_set = new std::vector <int>;
 
-    if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-      node_set->push_back(i);
+      if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
+        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
+        node_set->push_back(i);
 
-    } else if(is_atomic_srcml(nodes, i)) {
+      } else if(is_atomic_srcml(nodes, i)) {
 
-      node_set->push_back(i);
-      node_set->push_back(i + 1);
-      node_set->push_back(i + 2);
+        node_set->push_back(i);
+        node_set->push_back(i + 1);
+        node_set->push_back(i + 2);
 
-      i += 2;
+        i += 2;
 
-    } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
+      } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-      collect_entire_tag(nodes, node_set, &i);
+        collect_entire_tag(nodes, node_set, &i);
 
-    } else {
+      } else {
 
-      node_set->push_back(i);
+        node_set->push_back(i);
+      }
+
+      node_sets.push_back(node_set);
+
     }
-
-    node_sets.push_back(node_set);
 
   }
 
