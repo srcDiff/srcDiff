@@ -202,108 +202,104 @@ int main(int argc, char * argv[]) {
 
   xmlTextWriterPtr writer = NULL;
 
-  // TODO:  WHY IS THIS STILL HERE!  GET RID OF IT
-  {
-    // create the reader for the old file
-    reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
-    if (reader_old == NULL) {
+  // create the reader for the old file
+  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
+  if (reader_old == NULL) {
 
-      fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
+    fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
 
-      exit(1);
-    }
-
-    // create the reader for the new file
-    reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
-    if (reader_new == NULL) {
-
-      fprintf(stderr, "Unable to open file '%s' as XML", argv[2]);
-
-      if(reader_old)
-        xmlFreeTextReader(reader_old);
-
-      exit(1);
-    }
-
-    // create the writer
-    writer = xmlNewTextWriterFilename(srcdiff_file, 0);
-    if (writer == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
-
-      if(reader_old)
-        xmlFreeTextReader(reader_old);
-
-      if(reader_new)
-        xmlFreeTextReader(reader_new);
-
-      exit(1);
-    }
-
-    // issue the xml declaration
-    xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
-
-    std::vector<struct open_diff *> output_diff;
-    struct open_diff * new_diff = new struct open_diff;
-    new_diff->operation = COMMON;
-    output_diff.push_back(new_diff);
-
-    struct writer_state wstate = { 0 };
-    wstate.writer = writer;
-    wstate.output_diff = output_diff;
-
-    // run through diffs adding markup
-    struct reader_state rbuf_old = { 0 };
-    rbuf_old.stream_source = DELETE;
-    std::vector<struct open_diff *> open_diff_old;
-    rbuf_old.open_diff = open_diff_old;
-
-    new_diff = new struct open_diff;
-    new_diff->operation = COMMON;
-    rbuf_old.open_diff.push_back(new_diff);
-
-    //    rbuf_old.output_diff = &output_diff;
-    xmlTextReaderRead(reader_old);
-
-    struct reader_state rbuf_new = { 0 };
-    rbuf_new.stream_source = INSERT;
-    std::vector<struct open_diff *> open_diff_new;
-    rbuf_new.open_diff = open_diff_new;
-
-    new_diff = new struct open_diff;
-    new_diff->operation = COMMON;
-    rbuf_new.open_diff.push_back(new_diff);
-
-    //    rbuf_new.output_diff = &output_diff;
-    xmlTextReaderRead(reader_new);
-
-    // create srcdiff unit
-    xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
-
-    // output srcdiff unit
-    output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
-
-    int is_old = xmlTextReaderRead(reader_old);
-    int is_new = xmlTextReaderRead(reader_new);
-
-    if(is_old)
-      collect_difference(&nodes_old, reader_old);
-
-    xmlBufferFree(output_file_one);
-
-    if(is_new)
-      collect_difference(&nodes_new, reader_new);
-
-    xmlBufferFree(output_file_two);
-
-    std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
-    std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
-
-    output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
-
-    // output srcdiff unit
-    outputNode(*getRealCurrentNode(reader_old), wstate.writer);
-
+    exit(1);
   }
+
+  // create the reader for the new file
+  reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
+  if (reader_new == NULL) {
+
+    fprintf(stderr, "Unable to open file '%s' as XML", argv[2]);
+
+    if(reader_old)
+      xmlFreeTextReader(reader_old);
+
+    exit(1);
+  }
+
+  // create the writer
+  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
+  if (writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
+
+    if(reader_old)
+      xmlFreeTextReader(reader_old);
+
+    if(reader_new)
+      xmlFreeTextReader(reader_new);
+
+    exit(1);
+  }
+
+  // issue the xml declaration
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+
+  std::vector<struct open_diff *> output_diff;
+  struct open_diff * new_diff = new struct open_diff;
+  new_diff->operation = COMMON;
+  output_diff.push_back(new_diff);
+
+  struct writer_state wstate = { 0 };
+  wstate.writer = writer;
+  wstate.output_diff = output_diff;
+
+  // run through diffs adding markup
+  struct reader_state rbuf_old = { 0 };
+  rbuf_old.stream_source = DELETE;
+  std::vector<struct open_diff *> open_diff_old;
+  rbuf_old.open_diff = open_diff_old;
+
+  new_diff = new struct open_diff;
+  new_diff->operation = COMMON;
+  rbuf_old.open_diff.push_back(new_diff);
+
+  //    rbuf_old.output_diff = &output_diff;
+  xmlTextReaderRead(reader_old);
+
+  struct reader_state rbuf_new = { 0 };
+  rbuf_new.stream_source = INSERT;
+  std::vector<struct open_diff *> open_diff_new;
+  rbuf_new.open_diff = open_diff_new;
+
+  new_diff = new struct open_diff;
+  new_diff->operation = COMMON;
+  rbuf_new.open_diff.push_back(new_diff);
+
+  //    rbuf_new.output_diff = &output_diff;
+  xmlTextReaderRead(reader_new);
+
+  // create srcdiff unit
+  xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
+
+  // output srcdiff unit
+  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
+
+  int is_old = xmlTextReaderRead(reader_old);
+  int is_new = xmlTextReaderRead(reader_new);
+
+  if(is_old)
+    collect_difference(&nodes_old, reader_old);
+
+  xmlBufferFree(output_file_one);
+
+  if(is_new)
+    collect_difference(&nodes_new, reader_new);
+
+  xmlBufferFree(output_file_two);
+
+  std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
+  std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+
+  output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
+
+  // output srcdiff unit
+  outputNode(*getRealCurrentNode(reader_old), wstate.writer);
 
   // cleanup everything
   if(reader_old)
@@ -525,11 +521,11 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
   Output common elements.
 
-  All preceeding unused whitespace must be included, and all whitespace 
+  All preceeding unused whitespace must be included, and all whitespace
   with a newline afterwards.  Currently, if the first after has no newline,
   it is included and the following nodes are included if they have a new line.
 
- */
+*/
 void output_common(struct reader_state & rbuf_old, unsigned int end_old
                    , struct reader_state & rbuf_new, unsigned int end_new
                    , struct writer_state & wstate) {
@@ -982,7 +978,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
   Whitespace is not included with changes, but marked up
   where in common.
 
- */
+*/
 void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
@@ -1736,11 +1732,11 @@ return (is_block_type(node_sets_old, start_old, length_old) && is_statement_type
 
   Adds whitespace to a change. Then outputs the change.
 
-  All preceeding unused whitespace must be included, and all whitespace 
-  with a newline afterwards.  Currently, if the first after is not a newline, 
+  All preceeding unused whitespace must be included, and all whitespace
+  with a newline afterwards.  Currently, if the first after is not a newline,
   it is included and the following nodes are included if they have a new line.
-  
- */
+
+*/
 void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_old
                                , struct reader_state & rbuf_new, unsigned int end_new
                                , struct writer_state & wstate) {
@@ -1755,10 +1751,10 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
     ++nend;
 
   for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend)
-;
+    ;
 
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
-;
+    ;
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
@@ -1767,7 +1763,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
 
 /*
 
-  Outputs a syntactical diff. Beginning whitespace is narrowed and all 
+  Outputs a syntactical diff. Beginning whitespace is narrowed and all
   whitespace even if it could be matches is treated as different.
 
 */
