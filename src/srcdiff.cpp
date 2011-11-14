@@ -638,8 +638,8 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
-      continue;
-    }
+
+    } else {
 
     // handle pure delete or insert
     switch (edits->operation) {
@@ -666,6 +666,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
       last_diff_new = edits->offset_sequence_two + 1;
 
       break;
+    }
     }
 
   }
@@ -815,8 +816,8 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
-      continue;
-    }
+
+    } else {
 
     // handle pure delete or insert
     switch (edits->operation) {
@@ -842,6 +843,8 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
       last_diff_new = edits->offset_sequence_two + 1;
 
       break;
+    }
+
     }
 
   }
@@ -928,8 +931,8 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
-      continue;
-    }
+
+    } else {
 
     // handle pure delete or insert
     switch (edits->operation) {
@@ -957,6 +960,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
       break;
     }
 
+    }
   }
 
   diff_end_old = rbuf_old.last_output;
@@ -1041,8 +1045,8 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
-      continue;
-    }
+
+    } else {
 
     // handle pure delete or insert
     switch (edits->operation) {
@@ -1071,6 +1075,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
       break;
     }
 
+    }
   }
 
   diff_end_old = rbuf_old.last_output;
