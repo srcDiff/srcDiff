@@ -104,6 +104,10 @@ struct writer_state {
 
 };
 
+const char * block_types = { "block", "if", "while", "for", "function", "class", "struct", "union", 0 };
+
+const char * nest_types = { "block", "expr_stmt", "decl_stmt", 0 };
+
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
 
@@ -149,7 +153,6 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new, struct writer_state & wstate);
 
 void output_char(char character, struct writer_state & wstate);
-
 
 int main(int argc, char * argv[]) {
 
