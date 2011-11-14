@@ -2016,21 +2016,21 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       for(block_end = block_start + 1; block_end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(block_end))->name, "block") != 0; ++block_end)
         ;
 
-      unsigned int block_start_pos = nodes.at(structure_old->at(block_start));
-      unsigned int block_end_pos = nodes.at(structure_old->at(block_end));
+      unsigned int block_start_pos = structure_old->at(block_start);
+      unsigned int block_end_pos = structure_old->at(block_end);
 
-      if(strcmp(nodes.at(structure_new->at(0))->name, "block") != 0)
+      if(strcmp(nodes_old.at(structure_new->at(0))->name, "block") != 0)
         ++block_start_pos;
       else
         ++block_end_pos;
 
-      for(int i = 0; i < block_start_pos; ++i)
+      for(unsigned int i = 0; i < block_start_pos; ++i)
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       // collect subset of nodes
       std::vector<std::vector<int> *> next_node_set_old
         = create_node_set(&nodes_old, block_start_pos
-                          , block_end_pos;
+                          , block_end_pos);
 
       std::vector<std::vector<int> *> next_node_set_new
         = create_node_set(&nodes_new,  structure_new->at(0)
