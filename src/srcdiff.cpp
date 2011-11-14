@@ -3,6 +3,21 @@
 
   Create srcdiff format from two src files.
 
+  Approach:  srcdiff first computes the shortest edit script at
+  the highest sytactical level (file level).  Common areas as well as
+  inserts and deletes are output directly.  For changes, a number of 
+  events can occur.  First, if one syntactical structure is changed into another,
+  then they are checked if they have the same structure, and the shortest edit script/
+  entire process is recursively applied.  If they differ, then the output is treated as
+  a delete followed by an insert (may want to change this behaviour especially to account
+  for nesting).  If there are many deletes are insertions, then a matching algorithm 
+  allocates structures to possible matches, treating them as a one-to-one relationship.
+  This can result in the recursion or direct output as before.  Currently on matched output,
+  is outputted as deletions and insertions.
+
+  Whitespace:  Whitespace is regarded during the entire process, and is placed in during
+  output.  
+
   Michael J. Decker
   mjd52@zips.uakron.edu
 */
