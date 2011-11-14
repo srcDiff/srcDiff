@@ -2019,7 +2019,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       unsigned int block_start_pos = structure_old->at(block_start);
       unsigned int block_end_pos = structure_old->at(block_end);
 
-      if(strcmp(nodes_old.at(structure_new->at(0))->name, "block") != 0)
+      if(strcmp((const char *)nodes_old.at(structure_new->at(0))->name, "block") != 0)
         ++block_start_pos;
       else
         ++block_end_pos;
