@@ -159,6 +159,10 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
 
 bool has_interal_block(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes);
 
+void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_old
+                   , struct reader_state rbuf_new ,std::vector<int> * structure_new
+                   , int operation, struct writer_state wstate);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
@@ -1986,8 +1990,8 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
   return false;
 }
 
-void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_old, std::vector<xmlNodePtr> & nodes_old
-                   , struct reader_state rbuf_new ,std::vector<int> * structure_new, std::vector<xmlNodePtr> & nodes_new
+void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_old
+                   , struct reader_state rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state wstate) {
 
   if(operation == DELETE) {
