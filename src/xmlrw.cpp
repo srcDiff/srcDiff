@@ -49,7 +49,7 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
 
 xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
 
-  xmlNode* node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 1);
+  xmlNode* node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
 
   node->type = (xmlElementType) xmlTextReaderNodeType(reader);
 
