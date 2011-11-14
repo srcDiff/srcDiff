@@ -2058,9 +2058,12 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
 
       std::vector<std::vector<int> *> next_node_set_new
         = create_node_set(&nodes_new,  structure_new->at(0)
-                          , structure_new->back());
+                          , structure_new->back() + 1);
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+
+      for(unsigned int i = end_pos; i < structure_new->back() + 1; ++i)
+        output_node(rbuf_old, rbuf_new, nodes_old[i], DELETE, wstate);
 
     //for(unsigned int i = begin_old; i < end_old; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
