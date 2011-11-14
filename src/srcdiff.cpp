@@ -2006,16 +2006,26 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
     if(rbuf_old.open_diff.back()->operation != DELETE)
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
+      unsigned int start;
+      unsigned int end;
     if(has_interal_block(structure_old, nodes_old)) {
 
-      unsigned int start;
       for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
         ;
 
-      unsigned int end;
       for(end = start + 1; end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "block") != 0; ++end)
         ;
 
+    } else {
+
+      for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
+        ;
+
+      for(end = start + 1; end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "block") != 0; ++end)
+        ;
+
+
+    }
       unsigned int start_pos = structure_old->at(start);
       unsigned int end_pos = structure_old->at(end);
 
@@ -2037,8 +2047,6 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
                           , structure_new->back());
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
-
-    }
 
     //for(unsigned int i = begin_old; i < end_old; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
