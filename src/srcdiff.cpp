@@ -15,8 +15,17 @@
   This can result in the recursion or direct output as before.  Currently on matched output,
   is outputted as deletions and insertions.
 
+  Comments:  Comments follow a similiar approach, except once a comment change is encountered,
+  they are first matched based on paragraphs (separated by two new lines), then as needed
+  (following a similiar process as the other element), they are processes by line, and then
+  by word.
+
   Whitespace:  Whitespace is regarded during the entire process, and is placed in during
-  output.  
+  output.  Currently, this can occur in two places (although there are at least three circumstances).
+  Whitespace is either output as part of a change, where only the beginning is narrowed and all
+  whitespace even if it could be matches is treated as different.  The second output occurs in 
+  output of common where only the whitespace is output and shared whitespace should also be preserved.
+  
 
   Michael J. Decker
   mjd52@zips.uakron.edu
