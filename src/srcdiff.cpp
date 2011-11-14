@@ -1155,8 +1155,6 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
 
-  struct reader_state * rbuf = operation == DELETE ? rbuf_old : rbuf_new;
-
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(strcmp((const char *)wstate->output_diff->back()->open_tags.back()->name, (const char *)node->name) != 0)
