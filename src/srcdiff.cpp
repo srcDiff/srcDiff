@@ -798,12 +798,12 @@ void output_comment_paragraph(struct reader_state * rbuf_old, std::vector<std::v
           = create_comment_line_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
-        output_comment_line(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
+        output_comment_line(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
       } else {
 
         output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
       }
 
       last_diff_old = edits->offset_sequence_one + edits->length;
@@ -819,7 +819,7 @@ void output_comment_paragraph(struct reader_state * rbuf_old, std::vector<std::v
 
       //fprintf(stderr, "HERE\n");
       output_change_white_space(rbuf_old, 0
-                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
       last_diff_old = edits->offset_sequence_one + 1;
       last_diff_new = edits->offset_sequence_two + edits->length;
@@ -830,7 +830,7 @@ void output_comment_paragraph(struct reader_state * rbuf_old, std::vector<std::v
 
       //fprintf(stderr, "HERE\n");
       output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                , rbuf_new, 0, writer);
+                                , rbuf_new, 0, wstate);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edits->offset_sequence_two + 1;
@@ -849,7 +849,7 @@ void output_comment_paragraph(struct reader_state * rbuf_old, std::vector<std::v
 
   }
 
-  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
 
@@ -891,7 +891,7 @@ void output_comment_line(struct reader_state * rbuf_old, std::vector<std::vector
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -908,11 +908,11 @@ void output_comment_line(struct reader_state * rbuf_old, std::vector<std::vector
           = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
-        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
+        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
       } else
         output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -927,7 +927,7 @@ void output_comment_line(struct reader_state * rbuf_old, std::vector<std::vector
 
       //fprintf(stderr, "HERE\n");
       output_change_white_space(rbuf_old, 0
-                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
       last_diff_old = edits->offset_sequence_one + 1;
       last_diff_new = edits->offset_sequence_two + edits->length;
@@ -938,7 +938,7 @@ void output_comment_line(struct reader_state * rbuf_old, std::vector<std::vector
 
       //fprintf(stderr, "HERE\n");
       output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                , rbuf_new, 0, writer);
+                                , rbuf_new, 0, wstate);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edits->offset_sequence_two + 1;
@@ -957,7 +957,7 @@ void output_comment_line(struct reader_state * rbuf_old, std::vector<std::vector
 
   }
 
-  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
 
 }
@@ -998,7 +998,7 @@ void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -1011,12 +1011,12 @@ void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector
              || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
         output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
+                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
 
       } else {
 
         output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, writer);
+                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
 
       }
 
@@ -1033,7 +1033,7 @@ void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector
 
       //fprintf(stderr, "HERE\n");
       output_change(rbuf_old, 0
-                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
 
       last_diff_old = edits->offset_sequence_one + 1;
@@ -1045,7 +1045,7 @@ void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector
 
       //fprintf(stderr, "HERE\n");
       output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                    , rbuf_new, 0, writer);
+                    , rbuf_new, 0, wstate);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edits->offset_sequence_two + 1;
@@ -1064,7 +1064,7 @@ void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector
 
   }
 
-  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
 
@@ -1162,7 +1162,7 @@ void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new,
     if(strcmp((const char *)rbuf->output_diff->back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
 
-    outputNode(*node, writer);
+    outputNode(*node, wstate->writer);
 
     if(rbuf->output_diff->back()->operation == COMMON) {
 
