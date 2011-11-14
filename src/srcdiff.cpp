@@ -673,13 +673,13 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
                          , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
-                          , DELETE, wstate);
+                          , INSERT, wstate);
 
           } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
                                 , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
-                          , INSERT, wstate);
+                          , DELETE, wstate);
 
           } else {
 
@@ -2000,6 +2000,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
     if(rbuf_old.open_diff.back()->operation != DELETE)
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
+    //    if(has_interal_block(structure_old, 
     //for(unsigned int i = begin_old; i < end_old; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
