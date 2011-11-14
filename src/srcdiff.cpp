@@ -580,7 +580,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
-  // output common tag if needed 
+  // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
 }
@@ -671,37 +671,37 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
     } else {
 
-    // handle pure delete or insert
-    switch (edits->operation) {
+      // handle pure delete or insert
+      switch (edits->operation) {
 
-    case INSERT:
+      case INSERT:
 
-      //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, 0
-                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change_white_space(rbuf_old, 0
+                                  , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
 
-      last_diff_old = edits->offset_sequence_one + 1;
-      last_diff_new = edits->offset_sequence_two + edits->length;
+        last_diff_old = edits->offset_sequence_one + 1;
+        last_diff_new = edits->offset_sequence_two + edits->length;
 
-      break;
+        break;
 
-    case DELETE:
+      case DELETE:
 
-      //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                , rbuf_new, 0, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                                  , rbuf_new, 0, wstate);
 
-      last_diff_old = edits->offset_sequence_one + edits->length;
-      last_diff_new = edits->offset_sequence_two + 1;
+        last_diff_old = edits->offset_sequence_one + edits->length;
+        last_diff_new = edits->offset_sequence_two + 1;
 
-      break;
-    }
+        break;
+      }
     }
 
   }
 
-    // determine ending position to output
+  // determine ending position to output
   diff_end_old = rbuf_old.last_output;
   diff_end_new = rbuf_new.last_output;
   if(last_diff_old < (signed)node_sets_old->size()) {
@@ -711,7 +711,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
   }
 
-    // output area in common
+  // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
@@ -852,37 +852,37 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
 
     } else {
 
-    // handle pure delete or insert
-    switch (edits->operation) {
+      // handle pure delete or insert
+      switch (edits->operation) {
 
-    case INSERT:
+      case INSERT:
 
-      //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, 0
-                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change_white_space(rbuf_old, 0
+                                  , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
-      last_diff_old = edits->offset_sequence_one + 1;
-      last_diff_new = edits->offset_sequence_two + edits->length;
+        last_diff_old = edits->offset_sequence_one + 1;
+        last_diff_new = edits->offset_sequence_two + edits->length;
 
-      break;
+        break;
 
-    case DELETE:
+      case DELETE:
 
-      //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                , rbuf_new, 0, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                                  , rbuf_new, 0, wstate);
 
-      last_diff_old = edits->offset_sequence_one + edits->length;
-      last_diff_new = edits->offset_sequence_two + 1;
+        last_diff_old = edits->offset_sequence_one + edits->length;
+        last_diff_new = edits->offset_sequence_two + 1;
 
-      break;
-    }
+        break;
+      }
 
     }
 
   }
 
-    // determine ending position to output
+  // determine ending position to output
   diff_end_old = rbuf_old.last_output;
   diff_end_new = rbuf_new.last_output;
   if(last_diff_old < (signed)node_sets_old->size()) {
@@ -892,7 +892,7 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
 
   }
 
-    // output area in common
+  // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
@@ -970,36 +970,36 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
 
     } else {
 
-    // handle pure delete or insert
-    switch (edits->operation) {
+      // handle pure delete or insert
+      switch (edits->operation) {
 
-    case INSERT:
+      case INSERT:
 
-      //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, 0
-                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change_white_space(rbuf_old, 0
+                                  , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
-      last_diff_old = edits->offset_sequence_one + 1;
-      last_diff_new = edits->offset_sequence_two + edits->length;
+        last_diff_old = edits->offset_sequence_one + 1;
+        last_diff_new = edits->offset_sequence_two + edits->length;
 
-      break;
+        break;
 
-    case DELETE:
+      case DELETE:
 
-      //fprintf(stderr, "HERE\n");
-      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                , rbuf_new, 0, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                                  , rbuf_new, 0, wstate);
 
-      last_diff_old = edits->offset_sequence_one + edits->length;
-      last_diff_new = edits->offset_sequence_two + 1;
+        last_diff_old = edits->offset_sequence_one + edits->length;
+        last_diff_new = edits->offset_sequence_two + 1;
 
-      break;
-    }
+        break;
+      }
 
     }
   }
 
-    // determine ending position to output
+  // determine ending position to output
   diff_end_old = rbuf_old.last_output;
   diff_end_new = rbuf_new.last_output;
   if(last_diff_old < (signed)node_sets_old->size()) {
@@ -1009,7 +1009,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
 
   }
 
-    // output area in common
+  // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
 
@@ -1059,6 +1059,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
+    // output area in common
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
@@ -1087,37 +1088,37 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
 
     } else {
 
-    // handle pure delete or insert
-    switch (edits->operation) {
+      // handle pure delete or insert
+      switch (edits->operation) {
 
-    case INSERT:
+      case INSERT:
 
-      //fprintf(stderr, "HERE\n");
-      output_change(rbuf_old, 0
-                    , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change(rbuf_old, 0
+                      , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
 
-      last_diff_old = edits->offset_sequence_one + 1;
-      last_diff_new = edits->offset_sequence_two + edits->length;
+        last_diff_old = edits->offset_sequence_one + 1;
+        last_diff_new = edits->offset_sequence_two + edits->length;
 
-      break;
+        break;
 
-    case DELETE:
+      case DELETE:
 
-      //fprintf(stderr, "HERE\n");
-      output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                    , rbuf_new, 0, wstate);
+        //fprintf(stderr, "HERE\n");
+        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                      , rbuf_new, 0, wstate);
 
-      last_diff_old = edits->offset_sequence_one + edits->length;
-      last_diff_new = edits->offset_sequence_two + 1;
+        last_diff_old = edits->offset_sequence_one + edits->length;
+        last_diff_new = edits->offset_sequence_two + 1;
 
-      break;
-    }
+        break;
+      }
 
     }
   }
 
-    // determine ending position to output
+  // determine ending position to output
   diff_end_old = rbuf_old.last_output;
   diff_end_new = rbuf_new.last_output;
   if(last_diff_old < (signed)node_sets_old->size()) {
@@ -1127,6 +1128,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
 
   }
 
+  // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
@@ -1839,7 +1841,7 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
       int offset_new = 0;
 
       for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new)
-;
+        ;
 
       xmlTextWriterWriteRawLen(wstate.writer, content_old, offset_old);
 
