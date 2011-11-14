@@ -664,18 +664,20 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
         } else {
 
-          /*
+
           if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
                          , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
+
 
           } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
                                 , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
 
-                                } else {*/
+          } else {
+
           // syntax mismatch
           output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
                                     , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
-          //          }
+          }
 
         }
 
@@ -1979,3 +1981,8 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
   return false;
 }
 
+void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_old, std::vector<xmlNodePtr> & nodes_old
+                   , struct reader_state rbuf_new ,std::vector<int> * structure_new, std::vector<xmlNodePtr> & nodes_new
+                   , struct writer_state wstate) {
+
+}
