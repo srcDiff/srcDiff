@@ -1493,7 +1493,7 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
 
       for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart);
 
-      xmlTextWriterWriteRawLen(writer, content_old, ostart);
+      xmlTextWriterWriteRawLen(wstate->writer, content_old, ostart);
 
       if(ostart < size_old) {
 
@@ -1502,7 +1502,7 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
           output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
         // output diff tag
-        xmlTextWriterWriteRawLen(writer, content_old + ostart, size_old - ostart);
+        xmlTextWriterWriteRawLen(wstate->writer, content_old + ostart, size_old - ostart);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
@@ -1515,7 +1515,7 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
           output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
         // output diff tag
 
-        xmlTextWriterWriteRawLen(writer, content_new + nstart, size_new - nstart);
+        xmlTextWriterWriteRawLen(wstate->writer, content_new + nstart, size_new - nstart);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
