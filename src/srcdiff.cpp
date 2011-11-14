@@ -117,41 +117,41 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
 // output a single difference DELETE or INSERT
-void output_single(struct reader_state * rbuf_old, struct reader_state * rbuf_new, struct edit * edit, xmlTextWriterPtr writer);
+void output_single(struct reader_state * rbuf_old, struct reader_state * rbuf_new, struct edit * edit, struct writer_state wstate);
 
 // output file level info
-void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state wstate);
 
-void output_comment_paragraph(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_comment_paragraph(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state wstate);
 
-void output_comment_line(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_comment_line(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state wstate);
 
-void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, xmlTextWriterPtr writer);
+void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state wstate);
 
 void output_recursive(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , unsigned int start_old
                       , struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                       , unsigned int start_new
-                      , xmlTextWriterPtr writer);
+                      , struct writer_state wstate);
 
 void output_change(struct reader_state * rbuf_old, unsigned int end_old, struct reader_state * rbuf_new, unsigned int end_new
-                   , xmlTextWriterPtr writer);
+                   , struct writer_state wstate);
 
 void output_change_white_space(struct reader_state * rbuf_old, unsigned int end_old
                                , struct reader_state * rbuf_new, unsigned int end_new
-                               , xmlTextWriterPtr writer);
+                               , struct writer_state wstate);
 
 void compare_many2many(struct reader_state * rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , struct reader_state * rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                       , struct edit * edit_script, xmlTextWriterPtr writer);
+                       , struct edit * edit_script, struct writer_state wstate);
 
-void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new, xmlNodePtr node, int operation, xmlTextWriterPtr writer);
+void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new, xmlNodePtr node, int operation, struct writer_state wstate);
 
 void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr node, int operation);
 
-void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, struct reader_state * rbuf_new, unsigned int end_new, xmlTextWriterPtr writer);
+void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, struct reader_state * rbuf_new, unsigned int end_new, struct writer_state wstate);
 
-void output_char(char character, xmlTextWriterPtr writer);
+void output_char(char character, struct writer_state wstate);
 
 
 int main(int argc, char * argv[]) {
@@ -282,7 +282,7 @@ int main(int argc, char * argv[]) {
     xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
 
     // output srcdiff unit
-    output_node(&rbuf_old, &rbuf_new, unit, COMMON, writer);
+    output_node(&rbuf_old, &rbuf_new, unit, COMMON, wstate->writer);
 
     int is_old = xmlTextReaderRead(reader_old);
     int is_new = xmlTextReaderRead(reader_new);
@@ -300,10 +300,10 @@ int main(int argc, char * argv[]) {
     std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
     std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
-    output_diffs(&rbuf_old, &node_set_old, &rbuf_new, &node_set_new, writer);
+    output_diffs(&rbuf_old, &node_set_old, &rbuf_new, &node_set_new, wstate);
 
     // output srcdiff unit
-    outputNode(*getRealCurrentNode(reader_old), writer);
+    outputNode(*getRealCurrentNode(reader_old), wstate->writer);
 
   }
 
@@ -545,12 +545,12 @@ void output_common(struct reader_state * rbuf_old, unsigned int end_old
     ;
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
-    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
+    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   // add preceeding unchanged
-  markup_whitespace(rbuf_old, oend, rbuf_new, nend, writer);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
 }
 
@@ -591,7 +591,7 @@ void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -608,18 +608,18 @@ void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *
            && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
 
           output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
-                           , rbuf_new, node_sets_new, edit_next->offset_sequence_two, writer);
+                           , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
 
         } else {
 
           output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                    , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, writer);
+                                    , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
 
         }
 
       } else {
 
-        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, writer);
+        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
 
       }
 
@@ -636,7 +636,7 @@ void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *
 
       //fprintf(stderr, "HERE\n");
       output_change_white_space(rbuf_old, 0
-                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, writer);
+                                , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
 
       last_diff_old = edits->offset_sequence_one + 1;
@@ -648,7 +648,7 @@ void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *
 
       //fprintf(stderr, "HERE\n");
       output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                , rbuf_new, 0, writer);
+                                , rbuf_new, 0, wstate);
 
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edits->offset_sequence_two + 1;
@@ -667,7 +667,7 @@ void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *
 
   }
   // These were much longer before
-  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
   free_shortest_edit_script(edit_script);
 
@@ -781,7 +781,7 @@ void output_comment_paragraph(struct reader_state * rbuf_old, std::vector<std::v
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
     }
 
-    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, writer);
+    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
     struct edit * edit_next = edits->next;
@@ -1914,6 +1914,6 @@ void output_char(char character, struct writer_state wstate) {
     xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
 
   else
-    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) &character, 1);
+    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) &character, 1);
 
 }
