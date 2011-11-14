@@ -125,6 +125,8 @@ struct reader_state {
   int last_output;
 
   // just a pointer not on stack
+  // TODO:  Quit referring to the stack.
+  // TODO:  This doesn't need to be a pointer, so don't make it one
   std::vector<struct open_diff *> * open_diff;
 
 };
@@ -133,6 +135,7 @@ struct reader_state {
 struct writer_state {
 
   xmlTextWriterPtr writer;
+  // TODO:  This doesn't need to be a pointer, so don't make it one
   std::vector<struct open_diff *> * output_diff;
 
 };
@@ -1065,7 +1068,6 @@ void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector
       output_change(rbuf_old, 0
                     , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
-
       last_diff_old = edits->offset_sequence_one + 1;
       last_diff_new = edits->offset_sequence_two + edits->length;
 
@@ -1099,8 +1101,6 @@ void output_comment_word(struct reader_state * rbuf_old, std::vector<std::vector
   free_shortest_edit_script(edit_script);
 
 }
-
-
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 
@@ -1156,10 +1156,8 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
     if(open_diffs->size() == 1 && open_diffs->back()->open_tags.size() == 1)
       return;
 
-
     open_diffs->back()->open_tags.pop_back();
   }
-
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->size());
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags.size());
@@ -1170,7 +1168,6 @@ void update_diff_stack(std::vector<struct open_diff *> * open_diffs, xmlNodePtr 
     //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs->back()->open_tags.size());
   }
   //fprintf(stderr, "HERE\n");
-
 }
 
 void output_node(struct reader_state * rbuf_old, struct reader_state * rbuf_new, xmlNodePtr node, int operation, struct writer_state * wstate) {
@@ -1277,7 +1274,6 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
 
-
   unsigned int leftptr;
   for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr);
 
@@ -1313,7 +1309,6 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       int similarity = 0;
       if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
                                           , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
-
 
         old_pos = pos;
         min_similarity = similarity;
@@ -1489,7 +1484,6 @@ void output_recursive(struct reader_state * rbuf_old, std::vector<std::vector<in
     ++rbuf_new->last_output;
   */
 
-
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
 }
@@ -1608,9 +1602,12 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
           ++opos;
           ++npos;
 
+          // TODO:  Quit using continue.  You are overrelying on it.
+          // Make this 3 cases
           continue;
         }
 
+        // TODO:  Replace nested if with simple if else if
         if(isspace(text_old[opos]) || isspace(text_new[npos])) {
 
           if(isspace(text_old[opos])) {
@@ -1751,14 +1748,15 @@ void output_change_white_space(struct reader_state * rbuf_old, unsigned int end_
   if( nend < nodes_new.size() && is_white_space(nodes_new.at(nend)))
     ++nend;
 
+  // TODO:  Indent properly the statement inside a for loop
   for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend)
 ;
 
+  // TODO:  Indent properly the statement inside a for loop
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
 ;
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
-
 
 }
 
@@ -1938,7 +1936,6 @@ void output_char(char character, struct writer_state * wstate) {
     xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&lt;", 4);
 
   else if (character == '>')
-
     xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&gt;", 4);
 
   else
