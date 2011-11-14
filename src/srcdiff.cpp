@@ -1600,40 +1600,41 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
           ++opos;
           ++npos;
 
-          continue;
-        }
+        } else {
 
-        if(isspace(text_old[opos]) || isspace(text_new[npos])) {
+          if(isspace(text_old[opos]) || isspace(text_new[npos])) {
 
-          if(isspace(text_old[opos])) {
+            if(isspace(text_old[opos])) {
 
-            if(rbuf_old.open_diff.back()->operation != DELETE)
-              output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+              if(rbuf_old.open_diff.back()->operation != DELETE)
+                output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-            for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
+              for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
-              //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-              output_char(text_old[opos], wstate);
+                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
+                output_char(text_old[opos], wstate);
+              }
+
+              // output diff tag
+              output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
             }
 
-            // output diff tag
-            output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+            if(isspace(text_new[npos])) {
 
-          }
+              if(rbuf_old.open_diff.back()->operation != INSERT)
+                output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
 
-          if(isspace(text_new[npos])) {
+              for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
-            if(rbuf_old.open_diff.back()->operation != INSERT)
-              output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
+                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
+                output_char(text_new[npos], wstate);
+              }
 
-            for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
+              // output diff tag
+              output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
-              //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-              output_char(text_new[npos], wstate);
             }
-
-            // output diff tag
-            output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
           }
 
