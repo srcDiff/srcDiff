@@ -1908,22 +1908,6 @@ void output_char(char character, struct writer_state & wstate) {
 
 }
 
-bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
-                 , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two) {
-
-  if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, block_types[0]) == 0
-     || strcmp((const char *)nodes_two.at(structure_two->at(0))->name, block_types[0]) == 0) {
-    
-    if(is_nest_type(structure_one, nodes_one) && is_block_type(structure_two, nodes_two))
-      return true;
-    
-  } else {
-    
-  }
-
-  return false;
-}
-
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
@@ -1947,3 +1931,22 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes)
 
   return false;
 }
+
+bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
+                 , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two) {
+
+    
+  if(is_nest_type(structure_one, nodes_one) && is_block_type(structure_two, nodes_two)) {
+
+    if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, block_types[0]) != 0) {
+
+      return true;
+    }
+    
+  } else {
+    
+  }
+
+  return false;
+}
+
