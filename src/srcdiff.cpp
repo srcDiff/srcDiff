@@ -39,7 +39,7 @@
   Michael J. Decker
   mjd52@zips.uakron.edu
 */
-
+x
 #include <stdio.h>
 #include <fstream>
 #include <string>
@@ -113,7 +113,6 @@ xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file
 struct open_diff {
 
   int operation;
-
   std::vector<xmlNodePtr> open_tags;
 
 };
