@@ -2030,13 +2030,14 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       }
 
       else {
+
         for(start = 0; start < structure_old->size() && nodes_old.at(structure_old->at(start))->type == XML_READER_TYPE_END_ELEMENT
               && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "condition") != 0; ++start)
           ;
 
+        ++start;
 
-      for(end = start + 1; end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "block") != 0; ++end)
-        ;
+        end = structure_old->back();
 
       }
     }
