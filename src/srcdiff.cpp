@@ -708,41 +708,28 @@ void output_diffs(struct reader_state * rbuf_old, std::vector<std::vector<int> *
 
 std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
+  // collect all the paragraphs separated by double newlines
   std::vector<std::vector<int> *> node_sets;
-
   for(int i = start; i < end; ++i) {
 
+    // move past any starting newlines
+    for(; is_new_line(nodes->at(i)); ++i)
+      ;
+
+    // collect the nodes in the paragraph
     std::vector <int> * node_set = new std::vector <int>;
 
-    if(is_new_line(nodes->at(i))) {
-
-      for(; is_new_line(nodes->at(i)); ++i)
-        ;
-
-      --i;
-      continue;
-
-    }
-
-    bool first_newline = false;
+    int newlines = 0;
     for(; i < end; ++i) {
 
-      if(first_newline && is_new_line(nodes->at(i))) {
+      if(is_new_line(nodes->at(i)))
+        ++newlines;
 
-        --i;
+      if(newlines > 1)
         break;
 
-      } else
-        first_newline = false;
-
-
-      if(!first_newline && is_new_line(nodes->at(i)))
-        first_newline = true;
-
-      if(is_white_space(nodes->at(i)))
-        continue;
-
-      node_set->push_back(i);
+      if(!is_white_space(nodes->at(i)))
+        node_set->push_back(i);
     }
 
     node_sets.push_back(node_set);
