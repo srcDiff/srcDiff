@@ -1994,13 +1994,45 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
                    , struct reader_state rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state wstate) {
 
+  //markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
+
+  // compare subset of nodes
+
+    //markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+  //markup_whitespace before
+
   if(operation == DELETE) {
 
     // output diff tag begin
     if(rbuf_old.open_diff.back()->operation != DELETE)
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-    //    if(has_interal_block(structure_old, 
+    if(has_interal_block(structure_old, nodes_old)) {
+
+      int block_start;
+      for(block_start = 0; block_start < structure_old->size() && strcmp(nodes.at(structure->at(block_start))->name, "block") != 0; ++block_start)
+        ;
+
+      int block_start_pos = nodes.at(structure_old->at(end));
+
+      if(strcmp(nodes.at(structure_new->at(0))->name, "block") != 0)
+        ++e_pos;
+
+      for(int i = 0; i < end_pos; ++i)
+        output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+      // collect subset of nodes
+      std::vector<std::vector<int> *> next_node_set_old
+        = create_node_set(&nodes_old, end_pos
+                          , ucture_new->at(ld)->back());
+
+      std::vector<std::vector<int> *> next_node_set_new
+        = create_node_set(&nodes_new,  structure_new->at(0)
+                          , node_sets_new->at(start_new)->back());
+      
+      output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+      
+
     //for(unsigned int i = begin_old; i < end_old; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
