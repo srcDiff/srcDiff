@@ -641,10 +641,12 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
       //      fprintf(stderr, "HERE\n");
 
+      // 1-1
       if(edits->length == edit_next->length && edits->length == 1
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
              || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
+        // syntax match
         if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
                         , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
            && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
@@ -654,6 +656,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
         } else {
 
+          // syntax mismatch
           output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
                                     , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
 
@@ -661,10 +664,12 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
       } else {
 
+        // many to many handling
         compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
 
       }
 
+      // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
@@ -681,6 +686,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
                                   , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
 
+      // update for common
         last_diff_old = edits->offset_sequence_one + 1;
         last_diff_new = edits->offset_sequence_two + edits->length;
 
@@ -692,6 +698,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
         output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                                   , rbuf_new, 0, wstate);
 
+      // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
         last_diff_new = edits->offset_sequence_two + 1;
 
