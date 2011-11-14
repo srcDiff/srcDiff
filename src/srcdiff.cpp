@@ -1995,10 +1995,6 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
                    , int operation, struct writer_state wstate) {
 
   markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
-  // compare subset of nodes
-
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
-  //markup_whitespace before
 
   if(operation == DELETE) {
 
