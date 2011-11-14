@@ -1910,7 +1910,7 @@ void output_char(char character, struct writer_state & wstate) {
 
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
-  if(nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
+  if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
   for(int i = 0; block_types[i]; ++i)
@@ -1922,7 +1922,7 @@ bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes
 
 bool is_nest_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
-  if(nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
+  if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
   for(int i = 0; nest_types[i]; ++i)
