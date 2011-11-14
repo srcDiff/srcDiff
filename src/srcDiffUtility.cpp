@@ -1,4 +1,5 @@
 #include "srcDiffUtility.hpp"
+#include <string.h>
 #include <vector>
 #include <string>
 
