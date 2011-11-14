@@ -1328,7 +1328,7 @@ void output_unmatched(struct reader_state * rbuf_old, std::vector<std::vector<in
     finish_new = node_sets_new->at(end_new)->back() + 1;
   }
 
-  output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, writer);
+  output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
 
 }
 
@@ -1352,37 +1352,37 @@ void compare_many2many(struct reader_state * rbuf_old, std::vector<std::vector<i
     output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old,
                      edits->offset_sequence_one + matches->old_offset - 1,
                      rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
-                     , edit_next->offset_sequence_two + matches->new_offset - 1, writer);
+                     , edit_next->offset_sequence_two + matches->new_offset - 1, wstate);
 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
 
 
       if(rbuf_old->open_diff->back()->operation != COMMON)
-        output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
+        output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
 
       markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
-                        , writer);
+                        , wstate);
 
-      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
+      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
     } else if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
                            , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
               && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
 
       output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
-                       , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, writer);
+                       , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate);
 
-      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
+      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
     } else {
 
       output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1,
                                 rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
-                                , writer);
+                                , wstate);
 
     }
 
@@ -1395,7 +1395,7 @@ void compare_many2many(struct reader_state * rbuf_old, std::vector<std::vector<i
   output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old,
                    edits->offset_sequence_one + edits->length - 1,
                    rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
-                   , edit_next->offset_sequence_two + edit_next->length - 1, writer);
+                   , edit_next->offset_sequence_two + edit_next->length - 1, wstate);
 
 
 }
@@ -1407,12 +1407,12 @@ void output_recursive(struct reader_state * rbuf_old, std::vector<std::vector<in
                       , struct writer_state wstate) {
 
   if(rbuf_old->open_diff->back()->operation != COMMON)
-    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, writer);
+    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
 
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), writer);
+  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
 
-  output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, writer);
+  output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
 
   ++rbuf_old->last_output;
   ++rbuf_new->last_output;
@@ -1430,7 +1430,7 @@ void output_recursive(struct reader_state * rbuf_old, std::vector<std::vector<in
       = create_comment_paragraph_set(&nodes_new, node_sets_new->at(start_new)->at(1)
                                      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
-    output_comment_paragraph(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
+    output_comment_paragraph(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
   }
   else {
@@ -1444,25 +1444,25 @@ void output_recursive(struct reader_state * rbuf_old, std::vector<std::vector<in
       = create_node_set(&nodes_new, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->back());
 
-    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, writer);
+    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
 
   }
 
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, writer);
+  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
 
   /*
     output_node(rbuf_old, rbuf_new,
     nodes_old.at(node_sets_old->at(start_old)->
     at(node_sets_old->at(start_old)->size() - 1))
-    , COMMON, writer);
+    , COMMON, wstate);
 
     ++rbuf_old->last_output;
     ++rbuf_new->last_output;
   */
 
 
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, writer);
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
 }
 
@@ -1480,7 +1480,7 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
 
     if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
 
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, writer);
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
@@ -1501,26 +1501,26 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
 
 
         if(rbuf_old->open_diff->back()->operation != DELETE)
-          output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+          output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
         // output diff tag
         xmlTextWriterWriteRawLen(writer, content_old + ostart, size_old - ostart);
 
         // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
+        output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       }
 
       if(nstart < size_new) {
 
         if(rbuf_old->open_diff->back()->operation != INSERT)
-          output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, writer);
+          output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
         // output diff tag
 
         xmlTextWriterWriteRawLen(writer, content_new + nstart, size_new - nstart);
 
         // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
+        output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
       }
 
@@ -1528,28 +1528,28 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
     } else if(is_white_space(nodes_old.at(i))) {
 
       if(rbuf_old->open_diff->back()->operation != DELETE)
-        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
       // whitespace delete
       // output diff tag
 
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
       // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
+      output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       --j;
 
     } else if(is_white_space(nodes_new.at(j))) {
 
       if(rbuf_old->open_diff->back()->operation != INSERT)
-        output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, writer);
+        output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
       //whitespace insert
       // output diff tag
 
-      output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, writer);
+      output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
 
       // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
+      output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
       --i;
 
@@ -1575,7 +1575,7 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
         if(text_old[opos] == text_new[npos]) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          output_char(text_old[opos], writer);
+          output_char(text_old[opos], wstate);
 
           ++opos;
           ++npos;
@@ -1588,32 +1588,32 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
           if(isspace(text_old[opos])) {
 
             if(rbuf_old->open_diff->back()->operation != DELETE)
-              output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+              output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
             for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
               //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-              output_char(text_old[opos], writer);
+              output_char(text_old[opos], wstate);
             }
 
             // output diff tag
-            output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
+            output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
           }
 
           if(isspace(text_new[npos])) {
 
             if(rbuf_old->open_diff->back()->operation != INSERT)
-              output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, writer);
+              output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
 
             for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
               //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-              output_char(text_new[npos], writer);
+              output_char(text_new[npos], wstate);
             }
 
             // output diff tag
-            output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
+            output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
           }
 
@@ -1637,28 +1637,28 @@ void markup_whitespace(struct reader_state * rbuf_old, unsigned int end_old, str
   if(i < oend) {
 
     if(rbuf_old->open_diff->back()->operation != DELETE)
-      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
     // whitespace delete
     // output diff tag
 
     for( ; i < oend; ++i)
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
     // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
   } else if(j < nend) {
 
     if(rbuf_new->open_diff->back()->operation != INSERT)
-      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, writer);
+      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
     // whitespace delete
     // output diff tag
 
     for( ; j < nend; ++j)
-      output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, writer);
+      output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
 
     // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_new_end, DELETE, writer);
+    output_node(rbuf_old, rbuf_new, &diff_new_end, DELETE, wstate);
 
   }
 
@@ -1729,7 +1729,7 @@ void output_change_white_space(struct reader_state * rbuf_old, unsigned int end_
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
 ;
 
-  output_change(rbuf_old, oend, rbuf_new, nend, writer);
+  output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
 
 }
@@ -1756,7 +1756,7 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
 
       for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
 
-      xmlTextWriterWriteRawLen(writer, content_old, offset_old);
+      xmlTextWriterWriteRawLen(wstate, content_old, offset_old);
 
       if(offset_old < size_old) {
 
@@ -1790,12 +1790,12 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
 
     // output diff tag begin
     if(rbuf_old->open_diff->back()->operation != DELETE)
-    output_node(rbuf_old, rbuf_new, diff_old_start, DELETE, writer);
+    output_node(rbuf_old, rbuf_new, diff_old_start, DELETE, wstate);
 
     rbuf_old->open_diff->back()->open_tags.front()->marked = false;
 
-    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(0), DELETE, writer);
-    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(1), DELETE, writer);
+    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(0), DELETE, wstate);
+    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(1), DELETE, wstate);
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1806,33 +1806,33 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
     = create_node_set(node_sets_new->at(begin_new), 0
     , node_sets_new->at(begin_new)->size());
 
-    output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, writer);
+    output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, wstate);
 
     output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->
-    at(node_sets_old->at(begin_old)->size() - 1), DELETE, writer);
+    at(node_sets_old->at(begin_old)->size() - 1), DELETE, wstate);
 
     output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->
-    at(node_sets_old->at(begin_old)->size() - 2), DELETE, writer);
+    at(node_sets_old->at(begin_old)->size() - 2), DELETE, wstate);
 
     // output diff tag begin
     if(rbuf_old->open_diff->back()->operation == DELETE)
     rbuf_old->open_diff->back()->open_tags.front()->marked = true;
 
-    output_node(rbuf_old, rbuf_new, diff_old_end, DELETE, writer);
+    output_node(rbuf_old, rbuf_new, diff_old_end, DELETE, wstate);
 
     } else {
 
     // output diff tag
     if(rbuf_new->open_diff->back()->operation != INSERT)
-    output_node(rbuf_old, rbuf_new, diff_new_start, INSERT, writer);
+    output_node(rbuf_old, rbuf_new, diff_new_start, INSERT, wstate);
 
     rbuf_new->open_diff->back()->open_tags.front()->marked = false;
 
 
     // output diff tag begin
 
-    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(0), INSERT, writer);
-    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(1), INSERT, writer);
+    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(0), INSERT, wstate);
+    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(1), INSERT, wstate);
 
     // collect subset of nodes
     std::vector<std::vector<int> *> * next_node_set_old
@@ -1843,19 +1843,19 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
     = create_node_set(node_sets_new->at(begin_new), 2
     , node_sets_new->at(begin_new)->size() - 2);
 
-    output_diffs(rbuf_old, node_sets_old, rbuf_new, next_node_set_new, writer);
+    output_diffs(rbuf_old, node_sets_old, rbuf_new, next_node_set_new, wstate);
 
     output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->
-    at(node_sets_new->at(begin_new)->size() - 1), INSERT, writer);
+    at(node_sets_new->at(begin_new)->size() - 1), INSERT, wstate);
 
     output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->
-    at(node_sets_new->at(begin_new)->size() - 2), INSERT, writer);
+    at(node_sets_new->at(begin_new)->size() - 2), INSERT, wstate);
 
     // output diff tag begin
     if(rbuf_new->open_diff->back()->operation == INSERT)
     rbuf_new->open_diff->back()->open_tags.front()->marked = true;
 
-    output_node(rbuf_old, rbuf_new, diff_new_end, INSERT, writer);
+    output_node(rbuf_old, rbuf_new, diff_new_end, INSERT, wstate);
 
     }
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1869,13 +1869,13 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
 
     // output diff tag begin
     if(rbuf_old->open_diff->back()->operation != DELETE)
-      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, writer);
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
     for(unsigned int i = begin_old; i < end_old; ++i)
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, writer);
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, writer);
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
     rbuf_old->last_output = end_old;
 
@@ -1885,13 +1885,13 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
 
     // output diff tag
     if(rbuf_new->open_diff->back()->operation != INSERT)
-      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, writer);
+      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
     for(unsigned int i = begin_new; i < end_new; ++i)
-      output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, writer);
+      output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, writer);
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
     rbuf_new->last_output = end_new;
 
@@ -1904,14 +1904,14 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
 void output_char(char character, struct writer_state wstate) {
 
   if(character == '&')
-    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+    xmlTextWriterWriteRawLen(wstate, BAD_CAST (unsigned char*) "&amp;", 5);
 
   else if (character == '<')
-    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+    xmlTextWriterWriteRawLen(wstate, BAD_CAST (unsigned char*) "&lt;", 4);
 
   else if (character == '>')
 
-    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+    xmlTextWriterWriteRawLen(wstate, BAD_CAST (unsigned char*) "&gt;", 4);
 
   else
     xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) &character, 1);
