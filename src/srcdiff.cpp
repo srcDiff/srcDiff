@@ -963,6 +963,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
     struct edit * edit_next = edits->next;
     if(is_change(edits)) {
 
+      // 1-1
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
@@ -974,12 +975,16 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
           = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
+        // compare on word basis
         output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
       } else
+
+        // many to many
         output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                                   , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
 
+      // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
@@ -995,6 +1000,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
         output_change_white_space(rbuf_old, 0
                                   , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
+        // update for common
         last_diff_old = edits->offset_sequence_one + 1;
         last_diff_new = edits->offset_sequence_two + edits->length;
 
@@ -1006,6 +1012,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
         output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                                   , rbuf_new, 0, wstate);
 
+        // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
         last_diff_new = edits->offset_sequence_two + 1;
 
