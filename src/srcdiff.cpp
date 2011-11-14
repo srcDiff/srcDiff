@@ -303,7 +303,7 @@ int main(int argc, char * argv[]) {
     output_diffs(&rbuf_old, &node_set_old, &rbuf_new, &node_set_new, &wstate);
 
     // output srcdiff unit
-    outputNode(*getRealCurrentNode(reader_old), wstate->writer);
+    outputNode(*getRealCurrentNode(reader_old), wstate.writer);
 
   }
 
