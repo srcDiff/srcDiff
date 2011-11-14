@@ -50,8 +50,8 @@ const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
 const char* DIFF_PREFIX = "diff:";
-const char* DIFF_OLD = "diff:insert";
-const char* DIFF_NEW = "diff:delete";
+const char* DIFF_OLD = "diff:delete";
+const char* DIFF_NEW = "diff:insert";
 const char* DIFF_COMMON = "diff:common";
 
 const char* output_encoding = "UTF-8";
