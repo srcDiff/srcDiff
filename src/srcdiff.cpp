@@ -1911,6 +1911,16 @@ void output_char(char character, struct writer_state & wstate) {
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two) {
 
+  if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, block_types[0]) == 0
+     || strcmp((const char *)nodes_two.at(structure_two->at(0))->name, block_types[0]) == 0) {
+    
+    if(is_nest_type(structure_one, nodes_one) && is_block_type(structure_two, nodes_two))
+      return true;
+    
+  } else {
+    
+  }
+
   return false;
 }
 
