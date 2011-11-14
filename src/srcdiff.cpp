@@ -1902,14 +1902,14 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
 void output_char(char character, struct writer_state * wstate) {
 
   if(character == '&')
-    xmlTextWriterWriteRawLen(wstate, BAD_CAST (unsigned char*) "&amp;", 5);
+    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&amp;", 5);
 
   else if (character == '<')
-    xmlTextWriterWriteRawLen(wstate, BAD_CAST (unsigned char*) "&lt;", 4);
+    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&lt;", 4);
 
   else if (character == '>')
 
-    xmlTextWriterWriteRawLen(wstate, BAD_CAST (unsigned char*) "&gt;", 4);
+    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&gt;", 4);
 
   else
     xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) &character, 1);
