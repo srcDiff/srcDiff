@@ -2006,7 +2006,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
-    rbuf_old.last_output = end_old;
+    rbuf_old.last_output = structure_old->back() + 1;
 
   } else {
 
@@ -2020,7 +2020,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
-    rbuf_new.last_output = end_new;
+    rbuf_new.last_output = structure_new->back() + 1;
 
   }
 }
