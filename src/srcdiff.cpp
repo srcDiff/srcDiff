@@ -1995,7 +1995,6 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
                    , int operation, struct writer_state wstate) {
 
   markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
-x
   // compare subset of nodes
 
     //markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
@@ -2010,11 +2009,11 @@ x
     if(has_interal_block(structure_old, nodes_old)) {
 
       int block_start;
-      for(block_start = 0; block_start < structure_old->size() && strcmp(nodes.at(structure_old->at(block_start))->name, "block") != 0; ++block_start)
+      for(block_start = 0; block_start < structure_old->size() && strcmp(nodes_old.at((const char *)structure_old->at(block_start))->name, "block") != 0; ++block_start)
         ;
 
       int block_end;
-     (block_end = block_start + 1; block_end < structure_old->size() && strcmp(nodes.at(structure_old->at(block_end))->name, "block") != 0; ++block_end)
+      (block_end = block_start + 1; block_end < structure_old->size() && strcmp(nodes_old.at((const char *)structure_old->at(block_end))->name, "block") != 0; ++block_end)
         ;
 
       int block_start_pos = nodes.at(structure_old->at(block_start));
