@@ -1769,49 +1769,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 }
 
 /*
-// not generic enough may need to pass nodes_old or nodes_new
-bool is_block_type(std::vector<std::vector<int> *> * node_sets, int start, int length) {
-
-if(length != 1)
-return false;
-
-
-if((xmlReaderTypes)node_sets->at(start)->at(0)->type != XML_READER_TYPE_ELEMENT)
-return false;
-
-if(strcmp((const char *)node_sets->at(start)->at(0)->name, "block") == 0)
-return true;
-
-return false;
-
-}
-
-bool is_statement_type(std::vector<std::vector<int> *> * node_sets, int start, int length) {
-
-if(length != 1)
-return false;
-
-if((xmlReaderTypes)node_sets->at(start)->at(0)->type != XML_READER_TYPE_ELEMENT)
-return false;
-
-if(strcmp((const char *)node_sets->at(start)->at(0)->name, "expr_stmt") == 0)
-return true;
-
-return false;
-
-}
-
-bool is_nestable(std::vector<std::vector<int> *> * node_sets_old
-, int start_old, int length_old
-, std::vector<std::vector<int> *> * node_sets_new
-, int start_new, int length_new) {
-
-return (is_block_type(node_sets_old, start_old, length_old) && is_statement_type(node_sets_new, start_new, length_new))
-|| (is_block_type(node_sets_new, start_new, length_new) && is_statement_type(node_sets_old, start_old, length_old));
-}
-*/
-
-/*
 
   Adds whitespace to a change. Then outputs the change.
 
@@ -1899,88 +1856,6 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
     }
 
   }
-
-  /*
-    if(0 && is_nestable(node_sets_old, begin_old, end_old, node_sets_new, begin_new, end_new)) {
-
-    if(is_block_type(node_sets_old, start_old, length_old)) {
-
-    // output diff tag begin
-    if(rbuf_old.open_diff.back()->operation != DELETE)
-    output_node(rbuf_old, rbuf_new, diff_old_start, DELETE, wstate);
-
-    rbuf_old.open_diff.back()->open_tags.front()->marked = false;
-
-    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(0), DELETE, wstate);
-    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->at(1), DELETE, wstate);
-
-    // collect subset of nodes
-    std::vector<std::vector<int> *> * next_node_set_old
-    = create_node_set(node_sets_old->at(begin_old), 2
-    , node_sets_old->at(begin_old)->size() - 2);
-
-    std::vector<std::vector<int> *> * next_node_set_new
-    = create_node_set(node_sets_new->at(begin_new), 0
-    , node_sets_new->at(begin_new)->size());
-
-    output_diffs(rbuf_old, next_node_set_old, rbuf_new, next_node_set_new, wstate);
-
-    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->
-    at(node_sets_old->at(begin_old)->size() - 1), DELETE, wstate);
-
-    output_node(rbuf_old, rbuf_new, node_sets_old->at(begin_old)->
-    at(node_sets_old->at(begin_old)->size() - 2), DELETE, wstate);
-
-    // output diff tag begin
-    if(rbuf_old.open_diff.back()->operation == DELETE)
-    rbuf_old.open_diff.back()->open_tags.front()->marked = true;
-
-    output_node(rbuf_old, rbuf_new, diff_old_end, DELETE, wstate);
-
-    } else {
-
-    // output diff tag
-    if(rbuf_new.open_diff.back()->operation != INSERT)
-    output_node(rbuf_old, rbuf_new, diff_new_start, INSERT, wstate);
-
-    rbuf_new.open_diff.back()->open_tags.front()->marked = false;
-
-
-    // output diff tag begin
-
-    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(0), INSERT, wstate);
-    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->at(1), INSERT, wstate);
-
-    // collect subset of nodes
-    std::vector<std::vector<int> *> * next_node_set_old
-    = create_node_set(node_sets_old->at(begin_old), 0
-    , node_sets_old->at(begin_old)->size());
-
-    std::vector<std::vector<int> *> * next_node_set_new
-    = create_node_set(node_sets_new->at(begin_new), 2
-    , node_sets_new->at(begin_new)->size() - 2);
-
-    output_diffs(rbuf_old, node_sets_old, rbuf_new, next_node_set_new, wstate);
-
-    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->
-    at(node_sets_new->at(begin_new)->size() - 1), INSERT, wstate);
-
-    output_node(rbuf_old, rbuf_new, node_sets_new->at(begin_new)->
-    at(node_sets_new->at(begin_new)->size() - 2), INSERT, wstate);
-
-    // output diff tag begin
-    if(rbuf_new.open_diff.back()->operation == INSERT)
-    rbuf_new.open_diff.back()->open_tags.front()->marked = true;
-
-    output_node(rbuf_old, rbuf_new, diff_new_end, INSERT, wstate);
-
-    }
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-    }
-
-    // match beginning whitespace
-    else {
-  */
 
   if(end_old > begin_old) {
 
