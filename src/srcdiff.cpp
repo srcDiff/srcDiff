@@ -1889,8 +1889,6 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
   }
 
-  //  }
-
 }
 
 void output_char(char character, struct writer_state & wstate) {
