@@ -1754,7 +1754,7 @@ void output_change(struct reader_state * rbuf_old, unsigned int end_old
 
       for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
 
-      xmlTextWriterWriteRawLen(wstate, content_old, offset_old);
+      xmlTextWriterWriteRawLen(wstate->writer, content_old, offset_old);
 
       if(offset_old < size_old) {
 
