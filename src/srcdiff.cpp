@@ -1997,7 +1997,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
   markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
   // compare subset of nodes
 
-    //markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
   //markup_whitespace before
 
   if(operation == DELETE) {
@@ -2029,15 +2029,11 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
     } else {
 
       for(start = 0; start < structure_old->size() && nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
-              || strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "condition") != 0; ++start)
+            || strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "condition") != 0; ++start)
           ;
 
         ++start;
 
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start);
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, structure_old->size());
-
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(structure_old->at(start))->name);
         start_pos = structure_old->at(start) + 1;
         end_pos = structure_old->back();
 
@@ -2069,13 +2065,17 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       for(unsigned int i = end_pos; i < structure_old->back() + 1; ++i)
         output_node(rbuf_old, rbuf_new, nodes_old[i], DELETE, wstate);
 
+      rbuf_old.last_output = structure_old->back() + 1;
+      rbuf_new.last_output = structure_new->back() + 1;
+
+      markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output1, wstate);
+
     //for(unsigned int i = begin_old; i < end_old; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
-    rbuf_old.last_output = structure_old->back() + 1;
 
   } else {
 
