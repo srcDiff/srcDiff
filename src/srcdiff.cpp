@@ -1177,28 +1177,28 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if(strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
+    if(strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
 
-    outputNode(*node, wstate->writer);
+    outputNode(*node, wstate.writer);
 
-    if(wstate->output_diff.back()->operation == COMMON) {
+    if(wstate.output_diff.back()->operation == COMMON) {
 
       //fprintf(stderr, "HERE OUTPUT COMMON\n");
 
       update_diff_stack(rbuf_old.open_diff, node, COMMON);
       update_diff_stack(rbuf_new.open_diff, node, COMMON);
 
-      update_diff_stack(wstate->output_diff, node, COMMON);
+      update_diff_stack(wstate.output_diff, node, COMMON);
 
-    } else if(wstate->output_diff.back()->operation == DELETE) {
+    } else if(wstate.output_diff.back()->operation == DELETE) {
 
       //fprintf(stderr, "HERE OUTPUT DELETE\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
       update_diff_stack(rbuf_old.open_diff, node, DELETE);
 
-      update_diff_stack(wstate->output_diff, node, DELETE);
+      update_diff_stack(wstate.output_diff, node, DELETE);
 
     } else {
 
@@ -1207,14 +1207,14 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
       update_diff_stack(rbuf_new.open_diff, node, INSERT);
 
-      update_diff_stack(wstate->output_diff, node, INSERT);
+      update_diff_stack(wstate.output_diff, node, INSERT);
     }
 
     return;
   }
 
   // output non-text node and get next node
-  outputNode(*node, wstate->writer);
+  outputNode(*node, wstate.writer);
 
   if(operation == COMMON) {
 
@@ -1224,7 +1224,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
     update_diff_stack(rbuf_old.open_diff, node, operation);
     update_diff_stack(rbuf_new.open_diff, node, operation);
 
-    update_diff_stack(wstate->output_diff, node, operation);
+    update_diff_stack(wstate.output_diff, node, operation);
 
   }
   else if(operation == DELETE) {
@@ -1234,7 +1234,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
     update_diff_stack(rbuf_old.open_diff, node, operation);
 
-    update_diff_stack(wstate->output_diff, node, operation);
+    update_diff_stack(wstate.output_diff, node, operation);
 
   } else {
 
@@ -1243,7 +1243,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
     update_diff_stack(rbuf_new.open_diff, node, operation);
 
-    update_diff_stack(wstate->output_diff, node, operation);
+    update_diff_stack(wstate.output_diff, node, operation);
   }
 
 }
@@ -1517,7 +1517,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart);
 
-      xmlTextWriterWriteRawLen(wstate->writer, content_old, ostart);
+      xmlTextWriterWriteRawLen(wstate.writer, content_old, ostart);
 
       if(ostart < size_old) {
 
@@ -1526,7 +1526,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
           output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
         // output diff tag
-        xmlTextWriterWriteRawLen(wstate->writer, content_old + ostart, size_old - ostart);
+        xmlTextWriterWriteRawLen(wstate.writer, content_old + ostart, size_old - ostart);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
@@ -1539,7 +1539,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
           output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
         // output diff tag
 
-        xmlTextWriterWriteRawLen(wstate->writer, content_new + nstart, size_new - nstart);
+        xmlTextWriterWriteRawLen(wstate.writer, content_new + nstart, size_new - nstart);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
@@ -1793,7 +1793,7 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
       for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
 
-      xmlTextWriterWriteRawLen(wstate->writer, content_old, offset_old);
+      xmlTextWriterWriteRawLen(wstate.writer, content_old, offset_old);
 
       if(offset_old < size_old) {
 
@@ -1941,16 +1941,16 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 void output_char(char character, struct writer_state & wstate) {
 
   if(character == '&')
-    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&amp;", 5);
+    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) "&amp;", 5);
 
   else if (character == '<')
-    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&lt;", 4);
+    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) "&lt;", 4);
 
   else if (character == '>')
 
-    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) "&gt;", 4);
+    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) "&gt;", 4);
 
   else
-    xmlTextWriterWriteRawLen(wstate->writer, BAD_CAST (unsigned char*) &character, 1);
+    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) &character, 1);
 
 }
