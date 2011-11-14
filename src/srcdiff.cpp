@@ -163,6 +163,7 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
+  // TODO: mabe put this in a function
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.extra = 0;
@@ -187,6 +188,7 @@ int main(int argc, char * argv[]) {
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
+  // TODO: Error handling?
   // translate file one
   xmlBuffer * output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
 
@@ -240,6 +242,7 @@ int main(int argc, char * argv[]) {
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+  // set up writer state
   std::vector<struct open_diff *> output_diff;
   struct open_diff * new_diff = new struct open_diff;
   new_diff->operation = COMMON;
@@ -249,7 +252,8 @@ int main(int argc, char * argv[]) {
   wstate.writer = writer;
   wstate.output_diff = output_diff;
 
-  // run through diffs adding markup
+
+  // Set up delete reader state
   struct reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
   std::vector<struct open_diff *> open_diff_old;
@@ -259,9 +263,10 @@ int main(int argc, char * argv[]) {
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
 
-  //    rbuf_old.output_diff = &output_diff;
+  // read to unit
   xmlTextReaderRead(reader_old);
 
+  // Set up insert reader state
   struct reader_state rbuf_new = { 0 };
   rbuf_new.stream_source = INSERT;
   std::vector<struct open_diff *> open_diff_new;
@@ -271,7 +276,7 @@ int main(int argc, char * argv[]) {
   new_diff->operation = COMMON;
   rbuf_new.open_diff.push_back(new_diff);
 
-  //    rbuf_new.output_diff = &output_diff;
+  // read to unit
   xmlTextReaderRead(reader_new);
 
   // create srcdiff unit
@@ -280,22 +285,29 @@ int main(int argc, char * argv[]) {
   // output srcdiff unit
   output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
+  // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
   int is_new = xmlTextReaderRead(reader_new);
 
+  // collect if non empty files
   if(is_old)
     collect_difference(&nodes_old, reader_old);
 
+  // free the buffer
   xmlBufferFree(output_file_one);
 
+  // collect if non empty files
   if(is_new)
     collect_difference(&nodes_new, reader_new);
 
+  // free the buffer
   xmlBufferFree(output_file_two);
 
+  // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
+  // run on file level
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
   // output srcdiff unit
