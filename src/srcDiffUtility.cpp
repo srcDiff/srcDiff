@@ -73,7 +73,7 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
   std::vector<int> * node_set1 = (std::vector<int> *)e1;
   std::vector<int> * node_set2 = (std::vector<int> *)e2;
 
-  for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size(); ++i, ++j) {
+  for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size();) {
 
     // string consecutive non whitespace text nodes
     // TODO:  Why create the string?  Just compare directly as you go through
@@ -90,16 +90,14 @@ int node_set_syntax_compare(const void * e1, const void * e2) {
       if(text1 != text2)
         return 1;
 
-      --i;
-      --j;
+    } else if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(j))))
+      return 1;
+    else {
 
-      // TODO:  Remove
-      continue;
+      ++i;
+      ++j;
 
     }
-
-    if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(j))))
-      return 1;
   }
 
   return 0;
