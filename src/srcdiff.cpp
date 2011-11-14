@@ -1994,7 +1994,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
                    , struct reader_state rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state wstate) {
 
-  markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
+  output_common(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
 
   if(operation == DELETE) {
 
@@ -2024,8 +2024,9 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
 
     } else {
 
-      for(start = 0; start < structure_old->size() && nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
-            || strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "condition") != 0; ++start)
+      for(start = 0; start < structure_old->size() 
+	    && (nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
+		|| strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "condition") != 0); ++start)
           ;
 
         ++start;
