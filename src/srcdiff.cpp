@@ -561,6 +561,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
+  // advance whitespace after targeted end
   if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
     ++oend;
 
@@ -572,12 +573,14 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
     ;
 
+  // output common tag if needed
   if(rbuf_old.open_diff.back()->operation != COMMON)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-  // add preceeding unchanged
+  // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
+  // output common tag if needed 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
 }
@@ -597,7 +600,6 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  // It is used.  Look at the end of the file.  It is used to free memory
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
