@@ -13,7 +13,8 @@
   for nesting).  If there are many deletes are insertions, then a matching algorithm 
   allocates structures to possible matches, treating them as a one-to-one relationship.
   This can result in the recursion or direct output as before.  Currently on matched output,
-  is outputted as deletions and insertions.
+  is outputted as deletions and insertions.  TODO: add block detection and incorporate the
+  nesting of one element in another.
 
   Comments:  Comments follow a similiar approach, except once a comment change is encountered,
   they are first matched based on paragraphs (separated by two new lines), then as needed
@@ -21,11 +22,19 @@
   by word.
 
   Whitespace:  Whitespace is regarded during the entire process, and is placed in during
-  output.  Currently, this can occur in two places (although there are at least three circumstances).
-  Whitespace is either output as part of a change, where only the beginning is narrowed and all
-  whitespace even if it could be matches is treated as different.  The second output occurs in 
-  output of common where only the whitespace is output and shared whitespace should also be preserved.
-  
+  output.  This happens by tracking the last known output element from each stream (insert/
+  delete) until the specified end.  Currently, this can occur in two places (although there are at least 
+  three circumstances).  Whitespace is either output as part of a change, where only the beginning is 
+  narrowed and all whitespace even if it could be matches is treated as different.  The second output
+  occurs in output of common where only the whitespace is output and shared whitespace should also be
+  preserved.  These are included in two functions output_change and markup_whitespace.  The third place
+  it usually occurs in output_recursive which outputs the beginning matching tag, and therefor must
+  output all preceeding whitespace before the tag (this still however uses markup_whitespace).  There
+  may also be a lag of whitespace after returning to the output_recursive and before outputting a closing
+  tag.  This also uses markup_whitespace.  Whitespace follows simple rules (subject to change).  All preceeding
+  unused whitespace must be included, and all whitespace with a newline afterwards.  Currently, if the first after
+  has no newline, it is included and the following nodes are included if they have a new line.  Comments follow
+  this strategey, until they reach the word level, where no whitespace is included afterwards.
 
   Michael J. Decker
   mjd52@zips.uakron.edu
