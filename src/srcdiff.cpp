@@ -1919,3 +1919,15 @@ bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes
 
   return false;
 }
+
+bool is_nest_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
+
+  if(nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
+    return false;
+
+  for(int i = 0; nest_types[i]; ++i)
+    if(strcmp((const char *)nodes.at(structure->at(0))->name, nest_types[i]) == 0)
+      return true;
+
+  return false;
+}
