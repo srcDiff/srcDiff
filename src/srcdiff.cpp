@@ -2018,14 +2018,29 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
 
     } else {
 
-      for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
-        ;
+      if(strcmp((const char *)nodes_old.at(structure_old->at(0))->name, "if") == 0) {
+
+        for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "then") != 0; ++start)
+          ;
+
+        for(end = start + 1; end < structure_old->size() && nodes_old.at(structure_old->at(start))->type == XML_READER_TYPE_END_ELEMENT
+              && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "then") != 0; ++end)
+          ;
+
+      }
+
+      else {
+        for(start = 0; start < structure_old->size() && nodes_old.at(structure_old->at(start))->type == XML_READER_TYPE_END_ELEMENT
+              && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "condition") != 0; ++start)
+          ;
+
 
       for(end = start + 1; end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "block") != 0; ++end)
         ;
 
-
+      }
     }
+
       unsigned int start_pos = structure_old->at(start);
       unsigned int end_pos = structure_old->at(end);
 
