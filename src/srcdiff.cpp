@@ -102,13 +102,7 @@ struct reader_state {
 // stores information during xml Text Reader processing
 struct writer_state {
 
-  int stream_source;
-  int last_output;
-
-  // just a pointer not on stack
-  std::vector<struct open_diff *> * open_diff;
-
-  // must be it is a shared resource
+  xmlTextWriterPtr writer;
   std::vector<struct open_diff *> * output_diff;
 
 };
@@ -254,6 +248,10 @@ int main(int argc, char * argv[]) {
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = COMMON;
     output_diff.push_back(new_diff);
+
+    struct writer_state wstate = { 0 };
+    wstate.writer = writer;
+    wstate.output_diff = &output_diff;
 
     // run through diffs adding markup
     struct reader_state rbuf_old = { 0 };
