@@ -460,17 +460,18 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
   int is_open = 1;
   for(; is_open; ++(*start)) {
 
-    if(is_white_space(nodes->at(*start)))
-      continue;
+    if(!is_white_space(nodes->at(*start))) {
 
-    node_set->push_back(*start);
+      node_set->push_back(*start);
 
-    if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
-       && !(nodes->at(*start)->extra & 0x1))
-      ++is_open;
+      if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
+         && !(nodes->at(*start)->extra & 0x1))
+        ++is_open;
 
-    else if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
-      --is_open;
+      else if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
+        --is_open;
+
+    }
 
   }
 
