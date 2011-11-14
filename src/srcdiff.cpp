@@ -750,13 +750,13 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> 
 
     for(; i < end; ++i) {
 
+      // stop the node set at the newline
       if(is_new_line(nodes->at(i)))
         break;
 
-      if(is_white_space(nodes->at(i)))
-        continue;
-
-      node_set->push_back(i);
+      // only collect non-whitespace nodes
+      if(!is_white_space(nodes->at(i)))
+        node_set->push_back(i);
     }
 
     node_sets.push_back(node_set);
