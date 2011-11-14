@@ -2009,11 +2009,11 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
     if(has_interal_block(structure_old, nodes_old)) {
 
       int block_start;
-      for(block_start = 0; block_start < structure_old->size() && strcmp(nodes_old.at((const char *)structure_old->at(block_start))->name, "block") != 0; ++block_start)
+      for(block_start = 0; block_start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(block_start))->name, "block") != 0; ++block_start)
         ;
 
       int block_end;
-      (block_end = block_start + 1; block_end < structure_old->size() && strcmp(nodes_old.at((const char *)structure_old->at(block_end))->name, "block") != 0; ++block_end)
+      (block_end = block_start + 1; block_end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(block_end))->name, "block") != 0; ++block_end)
         ;
 
       int block_start_pos = nodes.at(structure_old->at(block_start));
