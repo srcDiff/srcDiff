@@ -1907,3 +1907,10 @@ void output_char(char character, struct writer_state & wstate) {
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) &character, 1);
 
 }
+
+bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
+
+  if(nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
+    return false;
+
+}
