@@ -725,6 +725,9 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
 }
 
+/*
+  Collect paragraphs
+*/
 std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
@@ -759,6 +762,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 
 }
 
+// collect lines
 std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
 
   std::vector<std::vector<int> *> node_sets;
@@ -834,6 +838,7 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
     struct edit * edit_next = edits->next;
     if(is_change(edits)) {
 
+      // 1-1
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
