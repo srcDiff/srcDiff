@@ -104,7 +104,7 @@ struct writer_state {
 
 };
 
-const char * block_types[] = { "block", "if", "while", "for", "function", "class", "struct", "union", 0 };
+const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
@@ -2008,35 +2008,36 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
 
     if(has_interal_block(structure_old, nodes_old)) {
 
-      unsigned int block_start;
-      for(block_start = 0; block_start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(block_start))->name, "block") != 0; ++block_start)
+      unsigned int start;
+      for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
         ;
 
-      unsigned int block_end;
-      for(block_end = block_start + 1; block_end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(block_end))->name, "block") != 0; ++block_end)
+      unsigned int end;
+      for(end = start + 1; end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "block") != 0; ++end)
         ;
 
-      unsigned int block_start_pos = structure_old->at(block_start);
-      unsigned int block_end_pos = structure_old->at(block_end);
+      unsigned int start_pos = structure_old->at(start);
+      unsigned int end_pos = structure_old->at(end);
 
       if(strcmp((const char *)nodes_old.at(structure_new->at(0))->name, "block") != 0)
-        ++block_start_pos;
+        ++start_pos;
       else
-        ++block_end_pos;
+        ++end_pos;
 
-      for(unsigned int i = 0; i < block_start_pos; ++i)
+      for(unsigned int i = 0; i < start_pos; ++i)
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       // collect subset of nodes
       std::vector<std::vector<int> *> next_node_set_old
-        = create_node_set(&nodes_old, block_start_pos
-                          , block_end_pos);
+        = create_node_set(&nodes_old, start_pos
+                          , end_pos);
 
       std::vector<std::vector<int> *> next_node_set_new
         = create_node_set(&nodes_new,  structure_new->at(0)
                           , structure_new->back());
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+
     }
 
     //for(unsigned int i = begin_old; i < end_old; ++i)
