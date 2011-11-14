@@ -238,6 +238,7 @@ int main(int argc, char * argv[]) {
 
   xmlTextWriterPtr writer = NULL;
 
+  // TODO:  WHY IS THIS STILL HERE!  GET RID OF IT
   {
     // create the reader for the old file
     reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
@@ -522,15 +523,12 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
   for(int i = start; i < end; ++i) {
 
-    std::vector <int> * node_set = new std::vector <int>;
-
-    if(is_white_space(nodes->at(i))) {
-
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-
+    if(is_white_space(nodes->at(i)))
       continue;
 
-    } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
+    std::vector <int> * node_set = new std::vector <int>;
+
+    if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
       node_set->push_back(i);
 
