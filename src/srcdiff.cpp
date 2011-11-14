@@ -668,9 +668,14 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
           if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
                          , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
 
+            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
+                          DELETE, wstate);
 
           } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
                                 , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
+
+            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
+                          INSERT, wstate);
 
           } else {
 
@@ -1983,6 +1988,35 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
 
 void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_old, std::vector<xmlNodePtr> & nodes_old
                    , struct reader_state rbuf_new ,std::vector<int> * structure_new, std::vector<xmlNodePtr> & nodes_new
-                   , struct writer_state wstate) {
+                   , int operation, struct writer_state wstate) {
 
+  if(operation == DELETE) {
+
+    // output diff tag begin
+    if(rbuf_old.open_diff.back()->operation != DELETE)
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+
+    for(unsigned int i = begin_old; i < end_old; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+    rbuf_old.last_output = end_old;
+
+  } else {
+
+    // output diff tag
+    if(rbuf_new.open_diff.back()->operation != INSERT)
+      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+
+    for(unsigned int i = begin_new; i < end_new; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+
+    rbuf_new.last_output = end_new;
+
+  }
 }
