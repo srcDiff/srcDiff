@@ -1285,12 +1285,14 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
 
   unsigned int leftptr;
-  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr);
+  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr)
+    ;
 
   unsigned int rightptr;
   for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
         && node_compare(nodes_old.at(node_set_old->at(node_set_old->size() - rightptr)),
-                        nodes_new.at(node_set_new->at(node_set_new->size() - rightptr))) == 0; ++rightptr);
+                        nodes_new.at(node_set_new->at(node_set_new->size() - rightptr))) == 0; ++rightptr)
+    ;
 
   int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
   int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
@@ -1531,7 +1533,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       int ostart = 0;
       int nstart = 0;
 
-      for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart);
+      for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
+        ;
 
       xmlTextWriterWriteRawLen(wstate.writer, content_old, ostart);
 
@@ -1808,7 +1811,8 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
       int offset_old = 0;
       int offset_new = 0;
 
-      for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new);
+      for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new)
+;
 
       xmlTextWriterWriteRawLen(wstate.writer, content_old, offset_old);
 
