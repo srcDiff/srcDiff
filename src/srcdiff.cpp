@@ -1934,11 +1934,11 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes)
 
 bool has_interal_block(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
-  if(strcmp((const char *)nodes_one.at(structure->at(0))->name, "block") == 0)
+  if(strcmp((const char *)nodes.at(structure->at(0))->name, "block") == 0)
     return false;
 
-  for(int i = 1; i < structure->size(); ++i)
-    if(strcmp((const char *)nodes_one.at(structure->at(i))->name, "block") == 0)
+  for(unsigned int i = 1; i < structure->size(); ++i)
+    if(strcmp((const char *)nodes.at(structure->at(i))->name, "block") == 0)
       return true;
 
   return false;
