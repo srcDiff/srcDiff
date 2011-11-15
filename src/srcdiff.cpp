@@ -580,6 +580,31 @@ void output_white_space(struct reader_state & rbuf_old
   
 }
 
+void output_white_space_nested(struct reader_state & rbuf_old
+                               , struct reader_state & rbuf_new
+                               , int operation, struct writer_state & wstate) {
+
+  unsigned int oend = rbuf_old.last_output;
+  unsigned int nend = rbuf_new.last_output;
+
+  // advance whitespace after targeted end
+  for(; oend < nodes_old.size() && nend < nodes_new.size()
+        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
+        ; ++oend)
+    ;
+
+  if(operation == DELETE)
+    for(oend < nodes_old.size() is_white_space(nodes_old.at(oend)); ++oend) {
+    }
+  else
+    for(nend < nodes_new.size() is_white_space(nodes_new.at(nend)); ++nend) {
+    }
+
+
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
+  
+}
+
 void output_white_space_all(struct reader_state & rbuf_old
                    , struct reader_state & rbuf_new
                    , struct writer_state & wstate) {
@@ -622,7 +647,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
-  output_white_space(rbuf_old, rbuf_new, wstate);
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -1828,7 +1853,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
     // whitespace delete
     // output diff tag
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     for( ; i < oend; ++i)
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
@@ -2127,8 +2152,6 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-      output_white_space_all(rbuf_old, rbuf_new, wstate);
-
       // could output change here instead
       for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
         output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
@@ -2139,7 +2162,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       rbuf_old.last_output = structure_old->back() + 1;
       //rbuf_new.last_output = structure_new->back() + 1;
 
-      output_white_space(rbuf_old, rbuf_new, wstate);
+      output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   } else {
 
