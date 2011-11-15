@@ -891,6 +891,9 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
                                   , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
       }
 
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(rbuf_old.last_output)->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(rbuf_new.last_output)->name);
+
       // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -1271,12 +1274,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
@@ -1993,9 +1996,9 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
   return false;
 }
 
-void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_old
-                   , struct reader_state rbuf_new ,std::vector<int> * structure_new
-                   , int operation, struct writer_state wstate) {
+void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_old
+                   , struct reader_state & rbuf_new ,std::vector<int> * structure_new
+                   , int operation, struct writer_state & wstate) {
 
   // may need to markup common that does not output common blocks
   markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
@@ -2011,7 +2014,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       unsigned int start_pos;
       unsigned int end_pos;
     if(has_interal_block(structure_old, nodes_old)) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
         ;
 
@@ -2054,7 +2057,8 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
             break;
 
         start += 3;
-
+        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(structure_old->at(start) + 1)->name);
+        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(structure_new->at(0))->name);
         start_pos = structure_old->at(start) + 1;
         end_pos = structure_old->back();
 
@@ -2079,16 +2083,18 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
       for(unsigned int i = end_pos; i < structure_old->back() + 1; ++i)
-        output_node(rbuf_old, rbuf_new, nodes_old[i], DELETE, wstate);
+        output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
       rbuf_old.last_output = structure_old->back() + 1;
+      rbuf_new.last_output = structure_new->back() + 1;
 
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
     markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
 
-
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(rbuf_old.last_output)->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(rbuf_new.last_output)->name);
 
   } else {
 
