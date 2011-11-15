@@ -1633,7 +1633,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   unsigned int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
@@ -1714,10 +1714,10 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       if(rbuf_old.open_diff.back()->operation != DELETE)
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-      // whitespace delete
-      // output diff tag
 
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+      // whitespace delete
+      for(; i < oend && is_white_space(nodes_old.at(i)); ++i)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
       // output diff tag
       output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
@@ -1731,7 +1731,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       //whitespace insert
       // output diff tag
 
-      output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
+      for(; j < nend && is_white_space(nodes_new.at(j)); ++j)
+        output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
 
       // output diff tag
       output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
@@ -1850,7 +1851,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   rbuf_old.last_output = oend;
   rbuf_new.last_output = nend;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 }
 
 /*
