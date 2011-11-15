@@ -565,10 +565,16 @@ void output_white_space(struct reader_state & rbuf_old
   unsigned int nend = rbuf_new.last_output;
 
   // advance whitespace after targeted end
-  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)) && !is_new_line(nodes_old.at(oend)); ++oend)
     ;
-  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)) && !is_new_line(nodes_new.at(nend)); ++nend)
     ;
+
+  if(oend < nodes_old.size() && is_new_line(nodes_old.at(oend))
+     ++oend;
+
+  if(nend < nodes_new.size() && is_new_line(nodes_new.at(nend))
+     ++nend;
 
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
   
