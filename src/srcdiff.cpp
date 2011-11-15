@@ -1553,7 +1553,7 @@ void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<i
         output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
 
-      markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
                         , wstate);
@@ -1601,7 +1601,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
 
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
 
@@ -1640,7 +1640,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
   }
 
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+    output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   /*
     output_node(rbuf_old, rbuf_new,
