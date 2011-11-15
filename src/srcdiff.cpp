@@ -1834,6 +1834,9 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
+  output_whitespace(rbuf_old, rbuf_new, wstate);
+
+  /*
   if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
     ++oend;
 
@@ -1845,8 +1848,11 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
 
   for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
     ;
+  */
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
+
+  output_whitespace(rbuf_old, rbuf_new, wstate);
 
 
 }
