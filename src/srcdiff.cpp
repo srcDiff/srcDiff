@@ -557,15 +557,6 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
 }
 
-/*
-
-  Output common elements.
-
-  All preceeding unused whitespace must be included, and all whitespace
-  with a newline afterwards.  Currently, if the first after has no newline,
-  it is included and the following nodes are included if they have a new line.
-
-*/
 void output_white_space(struct reader_state & rbuf_old
                    , struct reader_state & rbuf_new
                    , struct writer_state & wstate) {
@@ -583,6 +574,32 @@ void output_white_space(struct reader_state & rbuf_old
   
 }
 
+void output_white_space_all(struct reader_state & rbuf_old
+                   , struct reader_state & rbuf_new
+                   , struct writer_state & wstate) {
+
+  unsigned int oend = rbuf_old.last_output;
+  unsigned int nend = rbuf_new.last_output;
+
+  // advance whitespace after targeted end
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
+    ;
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
+    ;
+
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
+  
+}
+
+/*
+
+  Output common elements.
+
+  All preceeding unused whitespace must be included, and all whitespace
+  with a newline afterwards.  Currently, if the first after has no newline,
+  it is included and the following nodes are included if they have a new line.
+
+*/
 void output_common(struct reader_state & rbuf_old, unsigned int end_old
                    , struct reader_state & rbuf_new, unsigned int end_new
                    , struct writer_state & wstate) {
