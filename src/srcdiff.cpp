@@ -106,6 +106,7 @@ struct writer_state {
 
 const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
+// TODO:  How is an expr_stmt a nest type?  or decl_stmt?
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
 // create srcdiff unit
@@ -456,6 +457,7 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
   if(strcmp((const char *)nodes->at(start)->name, (const char *)nodes->at(start + 2)->name) != 0)
     return false;
 
+  // TODO:  Put into array of strings
   if(strcmp((const char *)nodes->at(start)->name, "name") == 0)
     return true;
 
@@ -472,6 +474,8 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
 }
 
 // collect an entire tag from open tag to closing tag
+// TODO: Pass int variable start by reference
+// If it has to exist and is not already a pointer, then it should be passed by reference
 void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node_set, int * start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
