@@ -1635,7 +1635,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
+  output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
 }
 
