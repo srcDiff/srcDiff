@@ -611,7 +611,7 @@ void output_white_space_all(struct reader_state & rbuf_old
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // advance whitespace after targeted end
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
     ;
@@ -627,6 +627,7 @@ void output_white_space_all(struct reader_state & rbuf_old
     if(is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
       --nend;
   */
+
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
   
 }
@@ -646,23 +647,18 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
+
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   if(rbuf_old.open_diff.back()->operation != COMMON)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
+
   output_white_space(rbuf_old, rbuf_new, wstate);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
+
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
@@ -682,7 +678,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
 void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 
   struct edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
@@ -1343,12 +1339,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  */
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
@@ -1667,7 +1663,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
 */
 void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new, struct writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   unsigned int begin_old = rbuf_old.last_output;
   unsigned int begin_new = rbuf_new.last_output;
 
@@ -1678,7 +1674,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
     if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
     } else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
@@ -2088,8 +2084,6 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
 void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_old
                    , struct reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state & wstate) {
-
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(operation == DELETE) {
 
