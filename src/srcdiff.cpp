@@ -586,7 +586,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
     ;
 
   // output common tag if needed
-  if(rbuf_old.open_diff.back()->operation != COMMON && oend <= rbuf_old.last_output && nend <= rbuf_new.last_output)
+  if(rbuf_old.open_diff.back()->operation != COMMON && oend > rbuf_old.last_output && nend > rbuf_new.last_output)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   // output common nodes
