@@ -2049,7 +2049,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
 	    && (nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
                  || strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") != 0)
             && (strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") != 0
-                || !(nodes_old->at(*start)->extra & 0x1)); ++start)
+                || !(nodes_old.at(start)->extra & 0x1)); ++start)
             ;
 
         start += 3;
