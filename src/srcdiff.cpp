@@ -618,11 +618,13 @@ void output_white_space_all(struct reader_state & rbuf_old
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     ;
 
-  if(is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
-    --oend;
+  if(oend != rbuf_old.last_output)
+    if(is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
+      --oend;
   
-  if(is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
-    --nend;
+  if(nend != rbuf_new.last_output)
+    if(is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
+      --nend;
 
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
   
