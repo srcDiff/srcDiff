@@ -1660,7 +1660,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       int reach_old = i + 1;
       int reach_new = j + 1;
 
-      for(; j = begin_new; i < oend && j < nend 
+      for(; i < oend && j < nend 
             && is_white_space(nodes_old.at(reach_old)) && is_white_space(nodes_new.at(reach_new))
             && node_compare(nodes_old.at(reach_old), nodes_new.at(reach_new)); ++reach_old, ++reach_new)
             ;
@@ -1852,7 +1852,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  output_white_space_alls(rbuf_old, rbuf_new, wstate);
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
