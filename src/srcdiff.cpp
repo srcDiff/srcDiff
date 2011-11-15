@@ -566,7 +566,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
   it is included and the following nodes are included if they have a new line.
 
 */
-void output_whitespace(struct reader_state & rbuf_old,
+void output_white_space(struct reader_state & rbuf_old,
                    , struct reader_state & rbuf_new,
                    , struct writer_state & wstate) {
 
@@ -590,17 +590,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  // advance whitespace after targeted end
-  if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
-    ++oend;
-
-  if( nend < nodes_new.size() && is_white_space(nodes_new.at(nend)))
-    ++nend;
-
-  for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend)
-    ;
-  for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
-    ;
+  output_white_space(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   if(rbuf_old.open_diff.back()->operation != COMMON)
