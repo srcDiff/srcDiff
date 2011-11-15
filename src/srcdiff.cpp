@@ -2125,7 +2125,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
 
     // could output change here instead
 
-    output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output);
+    output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
 
     //for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
