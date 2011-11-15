@@ -566,12 +566,12 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
   it is included and the following nodes are included if they have a new line.
 
 */
-void output_whitespace(struct reader_state & rbuf_old, unsigned int start_old
-                   , struct reader_state & rbuf_new, unsigned int start_new
+void output_whitespace(struct reader_state & rbuf_old,
+                   , struct reader_state & rbuf_new,
                    , struct writer_state & wstate) {
 
-  unsigned int oend = end_old;
-  unsigned int nend = end_new;
+  unsigned int oend = rbuf_old.last_output;
+  unsigned int nend = rbuf_new.last_output;
 
   // advance whitespace after targeted end
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
