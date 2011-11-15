@@ -1274,12 +1274,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  */
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
@@ -2057,8 +2057,6 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
             break;
 
         start += 3;
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(structure_old->at(start) + 1)->name);
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(structure_new->at(0))->name);
         start_pos = structure_old->at(start) + 1;
         end_pos = structure_old->back();
 
@@ -2092,9 +2090,6 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
     output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
     markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
-
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(rbuf_old.last_output)->name);
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(rbuf_new.last_output)->name);
 
   } else {
 
