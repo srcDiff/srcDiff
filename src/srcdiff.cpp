@@ -1674,7 +1674,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       }
 
-      if(ostart < size_old) {
+      if(ostart < size_old || (i + 1) < reach_old) {
 
 
         if(rbuf_old.open_diff.back()->operation != DELETE)
@@ -1686,14 +1686,12 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         for(i; i < reach_old; ++i)
           output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
-        --i;
-
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       }
 
-      if(nstart < size_new) {
+      if(nstart < size_new || (j + 1) < reach_new) {
 
         if(rbuf_old.open_diff.back()->operation != INSERT)
           output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
