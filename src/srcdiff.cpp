@@ -2046,10 +2046,6 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
     output_white_space_all(rbuf_old, rbuf_new, wstate);
     //markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
 
-    // output diff tag begin
-    if(rbuf_old.open_diff.back()->operation != DELETE)
-      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-
     unsigned int start;
     unsigned int end;
     unsigned int start_pos;
@@ -2104,10 +2100,16 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
 
     }
 
-    for(unsigned int i = rbuf_old.last_output; i < start_pos; ++i)
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+    // output diff tag begin
+    //if(rbuf_old.open_diff.back()->operation != DELETE)
+    //output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-    rbuf_old.last_output = start_pos;
+
+    output_change(rbuf_old, start_pos, rbuf_new, rbuf_new.last_output, wstate);
+    //for(unsigned int i = rbuf_old.last_output; i < start_pos; ++i)
+    //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+
+    //rbuf_old.last_output = start_pos;
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
@@ -2123,10 +2125,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
     output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
     //markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
-    // could output change here instead
-
     output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
-
     //for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
