@@ -1998,8 +1998,6 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
                    , int operation, struct writer_state & wstate) {
 
 
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(structure_old->at(0))->name);
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(structure_new->at(0))->name);
   if(operation == DELETE) {
 
     // may need to markup common that does not output common blocks
