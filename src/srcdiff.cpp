@@ -602,6 +602,8 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
+  output_white_space(rbuf_old, rbuf_new, wstate);
+
 }
 
 /*
@@ -1823,6 +1825,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
+  output_white_space(rbuf_old, rbuf_new, wstate);
 
 }
 
@@ -2086,7 +2089,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       rbuf_old.last_output = structure_old->back() + 1;
       //rbuf_new.last_output = structure_new->back() + 1;
 
-    output_white_space(rbuf_old, rbuf_new, wstate);
+      output_white_space(rbuf_old, rbuf_new, wstate);
 
   } else {
 
