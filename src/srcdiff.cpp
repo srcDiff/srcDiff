@@ -1999,10 +1999,11 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
 
 
   fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(structure_old->at(0))->name);
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(structure_new->at(0))->name);
   if(operation == DELETE) {
 
-  // may need to markup common that does not output common blocks
-  markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
+    // may need to markup common that does not output common blocks
+    markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_old->at(0), wstate);
 
     // output diff tag begin
     if(rbuf_old.open_diff.back()->operation != DELETE)
@@ -2062,7 +2063,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
 
     }
 
-      for(unsigned int i = 0; i < start_pos; ++i)
+      for(unsigned int i = rbuf_old.last_output; i < start_pos; ++i)
         output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
       rbuf_old.last_output = start_pos;
