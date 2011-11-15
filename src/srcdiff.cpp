@@ -2043,7 +2043,8 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
   if(operation == DELETE) {
 
     // may need to markup common that does not output common blocks
-    markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
+    output_white_space_all(rbuf_old, rbuf_new, wstate);
+    //markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
 
     // output diff tag begin
     if(rbuf_old.open_diff.back()->operation != DELETE)
