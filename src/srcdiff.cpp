@@ -557,8 +557,8 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
 }
 
-void output_whitespace(struct reader_state & rbuf_old,
-                   , struct reader_state & rbuf_new,
+void output_whitespace(struct reader_state & rbuf_old
+                   , struct reader_state & rbuf_new
                    , struct writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
