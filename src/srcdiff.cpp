@@ -1998,7 +1998,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
   if(operation == DELETE) {
 
     // may need to markup common that does not output common blocks
-    markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
+    output_white_space(rbuf_old, rbuf_new, wstate);
 
     // output diff tag begin
     if(rbuf_old.open_diff.back()->operation != DELETE)
@@ -2074,7 +2074,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-      markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+    output_white_space(rbuf_old, rbuf_new, wstate);
 
       // could output change here instead
       for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
@@ -2086,7 +2086,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       rbuf_old.last_output = structure_old->back() + 1;
       //rbuf_new.last_output = structure_new->back() + 1;
 
-      markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
+    output_white_space(rbuf_old, rbuf_new, wstate);
 
   } else {
 
