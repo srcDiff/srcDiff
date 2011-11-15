@@ -557,7 +557,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
 }
 
-void output_whitespace(struct reader_state & rbuf_old
+void output_white_space(struct reader_state & rbuf_old
                    , struct reader_state & rbuf_new
                    , struct writer_state & wstate) {
 
@@ -591,7 +591,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
   
-  output_whitespace(rbuf_old, rbuf_new, wstate);
+  output_white_space(rbuf_old, rbuf_new, wstate);
 
   // advance whitespace after targeted end
   if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
@@ -612,7 +612,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
-  output_whitespace(rbuf_old, rbuf_new, wstate);
+  output_white_space(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -1554,8 +1554,8 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
   if(rbuf_old.open_diff.back()->operation != COMMON)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
+  output_white_space(rbuf_old, rbuf_new, wstate);
+  //markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
 
   output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
 
@@ -1834,7 +1834,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  output_whitespace(rbuf_old, rbuf_new, wstate);
+  output_white_space(rbuf_old, rbuf_new, wstate);
 
   /*
   if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
@@ -1852,7 +1852,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
-  output_whitespace(rbuf_old, rbuf_new, wstate);
+  output_white_space(rbuf_old, rbuf_new, wstate);
 
 
 }
