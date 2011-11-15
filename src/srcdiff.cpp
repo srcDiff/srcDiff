@@ -613,7 +613,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  output_white_space(rbuf_old, rbuf_new, wstate);
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   if(rbuf_old.open_diff.back()->operation != COMMON)
@@ -1844,7 +1844,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  output_white_space(rbuf_old, rbuf_new, wstate);
+  output_white_space_alls(rbuf_old, rbuf_new, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
