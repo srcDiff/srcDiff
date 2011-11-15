@@ -1657,12 +1657,12 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       xmlTextWriterWriteRawLen(wstate.writer, content_old, ostart);
 
-      int reach_old = i;
-      int reach_new = j;
+      int reach_old = i + 1;
+      int reach_new = j + 1;
 
       for(; j = begin_new; i < oend && j < nend 
             && is_white_space(nodes_old.at(reach_old)) && is_white_space(nodes_new.at(reach_new))
-            && node_compare(nodes_old.at(reach_old), nodes_new.at(reach_new))
+            && node_compare(nodes_old.at(reach_old), nodes_new.at(reach_new)); ++reach_old, ++reach_new)
             ;
 
       if(ostart < size_old) {
