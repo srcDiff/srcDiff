@@ -28,6 +28,13 @@
 #include "xmlrw.h"
 #include <iostream>
 #include <cstring>
+#include <map>
+#include <string>
+
+typedef std::map<std::string, xmlNode*> NodeMap;
+
+NodeMap starttags;
+NodeMap endtags;
 
 bool operator==(const xmlNode& n1, const xmlNode& n2) {
 
@@ -49,7 +56,36 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
 
 xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
 
-  xmlNode* node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
+  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
+
+  xmlNode* node = 0;
+  if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
+
+    NodeMap::iterator lb = starttags.lower_bound((const char*) curnode->name);
+    if (lb != starttags.end() && !(starttags.key_comp()((const char*) curnode->name, lb->first))) {
+
+      node = lb->second;
+    } else {
+
+      node = xmlCopyNode(curnode, 2);
+      starttags.insert(lb, NodeMap::value_type((const char*) curnode->name, node));
+    }
+
+  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
+
+    NodeMap::iterator lb = endtags.lower_bound((const char*) curnode->name);
+    if (lb != endtags.end() && !(endtags.key_comp()((const char*) curnode->name, lb->first))) {
+
+      node = lb->second;
+    } else {
+
+      node = xmlCopyNode(curnode, 2);
+      endtags.insert(lb, NodeMap::value_type((const char*) curnode->name, node));
+    }
+
+  } else {
+    node = xmlCopyNode(curnode, 2);
+  }
 
   node->type = (xmlElementType) xmlTextReaderNodeType(reader);
 

@@ -41,6 +41,9 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 // diff node comparison function
 int node_compare(xmlNode * node1, xmlNode * node2) {
 
+  if (node1 == node2)
+    return 0;
+
   if(node1->type != node2->type || strcmp((const char *)node1->name, (const char *)node2->name) != 0)
     return 1;
 
