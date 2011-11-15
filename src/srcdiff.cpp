@@ -2152,6 +2152,8 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
+      output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+
       // could output change here instead
       for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
         output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
