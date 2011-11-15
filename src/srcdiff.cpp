@@ -1582,7 +1582,8 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
   }
 
-  markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+  output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+  //markup_whitespace(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
 
   /*
     output_node(rbuf_old, rbuf_new,
