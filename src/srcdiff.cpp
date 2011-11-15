@@ -891,9 +891,6 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
                                   , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
       }
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(rbuf_old.last_output)->name);
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_new.at(rbuf_new.last_output)->name);
-
       // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;
       last_diff_new = edit_next->offset_sequence_two + edit_next->length;
@@ -1999,7 +1996,7 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
 void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_old
                    , struct reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // may need to markup common that does not output common blocks
   markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
 
@@ -2047,6 +2044,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
         --end_pos;
 
       } 
+
     } else {
 
         for(start = 0; start < structure_old->size(); ++start)
