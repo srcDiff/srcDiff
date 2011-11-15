@@ -1646,7 +1646,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
   }
 
-  output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->back()->back()), COMMON, wstate);
+  output_common(rbuf_old, node_sets_old->back()->back(), rbuf_new,  node_sets_new->back()->back(), wstate);
 
     ++rbuf_old.last_output;
     ++rbuf_new.last_output;
@@ -1661,6 +1661,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
     ++rbuf_new.last_output;
   */
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
