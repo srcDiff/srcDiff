@@ -1811,8 +1811,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   }
 
-  rbuf_old.last_output = oend;
-  rbuf_new.last_output = nend;
+  rbuf_old.last_output = oend > rbuf_old.last_output ? oend : rbuf_old.last_output;
+  rbuf_new.last_output = nend > rbuf_new.last_output ? nend : rbuf_new.last_output;
 
 }
 
