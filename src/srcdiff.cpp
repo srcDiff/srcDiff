@@ -593,18 +593,6 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   
   output_white_space(rbuf_old, rbuf_new, wstate);
 
-  // advance whitespace after targeted end
-  if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
-    ++oend;
-
-  if( nend < nodes_new.size() && is_white_space(nodes_new.at(nend)))
-    ++nend;
-
-  for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend)
-    ;
-  for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
-    ;
-
   // output common tag if needed
   if(rbuf_old.open_diff.back()->operation != COMMON)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
@@ -1835,20 +1823,6 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   unsigned int nend = end_new;
 
   output_white_space(rbuf_old, rbuf_new, wstate);
-
-  /*
-  if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
-    ++oend;
-
-  if( nend < nodes_new.size() && is_white_space(nodes_new.at(nend)))
-    ++nend;
-
-  for(; oend < nodes_old.size() && is_new_line(nodes_old.at(oend)); ++oend)
-    ;
-
-  for(; nend < nodes_new.size() && is_new_line(nodes_new.at(nend)); ++nend)
-    ;
-  */
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
