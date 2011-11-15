@@ -647,13 +647,15 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
-
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   if(rbuf_old.open_diff.back()->operation != COMMON)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
@@ -661,7 +663,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
 
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
-  
+
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
 }
@@ -1528,7 +1530,7 @@ void output_unmatched(struct reader_state & rbuf_old, std::vector<std::vector<in
 void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , struct edit * edit_script, struct writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   struct edit * edits = edit_script;
   struct edit * edit_next = edit_script->next;
 
@@ -1598,12 +1600,12 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
                       , struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                       , unsigned int start_new
                       , struct writer_state & wstate) {
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   if(rbuf_old.open_diff.back()->operation != COMMON)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
 
@@ -1613,7 +1615,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
   // compare subset of nodes
 
   if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
       = create_comment_paragraph_set(&nodes_old, node_sets_old->at(start_old)->at(1)
@@ -1624,6 +1626,8 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
                                      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_comment_paragraph(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
 
   }
   else {
@@ -1642,7 +1646,10 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
   }
 
-    output_white_space(rbuf_old, rbuf_new, wstate);
+  output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->back()->back()), COMMON, wstate);
+
+    ++rbuf_old.last_output;
+    ++rbuf_new.last_output;
 
   /*
     output_node(rbuf_old, rbuf_new,
@@ -1653,8 +1660,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
     ++rbuf_old.last_output;
     ++rbuf_new.last_output;
   */
-
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
