@@ -2133,7 +2133,8 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
     rbuf_old.last_output = structure_old->back() + 1;
     //rbuf_new.last_output = structure_new->back() + 1;
 
-    markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
+    output_white_space_all(rbuf_old, rbuf_new, wstate);
+    //markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
 
   } else {
 
