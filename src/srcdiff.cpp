@@ -1715,7 +1715,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         // output diff tag
         xmlTextWriterWriteRawLen(wstate.writer, content_old + ostart, size_old - ostart);
 
-        for(i; i < reach_old; ++i)
+        for(; i < reach_old; ++i)
           output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
         --i;
@@ -1733,7 +1733,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
         xmlTextWriterWriteRawLen(wstate.writer, content_new + nstart, size_new - nstart);
 
-        for(j; j < reach_old; ++j)
+        for(; j < reach_old; ++j)
           output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
 
         --j;
