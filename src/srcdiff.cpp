@@ -646,18 +646,23 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
   output_white_space_all(rbuf_old, rbuf_new, wstate);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // output common tag if needed
   if(rbuf_old.open_diff.back()->operation != COMMON)
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
-
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
   output_white_space(rbuf_old, rbuf_new, wstate);
-
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
@@ -1673,11 +1678,11 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
     if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0) {
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
     } else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       xmlChar * content_old = nodes_old.at(i)->content;
       xmlChar * content_new = nodes_new.at(j)->content;
 
@@ -1887,8 +1892,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   }
 
-  rbuf_old.last_output = oend;
-  rbuf_new.last_output = nend;
+  rbuf_old.last_output = rbuf_old.last_output < oend ? oend : rbuf_old.last_output;
+  rbuf_new.last_output = rbuf_new.last_output < nend ? nend : rbuf_new.last_output;
 
 }
 
