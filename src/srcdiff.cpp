@@ -1633,15 +1633,15 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   unsigned int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
-    if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
+    if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0) {
 
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
-    else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
+    } else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
       xmlChar * content_old = nodes_old.at(i)->content;
       xmlChar * content_new = nodes_new.at(j)->content;
@@ -1725,6 +1725,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       --j;
 
     } else if(is_white_space(nodes_new.at(j))) {
+
 
       if(rbuf_old.open_diff.back()->operation != INSERT)
         output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
@@ -1827,7 +1828,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
     // whitespace delete
     // output diff tag
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     for( ; i < oend; ++i)
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
@@ -1851,7 +1852,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   rbuf_old.last_output = oend;
   rbuf_new.last_output = nend;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 /*
@@ -2126,7 +2127,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-      output_white_space(rbuf_old, rbuf_new, wstate);
+      output_white_space_all(rbuf_old, rbuf_new, wstate);
 
       // could output change here instead
       for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
