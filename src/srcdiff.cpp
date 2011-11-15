@@ -591,7 +591,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
   
-  //  output_whitespace(rbuf_old, rbuf_new, wstate);
+  output_whitespace(rbuf_old, rbuf_new, wstate);
 
   // advance whitespace after targeted end
   if(oend < nodes_old.size() && is_white_space(nodes_old.at(oend)))
