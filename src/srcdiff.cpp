@@ -2162,11 +2162,12 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
         output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
+      rbuf_old.last_output = structure_old->back() + 1;
+
+      output_white_space(rbuf_old, rbuf_new, wstate);
+
       // output diff tag begin
       output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
-
-      rbuf_old.last_output = structure_old->back() + 1;
-      //rbuf_new.last_output = structure_new->back() + 1;
 
       output_white_space_all(rbuf_old, rbuf_new, wstate);
 
