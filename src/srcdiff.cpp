@@ -2005,13 +2005,13 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
     // output diff tag begin
     if(rbuf_old.open_diff.back()->operation != DELETE)
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       unsigned int start;
       unsigned int end;
       unsigned int start_pos;
       unsigned int end_pos;
     if(has_interal_block(structure_old, nodes_old)) {
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
         ;
 
@@ -2043,8 +2043,9 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
         ++start_pos;
         --end_pos;
 
-      } else {
-
+      } 
+    } else {
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         for(start = 0; start < structure_old->size(); ++start)
           if((nodes_old.at(structure_old->at(start))->type == XML_READER_TYPE_END_ELEMENT
               && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") == 0)
@@ -2052,14 +2053,15 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
                  && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") == 0))
             break;
 
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start);
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, structure_old->size());
         start += 3;
 
         start_pos = structure_old->at(start) + 1;
         end_pos = structure_old->back();
 
-      }
     }
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       for(unsigned int i = 0; i < start_pos; ++i)
         output_node(rbuf_old, rbuf_new, nodes_old[i], DELETE, wstate);
 
