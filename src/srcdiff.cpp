@@ -594,10 +594,10 @@ void output_white_space_nested(struct reader_state & rbuf_old
     ;
 
   if(operation == DELETE)
-    for(; oend < nodes_old.size() is_white_space(nodes_old.at(oend)); ++oend) {
+    for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend) {
     }
   else
-    for(; nend < nodes_new.size() is_white_space(nodes_new.at(nend)); ++nend) {
+    for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend) {
     }
 
 
