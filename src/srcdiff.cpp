@@ -2134,7 +2134,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
     output_white_space_all(rbuf_old, rbuf_new, wstate);
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+    //output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
     //rbuf_new.last_output = structure_new->back() + 1;
 
