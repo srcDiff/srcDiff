@@ -1998,6 +1998,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
                    , int operation, struct writer_state & wstate) {
 
 
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(structure_old->at(0))->name);
   if(operation == DELETE) {
 
   // may need to markup common that does not output common blocks
@@ -2055,12 +2056,10 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
         for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") != 0; ++start)
           ;
 
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(structure_old->at(start))->name);
-
         start += 3;
         start_pos = structure_old->at(start) + 1;
         end_pos = structure_old->back();
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     }
 
       for(unsigned int i = 0; i < start_pos; ++i)
@@ -2089,7 +2088,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
       output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       rbuf_old.last_output = structure_old->back() + 1;
-      rbuf_new.last_output = structure_new->back() + 1;
+      //rbuf_new.last_output = structure_new->back() + 1;
 
       markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
 
