@@ -2120,7 +2120,8 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+    //markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
     // could output change here instead
     for(unsigned int i = end_pos; i < (structure_old->back() + 1); ++i)
