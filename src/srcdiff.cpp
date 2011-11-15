@@ -1997,14 +1997,15 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
                    , struct reader_state rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state wstate) {
 
-  output_common(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
+  // may need to markup common that does not output common blocks
+  markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, structure_new->at(0), wstate);
 
   if(operation == DELETE) {
 
     // output diff tag begin
     if(rbuf_old.open_diff.back()->operation != DELETE)
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       unsigned int start;
       unsigned int end;
       unsigned int start_pos;
@@ -2025,7 +2026,7 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
       else
         end_pos += 2;
 
-    } else {
+    } else if(strcmp((const char *)nodes_old.at(structure_old->at(0))->name, "for") != 0){
 
       for(start = 0; start < structure_old->size() 
 	    && (nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
@@ -2042,9 +2043,20 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
         ++start_pos;
         --end_pos;
 
+      } else {
+
+      for(start = 0; start < structure_old->size() 
+	    && (nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
+		|| strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") != 0); ++start)
+          ;
+
+        start += 3;
+
+        start_pos = structure_old->at(start) + 1;
+        end_pos = structure_old->back();
+
       }
     }
-
 
       for(unsigned int i = 0; i < start_pos; ++i)
         output_node(rbuf_old, rbuf_new, nodes_old[i], DELETE, wstate);
@@ -2069,10 +2081,11 @@ void output_nested(struct reader_state rbuf_old, std::vector<int> * structure_ol
 
       rbuf_old.last_output = structure_old->back() + 1;
 
-      output_common(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
-
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+    markup_whitespace(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
+
 
 
   } else {
