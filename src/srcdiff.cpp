@@ -1304,18 +1304,6 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 
   if(open_diffs.back()->operation != operation) {
 
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
-    if(open_diffs.back()->open_tags.size() == 0) {
-
-      open_diffs.pop_back();
-      //issue closing tag
-
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
-    }
-    //fprintf(stderr, "HERE\n");
-
     struct open_diff * new_diff = new struct open_diff;
     new_diff->operation = operation;
 
@@ -1335,6 +1323,15 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
     open_diffs.back()->open_tags.pop_back();
   }
 
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
+  if(open_diffs.back()->open_tags.size() == 0) {
+    open_diffs.pop_back();
+
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
+  }
+  //fprintf(stderr, "HERE\n");
 
 }
 
