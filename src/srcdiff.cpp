@@ -1348,17 +1348,17 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
 
-  static delay = false;
-  static delay_operation = COMMON;
+  static bool delay = false;
+  static int delay_operation = COMMON;
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && delay_operation != operation) {
 
     if(delay_operation == DELETE)
-      outputNode(&diff_old_end, wstate.writer);
+      outputNode(diff_old_end, wstate.writer);
     else if(delay_operation == INSERT)
-      outputNode(&diff_new_end, wstate.writer);
+      outputNode(diff_new_end, wstate.writer);
     else
-      outputNode(&diff_common_end, wstate.writer);
+      outputNode(diff_common_end, wstate.writer);
 
     delay = false;
     delay_operation = COMMON;
