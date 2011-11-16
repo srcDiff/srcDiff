@@ -1372,12 +1372,13 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
     // check if ending a DELETE/INSERT/COMMON tag. if so delay.
 
-    if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
+    /*    if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
 
       delay = true;
       delay_operation = wstate.output_diff.back()->operation;
 
-    } else
+      } else*/
+
       outputNode(*node, wstate.writer);
 
     if(wstate.output_diff.back()->operation == COMMON) {
