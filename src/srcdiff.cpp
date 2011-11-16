@@ -104,9 +104,10 @@ struct writer_state {
 
 };
 
+// tags that can have something nested in them
 const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
-// TODO:  How is an expr_stmt a nest type?  or decl_stmt?
+// tags that can be nested in something else
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
 // create srcdiff unit
