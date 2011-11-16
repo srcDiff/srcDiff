@@ -163,6 +163,8 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
                    , struct reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state & wstate);
 
+void diff_node_init();
+
 void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation, struct writer_state & wstate);
 
 int main(int argc, char * argv[]) {
@@ -342,6 +344,11 @@ int main(int argc, char * argv[]) {
 
   return 0;
 }
+
+void diff_node_init() {
+
+}
+
 
 // converts source code to srcML
 xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {
