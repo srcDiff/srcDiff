@@ -1351,7 +1351,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   static bool delay = false;
   static int delay_operation = COMMON;
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
-  if(delay && delay_operation != operation) {
+  if(0 && delay && delay_operation != operation) {
 
     if(delay_operation == DELETE)
       outputNode(diff_old_end, wstate.writer);
@@ -1370,12 +1370,14 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
       return;
 
     // check if ending a DELETE/INSERT/COMMON tag. if so delay.
+    /*
     if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
 
       delay == true;
       delay_operation = wstate.output_diff.back()->operation;
       return;
-    } else
+    } else {}
+    */
       outputNode(*node, wstate.writer);
 
     if(wstate.output_diff.back()->operation == COMMON) {
