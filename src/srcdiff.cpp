@@ -1373,7 +1373,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
     if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
 
       delay == true;
-      delay_opearation = wstate.output_diff.back()->operation;
+      delay_operation = wstate.output_diff.back()->operation;
       return;
     } else
       outputNode(*node, wstate.writer);
