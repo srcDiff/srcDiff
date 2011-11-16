@@ -180,29 +180,7 @@ int main(int argc, char * argv[]) {
   srcdiff_file = "-";
 
   // TODO: mabe put this in a function  Thought of that as well.
-  diff_common_start.name = (xmlChar *) DIFF_COMMON;
-  diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_common_start.extra = 0;
-
-  diff_common_end.name = (xmlChar *) DIFF_COMMON;
-  diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_common_end.extra = 0;
-
-  diff_old_start.name = (xmlChar *) DIFF_OLD;
-  diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_old_start.extra = 0;
-
-  diff_old_end.name = (xmlChar *) DIFF_OLD;
-  diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_old_end.extra = 0;
-
-  diff_new_start.name = (xmlChar *) DIFF_NEW;
-  diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_new_start.extra = 0;
-
-  diff_new_end.name = (xmlChar *) DIFF_NEW;
-  diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_new_end.extra = 0;
+  diff_node_init();
 
   // TODO: Error handling? Is the return NULL if bad?
   // translate file one
@@ -346,6 +324,30 @@ int main(int argc, char * argv[]) {
 }
 
 void diff_node_init() {
+
+  diff_common_start.name = (xmlChar *) DIFF_COMMON;
+  diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_common_start.extra = 0;
+
+  diff_common_end.name = (xmlChar *) DIFF_COMMON;
+  diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_common_end.extra = 0;
+
+  diff_old_start.name = (xmlChar *) DIFF_OLD;
+  diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_old_start.extra = 0;
+
+  diff_old_end.name = (xmlChar *) DIFF_OLD;
+  diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_old_end.extra = 0;
+
+  diff_new_start.name = (xmlChar *) DIFF_NEW;
+  diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_new_start.extra = 0;
+
+  diff_new_end.name = (xmlChar *) DIFF_NEW;
+  diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_new_end.extra = 0;
 
 }
 
