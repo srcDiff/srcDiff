@@ -179,7 +179,6 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  // TODO: mabe put this in a function  Thought of that as well.
   diff_node_init();
 
   // TODO: Error handling? Is the return NULL if bad?
