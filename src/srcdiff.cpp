@@ -154,8 +154,6 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 
 void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new, struct writer_state & wstate);
 
-void output_char(char character, struct writer_state & wstate);
-
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
 
@@ -1827,7 +1825,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
                 output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_old[opos], DELETE, wstate);
-                //output_char(text_old[opos], wstate);
               }
 
               // output diff tag
@@ -1844,7 +1841,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
                 output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_new[npos], INSERT, wstate);
-                //output_char(text_new[npos], wstate);
               }
 
               // output diff tag
@@ -2029,23 +2025,6 @@ void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & r
 
   output_node(rbuf_old, rbuf_new, &node, operation, wstate);
   
-}
-
-void output_char(char character, struct writer_state & wstate) {
-
-  if(character == '&')
-    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) "&amp;", 5);
-
-  else if (character == '<')
-    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) "&lt;", 4);
-
-  else if (character == '>')
-
-    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) "&gt;", 4);
-
-  else
-    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST (unsigned char*) &character, 1);
-
 }
 
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
