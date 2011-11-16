@@ -470,40 +470,40 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
 // collect an entire tag from open tag to closing tag
 // TODO: Pass int variable start by reference
 // If it has to exist and is not already a pointer, then it should be passed by reference
-void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node_set, int * start) {
+void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node_set, int & start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
 
-  node_set->push_back(*start);
+  node_set->push_back(start);
 
-  if(nodes->at(*start)->extra & 0x1)
+  if(nodes->at(start)->extra & 0x1)
     return;
 
-  ++(*start);
+  ++start;
 
   // track open tags because could have same type nested
   int is_open = 1;
-  for(; is_open; ++(*start)) {
+  for(; is_open; ++start) {
 
     // skip whitespace
-    if(!is_white_space(nodes->at(*start))) {
+    if(!is_white_space(nodes->at(start))) {
 
-      node_set->push_back(*start);
+      node_set->push_back(start);
 
       // opening tags
-      if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_ELEMENT
-         && !(nodes->at(*start)->extra & 0x1))
+      if((xmlReaderTypes)nodes->at(start)->type == XML_READER_TYPE_ELEMENT
+         && !(nodes->at(start)->extra & 0x1))
         ++is_open;
 
       // closing tags
-      else if((xmlReaderTypes)nodes->at(*start)->type == XML_READER_TYPE_END_ELEMENT)
+      else if((xmlReaderTypes)nodes->at(start)->type == XML_READER_TYPE_END_ELEMENT)
         --is_open;
 
     }
 
   }
 
-  --(*start);
+  --start;
 }
 
 // create the node sets for shortest edit script
@@ -536,7 +536,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
         // open tags handle here
       } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-        collect_entire_tag(nodes, node_set, &i);
+        collect_entire_tag(nodes, node_set, i);
 
       } else {
 
