@@ -1375,9 +1375,8 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
       delay == true;
       delay_opearation = wstate.output_diff.back()->operation;
       return;
-    }
-
-    outputNode(*node, wstate.writer);
+    } else
+      outputNode(*node, wstate.writer);
 
     if(wstate.output_diff.back()->operation == COMMON) {
 
