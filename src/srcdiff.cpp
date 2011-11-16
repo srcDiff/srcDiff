@@ -1844,7 +1844,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
                 output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_new[npos], INSERT, wstate);
-                output_char(text_new[npos], wstate);
+                //output_char(text_new[npos], wstate);
               }
 
               // output diff tag
