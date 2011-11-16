@@ -1957,12 +1957,7 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
       for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new)
         ;
       
-      xmlNode text;
-      text.type = (xmlElementType)XML_READER_TYPE_TEXT;
-      text.name = (const xmlChar *)"text";
-      text.content = (xmlChar *)strndup((const char *)content_old, offset_old);
-      
-      output_node(rbuf_old, rbuf_new, &text, COMMON, wstate);
+      output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, offset_old), COMMON, wstate);
       //xmlTextWriterWriteRawLen(wstate.writer, content_old, offset_old);
 
       if(offset_old < size_old) {
