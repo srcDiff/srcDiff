@@ -1809,7 +1809,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         if(text_old[opos] == text_new[npos]) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          output_text_as_node(rbuf_old, rbuf_new, &text_old[opos], COMMON, wstate);
+          output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_old[opos], COMMON, wstate);
 
           ++opos;
           ++npos;
