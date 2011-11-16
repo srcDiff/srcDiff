@@ -2037,7 +2037,7 @@ void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & r
   node.name = (const xmlChar *)"text";
   node.content = text;
 
-  output_node(rbuf_old, rbuf_new, node, operation, wstat);
+  output_node(rbuf_old, rbuf_new, &node, operation, wstate);
   
 }
 
