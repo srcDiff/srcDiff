@@ -1673,6 +1673,15 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       xmlTextWriterWriteRawLen(wstate.writer, content_old, ostart);
 
+      int olength = i + 1;
+      int nlength = j + 1;
+
+      for(olength < oend; is_white_space(nodes_old.at(olength)); ++olength)
+        ;
+
+      for(nlength < nend; is_white_space(nodes_new.at(nlength)); ++nlength)
+
+
       if(ostart < size_old) {
 
 
