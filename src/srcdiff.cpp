@@ -1323,7 +1323,7 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
     open_diffs.back()->open_tags.pop_back();
   }
 
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
   if(open_diffs.back()->open_tags.size() == 0) {
     open_diffs.pop_back();
@@ -1331,6 +1331,7 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
     //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
     //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
   }
+
   //fprintf(stderr, "HERE\n");
 
 }
@@ -1347,10 +1348,14 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
 
+  // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
+
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if(strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
+
+    // check if ending a DELETE/INSERT/COMMON tag. if so delay.
 
     outputNode(*node, wstate.writer);
 
