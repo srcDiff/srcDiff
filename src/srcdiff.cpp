@@ -1713,7 +1713,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         ;
 
       output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
-      //xmlTextWriterWriteRawLen(wstate.writer, content_old, ostart);
 
       int olength = i + 1;
       int nlength = j + 1;
@@ -1731,7 +1730,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
           output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
 	if(ostart < size_old)
-	  xmlTextWriterWriteRawLen(wstate.writer, content_old + ostart, size_old - ostart);
+	        output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old + ostart, size_old - ostart), COMMON, wstate);
+        //xmlTextWriterWriteRawLen(wstate.writer, content_old + ostart, size_old - ostart);
 
 	for(i = i + 1; i < olength; ++i)
 	  output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
@@ -1958,7 +1958,6 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
         ;
       
       output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, offset_old), COMMON, wstate);
-      //xmlTextWriterWriteRawLen(wstate.writer, content_old, offset_old);
 
       if(offset_old < size_old) {
 
