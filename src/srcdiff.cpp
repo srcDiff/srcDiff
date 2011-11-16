@@ -1712,12 +1712,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
         ;
 
-      xmlNode text;
-      text.type = (xmlElementType)XML_READER_TYPE_TEXT;
-      text.name = (const xmlChar *)"text";
-      text.content = (xmlChar *)strndup((const char *)content_old, ostart);
-      
-      output_node(rbuf_old, rbuf_new, &text, COMMON, wstate);
+      output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
       //xmlTextWriterWriteRawLen(wstate.writer, content_old, ostart);
 
       int olength = i + 1;
