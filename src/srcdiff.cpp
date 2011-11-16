@@ -1336,9 +1336,6 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 
 }
 
-bool delay = false;
-int delay_operation = COMMON;
-
 void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlNodePtr node, int operation, struct writer_state & wstate) {
 
   /*
@@ -1350,6 +1347,10 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
+
+static bool delay = false;
+static int delay_operation = COMMON;
+
 
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && delay_operation != operation) {
