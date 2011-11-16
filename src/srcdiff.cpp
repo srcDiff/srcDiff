@@ -1682,26 +1682,26 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
 	;
 
-      if(ostart < size_old) {
+      if(ostart < size_old || (i + 1) < olength) {
 
 
         if(rbuf_old.open_diff.back()->operation != DELETE)
           output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-        // output diff tag
-        xmlTextWriterWriteRawLen(wstate.writer, content_old + ostart, size_old - ostart);
+	if(ostart < size_old)
+	  xmlTextWriterWriteRawLen(wstate.writer, content_old + ostart, size_old - ostart);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       }
 
-      if(nstart < size_new) {
+      if(nstart < size_new || (j + 1) < nlength) {
 
         if(rbuf_old.open_diff.back()->operation != INSERT)
           output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
-        // output diff tag
 
+      if(nstart < size_new)
         xmlTextWriterWriteRawLen(wstate.writer, content_new + nstart, size_new - nstart);
 
         // output diff tag
