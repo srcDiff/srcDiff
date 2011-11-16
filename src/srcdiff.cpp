@@ -1657,7 +1657,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
-    else if(0 && is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
+    else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
       xmlChar * content_old = nodes_old.at(i)->content;
       xmlChar * content_new = nodes_new.at(j)->content;
@@ -1701,7 +1701,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       }
 
       // whitespace change
-    } else if(is_white_space(nodes_old.at(i)) && !is_white_space(nodes_old.at(j))) {
+    } else if(is_white_space(nodes_old.at(i))) {
 
       if(rbuf_old.open_diff.back()->operation != DELETE)
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
@@ -1715,7 +1715,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       --j;
 
-    } else if(is_white_space(nodes_new.at(j)) && !is_white_space(nodes_old.at(i))) {
+    } else if(is_white_space(nodes_new.at(j))) {
 
       if(rbuf_old.open_diff.back()->operation != INSERT)
         output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
