@@ -416,6 +416,21 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
+          xmlChar temp = *characters;
+          *characters = '\0';
+
+          bool is_empty_paren = strcmp((const char *)characters_start, "()") == 0;
+          *characters = temp;
+
+          if(is_empty_paren) {
+
+            const char * content = strndup((const char *)characters_start, 1);
+            text->content = (xmlChar *)content;
+            nodes->push_back(text);
+
+            ++characters_start;
+          }
+
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
 
