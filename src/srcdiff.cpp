@@ -1826,7 +1826,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
               for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-                output_char(text_old[opos], wstate);
+                output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_old[opos], DELETE, wstate);
+                //output_char(text_old[opos], wstate);
               }
 
               // output diff tag
@@ -1842,6 +1843,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
               for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
+                output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_new[npos], INSERT, wstate);
                 output_char(text_new[npos], wstate);
               }
 
