@@ -416,6 +416,19 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
+          if(*charactesr_start == "(" && *(character_start + 1) == ")") {
+
+            xmlNode * atext = new xmlNode;
+            atext->type = (xmlElementType)XML_READER_TYPE_TEXT;
+            atext->name = (const xmlChar *)"text";
+
+            const char * content = strndup((const char *)characters_start, 1);
+            atext->content = (xmlChar *)content;
+            nodes->push_back(atext);
+            ++characters_start;
+
+          }
+
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
 
