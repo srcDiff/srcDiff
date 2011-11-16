@@ -105,7 +105,7 @@ struct writer_state {
 };
 
 // tags that can have something nested in them
-const char * block_types[] = { "block", "if", "else", "while", "for", "function", 0 };
+const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 // tags that can be nested in something else
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
