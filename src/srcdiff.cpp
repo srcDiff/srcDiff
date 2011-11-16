@@ -2031,6 +2031,14 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
 void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation
                          , struct writer_state & wstate) {
+
+  xmlNode node;
+  node.type = (xmlElementType)XML_READER_TYPE_TEXT;
+  node.name = (const xmlChar *)"text";
+  node.content = text;
+
+  output_node(rbuf_old, rbuf_new, node, operation, wstat);
+  
 }
 
 void output_char(char character, struct writer_state & wstate) {
