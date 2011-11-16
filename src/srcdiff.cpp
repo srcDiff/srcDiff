@@ -177,7 +177,7 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  // TODO: mabe put this in a function
+  // TODO: mabe put this in a function  Thought of that as well.
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.extra = 0;
@@ -202,7 +202,7 @@ int main(int argc, char * argv[]) {
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
-  // TODO: Error handling?
+  // TODO: Error handling? Is the return NULL if bad?
   // translate file one
   xmlBuffer * output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
 
@@ -443,6 +443,8 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
 }
 
+const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
+
 // check if node is a indivisable group of three (atomic)
 bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
 
@@ -458,18 +460,9 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
   if(strcmp((const char *)nodes->at(start)->name, (const char *)nodes->at(start + 2)->name) != 0)
     return false;
 
-  // TODO:  Put into array of strings
-  if(strcmp((const char *)nodes->at(start)->name, "name") == 0)
-    return true;
-
-  if(strcmp((const char *)nodes->at(start)->name, "operator") == 0)
-    return true;
-
-  if(strcmp((const char *)nodes->at(start)->name, "literal") == 0)
-    return true;
-
-  if(strcmp((const char *)nodes->at(start)->name, "modifier") == 0)
-    return true;
+  for(int i = 0; atomic[i]; ++i)
+    if(strcmp((const char *)nodes->at(start)->name, atomic[i]) == 0)
+      return true;
 
   return false;
 }
