@@ -416,7 +416,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
-          if(*characters_start == "(" && *(characters_start + 1) == ")") {
+          if((*characters_start) == "(" && (*(characters_start + 1)) == ")") {
 
             xmlNode * atext = new xmlNode;
             atext->type = (xmlElementType)XML_READER_TYPE_TEXT;
