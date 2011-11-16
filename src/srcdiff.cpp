@@ -165,6 +165,8 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
                    , struct reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state & wstate);
 
+void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation, struct writer_state & wstate);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
@@ -2025,6 +2027,10 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
   }
 
+}
+
+void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation
+                         , struct writer_state & wstate) {
 }
 
 void output_char(char character, struct writer_state & wstate) {
