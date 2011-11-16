@@ -1519,7 +1519,7 @@ void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<i
   struct edit * edits = edit_script;
   struct edit * edit_next = edit_script->next;
 
-  struct offset_pair * matches;
+  struct offset_pair * matches = NULL;
 
   match_differences(node_sets_old, node_sets_new, edit_script, &matches);
 
