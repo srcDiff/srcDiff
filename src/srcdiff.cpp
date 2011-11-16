@@ -1350,7 +1350,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, delay_operation);
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && delay_operation != operation) {
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1374,7 +1374,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
     if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
       fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-      delay == true;
+      delay = true;
       delay_operation = wstate.output_diff.back()->operation;
 
     } else
