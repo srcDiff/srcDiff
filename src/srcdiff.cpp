@@ -645,7 +645,7 @@ void output_white_space_most(struct reader_state & rbuf_old
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // advance whitespace after targeted end
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
     ;
@@ -653,14 +653,13 @@ void output_white_space_most(struct reader_state & rbuf_old
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     ;
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+
   if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
     --oend;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
 
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
