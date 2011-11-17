@@ -1359,7 +1359,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   static int delay_operation = -2;
 
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
-  if(delay && delay_operation != operation) {
+  if(delay && (delay_operation != operation || !is_white_space(node))) {
 
     if(delay_operation == DELETE) {
 
