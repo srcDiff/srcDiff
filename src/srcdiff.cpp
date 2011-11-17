@@ -645,20 +645,23 @@ void output_white_space_most(struct reader_state & rbuf_old
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // advance whitespace after targeted end
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
     ;
 
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     ;
-
-  if(rbuf_old.last_output < (oend - 1) && is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.last_output);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, oend);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nend);
+  if(rbuf_old.last_output < (oend - 1) && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
     --oend;
 
-  if(rbuf_new.last_output < (nend - 1) && is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
+  if(rbuf_new.last_output < (nend - 1) && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
@@ -1641,7 +1644,7 @@ void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<i
     if(matches->similarity == MIN) {
 
 
-        output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+      output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
 
       markup_whitespace(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
