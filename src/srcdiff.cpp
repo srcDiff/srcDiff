@@ -1366,26 +1366,26 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
       outputNode(diff_old_end, wstate.writer);
 
-      update_diff_stack(rbuf_old.open_diff, diff_old_end, DELETE);
+      update_diff_stack(rbuf_old.open_diff, &diff_old_end, DELETE);
 
-      update_diff_stack(wstate.output_diff, diff_old_end, DELETE);
+      update_diff_stack(wstate.output_diff, &diff_old_end, DELETE);
 
     } else if(delay_operation == INSERT) {
 
       outputNode(diff_new_end, wstate.writer);
 
-      update_diff_stack(rbuf_new.open_diff, diff_new_end, INSERT);
+      update_diff_stack(rbuf_new.open_diff, &diff_new_end, INSERT);
 
-      update_diff_stack(wstate.output_diff, diff_new_end, INSERT);
+      update_diff_stack(wstate.output_diff, &diff_new_end, INSERT);
 
     } else {
 
       outputNode(diff_common_end, wstate.writer);
 
-      update_diff_stack(rbuf_old.open_diff, node, COMMON);
-      update_diff_stack(rbuf_new.open_diff, node, COMMON);
+      update_diff_stack(rbuf_old.open_diff, &diff_common_end, COMMON);
+      update_diff_stack(rbuf_new.open_diff, &diff_common_end, COMMON);
 
-      update_diff_stack(wstate.output_diff, node, COMMON);
+      update_diff_stack(wstate.output_diff, &diff_common_end, COMMON);
 
     }
 
