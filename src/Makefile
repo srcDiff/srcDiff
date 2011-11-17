@@ -45,7 +45,12 @@ endif
 
 #libsrcml include
 LIBSRCML_INCLUDE = -I ../include/
+ifdef MINGW32
+LIBSRCML_LIB = ${DLL_DIR}/libsrcml.dll
+else
 LIBSRCML_LIB = -L ../bin/ -lsrcml
+endif
+
 
 # project dirs
 EXE_DIR = ../bin/
@@ -73,7 +78,7 @@ $(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffUtility.o  $(OBJ_DIR)sh
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(EXE_DIR)srcdiff.exe : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) ../bin/libsrcml.dll $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
 	${CXX} -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@
