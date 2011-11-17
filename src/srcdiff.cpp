@@ -637,10 +637,10 @@ void output_white_space_all(struct reader_state & rbuf_old
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     nadvanced = true;
 
-  if(oend > 0 && is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
+  if(oadvanced && is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
     --oend;
 
-  if(nend > 0 && is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
+  if(nodvanced && is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
     --nend;
 
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
