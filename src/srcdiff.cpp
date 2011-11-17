@@ -647,14 +647,15 @@ void output_white_space_match_most(struct reader_state & rbuf_old
                                    , struct reader_state & rbuf_new
                                    , int operation
                                    , struct writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
 
   // advance whitespace after targeted end
 
   for(; oend < nodes_old.size() && nend < nodes_new.size()
-        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend)); ++oend, ++nend)
+        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
+        && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
         ;
 
   if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
@@ -704,7 +705,7 @@ void output_white_space_most(struct reader_state & rbuf_old
 void output_common(struct reader_state & rbuf_old, unsigned int end_old
                    , struct reader_state & rbuf_new, unsigned int end_new
                    , struct writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
@@ -1397,12 +1398,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
 
   static bool delay = false;
