@@ -856,7 +856,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
       case DELETE:
 
         //fprintf(stderr, "HERE\n");
-        output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1,
+        output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                                           , rbuf_new, 0, DELETE, wstate);
 
         // update for common
