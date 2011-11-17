@@ -628,19 +628,35 @@ void output_white_space_all(struct reader_state & rbuf_old
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
 
-  bool oadvanced = false;
   // advance whitespace after targeted end
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
-    oadvanced = true;
+    ;
 
-  bool nadvanced = false;
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
-    nadvanced = true;
+    ;
 
-  if(oadvanced && rbuf_old.last_output < (oend - 1) && is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
+
+}
+
+void output_white_space_all(struct reader_state & rbuf_old
+                            , struct reader_state & rbuf_new
+                            , struct writer_state & wstate) {
+
+  unsigned int oend = rbuf_old.last_output;
+  unsigned int nend = rbuf_new.last_output;
+
+  // advance whitespace after targeted end
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
+    ;
+
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
+    ;
+
+  if(rbuf_old.last_output < (oend - 1) && is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
     --oend;
 
-  if(nadvanced && rbuf_new.last_output < (nend - 1) && is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
+  if(rbuf_new.last_output < (nend - 1) && is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
     --nend;
 
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
