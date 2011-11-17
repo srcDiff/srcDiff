@@ -1636,8 +1636,6 @@ void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<i
       output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                        , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate);
 
-      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
-
     } else {
 
       output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1,
@@ -1923,7 +1921,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
 
     // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_new_end, DELETE, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
   }
 
