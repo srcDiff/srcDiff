@@ -1442,10 +1442,11 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     int current_operation = wstate.output_diff.back()->operation;
+    int size = wstate.output_diff.back()->open_tags.size();
 
-    if((*node == diff_old_start && current_operation == DELETE)
-       || (*node == diff_new_start && current_operation == INSERT)
-       || (*node == diff_common_start && current_operation == COMMON)) {
+    if(size > 0 && ((*node == diff_old_start && current_operation == DELETE)
+                    || (*node == diff_new_start && current_operation == INSERT)
+                    || (*node == diff_common_start && current_operation == COMMON))) {
 
       return;
     }
