@@ -514,7 +514,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
       //else
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
 
-      if(strcmp((const xmlChar *)nodes->at(start)->name, "incr") == 0)
+      if(strcmp((const char *)nodes->at(start)->name, "incr") == 0)
         fprintf(stderr, "HERE\n");;
 
       node_set->push_back(start);
