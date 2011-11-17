@@ -512,10 +512,8 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
       //      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
       //else
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
-
-      if(strcmp((const char *)nodes->at(start)->name, "incr") == 0)
-        fprintf(stderr, "HERE\n");;
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nodes->at(start)->extra & 0x1);
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
 
       node_set->push_back(start);
 
