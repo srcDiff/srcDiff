@@ -297,9 +297,11 @@ int main(int argc, char * argv[]) {
   xmlBufferFree(output_file_two);
 
   // group nodes
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
+ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // run on file level
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
@@ -544,16 +546,6 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
         node_set->push_back(i);
 
-        // a base case of sorts
-      } else if(is_atomic_srcml(nodes, i)) {
-
-        node_set->push_back(i);
-        node_set->push_back(i + 1);
-        node_set->push_back(i + 2);
-
-        i += 2;
-
-        // open tags handle here
       } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
 
         collect_entire_tag(nodes, node_set, i);
@@ -1347,12 +1339,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-
+  */
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
+
 
   static bool delay = false;
   static int delay_operation = -2;
