@@ -512,8 +512,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
       //      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
       //else
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nodes->at(start)->extra & 0x1);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
 
       node_set->push_back(start);
 
@@ -548,14 +547,14 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
+        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
         node_set->push_back(i);
 
       } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
+
+        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
         collect_entire_tag(nodes, node_set, i);
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
       } else {
 
