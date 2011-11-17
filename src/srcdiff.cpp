@@ -653,7 +653,8 @@ void output_white_space_match_most(struct reader_state & rbuf_old
 
   // advance whitespace after targeted end
 
-  for(; oend < nodes_old.size() && nend < nodes_new.size() && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend); ++oend, ++nend)
+  for(; oend < nodes_old.size() && nend < nodes_new.size()
+        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend)); ++oend, ++nend)
         ;
 
   if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
