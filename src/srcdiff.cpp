@@ -297,11 +297,10 @@ int main(int argc, char * argv[]) {
   xmlBufferFree(output_file_two);
 
   // group nodes
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
- fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // run on file level
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
