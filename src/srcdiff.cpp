@@ -640,7 +640,7 @@ void output_white_space_all(struct reader_state & rbuf_old
   if(oadvanced && is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1)))
     --oend;
 
-  if(ndvanced && is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
+  if(nadvanced && is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1)))
     --nend;
 
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
