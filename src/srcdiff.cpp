@@ -1034,8 +1034,8 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
       case INSERT:
 
         //fprintf(stderr, "HERE\n");
-        output_change_white_space(rbuf_old, 0
-                                  , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
+        output_pure_operation_white_space(rbuf_old, 0
+                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, INSERT, wstate);
         // update for common
         last_diff_old = edits->offset_sequence_one + 1;
         last_diff_new = edits->offset_sequence_two + edits->length;
@@ -1045,8 +1045,8 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
       case DELETE:
 
         //fprintf(stderr, "HERE\n");
-        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                  , rbuf_new, 0, wstate);
+        output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+                                          , rbuf_new, 0, DELETE, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
