@@ -1731,7 +1731,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
-    else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
+    else if(0 && is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
       xmlChar * content_old = nodes_old.at(i)->content;
       xmlChar * content_new = nodes_new.at(j)->content;
@@ -1967,7 +1967,7 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
   if(end_old > begin_old && end_new > begin_new) {
 
-    if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
+    if(0 && is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
       xmlChar * content_old = nodes_old.at(begin_old)->content;
       xmlChar * content_new = nodes_new.at(begin_new)->content;
