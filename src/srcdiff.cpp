@@ -489,7 +489,6 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
 }
 
 // collect an entire tag from open tag to closing tag
-// TODO: Pass int variable start by reference
 // If it has to exist and is not already a pointer, then it should be passed by reference
 void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node_set, int & start) {
 
