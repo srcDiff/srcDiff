@@ -839,7 +839,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
       case INSERT:
 
         //fprintf(stderr, "HERE\n");
-        output_change_white_space(rbuf_old, 0
+        output_pure_operation_white_space(rbuf_old, 0
                                   , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
 
@@ -852,7 +852,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
       case DELETE:
 
         //fprintf(stderr, "HERE\n");
-        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+        output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                                   , rbuf_new, 0, wstate);
 
         // update for common
@@ -2101,9 +2101,9 @@ void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned 
   unsigned int nend = end_new;
 
   if(operation == DELETE)
-    output_white_space_most_single(rbuf_old, rbuf_new, operation, wstate);
+    output_white_space_single_most(rbuf_old, rbuf_new, operation, wstate);
   if(operation == INSERT)
-    output_white_space_most_single(rbuf_old, rbuf_new, operation, wstate);
+    output_white_space_single_most(rbuf_old, rbuf_new, operation, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
