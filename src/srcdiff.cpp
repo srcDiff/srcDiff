@@ -652,7 +652,7 @@ void output_white_space_pure_statement_end(struct reader_state & rbuf_old
   unsigned int nend = rbuf_new.last_output;
 
   // advance whitespace after targeted end
-  if(opreation == DELETE)
+  if(operation == DELETE)
     if(oend < nodes_old.size() && is_new_line(nodes_old.at(oend)))
       ++oend;
   if(operation == INSERT)
@@ -667,7 +667,7 @@ void output_white_space_match_most(struct reader_state & rbuf_old
                                    , struct reader_state & rbuf_new
                                    , int operation
                                    , struct writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
 
