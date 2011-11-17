@@ -1968,7 +1968,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
+  output_white_space_most(rbuf_old, rbuf_new, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
