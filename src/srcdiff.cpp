@@ -1750,8 +1750,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
 
-      int olength = i + 1;
-      int nlength = j + 1;
+      unsigned int olength = i + 1;
+      unsigned int nlength = j + 1;
 
       for(; olength < oend && is_white_space(nodes_old.at(olength)); ++olength)
         ;
