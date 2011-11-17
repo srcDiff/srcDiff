@@ -2128,13 +2128,12 @@ void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  if(operation == DELETE)
-    output_white_space_match_most(rbuf_old, rbuf_new, operation, wstate);
-  if(operation == INSERT)
-    output_white_space_match_most(rbuf_old, rbuf_new, operation, wstate);
+  output_white_space_match_most(rbuf_old, rbuf_new, operation, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
-
+ 
+  output_white_space_pure_statement(rbuf_old, rbuf_new, operation, wstate);
+    
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
 }
