@@ -639,6 +639,33 @@ void output_white_space_all(struct reader_state & rbuf_old
 
 }
 
+void output_white_space_single_most(struct reader_state & rbuf_old
+                                    , struct reader_state & rbuf_new
+                                    , int operation
+                                    , struct writer_state & wstate) {
+
+  unsigned int oend = rbuf_old.last_output;
+  unsigned int nend = rbuf_new.last_output;
+
+  // advance whitespace after targeted end
+
+  if(operation == DELETE)
+    for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
+      ;
+  else
+    for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
+      ;
+
+  if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
+    --oend;
+
+  if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
+    --nend;
+
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
+
+}
+
 void output_white_space_most(struct reader_state & rbuf_old
                             , struct reader_state & rbuf_new
                             , struct writer_state & wstate) {
@@ -2067,13 +2094,16 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 }
 
 void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned int end_old
-                               , struct reader_state & rbuf_new, unsigned int end_new
-                               , struct writer_state & wstate) {
+                                       , struct reader_state & rbuf_new, unsigned int end_new
+                                       , int operation, struct writer_state & wstate) {
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  output_white_space_most(rbuf_old, rbuf_new, wstate);
+  if(operation == DELETE)
+    output_white_space_most_single(rbuf_old, rbuf_new, operation, wstate);
+  if(operation == INSERT)
+    output_white_space_most_single(rbuf_old, rbuf_new, operation, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
