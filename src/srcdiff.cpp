@@ -509,7 +509,10 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
 
     // skip whitespace
     if(!is_white_space(nodes->at(start))) {
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
+      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
+        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
+    else
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
 
       node_set->push_back(start);
 
@@ -1342,11 +1345,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-  */
+
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  */
 
 
   static bool delay = false;
