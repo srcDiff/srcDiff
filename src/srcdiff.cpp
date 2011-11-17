@@ -639,7 +639,7 @@ void output_white_space_all(struct reader_state & rbuf_old
 
 }
 
-void output_white_space_all(struct reader_state & rbuf_old
+void output_white_space_most(struct reader_state & rbuf_old
                             , struct reader_state & rbuf_new
                             , struct writer_state & wstate) {
 
