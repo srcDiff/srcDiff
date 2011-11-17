@@ -1867,7 +1867,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
             if(isspace(text_new[npos])) {
 
-                output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
+                output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
               for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
