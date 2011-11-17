@@ -543,10 +543,11 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_TEXT) {
-        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
+        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
         node_set->push_back(i);
 
       } else if((xmlReaderTypes)nodes->at(i)->type == XML_READER_TYPE_ELEMENT) {
+        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
         collect_entire_tag(nodes, node_set, i);
 
