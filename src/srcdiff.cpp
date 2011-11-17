@@ -89,7 +89,7 @@ struct open_diff {
 struct reader_state {
 
   int stream_source;
-  int last_output;
+  unsigned int last_output;
 
   // just a pointer not on stack
   std::vector<struct open_diff *> open_diff;
@@ -1742,8 +1742,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       int size_old = strlen((const char *)content_old);
       int size_new = strlen((const char *)content_new);
 
-      unsigned int ostart = 0;
-      unsigned int nstart = 0;
+      int ostart = 0;
+      int nstart = 0;
 
       for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
         ;
