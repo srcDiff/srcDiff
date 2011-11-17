@@ -2066,6 +2066,22 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
 }
 
+void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned int end_old
+                               , struct reader_state & rbuf_new, unsigned int end_new
+                               , struct writer_state & wstate) {
+
+  unsigned int oend = end_old;
+  unsigned int nend = end_new;
+
+  output_white_space_most(rbuf_old, rbuf_new, wstate);
+
+  output_change(rbuf_old, oend, rbuf_new, nend, wstate);
+
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+}
+
+
 void output_pure_operation(struct reader_state & rbuf_old, unsigned int end_old
                    , struct reader_state & rbuf_new, unsigned int end_new
                    , struct writer_state & wstate) {
