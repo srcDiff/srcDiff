@@ -1346,31 +1346,32 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 
 void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlNodePtr node, int operation, struct writer_state & wstate) {
 
-  /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
+  /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
   static bool delay = false;
-  static int delay_operation = COMMON;
+  static int delay_operation = -2;
 
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && delay_operation != operation) {
 
-    if(delay_operation == DELETE)
+    if(delay_operation == DELETE) {
       outputNode(diff_old_end, wstate.writer);
-    else if(delay_operation == INSERT)
+    } else if(delay_operation == INSERT) {
       outputNode(diff_new_end, wstate.writer);
-    else
+    } else {
       outputNode(diff_common_end, wstate.writer);
+    }
 
     delay = false;
-    delay_operation = COMMON;
+    delay_operation = -2;
   }
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
@@ -1380,14 +1381,13 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
     // check if ending a DELETE/INSERT/COMMON tag. if so delay.
 
-    /*    if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
+   if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
 
       delay = true;
-      delay_operation = wstate.output_diff.back()->operation;
-
-      } else*/
-
-      outputNode(*node, wstate.writer);
+      delay_operation = operation;
+      return;
+   } else
+     outputNode(*node, wstate.writer);
 
     if(wstate.output_diff.back()->operation == COMMON) {
 
