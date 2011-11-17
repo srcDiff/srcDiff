@@ -1778,7 +1778,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       if(nstart < size_new || (j + 1) < nlength) {
 
-          output_node(rbuf_new, rbuf_new, &diff_new_start, INSERT, wstate);
+          output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
       if(nstart < size_new)
           output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_new + nstart, size_new - nstart), INSERT, wstate);
