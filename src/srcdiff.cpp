@@ -2066,6 +2066,88 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
 }
 
+void output_pure_operation(struct reader_state & rbuf_old, unsigned int end_old
+                   , struct reader_state & rbuf_new, unsigned int end_new
+                   , struct writer_state & wstate) {
+
+  unsigned int begin_old = rbuf_old.last_output;
+  unsigned int begin_new = rbuf_new.last_output;
+
+  if(end_old > begin_old && end_new > begin_new) {
+
+    if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
+
+      xmlChar * content_old = nodes_old.at(begin_old)->content;
+      xmlChar * content_new = nodes_new.at(begin_new)->content;
+
+      int size_old = strlen((const char *)content_old);
+      int size_new = strlen((const char *)content_new);
+
+      int offset_old = 0;
+      int offset_new = 0;
+
+      for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new)
+        ;
+      
+      output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, offset_old), COMMON, wstate);
+
+      if(offset_old < size_old) {
+
+        // shrink
+        nodes_old.at(begin_old)->content = content_old + offset_old;
+        //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
+
+      } else {
+
+        nodes_old.at(begin_old)->content = (xmlChar *)"";
+      }
+
+      if(offset_new < size_new) {
+
+        nodes_new.at(begin_new)->content = content_new + offset_new;
+
+      } else {
+
+        nodes_new.at(begin_new)->content = (xmlChar *)"";
+      }
+
+
+    }
+
+  }
+
+  if(end_old > begin_old) {
+
+    // output diff tag begin
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+
+    for(unsigned int i = begin_old; i < end_old; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+    rbuf_old.last_output = end_old;
+
+  }
+
+  if(end_new > begin_new) {
+
+    // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+
+    for(unsigned int i = begin_new; i < end_new; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+
+    rbuf_new.last_output = end_new;
+
+  }
+
+}
+
 void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation
                          , struct writer_state & wstate) {
 
