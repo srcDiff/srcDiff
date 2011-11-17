@@ -1742,8 +1742,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       int size_old = strlen((const char *)content_old);
       int size_new = strlen((const char *)content_new);
 
-      int ostart = 0;
-      int nstart = 0;
+      unsigned int ostart = 0;
+      unsigned int nstart = 0;
 
       for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
         ;
