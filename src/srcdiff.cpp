@@ -1366,15 +1366,15 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 
 void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlNodePtr node, int operation, struct writer_state & wstate) {
 
-  /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
+  /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
 
   static bool delay = false;
@@ -1382,7 +1382,7 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)) {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(delay_operation == DELETE) {
 
       outputNode(diff_old_end, wstate.writer);
@@ -1756,7 +1756,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
-    else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
+    else if(0 && is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
       xmlChar * content_old = nodes_old.at(i)->content;
       xmlChar * content_new = nodes_new.at(j)->content;
@@ -1971,9 +1971,9 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   output_white_space_most(rbuf_old, rbuf_new, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
-
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(rbuf_old.last_output)->content);
   output_white_space_all(rbuf_old, rbuf_new, wstate);
-
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes_old.at(rbuf_old.last_output)->content);
 
 }
 
@@ -2067,6 +2067,9 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
 void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation
                          , struct writer_state & wstate) {
+
+  if(strlen((char *)text) == 0)
+    return;
 
   xmlNode node;
   node.type = (xmlElementType)XML_READER_TYPE_TEXT;
