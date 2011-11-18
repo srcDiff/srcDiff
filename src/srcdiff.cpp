@@ -1820,22 +1820,23 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       unsigned int olength = oend;
       unsigned int nlength = nend;
 
-      for(; olength < oend; is_white_space(nodes_old.at(olength)); ++olength)
+      for(; olength < oend && is_white_space(nodes_old.at(olength)); ++olength)
         ;
 
-      for(; nlength < nend; is_white_space(nodes_new.at(nlength)); ++nlength)
+      for(; nlength < nend&& is_white_space(nodes_new.at(nlength)); ++nlength)
         ;
 
       unsigned int opivot = olength - 1;
       unsigned int npivot = nlength - 1;
 
-      for(; opivot > i; npivot > j; node_compare(nodes_old.at(opivot), nodes_new.at(npivot)); --opivot, --npivto)
+      for(; opivot > i && npivot > j && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)); --opivot, --npivot)
         ;
 
       if(opivot < i || npivot < j) {
 
         opivot = olength;
         npivot = nlength;
+
       } else if(
 
         xmlChar * content_old = nodes_old.at(i)->content;
