@@ -2002,6 +2002,18 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
 }
 
+output_white_space_prefix(struct reader_state & rbuf_old, unsigned int end_old
+                               , struct reader_state & rbuf_new, unsigned int end_new
+                               , struct writer_state & wstate) {
+
+}
+
+output_white_space_suffix(struct reader_state & rbuf_old, unsigned int end_old
+                               , struct reader_state & rbuf_new, unsigned int end_new
+                               , struct writer_state & wstate) {
+
+}
+
 /*
 
   Adds whitespace to a change. Then outputs the change.
