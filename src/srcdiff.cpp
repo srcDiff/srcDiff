@@ -2002,13 +2002,24 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
 }
 
-output_white_space_prefix(struct reader_state & rbuf_old, unsigned int end_old
+void output_white_space_prefix(struct reader_state & rbuf_old, unsigned int end_old
                                , struct reader_state & rbuf_new, unsigned int end_new
                                , struct writer_state & wstate) {
 
+  for(; oend < nodes_old.size() && nend < nodes_new.size()
+        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
+        && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
+        ;
+
+  if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
+    --oend;
+
+  if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
+    --nend;
+
 }
 
-output_white_space_suffix(struct reader_state & rbuf_old, unsigned int end_old
+void output_white_space_suffix(struct reader_state & rbuf_old, unsigned int end_old
                                , struct reader_state & rbuf_new, unsigned int end_new
                                , struct writer_state & wstate) {
 
