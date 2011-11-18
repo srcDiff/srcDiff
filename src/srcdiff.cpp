@@ -2056,8 +2056,8 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     ;
 
-  unsigned int opivot = ostart == oend ? oend : oend - 1;
-  unsigned int npivot = nstart == nend ? nend : nend - 1;
+  unsigned int opivot = oend - 1;
+  unsigned int npivot = nend - 1;
 
   for(; opivot > ostart && npivot > nstart
         && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
@@ -2065,12 +2065,8 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 
   if(opivot < ostart || npivot < nstart) {
 
-    if(opivot < ostart)
-      opivot = ostart;
-
-    if(npivot < nstart)
-      npivot = nstart;
-
+      opivot = oend;
+      npivot = nend;
     
   } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
       ++opivot;
