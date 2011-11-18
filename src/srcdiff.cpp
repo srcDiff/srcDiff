@@ -1844,12 +1844,12 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       }
 
       /*
-
         if(i < opivot) {
 
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-        output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+        for(int k = i; k < opivot; ++k)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
@@ -1862,7 +1862,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         //whitespace insert
         // output diff tag
 
-        output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
+        for(int k = j; k < npivot; ++k)
+        output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
@@ -1875,13 +1876,16 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         //whitespace insert
         // output diff tag
 
-        output_node(rbuf_old, rbuf_new, nodes_old.at(opivot), COMMON, wstate);
+        for(int k = opivot; k < olength; ++k)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
         }
 
+        i = olength - 1;
+        j = nlength - 1;
 
        */
 
