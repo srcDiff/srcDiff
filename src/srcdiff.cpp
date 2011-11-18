@@ -2061,13 +2061,16 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 
   for(; opivot > ostart && npivot > nstart
         && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-    ;
+      ;
 
+  if(opivot < ostart || npivot < nstart) {
 
-  if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
-    ++opivot;
-    ++npivot;
-  }
+    
+  } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
+      ++opivot;
+      ++npivot;
+    }
+
 
   /*
   // may only match here, but belongs as part of pure change
