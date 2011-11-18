@@ -1852,9 +1852,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         int ostart = 0;
         int nstart = 0;
 
-        int opivot = size_old;
-        int npivot = size_new;
-
         for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
         ;
 
