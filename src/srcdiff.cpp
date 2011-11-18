@@ -640,17 +640,17 @@ void output_white_space_all(struct reader_state & rbuf_old
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
-  
+
   // advance whitespace after targeted end
   for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
     ;
-  
+
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     ;
-    
+
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
-  
- }
+
+}
 
 void output_white_space_pure_statement_end(struct reader_state & rbuf_old
                                            , struct reader_state & rbuf_new
@@ -685,7 +685,7 @@ void output_white_space_match_most(struct reader_state & rbuf_old
   for(; oend < nodes_old.size() && nend < nodes_new.size()
         && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
         && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
-        ;
+    ;
 
   if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
     --oend;
@@ -698,8 +698,8 @@ void output_white_space_match_most(struct reader_state & rbuf_old
 }
 
 void output_white_space_most(struct reader_state & rbuf_old
-                            , struct reader_state & rbuf_new
-                            , struct writer_state & wstate) {
+                             , struct reader_state & rbuf_new
+                             , struct writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
@@ -741,7 +741,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
-    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
@@ -826,27 +826,27 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
         } else {
 
           /*
-          if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
-                         , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
+            if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
+            , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
 
             //output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
             //              , INSERT, wstate);
             // syntax mismatch
             output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+            , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
 
-          } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
-                                     , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
+            } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
+            , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
-                          , DELETE, wstate);
+            , DELETE, wstate);
 
-          } else {
+            } else {
           */
-            // syntax mismatch
-            output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
-            //          }
+          // syntax mismatch
+          output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                                    , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+          //          }
 
         }
 
@@ -871,7 +871,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, 0
-                                  , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, 
+                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1,
                                           INSERT, wstate);
 
 
@@ -885,7 +885,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                  , rbuf_new, 0, DELETE, wstate);
+                                          , rbuf_new, 0, DELETE, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
@@ -1199,7 +1199,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                  , rbuf_new, 0, DELETE, wstate);
+                                          , rbuf_new, 0, DELETE, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
@@ -1481,14 +1481,14 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
     // check if ending a DELETE/INSERT/COMMON tag. if so delay.
 
 
-   if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
+    if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
 
       delay = true;
       delay_operation = wstate.output_diff.back()->operation;
       return;
 
-   } else
-     outputNode(*node, wstate.writer);
+    } else
+      outputNode(*node, wstate.writer);
 
     if(wstate.output_diff.back()->operation == COMMON) {
 
@@ -1745,7 +1745,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
                       , unsigned int start_new
                       , struct writer_state & wstate) {
 
-    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   //markup_whitespace(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
@@ -1818,22 +1818,22 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
       /*
-      xmlChar * content_old = nodes_old.at(i)->content;
-      xmlChar * content_new = nodes_new.at(j)->content;
+        xmlChar * content_old = nodes_old.at(i)->content;
+        xmlChar * content_new = nodes_new.at(j)->content;
 
-      int size_old = strlen((const char *)content_old);
-      int size_new = strlen((const char *)content_new);
+        int size_old = strlen((const char *)content_old);
+        int size_new = strlen((const char *)content_new);
 
-      int ostart = 0;
-      int nstart = 0;
+        int ostart = 0;
+        int nstart = 0;
 
-      int opivot = size_old;
-      int npivot = size_new;
+        int opivot = size_old;
+        int npivot = size_new;
 
-      for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
+        for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
         ;
 
-      output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
+        output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
       */
       unsigned int olength = i + 1;
       unsigned int nlength = j + 1;
@@ -1842,7 +1842,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         ;
 
       for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
-	;
+        ;
 
       unsigned int opivot = oend - 1;
       unsigned int npivot = nend - 1;
@@ -1852,88 +1852,88 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         ;
 
       if(opivot < ostart || npivot < nstart) {
-    
+
         opivot = oend;
         npivot = nend;
-    
+
       } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
         ++opivot;
         ++npivot;
       }
 
-  if(ostart < opivot) {
+      if(ostart < opivot) {
 
-  // output delete
-    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+        // output delete
+        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-  for(unsigned int i = ostart; i < opivot; ++i)
-    output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
-  
-  // output diff tag begin
-  output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+        for(unsigned int i = ostart; i < opivot; ++i)
+          output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
-  }
-
-  if(nstart < npivot) {
-
-  // output insert
-  output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
-
-  for(unsigned int i = nstart; i < npivot; ++i)
-    output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
-  
-  // output diff tag begin
-  output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
-
-  }
-
-  // output common
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
-
-  for(unsigned int i = opivot; i < oend; ++i)
-    output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);  
-
-      /*
-      if(ostart < size_old || (i + 1) < olength) {
-
-
-          output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-
-          if(ostart < size_old)
-          output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old + ostart, size_old - ostart), DELETE, wstate);
-
-	for(i = i + 1; i < olength; ++i)
-	  output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
-	--i;
-
-        // output diff tag
+        // output diff tag begin
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       }
 
-      if(nstart < size_new || (j + 1) < nlength) {
+      if(nstart < npivot) {
 
-          output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+        // output insert
+        output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-      if(nstart < size_new)
-          output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_new + nstart, size_new - nstart), INSERT, wstate);
-      
-	for(j = j + 1; j < nlength; ++j)
-	  output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
-	--j;
+        for(unsigned int i = nstart; i < npivot; ++i)
+          output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+
+        // output diff tag begin
+        output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+
+      }
+
+      // output common
+      output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+
+      for(unsigned int i = opivot; i < oend; ++i)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+
+      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+
+      /*
+        if(ostart < size_old || (i + 1) < olength) {
+
+
+        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+
+        if(ostart < size_old)
+        output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old + ostart, size_old - ostart), DELETE, wstate);
+
+        for(i = i + 1; i < olength; ++i)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+        --i;
+
+        // output diff tag
+        output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+        }
+
+        if(nstart < size_new || (j + 1) < nlength) {
+
+        output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+
+        if(nstart < size_new)
+        output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_new + nstart, size_new - nstart), INSERT, wstate);
+
+        for(j = j + 1; j < nlength; ++j)
+        output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
+        --j;
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
-      }
+        }
       */
 
       // whitespace change
     } else if(is_white_space(nodes_old.at(i))) {
 
-        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
       // whitespace delete
       // output diff tag
 
@@ -1946,7 +1946,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
     } else if(is_white_space(nodes_new.at(j))) {
 
-        output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
       //whitespace insert
       // output diff tag
 
@@ -1990,7 +1990,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
             if(isspace(text_old[opos])) {
 
-                output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+              output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
               for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
 
@@ -2005,7 +2005,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
             if(isspace(text_new[npos])) {
 
-                output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+              output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
               for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
 
@@ -2039,7 +2039,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
   // output leftover nodes
   if(i < oend) {
 
-      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
     // whitespace delete
     // output diff tag
 
@@ -2051,7 +2051,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   } else if(j < nend) {
 
-      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
     // whitespace delete
     // output diff tag
 
@@ -2081,7 +2081,7 @@ void output_white_space_prefix(struct reader_state & rbuf_old
   for(; oend < nodes_old.size() && nend < nodes_new.size()
         && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
         && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
-        ;
+    ;
 
   // may only match here, but belongs as part of pure change
   if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
@@ -2090,12 +2090,12 @@ void output_white_space_prefix(struct reader_state & rbuf_old
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   for(unsigned int i = ostart; i < oend; ++i)
     output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);  
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
   rbuf_old.last_output = oend > rbuf_old.last_output ? oend : rbuf_old.last_output;
   rbuf_new.last_output = nend > rbuf_new.last_output ? nend : rbuf_new.last_output;
@@ -2123,60 +2123,60 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 
   for(; opivot > ostart && npivot > nstart
         && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-      ;
+    ;
 
   if(opivot < ostart || npivot < nstart) {
 
-      opivot = oend;
-      npivot = nend;
-    
+    opivot = oend;
+    npivot = nend;
+
   } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
-      ++opivot;
-      ++npivot;
-    }
+    ++opivot;
+    ++npivot;
+  }
 
   /*
   // may only match here, but belongs as part of pure change
   if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
-    --oend;
+  --oend;
 
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
-    --nend;
+  --nend;
   */
 
   if(ostart < opivot) {
 
-  // output delete
+    // output delete
     output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-  for(unsigned int i = ostart; i < opivot; ++i)
-    output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
-  
-  // output diff tag begin
-  output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+    for(unsigned int i = ostart; i < opivot; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
   }
 
   if(nstart < npivot) {
 
-  // output insert
-  output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+    // output insert
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-  for(unsigned int i = nstart; i < npivot; ++i)
-    output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
-  
-  // output diff tag begin
-  output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+    for(unsigned int i = nstart; i < npivot; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
   }
 
   // output common
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   for(unsigned int i = opivot; i < oend; ++i)
     output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);  
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
   rbuf_old.last_output = oend > rbuf_old.last_output ? oend : rbuf_old.last_output;
   rbuf_new.last_output = nend > rbuf_new.last_output ? nend : rbuf_new.last_output;
@@ -2235,7 +2235,7 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
       for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new)
         ;
-      
+
       output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, offset_old), COMMON, wstate);
 
       if(offset_old < size_old) {
@@ -2266,7 +2266,7 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
   if(end_old > begin_old) {
 
     // output diff tag begin
-      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
     for(unsigned int i = begin_old; i < end_old; ++i)
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
@@ -2281,7 +2281,7 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
   if(end_new > begin_new) {
 
     // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
     for(unsigned int i = begin_new; i < end_new; ++i)
       output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
@@ -2305,11 +2305,11 @@ void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
- 
+
   output_white_space_suffix(rbuf_old, rbuf_new, wstate);
-  
+
   //  output_white_space_pure_statement_end(rbuf_old, rbuf_new, operation, wstate);
-    
+
   //output_white_space_all(rbuf_old, rbuf_new, wstate);
 
 }
@@ -2326,7 +2326,7 @@ void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & r
   node.content = text;
 
   output_node(rbuf_old, rbuf_new, &node, operation, wstate);
-  
+
 }
 
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
@@ -2493,7 +2493,7 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
   } else {
 
     // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
     //for(unsigned int i = begin_new; i < end_new; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
