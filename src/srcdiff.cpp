@@ -2058,13 +2058,15 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 
   unsigned int opivot = oend - 1;
   unsigned int npivot = nend - 1;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   for(; opivot > ostart && npivot > nstart
         && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-        ;
+    ;
 
-  ++opivot;
-  ++npivot;
+  if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
+    ++opivot;
+    ++npivot;
+  }
 
   /*
   // may only match here, but belongs as part of pure change
