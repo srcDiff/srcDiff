@@ -2057,18 +2057,43 @@ void output_white_space_suffix(struct reader_state & rbuf_old
     ;
 
   unsigned int opivot = oend - 1;
-  unsigned int npivot = nend - 1d;
+  unsigned int npivot = nend - 1;
 
   for(; opivot > ostart && npivot > nstart
         && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, ++npivot)
         ;
 
+  ++opivot;
+  ++npivot;
+
+  /*
   // may only match here, but belongs as part of pure change
   if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
     --oend;
 
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
+  */
+
+  // output delete
+  // output diff tag begin
+  output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+
+  for(unsigned int i = ostart; i < opivot; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+  
+  // output diff tag begin
+  output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+  // output insert
+  output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+
+  for(unsigned int i = nstart; i < npivot; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+  
+  // output diff tag begin
+  output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
 
