@@ -1851,36 +1851,36 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
             && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
         ;
 
-      if(opivot < ostart || npivot < nstart) {
+      if(opivot < i || npivot < j) {
 
-        opivot = oend;
-        npivot = nend;
+        opivot = olength;
+        npivot = nlength;
 
       } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
         ++opivot;
         ++npivot;
       }
 
-      if(ostart < opivot) {
+      if(i < opivot) {
 
         // output delete
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-        for(unsigned int i = ostart; i < opivot; ++i)
-          output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+        for(unsigned int k = i; k < opivot; ++k)
+          output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
         // output diff tag begin
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
       }
 
-      if(nstart < npivot) {
+      if(j < npivot) {
 
         // output insert
         output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-        for(unsigned int i = nstart; i < npivot; ++i)
-          output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+        for(unsigned int k = j; k < npivot; ++k)
+          output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
         // output diff tag begin
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
@@ -1890,8 +1890,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       // output common
       output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-      for(unsigned int i = opivot; i < oend; ++i)
-        output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+      for(unsigned int k = opivot; k < olength; ++k)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
       output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
