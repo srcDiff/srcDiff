@@ -2063,6 +2063,7 @@ void output_white_space_suffix(struct reader_state & rbuf_old
         && node_compare(nodes_old.at(opivot - 1), nodes_new.at(npivot - 1)) == 0; --opivot, --npivot)
       ;
 
+  /*
   if(opivot < ostart || npivot < nstart) {
 
     if(opivot < ostart)
@@ -2075,7 +2076,7 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
       ++opivot;
       ++npivot;
-    }
+      }*/
 
   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ostart);
