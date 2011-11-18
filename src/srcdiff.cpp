@@ -1817,6 +1817,19 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
+      unsigned int olength = oend;
+      unsigned int nlength = nend;
+
+      for(; olength < oend; is_white_space(nodes_old.at(olength)); ++olength)
+        ;
+
+      for(; nlength < nend; is_white_space(nodes_new.at(nlength)); ++nlength)
+        ;
+
+      unsigned int opivot = olength;
+      unsigned int npivot = nlength;
+      
+
         xmlChar * content_old = nodes_old.at(i)->content;
         xmlChar * content_new = nodes_new.at(j)->content;
 
