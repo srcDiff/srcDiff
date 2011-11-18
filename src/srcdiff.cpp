@@ -2056,12 +2056,11 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     ;
 
-  unsigned int opivot = oend;
-  unsigned int npivot = nend;
+  unsigned int opivot = oend - 1;
+  unsigned int npivot = nend - 1d;
 
-  for(; oend < nodes_old.size() && nend < nodes_new.size()
-        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
-        && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
+  for(; opivot > ostart && npivot > nstart
+        && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, ++npivot)
         ;
 
   // may only match here, but belongs as part of pure change
