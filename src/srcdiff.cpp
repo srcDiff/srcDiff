@@ -1843,7 +1843,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         ++npivot;
       }
 
-      /*
         if(i < opivot) {
 
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
@@ -1886,47 +1885,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
         i = olength - 1;
         j = nlength - 1;
-
-       */
-
-        xmlChar * content_old = nodes_old.at(i)->content;
-        xmlChar * content_new = nodes_new.at(j)->content;
-
-        int size_old = strlen((const char *)content_old);
-        int size_new = strlen((const char *)content_new);
-
-        int ostart = 0;
-        int nstart = 0;
-
-        for(; ostart < size_old && nstart < size_new && content_old[ostart] == content_new[nstart]; ++ostart, ++nstart)
-        ;
-
-        output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
-
-        if(ostart < size_old) {
-
-
-        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-
-        if(ostart < size_old)
-        output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old + ostart, size_old - ostart), DELETE, wstate);
-
-        // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
-
-        }
-
-        if(nstart < size_new) {
-
-        output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
-
-        if(nstart < size_new)
-        output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_new + nstart, size_new - nstart), INSERT, wstate);
-
-        // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
-
-        }
 
       // whitespace change
     } else if(is_white_space(nodes_old.at(i))) {
