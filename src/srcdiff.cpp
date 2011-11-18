@@ -1817,6 +1817,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
+      /*
       xmlChar * content_old = nodes_old.at(i)->content;
       xmlChar * content_new = nodes_new.at(j)->content;
 
@@ -1833,22 +1834,41 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         ;
 
       output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
-
+      */
       unsigned int olength = i + 1;
       unsigned int nlength = j + 1;
 
-      //for(; olength < oend && is_white_space(nodes_old.at(olength)); ++olength)
-      //  ;
+      for(; olength < oend && is_white_space(nodes_old.at(olength)); ++olength)
+        ;
 
-        //for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
-	//;
+      for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
+	;
 
+  unsigned int opivot = oend - 1;
+  unsigned int npivot = nend - 1;
+
+  for(; opivot > ostart && npivot > nstart
+        && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
+      ;
+
+  if(opivot < ostart || npivot < nstart) {
+
+      opivot = oend;
+      npivot = nend;
+    
+  } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
+      ++opivot;
+      ++npivot;
+    }
+
+
+      /*
       if(ostart < size_old || (i + 1) < olength) {
 
 
           output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-	if(ostart < size_old)
+          if(ostart < size_old)
           output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old + ostart, size_old - ostart), DELETE, wstate);
 
 	for(i = i + 1; i < olength; ++i)
@@ -1875,6 +1895,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
       }
+      */
 
       // whitespace change
     } else if(is_white_space(nodes_old.at(i))) {
