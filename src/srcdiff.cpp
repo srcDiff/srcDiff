@@ -171,6 +171,10 @@ void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned 
                                        , struct reader_state & rbuf_new, unsigned int end_new
                                        , int operation, struct writer_state & wstate);
 
+void output_white_space_prefix(struct reader_state & rbuf_old
+                               , struct reader_state & rbuf_new
+                               , struct writer_state & wstate);
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
