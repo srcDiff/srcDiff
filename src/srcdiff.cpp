@@ -318,7 +318,7 @@ int main(int argc, char * argv[]) {
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   // output srcdiff unit
-  output_node(rbuf_old, rbuf_new, getRealCurrentNode(reader_old), COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, getRealCurrentNode(reader_old), COMMON, wstate.writer);
 
   // cleanup everything
   if(reader_old)
