@@ -2030,13 +2030,13 @@ void output_white_space_prefix(struct reader_state & rbuf_old
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
 
-  for(int i = ostart; ostart < oend; ++i)
+  for(int i = ostart; i < oend; ++i)
     output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);  
 
-  rbuf_old.last_output = oend;
-  rbuf_new.last_output = nend;
+  rbuf_old.last_output = oend > rbuf_old.last_output ? oend : rbuf_old.last_output;
+  rbuf_new.last_output = nend > rbuf_new.last_output ? nend : rbuf_new.last_output;
 
 }
 
