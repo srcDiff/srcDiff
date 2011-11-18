@@ -2077,15 +2077,20 @@ void output_white_space_suffix(struct reader_state & rbuf_old
     --nend;
   */
 
+  if(ostart < opivot) {
+
   // output delete
-  // output diff tag begin
-  output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
   for(unsigned int i = ostart; i < opivot; ++i)
     output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
   
   // output diff tag begin
   output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+  }
+
+  if(nstart < npivot) {
 
   // output insert
   output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
@@ -2096,6 +2101,7 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   // output diff tag begin
   output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
+  }
 
   // output common
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
