@@ -288,7 +288,7 @@ int main(int argc, char * argv[]) {
   xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
 
   // output srcdiff unit
-  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate.writer);
 
   // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
