@@ -2060,7 +2060,7 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   unsigned int npivot = nend - 1;
 
   for(; opivot > ostart && npivot > nstart
-        && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, ++npivot)
+        && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
         ;
 
   ++opivot;
