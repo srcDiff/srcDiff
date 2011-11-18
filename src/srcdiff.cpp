@@ -2006,6 +2006,12 @@ void output_white_space_prefix(struct reader_state & rbuf_old
                                , struct reader_state & rbuf_new
                                , struct writer_state & wstate) {
 
+  unsigned int ostart = rbuf_old.last_output;
+  unsigned int nstart = rbuf_new.last_output;
+  unsigned int oend = ostart;
+  unsigned int nend = nstart;
+
+  // advance whitespace while matches
   for(; oend < nodes_old.size() && nend < nodes_new.size()
         && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
         && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
@@ -2017,6 +2023,13 @@ void output_white_space_prefix(struct reader_state & rbuf_old
 
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
+
+  for(int i = ostart; ostart < oend; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+
+  rbuf_old.last_output = oend;
+  rbuf_new.last_output = nend;
+  
 
 }
 
