@@ -1837,7 +1837,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         opivot = olength;
         npivot = nlength;
 
-      } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0) {
+      } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
 
         ++opivot;
         ++npivot;
