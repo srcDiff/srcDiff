@@ -1847,7 +1847,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-        for(int k = i; k < opivot; ++k)
+        for(unsigned int k = i; k < opivot; ++k)
         output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
         // output diff tag
@@ -1858,10 +1858,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         if(j < npivot) {
 
         output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
-        //whitespace insert
-        // output diff tag
 
-        for(int k = j; k < npivot; ++k)
+        for(unsigned int k = j; k < npivot; ++k)
         output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
         // output diff tag
@@ -1872,10 +1870,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         if(opivot < olength) {
 
         output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-        //whitespace insert
-        // output diff tag
 
-        for(int k = opivot; k < olength; ++k)
+        for(unsigned int k = opivot; k < olength; ++k)
         output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
         // output diff tag
@@ -1886,7 +1882,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         i = olength - 1;
         j = nlength - 1;
 
-      // whitespace change
     } else if(is_white_space(nodes_old.at(i))) {
 
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
