@@ -1844,23 +1844,56 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
 	;
 
-  unsigned int opivot = oend - 1;
-  unsigned int npivot = nend - 1;
+      unsigned int opivot = oend - 1;
+      unsigned int npivot = nend - 1;
 
-  for(; opivot > ostart && npivot > nstart
-        && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-      ;
+      for(; opivot > ostart && npivot > nstart
+            && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
+        ;
 
-  if(opivot < ostart || npivot < nstart) {
-
-      opivot = oend;
-      npivot = nend;
+      if(opivot < ostart || npivot < nstart) {
     
-  } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
-      ++opivot;
-      ++npivot;
-    }
+        opivot = oend;
+        npivot = nend;
+    
+      } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
+        ++opivot;
+        ++npivot;
+      }
 
+  if(ostart < opivot) {
+
+  // output delete
+    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+
+  for(unsigned int i = ostart; i < opivot; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+  
+  // output diff tag begin
+  output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+  }
+
+  if(nstart < npivot) {
+
+  // output insert
+  output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+
+  for(unsigned int i = nstart; i < npivot; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+  
+  // output diff tag begin
+  output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+
+  }
+
+  // output common
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
+
+  for(unsigned int i = opivot; i < oend; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);  
 
       /*
       if(ostart < size_old || (i + 1) < olength) {
