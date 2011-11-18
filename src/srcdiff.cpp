@@ -312,8 +312,9 @@ int main(int argc, char * argv[]) {
   // run on file level
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
   // output srcdiff unit
-  outputNode(*getRealCurrentNode(reader_old), wstate.writer);
+  output_node(rbuf_old, rbuf_new, *getRealCurrentNode(reader_old), COMMON, wstate.writer);
 
   // cleanup everything
   if(reader_old)
