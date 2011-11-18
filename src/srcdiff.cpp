@@ -2095,9 +2095,10 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
 
+  // output common
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
 
-  for(int i = ostart; ostart < oend; ++i)
+  for(int i = opivot; i < oend; ++i)
     output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);  
