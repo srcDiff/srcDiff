@@ -1817,8 +1817,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
-      unsigned int olength = oend;
-      unsigned int nlength = nend;
+      unsigned int olength = i;
+      unsigned int nlength = j;
 
       for(; olength < oend && is_white_space(nodes_old.at(olength)); ++olength)
         ;
