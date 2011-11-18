@@ -1843,6 +1843,25 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         ++npivot;
       }
 
+      /*
+
+        if(i < opivot) {
+
+
+        }
+
+        if(j < npivot) {
+
+
+        }
+
+        if(opivot < olength) {
+
+        }
+
+
+       */
+
         xmlChar * content_old = nodes_old.at(i)->content;
         xmlChar * content_new = nodes_new.at(j)->content;
 
