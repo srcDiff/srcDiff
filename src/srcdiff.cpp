@@ -2037,13 +2037,49 @@ void output_white_space_prefix(struct reader_state & rbuf_old
 
   rbuf_old.last_output = oend;
   rbuf_new.last_output = nend;
-  
 
 }
 
 void output_white_space_suffix(struct reader_state & rbuf_old
                                , struct reader_state & rbuf_new
                                , struct writer_state & wstate) {
+
+  unsigned int ostart = rbuf_old.last_output;
+  unsigned int nstart = rbuf_new.last_output;
+  unsigned int oend = ostart;
+  unsigned int nend = nstart;
+
+  // advance all whitespace
+  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
+    ;
+
+  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
+    ;
+
+  unsigned int opivot = oend;
+  unsigned int npivot = nend;
+
+  for(; oend < nodes_old.size() && nend < nodes_new.size()
+        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
+        && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
+        ;
+
+  // may only match here, but belongs as part of pure change
+  if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
+    --oend;
+
+  if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
+    --nend;
+
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);  
+
+  for(int i = ostart; ostart < oend; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);  
+
+  rbuf_old.last_output = oend;
+  rbuf_new.last_output = nend;
 
 }
 
