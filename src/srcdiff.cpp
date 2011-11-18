@@ -1817,7 +1817,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
-      /*
         xmlChar * content_old = nodes_old.at(i)->content;
         xmlChar * content_new = nodes_new.at(j)->content;
 
@@ -1834,68 +1833,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         ;
 
         output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, ostart), COMMON, wstate);
-      */
-      unsigned int olength = i + 1;
-      unsigned int nlength = j + 1;
 
-      for(; olength < oend && is_white_space(nodes_old.at(olength)); ++olength)
-        ;
-
-      for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
-        ;
-
-      unsigned int opivot = olength - 1;
-      unsigned int npivot = nlength - 1;
-
-      for(; opivot > i && npivot > j
-            && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-        ;
-
-      if(opivot < i || npivot < j) {
-
-        opivot = olength;
-        npivot = nlength;
-
-      } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
-        ++opivot;
-        ++npivot;
-      }
-
-      if(i < opivot) {
-
-        // output delete
-        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-
-        for(unsigned int k = i; k < opivot; ++k)
-          output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
-
-        // output diff tag begin
-        output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
-
-      }
-
-      if(j < npivot) {
-
-        // output insert
-        output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
-
-        for(unsigned int k = j; k < npivot; ++k)
-          output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
-
-        // output diff tag begin
-        output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
-
-      }
-
-      // output common
-      output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-      for(unsigned int k = opivot; k < olength; ++k)
-        output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
-
-      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
-
-      /*
         if(ostart < size_old || (i + 1) < olength) {
 
 
@@ -1928,7 +1866,6 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
         }
-      */
 
       // whitespace change
     } else if(is_white_space(nodes_old.at(i))) {
