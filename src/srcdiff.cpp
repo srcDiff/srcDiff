@@ -2059,8 +2059,8 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   unsigned int opivot = oend;
   unsigned int npivot = nend;
 
-  for(; opivot > ostart && npivot > nstart
-        && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
+  for(; (opivot - 1) > ostart && (npivot - 1) > nstart
+        && node_compare(nodes_old.at(opivot - 1), nodes_new.at(npivot - 1)) == 0; --opivot, --npivot)
       ;
 
   if(opivot < ostart || npivot < nstart) {
