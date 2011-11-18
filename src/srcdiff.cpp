@@ -2066,10 +2066,10 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   if(opivot < ostart || npivot < nstart) {
 
     if(opivot < ostart)
-      ++opivot;
+      opivot = ostart;
 
     if(npivot < nstart)
-      ++npivot;
+      npivot = nstart;
 
     
   } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
