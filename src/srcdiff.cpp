@@ -240,7 +240,7 @@ int main(int argc, char * argv[]) {
   xmlBufferEmpty(output_file);
  
   // translate file two
-  xmlBuffer * output_file = translate_to_srcML(argv[2], 0, argv[3]);
+  output_file = translate_to_srcML(argv[2], 0, argv[3]);
 
   // create the reader for the new file
   xmlTextReaderPtr reader_new = NULL;
