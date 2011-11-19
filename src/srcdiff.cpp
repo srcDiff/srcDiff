@@ -257,12 +257,8 @@ int main(int argc, char * argv[]) {
 
   xmlNodePtr unit_new = getRealCurrentNode(reader_new);
 
-  // create srcdiff unit
-  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
-
   // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
-  int is_new = xmlTextReaderRead(reader_new);
 
   // collect if non empty files
   if(is_old)
@@ -270,6 +266,8 @@ int main(int argc, char * argv[]) {
 
   // free the buffer
   xmlBufferFree(output_file_one);
+
+  int is_new = xmlTextReaderRead(reader_new);
 
   // collect if non empty files
   if(is_new)
@@ -282,6 +280,9 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+
+  // create srcdiff unit
+  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
