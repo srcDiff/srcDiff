@@ -238,7 +238,7 @@ int main(int argc, char * argv[]) {
 
 
   xmlBufferEmpty(output_file);
- 
+  ) 
   // translate file two
   xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
 
