@@ -1943,7 +1943,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
               output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-              for(; opos < text_old.size() && isspace(text_old[opos]); ++opos) {
+              for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
                 output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_old[opos], DELETE, wstate);
@@ -1958,7 +1958,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
               output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-              for(; npos < text_new.size() && isspace(text_new[npos]); ++npos) {
+              for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
                 output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)&text_new[npos], INSERT, wstate);
