@@ -111,7 +111,7 @@ const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
 // create srcdiff unit
-xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new);
+xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
 
 // create sets of nodes
 std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
@@ -224,6 +224,8 @@ int main(int argc, char * argv[]) {
   // read to unit
   xmlTextReaderRead(reader_old);
 
+  xmlNodePtr unit_old = getRealCurrentNode(reader_old);
+
   // translate file two
   xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
 
@@ -253,8 +255,10 @@ int main(int argc, char * argv[]) {
   // read to unit
   xmlTextReaderRead(reader_new);
 
+  xmlNodePtr unit_new = getRealCurrentNode(reader_new);
+
   // create srcdiff unit
-  xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
+  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
@@ -1353,11 +1357,10 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 
 // create srcdiff unit
-xmlNodePtr create_srcdiff_unit(xmlTextReaderPtr reader_old, xmlTextReaderPtr reader_new) {
+xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
   // get units from source code
-  xmlNodePtr unit = getRealCurrentNode(reader_old);
-  //xmlNodePtr unit_new = getRealCurrentNode(reader_new);
+  xmlNodePtr unit = unit_old;
 
   // add diff namespace
   addNamespace(&unit->nsDef, &diff);
