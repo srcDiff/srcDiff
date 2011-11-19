@@ -194,32 +194,8 @@ int main(int argc, char * argv[]) {
   diff_node_init();
 
   // TODO: Error handling? Is the return NULL if bad?
-
   // translate file one
   xmlBuffer * output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
-
-
-  // create the reader for the old file
-  xmlTextReaderPtr reader_old = NULL;
-  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
-  if (reader_old == NULL) {
-
-    fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
-
-    exit(1);
-  }
-
-  // Set up delete reader state
-  struct reader_state rbuf_old = { 0 };
-  rbuf_old.stream_source = DELETE;
-  std::vector<struct open_diff *> open_diff_old;
-  rbuf_old.open_diff = open_diff_old;
-
-  struct open_diff * new_diff = new struct open_diff;
-  new_diff->operation = COMMON;
-  rbuf_old.open_diff.push_back(new_diff);
-
-
 
   // translate file two
   xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
@@ -228,7 +204,19 @@ int main(int argc, char * argv[]) {
     Create xmlreaders and the xmlwriter
   */
 
+  xmlTextReaderPtr reader_old = NULL;
   xmlTextReaderPtr reader_new = NULL;
+
+  xmlTextWriterPtr writer = NULL;
+
+  // create the reader for the old file
+  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
+  if (reader_old == NULL) {
+
+    fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
+
+    exit(1);
+  }
 
   // create the reader for the new file
   reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
@@ -241,18 +229,6 @@ int main(int argc, char * argv[]) {
 
     exit(1);
   }
-
-  // Set up insert reader state
-  struct reader_state rbuf_new = { 0 };
-  rbuf_new.stream_source = INSERT;
-  std::vector<struct open_diff *> open_diff_new;
-  rbuf_new.open_diff = open_diff_new;
-
-  new_diff = new struct open_diff;
-  new_diff->operation = COMMON;
-  rbuf_new.open_diff.push_back(new_diff);
-
-  xmlTextWriterPtr writer = NULL;
 
   // create the writer
   writer = xmlNewTextWriterFilename(srcdiff_file, 0);
@@ -268,9 +244,12 @@ int main(int argc, char * argv[]) {
     exit(1);
   }
 
+  // issue the xml declaration
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+
   // set up writer state
   std::vector<struct open_diff *> output_diff;
-  new_diff = new struct open_diff;
+  struct open_diff * new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   output_diff.push_back(new_diff);
 
@@ -278,11 +257,38 @@ int main(int argc, char * argv[]) {
   wstate.writer = writer;
   wstate.output_diff = output_diff;
 
-  // Read to unit
+
+  // Set up delete reader state
+  struct reader_state rbuf_old = { 0 };
+  rbuf_old.stream_source = DELETE;
+  std::vector<struct open_diff *> open_diff_old;
+  rbuf_old.open_diff = open_diff_old;
+
+  new_diff = new struct open_diff;
+  new_diff->operation = COMMON;
+  rbuf_old.open_diff.push_back(new_diff);
+
+  // read to unit
+  xmlTextReaderRead(reader_old);
+
+  // Set up insert reader state
+  struct reader_state rbuf_new = { 0 };
+  rbuf_new.stream_source = INSERT;
+  std::vector<struct open_diff *> open_diff_new;
+  rbuf_new.open_diff = open_diff_new;
+
+  new_diff = new struct open_diff;
+  new_diff->operation = COMMON;
+  rbuf_new.open_diff.push_back(new_diff);
+
+  // read to unit
   xmlTextReaderRead(reader_new);
 
   // create srcdiff unit
   xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
+
+  // output srcdiff unit
+  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
   // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
@@ -306,12 +312,6 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
-
-  // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
-
-  // output srcdiff unit
-  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
   // run on file level
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
