@@ -243,9 +243,6 @@ int main(int argc, char * argv[]) {
     exit(1);
   }
 
-  // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
-
   // set up writer state
   std::vector<struct open_diff *> output_diff;
   struct open_diff * new_diff = new struct open_diff;
@@ -286,9 +283,6 @@ int main(int argc, char * argv[]) {
   // create srcdiff unit
   xmlNodePtr unit = create_srcdiff_unit(reader_old, reader_new);
 
-  // output srcdiff unit
-  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
-
   // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
   int is_new = xmlTextReaderRead(reader_new);
@@ -311,6 +305,12 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+
+  // issue the xml declaration
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+
+  // output srcdiff unit
+  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
   // run on file level
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
