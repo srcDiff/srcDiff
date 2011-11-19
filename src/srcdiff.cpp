@@ -240,21 +240,6 @@ int main(int argc, char * argv[]) {
     exit(1);
   }
 
-  // create the writer
-  xmlTextWriterPtr writer = NULL;
-  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
-  if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
-
-    if(reader_old)
-      xmlFreeTextReader(reader_old);
-
-    if(reader_new)
-      xmlFreeTextReader(reader_new);
-
-    exit(1);
-  }
-
   // Set up insert reader state
   struct reader_state rbuf_new = { 0 };
   rbuf_new.stream_source = INSERT;
@@ -293,6 +278,21 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+
+  // create the writer
+  xmlTextWriterPtr writer = NULL;
+  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
+  if (writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
+
+    if(reader_old)
+      xmlFreeTextReader(reader_old);
+
+    if(reader_new)
+      xmlFreeTextReader(reader_new);
+
+    exit(1);
+  }
 
   // set up writer state
   std::vector<struct open_diff *> output_diff;
