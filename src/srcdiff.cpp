@@ -204,7 +204,6 @@ int main(int argc, char * argv[]) {
     Create xmlreaders and the xmlwriter
   */
 
-
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
@@ -214,6 +213,19 @@ int main(int argc, char * argv[]) {
 
     exit(1);
   }
+
+  // Set up delete reader state
+  struct reader_state rbuf_old = { 0 };
+  rbuf_old.stream_source = DELETE;
+  std::vector<struct open_diff *> open_diff_old;
+  rbuf_old.open_diff = open_diff_old;
+
+  struct open_diff * new_diff = new struct open_diff;
+  new_diff->operation = COMMON;
+  rbuf_old.open_diff.push_back(new_diff);
+
+  // read to unit
+  xmlTextReaderRead(reader_old);
 
   // create the reader for the new file
   xmlTextReaderPtr reader_new = NULL;
@@ -242,19 +254,6 @@ int main(int argc, char * argv[]) {
 
     exit(1);
   }
-
-  // Set up delete reader state
-  struct reader_state rbuf_old = { 0 };
-  rbuf_old.stream_source = DELETE;
-  std::vector<struct open_diff *> open_diff_old;
-  rbuf_old.open_diff = open_diff_old;
-
-  struct open_diff * new_diff = new struct open_diff;
-  new_diff->operation = COMMON;
-  rbuf_old.open_diff.push_back(new_diff);
-
-  // read to unit
-  xmlTextReaderRead(reader_old);
 
   // Set up insert reader state
   struct reader_state rbuf_new = { 0 };
