@@ -240,11 +240,11 @@ int main(int argc, char * argv[]) {
   xmlBufferEmpty(output_file);
  
   // translate file two
-  xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
+  xmlBuffer * output_file = translate_to_srcML(argv[2], 0, argv[3]);
 
   // create the reader for the new file
   xmlTextReaderPtr reader_new = NULL;
-  reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
+  reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
   if (reader_new == NULL) {
 
     fprintf(stderr, "Unable to open file '%s' as XML", argv[2]);
@@ -279,7 +279,7 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
   // free the buffer
-  xmlBufferFree(output_file_two);
+  xmlBufferFree(output_file);
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
