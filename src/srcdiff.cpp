@@ -2124,13 +2124,13 @@ void output_white_space_suffix(struct reader_state & rbuf_old
   // output common
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-  for(unsigned int i = opivot; i < oend; ++i)
+  for(int i = opivot; i < oend; ++i)
     output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
-  rbuf_old.last_output = oend > rbuf_old.last_output ? oend : rbuf_old.last_output;
-  rbuf_new.last_output = nend > rbuf_new.last_output ? nend : rbuf_new.last_output;
+  rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
+  rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
 
 }
 
