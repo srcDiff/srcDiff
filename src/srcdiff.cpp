@@ -226,6 +226,19 @@ int main(int argc, char * argv[]) {
 
   xmlNodePtr unit_old = getRealCurrentNode(reader_old);
 
+  // free the buffer
+  xmlBufferFree(output_file_two);
+
+  // Read past unit tag open
+  int is_old = xmlTextReaderRead(reader_old);
+
+  // collect if non empty files
+  if(is_old)
+    collect_difference(&nodes_old, reader_old);
+
+  // group nodes
+  std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
+
   // translate file two
   xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
 
@@ -257,32 +270,13 @@ int main(int argc, char * argv[]) {
 
   xmlNodePtr unit_new = getRealCurrentNode(reader_new);
 
-  // Read past unit tag open
-  int is_old = xmlTextReaderRead(reader_old);
-
-  // collect if non empty files
-  if(is_old)
-    collect_difference(&nodes_old, reader_old);
-
-  // free the buffer
-  xmlBufferFree(output_file_one);
-
   int is_new = xmlTextReaderRead(reader_new);
 
   // collect if non empty files
   if(is_new)
     collect_difference(&nodes_new, reader_new);
 
-  // free the buffer
-  xmlBufferFree(output_file_two);
-
-  // group nodes
-  std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
-
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
-
-  // create srcdiff unit
-  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
@@ -311,6 +305,9 @@ int main(int argc, char * argv[]) {
 
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+
+  // create srcdiff unit
+  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   // output srcdiff unit
   output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
