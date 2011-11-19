@@ -1801,7 +1801,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
 */
 void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new, struct writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   unsigned int begin_old = rbuf_old.last_output;
   unsigned int begin_new = rbuf_new.last_output;
 
@@ -2016,7 +2016,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
   rbuf_old.last_output = oend > rbuf_old.last_output ? oend : rbuf_old.last_output;
   rbuf_new.last_output = nend > rbuf_new.last_output ? nend : rbuf_new.last_output;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 void output_white_space_prefix(struct reader_state & rbuf_old
@@ -2056,7 +2056,7 @@ void output_white_space_prefix(struct reader_state & rbuf_old
 void output_white_space_suffix(struct reader_state & rbuf_old
                                , struct reader_state & rbuf_new
                                , struct writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   int ostart = rbuf_old.last_output;
   int nstart = rbuf_new.last_output;
   int oend = ostart;
