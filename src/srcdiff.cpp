@@ -269,15 +269,14 @@ int main(int argc, char * argv[]) {
 
   int is_new = xmlTextReaderRead(reader_new);
 
-  // free the buffer
-  xmlBufferFree(output_file_two);
-
-
   // collect if non empty files
   if(is_new)
     collect_difference(&nodes_new, reader_new);
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+
+  // free the buffer
+  xmlBufferFree(output_file_two);
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
