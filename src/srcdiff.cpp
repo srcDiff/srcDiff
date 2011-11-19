@@ -1912,11 +1912,11 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
       // collect all adjacent text nodes character arrays and input difference
       std::string text_old = "";
-      for(; i < end_old && is_text(nodes_old.at(i)); ++i)
+      for(; i < oend && is_text(nodes_old.at(i)); ++i)
         text_old += (const char *)nodes_old.at(i)->content;
 
       std::string text_new = "";
-      for(; j < end_new && is_text(nodes_new.at(j)); ++j)
+      for(; j < nend && is_text(nodes_new.at(j)); ++j)
         text_new += (const char *)nodes_new.at(j)->content;
 
       --i;
