@@ -226,9 +226,6 @@ int main(int argc, char * argv[]) {
 
   xmlNodePtr unit_old = getRealCurrentNode(reader_old);
 
-  // free the buffer
-  xmlBufferFree(output_file_two);
-
   // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
 
@@ -275,6 +272,9 @@ int main(int argc, char * argv[]) {
   // collect if non empty files
   if(is_new)
     collect_difference(&nodes_new, reader_new);
+
+  // free the buffer
+  xmlBufferFree(output_file_two);
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
