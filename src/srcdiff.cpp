@@ -236,6 +236,9 @@ int main(int argc, char * argv[]) {
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
+
+  xmlBufferEmpty(output_file);
+ 
   // translate file two
   xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
 
