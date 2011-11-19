@@ -2100,7 +2100,7 @@ void output_white_space_suffix(struct reader_state & rbuf_old
     // output delete
     output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-    for(unsigned int i = ostart; i < opivot; ++i)
+    for(int i = ostart; i < opivot; ++i)
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
     // output diff tag begin
@@ -2113,7 +2113,7 @@ void output_white_space_suffix(struct reader_state & rbuf_old
     // output insert
     output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-    for(unsigned int i = nstart; i < npivot; ++i)
+    for(int i = nstart; i < npivot; ++i)
       output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
 
     // output diff tag begin
