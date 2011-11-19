@@ -200,6 +200,7 @@ int main(int argc, char * argv[]) {
 
 
   // create the reader for the old file
+  xmlTextReaderPtr reader_old = NULL;
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
   if (reader_old == NULL) {
 
@@ -228,7 +229,6 @@ int main(int argc, char * argv[]) {
   */
 
   xmlTextReaderPtr reader_new = NULL;
-
 
   // create the reader for the new file
   reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
