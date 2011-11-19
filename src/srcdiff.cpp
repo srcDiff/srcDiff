@@ -2057,23 +2057,20 @@ void output_white_space_suffix(struct reader_state & rbuf_old
                                , struct reader_state & rbuf_new
                                , struct writer_state & wstate) {
   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-  unsigned int ostart = rbuf_old.last_output;
-  unsigned int nstart = rbuf_new.last_output;
-  unsigned int oend = ostart;
-  unsigned int nend = nstart;
+  int ostart = rbuf_old.last_output;
+  int nstart = rbuf_new.last_output;
+  int oend = ostart;
+  int nend = nstart;
 
   // advance all whitespace
-  for(; oend < nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
+  for(; oend < (signed)nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
     ;
 
-  for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
+  for(; nend < (signed)nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
     ;
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, oend);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nend);
-
-  unsigned int opivot = oend == 0 ? oend : oend - 1;
-  unsigned int npivot = nend == 0 ? nend : nend - 1;
+  int opivot = oend - 1;
+  int npivot = nend - 1;
 
   for(; opivot > ostart && npivot > nstart
         && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
@@ -2134,7 +2131,7 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 
   rbuf_old.last_output = oend > rbuf_old.last_output ? oend : rbuf_old.last_output;
   rbuf_new.last_output = nend > rbuf_new.last_output ? nend : rbuf_new.last_output;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 /*
