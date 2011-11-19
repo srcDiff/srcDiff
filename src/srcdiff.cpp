@@ -198,7 +198,6 @@ int main(int argc, char * argv[]) {
   // translate file one
   xmlBuffer * output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
 
-  xmlTextReaderPtr reader_old = NULL;
 
   // create the reader for the old file
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
@@ -215,7 +214,7 @@ int main(int argc, char * argv[]) {
   std::vector<struct open_diff *> open_diff_old;
   rbuf_old.open_diff = open_diff_old;
 
-  new_diff = new struct open_diff;
+  struct open_diff * new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
 
@@ -271,7 +270,7 @@ int main(int argc, char * argv[]) {
 
   // set up writer state
   std::vector<struct open_diff *> output_diff;
-  struct open_diff * new_diff = new struct open_diff;
+  new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   output_diff.push_back(new_diff);
 
