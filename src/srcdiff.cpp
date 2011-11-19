@@ -197,9 +197,6 @@ int main(int argc, char * argv[]) {
   // translate file one
   xmlBuffer * output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
 
-  // translate file two
-  xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
-
   /*
     Create xmlreaders and the xmlwriter
   */
@@ -226,6 +223,9 @@ int main(int argc, char * argv[]) {
 
   // read to unit
   xmlTextReaderRead(reader_old);
+
+  // translate file two
+  xmlBuffer * output_file_two = translate_to_srcML(argv[2], 0, argv[3]);
 
   // create the reader for the new file
   xmlTextReaderPtr reader_new = NULL;
