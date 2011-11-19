@@ -1925,7 +1925,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
 
-      for(int opos = 0, npos = 0; opos < text_old.size() && npos < text_new.size();) {
+      for(int opos = 0, npos = 0; opos < (signed)text_old.size() && npos < (signed)text_new.size();) {
 
         if(text_old[opos] == text_new[npos]) {
 
