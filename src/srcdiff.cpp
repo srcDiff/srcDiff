@@ -204,12 +204,9 @@ int main(int argc, char * argv[]) {
     Create xmlreaders and the xmlwriter
   */
 
-  xmlTextReaderPtr reader_old = NULL;
-  xmlTextReaderPtr reader_new = NULL;
-
-  xmlTextWriterPtr writer = NULL;
 
   // create the reader for the old file
+  xmlTextReaderPtr reader_old = NULL;
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
   if (reader_old == NULL) {
 
@@ -219,6 +216,7 @@ int main(int argc, char * argv[]) {
   }
 
   // create the reader for the new file
+  xmlTextReaderPtr reader_new = NULL;
   reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file_two), output_file_two->use, 0, 0, 0);
   if (reader_new == NULL) {
 
@@ -231,6 +229,7 @@ int main(int argc, char * argv[]) {
   }
 
   // create the writer
+  xmlTextWriterPtr writer = NULL;
   writer = xmlNewTextWriterFilename(srcdiff_file, 0);
   if (writer == NULL) {
     fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
