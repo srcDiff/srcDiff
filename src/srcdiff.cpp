@@ -243,24 +243,13 @@ int main(int argc, char * argv[]) {
     exit(1);
   }
 
-  // set up writer state
-  std::vector<struct open_diff *> output_diff;
-  struct open_diff * new_diff = new struct open_diff;
-  new_diff->operation = COMMON;
-  output_diff.push_back(new_diff);
-
-  struct writer_state wstate = { 0 };
-  wstate.writer = writer;
-  wstate.output_diff = output_diff;
-
-
   // Set up delete reader state
   struct reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
   std::vector<struct open_diff *> open_diff_old;
   rbuf_old.open_diff = open_diff_old;
 
-  new_diff = new struct open_diff;
+  struct open_diff * new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
 
@@ -305,6 +294,16 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+
+  // set up writer state
+  std::vector<struct open_diff *> output_diff;
+  new_diff = new struct open_diff;
+  new_diff->operation = COMMON;
+  output_diff.push_back(new_diff);
+
+  struct writer_state wstate = { 0 };
+  wstate.writer = writer;
+  wstate.output_diff = output_diff;
 
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
