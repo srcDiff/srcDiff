@@ -1802,13 +1802,13 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 */
 void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new, struct writer_state & wstate) {
 
-  unsigned int begin_old = rbuf_old.last_output;
-  unsigned int begin_new = rbuf_new.last_output;
+  int begin_old = rbuf_old.last_output;
+  int begin_new = rbuf_new.last_output;
 
-  unsigned int oend = end_old;
-  unsigned int nend = end_new;
+  int oend = end_old;
+  int nend = end_new;
 
-  unsigned int i, j;
+  int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
     if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
@@ -1817,8 +1817,8 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
 
-      unsigned int olength = i;
-      unsigned int nlength = j;
+      int olength = i;
+      int nlength = j;
 
       for(; olength < oend && is_white_space(nodes_old.at(olength)); ++olength)
         ;
@@ -1847,7 +1847,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-        for(unsigned int k = i; k < opivot; ++k)
+        for(int k = i; k < opivot; ++k)
         output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
         // output diff tag
@@ -1859,7 +1859,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
         output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-        for(unsigned int k = j; k < npivot; ++k)
+        for(int k = j; k < npivot; ++k)
         output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
         // output diff tag
@@ -1871,7 +1871,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
         output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-        for(unsigned int k = opivot; k < olength; ++k)
+        for(int k = opivot; k < olength; ++k)
         output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
         // output diff tag
@@ -1925,7 +1925,7 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
 
-      for(unsigned int opos = 0, npos = 0; opos < text_old.size() && npos < text_new.size();) {
+      for(int opos = 0, npos = 0; opos < text_old.size() && npos < text_new.size();) {
 
         if(text_old[opos] == text_new[npos]) {
 
