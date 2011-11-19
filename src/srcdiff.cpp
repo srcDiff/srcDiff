@@ -195,7 +195,7 @@ int main(int argc, char * argv[]) {
 
   // TODO: Error handling? Is the return NULL if bad?
   // translate file one
-  xmlBuffer * output_file_one = translate_to_srcML(argv[1], 0, argv[3]);
+  xmlBuffer * output_file = translate_to_srcML(argv[1], 0, argv[3]);
 
   /*
     Create xmlreaders and the xmlwriter
@@ -203,7 +203,7 @@ int main(int argc, char * argv[]) {
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
-  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file_one), output_file_one->use, 0, 0, 0);
+  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
   if (reader_old == NULL) {
 
     fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
