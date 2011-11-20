@@ -1441,6 +1441,11 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
+  xmlNodePtr unit = unit_old;
+
+  for(xmlAttrPtr attr = unit->properties; attr; attr = attr->next)
+    if(strcmp((const char *)attr->name, "filename") == 0)
+      ;
 
 }
 
