@@ -304,8 +304,11 @@ int main(int argc, char * argv[]) {
    */
 
   // Set up delete reader state
-  struct reader_state rbuf_old;
+  struct reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
+
+  std::vector<struct open_diff *> open_diff_old;
+  rbuf_old.open_diff = open_diff_old;
 
   struct open_diff * new_diff = new struct open_diff;
   new_diff->operation = COMMON;
@@ -313,8 +316,11 @@ int main(int argc, char * argv[]) {
 
 
   // Set up insert reader state
-  struct reader_state rbuf_new;
+  struct reader_state rbuf_new = { 0 };
   rbuf_new.stream_source = INSERT;
+
+  std::vector<struct open_diff *> open_diff_new;
+  rbuf_new.open_diff = open_diff_new;
 
   new_diff = new struct open_diff;
   new_diff->operation = COMMON;
@@ -322,7 +328,7 @@ int main(int argc, char * argv[]) {
 
 
   // set up writer state
-  struct writer_state wstate;
+  struct writer_state wstate = { 0 };
   wstate.writer = writer;
 
   std::vector<struct open_diff *> output_diff;
@@ -1458,12 +1464,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-  */
+
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
+  */
 
   static bool delay = false;
   static int delay_operation = -2;
