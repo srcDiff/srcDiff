@@ -163,8 +163,6 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
                    , struct reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, struct writer_state & wstate);
 
-void diff_node_init();
-
 void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation, struct writer_state & wstate);
 
 void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned int end_old
@@ -341,46 +339,6 @@ int main(int argc, char * argv[]) {
   wstate.output_diff = output_diff;
 
   // setup diff tags
-  diff_node_init();
-
-  // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
-
-  // create srcdiff unit
-  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
-
-  // output srcdiff unit
-  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
-
-  // run on file level
-  if(is_old || is_new)
-  output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
-
-  // output remaining whitespace
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
-
-  // output srcdiff unit ending tag
-  if(is_old && is_new)
-    output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
-
-  // cleanup everything
-  if(reader_old)
-    xmlFreeTextReader(reader_old);
-
-  if(reader_new)
-    xmlFreeTextReader(reader_new);
-
-  if(writer) {
-
-    xmlTextWriterEndDocument(writer);
-    xmlFreeTextWriter(writer);
-  }
-
-  return 0;
-}
-
-void diff_node_init() {
-
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.extra = 0;
@@ -405,8 +363,41 @@ void diff_node_init() {
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
-}
+  // issue the xml declaration
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+  // create srcdiff unit
+  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
+
+  // output srcdiff unit
+  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
+
+  // run on file level
+  if(is_old || is_new)
+    output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
+
+  // output remaining whitespace
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+  // output srcdiff unit ending tag
+  if(is_old && is_new)
+    output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+
+  // cleanup everything
+  if(reader_old)
+    xmlFreeTextReader(reader_old);
+
+  if(reader_new)
+    xmlFreeTextReader(reader_new);
+
+  if(writer) {
+
+    xmlTextWriterEndDocument(writer);
+    xmlFreeTextWriter(writer);
+  }
+
+  return 0;
+}
 
 // converts source code to srcML
 xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {
