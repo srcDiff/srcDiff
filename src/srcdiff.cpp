@@ -1319,13 +1319,13 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
              || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
-        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
                       , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
 
       } else {
 
         // many to many
-        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                       , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
 
       }
@@ -1343,7 +1343,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
       case INSERT:
 
         //fprintf(stderr, "HERE\n");
-        output_change(rbuf_old, 0
+        output_change_white_space(rbuf_old, 0
                       , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, wstate);
 
         // update for common
@@ -1355,7 +1355,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
       case DELETE:
 
         //fprintf(stderr, "HERE\n");
-        output_change(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                       , rbuf_new, 0, wstate);
 
         // update for common
