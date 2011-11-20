@@ -2065,6 +2065,11 @@ void output_white_space_prefix(struct reader_state & rbuf_old
         && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
     ;
 
+  /*
+
+    Change back to if's when not collecting whitespace as single nodes
+
+   */
   // may only match here, but belongs as part of pure change
   while(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
     --oend;
