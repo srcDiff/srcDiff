@@ -1482,7 +1482,8 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
       xmlAttrPtr file_attr = new xmlAttr;
 
       file_attr->name = (xmlChar *)"filename";
-      file_attr->childrent->content = (xmlChar *)filename->c_str();
+      file_attr->children->content = (xmlChar *)filename->c_str();
+      file_attr->next = 0;
 
       attr = unit->properties;
       if(attr) {
@@ -1494,7 +1495,7 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
       } else {
 
-        attr
+        unit->properties = file_attr;
       }
 
     }
