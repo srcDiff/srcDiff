@@ -2066,10 +2066,10 @@ void output_white_space_prefix(struct reader_state & rbuf_old
     ;
 
   // may only match here, but belongs as part of pure change
-  if(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
+  while(rbuf_old.last_output < oend && (is_white_space(nodes_old.at(oend - 1)) && !is_new_line(nodes_old.at(oend - 1))))
     --oend;
 
-  if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
+  while(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
