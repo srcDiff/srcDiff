@@ -1489,7 +1489,7 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
         attr->next = attr_new;
 
       } else {
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         unit->properties = attr_new;
       }
 
