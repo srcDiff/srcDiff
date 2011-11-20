@@ -390,17 +390,12 @@ int main(int argc, char * argv[]) {
     output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
   // cleanup everything
-  if(reader_old)
-    xmlFreeTextReader(reader_old);
+  xmlFreeTextReader(reader_old);
+  
+  xmlFreeTextReader(reader_new);
 
-  if(reader_new)
-    xmlFreeTextReader(reader_new);
-
-  if(writer) {
-
-    xmlTextWriterEndDocument(writer);
-    xmlFreeTextWriter(writer);
-  }
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
 
   return 0;
 }
