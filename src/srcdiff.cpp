@@ -224,9 +224,10 @@ int main(int argc, char * argv[]) {
   if(is_old)
     collect_difference(&nodes_old, reader_old);
 
+  xmlNodePtr unit_end = xmlTextReaderRead(reader_old);
+
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
-
 
   xmlBufferEmpty(output_file);
 
