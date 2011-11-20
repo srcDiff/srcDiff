@@ -325,12 +325,9 @@ int main(int argc, char * argv[]) {
   struct writer_state wstate = { 0 };
   wstate.writer = writer;
 
-  std::vector<struct open_diff *> output_diff;
   new_diff = new struct open_diff;
   new_diff->operation = COMMON;
-  output_diff.push_back(new_diff);
-
-  wstate.output_diff = output_diff;
+  wstate.output_diff.push_back(new_diff);
 
   // setup diff tags
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
