@@ -208,8 +208,12 @@ int main(int argc, char * argv[]) {
   if(!is_srcML) {
 
     // translate file one
-     output_file = translate_to_srcML(argv[1], 0, argv[3]);
+    output_file = translate_to_srcML(argv[1], 0, argv[3]);
     reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
+
+  } else {
+
+    reader_old = xmlNewTextReaderFilename(argv[2], 0);
 
   }
 
@@ -258,7 +262,12 @@ int main(int argc, char * argv[]) {
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
 
+  } else {
+
+    reader_new = xmlNewTextReaderFilename(argv[3], 0);
+
   }
+
 
   if (reader_new == NULL) {
 
