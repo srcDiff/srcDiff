@@ -307,9 +307,6 @@ int main(int argc, char * argv[]) {
   struct reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
 
-  std::vector<struct open_diff *> open_diff_old;
-  rbuf_old.open_diff = open_diff_old;
-
   struct open_diff * new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
@@ -318,9 +315,6 @@ int main(int argc, char * argv[]) {
   // Set up insert reader state
   struct reader_state rbuf_new = { 0 };
   rbuf_new.stream_source = INSERT;
-
-  std::vector<struct open_diff *> open_diff_new;
-  rbuf_new.open_diff = open_diff_new;
 
   new_diff = new struct open_diff;
   new_diff->operation = COMMON;
