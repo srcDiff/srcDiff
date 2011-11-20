@@ -1900,13 +1900,13 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
         if(opivot < olength) {
 
-        output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+          //output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
         for(int k = opivot; k < olength; ++k)
         output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
         // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+        //output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
         }
 
