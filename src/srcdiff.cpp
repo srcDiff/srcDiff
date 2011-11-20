@@ -213,7 +213,7 @@ int main(int argc, char * argv[]) {
 
   } else {
 
-    reader_old = xmlNewTextReaderFilename(argv[2], 0);
+    reader_old = xmlNewTextReaderFilename(argv[2]);
 
   }
 
@@ -264,7 +264,7 @@ int main(int argc, char * argv[]) {
 
   } else {
 
-    reader_new = xmlNewTextReaderFilename(argv[3], 0);
+    reader_new = xmlNewTextReaderFilename(argv[3]);
 
   }
 
