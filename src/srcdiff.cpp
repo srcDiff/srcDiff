@@ -1483,7 +1483,7 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
       file_attr->name = (xmlChar *)"filename";
 
       xmlNodePtr value = new xmlNode;
-      value->name = "text";
+      value->name = (xmlChar *)"text";
       file_attr->children = value;
       file_attr->children->content = (xmlChar *)filename->c_str();
 
