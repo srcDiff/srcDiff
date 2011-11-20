@@ -1524,6 +1524,10 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
+    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
+       && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
+      return;
+
     // check if ending a DELETE/INSERT/COMMON tag. if so delay.
     if(*node == diff_old_end || *node == diff_new_end || *node == diff_common_end) {
 
