@@ -1476,7 +1476,7 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
     if(attr) {
 
-      attr->children->content = (const xmlChar *)filename->c_str();
+      attr->children->content = (xmlChar *)filename->c_str();
     }
 
     // for(; namespaces->next; namespaces = namespaces->next)
