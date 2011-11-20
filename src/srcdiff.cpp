@@ -186,6 +186,17 @@ int main(int argc, char * argv[]) {
     return 1;
   }
 
+  bool is_srcml = false;
+  int file_one_offset = 1;
+  int file_two_offset = 2;
+  if(strcmp(argv[1], "--srcml-files") == 0) {
+
+    is_srcml = true;
+    ++file_one_offset;
+    ++file_two_offset;
+
+  }
+
   const char * srcdiff_file;
   srcdiff_file = "-";
 
