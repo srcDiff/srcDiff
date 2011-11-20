@@ -1477,12 +1477,27 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
     if(attr) {
 
       attr->children->content = (xmlChar *)filename->c_str();
+    } else {
+
+      xmlAttrPtr file_attr = new xmlAttr;
+
+      file_attr->name = (xmlChar *)"filename";
+      file_attr->childrent->content = (xmlChar *)filename->c_str();
+
+      attr = unit->properties;
+      if(attr) {
+
+        for(; attr->next; attr = attr->next)
+          ;
+
+        attr->next = file_attr;
+
+      } else {
+
+        attr
+      }
+
     }
-
-    // for(; namespaces->next; namespaces = namespaces->next)
-    //;
-
-    //namespaces->next = ns;
   }
 
 }
