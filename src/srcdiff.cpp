@@ -772,10 +772,12 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
+  // fix
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output common nodes
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
@@ -1462,28 +1464,15 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-
+  */
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
+
 
   static bool delay = false;
   static int delay_operation = -2;
-
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
-
-    int current_operation = wstate.output_diff.back()->operation;
-    int size = wstate.output_diff.back()->open_tags.size();
-
-    if(size > 0 && ((*node == diff_old_start && current_operation == DELETE)
-                    || (*node == diff_new_start && current_operation == INSERT)
-                    || (*node == diff_common_start && current_operation == COMMON))) {
-
-      return;
-    }
-  }
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
      && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
