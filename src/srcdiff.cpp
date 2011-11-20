@@ -1444,7 +1444,8 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
   xmlNodePtr unit = unit_old;
 
   std::string filename_old = "";
-  for(xmlAttrPtr attr = unit->properties; attr; attr = attr->next)
+  xmlAttrPtr attr;
+  for(attr = unit->properties; attr; attr = attr->next)
     if(strcmp((const char *)attr->name, "filename") == 0) {
 
       filename_old += (const char *)attr->children->content;
@@ -1454,10 +1455,10 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
 
   std::string filename_new = "";
-  for(xmlAttrPtr attr = unit_new->properties; attr; attr = attr->next)
-    if(strcmp((const char *)attr->name, "filename") == 0) {
+  for(xmlAttrPtr attr_new = unit_new->properties; attr_new; attr_new = attr_new->next)
+    if(strcmp((const char *)attr_new->name, "filename") == 0) {
 
-      filename_new += (const char *)attr->children->content;
+      filename_new += (const char *)attr_new->children->content;
       break;
     }
 
@@ -1472,6 +1473,11 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
     filename = new std::string(filename_new);
 
   if(filename) {
+
+    if(attr) {
+
+      attr->children->content = (const xmlChar *)filename->c_str();
+    }
 
     // for(; namespaces->next; namespaces = namespaces->next)
     //;
