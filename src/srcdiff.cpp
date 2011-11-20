@@ -773,10 +773,8 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   unsigned int nend = end_new;
 
 
-  // fix
   // output common tag if needed
-  if(rbuf_old.last_output != oend && rbuf_new.last_output != nend)
-    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
