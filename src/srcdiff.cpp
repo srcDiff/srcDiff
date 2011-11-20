@@ -782,7 +782,7 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
   // may need to take out all occurences afterwards except on pure deletes of this after something
-  output_white_space_statement(rbuf_old, rbuf_new, wstate);
+  //output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
