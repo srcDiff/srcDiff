@@ -192,12 +192,15 @@ int main(int argc, char * argv[]) {
   srcdiff_file = "-";
 
   // TODO: Error handling? Is the return NULL if bad?
-  // translate file one
-  xmlBuffer * output_file = translate_to_srcML(argv[1], 0, argv[3]);
 
   /*
-    Create xmlreaders and the xmlwriter
+
+    Input for file one
+
   */
+
+  // translate file one
+  xmlBuffer * output_file = translate_to_srcML(argv[1], 0, argv[3]);
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
@@ -226,7 +229,13 @@ int main(int argc, char * argv[]) {
 
 
   xmlBufferEmpty(output_file);
- 
+
+  /*
+
+    Input for file two
+
+  */
+
   // translate file two
   output_file = translate_to_srcML(argv[2], 0, argv[3]);
 
@@ -259,6 +268,12 @@ int main(int argc, char * argv[]) {
   // free the buffer
   xmlBufferFree(output_file);
 
+  /*
+
+    Setup output file
+
+  */
+
   // create the writer
   xmlTextWriterPtr writer = NULL;
   writer = xmlNewTextWriterFilename(srcdiff_file, 0);
@@ -274,9 +289,17 @@ int main(int argc, char * argv[]) {
     exit(1);
   }
 
+  /*
+
+    Setup internal structure for the
+    readers and writer.
+
+   */
+
   // Set up delete reader state
   struct reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
+
   std::vector<struct open_diff *> open_diff_old;
   rbuf_old.open_diff = open_diff_old;
 
@@ -284,9 +307,11 @@ int main(int argc, char * argv[]) {
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
 
+
   // Set up insert reader state
   struct reader_state rbuf_new = { 0 };
   rbuf_new.stream_source = INSERT;
+
   std::vector<struct open_diff *> open_diff_new;
   rbuf_new.open_diff = open_diff_new;
 
@@ -294,16 +319,19 @@ int main(int argc, char * argv[]) {
   new_diff->operation = COMMON;
   rbuf_new.open_diff.push_back(new_diff);
 
+
   // set up writer state
+  struct writer_state wstate = { 0 };
+  wstate.writer = writer;
+
   std::vector<struct open_diff *> output_diff;
   new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   output_diff.push_back(new_diff);
 
-  struct writer_state wstate = { 0 };
-  wstate.writer = writer;
   wstate.output_diff = output_diff;
 
+  // setup diff tags
   diff_node_init();
 
   // issue the xml declaration
@@ -318,8 +346,10 @@ int main(int argc, char * argv[]) {
   // run on file level
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
+  // output remaining whitespace
   output_white_space_all(rbuf_old, rbuf_new, wstate);
-  // output srcdiff unit
+
+  // output srcdiff unit ending tag
   output_node(rbuf_old, rbuf_new, getRealCurrentNode(reader_old), COMMON, wstate);
 
   // cleanup everything
