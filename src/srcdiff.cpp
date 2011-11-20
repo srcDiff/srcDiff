@@ -188,7 +188,7 @@ int main(int argc, char * argv[]) {
 
   bool is_srcML = false;
 
-  if(strcmp(argv[1], "--srcml-files") == 0)
+  if(strcmp(argv[1], "--srcml") == 0)
     is_srcML = true;
 
   const char * srcdiff_file;
