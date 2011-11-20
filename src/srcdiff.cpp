@@ -1452,8 +1452,6 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
       break;
     }
 
-
-
   std::string filename_new = "";
   xmlAttrPtr attr_new;
   for(attr_new = unit_new->properties; attr_new; attr_new = attr_new->next)
