@@ -353,6 +353,7 @@ int main(int argc, char * argv[]) {
   output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
   // run on file level
+  if(is_old || is_new)
   output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
   // output remaining whitespace
