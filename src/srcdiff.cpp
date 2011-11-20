@@ -1443,9 +1443,21 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
   xmlNodePtr unit = unit_old;
 
+  std::string filename_old = "";
   for(xmlAttrPtr attr = unit->properties; attr; attr = attr->next)
-    if(strcmp((const char *)attr->name, "filename") == 0)
-      ;
+    if(strcmp((const char *)attr->name, "filename") == 0) {
+
+      filename_old += attr->children->content;
+      break;
+    }
+
+  std::string filename_new = "";
+  for(xmlAttrPtr attr = unit_new->properties; attr; attr = attr->next)
+    if(strcmp((const char *)attr->name, "filename") == 0) {
+
+      filename_new += attr->children->content;
+      break;
+    }
 
 }
 
