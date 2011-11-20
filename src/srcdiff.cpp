@@ -1407,6 +1407,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
 
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
+void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new);
 
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new) {
@@ -1416,6 +1417,8 @@ xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
   // add diff namespace
   addNamespace(&unit->nsDef, &diff);
+
+  merge_filename(unit, unit_new);
 
   return unit;
 }
@@ -1435,6 +1438,12 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
     *nsDef = ns;
 
 }
+
+void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
+
+
+}
+
 
 void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr node, int operation) {
 
