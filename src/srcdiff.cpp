@@ -1470,6 +1470,10 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   static bool delay = false;
   static int delay_operation = -2;
 
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
+     && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
+    return;
+
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)) {
 
