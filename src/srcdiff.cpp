@@ -1451,6 +1451,8 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
       break;
     }
 
+
+
   std::string filename_new = "";
   for(xmlAttrPtr attr = unit_new->properties; attr; attr = attr->next)
     if(strcmp((const char *)attr->name, "filename") == 0) {
@@ -1458,6 +1460,24 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
       filename_new += attr->children->content;
       break;
     }
+
+  std::string * filename = NULL;
+  if(filename_old != "" && filename_new != "") {
+
+    filename = new std::string(filename_old + "|" + filename_new);
+
+  } else if(filename_old != "")
+    filename = new std::string(filename_old);
+  else if(filename_new != "")
+    filename = new std::string(filename_new);
+
+  if(filename) {
+
+    // for(; namespaces->next; namespaces = namespaces->next)
+    //;
+
+    //namespaces->next = ns;
+  }
 
 }
 
