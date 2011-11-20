@@ -264,8 +264,13 @@ int main(int argc, char * argv[]) {
   int is_new = xmlTextReaderRead(reader_new);
 
   // collect if non empty files
-  if(is_new)
+  if(is_new) {
+
     collect_difference(&nodes_new, reader_new);
+
+    unit_end = getRealCurrentNode(reader_old);
+
+  }
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
@@ -354,7 +359,8 @@ int main(int argc, char * argv[]) {
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output srcdiff unit ending tag
-  output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+  if(is_old && is_new)
+    output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
   // cleanup everything
   if(reader_old)
