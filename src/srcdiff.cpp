@@ -202,12 +202,17 @@ int main(int argc, char * argv[]) {
 
   */
 
-  // translate file one
-  xmlBuffer * output_file = translate_to_srcML(argv[1], 0, argv[3]);
-
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
-  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
+  xmlBuffer * output_file = NULL;
+  if(!is_srcML) {
+
+    // translate file one
+     output_file = translate_to_srcML(argv[1], 0, argv[3]);
+    reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
+
+  }
+
   if (reader_old == NULL) {
 
     fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
@@ -235,7 +240,8 @@ int main(int argc, char * argv[]) {
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
-  xmlBufferEmpty(output_file);
+  if(!is_srcML)
+    xmlBufferEmpty(output_file);
 
   /*
 
@@ -243,12 +249,17 @@ int main(int argc, char * argv[]) {
 
   */
 
-  // translate file two
-  output_file = translate_to_srcML(argv[2], 0, argv[3]);
-
-  // create the reader for the new file
   xmlTextReaderPtr reader_new = NULL;
-  reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
+  if(!is_srcML) {
+
+    // translate file two
+    output_file = translate_to_srcML(argv[2], 0, argv[3]);
+
+    // create the reader for the new file
+    reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
+
+  }
+
   if (reader_new == NULL) {
 
     fprintf(stderr, "Unable to open file '%s' as XML", argv[2]);
@@ -278,7 +289,8 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
   // free the buffer
-  xmlBufferFree(output_file);
+  if(!is_srcML)
+    xmlBufferFree(output_file);
 
   /*
 
