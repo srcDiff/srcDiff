@@ -1480,17 +1480,6 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
       attr->children->content = (xmlChar *)filename->c_str();
     } else {
 
-      /*
-      xmlAttrPtr file_attr = new xmlAttr;
-      file_attr->name = (xmlChar *)"filename";
-
-      xmlNodePtr value = new xmlNode;
-      value->name = (xmlChar *)"text";
-      file_attr->children = value;
-      file_attr->children->content = (xmlChar *)filename->c_str();
-
-      file_attr->next = 0;
-      */
       attr = unit->properties;
       if(attr) {
 
