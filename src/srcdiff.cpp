@@ -221,10 +221,13 @@ int main(int argc, char * argv[]) {
   int is_old = xmlTextReaderRead(reader_old);
 
   // collect if non empty files
-  if(is_old)
-    collect_difference(&nodes_old, reader_old);
+  xmlNodePtr unit_end = NULL;
+  if(is_old) {
 
-  xmlNodePtr unit_end = getRealCurrentNode(reader_old);
+    collect_difference(&nodes_old, reader_old);
+    unit_end = getRealCurrentNode(reader_old);
+
+  }
 
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
