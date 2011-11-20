@@ -224,7 +224,7 @@ int main(int argc, char * argv[]) {
   if(is_old)
     collect_difference(&nodes_old, reader_old);
 
-  xmlNodePtr unit_end = xmlTextReaderRead(reader_old);
+  xmlNodePtr unit_end = getRealCurrentNode(reader_old);
 
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
@@ -351,7 +351,7 @@ int main(int argc, char * argv[]) {
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output srcdiff unit ending tag
-  output_node(rbuf_old, rbuf_new, getRealCurrentNode(reader_old), COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
   // cleanup everything
   if(reader_old)
