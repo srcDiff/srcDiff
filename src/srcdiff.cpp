@@ -191,8 +191,6 @@ int main(int argc, char * argv[]) {
   const char * srcdiff_file;
   srcdiff_file = "-";
 
-  diff_node_init();
-
   // TODO: Error handling? Is the return NULL if bad?
   // translate file one
   xmlBuffer * output_file = translate_to_srcML(argv[1], 0, argv[3]);
@@ -305,6 +303,8 @@ int main(int argc, char * argv[]) {
   struct writer_state wstate = { 0 };
   wstate.writer = writer;
   wstate.output_diff = output_diff;
+
+  diff_node_init();
 
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
