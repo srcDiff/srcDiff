@@ -366,6 +366,12 @@ int main(int argc, char * argv[]) {
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+  /*
+
+    Start output
+
+  */
+
   // create srcdiff unit
   xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
