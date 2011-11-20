@@ -243,6 +243,9 @@ int main(int argc, char * argv[]) {
     exit(1);
   }
 
+  // read to unit
+  xmlTextReaderRead(reader_new);
+
   xmlNodePtr unit_new = getRealCurrentNode(reader_new);
 
   int is_new = xmlTextReaderRead(reader_new);
@@ -290,9 +293,6 @@ int main(int argc, char * argv[]) {
   new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   rbuf_new.open_diff.push_back(new_diff);
-
-  // read to unit
-  xmlTextReaderRead(reader_new);
 
   // set up writer state
   std::vector<struct open_diff *> output_diff;
