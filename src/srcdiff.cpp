@@ -111,7 +111,6 @@ xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
 std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes, int start, int end);
 
 // collect the nodes
-// TODO:  No it doesn't.  Rename this
 void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
 // output a single difference DELETE or INSERT
@@ -321,7 +320,6 @@ int main(int argc, char * argv[]) {
   reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
 
-  // TODO:  This is C++.  The name of a struct (and a class) is a new type.  Quit referring to "struct" each time
   diff_set * new_diff = new diff_set;
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
@@ -559,8 +557,9 @@ void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node
   for(; is_open; ++start) {
 
     // skip whitespace
-    // TODO:  THIS IS WHERE A continue would work.  Special case
-    if(!is_white_space(nodes.at(start))) {
+    if(is_white_space(nodes.at(start)))
+      continue;
+
       //      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
       //else
@@ -576,8 +575,6 @@ void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node
       // closing tags
       else if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_END_ELEMENT)
         --is_open;
-
-    }
 
   }
 
