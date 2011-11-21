@@ -726,12 +726,13 @@ void output_white_space_pure_statement_end(struct reader_state & rbuf_old
   unsigned int nend = rbuf_new.last_output;
 
   // advance whitespace after targeted end
-  if(operation == DELETE)
-    if(oend < nodes_old.size() && is_new_line(nodes_old.at(oend))) {
-      ++oend;
-    } else if(operation == INSERT)
-      if(nend < nodes_new.size() && is_new_line(nodes_new.at(nend)))
-	++nend;
+  if(operation == DELETE) {
+    if(oend < nodes_old.size() && is_new_line(nodes_old.at(oend)))
+      ++oend; 
+    }
+  else if(operation == INSERT)
+    if(nend < nodes_new.size() && is_new_line(nodes_new.at(nend)))
+      ++nend;
 
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
