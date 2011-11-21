@@ -1087,15 +1087,15 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
 
         // collect subset of nodes
         std::vector<std::vector<int> *> next_node_set_old
-          = create_comment_line_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+          = create_node_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         std::vector<std::vector<int> *> next_node_set_new
-          = create_comment_line_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+          = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare as lines
-        output_comment_line(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
       } else {
 
