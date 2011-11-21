@@ -323,7 +323,7 @@ int main(int argc, char * argv[]) {
 
   // TODO:  This is C++.  The name of a struct (and a class) is a new type.  Quit referring to "struct" each time
   diff_set * new_diff = new diff_set;
-  new_diff->operation = DELETE;
+  new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
 
   // insert reader state
