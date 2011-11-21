@@ -480,7 +480,8 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
             ++characters;
 
 	  // break up ( and )
-          // TODO:  THIS MAY BOMB IF NO characters_start + 1 if only ( next is 0
+          // TODO:  THIS MAY BOMB IF NO characters_start + 1 
+	  //shouldnt next character would be 0 if only (
           if((*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
             xmlNode * atext = new xmlNode;
