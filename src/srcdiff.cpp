@@ -2303,8 +2303,8 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
                                , struct reader_state & rbuf_new, unsigned int end_new
                                , struct writer_state & wstate) {
 
-  unsigned int oend = end_old;
-  unsigned int nend = end_new;
+  int oend = end_old;
+  int nend = end_new;
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
