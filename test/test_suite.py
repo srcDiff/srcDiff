@@ -83,7 +83,7 @@ def extract_source(srcDiff, operation):
 
 	# run the srcML extractor
 	command = [srcml_utility, "--diff", operation]
-        
+        print command
 	return safe_communicate(command, srcDiff)
 
 # switch diff order
@@ -398,9 +398,12 @@ try:
 						# total count of test cases
 						total_count = total_count + 1
 
+                                                print unitxml
 						# convert the unit in xml to text
 						unit_text_old = extract_source(unitxml, "1")
+                                                print unit_text_old
 						unit_text_new = extract_source(unitxml, "2")
+                                                print unit_text_new
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
