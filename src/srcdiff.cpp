@@ -496,7 +496,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           }
 
-          // Copy the remainder after ( NOTE: Could be empty string need to check
+          // Copy the remainder after (
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
 
