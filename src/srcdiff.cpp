@@ -761,7 +761,6 @@ void output_common(reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-
   // output common tag if needed
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
@@ -833,7 +832,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");
-
+      
       // 1-1
       if(edits->length == edit_next->length && edits->length == 1
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
@@ -1673,7 +1672,8 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
 
   unsigned int leftptr;
-  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size() && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr)
+  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size()
+        && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr)
     ;
 
   unsigned int rightptr;
@@ -2130,10 +2130,10 @@ void output_white_space_prefix(reader_state & rbuf_old
   while(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
 
-  if(!is_new_line(nodes_old.at(oend - 1)))
+  if(oend > 0 && !is_new_line(nodes_old.at(oend - 1)))
     oend = save_oend;
   
-  if(!is_new_line(nodes_new.at(nend - 1)))
+  if(nend > 0 && !is_new_line(nodes_new.at(nend - 1)))
     nend = save_nend;
   
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
