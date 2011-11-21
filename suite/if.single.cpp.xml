@@ -2,62 +2,62 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="if.single">
 
 <unit>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</diff:common>}</block></then></if></diff:old></unit>
+</diff:common>}</block></then></if></diff:delete></unit>
 
 <unit>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </diff:common>}</block></then></if>
-</diff:old></unit>
+</diff:delete></unit>
 
 <unit>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </diff:common>}</block></then></if>
-</diff:old><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+</diff:delete><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 <unit>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </diff:common>}</block></then></if>
-</diff:old><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</diff:delete><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-</diff:common>}</block></then></if></diff:old></unit>
+</diff:common>}</block></then></if></diff:delete></unit>
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </diff:common>}</block></then></if>
-</diff:old></unit>
+</diff:delete></unit>
 
 <unit>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:old></unit>
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:delete></unit>
 
 <unit>
-<diff:old><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:old>
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:delete>
 </unit>
 
 <unit>
 <if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:old><block>{
+<diff:delete><block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</diff:common>}</block></diff:old></then></if></unit>
+</diff:common>}</block></diff:delete></then></if></unit>
 
 <unit>
 <if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:old><block>{
+<diff:delete><block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</diff:common>}</block></diff:old></then></if>
+</diff:common>}</block></diff:delete></then></if>
 </unit>
 
 </unit>
