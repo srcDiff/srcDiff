@@ -246,6 +246,8 @@ int main(int argc, char * argv[]) {
   if(!is_srcML)
     xmlBufferEmpty(output_file);
 
+  xmlFreeTextReader(reader_old);
+
   /*
 
     Input for file two
@@ -267,7 +269,6 @@ int main(int argc, char * argv[]) {
 
   }
 
-
   if (reader_new == NULL) {
 
     fprintf(stderr, "Unable to open file '%s' as XML", argv[2]);
@@ -278,6 +279,7 @@ int main(int argc, char * argv[]) {
   // read to unit
   xmlTextReaderRead(reader_new);
 
+
   xmlNodePtr unit_new = getRealCurrentNode(reader_new);
 
   int is_new = xmlTextReaderRead(reader_new);
@@ -287,7 +289,7 @@ int main(int argc, char * argv[]) {
 
     collect_difference(&nodes_new, reader_new);
 
-    unit_end = getRealCurrentNode(reader_old);
+    unit_end = getRealCurrentNode(reader_new);
 
   }
   
@@ -297,7 +299,6 @@ int main(int argc, char * argv[]) {
   if(!is_srcML)
     xmlBufferFree(output_file);
 
-  xmlFreeTextReader(reader_old);
   xmlFreeTextReader(reader_new);
 
   /*
