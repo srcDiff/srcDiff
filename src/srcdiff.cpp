@@ -467,20 +467,20 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
             ++characters;
 
             // TODO:  Straighten out logic.  You have only one character.
-          const char * content = strndup((const char *)characters_start, characters  - characters_start);
-          text->content = (xmlChar *)content;
+	    const char * content = strndup((const char *)characters_start, characters  - characters_start);
+	    text->content = (xmlChar *)content;
 
         }
 
         // separate non whitespace
         else {
 
-          // TODO:  COMMENT WHAT THIS IS FOR
+	  // collect all 
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
-          // TODO:  COMMENT WHAT THIS IS FOR
-          // TODO:  THIS MAY BOMB IF NO characters_start + 1
+	  // break up ( and )
+          // TODO:  THIS MAY BOMB IF NO characters_start + 1 if only ( next is 0
           if((*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
             xmlNode * atext = new xmlNode;
