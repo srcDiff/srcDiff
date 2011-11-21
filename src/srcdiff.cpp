@@ -404,7 +404,7 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
   translator.setInput(source_file);
 
   // translate file
-  translator.translate(NULL, dir, NULL, NULL, language);
+  translator.translate(NULL, dir, source_file, NULL, language);
 
   // close the input file
   translator.close();
