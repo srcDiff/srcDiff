@@ -85,7 +85,7 @@ struct reader_state {
   unsigned int last_output;
 
   // just a pointer not on stack
-  std::vector<struct open_diff *> open_diff;
+  std::vector<open_diff *> open_diff;
 
 };
 
@@ -93,7 +93,7 @@ struct reader_state {
 struct writer_state {
 
   xmlTextWriterPtr writer;
-  std::vector<struct open_diff *> output_diff;
+  std::vector<open_diff *> output_diff;
 
 };
 
@@ -115,62 +115,62 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes,
 void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
 // output a single difference DELETE or INSERT
-void output_single(struct reader_state & rbuf_old, struct reader_state & rbuf_new, struct edit * edit, struct writer_state & wstate);
+void output_single(reader_state & rbuf_old, reader_state & rbuf_new, edit * edit, writer_state & wstate);
 
 // output file level info
-void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate);
+void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
 
-void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate);
+void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
 
-void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate);
+void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
 
-void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate);
+void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
 
-void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , unsigned int start_old
-                      , struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                       , unsigned int start_new
-                      , struct writer_state & wstate);
+                      , writer_state & wstate);
 
-void output_change(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new
-                   , struct writer_state & wstate);
+void output_change(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new
+                   , writer_state & wstate);
 
-void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_old
-                               , struct reader_state & rbuf_new, unsigned int end_new
-                               , struct writer_state & wstate);
+void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
+                               , reader_state & rbuf_new, unsigned int end_new
+                               , writer_state & wstate);
 
-void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                       , struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                       , struct edit * edit_script, struct writer_state & wstate);
+void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                       , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                       , edit * edit_script, writer_state & wstate);
 
-void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlNodePtr node, int operation, struct writer_state & wstate);
+void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr node, int operation, writer_state & wstate);
 
-void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr node, int operation);
+void update_diff_stack(std::vector<open_diff *> & open_diffs, xmlNodePtr node, int operation);
 
-void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new, struct writer_state & wstate);
+void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate);
 
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
 
 bool has_interal_block(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes);
 
-void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_old
-                   , struct reader_state & rbuf_new ,std::vector<int> * structure_new
-                   , int operation, struct writer_state & wstate);
+void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
+                   , reader_state & rbuf_new ,std::vector<int> * structure_new
+                   , int operation, writer_state & wstate);
 
-void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation, struct writer_state & wstate);
+void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar * text, int operation, writer_state & wstate);
 
-void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned int end_old
-                                       , struct reader_state & rbuf_new, unsigned int end_new
-                                       , int operation, struct writer_state & wstate);
+void output_pure_operation_white_space(reader_state & rbuf_old, unsigned int end_old
+                                       , reader_state & rbuf_new, unsigned int end_new
+                                       , int operation, writer_state & wstate);
 
-void output_white_space_all(struct reader_state & rbuf_old
-                            , struct reader_state & rbuf_new
-                            , struct writer_state & wstate);
+void output_white_space_all(reader_state & rbuf_old
+                            , reader_state & rbuf_new
+                            , writer_state & wstate);
 
-void output_white_space_prefix(struct reader_state & rbuf_old
-                               , struct reader_state & rbuf_new
-                               , struct writer_state & wstate);
+void output_white_space_prefix(reader_state & rbuf_old
+                               , reader_state & rbuf_new
+                               , writer_state & wstate);
 
 int main(int argc, char * argv[]) {
 
@@ -318,7 +318,7 @@ int main(int argc, char * argv[]) {
 
   // TODO:  If you really want to clean this up, make reader_state into a class
   // delete reader state
-  struct reader_state rbuf_old = { 0 };
+  reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
 
   // TODO:  This is C++.  The name of a struct (and a class) is a new type.  Quit referring to "struct" each time
@@ -624,9 +624,9 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes,
   return node_sets;
 
 }
-void output_white_space_nested(struct reader_state & rbuf_old
-                               , struct reader_state & rbuf_new
-                               , int operation, struct writer_state & wstate) {
+void output_white_space_nested(reader_state & rbuf_old
+                               , reader_state & rbuf_new
+                               , int operation, writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
@@ -650,9 +650,9 @@ void output_white_space_nested(struct reader_state & rbuf_old
 }
 
 
-void output_white_space_statement(struct reader_state & rbuf_old
-                                  , struct reader_state & rbuf_new
-                                  , struct writer_state & wstate) {
+void output_white_space_statement(reader_state & rbuf_old
+                                  , reader_state & rbuf_new
+                                  , writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
@@ -674,9 +674,9 @@ void output_white_space_statement(struct reader_state & rbuf_old
 
 }
 
-void output_white_space_all(struct reader_state & rbuf_old
-                            , struct reader_state & rbuf_new
-                            , struct writer_state & wstate) {
+void output_white_space_all(reader_state & rbuf_old
+                            , reader_state & rbuf_new
+                            , writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
@@ -692,10 +692,10 @@ void output_white_space_all(struct reader_state & rbuf_old
 
 }
 
-void output_white_space_pure_statement_end(struct reader_state & rbuf_old
-                                           , struct reader_state & rbuf_new
+void output_white_space_pure_statement_end(reader_state & rbuf_old
+                                           , reader_state & rbuf_new
                                            , int operation
-                                           , struct writer_state & wstate) {
+                                           , writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
@@ -713,10 +713,10 @@ void output_white_space_pure_statement_end(struct reader_state & rbuf_old
 
 }
 
-void output_white_space_match_most(struct reader_state & rbuf_old
-                                   , struct reader_state & rbuf_new
+void output_white_space_match_most(reader_state & rbuf_old
+                                   , reader_state & rbuf_new
                                    , int operation
-                                   , struct writer_state & wstate) {
+                                   , writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
@@ -738,9 +738,9 @@ void output_white_space_match_most(struct reader_state & rbuf_old
 
 }
 
-void output_white_space_most(struct reader_state & rbuf_old
-                             , struct reader_state & rbuf_new
-                             , struct writer_state & wstate) {
+void output_white_space_most(reader_state & rbuf_old
+                             , reader_state & rbuf_new
+                             , writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
@@ -772,9 +772,9 @@ void output_white_space_most(struct reader_state & rbuf_old
 
 */
 
-void output_common(struct reader_state & rbuf_old, unsigned int end_old
-                   , struct reader_state & rbuf_new, unsigned int end_new
-                   , struct writer_state & wstate) {
+void output_common(reader_state & rbuf_old, unsigned int end_old
+                   , reader_state & rbuf_new, unsigned int end_new
+                   , writer_state & wstate) {
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
@@ -807,11 +807,11 @@ void output_common(struct reader_state & rbuf_old, unsigned int end_old
   output before and after changes/common sections.
 
 */
-void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate) {
+void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  struct edit * edit_script;
+  edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
@@ -826,7 +826,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
   int diff_end_old = rbuf_old.last_output;
   int diff_end_new = rbuf_new.last_output;
 
-  struct edit * edits = edit_script;
+  edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
@@ -847,7 +847,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
-    struct edit * edit_next = edits->next;
+    edit * edit_next = edits->next;
     if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");
@@ -1028,9 +1028,9 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> 
   , and then by word using shortest edit script. Whitespace is included after/before changes
 
 */
-void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate) {
+void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
-  struct edit * edit_script;
+  edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
@@ -1045,7 +1045,7 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
   int diff_end_old = rbuf_old.last_output;
   int diff_end_new = rbuf_new.last_output;
 
-  struct edit * edits = edit_script;
+  edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
@@ -1066,7 +1066,7 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
-    struct edit * edit_next = edits->next;
+    edit * edit_next = edits->next;
     if(is_change(edits)) {
 
       // 1-1
@@ -1152,9 +1152,9 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
   Whitespace is included after/before changes
 
 */
-void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate) {
+void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
-  struct edit * edit_script;
+  edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
@@ -1169,7 +1169,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
   int diff_end_old = rbuf_old.last_output;
   int diff_end_new = rbuf_new.last_output;
 
-  struct edit * edits = edit_script;
+  edit * edits = edit_script;
 
   for (; edits; edits = edits->next) {
 
@@ -1191,7 +1191,7 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
-    struct edit * edit_next = edits->next;
+    edit * edit_next = edits->next;
     if(is_change(edits)) {
 
       // 1-1
@@ -1277,11 +1277,11 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
   where in common.
 
 */
-void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, struct writer_state & wstate) {
+void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  struct edit * edit_script;
+  edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
 
@@ -1296,7 +1296,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
   int diff_end_old = rbuf_old.last_output;
   int diff_end_new = rbuf_new.last_output;
 
-  struct edit * edits = edit_script;
+  edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
@@ -1317,7 +1317,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
     // detect and change
-    struct edit * edit_next = edits->next;
+    edit * edit_next = edits->next;
     if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");
@@ -1481,7 +1481,7 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 }
 
 
-void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr node, int operation) {
+void update_diff_stack(std::vector<open_diff *> & open_diffs, xmlNodePtr node, int operation) {
 
   // Skip empty node
   if(node->extra & 0x1)
@@ -1489,7 +1489,7 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 
   if(open_diffs.back()->operation != operation) {
 
-    struct open_diff * new_diff = new struct open_diff;
+    open_diff * new_diff = new open_diff;
     new_diff->operation = operation;
 
     open_diffs.push_back(new_diff);
@@ -1521,7 +1521,7 @@ void update_diff_stack(std::vector<struct open_diff *> & open_diffs, xmlNodePtr 
 
 }
 
-void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlNodePtr node, int operation, struct writer_state & wstate) {
+void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr node, int operation, writer_state & wstate) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -1677,7 +1677,7 @@ struct offset_pair {
   int new_offset;
   int new_length;
   int similarity;
-  struct offset_pair * next;
+  offset_pair * next;
 };
 
 #define MIN -1
@@ -1713,10 +1713,10 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
                        , std::vector<std::vector<int> *> * node_sets_new
-                       , struct edit * edit_script, struct offset_pair ** matches) {
+                       , edit * edit_script, offset_pair ** matches) {
 
-  struct edit * edits = edit_script;
-  struct edit * edit_next = edit_script->next;
+  edit * edits = edit_script;
+  edit * edit_next = edit_script->next;
 
   for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
@@ -1736,7 +1736,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
     }
 
-    struct offset_pair * match = new struct offset_pair;
+    offset_pair * match = new offset_pair;
     match->old_offset = old_pos;
     match->new_offset = new_pos;
     match->similarity = min_similarity;
@@ -1751,11 +1751,11 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
 }
 
-void output_unmatched(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , int start_old, int end_old
-                      , struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                       , int start_new, int end_new
-                      , struct writer_state & wstate) {
+                      , writer_state & wstate) {
 
   unsigned int finish_old = rbuf_old.last_output;
   unsigned int finish_new = rbuf_new.last_output;
@@ -1774,14 +1774,14 @@ void output_unmatched(struct reader_state & rbuf_old, std::vector<std::vector<in
 
 }
 
-void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                       , struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                       , struct edit * edit_script, struct writer_state & wstate) {
+void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                       , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                       , edit * edit_script, writer_state & wstate) {
 
-  struct edit * edits = edit_script;
-  struct edit * edit_next = edit_script->next;
+  edit * edits = edit_script;
+  edit * edit_next = edit_script->next;
 
-  struct offset_pair * matches = NULL;
+  offset_pair * matches = NULL;
 
   match_differences(node_sets_old, node_sets_new, edit_script, &matches);
 
@@ -1839,11 +1839,11 @@ void compare_many2many(struct reader_state & rbuf_old, std::vector<std::vector<i
 
 }
 
-void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , unsigned int start_old
-                      , struct reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                       , unsigned int start_new
-                      , struct writer_state & wstate) {
+                      , writer_state & wstate) {
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
@@ -1900,7 +1900,7 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
   Output of same syntactical entities, but possible whitespace differences.
 
 */
-void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, struct reader_state & rbuf_new, unsigned int end_new, struct writer_state & wstate) {
+void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate) {
 
   int begin_old = rbuf_old.last_output;
   int begin_new = rbuf_new.last_output;
@@ -2119,9 +2119,9 @@ void markup_whitespace(struct reader_state & rbuf_old, unsigned int end_old, str
 
 }
 
-void output_white_space_prefix(struct reader_state & rbuf_old
-                               , struct reader_state & rbuf_new
-                               , struct writer_state & wstate) {
+void output_white_space_prefix(reader_state & rbuf_old
+                               , reader_state & rbuf_new
+                               , writer_state & wstate) {
 
   unsigned int ostart = rbuf_old.last_output;
   unsigned int nstart = rbuf_new.last_output;
@@ -2166,9 +2166,9 @@ void output_white_space_prefix(struct reader_state & rbuf_old
 
 }
 
-void output_white_space_suffix(struct reader_state & rbuf_old
-                               , struct reader_state & rbuf_new
-                               , struct writer_state & wstate) {
+void output_white_space_suffix(reader_state & rbuf_old
+                               , reader_state & rbuf_new
+                               , writer_state & wstate) {
 
   int ostart = rbuf_old.last_output;
   int nstart = rbuf_new.last_output;
@@ -2238,9 +2238,9 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 
 }
 
-void advance_white_space_suffix(struct reader_state & rbuf_old
+void advance_white_space_suffix(reader_state & rbuf_old
                                 , int & end_old
-                                , struct reader_state & rbuf_new
+                                , reader_state & rbuf_new
                                 , int & end_new){
 
   int ostart = end_old;
@@ -2286,9 +2286,9 @@ void advance_white_space_suffix(struct reader_state & rbuf_old
   it is included and the following nodes are included if they have a new line.
 
 */
-void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_old
-                               , struct reader_state & rbuf_new, unsigned int end_new
-                               , struct writer_state & wstate) {
+void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
+                               , reader_state & rbuf_new, unsigned int end_new
+                               , writer_state & wstate) {
 
   int oend = end_old;
   int nend = end_new;
@@ -2309,9 +2309,9 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   whitespace even if it could be matches is treated as different.
 
 */
-void output_change(struct reader_state & rbuf_old, unsigned int end_old
-                   , struct reader_state & rbuf_new, unsigned int end_new
-                   , struct writer_state & wstate) {
+void output_change(reader_state & rbuf_old, unsigned int end_old
+                   , reader_state & rbuf_new, unsigned int end_new
+                   , writer_state & wstate) {
 
   unsigned int begin_old = rbuf_old.last_output;
   unsigned int begin_new = rbuf_new.last_output;
@@ -2391,9 +2391,9 @@ void output_change(struct reader_state & rbuf_old, unsigned int end_old
 
 }
 
-void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned int end_old
-                                       , struct reader_state & rbuf_new, unsigned int end_new
-                                       , int operation, struct writer_state & wstate) {
+void output_pure_operation_white_space(reader_state & rbuf_old, unsigned int end_old
+                                       , reader_state & rbuf_new, unsigned int end_new
+                                       , int operation, writer_state & wstate) {
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
@@ -2410,8 +2410,8 @@ void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned 
 
 }
 
-void output_text_as_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new, xmlChar * text, int operation
-                         , struct writer_state & wstate) {
+void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar * text, int operation
+                         , writer_state & wstate) {
 
   if(strlen((char *)text) == 0)
     return;
@@ -2482,9 +2482,9 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nod
   return false;
 }
 
-void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_old
-                   , struct reader_state & rbuf_new ,std::vector<int> * structure_new
-                   , int operation, struct writer_state & wstate) {
+void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
+                   , reader_state & rbuf_new ,std::vector<int> * structure_new
+                   , int operation, writer_state & wstate) {
 
 
   if(operation == DELETE) {
