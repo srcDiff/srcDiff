@@ -108,7 +108,7 @@ const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
 
 // create sets of nodes
-std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
+std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes, int start, int end);
 
 // collect the nodes
 // TODO:  No it doesn't.  Rename this
