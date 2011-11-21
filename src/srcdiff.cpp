@@ -1406,7 +1406,7 @@ void output_comment_word(struct reader_state & rbuf_old, std::vector<std::vector
 
 
 
-void addNamespace(xmlNsPtr & nsDef, xmlNsPtr ns);
+void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new);
 
 // create srcdiff unit
@@ -1416,16 +1416,16 @@ xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new) {
   xmlNodePtr unit = unit_old;
 
   // add diff namespace
-  addNamespace(unit->nsDef, &diff);
+  addNamespace(&unit->nsDef, &diff);
 
   merge_filename(unit, unit_new);
 
   return unit;
 }
 
-void addNamespace(xmlNsPtr & nsDef, xmlNsPtr ns) {
+void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
-  xmlNsPtr namespaces = nsDef;
+  xmlNsPtr namespaces = *nsDef;
 
   if(namespaces) {
 
@@ -1435,7 +1435,7 @@ void addNamespace(xmlNsPtr & nsDef, xmlNsPtr ns) {
     namespaces->next = ns;
   }
   else
-    nsDef = ns;
+    *nsDef = ns;
 
 }
 
@@ -1462,29 +1462,36 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
     }
 
   std::string * filename = NULL;
-
-  // if both had a filename combine
-  if(attr && attr_new) {
+  if(filename_old != "" && filename_new != "") {
 
     filename = new std::string(filename_old + "|" + filename_new);
-    attr->children->content = (xmlChar *)filename->c_str();
-    return;
 
-  }
+  } else if(filename_old != "")
+    filename = new std::string(filename_old);
+  else if(filename_new != "")
+    filename = new std::string(filename_new);
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
-  if(attr_new) {
-
-    attr = unit->properties;
+  if(filename) {
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(attr) {
-      
-      for(; attr->next; attr = attr->next)
-        ;
 
-      attr->next = attr_new;
-      
+      attr->children->content = (xmlChar *)filename->c_str();
     } else {
 
-      unit->properties = attr_new;
+      attr = unit->properties;
+      if(attr) {
+
+        for(; attr->next; attr = attr->next)
+          ;
+
+        attr->next = attr_new;
+
+      } else {
+
+        unit->properties = attr_new;
+      }
+
     }
   }
 
