@@ -322,7 +322,7 @@ int main(int argc, char * argv[]) {
   rbuf_old.stream_source = DELETE;
 
   // TODO:  This is C++.  The name of a struct (and a class) is a new type.  Quit referring to "struct" each time
-  open_diff * new_diff = new diff_set;
+  diff_set * new_diff = new diff_set;
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
 
