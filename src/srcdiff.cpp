@@ -1462,16 +1462,15 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
     }
 
   std::string * filename = NULL;
+
+  // if both had a filename combine
   if(filename_old != "" && filename_new != "") {
 
     filename = new std::string(filename_old + "|" + filename_new);
 
-  } else if(filename_old != "")
-    filename = new std::string(filename_old);
-  else if(filename_new != "")
-    filename = new std::string(filename_new);
+  }
 
-  if(filename) {
+  if(attr || attr_new) {
 
     if(attr) {
 
