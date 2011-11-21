@@ -466,8 +466,9 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
           //while((*characters) != 0 && *characters != '\n' && isspace(*characters))
             ++characters;
 
-            // TODO:  Straighten out logic.  You have only one character.
-	    const char * content = strndup((const char *)characters_start, characters  - characters_start);
+	    // kind of want a look up table for this
+	    //const char * content = strndup((const char *)characters_start, characters  - characters_start);
+	    const char * content = strndup((const char *)characters_start, 1);
 	    text->content = (xmlChar *)content;
 
         }
