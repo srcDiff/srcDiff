@@ -181,10 +181,7 @@ int main(int argc, char * argv[]) {
     return 1;
   }
 
-  bool is_srcML = false;
-
-  if(strcmp(argv[1], "--srcml") == 0)
-    is_srcML = true;
+  bool is_srcML = strcmp(argv[1], "--srcml") == 0;
 
   const char * srcdiff_file = "-";
 
