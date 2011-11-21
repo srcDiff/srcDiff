@@ -966,7 +966,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
   for(int i = start; i < end; ++i) {
 
     // move past any starting newlines
-    for(; is_new_line(nodes->at(i)); ++i)
+    for(; is_new_line(nodes.at(i)); ++i)
       ;
 
     // collect the nodes in the paragraph
@@ -975,13 +975,13 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
     int newlines = 0;
     for(; i < end; ++i) {
 
-      if(is_new_line(nodes->at(i)))
+      if(is_new_line(nodes.at(i)))
         ++newlines;
 
       if(newlines > 1)
         break;
 
-      if(!is_white_space(nodes->at(i)))
+      if(!is_white_space(nodes.at(i)))
         node_set->push_back(i);
     }
 
@@ -1005,11 +1005,11 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> 
     for(; i < end; ++i) {
 
       // stop the node set at the newline
-      if(is_new_line(nodes->at(i)))
+      if(is_new_line(nodes.at(i)))
         break;
 
       // only collect non-whitespace nodes
-      if(!is_white_space(nodes->at(i)))
+      if(!is_white_space(nodes.at(i)))
         node_set->push_back(i);
     }
 
