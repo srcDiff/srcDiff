@@ -543,13 +543,11 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
 }
 
 // collect an entire tag from open tag to closing tag
-// TODO:  If it has to exist and is not already a pointer, then it should be passed by reference
-// Yes, but it is already a pointer does that make it any clearer to make it a reference
-void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node_set, int & start) {
+void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> & node_set, int & start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
 
-  node_set->push_back(start);
+  node_set.push_back(start);
 
   if(nodes->at(start)->extra & 0x1)
     return;
@@ -568,7 +566,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
       //else
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
 
-      node_set->push_back(start);
+      node_set.push_back(start);
 
       // opening tags
       if((xmlReaderTypes)nodes->at(start)->type == XML_READER_TYPE_ELEMENT
@@ -608,7 +606,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes,
 
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
-        collect_entire_tag(nodes, node_set, i);
+        collect_entire_tag(nodes, *node_set, i);
 
       } else {
 
