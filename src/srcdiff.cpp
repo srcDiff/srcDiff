@@ -40,10 +40,12 @@ char * strndup(const char * s1, size_t n) {
 
 #include "xmlrw.h"
 
+// TODO:  Never used.  Delete or use
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
+// TODO:  Put with DELETE and INSERT
 #define COMMON -1
 
 const char* XML_DECLARATION_STANDALONE = "yes";
@@ -54,8 +56,10 @@ const char* DIFF_OLD = "diff:delete";
 const char* DIFF_NEW = "diff:insert";
 const char* DIFF_COMMON = "diff:common";
 
+// TODO:  Get the output encoding from the input
 const char* output_encoding = "UTF-8";
 
+// TODO:  Not being used
 const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
 
 const char* EDIFF_BEGIN = "start";
@@ -70,6 +74,7 @@ xmlNode diff_new_end;
 
 xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
 
+// TODO:  We know its global.  "hold read in node"?  State what it is, not how it go there
 // global structures to hold read in nodes
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
@@ -107,6 +112,7 @@ struct writer_state {
 // tags that can have something nested in them
 const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
+// TODO:  So if can't be nested?  return statement?
 // tags that can be nested in something else
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
@@ -191,6 +197,7 @@ int main(int argc, char * argv[]) {
   if(strcmp(argv[1], "--srcml") == 0)
     is_srcML = true;
 
+  // TODO:  Initialize, not assign
   const char * srcdiff_file;
   srcdiff_file = "-";
 
@@ -324,12 +331,11 @@ int main(int argc, char * argv[]) {
 
   /*
 
-    Setup internal structure for the
-    readers and writer.
+    Setup readers and writer.
 
    */
 
-  // Set up delete reader state
+  // delete reader state
   struct reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
 
@@ -337,8 +343,7 @@ int main(int argc, char * argv[]) {
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
 
-
-  // Set up insert reader state
+  // insert reader state
   struct reader_state rbuf_new = { 0 };
   rbuf_new.stream_source = INSERT;
 
@@ -346,8 +351,7 @@ int main(int argc, char * argv[]) {
   new_diff->operation = COMMON;
   rbuf_new.open_diff.push_back(new_diff);
 
-
-  // set up writer state
+  // writer state
   struct writer_state wstate = { 0 };
   wstate.writer = writer;
 
@@ -355,7 +359,7 @@ int main(int argc, char * argv[]) {
   new_diff->operation = COMMON;
   wstate.output_diff.push_back(new_diff);
 
-  // setup diff tags
+  // diff tags
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.extra = 0;
@@ -380,12 +384,13 @@ int main(int argc, char * argv[]) {
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
+  // TODO:  THIS IS PART OF THE OUTPUT
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
   /*
 
-    Start output
+    Output srcDiff
 
   */
 
@@ -407,6 +412,8 @@ int main(int argc, char * argv[]) {
     output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
   // cleanup everything
+  // TODO:  WHY ARE YOU CLEANING THIS UP HERE?  IT HAS NOT BEEN
+  // USED IN THIS SECTION AT ALL?
   xmlFreeTextReader(reader_old);
   
   xmlFreeTextReader(reader_new);
@@ -479,6 +486,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
           //while((*characters) != 0 && *characters != '\n' && isspace(*characters))
             ++characters;
 
+            // TODO:  Straighten out logic.  You have only one character.
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
 
@@ -487,9 +495,12 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
         // separate non whitespace
         else {
 
+          // TODO:  COMMENT WHAT THIS IS FOR
           while((*characters) != 0 && !isspace(*characters))
             ++characters;
 
+          // TODO:  COMMENT WHAT THIS IS FOR
+          // TODO:  THIS MAY BOMB IF NO characters_start + 1
           if((*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
             xmlNode * atext = new xmlNode;
@@ -503,6 +514,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           }
 
+          // TODO:  HOW DOES WITH WORK WITH THE SPECIAL CASE ABOVE?
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
 
@@ -530,10 +542,10 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
 }
 
-const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
-
 // check if node is a indivisable group of three (atomic)
 bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
+
+  static const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
 
   if((start + 2) >= nodes->size())
     return false;
@@ -555,7 +567,7 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
 }
 
 // collect an entire tag from open tag to closing tag
-// If it has to exist and is not already a pointer, then it should be passed by reference
+// TODO:  If it has to exist and is not already a pointer, then it should be passed by reference
 void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node_set, int & start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
@@ -572,6 +584,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> * node
   for(; is_open; ++start) {
 
     // skip whitespace
+    // TODO:  THIS IS WHERE A continue would work.  Special case
     if(!is_white_space(nodes->at(start))) {
       //      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
@@ -716,7 +729,7 @@ void output_white_space_pure_statement_end(struct reader_state & rbuf_old
   if(operation == DELETE)
     if(oend < nodes_old.size() && is_new_line(nodes_old.at(oend)))
       ++oend;
-  if(operation == INSERT)
+  else if(operation == INSERT)
     if(nend < nodes_new.size() && is_new_line(nodes_new.at(nend)))
       ++nend;
 
