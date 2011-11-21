@@ -110,9 +110,9 @@ xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
 // create sets of nodes
 std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
 
-// collect the differnces
+// collect the nodes
 // TODO:  No it doesn't.  Rename this
-void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
+void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
 // output a single difference DELETE or INSERT
 void output_single(struct reader_state & rbuf_old, struct reader_state & rbuf_new, struct edit * edit, struct writer_state & wstate);
@@ -227,19 +227,19 @@ int main(int argc, char * argv[]) {
   xmlNodePtr unit_end = NULL;
   if(is_old) {
 
-    collect_difference(&nodes_old, reader_old);
+    collect_nodes(&nodes_old, reader_old);
     unit_end = getRealCurrentNode(reader_old);
 
   }
 
-  // group nodes
-  std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
-
-  // TODO:  Empty the buffer AS SOON AS YOU ARE DONE WITH IT
   if(!is_srcML)
     xmlBufferEmpty(output_file);
 
   xmlFreeTextReader(reader_old);
+
+  // group nodes
+  std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
+
 
   /*
 
@@ -280,20 +280,20 @@ int main(int argc, char * argv[]) {
   // collect if non empty files
   if(is_new) {
 
-    collect_difference(&nodes_new, reader_new);
+    collect_nodes(&nodes_new, reader_new);
 
     unit_end = getRealCurrentNode(reader_new);
 
   }
-  
-  std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
-
+ 
   // free the buffer
-  // TODO:  Free the buffer AS SOON AS YOU ARE DONE WITH IT
   if(!is_srcML)
     xmlBufferFree(output_file);
 
   xmlFreeTextReader(reader_new);
+ 
+  std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
+
 
   /*
 
@@ -430,7 +430,7 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
 }
 
 // collect the differnces
-void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
+void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 
   int not_done = 1;
   while(not_done) {
