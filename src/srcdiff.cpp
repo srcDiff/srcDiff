@@ -1462,36 +1462,25 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
     }
 
   std::string * filename = NULL;
-  if(filename_old != "" && filename_new != "") {
+  if(attr && attr_new) {
 
     filename = new std::string(filename_old + "|" + filename_new);
 
-  } else if(filename_old != "")
-    filename = new std::string(filename_old);
-  else if(filename_new != "")
-    filename = new std::string(filename_new);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  }
 
-  if(filename) {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  if(attr_new) {
+    
+    attr = unit->properties;
     if(attr) {
-
-      attr->children->content = (xmlChar *)filename->c_str();
+      
+      for(; attr->next; attr = attr->next)
+        ;
+      
+      attr->next = attr_new;
+      
     } else {
-
-      attr = unit->properties;
-      if(attr) {
-
-        for(; attr->next; attr = attr->next)
-          ;
-
-        attr->next = attr_new;
-
-      } else {
-
-        unit->properties = attr_new;
-      }
-
+      
+      unit->properties = attr_new;
     }
   }
 
