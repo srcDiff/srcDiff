@@ -21,21 +21,8 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-// TODO:  Put this in a separate .hpp file called mingw32
 #ifdef __MINGW32__
-#include <string.h>
-#include <io.h>
-
-char * strndup(const char * s1, size_t n) {
-
-  char * dest = (char *)malloc(n * sizeof(char) + 1);
-
-  memcpy(dest, s1, n);
-
-  dest[n] = 0;
-
-  return dest;
-}
+#include "mingw32.hpp"
 #endif
 
 #include "xmlrw.h"
