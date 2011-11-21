@@ -2251,6 +2251,79 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 
 }
 
+void advance_white_space_suffix(struct reader_state & rbuf_old
+                                , int end_old
+                                , struct reader_state & rbuf_new
+                                , int end_new){
+
+  int ostart = rbuf_old.last_output;
+  int nstart = rbuf_new.last_output;
+  int oend = ostart;
+  int nend = nstart;
+
+  // advance all whitespace
+  for(; oend < (signed)nodes_old.size() && is_white_space(nodes_old.at(oend)); ++oend)
+    ;
+
+  for(; nend < (signed)nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend)
+    ;
+
+  int opivot = oend - 1;
+  int npivot = nend - 1;
+
+  for(; opivot > ostart && npivot > nstart
+        && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
+    ;
+
+  if(opivot < ostart || npivot < nstart) {
+
+    opivot = oend;
+    npivot = nend;
+
+  } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
+    ++opivot;
+    ++npivot;
+  }
+
+  if(ostart < opivot) {
+
+    // output delete
+    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+
+    for(int i = ostart; i < opivot; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+
+  }
+
+  if(nstart < npivot) {
+
+    // output insert
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+
+    for(int i = nstart; i < npivot; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+
+  }
+
+  // output common
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+
+  for(int i = opivot; i < oend; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+
+  rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
+  rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
+
+}
+
 /*
 
   Adds whitespace to a change. Then outputs the change.
