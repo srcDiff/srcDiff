@@ -117,6 +117,7 @@ xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
 std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end);
 
 // collect the differnces
+// TODO:  No it doesn't.  Rename this
 void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
 // output a single difference DELETE or INSERT
@@ -243,6 +244,7 @@ int main(int argc, char * argv[]) {
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
+  // TODO:  Empty the buffer AS SOON AS YOU ARE DONE WITH IT
   if(!is_srcML)
     xmlBufferEmpty(output_file);
 
@@ -296,6 +298,7 @@ int main(int argc, char * argv[]) {
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
   // free the buffer
+  // TODO:  Free the buffer AS SOON AS YOU ARE DONE WITH IT
   if(!is_srcML)
     xmlBufferFree(output_file);
 
@@ -322,10 +325,12 @@ int main(int argc, char * argv[]) {
 
    */
 
+  // TODO:  If you really want to clean this up, make reader_state into a class
   // delete reader state
   struct reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
 
+  // TODO:  This is C++.  The name of a struct (and a class) is a new type.  Quit referring to "struct" each time
   struct open_diff * new_diff = new struct open_diff;
   new_diff->operation = COMMON;
   rbuf_old.open_diff.push_back(new_diff);
