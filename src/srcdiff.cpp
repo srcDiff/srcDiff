@@ -2252,12 +2252,12 @@ void output_white_space_suffix(struct reader_state & rbuf_old
 }
 
 void advance_white_space_suffix(struct reader_state & rbuf_old
-                                , int end_old
+                                , int & end_old
                                 , struct reader_state & rbuf_new
-                                , int end_new){
+                                , int & end_new){
 
-  int ostart = rbuf_old.last_output;
-  int nstart = rbuf_new.last_output;
+  int ostart = end_old;
+  int nstart = end_new;
   int oend = ostart;
   int nend = nstart;
 
@@ -2284,6 +2284,9 @@ void advance_white_space_suffix(struct reader_state & rbuf_old
     ++opivot;
     ++npivot;
   }
+
+  end_old = opivot;
+  end_new = npivot;
 
 }
 
