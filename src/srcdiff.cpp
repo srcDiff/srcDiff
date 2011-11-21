@@ -1539,12 +1539,12 @@ void output_node(struct reader_state & rbuf_old, struct reader_state & rbuf_new,
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+  */
 
   static bool delay = false;
   static int delay_operation = -2;
@@ -2145,7 +2145,6 @@ void output_white_space_prefix(struct reader_state & rbuf_old
   for(; oend < nodes_old.size() && nend < nodes_new.size()
         && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
         && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);;
 
   /*
 
@@ -2371,7 +2370,7 @@ void output_pure_operation_white_space(struct reader_state & rbuf_old, unsigned 
 
   unsigned int oend = end_old;
   unsigned int nend = end_new;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
