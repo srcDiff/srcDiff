@@ -191,9 +191,7 @@ int main(int argc, char * argv[]) {
   if(strcmp(argv[1], "--srcml") == 0)
     is_srcML = true;
 
-  // TODO:  Initialize, not assign
-  const char * srcdiff_file;
-  srcdiff_file = "-";
+  const char * srcdiff_file = "-";
 
   // TODO: Error handling? Is the return NULL if bad?
 
@@ -242,6 +240,8 @@ int main(int argc, char * argv[]) {
 
   }
 
+  xmlFreeTextReader(reader_old);
+
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
@@ -274,9 +274,6 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "Unable to open file '%s' as XML", argv[2]);
 
-    if(reader_old)
-      xmlFreeTextReader(reader_old);
-
     exit(1);
   }
 
@@ -295,6 +292,8 @@ int main(int argc, char * argv[]) {
     unit_end = getRealCurrentNode(reader_old);
 
   }
+  
+  xmlFreeTextReader(reader_new);
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
@@ -313,12 +312,6 @@ int main(int argc, char * argv[]) {
   writer = xmlNewTextWriterFilename(srcdiff_file, 0);
   if (writer == NULL) {
     fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
-
-    if(reader_old)
-      xmlFreeTextReader(reader_old);
-
-    if(reader_new)
-      xmlFreeTextReader(reader_new);
 
     exit(1);
   }
@@ -378,15 +371,14 @@ int main(int argc, char * argv[]) {
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
-  // TODO:  THIS IS PART OF THE OUTPUT
-  // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
-
   /*
 
     Output srcDiff
 
   */
+
+  // issue the xml declaration
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
   // create srcdiff unit
   xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
@@ -408,9 +400,6 @@ int main(int argc, char * argv[]) {
   // cleanup everything
   // TODO:  WHY ARE YOU CLEANING THIS UP HERE?  IT HAS NOT BEEN
   // USED IN THIS SECTION AT ALL?
-  xmlFreeTextReader(reader_old);
-  
-  xmlFreeTextReader(reader_new);
 
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
