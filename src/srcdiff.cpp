@@ -1847,7 +1847,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
                                      , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_node_paragraph_set(nodes_new, node_sets_new->at(start_new)->at(1)
+      = create_node_set(nodes_new, node_sets_new->at(start_new)->at(1)
                                      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
