@@ -70,7 +70,7 @@ std::vector<xmlNode *> nodes_new;
 // converts source code to srcML
 xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
 
-struct open_diff {
+struct diff_set {
 
   int operation;
 
@@ -85,7 +85,7 @@ struct reader_state {
   unsigned int last_output;
 
   // just a pointer not on stack
-  std::vector<open_diff *> open_diff;
+  std::vector<diff_set *> open_diff;
 
 };
 
@@ -93,7 +93,7 @@ struct reader_state {
 struct writer_state {
 
   xmlTextWriterPtr writer;
-  std::vector<open_diff *> output_diff;
+  std::vector<diff_set *> output_diff;
 
 };
 
