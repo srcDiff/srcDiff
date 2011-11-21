@@ -543,7 +543,7 @@ bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
 }
 
 // collect an entire tag from open tag to closing tag
-void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> & node_set, int & start) {
+void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node_set, int & start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
 
@@ -585,7 +585,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> * nodes, std::vector<int> & node
 }
 
 // create the node sets for shortest edit script
-std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
+std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
 
   std::vector<std::vector<int> *> node_sets;
 
@@ -959,7 +959,7 @@ void output_diffs(struct reader_state & rbuf_old, std::vector<std::vector<int> *
 /*
   Collect paragraphs
 */
-std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
+std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
   std::vector<std::vector<int> *> node_sets;
@@ -994,7 +994,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 }
 
 // collect lines
-std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> * nodes, int start, int end) {
+std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
 
   std::vector<std::vector<int> *> node_sets;
 
@@ -1074,11 +1074,11 @@ void output_comment_paragraph(struct reader_state & rbuf_old, std::vector<std::v
 
         // collect subset of nodes
         std::vector<std::vector<int> *> next_node_set_old
-          = create_node_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+          = create_node_set(nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         std::vector<std::vector<int> *> next_node_set_new
-          = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+          = create_node_set(nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare as lines
@@ -1199,11 +1199,11 @@ void output_comment_line(struct reader_state & rbuf_old, std::vector<std::vector
 
         // collect subset of nodes
         std::vector<std::vector<int> *> next_node_set_old
-          = create_node_set(&nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+          = create_node_set(nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         std::vector<std::vector<int> *> next_node_set_new
-          = create_node_set(&nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+          = create_node_set(nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare on word basis
@@ -1861,11 +1861,11 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
-      = create_comment_paragraph_set(&nodes_old, node_sets_old->at(start_old)->at(1)
+      = create_comment_paragraph_set(nodes_old, node_sets_old->at(start_old)->at(1)
                                      , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_comment_paragraph_set(&nodes_new, node_sets_new->at(start_new)->at(1)
+      = create_comment_paragraph_set(nodes_new, node_sets_new->at(start_new)->at(1)
                                      , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_comment_paragraph(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
@@ -1875,11 +1875,11 @@ void output_recursive(struct reader_state & rbuf_old, std::vector<std::vector<in
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(&nodes_old, node_sets_old->at(start_old)->at(1)
+      = create_node_set(nodes_old, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->back());
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(&nodes_new, node_sets_new->at(start_new)->at(1)
+      = create_node_set(nodes_new, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->back());
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
