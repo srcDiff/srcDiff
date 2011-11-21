@@ -496,7 +496,7 @@ void collect_difference(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader)
 
           }
 
-          // TODO:  HOW DOES WITH WORK WITH THE SPECIAL CASE ABOVE?
+          // Copy the remainder after ( NOTE: Could be empty string need to check
           const char * content = strndup((const char *)characters_start, characters  - characters_start);
           text->content = (xmlChar *)content;
 
