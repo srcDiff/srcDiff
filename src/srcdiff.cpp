@@ -240,13 +240,14 @@ int main(int argc, char * argv[]) {
 
   }
 
-  xmlFreeTextReader(reader_old);
-
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(&nodes_old, 0, nodes_old.size());
 
   if(!is_srcML)
     xmlBufferEmpty(output_file);
+
+  xmlFreeTextReader(reader_old);
+
 
   /*
 
@@ -293,13 +294,13 @@ int main(int argc, char * argv[]) {
 
   }
   
-  xmlFreeTextReader(reader_new);
-
   std::vector<std::vector<int> *> node_set_new = create_node_set(&nodes_new, 0, nodes_new.size());
 
   // free the buffer
   if(!is_srcML)
     xmlBufferFree(output_file);
+
+  xmlFreeTextReader(reader_new);
 
   /*
 
