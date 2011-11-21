@@ -11,6 +11,7 @@
 #define INCLUDED_SHORTEST_EDIT_SCRIPT_H
 
 // edit constants
+#define COMMON -1
 #define INSERT 0
 #define DELETE 1
 

@@ -40,12 +40,6 @@ char * strndup(const char * s1, size_t n) {
 
 #include "xmlrw.h"
 
-// TODO:  Put with DELETE and INSERT
-// No problem but, they are defined in shortest-dit_script.h
-// which really does not directly support common
-// however I have no problem adding it if you still want me too.
-#define COMMON -1
-
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
