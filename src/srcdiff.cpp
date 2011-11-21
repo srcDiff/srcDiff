@@ -397,10 +397,7 @@ int main(int argc, char * argv[]) {
   if(is_old && is_new)
     output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
-  // cleanup everything
-  // TODO:  WHY ARE YOU CLEANING THIS UP HERE?  IT HAS NOT BEEN
-  // USED IN THIS SECTION AT ALL?
-
+  // cleanup writer
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
 
