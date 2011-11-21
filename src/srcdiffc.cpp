@@ -42,11 +42,9 @@
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 
-#define PROGRAM_NAME "src2srcml"
+#define PROGRAM_NAME "srcdiff"
 
 void output_version(const char* name);
-
-class srcMLTranslator;
 
 struct stringequal {
   const char *const lhs;
@@ -153,9 +151,9 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 int option_error_status(int optopt);
 
 // translate a file, maybe an archive
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void srcdiff_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
-void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
 using namespace LanguageName;
 
@@ -343,10 +341,10 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
+void srcdiff_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -560,13 +558,13 @@ int main(int argc, char* argv[]) {
         poptions.fname = STDIN;
 
       // so process the filelist
-      src2srcml_filelist(translator, poptions, count, skipped, error, showinput);
+      srcdiff_filelist(translator, poptions, count, skipped, error, showinput);
 
       // translate from standard input
     } else if (input_arg_count == 0) {
 
       // translate from standard input using any directory, filename and version given on the command line
-      src2srcml_file(translator, STDIN, options,
+      srcdiff_file(translator, STDIN, options,
                      poptions.given_directory,
                      poptions.given_filename,
                      poptions.given_version,
@@ -581,7 +579,7 @@ int main(int argc, char* argv[]) {
       for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
         // process this command line argument
-        src2srcml_file(translator, argv[i], options,
+        srcdiff_file(translator, argv[i], options,
                        input_arg_count == 1 ? poptions.given_directory : 0,
                        input_arg_count == 1 ? poptions.given_filename : 0,
                        input_arg_count == 1 ? poptions.given_version : 0,
@@ -1103,21 +1101,21 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // handle local directories specially
   struct stat instat = { 0 };
   int stat_status = stat(path, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    src2srcml_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
+    srcdiff_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
     return;
   }
 
-  src2srcml_archive(translator, path, options, dir, root_filename, version, language, tabsize, count, skipped,
+  srcdiff_archive(translator, path, options, dir, root_filename, version, language, tabsize, count, skipped,
                     error, showinput, shownumber);
 }
 
-void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1216,7 +1214,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   options = save_options;
 }
 
-void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1387,7 +1385,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
   } while (isarchive && isAnythingOpen(context));
 }
 
-void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
@@ -1398,7 +1396,7 @@ void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, proce
 
   showinput = true;
 
-  src2srcml_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
+  srcdiff_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
 // file/directory names to ignore when processing a directory
@@ -1413,7 +1411,7 @@ int dir_filter(struct dirent* d) {
   return dir_filter((const struct dirent*)d);
 }
 
-void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+void srcdiff_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
@@ -1463,7 +1461,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    src2srcml_text(translator,
+    srcdiff_text(translator,
                    filename.c_str(),
                    options,
                    0,
@@ -1498,7 +1496,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
       continue;
 #endif
 
-    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    srcdiff_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
@@ -1553,7 +1551,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    src2srcml_text(translator,
+    srcdiff_text(translator,
                    filename.c_str(),
                    options,
                    0,
@@ -1593,7 +1591,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     if (!stat_status && !S_ISDIR(instat.st_mode))
       continue;
 
-    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    srcdiff_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
@@ -1602,7 +1600,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
 #endif
 }
 
-void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
+void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
   try {
 
@@ -1628,7 +1626,7 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, 
       showinput = true;
 
       // translate the file listed in the input file using the directory and filename extracted from the path
-      src2srcml_file(translator,
+      srcdiff_file(translator,
                      line,
                      options,
                      0,
