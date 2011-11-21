@@ -570,7 +570,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node
 
       // opening tags
       if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_ELEMENT
-         && !(nodes->at(start)->extra & 0x1))
+         && !(nodes.at(start)->extra & 0x1))
         ++is_open;
 
       // closing tags
