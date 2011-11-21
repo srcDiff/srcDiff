@@ -2312,7 +2312,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
   // need to make function that sets end and pass modified end to change then call to output rest
-  output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
 }
 
