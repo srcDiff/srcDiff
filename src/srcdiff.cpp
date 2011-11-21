@@ -145,7 +145,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
 void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr node, int operation, writer_state & wstate);
 
-void update_diff_stack(std::vector<open_diff *> & open_diffs, xmlNodePtr node, int operation);
+void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, int operation);
 
 void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate);
 
@@ -1481,7 +1481,7 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 }
 
 
-void update_diff_stack(std::vector<open_diff *> & open_diffs, xmlNodePtr node, int operation) {
+void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, int operation) {
 
   // Skip empty node
   if(node->extra & 0x1)
@@ -1489,7 +1489,7 @@ void update_diff_stack(std::vector<open_diff *> & open_diffs, xmlNodePtr node, i
 
   if(open_diffs.back()->operation != operation) {
 
-    open_diff * new_diff = new open_diff;
+    diff_set * new_diff = new diff_set;
     new_diff->operation = operation;
 
     open_diffs.push_back(new_diff);
