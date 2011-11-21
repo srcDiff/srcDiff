@@ -1465,7 +1465,9 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
   if(attr && attr_new) {
 
     filename = new std::string(filename_old + "|" + filename_new);
-    attr->childrent.content = (xmlChar *)filename->c_str();
+    attr->children.content = (xmlChar *)filename->c_str();
+    return;
+
   }
 
   if(attr_new) {
