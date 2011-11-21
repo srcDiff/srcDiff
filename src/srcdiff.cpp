@@ -2559,11 +2559,11 @@ void output_nested(struct reader_state & rbuf_old, std::vector<int> * structure_
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(&nodes_old, start_pos
+      = create_node_set(nodes_old, start_pos
                         , end_pos);
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(&nodes_new,  structure_new->at(0)
+      = create_node_set(nodes_new,  structure_new->at(0)
                         , structure_new->back() + 1);
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
