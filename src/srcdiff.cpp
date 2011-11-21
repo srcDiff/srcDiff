@@ -100,8 +100,7 @@ struct writer_state {
 // tags that can have something nested in them
 const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
-// TODO:  So if can't be nested?  return statement?
-// tags that can be nested in something else
+// tags that can be nested in something else (incomplete)
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
 // create srcdiff unit
@@ -315,7 +314,6 @@ int main(int argc, char * argv[]) {
 
    */
 
-  // TODO:  If you really want to clean this up, make reader_state into a class
   // delete reader state
   reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
