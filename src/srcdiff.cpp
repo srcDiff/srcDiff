@@ -477,9 +477,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
             ++characters;
 
 	  // break up ( and )
-          // TODO:  THIS MAY BOMB IF NO characters_start + 1 
-	  //shouldnt next character would be 0 if only (
-          if((*characters_start) == '(' && (*(characters_start + 1)) == ')') {
+          if((characters_start + 1) && (*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
             xmlNode * atext = new xmlNode;
             atext->type = (xmlElementType)XML_READER_TYPE_TEXT;
