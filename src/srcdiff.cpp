@@ -246,9 +246,6 @@ int main(int argc, char * argv[]) {
   if(!is_srcML)
     xmlBufferEmpty(output_file);
 
-  xmlFreeTextReader(reader_old);
-
-
   /*
 
     Input for file two
@@ -300,8 +297,6 @@ int main(int argc, char * argv[]) {
   if(!is_srcML)
     xmlBufferFree(output_file);
 
-  xmlFreeTextReader(reader_new);
-
   /*
 
     Setup output file
@@ -316,6 +311,9 @@ int main(int argc, char * argv[]) {
 
     exit(1);
   }
+
+  xmlFreeTextReader(reader_old);
+  xmlFreeTextReader(reader_new);
 
   /*
 
