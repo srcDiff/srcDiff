@@ -57,12 +57,6 @@ const char* DIFF_COMMON = "diff:common";
 // TODO:  Get the output encoding from the input
 const char* output_encoding = "UTF-8";
 
-// TODO:  Not being used
-const xmlChar* EDIFF_ATTRIBUTE = BAD_CAST "type";
-
-const char* EDIFF_BEGIN = "start";
-const char* EDIFF_END = "end";
-
 xmlNode diff_common_start;
 xmlNode diff_common_end;
 xmlNode diff_old_start;
