@@ -83,7 +83,7 @@ def extract_source(srcDiff, operation):
 
 	# run the srcML extractor
 	command = [srcml_utility, "--diff", operation]
-        print command
+
 	return safe_communicate(command, srcDiff)
 
 # switch diff order
