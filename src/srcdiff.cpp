@@ -40,11 +40,6 @@ char * strndup(const char * s1, size_t n) {
 
 #include "xmlrw.h"
 
-// TODO:  Never used.  Delete or use
-// macros
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
-#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
-
 // TODO:  Put with DELETE and INSERT
 #define COMMON -1
 
@@ -2275,6 +2270,7 @@ void output_change_white_space(struct reader_state & rbuf_old, unsigned int end_
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
+  // need to make function that sets end and pass modified end to change then call to output rest
   output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
 }
