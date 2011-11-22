@@ -356,7 +356,7 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
 int process_args(int argc, char* argv[], process_options & poptions);
 
 int main(int argc, char* argv[]) {
-
+  /*
   // test for correct input
   if(argc < 3) {
 
@@ -384,7 +384,6 @@ int main(int argc, char* argv[]) {
 
     Setup output file
 
-  */
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
@@ -404,7 +403,7 @@ int main(int argc, char* argv[]) {
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
   return status
-
+*/
 
   int exit_status = EXIT_SUCCESS;
 
