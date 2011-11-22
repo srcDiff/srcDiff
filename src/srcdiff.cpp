@@ -104,10 +104,6 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate);
 
-void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr node, int operation, writer_state & wstate);
-
-void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, int operation);
-
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
 
