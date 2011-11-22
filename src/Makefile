@@ -74,16 +74,16 @@ $(OBJ_DIR)srcdiff.o : srcdiff.cpp srcDiffTypes.hpp srcDiffUtility.hpp srcDiffWhi
 $(OBJ_DIR)srcDiffUtility.o : srcDiffUtility.cpp srcDiffUtility.hpp shortest_edit_script.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcDiffWhiteSpace.o : srcDiffWhiteSpace.cpp srcDiffWhiteSpace.hpp srcDiffTypes.hpp srcDiffUtility.hpp
+$(OBJ_DIR)srcDiffWhiteSpace.o : srcDiffWhiteSpace.cpp srcDiffWhiteSpace.hpp srcDiffCommon.hpp srcDiffOutput.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcDiffCommon.o : srcDiffCommon.cpp srcDiffCommon.hpp srcDiffTypes.hpp srcDiffUtility.hpp
+$(OBJ_DIR)srcDiffCommon.o : srcDiffCommon.cpp srcDiffCommon.hpp srcDiffTypes.hpp srcDiffUtility.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcDiffChange.o : srcDiffChange.cpp srcDiffChange.hpp srcDiffTypes.hpp srcDiffUtility.hpp
+$(OBJ_DIR)srcDiffChange.o : srcDiffChange.cpp srcDiffChange.hpp srcDiffTypes.hpp srcDiffUtility.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcDiffOutput.o : srcDiffOutput.cpp srcDiffOutput.hpp srcDiffTypes.hpp srcDiffUtility.hpp
+$(OBJ_DIR)srcDiffOutput.o : srcDiffOutput.cpp srcDiffOutput.hpp srcDiffTypes.hpp srcDiffUtility.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
