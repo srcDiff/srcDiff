@@ -71,18 +71,18 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   if(!is_srcML) {
 
     // translate file one
-    output_file = translate_to_srcML(argv[1], 0, argv[3]);
+    output_file = translate_to_srcML(filename_one, 0, 0);
     reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
 
   } else {
 
-    reader_old = xmlNewTextReaderFilename(argv[2]);
+    reader_old = xmlNewTextReaderFilename(filename_one);
 
   }
 
   if (reader_old == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", argv[1]);
+    fprintf(stderr, "Unable to open file '%s' as XML", filename_one);
 
     exit(1);
   }
@@ -123,20 +123,20 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   if(!is_srcML) {
 
     // translate file two
-    output_file = translate_to_srcML(argv[2], 0, argv[3]);
+    output_file = translate_to_srcML(filename_two, 0, 0);
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
 
   } else {
 
-    reader_new = xmlNewTextReaderFilename(argv[3]);
+    reader_new = xmlNewTextReaderFilename(filename_two);
 
   }
 
   if (reader_new == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", argv[2]);
+    fprintf(stderr, "Unable to open file '%s' as XML", filename_two);
 
     exit(1);
   }
