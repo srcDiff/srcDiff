@@ -54,7 +54,7 @@ endif
 # libarchive
 XML_IO_LIB=-larchive
 IO_LIB_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
-IO_LIB=../../../libxml_archive_read.o ../../../libxml_archive_write.o
+IO_LIB=../../../obj/libxml_archive_read.o ../../../obj/libxml_archive_write.o
 
 # project dirs
 EXE_DIR = ../bin/
