@@ -1,3 +1,11 @@
+#include "srcDiffCommon.hpp"
+#include "srcDiffTypes.hpp"
+#include "srcDiffUtility.hpp"
+
+// global structures defined in main
+extern std::vector<xmlNode *> nodes_old;
+extern std::vector<xmlNode *> nodes_new;
+
 /*
 
   Output of same syntactical entities, but possible whitespace differences.
