@@ -56,12 +56,6 @@ xmlNode diff_new_end;
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
-// tags that can have something nested in them
-const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
-
-// tags that can be nested in something else (incomplete)
-const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
-
 
 int main(int argc, char * argv[]) {
 
