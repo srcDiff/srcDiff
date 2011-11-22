@@ -541,7 +541,7 @@ int main(int argc, char* argv[]) {
   }
 
   try {
-    /*
+
     // translator from input to output using determined language
     srcMLTranslator translator(poptions.language,
                                poptions.src_encoding,
@@ -553,7 +553,7 @@ int main(int argc, char* argv[]) {
                                poptions.given_version,
                                urisprefix,
                                poptions.tabsize);
-    */
+
 
     bool showinput = false;
     bool shownumber = false;
