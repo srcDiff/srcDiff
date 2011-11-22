@@ -1,3 +1,5 @@
+#include "srcDiffWhiteSpace.hpp"
+
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
                                , int operation, writer_state & wstate) {
