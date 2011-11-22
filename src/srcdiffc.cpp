@@ -429,9 +429,9 @@ int main(int argc, char* argv[]) {
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
-  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
+  writer = xmlNewTextWriterFilename(poptions.srcml_filename, 0);
   if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
+    fprintf(stderr, "Unable to open file '%s' as XML", poptions.srcml_filename);
 
     exit(1);
   }
@@ -549,7 +549,7 @@ int main(int argc, char* argv[]) {
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
-    int status = srcdiff_translate(filename_one, filename_two, is_srcML, writer);
+    int status = srcdiff_translate(filename_one, filename_two, 0, writer);
 
     // cleanup writer
     xmlTextWriterEndDocument(writer);
