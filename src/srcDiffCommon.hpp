@@ -3,6 +3,10 @@
 
 #include "srcDiffTypes.hpp"
 
+void output_common(reader_state & rbuf_old, unsigned int end_old
+                   , reader_state & rbuf_new, unsigned int end_new
+                   , writer_state & wstate);
+
 void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate);
 
 #endif

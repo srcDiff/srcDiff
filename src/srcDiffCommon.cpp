@@ -16,6 +16,38 @@ extern xmlNode diff_old_end;
 extern xmlNode diff_new_start;
 extern xmlNode diff_new_end;
 
+/*
+
+  Output common elements.
+
+  All preceeding unused whitespace must be included, and all whitespace
+  with a newline afterwards.  Currently, if the first after has no newline,
+  it is included and the following nodes are included if they have a new line.
+
+*/
+
+void output_common(reader_state & rbuf_old, unsigned int end_old
+                   , reader_state & rbuf_new, unsigned int end_new
+                   , writer_state & wstate) {
+
+  unsigned int oend = end_old;
+  unsigned int nend = end_new;
+
+  // output common tag if needed
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+  // output common nodes
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
+
+  // may need to take out all occurences afterwards except on pure deletes of this after something
+  //output_white_space_statement(rbuf_old, rbuf_new, wstate);
+
+  // output common tag if needed
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+
+}
 
 /*
 
