@@ -12,9 +12,6 @@ xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/sr
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer) {
 
-  // register default language extensions
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
   // get language from file extension
   int language = Language::getLanguageFromFilename(source_file);
 
