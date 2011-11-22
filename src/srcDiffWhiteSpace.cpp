@@ -1,5 +1,4 @@
 #include "srcDiffWhiteSpace.hpp"
-#include "srcDiffTypes.hpp"
 
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
