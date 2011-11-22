@@ -28,11 +28,11 @@ int main(int argc, char * argv[]) {
     return 1;
   }
 
-  int is_srcML = strcmp(argv[1], "--srcml");
+  int is_srcML = strcmp(argv[1], "--srcml") == 0;
 
   char * filename_one;
   char * filename_two;
-  if(is_srcML) {
+  if(!is_srcML) {
     filename_one = argv[1];
     filename_two = argv[2];
   } else {
