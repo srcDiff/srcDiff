@@ -61,16 +61,8 @@ std::vector<xmlNode *> nodes_new;
 
 int srcdiff_translate(int argc, char * argv[], xmlTextWriterPtr writer) {
 
-  // test for correct input
-  if(argc < 3) {
-
-    fprintf(stderr, "Usage: srcdiff oldFile newFile dir\n");
-    return 1;
-  }
 
   bool is_srcML = strcmp(argv[1], "--srcml") == 0;
-
-  const char * srcdiff_file = "-";
 
   // TODO: Error handling? Is the return NULL if bad?
 

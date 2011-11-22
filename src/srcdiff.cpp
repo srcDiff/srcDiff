@@ -15,6 +15,15 @@
 
 int main(int argc, char * argv[]) {
 
+  // test for correct input
+  if(argc < 3) {
+
+    fprintf(stderr, "Usage: srcdiff oldFile newFile dir\n");
+    return 1;
+  }
+
+  const char * srcdiff_file = "-";
+
   /*
 
     Setup output file
