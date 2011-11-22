@@ -341,7 +341,7 @@ struct process_options
 };
 
 process_options* gpoptions = 0;
-
+s
 void srcdiff_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void srcdiff_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void srcdiff_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
@@ -351,38 +351,6 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
 int process_args(int argc, char* argv[], process_options & poptions);
 
 int main(int argc, char* argv[]) {
-
-  /*
-  // test for correct input
-  if(argc < 3) {
-
-    fprintf(stderr, "Usage: srcdiff oldFile newFile dir\n");
-    return 1;
-  }
-
-  int is_srcML = strcmp(argv[1], "--srcml") == 0;
-
-  char * filename_one;
-  char * filename_two;
-  if(!is_srcML) {
-    filename_one = argv[1];
-    filename_two = argv[2];
-  } else {
-    filename_one = argv[2];
-    filename_two = argv[3];
-
-  }
-  const char * srcdiff_out_file = "-";
-
-  */
-
-
-  /*
-
-    Setup output file
-
-  */
-
 
   int exit_status = EXIT_SUCCESS;
 
