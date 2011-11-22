@@ -28,4 +28,10 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate);
 
+void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                      , unsigned int start_old
+                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , unsigned int start_new
+                      , writer_state & wstate);
+
 #endif
