@@ -371,9 +371,8 @@ int main(int argc, char* argv[]) {
     filename_two = argv[3];
 
   }
-    
 
-  const char * srcdiff_file = "-";
+  const char * srcdiff_out_file = "-";
 
   /*
 
@@ -383,9 +382,9 @@ int main(int argc, char* argv[]) {
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
-  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
+  writer = xmlNewTextWriterFilename(srcdiff_out_file, 0);
   if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
+    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_out_file);
 
     exit(1);
   }
