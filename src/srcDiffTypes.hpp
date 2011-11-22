@@ -1,6 +1,8 @@
 #ifndef INCLUDED_SRCDIFFTYPES_HPP
 #define INCLUDED_SRCDIFFTYPES_HPP
 
+#include <vector>
+
 struct diff_set {
 
   int operation;
