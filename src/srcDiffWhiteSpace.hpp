@@ -45,6 +45,6 @@ void output_white_space_suffix(reader_state & rbuf_old
 void advance_white_space_suffix(reader_state & rbuf_old
                                 , int & end_old
                                 , reader_state & rbuf_new
-                                , int & end_new){
+                                , int & end_new);
 
 #endif
