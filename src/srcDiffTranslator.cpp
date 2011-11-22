@@ -7,6 +7,8 @@
   mjd52@zips.uakron.edu
 */
 
+#include "srcDiffTranslator.hpp"
+
 #include <stdio.h>
 #include <fstream>
 #include <string>
