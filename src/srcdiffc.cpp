@@ -352,6 +352,7 @@ int process_args(int argc, char* argv[], process_options & poptions);
 
 int main(int argc, char* argv[]) {
 
+  /*
   // test for correct input
   if(argc < 3) {
 
@@ -371,33 +372,16 @@ int main(int argc, char* argv[]) {
     filename_two = argv[3];
 
   }
-
   const char * srcdiff_out_file = "-";
+
+  */
+
 
   /*
 
     Setup output file
 
   */
-
-  // create the writer
-  xmlTextWriterPtr writer = NULL;
-  writer = xmlNewTextWriterFilename(srcdiff_out_file, 0);
-  if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_out_file);
-
-    exit(1);
-  }
-
-  // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, "UTF-8", XML_DECLARATION_STANDALONE);
-
-  int status = srcdiff_translate(filename_one, filename_two, is_srcML, writer);
-
-  // cleanup writer
-  xmlTextWriterEndDocument(writer);
-  xmlFreeTextWriter(writer);
-  return status;
 
 
   int exit_status = EXIT_SUCCESS;
@@ -557,7 +541,7 @@ int main(int argc, char* argv[]) {
   }
 
   try {
-
+    /*
     // translator from input to output using determined language
     srcMLTranslator translator(poptions.language,
                                poptions.src_encoding,
@@ -569,7 +553,7 @@ int main(int argc, char* argv[]) {
                                poptions.given_version,
                                urisprefix,
                                poptions.tabsize);
-
+    */
 
     bool showinput = false;
     bool shownumber = false;
@@ -623,10 +607,26 @@ int main(int argc, char* argv[]) {
       // translate filenames from the command line
     } else {
 
+      // create the writer
+      xmlTextWriterPtr writer = NULL;
+      writer = xmlNewTextWriterFilename(srcdiff_out_file, 0);
+      if (writer == NULL) {
+        fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_out_file);
+
+        exit(1);
+      }
+
+      // issue the xml declaration
+      xmlTextWriterStartDocument(writer, XML_VERSION, "UTF-8", XML_DECLARATION_STANDALONE);
+
       // translate in batch the input files on the command line extracting the directory and filename attributes
       // from the full path
-      for (int i = input_arg_start; i <= input_arg_end; ++i) {
+      for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
 
+
+        srcdiff_translate(filename_one, filename_two, is_srcML, writer);
+
+        /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
                        input_arg_count == 1 ? poptions.given_directory : 0,
@@ -635,7 +635,12 @@ int main(int argc, char* argv[]) {
                        poptions.language,
                        poptions.tabsize,
                        count, skipped, error, showinput, shownumber);
+        */
       }
+
+      // cleanup writer
+      xmlTextWriterEndDocument(writer);
+      xmlFreeTextWriter(writer);
     }
 
     if (count == 0)
