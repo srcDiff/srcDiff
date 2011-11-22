@@ -1,5 +1,5 @@
 #include "srcDiffWhiteSpace.hpp"
-#include "shorest_edit_script.h"
+#include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
 
 // global structures defined in main
