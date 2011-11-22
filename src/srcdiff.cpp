@@ -10,6 +10,9 @@
 
 #include "srcDiffTranslator.hpp"
 
+#include <libxml/xmlreader.h>
+#include <libxml/xmlwriter.h>
+
 int main(int argc, char * argv[]) {
 
   /*
