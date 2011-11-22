@@ -1,6 +1,9 @@
 #ifndef INCLUDED_SRCDIFFNESTED_HPP
 #define INCLUDED_SRCDIFFNESTED_HPP
 
+#include "srcDiffTypes.hpp"
+#include <vector>
+
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
 
