@@ -1,3 +1,5 @@
+#ifndef INCLUDED_SRCDIFFTYPES_HPP
+#define INCLUDED_SRCDIFFTYPES_HPP
 
 struct diff_set {
 
@@ -26,3 +28,4 @@ struct writer_state {
 
 };
 
+#endif
