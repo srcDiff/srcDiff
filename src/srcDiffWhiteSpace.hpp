@@ -1,3 +1,9 @@
+#ifndef INCLUDED_SRCDIFF_WHITESPACE_HPP
+#define INCLUDED_SRCDIFF_WHITESPACE_HPP
+
+struct reader_state;
+struct writerr_state;
+
 void output_white_space_all(reader_state & rbuf_old
                             , reader_state & rbuf_new
                             , writer_state & wstate);
@@ -28,3 +34,4 @@ void output_white_space_match_most(reader_state & rbuf_old
                                    , reader_state & rbuf_new
                                    , int operation
                                    , writer_state & wstate);
+#endif
