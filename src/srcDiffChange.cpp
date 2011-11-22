@@ -4,7 +4,10 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "shortest_edit_script.h"
 
+#ifdef __MINGW32__
 #include "mingw32.hpp"
+#endif
+
 #include <string.h>
 #include <string>
 
