@@ -1,6 +1,8 @@
 #include "srcDiffCommon.hpp"
 #include "srcDiffUtility.hpp"
 
+#include <string>
+
 // global structures defined in main
 extern std::vector<xmlNode *> nodes_old;
 extern std::vector<xmlNode *> nodes_new;
