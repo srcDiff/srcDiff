@@ -358,6 +358,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  /*
   int is_srcML = strcmp(argv[1], "--srcml") == 0;
 
   char * filename_one;
@@ -370,35 +371,7 @@ int main(int argc, char* argv[]) {
     filename_two = argv[3];
 
   }
-    
-
-  const char * srcdiff_file = "-";
-
-  /*
-
-    Setup output file
-
   */
-
-  // create the writer
-  xmlTextWriterPtr writer = NULL;
-  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
-  if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
-
-    exit(1);
-  }
-
-  // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
-
-  int status = srcdiff_translate(filename_one, filename_two, is_srcML, writer);
-
-  // cleanup writer
-  xmlTextWriterEndDocument(writer);
-  xmlFreeTextWriter(writer);
-  return status;
-
 
   int exit_status = EXIT_SUCCESS;
 
@@ -447,6 +420,21 @@ int main(int argc, char* argv[]) {
   // no output specified, so use stdout
   if (!poptions.srcml_filename)
     poptions.srcml_filename = "-";
+
+  /*
+
+    Setup output file
+
+  */
+
+  // create the writer
+  xmlTextWriterPtr writer = NULL;
+  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
+  if (writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
+
+    exit(1);
+  }
 
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
@@ -558,6 +546,16 @@ int main(int argc, char* argv[]) {
 
   try {
 
+    // issue the xml declaration
+    xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+
+    int status = srcdiff_translate(filename_one, filename_two, is_srcML, writer);
+
+    // cleanup writer
+    xmlTextWriterEndDocument(writer);
+    xmlFreeTextWriter(writer);
+
+    /*
     // translator from input to output using determined language
     srcMLTranslator translator(poptions.language,
                                poptions.src_encoding,
@@ -570,7 +568,7 @@ int main(int argc, char* argv[]) {
                                urisprefix,
                                poptions.tabsize);
 
-
+    */
     bool showinput = false;
     bool shownumber = false;
     // output source encoding
