@@ -12,4 +12,7 @@ xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new);
 
+bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start);
+  void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
+
 #endif
