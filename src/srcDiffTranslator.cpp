@@ -16,7 +16,6 @@
 
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
-#include "srcDiffTypes.hpp"
 #include "srcDiffWhiteSpace.hpp"
 #include "srcDiffCommon.hpp"
 #include "srcDiffChange.hpp"
