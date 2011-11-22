@@ -1,3 +1,5 @@
+#include "srcDiffComment.hpp"
+
 /*
   Collect paragraphs
 */
