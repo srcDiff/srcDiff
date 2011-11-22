@@ -44,6 +44,12 @@
 
 #define PROGRAM_NAME "srcdiff"
 
+// TODO:  Get the output encoding from the input
+const char* XML_DECLARATION_STANDALONE = "yes";
+const char* XML_VERSION = "1.0";
+
+const char* output_encoding = "UTF-8";
+
 void output_version(const char* name);
 
 struct stringequal {
