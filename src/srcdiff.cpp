@@ -62,8 +62,6 @@ const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 // tags that can be nested in something else (incomplete)
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
-// collect the nodes
-void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
