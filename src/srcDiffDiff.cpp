@@ -6,6 +6,8 @@
 #include "srcDiffCommentDiff.hpp"
 #include "srcDiffWhiteSpace.hpp"
 
+#include <string.h>
+
 // global structures defined in main
 extern std::vector<xmlNode *> nodes_old;
 extern std::vector<xmlNode *> nodes_new;
