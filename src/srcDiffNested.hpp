@@ -10,4 +10,6 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate);
 
+bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes);
+
 #endif

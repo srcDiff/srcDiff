@@ -1,3 +1,4 @@
+#include "srcDiffNested.hpp"
 
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
