@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "srcMLTranslator.hpp"
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
 #include "srcDiffTypes.hpp"
@@ -58,7 +59,7 @@ std::vector<xmlNode *> nodes_new;
 
 
 int main(int argc, char * argv[]) {
-
+  /*
   // test for correct input
   if(argc < 3) {
 
@@ -279,6 +280,6 @@ int main(int argc, char * argv[]) {
   // cleanup writer
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
-
-  return 0;
+*/
+    return srcml_tranlsate(argc, argv);
 }
