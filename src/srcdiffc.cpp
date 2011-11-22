@@ -624,7 +624,7 @@ int main(int argc, char* argv[]) {
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
 
 
-        srcdiff_translate(filename_one, filename_two, is_srcML, writer);
+        srcdiff_translate(argv[i], argv[2], 0, writer);
 
         /*
         // process this command line argument
