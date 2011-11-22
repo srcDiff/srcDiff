@@ -50,7 +50,7 @@ int main(int argc, char * argv[]) {
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
-  int status = srcdiff_translate(argv[1], argv[2], is_srcml, writer);
+  int status = srcdiff_translate(argv[1], argv[2], is_srcML, writer);
 
   // cleanup writer
   xmlTextWriterEndDocument(writer);
