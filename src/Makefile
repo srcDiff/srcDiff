@@ -80,6 +80,9 @@ $(OBJ_DIR)srcDiffWhiteSpace.o : srcDiffWhiteSpace.cpp srcDiffWhiteSpace.hpp srcD
 $(OBJ_DIR)srcDiffCommon.o : srcDiffCommon.cpp srcDiffCommon.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
+$(OBJ_DIR)srcDiffChange.o : srcDiffChange.cpp srcDiffChange.hpp srcDiffTypes.hpp srcDiffUtility.hpp
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+
 $(OBJ_DIR)srcDiffOutput.o : srcDiffOutput.cpp srcDiffOutput.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
