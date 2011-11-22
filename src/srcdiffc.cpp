@@ -326,7 +326,7 @@ struct process_options
 {
   // options
   // output filename
-  const char* srcml_filename;
+  const char* srcdiff_filename;
   const char* fname;
   const char* input_format;
   const char* output_format;
@@ -429,8 +429,8 @@ int main(int argc, char* argv[]) {
   int input_arg_count = input_arg_end - input_arg_start + 1;
 
   // no output specified, so use stdout
-  if (!poptions.srcml_filename)
-    poptions.srcml_filename = "-";
+  if (!poptions.srcdiff_filename)
+    poptions.srcdiff_filename = "-";
 
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
@@ -486,7 +486,7 @@ int main(int argc, char* argv[]) {
 
   // verify that the output filename is not the same as any of the input filenames
   struct stat outstat = { 0 };
-  stat(poptions.srcml_filename, &outstat);
+  stat(poptions.srcdiff_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
     if (strcmp(argv[i], "-") == 0)
@@ -499,7 +499,7 @@ int main(int argc, char* argv[]) {
 
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-              PROGRAM_NAME, argv[i], poptions.srcml_filename);
+              PROGRAM_NAME, argv[i], poptions.srcdiff_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
@@ -546,7 +546,7 @@ int main(int argc, char* argv[]) {
     srcMLTranslator translator(poptions.language,
                                poptions.src_encoding,
                                poptions.xml_encoding,
-                               poptions.srcml_filename,
+                               poptions.srcdiff_filename,
                                options,
                                poptions.given_directory,
                                poptions.given_filename,
@@ -609,9 +609,9 @@ int main(int argc, char* argv[]) {
 
       // create the writer
       xmlTextWriterPtr writer = NULL;
-      writer = xmlNewTextWriterFilename(poptions.srcml_filename, 0);
+      writer = xmlNewTextWriterFilename(poptions.srcdiff_filename, 0);
       if (writer == NULL) {
-        fprintf(stderr, "Unable to open file '%s' as XML", poptions.srcml_filename);
+        fprintf(stderr, "Unable to open file '%s' as XML", poptions.srcdiff_filename);
 
         exit(1);
       }
@@ -759,7 +759,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      poptions.srcml_filename = optarg;
+      poptions.srcdiff_filename = optarg;
       break;
 
     case FILELIST_FLAG_CODE:
@@ -1446,7 +1446,7 @@ void srcdiff_dir_top(srcMLTranslator& translator, const char* directory, process
 
   // record the stat info on the output file
   struct stat outstat = { 0 };
-  stat(poptions.srcml_filename, &outstat);
+  stat(poptions.srcdiff_filename, &outstat);
 
   showinput = true;
 
@@ -1508,7 +1508,7 @@ void srcdiff_dir(srcMLTranslator& translator, const char* directory, process_opt
     // make sure that we are not processing the output file
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-              "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
+              "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
 
       ++skipped;
       continue;
@@ -1596,9 +1596,9 @@ void srcdiff_dir(srcMLTranslator& translator, const char* directory, process_opt
     }
 
     // make sure that we are not processing the output file
-    if (strcmp(filename.c_str(), poptions.srcml_filename) == 0) {
+    if (strcmp(filename.c_str(), poptions.srcdiff_filename) == 0) {
       fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-              "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
+              "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
 
       ++skipped;
       continue;
