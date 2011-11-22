@@ -1,4 +1,6 @@
 #include "srcMLUtility.hpp"
+#include <srcMLTranslator.hpp>
+#include <Language.hpp>
 
 // converts source code to srcML
 xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {

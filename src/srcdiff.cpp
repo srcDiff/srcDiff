@@ -12,8 +12,6 @@
 #include <string>
 #include <vector>
 #include <Options.hpp>
-#include <srcMLTranslator.hpp>
-#include <Language.hpp>
 
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
