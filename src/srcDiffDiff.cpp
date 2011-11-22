@@ -1,5 +1,7 @@
 #include "srcDiffDiff.hpp"
 
+#include "srcDiffTypes.hpp"
+
 // collect an entire tag from open tag to closing tag
 void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node_set, int & start) {
 
