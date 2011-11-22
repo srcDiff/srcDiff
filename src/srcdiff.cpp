@@ -654,6 +654,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 }
 
 /*
+/*
   Collect paragraphs
 */
 std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
@@ -1090,7 +1091,7 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
 
 }
 
-
+*/
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new);
