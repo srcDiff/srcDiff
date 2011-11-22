@@ -52,10 +52,10 @@ std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
 
-int srcdiff_translate(const char * filename_one, const char * filename_two, xmlTextWriterPtr writer) {
+int srcdiff_translate(const char * filename_one, const char * filename_two, int options, xmlTextWriterPtr writer) {
 
 
-  bool is_srcML = strcmp(argv[1], "--srcml") == 0;
+  bool is_srcML = (bool)options;
 
   // TODO: Error handling? Is the return NULL if bad?
 
