@@ -1,5 +1,6 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "shorest_edit_script.h"
+#include "srcDiffUtility.hpp"
 
 // global structures defined in main
 extern std::vector<xmlNode *> nodes_old;
