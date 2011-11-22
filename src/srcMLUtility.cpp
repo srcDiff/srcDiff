@@ -32,9 +32,6 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
   return output_buffer;
 }
 
-void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
-void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new);
-
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 
