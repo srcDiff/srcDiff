@@ -566,11 +566,11 @@ int main(int argc, char* argv[]) {
 
       // translate from standard input using any directory, filename and version given on the command line
       srcdiff_file(translator, STDIN, options,
-                     poptions.given_directory,
-                     poptions.given_filename,
-                     poptions.given_version,
-                     poptions.language,
-                     poptions.tabsize, count, skipped, error, showinput, shownumber);
+                   poptions.given_directory,
+                   poptions.given_filename,
+                   poptions.given_version,
+                   poptions.language,
+                   poptions.tabsize, count, skipped, error, showinput, shownumber);
 
       // translate filenames from the command line
     } else {
@@ -597,12 +597,12 @@ int main(int argc, char* argv[]) {
         /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
-                       input_arg_count == 1 ? poptions.given_directory : 0,
-                       input_arg_count == 1 ? poptions.given_filename : 0,
-                       input_arg_count == 1 ? poptions.given_version : 0,
-                       poptions.language,
-                       poptions.tabsize,
-                       count, skipped, error, showinput, shownumber);
+        input_arg_count == 1 ? poptions.given_directory : 0,
+        input_arg_count == 1 ? poptions.given_filename : 0,
+        input_arg_count == 1 ? poptions.given_version : 0,
+        poptions.language,
+        poptions.tabsize,
+        count, skipped, error, showinput, shownumber);
         */
       }
 
@@ -630,7 +630,7 @@ int main(int argc, char* argv[]) {
 } catch (...) {}
 #endif
 
-  return exit_status;
+return exit_status;
 }
 
 // setup options and collect info from arguments
@@ -1134,7 +1134,7 @@ void srcdiff_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& op
   }
 
   srcdiff_archive(translator, path, options, dir, root_filename, version, language, tabsize, count, skipped,
-                    error, showinput, shownumber);
+                  error, showinput, shownumber);
 }
 
 void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
@@ -1484,14 +1484,14 @@ void srcdiff_dir(srcMLTranslator& translator, const char* directory, process_opt
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     srcdiff_text(translator,
-                   filename.c_str(),
-                   options,
-                   0,
-                   0,
-                   poptions.given_version,
-                   poptions.language,
-                   poptions.tabsize,
-                   count, skipped, error, showinput, shownumber);
+                 filename.c_str(),
+                 options,
+                 0,
+                 0,
+                 poptions.given_version,
+                 poptions.language,
+                 poptions.tabsize,
+                 count, skipped, error, showinput, shownumber);
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1574,14 +1574,14 @@ void srcdiff_dir(srcMLTranslator& translator, const char* directory, process_opt
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     srcdiff_text(translator,
-                   filename.c_str(),
-                   options,
-                   0,
-                   0,
-                   poptions.given_version,
-                   poptions.language,
-                   poptions.tabsize,
-                   count, skipped, error, showinput, shownumber);
+                 filename.c_str(),
+                 options,
+                 0,
+                 0,
+                 poptions.given_version,
+                 poptions.language,
+                 poptions.tabsize,
+                 count, skipped, error, showinput, shownumber);
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1635,6 +1635,17 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
       exit(1);
     }
 
+    // create the writer
+    xmlTextWriterPtr writer = xmlNewTextWriterFilename(poptions.srcdiff_filename, 0);
+    if (writer == NULL) {
+      fprintf(stderr, "Unable to open file '%s' as XML", poptions.srcdiff_filename);
+
+      exit(1);
+    }
+
+    // issue the xml declaration
+    xmlTextWriterStartDocument(writer, XML_VERSION, poptions.xml_encoding, XML_DECLARATION_STANDALONE);
+
     while ((line = uriinput.readline())) {
 
       // skip over whitespace
@@ -1647,20 +1658,28 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
 
       showinput = true;
 
-      // translate the file listed in the input file using the directory and filename extracted from the path
-      srcdiff_file(translator,
-                     line,
-                     options,
-                     0,
-                     0,
-                     poptions.given_version,
-                     poptions.language,
-                     poptions.tabsize,
-                     count, skipped, error, showinput, true);
+      srcdiff_translate(line, line, 0, writer);
+
+      /*
+      // process this command line argument
+      srcdiff_file(translator, argv[i], options,
+      input_arg_count == 1 ? poptions.given_directory : 0,
+      input_arg_count == 1 ? poptions.given_filename : 0,
+      input_arg_count == 1 ? poptions.given_version : 0,
+      poptions.language,
+      poptions.tabsize,
+      count, skipped, error, showinput, shownumber);
+      */
+
     }
+
+    // cleanup writer
+    xmlTextWriterEndDocument(writer);
+    xmlFreeTextWriter(writer);
 
   } catch (URIStreamFileError) {
     fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.fname);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
+
 }
