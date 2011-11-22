@@ -4,6 +4,8 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "shortest_edit_script.h"
 
+#include "mingw32.hpp"
+#include <string.h>
 #include <string>
 
 // global structures defined in main
