@@ -2,6 +2,7 @@
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
 #include "srcDiffCommon.hpp"
+#include "srcDiffOutput.hpp"
 
 // global structures defined in main
 extern std::vector<xmlNode *> nodes_old;
