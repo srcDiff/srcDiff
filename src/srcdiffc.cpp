@@ -544,16 +544,13 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  try {
-
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
-    int status = srcdiff_translate(filename_one, filename_two, 0, writer);
+    //    int status = srcdiff_translate(filename_one, filename_two, 0, writer);
 
-    // cleanup writer
-    xmlTextWriterEndDocument(writer);
-    xmlFreeTextWriter(writer);
+  try {
+
 
     /*
     // translator from input to output using determined language
@@ -654,6 +651,10 @@ int main(int argc, char* argv[]) {
 #else
 } catch (...) {}
 #endif
+
+    // cleanup writer
+    xmlTextWriterEndDocument(writer);
+    xmlFreeTextWriter(writer);
 
   return exit_status;
 }
