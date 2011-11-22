@@ -1,6 +1,10 @@
 #include "srcDiffComment.hpp"
 #include "shortest_edit_script.h"
 
+// global structures defined in main
+extern std::vector<xmlNode *> nodes_old;
+extern std::vector<xmlNode *> nodes_new;
+
 /*
   Collect paragraphs
 */
