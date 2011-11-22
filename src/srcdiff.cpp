@@ -13,6 +13,12 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+// TODO:  Get the output encoding from the input
+const char* XML_DECLARATION_STANDALONE = "yes";
+const char* XML_VERSION = "1.0";
+
+const char* output_encoding = "UTF-8";
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
