@@ -1,6 +1,10 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "shorest_edit_script.h"
 
+// global structures defined in main
+extern std::vector<xmlNode *> nodes_old;
+extern std::vector<xmlNode *> nodes_new;
+
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
                                , int operation, writer_state & wstate) {
