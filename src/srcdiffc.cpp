@@ -391,7 +391,7 @@ int main(int argc, char* argv[]) {
   }
 
   // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+  xmlTextWriterStartDocument(writer, XML_VERSION, "UTF-8", XML_DECLARATION_STANDALONE);
 
   int status = srcdiff_translate(filename_one, filename_two, is_srcML, writer);
 
