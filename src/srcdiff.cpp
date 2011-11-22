@@ -656,7 +656,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 /*
 /*
   Collect paragraphs
-*/
+
 std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
@@ -725,7 +725,7 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> 
   on paragraphs (separated by two new lines), then as needed, they are processes by line
   , and then by word using shortest edit script. Whitespace is included after/before changes
 
-*/
+
 void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
   edit * edit_script;
@@ -849,7 +849,7 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
   Breaks down paragraphs and runs on a line bases.
   Whitespace is included after/before changes
 
-*/
+
 void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
   edit * edit_script;
@@ -974,7 +974,7 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
   Whitespace is not included with changes, but marked up
   where in common.
 
-*/
+
 void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
