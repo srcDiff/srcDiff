@@ -119,7 +119,7 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
 
   xmlTextReaderPtr reader_new = NULL;
   if(!is_srcML) {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     // translate file two
     output_file = translate_to_srcML(filename_two, 0, 0);
 
@@ -155,7 +155,6 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
     unit_end = getRealCurrentNode(reader_new);
 
   }
-
   // free the buffer
   if(!is_srcML)
     xmlBufferFree(output_file);
@@ -163,7 +162,6 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   xmlFreeTextReader(reader_new);
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
-
 
   /*
 

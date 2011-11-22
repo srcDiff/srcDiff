@@ -13,7 +13,7 @@ xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/sr
 xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {
 
   // register default language extensions
-  Language::register_standard_file_extensions();
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   // get language from file extension
   int language = Language::getLanguageFromFilename(source_file);
