@@ -75,35 +75,6 @@ xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
 // collect the nodes
 void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
 
-// output a single difference DELETE or INSERT
-void output_single(reader_state & rbuf_old, reader_state & rbuf_new, edit * edit, writer_state & wstate);
-
-// output file level info
-void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
-
-void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
-
-void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
-
-void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
-
-void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate);
-
-void output_change(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new
-                   , writer_state & wstate);
-
-void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
-                               , reader_state & rbuf_new, unsigned int end_new
-                               , writer_state & wstate);
-
-void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                       , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                       , edit * edit_script, writer_state & wstate);
-
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
 
@@ -112,18 +83,6 @@ bool has_interal_block(std::vector<int> * structure, std::vector<xmlNodePtr> & n
 void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate);
-
-void output_pure_operation_white_space(reader_state & rbuf_old, unsigned int end_old
-                                       , reader_state & rbuf_new, unsigned int end_new
-                                       , int operation, writer_state & wstate);
-
-void output_white_space_all(reader_state & rbuf_old
-                            , reader_state & rbuf_new
-                            , writer_state & wstate);
-
-void output_white_space_prefix(reader_state & rbuf_old
-                               , reader_state & rbuf_new
-                               , writer_state & wstate);
 
 int main(int argc, char * argv[]) {
 
