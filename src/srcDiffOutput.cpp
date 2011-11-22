@@ -2,6 +2,8 @@
 #include "shortest_edit_script.h"
 #include "xmlrw.h"
 
+#include <string.h>
+
 // more external variables
 extern xmlNode diff_common_start;
 extern xmlNode diff_common_end;
