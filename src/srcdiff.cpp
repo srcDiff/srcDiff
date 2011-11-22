@@ -32,7 +32,7 @@ int main(int argc, char * argv[]) {
 
   char * filename_one;
   char * filename_two;
-  if(!is_srcML) {
+  if(is_srcML) {
     filename_one = argv[1];
     filename_two = argv[2];
   } else {
