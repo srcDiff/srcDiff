@@ -1,7 +1,6 @@
 #ifndef INCLUDED_SRCDIFFDIFF_HPP
 #define INCLUDED_SRCDIFFDIFF_HPP
 
-
 #include "srcDiffTypes.hpp"
 
 #include <vector>
