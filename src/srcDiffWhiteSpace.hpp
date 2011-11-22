@@ -2,7 +2,7 @@
 #define INCLUDED_SRCDIFF_WHITESPACE_HPP
 
 struct reader_state;
-struct writerr_state;
+struct writer_state;
 
 void output_white_space_all(reader_state & rbuf_old
                             , reader_state & rbuf_new

@@ -17,6 +17,7 @@
 
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
+#include "srcDiffTypes.hpp"
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
@@ -56,33 +57,6 @@ std::vector<xmlNode *> nodes_new;
 
 // converts source code to srcML
 xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
-
-struct diff_set {
-
-  int operation;
-
-  std::vector<xmlNodePtr> open_tags;
-
-};
-
-// stores information on state of a single file
-struct reader_state {
-
-  int stream_source;
-  unsigned int last_output;
-
-  // just a pointer not on stack
-  std::vector<diff_set *> open_diff;
-
-};
-
-// stores information during xml Text Writer processing
-struct writer_state {
-
-  xmlTextWriterPtr writer;
-  std::vector<diff_set *> output_diff;
-
-};
 
 // tags that can have something nested in them
 const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
