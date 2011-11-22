@@ -52,8 +52,6 @@ xmlNode diff_old_end;
 xmlNode diff_new_start;
 xmlNode diff_new_end;
 
-xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
-
 /*
   Global structures to store of the collected xml nodes.
   Base reference structure for all node comparison and output
