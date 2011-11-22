@@ -585,7 +585,7 @@ int main(int argc, char* argv[]) {
       }
 
       // issue the xml declaration
-      xmlTextWriterStartDocument(writer, XML_VERSION, "UTF-8", XML_DECLARATION_STANDALONE);
+      xmlTextWriterStartDocument(writer, XML_VERSION, poptions.xml_encoding, XML_DECLARATION_STANDALONE);
 
       // translate in batch the input files on the command line extracting the directory and filename attributes
       // from the full path
