@@ -78,8 +78,8 @@ $(OBJ_DIR)srcDiffTranslator.o : srcDiffTranslator.cpp srcDiffTranslator.hpp srcD
 $(OBJ_DIR)srcdiff.o : srcdiff.cpp srcDiffTranslator.hpp
 	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcdiffc.o : srcdiffc.cpp srcDiffTranslator.hpp
-	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -I ../../../src -c $< -o $@
+$(OBJ_DIR)srcdiffc.o : srcdiff.cpp srcDiffTranslator.hpp
+	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
@@ -111,8 +111,8 @@ $(OBJ_DIR)srcDiffDiff.o : srcDiffDiff.cpp srcDiffDiff.hpp srcDiffCommon.hpp srcD
 $(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
-$(EXE_DIR)srcdiffc : $(OBJ_DIR)srcdiffc.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} $(IO_LIB) ../../../obj/Language.o ../../../obj/URIStream.o ../../../obj/srcmlapps.o -o $@
+$(EXE_DIR)srcdiffc : srcdiffc.cpp $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) -I ../../../src $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} $(IO_LIB) ../../../obj/Language.o ../../../obj/URIStream.o ../../../obj/srcmlapps.o -o $@
 
 $(EXE_DIR)srcdiff.exe : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
