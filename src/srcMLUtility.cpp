@@ -2,6 +2,7 @@
 #include <Options.hpp>
 #include <srcMLTranslator.hpp>
 #include <Language.hpp>
+#include "xmlrw.h"
 
 extern std::vector<xmlNode *> nodes_old;
 extern std::vector<xmlNode *> nodes_new;
