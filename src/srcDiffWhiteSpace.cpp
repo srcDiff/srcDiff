@@ -26,9 +26,7 @@ void output_white_space_nested(reader_state & rbuf_old
 }
 
 
-void output_white_space_statement(reader_state & rbuf_old
-                                  , reader_state & rbuf_new
-                                  , writer_state & wstate) {
+void output_white_space_statement(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate) {
 
   unsigned int oend = rbuf_old.last_output;
   unsigned int nend = rbuf_new.last_output;
