@@ -1,6 +1,7 @@
 #include "srcDiffCommon.hpp"
 #include "srcDiffUtility.hpp"
 #include "srcDiffOutput.hpp"
+#include "srcDiffWhiteSpace.hpp"
 
 #include <string>
 
