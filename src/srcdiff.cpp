@@ -9,6 +9,7 @@
 */
 
 
+#include "string.h"
 #include "srcDiffTranslator.hpp"
 
 #include <libxml/xmlreader.h>
