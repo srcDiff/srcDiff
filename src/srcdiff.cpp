@@ -30,6 +30,18 @@ int main(int argc, char * argv[]) {
 
   int is_srcML = strcmp(argv[1], "--srcml");
 
+  char * filename_one;
+  char * filename_two;
+  if(!is_srcML) {
+    filename_one = argv[1];
+    filename_two = argv[2];
+  } else {
+    filename_one = argv[2];
+    filename_two = argv[3];
+
+  }
+    
+
   const char * srcdiff_file = "-";
 
   /*
@@ -50,7 +62,7 @@ int main(int argc, char * argv[]) {
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
-  int status = srcdiff_translate(argv[1], argv[2], is_srcML, writer);
+  int status = srcdiff_translate(filename_one, filename_two, is_srcML, writer);
 
   // cleanup writer
   xmlTextWriterEndDocument(writer);
