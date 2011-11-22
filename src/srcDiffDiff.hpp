@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFFDIFF_HPP
 
 #include "srcDiffTypes.hpp"
+#include "shortest_edit_script.h"
 
 #include <vector>
 
@@ -24,7 +25,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node
 
 void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
 
-  int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new);
+int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new);
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
                        , std::vector<std::vector<int> *> * node_sets_new

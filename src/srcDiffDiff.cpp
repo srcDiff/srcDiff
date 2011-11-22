@@ -4,7 +4,6 @@
 #include "srcDiffCommon.hpp"
 #include "srcDiffCommentDiff.hpp"
 #include "srcDiffWhiteSpace.hpp"
-#include "shortest_edit_script.h"
 
 // global structures defined in main
 extern std::vector<xmlNode *> nodes_old;
