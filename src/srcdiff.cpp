@@ -579,6 +579,8 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes,
   return node_sets;
 
 }
+
+/*
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
                                , int operation, writer_state & wstate) {
@@ -716,7 +718,7 @@ void output_white_space_most(reader_state & rbuf_old
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
-
+*/
 /*
 
   Output common elements.
