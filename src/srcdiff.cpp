@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#include "srcMLTranslator.hpp"
+#include "srcDiffTranslator.hpp"
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
 #include "srcDiffTypes.hpp"
