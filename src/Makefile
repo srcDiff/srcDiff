@@ -63,11 +63,11 @@ OBJ_DIR = ../obj/
 ifdef MINGW32
 EXE = $(EXE_DIR)srcdiff.exe
 else
-EXE = $(EXE_DIR)srcdiff
+EXE = $(EXE_DIR)srcdiff $(EXE_DIR)srcdiffc
 endif
 
 
-all : ${EXE} ../bin/srcdiffc
+all : ${EXE}sv
 
 mingw32 : 
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
