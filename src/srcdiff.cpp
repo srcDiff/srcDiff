@@ -22,6 +22,7 @@
 #include "srcDiffCommon.hpp"
 #include "srcDiffChange.hpp"
 #include "srcDiffOutput.hpp"
+#include "srcDiffDiff.hpp"
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
