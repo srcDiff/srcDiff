@@ -281,5 +281,5 @@ int main(int argc, char * argv[]) {
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
 */
-    return srcml_translate(argc, argv);
+    return srcdiff_translate(argc, argv);
 }
