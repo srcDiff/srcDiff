@@ -106,8 +106,6 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr no
 
 void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, int operation);
 
-void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate);
-
 bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two);
 
