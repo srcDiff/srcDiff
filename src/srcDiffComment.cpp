@@ -1,4 +1,5 @@
 #include "srcDiffComment.hpp"
+#include "shortest_edit_script.h"
 
 /*
   Collect paragraphs
