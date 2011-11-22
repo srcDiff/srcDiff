@@ -70,7 +70,7 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   if(!is_srcML) {
 
     // translate file one
-    output_file = translate_to_srcML(filename_one, 0, 0);
+    translate_to_srcML(filename_one, 0, 0, output_file);
     reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
 
   } else {
@@ -121,7 +121,7 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   if(!is_srcML) {
  
     // translate file two
-    output_file = translate_to_srcML(filename_two, 0, 0);
+    translate_to_srcML(filename_two, 0, 0, output_file);
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
