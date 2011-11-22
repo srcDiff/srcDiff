@@ -33,4 +33,18 @@ void output_white_space_match_most(reader_state & rbuf_old
                                    , reader_state & rbuf_new
                                    , int operation
                                    , writer_state & wstate);
+
+void output_white_space_prefix(reader_state & rbuf_old
+                               , reader_state & rbuf_new
+                               , writer_state & wstate);
+
+void output_white_space_suffix(reader_state & rbuf_old
+                               , reader_state & rbuf_new
+                               , writer_state & wstate);
+
+void advance_white_space_suffix(reader_state & rbuf_old
+                                , int & end_old
+                                , reader_state & rbuf_new
+                                , int & end_new){
+
 #endif
