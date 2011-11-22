@@ -68,7 +68,7 @@ all : ${EXE}
 mingw32 : 
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
 
-$(OBJ_DIR)srcdiff.o : srcdiff.cpp srcDiffTypes.hpp srcDiffUtility.hpp srcDiffWhiteSpace.hpp shortest_edit_script.h xmlrw.h
+$(OBJ_DIR)srcdiff.o : srcdiff.cpp srcDiffTypes.hpp srcDiffUtility.hpp srcDiffWhiteSpace.hpp srcDiffCommon.hpp shortest_edit_script.h xmlrw.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcDiffUtility.o : srcDiffUtility.cpp srcDiffUtility.hpp shortest_edit_script.h
@@ -80,7 +80,7 @@ $(OBJ_DIR)srcDiffWhiteSpace.o : srcDiffWhiteSpace.cpp srcDiffWhiteSpace.hpp srcD
 $(OBJ_DIR)srcDiffCommon.o : srcDiffCommon.cpp srcDiffCommon.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
+$(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} -o $@
 
 $(EXE_DIR)srcdiff.exe : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
