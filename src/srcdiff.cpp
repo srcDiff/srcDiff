@@ -20,6 +20,7 @@
 #include "srcDiffTypes.hpp"
 #include "srcDiffWhiteSpace.hpp"
 #include "srcDiffCommon.hpp"
+#include "srcDiffChange.hpp"
 #include "srcDiffOutput.hpp"
 
 #include <libxml/xmlreader.h>
