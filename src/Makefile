@@ -83,7 +83,7 @@ $(OBJ_DIR)srcDiffCommon.o : srcDiffCommon.cpp srcDiffCommon.hpp srcDiffTypes.hpp
 $(OBJ_DIR)srcDiffOutput.o : srcDiffOutput.cpp srcDiffOutput.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-x$(OBJ_DIR)srcDiffComment.o : srcDiffComment.cpp srcDiffComment.hpp srcDiffTypes.hpp srcDiffUtility.hpp
+$(OBJ_DIR)srcDiffComment.o : srcDiffComment.cpp srcDiffComment.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffComment.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o 
