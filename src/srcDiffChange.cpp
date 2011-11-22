@@ -2,6 +2,7 @@
 //#include "srcDiffUtility.hpp"
 #include "srcDiffOutput.hpp"
 #include "srcDiffWhiteSpace.hpp"
+#include "shorteset_edit_script.h"
 
 #include <string>
 
