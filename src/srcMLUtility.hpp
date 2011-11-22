@@ -5,7 +5,7 @@
 #include <vector>
 
 // converts source code to srcML
-xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
+void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer);
 
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
