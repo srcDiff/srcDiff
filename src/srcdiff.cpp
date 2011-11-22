@@ -53,7 +53,7 @@ xmlNode diff_new_end;
 /*
   Global structures to store of the collected xml nodes.
   Base reference structure for all node comparison and output
-*/
+
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 */
@@ -281,5 +281,5 @@ int main(int argc, char * argv[]) {
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
 */
-    return srcml_tranlsate(argc, argv);
+    return srcml_translate(argc, argv);
 }
