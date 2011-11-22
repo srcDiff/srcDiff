@@ -244,18 +244,6 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 }
 
 
-struct offset_pair {
-
-  int old_offset;
-  int old_length;
-  int new_offset;
-  int new_length;
-  int similarity;
-  offset_pair * next;
-};
-
-#define MIN -1
-
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
   //unsigned int length = node_set_new->size();

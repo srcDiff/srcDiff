@@ -5,6 +5,18 @@
 
 #include <vector>
 
+struct offset_pair {
+
+  int old_offset;
+  int old_length;
+  int new_offset;
+  int new_length;
+  int similarity;
+  offset_pair * next;
+};
+
+#define MIN -1
+
 // create sets of nodes
 std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes, int start, int end);
 
