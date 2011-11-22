@@ -60,17 +60,18 @@ xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/sr
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
-// converts source code to srcML
-xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
-
 // tags that can have something nested in them
 const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 // tags that can be nested in something else (incomplete)
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
+// converts source code to srcML
+xmlBuffer * translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir);
+
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
+
 
 // collect the nodes
 void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
