@@ -31,7 +31,7 @@
 #endif
 
 #include "xmlrw.h"
-
+/*
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
@@ -56,7 +56,7 @@ xmlNode diff_new_end;
 */
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
-
+*/
 
 int main(int argc, char * argv[]) {
   /*
@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
 
     Input for file one
 
-  */
+
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
@@ -131,7 +131,7 @@ int main(int argc, char * argv[]) {
 
     Input for file two
 
-  */
+
 
   xmlTextReaderPtr reader_new = NULL;
   if(!is_srcML) {
@@ -185,7 +185,7 @@ int main(int argc, char * argv[]) {
 
     Setup output file
 
-  */
+
 
   // create the writer
   xmlTextWriterPtr writer = NULL;
@@ -200,7 +200,7 @@ int main(int argc, char * argv[]) {
 
     Setup readers and writer.
 
-   */
+
 
   // delete reader state
   reader_state rbuf_old = { 0 };
@@ -255,7 +255,7 @@ int main(int argc, char * argv[]) {
 
     Output srcDiff
 
-  */
+
 
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
