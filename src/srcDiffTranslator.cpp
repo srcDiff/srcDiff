@@ -66,7 +66,7 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
-  xmlBuffer * output_file = NULL;
+  xmlBuffer * output_file = xmlBufferCreate();
   if(!is_srcML) {
 
     // translate file one
@@ -119,7 +119,7 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
 
   xmlTextReaderPtr reader_new = NULL;
   if(!is_srcML) {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+ 
     // translate file two
     output_file = translate_to_srcML(filename_two, 0, 0);
 

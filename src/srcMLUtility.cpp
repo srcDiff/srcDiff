@@ -10,7 +10,7 @@ extern std::vector<xmlNode *> nodes_new;
 xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
 
 // converts source code to srcML
-xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir) {
+void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer) {
 
   // register default language extensions
   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -20,8 +20,6 @@ xmlBuffer* translate_to_srcML(const char * source_file, const char * srcml_file,
 
   // select basic options
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
-
-  xmlBuffer* output_buffer = xmlBufferCreate();
 
   // create translator object
   srcMLTranslator translator(language, output_buffer, options);
