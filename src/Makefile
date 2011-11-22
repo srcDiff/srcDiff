@@ -67,7 +67,7 @@ EXE = $(EXE_DIR)srcdiff
 endif
 
 
-all : ${EXE} srcdiffc
+all : ${EXE} ../bin/srcdiffc
 
 mingw32 : 
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
