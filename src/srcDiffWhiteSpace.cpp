@@ -7,6 +7,14 @@
 extern std::vector<xmlNode *> nodes_old;
 extern std::vector<xmlNode *> nodes_new;
 
+// more external variables
+extern xmlNode diff_common_start;
+extern xmlNode diff_common_end;
+extern xmlNode diff_old_start;
+extern xmlNode diff_old_end;
+extern xmlNode diff_new_start;
+extern xmlNode diff_new_end;
+
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
                                , int operation, writer_state & wstate) {
