@@ -1,5 +1,4 @@
 #include "srcDiffCommon.hpp"
-#include "srcDiffTypes.hpp"
 #include "srcDiffUtility.hpp"
 
 // global structures defined in main
