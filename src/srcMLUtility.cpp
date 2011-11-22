@@ -32,8 +32,6 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 
   // close the input file
   translator.close();
-
-  return output_buffer;
 }
 
 // create srcdiff unit
