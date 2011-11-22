@@ -2,6 +2,8 @@
 #define INCLUDED_SRCDIFFTYPES_HPP
 
 #include <vector>
+#include <libxml/xmlreader.h>
+#include <libxml/xmlwriter.h>
 
 struct diff_set {
 
