@@ -3,6 +3,7 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "srcDiffChange.hpp"
 #include "srcDiffOutput.hpp"
+#include "srcDiffDiff.hpp"
 
 // global structures defined in main
 extern std::vector<xmlNode *> nodes_old;
