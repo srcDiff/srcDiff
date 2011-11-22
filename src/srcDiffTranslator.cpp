@@ -59,7 +59,7 @@ std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
 
-int srcdiff_translate(int argc, char * argv[]) {
+int srcdiff_translate(int argc, char * argv[], xmlTextWriterPtr writer) {
 
   // test for correct input
   if(argc < 3) {
@@ -184,21 +184,6 @@ int srcdiff_translate(int argc, char * argv[]) {
 
   /*
 
-    Setup output file
-
-  */
-
-  // create the writer
-  xmlTextWriterPtr writer = NULL;
-  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
-  if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
-
-    exit(1);
-  }
-
-  /*
-
     Setup readers and writer.
 
    */
@@ -258,9 +243,6 @@ int srcdiff_translate(int argc, char * argv[]) {
 
   */
 
-  // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
-
   // create srcdiff unit
   xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
@@ -277,10 +259,6 @@ int srcdiff_translate(int argc, char * argv[]) {
   // output srcdiff unit ending tag
   if(is_old && is_new)
     output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
-
-  // cleanup writer
-  xmlTextWriterEndDocument(writer);
-  xmlFreeTextWriter(writer);
 
   return 0;
 }
