@@ -638,6 +638,9 @@ int main(int argc, char* argv[]) {
         */
       }
 
+      // cleanup writer
+      xmlTextWriterEndDocument(writer);
+      xmlFreeTextWriter(writer);
     }
 
     if (count == 0)
@@ -658,10 +661,6 @@ int main(int argc, char* argv[]) {
 #else
 } catch (...) {}
 #endif
-
-      // cleanup writer
-      xmlTextWriterEndDocument(writer);
-      xmlFreeTextWriter(writer);
 
   return exit_status;
 }
