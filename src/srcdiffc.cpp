@@ -357,6 +357,55 @@ int process_args(int argc, char* argv[], process_options & poptions);
 
 int main(int argc, char* argv[]) {
 
+  // test for correct input
+  if(argc < 3) {
+
+    fprintf(stderr, "Usage: srcdiff oldFile newFile dir\n");
+    return 1;
+  }
+
+  int is_srcML = strcmp(argv[1], "--srcml") == 0;
+
+  char * filename_one;
+  char * filename_two;
+  if(!is_srcML) {
+    filename_one = argv[1];
+    filename_two = argv[2];
+  } else {
+    filename_one = argv[2];
+    filename_two = argv[3];
+
+  }
+    
+
+  const char * srcdiff_file = "-";
+
+  /*
+
+    Setup output file
+
+  */
+
+  // create the writer
+  xmlTextWriterPtr writer = NULL;
+  writer = xmlNewTextWriterFilename(srcdiff_file, 0);
+  if (writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_file);
+
+    exit(1);
+  }
+
+  // issue the xml declaration
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+
+  int status = srcdiff_translate(filename_one, filename_two, is_srcML, writer);
+
+  // cleanup writer
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
+  return status
+
+
   int exit_status = EXIT_SUCCESS;
 
   LIBXML_TEST_VERSION
