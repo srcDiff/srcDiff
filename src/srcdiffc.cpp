@@ -609,7 +609,7 @@ int main(int argc, char* argv[]) {
 
       // create the writer
       xmlTextWriterPtr writer = NULL;
-      writer = xmlNewTextWriterFilename(srcdiff_out_file, 0);
+      writer = xmlNewTextWriterFilename(poptions.srcml_filename, 0);
       if (writer == NULL) {
         fprintf(stderr, "Unable to open file '%s' as XML", poptions.srcml_filename);
 
