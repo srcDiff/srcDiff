@@ -2,6 +2,7 @@
 #include "srcDiffUtility.hpp"
 #include "srcDiffOutput.hpp"
 #include "srcDiffCommon.hpp"
+#include "srcDiffChange.hpp"
 #include "srcDiffCommentDiff.hpp"
 #include "srcDiffWhiteSpace.hpp"
 
