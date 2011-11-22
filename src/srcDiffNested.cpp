@@ -2,6 +2,18 @@
 #include "shortest_edit_script.h"
 #include "srcDiffWhiteSpace.hpp"
 
+// global structures defined in main
+extern std::vector<xmlNode *> nodes_old;
+extern std::vector<xmlNode *> nodes_new;
+
+// more external variables
+extern xmlNode diff_common_start;
+extern xmlNode diff_common_end;
+extern xmlNode diff_old_start;
+extern xmlNode diff_old_end;
+extern xmlNode diff_new_start;
+extern xmlNode diff_new_end;
+
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
