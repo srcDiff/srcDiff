@@ -3,6 +3,6 @@
 
 #include "srcDiffTypes.hpp"
 
-int srcdiff_translate(int argc, char * argv[], xmlTextWriterPtr writer);
+int srcdiff_translate(const char * filename_one, const char * filename_two, xmlTextWriterPtr writer);
 
 #endif
