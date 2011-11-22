@@ -1,6 +1,14 @@
 #include "srcDiffOutput.hpp"
 #include "shortest_edit_script.h"
 
+// more external variables
+extern xmlNode diff_common_start;
+extern xmlNode diff_common_end;
+extern xmlNode diff_old_start;
+extern xmlNode diff_old_end;
+extern xmlNode diff_new_start;
+extern xmlNode diff_new_end;
+
 void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr node, int operation, writer_state & wstate) {
 
   /*
