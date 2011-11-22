@@ -1,4 +1,4 @@
-#include "srcDiffComment.hpp"
+#include "srcDiffCommentDiff.hpp"
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
 #include "srcDiffCommon.hpp"
