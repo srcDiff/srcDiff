@@ -1,4 +1,6 @@
 #include "srcDiffNested.hpp"
+#include "shortest_edit_script.h"
+#include "srcDiffWhiteSpace.hpp"
 
 bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
 
