@@ -1,4 +1,5 @@
 #include "srcDiffWhiteSpace.hpp"
+#include "shorest_edit_script.h"
 
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
