@@ -54,7 +54,6 @@ std::vector<xmlNode *> nodes_new;
 
 int srcdiff_translate(const char * filename_one, const char * filename_two, int options, xmlTextWriterPtr writer) {
 
-
   bool is_srcML = (bool)options;
 
   // TODO: Error handling? Is the return NULL if bad?
@@ -112,7 +111,6 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
 
-
   /*
 
     Input for file two
@@ -157,13 +155,13 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
     unit_end = getRealCurrentNode(reader_new);
 
   }
- 
+
   // free the buffer
   if(!is_srcML)
     xmlBufferFree(output_file);
 
   xmlFreeTextReader(reader_new);
- 
+
   std::vector<std::vector<int> *> node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
 
 
@@ -244,6 +242,9 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   // output srcdiff unit ending tag
   if(is_old && is_new)
     output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+
+  nodes_old.clear();
+  nodes_new.clear();
 
   return 0;
 }
