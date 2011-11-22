@@ -1,3 +1,5 @@
+#include "srcDiffOutput.cpp"
+
 void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr node, int operation, writer_state & wstate) {
 
   /*
