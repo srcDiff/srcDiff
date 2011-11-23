@@ -46,6 +46,8 @@ int main(int argc, char * argv[]) {
 
   const char * srcdiff_file = "-";
 
+  Language::register_standard_file_extensions();
+
   /*
 
     Setup output file
