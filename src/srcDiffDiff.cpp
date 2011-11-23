@@ -114,7 +114,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes,
 
 */
 void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   //fprintf(stderr, "HERE_DOUBLE\n");
 
   edit * edit_script;

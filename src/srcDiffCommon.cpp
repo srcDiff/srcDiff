@@ -134,8 +134,11 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
 
         }
 
-        i = olength - 1;
-        j = nlength - 1;
+        if(i < olength)
+          i = olength - 1;
+
+        if(j < nlength)
+          j = nlength - 1;
 
     } else if(is_white_space(nodes_old.at(i))) {
 
