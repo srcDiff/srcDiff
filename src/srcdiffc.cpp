@@ -578,28 +578,9 @@ int main(int argc, char* argv[]) {
       // translate filenames from the command line
     } else {
 
-      // create the writer
-      xmlTextWriterPtr writer = NULL;
-      writer = xmlNewTextWriterFilename(poptions.srcdiff_filename, 0);
-      if (writer == NULL) {
-        fprintf(stderr, "Unable to open file '%s' as XML", poptions.srcdiff_filename);
-
-        exit(1);
-      }
-
-      // issue the xml declaration
-      xmlTextWriterStartDocument(writer, XML_VERSION, poptions.xml_encoding, XML_DECLARATION_STANDALONE);
-
-      if(input_arg_count / 2 > 1)
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit>"));
-
       // translate in batch the input files on the command line extracting the directory and filename attributes
       // from the full path
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
-
-      if(input_arg_count / 2 > 1)
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n"));
-
 
       //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
       translator.translate(argv[i], argv[i + 1],
@@ -617,12 +598,6 @@ int main(int argc, char* argv[]) {
         */
       }
 
-      if(input_arg_count / 2 > 1)
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n</unit>"));
-
-      // cleanup writer
-      xmlTextWriterEndDocument(writer);
-      xmlFreeTextWriter(writer);
     }
 
     if (count == 0)
