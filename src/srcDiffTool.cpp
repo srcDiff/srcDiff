@@ -269,13 +269,14 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   first = false;
 
+  // cleanup writer                                                                                                                                  
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
+
 }
 
 // destructor
 srcDiffTool::~srcDiffTool() {
 
-  // cleanup writer                                                                                                                                  
-  xmlTextWriterEndDocument(writer);
-  xmlFreeTextWriter(writer);
 
 }
