@@ -57,11 +57,9 @@ std::vector<xmlNode *> nodes_new;
 
 // constructor
 srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& op)
-  : 
-  out(0, srcml_filename, "", DEFAULT_XML_ENCODING, op, (const char**)DEFAULT_URI_PREFIX, 8, 0),
-    first(true),
-    root_directory(""), root_filename(""), root_version(""),
-    encoding(DEFAULT_TEXT_ENCODING), options(op)
+  : first(true),
+  root_directory(""), root_filename(""), root_version(""),
+  encoding(DEFAULT_TEXT_ENCODING), options(op)
 {
   // diff tags
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
@@ -102,8 +100,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 				 const char* uri[],           // uri prefixes
 				 int tabsize                  // size of tabs
 				 )
-  : out(0, srcml_filename, "", xml_encoding, op, uri, tabsize, 0),
-    first(true),
+  : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
     encoding(src_encoding), options(op)
 {
@@ -146,8 +143,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 				int language) {
 
   // root unit for compound srcML documents
-  if (first && ((options & OPTION_NESTED) > 0))
-    out.startUnit(0, root_directory, root_filename, root_version, true);
+  //if (first && ((options & OPTION_NESTED) > 0))
+  //out.startUnit(0, root_directory, root_filename, root_version, true);
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
