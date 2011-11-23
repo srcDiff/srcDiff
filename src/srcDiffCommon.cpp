@@ -186,7 +186,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
         if(text_old[opos] == text_new[npos]) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          output_char(rbuf_old, rbuf_new, (xmlChar *)&text_old[opos], COMMON, wstate);
+          output_char(rbuf_old, rbuf_new, (xmlChar)text_old[opos], COMMON, wstate);
 
           ++opos;
           ++npos;
@@ -202,7 +202,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
               for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-                output_char(rbuf_old, rbuf_new, (xmlChar *)&text_old[opos], DELETE, wstate);
+                output_char(rbuf_old, rbuf_new, (xmlChar)text_old[opos], DELETE, wstate);
               }
 
               // output diff tag
@@ -217,7 +217,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
               for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-                output_char(rbuf_old, rbuf_new, (xmlChar *)&text_new[npos], INSERT, wstate);
+                output_char(rbuf_old, rbuf_new, (xmlChar)text_new[npos], INSERT, wstate);
               }
 
               // output diff tag
