@@ -1657,6 +1657,8 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
     // issue the xml declaration
     xmlTextWriterStartDocument(writer, XML_VERSION, poptions.xml_encoding, XML_DECLARATION_STANDALONE);
 
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit>"));
+
     while ((line = uriinput.readline())) {
 
       // skip over whitespace
@@ -1666,6 +1668,8 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
       // skip blank lines or comment lines
       if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
         continue;
+
+      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n"));
 
       char * separator = strchr(line, ',');
 
@@ -1693,6 +1697,8 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
       */
 
     }
+
+    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n</unit>"));
 
     // cleanup writer
     xmlTextWriterEndDocument(writer);
