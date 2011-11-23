@@ -24,7 +24,6 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr no
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
 
-
   static bool delay = false;
   static int delay_operation = -2;
 

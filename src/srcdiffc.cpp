@@ -582,8 +582,9 @@ int main(int argc, char* argv[]) {
       // from the full path
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
 
-      //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
-      translator.translate(argv[i], argv[i + 1],
+        //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
+
+        translator.translate(argv[i], argv[i + 1],
                            input_arg_count == 1 ? poptions.given_directory : 0,
                            input_arg_count == 1 ? poptions.given_filename : 0,
                            input_arg_count == 1 ? poptions.given_version : 0,

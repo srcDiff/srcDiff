@@ -270,10 +270,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   */
 
   // create srcdiff unit
-  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
+  //  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   // output srcdiff unit
-  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
+  //  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
   // run on file level
   if(is_old || is_new)
@@ -283,8 +283,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output srcdiff unit ending tag
-  if(is_old && is_new)
-    output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+  //  if(is_old && is_new)
+    //    output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
   nodes_old.clear();
   nodes_new.clear();
@@ -296,4 +296,5 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
 // destructor
 srcDiffTool::~srcDiffTool() {
+
 }
