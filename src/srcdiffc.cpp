@@ -612,7 +612,7 @@ int main(int argc, char* argv[]) {
         xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n"));
 
 
-        srcdiff_translate(argv[i], argv[i + 1], 0, writer);
+      //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
 
         /*
         // process this command line argument
@@ -1693,7 +1693,7 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
         
       line2 += strspn(line2, " \t\f");
 
-      srcdiff_translate(line, line2, 0, writer);
+      //srcdiff_translate(line, line2, 0, writer);
 
       *separator = ',';
 
