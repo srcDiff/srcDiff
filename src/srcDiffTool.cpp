@@ -138,8 +138,8 @@ void srcDiffTool::close() {
   close();
 }
 
-// translate from input stream to output stream
-void srcDiffTool::translate(const char* path, const char* unit_directory,
+// Translate from input stream to output stream
+void srcDiffTool::translate(const char* path_one, const char* path_two, const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 				int language) {
 
@@ -152,12 +152,12 @@ void srcDiffTool::translate(const char* path, const char* unit_directory,
   xmlBuffer * output_file = xmlBufferCreate();
 
   // translate file one
-  translate_to_srcML(filename_one, 0, 0, output_file);
+  translate_to_srcML(path_one, 0, 0, output_file);
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
 
   if (reader_old == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", filename_one);
+    fprintf(stderr, "Unable to open file '%s' as XML", path_one);
     
     exit(1);
   }
@@ -195,14 +195,14 @@ void srcDiffTool::translate(const char* path, const char* unit_directory,
   xmlTextReaderPtr reader_new = NULL;
 
     // translate file two
-    translate_to_srcML(filename_two, 0, 0, output_file);
+    translate_to_srcML(path_two, 0, 0, output_file);
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
 
   if (reader_new == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", filename_two);
+    fprintf(stderr, "Unable to open file '%s' as XML", path_two);
 
     exit(1);
   }
