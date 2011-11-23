@@ -503,12 +503,12 @@ int main(int argc, char* argv[]) {
 #endif
 
   // all input is through libarchive
-  //  if (!isoption(options, OPTION_FILELIST)) {
+  if (!isoption(options, OPTION_FILELIST)) {
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
       exit(1);
     }
-    //}
+  }
 
   try {
 
@@ -1641,12 +1641,11 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
     URIStream uriinput(poptions.fname);
     char* line;
-    /*
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
       exit(1);
     }
-    */
+
     // create the writer
     xmlTextWriterPtr writer = xmlNewTextWriterFilename(poptions.srcdiff_filename, 0);
     if (writer == NULL) {
