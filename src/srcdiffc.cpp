@@ -42,6 +42,7 @@
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 #include "srcDiffTranslator.hpp"
+#include "srcDiffTool.hpp"
 
 #define PROGRAM_NAME "srcdiff"
 
@@ -514,6 +515,17 @@ int main(int argc, char* argv[]) {
 
     // translator from input to output using determined language
     srcMLTranslator translator(poptions.language,
+                               poptions.src_encoding,
+                               poptions.xml_encoding,
+                               poptions.srcdiff_filename,
+                               options,
+                               poptions.given_directory,
+                               poptions.given_filename,
+                               poptions.given_version,
+                               urisprefix,
+                               poptions.tabsize);
+
+    srcDiffTool diff_tool(poptions.language,
                                poptions.src_encoding,
                                poptions.xml_encoding,
                                poptions.srcdiff_filename,
