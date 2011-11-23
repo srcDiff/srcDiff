@@ -61,31 +61,7 @@ srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& 
   root_directory(""), root_filename(""), root_version(""),
   encoding(DEFAULT_TEXT_ENCODING), options(op)
 {
-  // diff tags
-  diff_common_start.name = (xmlChar *) DIFF_COMMON;
-  diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_common_start.extra = 0;
-
-  diff_common_end.name = (xmlChar *) DIFF_COMMON;
-  diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_common_end.extra = 0;
-
-  diff_old_start.name = (xmlChar *) DIFF_OLD;
-  diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_old_start.extra = 0;
-
-  diff_old_end.name = (xmlChar *) DIFF_OLD;
-  diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_old_end.extra = 0;
-
-  diff_new_start.name = (xmlChar *) DIFF_NEW;
-  diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_new_start.extra = 0;
-
-  diff_new_end.name = (xmlChar *) DIFF_NEW;
-  diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_new_end.extra = 0;
-
+  srcDiffTool(language, DEFAULT_TEXT_ENCODING, "UTF-8", srcml_filename, op, "", "", "", 0, 8);
 }
 
 // constructor
