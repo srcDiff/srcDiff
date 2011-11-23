@@ -68,7 +68,7 @@ srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& 
 srcDiffTool::srcDiffTool(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
-				 const char* srcml_filename,  // filename of result srcML file
+				 const char* srcdiff_filename,  // filename of result srcDiff file
 				 OPTION_TYPE& op,             // many and varied options
 				 const char* directory,       // root unit directory
 				 const char* filename,        // root unit filename
@@ -105,12 +105,14 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
-}
+  writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
 
-// close the output
-void srcDiffTool::close() {
+  if (writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_filename);
 
-  close();
+    exit(1);
+  } 
+
 }
 
 // Translate from input stream to output stream
@@ -269,5 +271,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
 // destructor
 srcDiffTool::~srcDiffTool() {
+
+  // cleanup writer                                                                                                                                  
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
 
 }

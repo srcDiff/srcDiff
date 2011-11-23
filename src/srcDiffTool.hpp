@@ -61,7 +61,8 @@ void translate(const char* path_one, const char* path_two, const char* unit_dire
   ~srcDiffTool();
 
  private:
-   bool first;
+
+  bool first;
   const char* root_directory;
   const char* root_filename;
   const char* root_version;
