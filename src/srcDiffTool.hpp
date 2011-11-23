@@ -29,6 +29,8 @@
 
 #include "Language.hpp"
 #include "srcMLOutput.hpp"
+#include <libxml/xmlreader.h>
+#include <libxml/xmlwriter.h>
 
 class srcDiffTool {
  public:
@@ -59,8 +61,7 @@ void translate(const char* path_one, const char* path_two, const char* unit_dire
   ~srcDiffTool();
 
  private:
-  srcMLOutput out;
-  bool first;
+   bool first;
   const char* root_directory;
   const char* root_filename;
   const char* root_version;
@@ -68,6 +69,8 @@ void translate(const char* path_one, const char* path_two, const char* unit_dire
   int language;
   OPTION_TYPE& options;
   int tabsize;
+  xmlTextWriterPtr writer;
+
 };
 
 #endif
