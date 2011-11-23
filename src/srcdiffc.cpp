@@ -602,13 +602,15 @@ int main(int argc, char* argv[]) {
 
 
       //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
-
+      translator.translate(argv[i], argv[i + 1],
+                           input_arg_count == 1 ? poptions.given_directory : 0,
+                           input_arg_count == 1 ? poptions.given_filename : 0,
+                           input_arg_count == 1 ? poptions.given_version : 0,
+                           poptions.language);
         /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
         input_arg_count == 1 ? poptions.given_directory : 0,
-        input_arg_count == 1 ? poptions.given_filename : 0,
-        input_arg_count == 1 ? poptions.given_version : 0,
         poptions.language,
         poptions.tabsize,
         count, skipped, error, showinput, shownumber);
