@@ -350,6 +350,8 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
 
+#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
+
 int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
