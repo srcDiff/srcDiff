@@ -53,12 +53,9 @@ class srcDiffTool : public srcMLOutput {
 
   void close();
 
-  // translate from input stream to output stream
-  void translate(const char* path,
-		 const char* unit_directory = 0,
-		 const char* unit_filename = 0,
-		 const char* unit_version = 0,
-		 int language = 0);
+void translate(const char* path_one, const char* path_two, const char* unit_directory = 0,
+				const char* unit_filename = 0, const char* unit_version = 0,
+				int language = 0) {
 
   // destructor
   ~srcDiffTool();
