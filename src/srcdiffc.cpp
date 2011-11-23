@@ -40,7 +40,7 @@
 #include <algorithm>
 #include <archive.h>
 #include "libxml_archive_read.hpp"
-include "libxml_archive_write.hpp"
+#include "libxml_archive_write.hpp"
 #include "srcDiffTranslator.hpp"
 
 #define PROGRAM_NAME "srcdiff"
