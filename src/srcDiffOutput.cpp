@@ -24,6 +24,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr no
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
   */
 
+
   static bool delay = false;
   static int delay_operation = -2;
 
@@ -214,5 +215,15 @@ void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlCh
 
   output_node(rbuf_old, rbuf_new, &node, operation, wstate);
 
+}
+
+
+void output_char(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar character, int operation
+                         , writer_state & wstate) {
+
+  xmlChar[2] buf = { 0 };
+  buf[0] = character;
+
+  output_text_as_node(rbuf_old, rbuf_new, buf, operation, wstate);
 }
 
