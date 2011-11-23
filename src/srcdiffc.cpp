@@ -587,6 +587,9 @@ int main(int argc, char* argv[]) {
       // issue the xml declaration
       xmlTextWriterStartDocument(writer, XML_VERSION, poptions.xml_encoding, XML_DECLARATION_STANDALONE);
 
+      if(input_arg_count / 2 > 1)
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit>\n\n"));
+
       // translate in batch the input files on the command line extracting the directory and filename attributes
       // from the full path
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
@@ -605,6 +608,9 @@ int main(int argc, char* argv[]) {
         count, skipped, error, showinput, shownumber);
         */
       }
+
+      if(input_arg_count / 2 > 1)
+        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n</unit>"));
 
       // cleanup writer
       xmlTextWriterEndDocument(writer);
