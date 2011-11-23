@@ -1673,7 +1673,9 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
 
       *separator = 0;
 
-      srcdiff_translate(line, separator + 1, 0, writer);
+      char * line2 = strspn(separator + 1, " \t\f");
+
+      srcdiff_translate(line, line2, 0, writer);
 
       *separator = ',';
 
