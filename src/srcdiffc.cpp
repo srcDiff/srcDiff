@@ -153,9 +153,9 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 int option_error_status(int optopt);
 
 // translate a file, maybe an archive
-void srcdiff_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
-void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
 using namespace LanguageName;
 
@@ -343,10 +343,10 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void srcdiff_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
+void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir_top(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -514,18 +514,7 @@ int main(int argc, char* argv[]) {
   try {
 
     // translator from input to output using determined language
-    srcMLTranslator translator(poptions.language,
-                               poptions.src_encoding,
-                               poptions.xml_encoding,
-                               poptions.srcdiff_filename,
-                               options,
-                               poptions.given_directory,
-                               poptions.given_filename,
-                               poptions.given_version,
-                               urisprefix,
-                               poptions.tabsize);
-
-    srcDiffTool diff_tool(poptions.language,
+    srcDiffTool translator(poptions.language,
                                poptions.src_encoding,
                                poptions.xml_encoding,
                                poptions.srcdiff_filename,
@@ -1146,7 +1135,7 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void srcdiff_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // handle local directories specially
   struct stat instat = { 0 };
@@ -1160,7 +1149,7 @@ void srcdiff_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& op
                   error, showinput, shownumber);
 }
 
-void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1209,7 +1198,7 @@ void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& op
       options |= OPTION_CPP;
 
     // open up the file
-    void* context = translator.setInput(path);
+    /*    void* context = translator.setInput(path);
 
     // check if file is bad
     if (!context || archiveReadStatus(context) < 0 ) {
@@ -1220,7 +1209,7 @@ void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& op
 
       return;
     }
-
+    */
     // another file
     ++count;
 
@@ -1259,7 +1248,7 @@ void srcdiff_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& op
   options = save_options;
 }
 
-void srcdiff_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1430,7 +1419,7 @@ void srcdiff_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE&
   } while (isarchive && isAnythingOpen(context));
 }
 
-void srcdiff_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_dir_top(srcDiffTool& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
@@ -1456,7 +1445,7 @@ int dir_filter(struct dirent* d) {
   return dir_filter((const struct dirent*)d);
 }
 
-void srcdiff_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
@@ -1645,7 +1634,7 @@ void srcdiff_dir(srcMLTranslator& translator, const char* directory, process_opt
 #endif
 }
 
-void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
+void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
   try {
 
