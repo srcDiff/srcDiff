@@ -1221,10 +1221,10 @@ void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& option
       fprintf(stderr, "%5d %s\n", count, c_filename);
 
     // translate the file
-    translator.translate(path, dir,
+    /*    translator.translate(path, dir,
                          foundfilename ? c_filename : 0,
                          version, reallanguage);
-
+    */
   } catch (FileError) {
 
     // output tracing information about the input file
@@ -1266,10 +1266,10 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 
     try {
 
-      // open up the file
+      /*      // open up the file
       if (firstopen)
         context = translator.setInput(path);
-      else
+        else*/
         context = getContext();
 
       // check if file is bad
@@ -1375,14 +1375,15 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
         fprintf(stderr, "%5d %s\n", count, c_filename);
 
       // open up the file
-      if (!firstopen)
+      /*      if (!firstopen)
         context = translator.setInput(path);
+      */
 
       // translate the file
-      translator.translate(path, dir,
+      /*      translator.translate(path, dir,
                            foundfilename ? c_filename : 0,
                            version, reallanguage);
-
+      */
     } catch (FileError) {
 
       // output tracing information about the input file
