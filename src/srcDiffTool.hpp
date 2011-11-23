@@ -30,9 +30,7 @@
 #include "Language.hpp"
 #include "srcMLOutput.hpp"
 
-class UTF8CharBuffer;
-
-class srcDiffTool : public srcMLOutput {
+class srcDiffTool {
  public:
 
   // constructor
@@ -61,6 +59,7 @@ void translate(const char* path_one, const char* path_two, const char* unit_dire
   ~srcDiffTool();
 
  private:
+  srcMLOutput out;
   bool first;
   const char* root_directory;
   const char* root_filename;
