@@ -11,4 +11,7 @@ void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, in
 
 void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar * text, int operation, writer_state & wstate);
 
+void output_char(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar character, int operation
+                 , writer_state & wstate);
+
 #endif
