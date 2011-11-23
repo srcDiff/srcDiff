@@ -134,11 +134,9 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
 
         }
 
-        if(i < olength)
-          i = olength - 1;
+        i = olength - 1;
 
-        if(j < nlength)
-          j = nlength - 1;
+        j = nlength - 1;
 
     } else if(is_white_space(nodes_old.at(i))) {
 
@@ -151,7 +149,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
       // output diff tag
       output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
-      --j;
+      --i;
 
     } else if(is_white_space(nodes_new.at(j))) {
 
@@ -164,7 +162,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
       // output diff tag
       output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
-      --i;
+      --j;
 
     } else if(is_text(nodes_old.at(i)) && is_text(nodes_new.at(j))) {
 
