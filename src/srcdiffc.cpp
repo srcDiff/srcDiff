@@ -1667,9 +1667,15 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
       if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
         continue;
 
+      char * separator = strchr(line, ',');
+
       showinput = true;
 
-      srcdiff_translate(line, line, 0, writer);
+      *separator = 0;
+
+      srcdiff_translate(line, separator + 1, 0, writer);
+
+      *separator = ',';
 
       /*
       // process this command line argument
@@ -1758,4 +1764,4 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
   }
 
 }
-*/
+*/ 
