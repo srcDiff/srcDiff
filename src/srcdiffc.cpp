@@ -1750,7 +1750,7 @@ void srcdiff_filelist(srcMLTranslator& translator, process_options& poptions, in
       poptions.language,
       poptions.tabsize,
       count, skipped, error, showinput, shownumber);
-      */
+
 
     }
 
