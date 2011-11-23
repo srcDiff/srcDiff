@@ -34,6 +34,8 @@
 #include "srcDiffDiff.hpp"
 #include "srcMLUtility.hpp"
 
+#include "xmlrw.h"
+
 const char* DIFF_PREFIX = "diff:";
 const char* DIFF_OLD = "diff:delete";
 const char* DIFF_NEW = "diff:insert";
@@ -255,7 +257,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   // writer state
   writer_state wstate = { 0 };
-  wstate.writer = writer;
+  wstate.writer = xout;
 
   new_diff = new diff_set;
   new_diff->operation = COMMON;
