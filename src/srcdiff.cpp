@@ -11,6 +11,7 @@
 
 #include <string.h>
 #include "srcDiffTranslator.hpp"
+#include <Language.hpp>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
