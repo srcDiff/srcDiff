@@ -221,7 +221,7 @@ void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlCh
 void output_char(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar character, int operation
                          , writer_state & wstate) {
 
-  xmlChar[2] buf = { 0 };
+  xmlChar buf[2] = { 0 };
   buf[0] = character;
 
   output_text_as_node(rbuf_old, rbuf_new, buf, operation, wstate);
