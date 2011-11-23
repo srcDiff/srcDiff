@@ -76,7 +76,7 @@ $(OBJ_DIR)srcDiffTranslator.o : srcDiffTranslator.cpp srcDiffTranslator.hpp srcD
 	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcdiff.o : srcdiff.cpp srcDiffTranslator.hpp
-	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcdiffc.o : srcdiff.cpp srcDiffTranslator.hpp
 	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) -c $< -o $@
