@@ -271,6 +271,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   */
 
+  startUnit(0, options, unit_directory, unit_filename, unit_version, uri, writer);
+
+
   // create srcdiff unit
   xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
