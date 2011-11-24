@@ -126,8 +126,8 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   maintag += "unit";
 
   // start of main tag
-  srcMLTextWriterStartElement(xout, BAD_CAST maintag.c_str());
-
+  xmlTextWriterWriteRawLen(writer, BAD_CAST "<", 1);
+  xmlTextWriterWriteRawLen(writer, BAD_CAST maintag.c_str(), maintag.size());
   // outer units have namespaces
   if (!isoption(OPTION_NAMESPACEDECL)) {
     outputNamespaces(xout, options, depth, outer, num2prefix);
