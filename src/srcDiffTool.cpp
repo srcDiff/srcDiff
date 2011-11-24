@@ -314,12 +314,12 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   // create srcdiff unit
   xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
-  // output srcdiff unit
-  output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
+  //// output srcdiff unit
+  //output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
   // run on file level
-  //if(is_old || is_new)
-  //output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
+  if(is_old || is_new)
+  output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
   // output remaining whitespace
   output_white_space_all(rbuf_old, rbuf_new, wstate);
