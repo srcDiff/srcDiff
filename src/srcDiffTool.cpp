@@ -47,7 +47,7 @@ xmlNode diff_old_start;
 xmlNode diff_old_end;
 xmlNode diff_new_start;
 xmlNode diff_new_end;
-xmlNode unit_end;
+xmlNode flush;
 
 /*
   Global structures to store of the collected xml nodes.
@@ -118,9 +118,10 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
-  unit_end.name = (xmlChar *)"unit";
-  unit_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  unit_end.extra = 0;
+  flush.name = (xmlChar *)"text";
+  flush.type = (xmlElementType)XML_READER_TYPE_TEXT;
+  flush.content = (xmlChar *)"";
+  flush.extra = 0;
 
   writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
 
