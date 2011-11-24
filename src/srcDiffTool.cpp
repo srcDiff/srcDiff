@@ -204,8 +204,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   }
 
-  // free the buffer
-    xmlBufferFree(output_srcml_file);
+  xmlBufferEmpty(output_srcml_file);
 
   xmlFreeTextReader(reader_new);
 
@@ -278,5 +277,8 @@ srcDiffTool::~srcDiffTool() {
   // cleanup writer                                                                                                                                  
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
+
+  // free the buffer
+  xmlBufferFree(output_srcml_file);
 
 }
