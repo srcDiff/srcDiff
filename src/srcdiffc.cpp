@@ -1675,7 +1675,7 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
         translator.translate(line, line2,
                              poptions.given_directory,
                              filename.c_str(),
-                             poptions.given_version
+                             poptions.given_version,
                              poptions.language);
 
       *separator = ',';
