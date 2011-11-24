@@ -122,51 +122,6 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   output_srcml_file = xmlBufferCreate();
 
-  std::string maintag = uri[0];
-  if (!maintag.empty())
-    maintag += ":";
-  maintag += "unit";
-
-  // start of main tag
-  xmlTextWriterStartElement(writer, BAD_CAST maintag.c_str());
-
-  // outer units have namespaces
-  if (!isoption(options, OPTION_NAMESPACEDECL)) {
-    outputNamespaces(writer, options, 0, true, uri);
-  }
-
-  // list of attributes
-  const char* const attrs[][2] = {
-
-    // language attribute
-    { UNIT_ATTRIBUTE_LANGUAGE, /*language*/ "C" },
-
-    // directory attribute
-    { UNIT_ATTRIBUTE_DIRECTORY, directory },
-
-    // filename attribute
-    { UNIT_ATTRIBUTE_FILENAME, filename },
-
-    // version attribute
-    { UNIT_ATTRIBUTE_VERSION, version },
-
-    // position tab setting
-    //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
-
-  };
-
-  // output attributes
-  for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
-    if (!attrs[i][1])
-      continue;
-
-    xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
-  }
-
-  if(isoption(options, OPTION_NESTED)) {
-    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
-  }
-
 }
 
 // Translate from input stream to output stream
@@ -358,7 +313,60 @@ srcDiffTool::~srcDiffTool() {
   xmlBufferFree(output_srcml_file);
 
 }
+void startUnit(const char * language,
+               OPTION_TYPE& options,             // many and varied options                                                               
+               const char* directory,       // root unit directory                                                                   
+               const char* filename,        // root unit filename                                                                    
+               const char* version,         // root unit version                                                                     
+               const char* uri[],           // uri prefixes                                                                          
+               xmlTextWriterPtr writer) {
 
+  std::string maintag = uri[0];
+  if (!maintag.empty())
+    maintag += ":";
+  maintag += "unit";
+
+  // start of main tag
+  xmlTextWriterStartElement(writer, BAD_CAST maintag.c_str());
+
+  // outer units have namespaces
+  if (!isoption(options, OPTION_NAMESPACEDECL)) {
+    outputNamespaces(writer, options, 0, true, uri);
+  }
+
+  // list of attributes
+  const char* const attrs[][2] = {
+
+    // language attribute
+    { UNIT_ATTRIBUTE_LANGUAGE, /*language*/ "C" },
+
+    // directory attribute
+    { UNIT_ATTRIBUTE_DIRECTORY, directory },
+
+    // filename attribute
+    { UNIT_ATTRIBUTE_FILENAME, filename },
+
+    // version attribute
+    { UNIT_ATTRIBUTE_VERSION, version },
+
+    // position tab setting
+    //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
+
+  };
+
+  // output attributes
+  for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
+    if (!attrs[i][1])
+      continue;
+
+    xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+  }
+
+  if(isoption(options, OPTION_NESTED)) {
+    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+  }
+
+}
 
 void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
 
