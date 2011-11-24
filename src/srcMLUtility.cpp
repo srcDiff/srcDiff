@@ -34,11 +34,12 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
                 const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
 
   // create translator object
-  srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
+  srcMLTranslator translator(language, output_buffer, options);
+  //srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
 
   // set input file (must be done)
   translator.setInput(filename);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // translate file
   translator.translate(filename, directory, filename, version, language);
 
