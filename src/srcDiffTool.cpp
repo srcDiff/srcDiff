@@ -115,7 +115,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
-  xmlBuffer * output_srcml_file = xmlBufferCreate();
+  output_srcml_file = xmlBufferCreate();
 
 }
 
