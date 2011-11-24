@@ -328,6 +328,8 @@ void startUnit(const char * language,
                const char* uri[],           // uri prefixes                                                                          
                xmlTextWriterPtr writer) {
 
+  static int depth = 0;
+
   std::string maintag = uri[0];
   if (!maintag.empty())
     maintag += ":";
@@ -338,7 +340,7 @@ void startUnit(const char * language,
 
   // outer units have namespaces
   if (!isoption(options, OPTION_NAMESPACEDECL)) {
-    outputNamespaces(writer, options, 0, true, uri);
+    outputNamespaces(writer, options, depth, true, uri);
   }
 
   // list of attributes
@@ -372,6 +374,8 @@ void startUnit(const char * language,
   if(isoption(options, OPTION_NESTED)) {
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
   }
+
+  ++depth;
 
 }
 
