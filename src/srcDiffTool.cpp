@@ -137,14 +137,15 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 				int language) {
 
   // root unit for compound srcML documents
-  if (first && ((options & OPTION_NESTED) > 0))
+  if (first && ((options & OPTION_NESTED) > 0)) {
+
     startUnit(0, options, root_directory, root_filename, root_version, uri, writer);
+    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+
+  }
 
   first = false;
 
-  if(isoption(options, OPTION_NESTED)) {
-    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
-  }
 
   // Do not nest individual files
   OPTION_TYPE srcml_options = options & ~OPTION_NESTED;
