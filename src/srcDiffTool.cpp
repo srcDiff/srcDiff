@@ -130,7 +130,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   //if (first && ((options & OPTION_NESTED) > 0))
   //out.startUnit(0, root_directory, root_filename, root_version, true);
 
-  OPTION_TYPE srcml_option = options | ~ OPTION_NESTED;
+  OPTION_TYPE srcml_option = options & ~OPTION_NESTED;
 
   // Remove eventually
   language = Language::getLanguageFromFilename(path_one);
