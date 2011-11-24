@@ -140,8 +140,11 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   if (first && ((options & OPTION_NESTED) > 0))
     startUnit(0, options, root_directory, root_filename, root_version, uri, writer);
 
-
   first = false;
+
+  if(isoption(options, OPTION_NESTED)) {
+    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+  }
 
   // Do not nest individual files
   OPTION_TYPE srcml_options = options & ~OPTION_NESTED;
@@ -330,6 +333,7 @@ void startUnit(const char * language,
 
   static int depth = 0;
 
+  // start of main tag
   std::string maintag = uri[0];
   if (!maintag.empty())
     maintag += ":";
@@ -369,10 +373,6 @@ void startUnit(const char * language,
       continue;
 
     xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
-  }
-
-  if(isoption(options, OPTION_NESTED)) {
-    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
   }
 
   ++depth;
