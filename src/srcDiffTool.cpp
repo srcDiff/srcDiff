@@ -305,10 +305,11 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
   // Because of grouping need to output a common to end grouping
+  output_node(rbuf_old, rbuf_new, &flush, COMMON, wstate);
+
   if(isoption(options, OPTION_NESTED)) {
 
     //xmlTextWriterEndElement(writer);
-    output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
 
   }
