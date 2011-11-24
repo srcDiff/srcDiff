@@ -119,6 +119,51 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   output_srcml_file = xmlBufferCreate();
 
+  /*
+  std::string maintag = num2prefix[0];
+  if (!maintag.empty())
+    maintag += ":";
+  maintag += "unit";
+
+  // start of main tag
+  srcMLTextWriterStartElement(xout, BAD_CAST maintag.c_str());
+
+  // outer units have namespaces
+  if (!isoption(OPTION_NAMESPACEDECL)) {
+    outputNamespaces(xout, options, depth, outer, num2prefix);
+  }
+
+  // list of attributes
+  const char* const attrs[][2] = {
+
+    // language attribute
+    { UNIT_ATTRIBUTE_LANGUAGE, language },
+
+    // directory attribute
+    { UNIT_ATTRIBUTE_DIRECTORY, dir },
+
+    // filename attribute
+    { UNIT_ATTRIBUTE_FILENAME, filename },
+
+    // version attribute
+    { UNIT_ATTRIBUTE_VERSION, version },
+
+    // position tab setting
+    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+  };
+
+  // output attributes
+  for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
+    if (!attrs[i][1])
+      continue;
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+  }
+
+  // leave space for nested unit
+  if (outer && isoption(OPTION_NESTED))
+    processText("\n\n", 2);
+*/
 }
 
 // Translate from input stream to output stream
@@ -130,6 +175,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   //if (first && ((options & OPTION_NESTED) > 0))
   //out.startUnit(0, root_directory, root_filename, root_version, true);
 
+  first = false;
+
+  // Do not nest individual files
   OPTION_TYPE srcml_options = options & ~OPTION_NESTED;
 
   // Remove eventually
@@ -276,9 +324,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   nodes_old.clear();
   nodes_new.clear();
-
-
-  first = false;
 
 }
 
