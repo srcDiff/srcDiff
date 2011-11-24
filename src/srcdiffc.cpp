@@ -1668,7 +1668,15 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
         
       line2 += strspn(line2, " \t\f");
 
-      //srcdiff_translate(line, line2, 0, writer);
+      std::string filename = line;
+        filename += "|";
+        filename += line2;
+
+        translator.translate(line, line2,
+                             poptions.given_directory,
+                             filename.c_str(),
+                             poptions.given_version
+                             poptions.language);
 
       *separator = ',';
 
