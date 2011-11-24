@@ -140,7 +140,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   const char* const attrs[][2] = {
 
     // language attribute
-    { UNIT_ATTRIBUTE_LANGUAGE, language },
+    { UNIT_ATTRIBUTE_LANGUAGE, /*language*/ "C" },
 
     // directory attribute
     { UNIT_ATTRIBUTE_DIRECTORY, directory },
@@ -318,15 +318,15 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
 
   // run on file level
-  if(is_old || is_new)
-    output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
+  //if(is_old || is_new)
+  //output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
   // output remaining whitespace
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output srcdiff unit ending tag
-  if(is_old && is_new)
-    output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+  //if(is_old && is_new)
+  //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
   nodes_old.clear();
   nodes_new.clear();
