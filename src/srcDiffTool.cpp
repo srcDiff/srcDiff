@@ -120,7 +120,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   output_srcml_file = xmlBufferCreate();
 
   /*
-  std::string maintag = num2prefix[0];
+  std::string maintag = uri[0];
   if (!maintag.empty())
     maintag += ":";
   maintag += "unit";
@@ -130,7 +130,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   xmlTextWriterWriteRawLen(writer, BAD_CAST maintag.c_str(), maintag.size());
   // outer units have namespaces
   if (!isoption(OPTION_NAMESPACEDECL)) {
-    outputNamespaces(xout, options, depth, outer, num2prefix);
+    outputNamespaces(xout, options, 0, outer, uri);
   }
 
   // list of attributes
@@ -157,12 +157,9 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     if (!attrs[i][1])
       continue;
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+    xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
   }
 
-  // leave space for nested unit
-  if (outer && isoption(OPTION_NESTED))
-    processText("\n\n", 2);
 */
 }
 
@@ -174,6 +171,11 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   // root unit for compound srcML documents
   //if (first && ((options & OPTION_NESTED) > 0))
   //out.startUnit(0, root_directory, root_filename, root_version, true);
+
+  // leave space for nested unit
+  //if(isoption(OPTION_NESTED))
+  //xmlTextWriterWriteRawLen("\n\n", 2);
+
 
   first = false;
 
