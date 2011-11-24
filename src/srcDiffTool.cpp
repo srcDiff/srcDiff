@@ -338,3 +338,50 @@ srcDiffTool::~srcDiffTool() {
   xmlBufferFree(output_srcml_file);
 
 }
+
+/*
+void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
+
+    // figure out which namespaces are needed
+    char const * const ns[] = {
+
+      // main srcML namespace declaration always used
+      (depth == 0) ? SRCML_SRC_NS_URI : 0,
+
+      // main cpp namespace declaration
+      isoption(OPTION_CPP, options) && (isoption(OPTION_NESTED, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+
+      // optional debugging xml namespace
+      (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
+
+      // optional literal xml namespace
+      (depth == 0) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+
+      // optional operator xml namespace
+      (depth == 0) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+
+      // optional modifier xml namespace
+      (depth == 0) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+
+      // optional position xml namespace
+      (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
+
+      // optional diff xml namespace
+      (depth == 0) && isoption(OPTION_DIFF, options)     ? SRCML_DIFF_NS_URI : 0,
+    };
+
+    // output the namespaces
+    for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
+      if (!ns[i])
+	continue;
+
+      std::string prefix = "xmlns";
+      if (num2prefix[i][0] != '\0') {
+	prefix += ':';
+	prefix += num2prefix[i];
+      }
+
+      xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
+    }
+}
+*/
