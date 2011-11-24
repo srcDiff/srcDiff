@@ -130,12 +130,15 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   //if (first && ((options & OPTION_NESTED) > 0))
   //out.startUnit(0, root_directory, root_filename, root_version, true);
 
+  if (!(language == Language::LANGUAGE_JAVA || language == Language::LANGUAGE_ASPECTJ))
+    options |= OPTION_CPP;
+
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
 
   // translate file one
-  translate_to_srcML(path_one, 0, 0, output_srcml_file);
-  //translate_to_srcML(language, encoding, "UTF-8", output_srcml_file, options, unit_directory, path_one, unit_version, 0, 8);
+  //translate_to_srcML(path_one, 0, 0, output_srcml_file);
+  translate_to_srcML(language, encoding, "UTF-8", output_srcml_file, options, unit_directory, path_one, unit_version, 0, 8);
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_old == NULL) {
