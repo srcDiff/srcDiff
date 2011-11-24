@@ -78,7 +78,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 				 )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    encoding(src_encoding), options(op)
+    encoding(src_encoding), language(language), options(op), uri(uri), tabsize(tabsize)
 {
   // diff tags
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
