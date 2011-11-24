@@ -163,6 +163,9 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
   }
 
+  if(isoption(options, OPTION_NESTED)) {
+    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+  }
 
 }
 
@@ -176,9 +179,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   //out.startUnit(0, root_directory, root_filename, root_version, true);
 
   // leave space for nested unit
-  //if(isoption(OPTION_NESTED))
-  //xmlTextWriterWriteRawLen("\n\n", 2);
-
+  if(isoption(options, OPTION_NESTED)) {
+    xmlTextWriterStartElement(writer, BAD_CAST "unit");
+  }
 
   first = false;
 
@@ -328,6 +331,14 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   // output srcdiff unit ending tag
   //if(is_old && is_new)
   //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+
+  if(isoption(options, OPTION_NESTED)) {
+
+    xmlTextWriterEndElement(writer);
+    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+
+  }
+
 
   nodes_old.clear();
   nodes_new.clear();
