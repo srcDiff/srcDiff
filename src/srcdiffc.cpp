@@ -1627,7 +1627,7 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
     URIStream uriinput(poptions.fname);
-    char* line;
+    char* file_one;
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
       exit(1);
@@ -1646,33 +1646,33 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
 
     xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit>"));
 
-    while ((line = uriinput.readline())) {
+    while ((file_one = uriinput.readline())) {
 
       // skip over whitespace
       // TODO:  Other types of whitespace?  backspace?
-      line += strspn(line, " \t\f");
+      file_one += strspn(file_one, " \t\f");
 
       // skip blank lines or comment lines
-      if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
+      if (file_one[0] == '\0' || file_one[0] == FILELIST_COMMENT)
         continue;
 
       xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n"));
 
-      char * separator = strchr(line, ',');
+      char * separator = strchr(file_one, ',');
 
       showinput = true;
 
       *separator = 0;
 
-      char * line2 = separator + 1;
+      char * file_two = separator + 1;
         
-      line2 += strspn(line2, " \t\f");
+      file_two += strspn(file_two, " \t\f");
 
-      std::string filename = line;
+      std::string filename = file_one;
         filename += "|";
-        filename += line2;
+        filename += file_two;
 
-        translator.translate(line, line2,
+        translator.translate(file_one, file_two,
                              poptions.given_directory,
                              filename.c_str(),
                              poptions.given_version,
