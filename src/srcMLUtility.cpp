@@ -30,6 +30,27 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
   // close the input file
   translator.close();
 }
+void translate_to_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+                const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
+  /*
+  // get language from file extension
+  int language = Language::getLanguageFromFilename(source_file);
+
+  // select basic options
+  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+
+  // create translator object
+  srcMLTranslator translator(language, output_buffer, options);
+
+  // set input file (must be done)
+  translator.setInput(source_file);
+
+  // translate file
+  translator.translate(NULL, dir, source_file, NULL, language);
+
+  // close the input file
+  translator.close();*/
+}
 
 // create srcdiff unit
 xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new) {
