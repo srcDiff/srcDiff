@@ -586,11 +586,15 @@ int main(int argc, char* argv[]) {
         ++count;
 
         //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
+        std::string filename = argv[i];
+        filename += "|";
+        filename += argv[i + 1];
+
         translator.translate(argv[i], argv[i + 1],
-                           input_arg_count == 1 ? poptions.given_directory : 0,
-                           input_arg_count == 1 ? poptions.given_filename : 0,
-                           input_arg_count == 1 ? poptions.given_version : 0,
-                           poptions.language);
+                             input_arg_count == 1 ? poptions.given_directory : 0,
+                             filename.c_str(),
+                             input_arg_count == 1 ? poptions.given_version : 0,
+                             poptions.language);
         /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
