@@ -130,6 +130,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   //if (first && ((options & OPTION_NESTED) > 0))
   //out.startUnit(0, root_directory, root_filename, root_version, true);
 
+  language = Language::getLanguageFromFilename(source_file);
+
+  // Remove eventually
   if (!(language == Language::LANGUAGE_JAVA || language == Language::LANGUAGE_ASPECTJ))
     options |= OPTION_CPP;
 
