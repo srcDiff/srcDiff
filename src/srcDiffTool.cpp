@@ -122,7 +122,6 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   output_srcml_file = xmlBufferCreate();
 
-
   std::string maintag = uri[0];
   if (!maintag.empty())
     maintag += ":";
@@ -315,7 +314,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   //// output srcdiff unit
-  //output_node(rbuf_old, rbuf_new, unit, COMMON, wstate);
+  update_diff_stack((rbuf_old.open_diff, unit, COMMON, wstate);
+  update_diff_stack((rbuf_new.open_diff, unit, COMMON, wstate);
+  update_diff_stack((wstate.output_diff, unit, COMMON, wstate);
 
   // run on file level
   if(is_old || is_new)
