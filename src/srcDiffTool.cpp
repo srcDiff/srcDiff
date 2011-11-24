@@ -55,8 +55,15 @@ xmlNode diff_new_end;
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
-void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
+void startUnit(const char * language,
+               OPTION_TYPE& options,             // many and varied options                                                               
+               const char* directory,       // root unit directory                                                                   
+               const char* filename,        // root unit filename                                                                    
+               const char* version,         // root unit version                                                                     
+               const char* uri[],           // uri prefixes                                                                          
+               xmlTextWriterPtr writer);
 
+void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
 // constructor
 srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& op)
@@ -130,13 +137,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 				int language) {
 
   // root unit for compound srcML documents
-  //if (first && ((options & OPTION_NESTED) > 0))
-  //out.startUnit(0, root_directory, root_filename, root_version, true);
+  if (first && ((options & OPTION_NESTED) > 0))
+    startUnit(0, root_directory, root_filename, root_version, true, writer);
 
-  // leave space for nested unit
-  if(isoption(options, OPTION_NESTED)) {
-    xmlTextWriterStartElement(writer, BAD_CAST "unit");
-  }
 
   first = false;
 
@@ -313,6 +316,7 @@ srcDiffTool::~srcDiffTool() {
   xmlBufferFree(output_srcml_file);
 
 }
+
 void startUnit(const char * language,
                OPTION_TYPE& options,             // many and varied options                                                               
                const char* directory,       // root unit directory                                                                   
