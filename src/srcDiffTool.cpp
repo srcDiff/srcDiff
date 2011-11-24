@@ -55,6 +55,9 @@ xmlNode diff_new_end;
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
+void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
+
+
 // constructor
 srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& op)
   : first(true),
@@ -119,7 +122,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   output_srcml_file = xmlBufferCreate();
 
-  /*
+
   std::string maintag = uri[0];
   if (!maintag.empty())
     maintag += ":";
@@ -129,8 +132,8 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   xmlTextWriterWriteRawLen(writer, BAD_CAST "<", 1);
   xmlTextWriterWriteRawLen(writer, BAD_CAST maintag.c_str(), maintag.size());
   // outer units have namespaces
-  if (!isoption(OPTION_NAMESPACEDECL)) {
-    outputNamespaces(xout, options, 0, outer, uri);
+  if (!isoption(options, OPTION_NAMESPACEDECL)) {
+    outputNamespaces(writer, options, 0, true, uri);
   }
 
   // list of attributes
@@ -140,7 +143,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     { UNIT_ATTRIBUTE_LANGUAGE, language },
 
     // directory attribute
-    { UNIT_ATTRIBUTE_DIRECTORY, dir },
+    { UNIT_ATTRIBUTE_DIRECTORY, directory },
 
     // filename attribute
     { UNIT_ATTRIBUTE_FILENAME, filename },
@@ -149,7 +152,8 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     { UNIT_ATTRIBUTE_VERSION, version },
 
     // position tab setting
-    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+    //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
+
   };
 
   // output attributes
@@ -160,7 +164,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
   }
 
-*/
+
 }
 
 // Translate from input stream to output stream
