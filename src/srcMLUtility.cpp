@@ -38,9 +38,9 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
   // set input file (must be done)
   translator.setInput(filename);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // translate file
-  translator.translate(NULL, NULL, filename, NULL, language);
+  translator.translate(filename, directory, filename, version, language);
 
   // close the input file
   translator.close();

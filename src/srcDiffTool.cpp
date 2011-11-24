@@ -61,6 +61,7 @@ srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& 
   root_directory(""), root_filename(""), root_version(""),
   encoding(DEFAULT_TEXT_ENCODING), options(op)
 {
+
   srcDiffTool(language, DEFAULT_TEXT_ENCODING, "UTF-8", srcml_filename, op, "", "", "", 0, 8);
 }
 
@@ -80,6 +81,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     root_directory(directory), root_filename(filename), root_version(version),
     encoding(src_encoding), language(language), options(op), uri(uri), tabsize(tabsize)
 {
+
   // diff tags
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
