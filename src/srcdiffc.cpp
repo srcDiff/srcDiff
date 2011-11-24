@@ -144,6 +144,7 @@ const char* urisprefix[] = {
   SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
   SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
   SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
+  SRCML_DIFF_NS_PREFIX_DEFAULT,
 };
 
 const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
