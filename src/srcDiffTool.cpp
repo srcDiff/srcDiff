@@ -339,8 +339,8 @@ srcDiffTool::~srcDiffTool() {
 
 }
 
-/*
-void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
+
+void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
 
     // figure out which namespaces are needed
     char const * const ns[] = {
@@ -384,4 +384,4 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
       xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
 }
-*/
+
