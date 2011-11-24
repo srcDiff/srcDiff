@@ -115,6 +115,8 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
+  xmlBuffer * output_srcml_file = xmlBufferCreate();
+
 }
 
 // Translate from input stream to output stream
@@ -128,11 +130,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
-  xmlBuffer * output_file = xmlBufferCreate();
 
   // translate file one
-  translate_to_srcML(path_one, 0, 0, output_file);
-  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
+  translate_to_srcML(path_one, 0, 0, output_srcml_file);
+  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_old == NULL) {
 
@@ -158,7 +159,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   }
 
-  xmlBufferEmpty(output_file);
+  xmlBufferEmpty(output_srcml_file);
 
   xmlFreeTextReader(reader_old);
 
@@ -174,10 +175,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   xmlTextReaderPtr reader_new = NULL;
 
     // translate file two
-    translate_to_srcML(path_two, 0, 0, output_file);
+    translate_to_srcML(path_two, 0, 0, output_srcml_file);
 
     // create the reader for the new file
-    reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_file), output_file->use, 0, 0, 0);
+    reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_new == NULL) {
 
@@ -204,7 +205,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   }
 
   // free the buffer
-    xmlBufferFree(output_file);
+    xmlBufferFree(output_srcml_file);
 
   xmlFreeTextReader(reader_new);
 
@@ -273,7 +274,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
 // destructor
 srcDiffTool::~srcDiffTool() {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // cleanup writer                                                                                                                                  
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);

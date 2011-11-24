@@ -70,6 +70,7 @@ void translate(const char* path_one, const char* path_two, const char* unit_dire
   int language;
   OPTION_TYPE& options;
   int tabsize;
+  xmlBuffer * output_srcml_file;
   xmlTextWriterPtr writer;
 
 };
