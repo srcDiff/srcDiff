@@ -130,6 +130,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   // start of main tag
   xmlTextWriterStartElement(writer, BAD_CAST maintag.c_str());
+
   // outer units have namespaces
   if (!isoption(options, OPTION_NAMESPACEDECL)) {
     outputNamespaces(writer, options, 0, true, uri);
@@ -334,6 +335,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
 // destructor
 srcDiffTool::~srcDiffTool() {
+
+  xmlTextWriterEndElement(writer);
 
   // cleanup writer                                                                                                                                  
   xmlTextWriterEndDocument(writer);
