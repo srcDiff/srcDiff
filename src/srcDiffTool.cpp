@@ -353,7 +353,7 @@ void startUnit(const char * language,
   const char* const attrs[][2] = {
 
     // language attribute
-    { UNIT_ATTRIBUTE_LANGUAGE, /*language*/ "C" },
+    { UNIT_ATTRIBUTE_LANGUAGE, language },
 
     // directory attribute
     { UNIT_ATTRIBUTE_DIRECTORY, directory },
