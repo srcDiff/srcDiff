@@ -375,7 +375,7 @@ void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int dep
       (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
       // optional diff xml namespace
-      (depth == 0) && isoption(OPTION_DIFF, options)     ? SRCML_DIFF_NS_URI : 0,
+      (depth == 0) ? SRCML_DIFF_NS_URI : 0,
     };
 
     // output the namespaces
