@@ -275,7 +275,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
   */
 
-  startUnit(0, options, unit_directory, unit_filename, unit_version, uri, writer);
+  Language l(language);
+  startUnit(l.getLanguageString(), options, unit_directory, unit_filename, unit_version, uri, writer);
 
 
   // create srcdiff unit
