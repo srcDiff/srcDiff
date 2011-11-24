@@ -314,9 +314,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
   xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   //// output srcdiff unit
-  update_diff_stack((rbuf_old.open_diff, unit, COMMON, wstate);
-  update_diff_stack((rbuf_new.open_diff, unit, COMMON, wstate);
-  update_diff_stack((wstate.output_diff, unit, COMMON, wstate);
+  update_diff_stack(rbuf_old.open_diff, unit, COMMON, wstate);
+  update_diff_stack(rbuf_new.open_diff, unit, COMMON, wstate);
+  update_diff_stack(wstate.output_diff, unit, COMMON, wstate);
 
   // run on file level
   if(is_old || is_new)
