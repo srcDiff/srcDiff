@@ -74,7 +74,7 @@ mingw32 :
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
 
 $(OBJ_DIR)srcDiffTranslator.o : srcDiffTranslator.cpp srcDiffTranslator.hpp srcDiffTypes.hpp srcMLUtility.hpp srcDiffUtility.hpp srcDiffWhiteSpace.hpp srcDiffCommon.hpp shortest_edit_script.h xmlrw.h
-	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcdiff.o : srcdiff.cpp srcDiffTranslator.hpp
 	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
