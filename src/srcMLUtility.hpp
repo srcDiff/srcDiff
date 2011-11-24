@@ -2,6 +2,7 @@
 #define INCLUDED_SRCMLUTILITY_HPP
 
 #include "srcDiffUtility.hpp"
+#include <Options.hpp>
 #include <vector>
 
 // converts source code to srcML
