@@ -1664,6 +1664,7 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
                              poptions.language);
 
       *separator = ',';
+      ++count;
 
       /*
       // process this command line argument
