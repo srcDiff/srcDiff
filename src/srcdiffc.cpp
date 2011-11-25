@@ -590,7 +590,10 @@ int main(int argc, char* argv[]) {
         filename += "|";
         filename += argv[i + 1];
 
-        translator.translate(argv[i], argv[i + 1], options,
+        // Do not nest individual files
+        OPTION_TYPE local_options = options & ~OPTION_NESTED;
+
+        translator.translate(argv[i], argv[i + 1], local_options,
                              input_arg_count == 1 ? poptions.given_directory : 0,
                              filename.c_str(),
                              input_arg_count == 1 ? poptions.given_version : 0,
@@ -1622,6 +1625,9 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
 void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
+  // Do not nest individual files
+  OPTION_TYPE local_options = options & ~OPTION_NESTED;
+
   try {
 
     // translate all the filenames listed in the named file
@@ -1656,10 +1662,10 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
       std::string filename = file_one;
         filename += "|";
         filename += file_two;
-
+        
         fprintf(stderr, "%d: %s\t %s\n", count + 1, file_one, file_two);
 
-        translator.translate(file_one, file_two, options,
+        translator.translate(file_one, file_two, local_options,
                              poptions.given_directory,
                              filename.c_str(),
                              poptions.given_version,

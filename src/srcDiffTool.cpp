@@ -152,10 +152,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   first = false;
 
-
-  // Do not nest individual files
-  local_options = global_options & ~OPTION_NESTED;
-
   // Remove eventually
   language = Language::getLanguageFromFilename(path_one);
   if (!(language == Language::LANGUAGE_JAVA || language == Language::LANGUAGE_ASPECTJ))
