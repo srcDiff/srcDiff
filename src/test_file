@@ -5,6 +5,7 @@ src2srcml --literal --operator --modifier $1 -o $1.xml
 src2srcml --literal --operator --modifier $2 -o $2.xml
 
 ../bin/srcdiffc --literal --operator --modifier $1 $2 > temp;
+
 srcml2src  --diff 1 temp -o old;
 srcml2src --diff 2 temp -o new;
 diff old $1;
