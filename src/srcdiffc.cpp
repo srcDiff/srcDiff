@@ -1668,7 +1668,7 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
         // Do not nest individual files
         OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
-        int real_language = poptions.language ? poptions.language : Language::getLanguageFromFilename(file_one);
+        int real_language = poptions.language ? poptions.language : Language::getLanguageFromFilename(argv[i]);
         if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
           local_options |= OPTION_CPP;
         
