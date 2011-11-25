@@ -1634,7 +1634,7 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
     }
 
     while ((file_one = uriinput.readline())) {
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, file_one);
+
       // skip over whitespace
       // TODO:  Other types of whitespace?  backspace?
       file_one += strspn(file_one, " \t\f");
@@ -1656,6 +1656,8 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
       std::string filename = file_one;
         filename += "|";
         filename += file_two;
+
+        fprintf(stderr, "%d: %s\t %s\n", count + 1, file_one, file_two);
 
         translator.translate(file_one, file_two,
                              poptions.given_directory,
