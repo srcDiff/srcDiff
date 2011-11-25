@@ -1633,14 +1633,6 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
       exit(1);
     }
 
-    // create the writer
-    xmlTextWriterPtr writer = xmlNewTextWriterFilename(poptions.srcdiff_filename, 0);
-    if (writer == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML", poptions.srcdiff_filename);
-
-      exit(1);
-    }
-
     while ((file_one = uriinput.readline())) {
 
       // skip over whitespace
