@@ -1641,11 +1641,6 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
       exit(1);
     }
 
-    // issue the xml declaration
-    xmlTextWriterStartDocument(writer, XML_VERSION, poptions.xml_encoding, XML_DECLARATION_STANDALONE);
-
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<unit>"));
-
     while ((file_one = uriinput.readline())) {
 
       // skip over whitespace
@@ -1655,8 +1650,6 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
       // skip blank lines or comment lines
       if (file_one[0] == '\0' || file_one[0] == FILELIST_COMMENT)
         continue;
-
-      xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n"));
 
       char * separator = strchr(file_one, ',');
 
@@ -1692,12 +1685,6 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
       */
 
     }
-
-    xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("\n\n</unit>"));
-
-    // cleanup writer
-    xmlTextWriterEndDocument(writer);
-    xmlFreeTextWriter(writer);
 
   } catch (URIStreamFileError) {
     fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.fname);
