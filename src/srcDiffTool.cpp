@@ -67,13 +67,13 @@ void startUnit(const char * language,
 void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
 // constructor
-srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE op)
+srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE global_options)
   : first(true),
   root_directory(""), root_filename(""), root_version(""),
-  encoding(DEFAULT_TEXT_ENCODING), options(op)
+  encoding(DEFAULT_TEXT_ENCODING), global_options(global_options)
 {
 
-  srcDiffTool(language, DEFAULT_TEXT_ENCODING, "UTF-8", srcml_filename, op, "", "", "", 0, 8);
+  srcDiffTool(language, DEFAULT_TEXT_ENCODING, "UTF-8", srcml_filename, global_options, "", "", "", 0, 8);
 }
 
 // constructor
@@ -81,7 +81,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
 				 const char* srcdiff_filename,  // filename of result srcDiff file
-				 OPTION_TYPE op,             // many and varied options
+				 OPTION_TYPE global_options,             // many and varied options
 				 const char* directory,       // root unit directory
 				 const char* filename,        // root unit filename
 				 const char* version,         // root unit version
@@ -90,7 +90,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 				 )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    encoding(src_encoding), language(language), options(op), uri(uri), tabsize(tabsize)
+    encoding(src_encoding), language(language), global_options(global_options), uri(uri), tabsize(tabsize)
 {
 
   // diff tags
@@ -143,9 +143,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
                             int language) {
   
   // root unit for compound srcML documents
-  if (first && ((options & OPTION_NESTED) > 0)) {
+  if (first && ((global_options & OPTION_NESTED) > 0)) {
 
-    startUnit(0, options, root_directory, root_filename, root_version, uri, writer);
+    startUnit(0, global_options, root_directory, root_filename, root_version, uri, writer);
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
 
   }
@@ -154,7 +154,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
 
   // Do not nest individual files
-  local_options = options & ~OPTION_NESTED;
+  local_options = global_options & ~OPTION_NESTED;
 
   // Remove eventually
   language = Language::getLanguageFromFilename(path_one);
@@ -306,7 +306,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   output_node(rbuf_old, rbuf_new, &flush, COMMON, wstate);
 
-  if(isoption(options, OPTION_NESTED)) {
+  if(isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(writer);
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
