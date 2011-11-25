@@ -1672,7 +1672,8 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
         if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
           local_options |= OPTION_CPP;
         
-        fprintf(stderr, "%d: %s\t %s\n", count + 1, file_one, file_two);
+        if(!isoption(local_options, OPTION_QUIET))
+          fprintf(stderr, "%d: %s\t %s\n", count + 1, file_one, file_two);
 
         translator.translate(file_one, file_two, local_options,
                              poptions.given_directory,
