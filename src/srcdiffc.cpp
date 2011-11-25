@@ -1630,9 +1630,6 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
 void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
-  // Do not nest individual files
-  OPTION_TYPE local_options = options & ~OPTION_NESTED;
-
   try {
 
     // translate all the filenames listed in the named file
@@ -1667,6 +1664,9 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
       std::string filename = file_one;
         filename += "|";
         filename += file_two;
+
+        // Do not nest individual files
+        OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
         int real_language = Language::getLanguageFromFilename(file_one);
         if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
