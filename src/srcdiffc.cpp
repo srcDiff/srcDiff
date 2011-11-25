@@ -598,7 +598,6 @@ int main(int argc, char* argv[]) {
         if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
           local_options |= OPTION_CPP;
 
-
         translator.translate(argv[i], argv[i + 1], local_options,
                              input_arg_count == 1 ? poptions.given_directory : 0,
                              filename.c_str(),
