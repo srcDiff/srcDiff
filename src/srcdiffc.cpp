@@ -1634,7 +1634,7 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
     }
 
     while ((file_one = uriinput.readline())) {
-
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, file_one);
       // skip over whitespace
       // TODO:  Other types of whitespace?  backspace?
       file_one += strspn(file_one, " \t\f");
