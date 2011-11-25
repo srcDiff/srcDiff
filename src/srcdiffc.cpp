@@ -593,11 +593,17 @@ int main(int argc, char* argv[]) {
         // Do not nest individual files
         OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
+        // Remove eventually
+        int real_language = Language::getLanguageFromFilename(argv[i]);
+        if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
+          local_options |= OPTION_CPP;
+
+
         translator.translate(argv[i], argv[i + 1], local_options,
                              input_arg_count == 1 ? poptions.given_directory : 0,
                              filename.c_str(),
                              input_arg_count == 1 ? poptions.given_version : 0,
-                             poptions.language);
+                             poptions.language ? poptions.language : real_language);
         /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
@@ -1662,6 +1668,10 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
       std::string filename = file_one;
         filename += "|";
         filename += file_two;
+
+        int real_language = Language::getLanguageFromFilename(file_one);
+        if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
+          local_options |= OPTION_CPP;
         
         fprintf(stderr, "%d: %s\t %s\n", count + 1, file_one, file_two);
 
@@ -1669,7 +1679,7 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
                              poptions.given_directory,
                              filename.c_str(),
                              poptions.given_version,
-                             poptions.language);
+                             poptions.language ? poptions.language : real_language);
 
       *separator = ',';
       ++count;

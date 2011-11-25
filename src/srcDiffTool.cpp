@@ -152,11 +152,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   first = false;
 
-  // Remove eventually
-  language = Language::getLanguageFromFilename(path_one);
-  if (!(language == Language::LANGUAGE_JAVA || language == Language::LANGUAGE_ASPECTJ))
-    local_options |= OPTION_CPP;
-
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
 
