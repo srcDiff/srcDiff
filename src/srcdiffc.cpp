@@ -347,7 +347,7 @@ process_options* gpoptions = 0;
 void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void srcdiff_dir_top(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void srcdiff_dir(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
+void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -563,7 +563,7 @@ int main(int argc, char* argv[]) {
         poptions.fname = STDIN;
 
       // so process the filelist
-      srcdiff_filelist(translator, poptions, count, skipped, error, showinput);
+      srcdiff_filelist(translator, options, poptions, count, skipped, error, showinput);
 
       // translate from standard input
     } else if (input_arg_count == 0) {
@@ -590,7 +590,7 @@ int main(int argc, char* argv[]) {
         filename += "|";
         filename += argv[i + 1];
 
-        translator.translate(argv[i], argv[i + 1],
+        translator.translate(argv[i], argv[i + 1], options,
                              input_arg_count == 1 ? poptions.given_directory : 0,
                              filename.c_str(),
                              input_arg_count == 1 ? poptions.given_version : 0,
@@ -1620,7 +1620,7 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 #endif
 }
 
-void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
+void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
   try {
 
@@ -1659,7 +1659,7 @@ void srcdiff_filelist(srcDiffTool& translator, process_options& poptions, int& c
 
         fprintf(stderr, "%d: %s\t %s\n", count + 1, file_one, file_two);
 
-        translator.translate(file_one, file_two,
+        translator.translate(file_one, file_two, options,
                              poptions.given_directory,
                              filename.c_str(),
                              poptions.given_version,

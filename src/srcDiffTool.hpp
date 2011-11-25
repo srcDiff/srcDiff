@@ -36,14 +36,14 @@ class srcDiffTool {
  public:
 
   // constructor
-  srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& op);
+  srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE op);
 
   // constructor
   srcDiffTool(int language,
 		  const char* src_encoding,
 		  const char* xml_encoding,
 		  const char* srcml_filename,
-		  OPTION_TYPE& options,
+		  OPTION_TYPE options,
 		  const char* directory,
 		  const char* filename,
 		  const char* version,
@@ -53,8 +53,8 @@ class srcDiffTool {
 
   void close();
 
-void translate(const char* path_one, const char* path_two, const char* unit_directory = 0,
-				const char* unit_filename = 0, const char* unit_version = 0,
+  void translate(const char* path_one, const char* path_two, OPTION_TYPE srcml_option,
+               const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0,
                int language = 0);
 
   // destructor
@@ -68,7 +68,7 @@ void translate(const char* path_one, const char* path_two, const char* unit_dire
   const char* root_version;
   const char* encoding;
   int language;
-  OPTION_TYPE& options;
+  OPTION_TYPE options;
   const char** uri;
   int tabsize;
   xmlBuffer * output_srcml_file;

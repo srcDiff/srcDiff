@@ -67,7 +67,7 @@ void startUnit(const char * language,
 void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
 // constructor
-srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE& op)
+srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE op)
   : first(true),
   root_directory(""), root_filename(""), root_version(""),
   encoding(DEFAULT_TEXT_ENCODING), options(op)
@@ -81,7 +81,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
 				 const char* srcdiff_filename,  // filename of result srcDiff file
-				 OPTION_TYPE& op,             // many and varied options
+				 OPTION_TYPE op,             // many and varied options
 				 const char* directory,       // root unit directory
 				 const char* filename,        // root unit filename
 				 const char* version,         // root unit version
@@ -138,10 +138,10 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 }
 
 // Translate from input stream to output stream
-void srcDiffTool::translate(const char* path_one, const char* path_two, const char* unit_directory,
-				const char* unit_filename, const char* unit_version,
-				int language) {
-
+void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_TYPE srcml_options, 
+                            const char* unit_directory, const char* unit_filename, const char* unit_version,
+                            int language) {
+  
   // root unit for compound srcML documents
   if (first && ((options & OPTION_NESTED) > 0)) {
 
@@ -154,7 +154,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, const ch
 
 
   // Do not nest individual files
-  OPTION_TYPE srcml_options = options & ~OPTION_NESTED;
+  srcml_options = options & ~OPTION_NESTED;
 
   // Remove eventually
   language = Language::getLanguageFromFilename(path_one);
