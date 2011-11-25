@@ -138,7 +138,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 }
 
 // Translate from input stream to output stream
-void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_TYPE srcml_options, 
+void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options, 
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
   
@@ -154,19 +154,19 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
 
   // Do not nest individual files
-  srcml_options = options & ~OPTION_NESTED;
+  local_options = options & ~OPTION_NESTED;
 
   // Remove eventually
   language = Language::getLanguageFromFilename(path_one);
   if (!(language == Language::LANGUAGE_JAVA || language == Language::LANGUAGE_ASPECTJ))
-    srcml_options |= OPTION_CPP;
+    local_options |= OPTION_CPP;
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
 
   // translate file one
   //translate_to_srcML(path_one, 0, 0, output_srcml_file);
-  translate_to_srcML(language, encoding, "UTF-8", output_srcml_file, srcml_options, unit_directory, path_one, unit_version, 0, 8);
+  translate_to_srcML(language, encoding, "UTF-8", output_srcml_file, local_options, unit_directory, path_one, unit_version, 0, 8);
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_old == NULL) {
@@ -210,7 +210,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     // translate file two
   //translate_to_srcML(path_two, 0, 0, output_srcml_file);
-  translate_to_srcML(language, encoding,  "UTF-8", output_srcml_file, srcml_options, unit_directory, path_two, unit_version, 0, 8);
+  translate_to_srcML(language, encoding,  "UTF-8", output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
@@ -282,7 +282,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   */
 
   Language l(language);
-  startUnit(l.getLanguageString(), srcml_options, unit_directory, unit_filename, unit_version, uri, writer);
+  startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, writer);
 
 
   // create srcdiff unit
