@@ -1139,8 +1139,8 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
           local_options |= OPTION_CPP;
 
         if (!real_language && !isoption(options, OPTION_QUIET)) {
-              fprintf(stderr, !shownumber ? "Skipped '%s:%s':  Unregistered extension.\n" :
-                      "    - '%s:%s'\tSkipped: Unregistered extension.\n",
+              fprintf(stderr, !shownumber ? "Skipped '%s,%s':  Unregistered extension.\n" :
+                      "    - '%s,%s'\tSkipped: Unregistered extension.\n",
                       path_one, path_two);
 
           ++skipped;
@@ -1151,7 +1151,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
         ++count;
 
         if(showinput && !isoption(local_options, OPTION_QUIET))
-          fprintf(stderr, "%5d '%s:%s'\n", count, path_one, path_two);
+          fprintf(stderr, "%5d '%s,%s'\n", count, path_one, path_two);
         
         translator.translate(path_one, path_two, local_options,
                              poptions.given_directory,
