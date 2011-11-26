@@ -156,7 +156,7 @@ int option_error_status(int optopt);
 // translate a file, maybe an archive
 void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
-void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 
 using namespace LanguageName;
 
@@ -1142,8 +1142,9 @@ void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& option
                   error, showinput, shownumber);
 }
 
-void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
+  /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
   OPTION_TYPE save_options = options;
@@ -1191,7 +1192,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& option
       options |= OPTION_CPP;
 
     // open up the file
-    /*    void* context = translator.setInput(path);
+       void* context = translator.setInput(path);
 
     // check if file is bad
     if (!context || archiveReadStatus(context) < 0 ) {
@@ -1202,7 +1203,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& option
 
       return;
     }
-    */
+   /
     // another file
     ++count;
 
@@ -1214,10 +1215,10 @@ void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& option
       fprintf(stderr, "%5d %s\n", count, c_filename);
 
     // translate the file
-    /*    translator.translate(path, dir,
+       translator.translate(path, dir,
                          foundfilename ? c_filename : 0,
                          version, reallanguage);
-    */
+   
   } catch (FileError) {
 
     // output tracing information about the input file
@@ -1239,6 +1240,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path, OPTION_TYPE& option
   }
 
   options = save_options;
+*/
 }
 
 void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
@@ -1489,6 +1491,7 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
+    /*
     srcdiff_text(translator,
                  filename.c_str(),
                  options,
@@ -1498,6 +1501,7 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
                  poptions.language,
                  poptions.tabsize,
                  count, skipped, error, showinput, shownumber);
+    */
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1579,6 +1583,7 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
+    /*
     srcdiff_text(translator,
                  filename.c_str(),
                  options,
@@ -1588,6 +1593,7 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
                  poptions.language,
                  poptions.tabsize,
                  count, skipped, error, showinput, shownumber);
+    */
   }
 
   // no need to handle subdirectories, unless recursive
