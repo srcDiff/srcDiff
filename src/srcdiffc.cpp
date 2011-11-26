@@ -1142,7 +1142,26 @@ void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& option
                   error, showinput, shownumber);
 }
 
-void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, process_options& poptions, 
+                  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+
+        // Do not nest individual files
+        OPTION_TYPE local_options = options & ~OPTION_NESTED;
+
+        std::string filename = path_one;
+        filename += "|";
+        filename += path_two;
+
+        // Remove eventually
+        int real_language = poptions.language ? poptions.language : Language::getLanguageFromFilename(path_one);
+        if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
+          local_options |= OPTION_CPP;
+
+        translator.translate(path_one, path_two, local_options,
+                             poptions.given_directory,
+                             filename.c_str(),
+                             poptions.given_version,
+                             real_language);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
