@@ -582,27 +582,6 @@ int main(int argc, char* argv[]) {
       // from the full path
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
 
-
-        /*
-        //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
-        std::string filename = argv[i];
-        filename += "|";
-        filename += argv[i + 1];
-
-        // Do not nest individual files
-        OPTION_TYPE local_options = options & ~OPTION_NESTED;
-
-        // Remove eventually
-        int real_language = poptions.language ? poptions.language : Language::getLanguageFromFilename(argv[i]);
-        if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
-          local_options |= OPTION_CPP;
-
-        translator.translate(argv[i], argv[i + 1], local_options,
-                             input_arg_count == 1 ? poptions.given_directory : 0,
-                             filename.c_str(),
-                             input_arg_count == 1 ? poptions.given_version : 0,
-                             real_language);
-        */
         srcdiff_text(translator, argv[i], argv[i + 1], options, poptions, count, skipped, error, showinput, shownumber);
                      
         /*
@@ -1694,10 +1673,10 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
       file_two += strspn(file_two, " \t\f");
 
       std::string filename = file_one;
-        filename += "|";
-        filename += file_two;
+      filename += "|";
+      filename += file_two;
 
-        srcdiff_text(translator, file_one, file_two, options, poptions, count, skipped, error, showinput, shownumber);
+      srcdiff_text(translator, file_one, file_two, options, poptions, count, skipped, error, showinput, shownumber);
         
       *separator = ',';
 
