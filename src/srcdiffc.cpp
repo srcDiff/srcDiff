@@ -1133,14 +1133,26 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
         filename += "|";
         filename += path_two;
 
-        if(showinput && !isoption(local_options, OPTION_QUIET))
-          fprintf(stderr, "%d: %s\t %s\n", count + 1, path_one, path_two);
-
         // Remove eventually
         int real_language = poptions.language ? poptions.language : Language::getLanguageFromFilename(path_one);
         if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
           local_options |= OPTION_CPP;
 
+        if (!real_language && !isoption(options, OPTION_QUIET)) {
+              fprintf(stderr, !shownumber ? "Skipped '%s:%s':  Unregistered extension.\n" :
+                      "    - '%s:%s'\tSkipped: Unregistered extension.\n",
+                      path_one, path_two);
+
+          ++skipped;
+
+          return;
+        }
+
+        if(showinput && !isoption(local_options, OPTION_QUIET))
+          fprintf(stderr, "%d: %s\t %s\n", count + 1, path_one, path_two);
+
+
+        
         translator.translate(path_one, path_two, local_options,
                              poptions.given_directory,
                              filename.c_str(),
