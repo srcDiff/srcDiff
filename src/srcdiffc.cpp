@@ -153,12 +153,6 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 
 int option_error_status(int optopt);
 
-// translate a file, maybe an archive
-void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
-
-void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, process_options& poptions, 
-                  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
-
 using namespace LanguageName;
 
 // output help
@@ -349,6 +343,12 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 void srcdiff_dir_top(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void srcdiff_dir(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
 void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
+
+// translate a file, maybe an archive
+void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+
+void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, process_options& poptions, 
+                  int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -603,7 +603,7 @@ int main(int argc, char* argv[]) {
                              input_arg_count == 1 ? poptions.given_version : 0,
                              real_language);
         */
-        srcdiff_text(translator, argv[i], argv[i + 1], local_options,, count, skipped, error, showinput, shownumber);
+        srcdiff_text(translator, argv[i], argv[i + 1], options, poptions, count, skipped, error, showinput, shownumber);
                      
         /*
         // process this command line argument
