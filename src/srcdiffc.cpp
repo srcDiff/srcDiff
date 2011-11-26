@@ -1154,9 +1154,9 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
           fprintf(stderr, "%5d '%s,%s'\n", count, path_one, path_two);
         
         translator.translate(path_one, path_two, local_options,
-                             poptions.given_directory,
+                             0, //poptions.given_directory,
                              filename.c_str(),
-                             poptions.given_version,
+                             0, //poptions.given_version,
                              real_language);
 
   /*
