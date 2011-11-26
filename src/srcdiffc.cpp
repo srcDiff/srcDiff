@@ -156,7 +156,8 @@ int option_error_status(int optopt);
 // translate a file, maybe an archive
 void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
-void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, process_options& poptions, 
+                  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
 using namespace LanguageName;
 
@@ -388,8 +389,6 @@ int main(int argc, char* argv[]) {
       { false, false, false, false, false, false }
     };
 
-  gpoptions = &poptions;
-
   // process command-line arguments
   int curarg = process_args(argc, argv, poptions);
 
@@ -583,8 +582,8 @@ int main(int argc, char* argv[]) {
       // from the full path
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
 
-        ++count;
 
+        /*
         //srcdiff_translate(argv[i], argv[i + 1], 0, writer);
         std::string filename = argv[i];
         filename += "|";
@@ -603,6 +602,9 @@ int main(int argc, char* argv[]) {
                              filename.c_str(),
                              input_arg_count == 1 ? poptions.given_version : 0,
                              real_language);
+        */
+        srcdiff_text(translator, argv[i], argv[i + 1], local_options,, count, skipped, error, showinput, shownumber);
+                     
         /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
@@ -1162,6 +1164,8 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
                              filename.c_str(),
                              poptions.given_version,
                              real_language);
+
+        ++count;
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
