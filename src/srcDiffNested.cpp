@@ -20,7 +20,8 @@ extern xmlNode diff_new_start;
 extern xmlNode diff_new_end;
 
 // tags that can have something nested in them
-const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
+const char * block_types[] = { "block", "if", "while", "function", 0 };
+//const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 // tags that can be nested in something else (incomplete)
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };

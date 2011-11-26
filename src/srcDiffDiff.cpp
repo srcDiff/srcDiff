@@ -5,6 +5,7 @@
 #include "srcDiffChange.hpp"
 #include "srcDiffCommentDiff.hpp"
 #include "srcDiffWhiteSpace.hpp"
+#include "srcDiffNested.hpp"
 
 #include <string.h>
 
@@ -173,7 +174,6 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
         } else {
 
-          /*
             if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
             , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
 
@@ -190,11 +190,11 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
             , DELETE, wstate);
 
             } else {
-          */
-          // syntax mismatch
-          output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                    , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
-          //          }
+
+              // syntax mismatch
+              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+            }
 
         }
 
