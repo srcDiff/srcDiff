@@ -1,5 +1,6 @@
 #include "srcMLUtility.hpp"
 #include <srcMLTranslator.hpp>
+#include <Options.hpp>
 #include <Language.hpp>
 #include "xmlrw.h"
 
