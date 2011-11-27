@@ -133,6 +133,7 @@ const uridata uris[] = {
   { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR, "namespace for optional operator element"},
   { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER, "namespace for optional modifier element"},
   { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION, "namespace for optional position element and attributes" },
+  { SRCML_DIFF_NS_URI,         SRCML_DIFF_NS_PREFIX_DEFAULT, 0,               "primary srcDiff namespace" },
 };
 
 const char* urisprefix[] = {
