@@ -37,9 +37,9 @@
 #include "xmlrw.h"
 
 const char* DIFF_PREFIX = "diff:";
-const char* DIFF_OLD = "diff:delete";
-const char* DIFF_NEW = "diff:insert";
-const char* DIFF_COMMON = "diff:common";
+const char* DIFF_OLD = "delete";
+const char* DIFF_NEW = "insert";
+const char* DIFF_COMMON = "common";
 
 xmlNode diff_common_start;
 xmlNode diff_common_end;
@@ -94,27 +94,34 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 {
 
   // diff tags
-  diff_common_start.name = (xmlChar *) DIFF_COMMON;
+  std::string diff_namespace = uri[7];
+  if(diff_namespace != "")
+    diff_namespace += ":";
+
+  std::string common_name = diff_namespace + DIFF_COMMON;
+  diff_common_start.name = (xmlChar *) common_name.c_str();
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.extra = 0;
 
-  diff_common_end.name = (xmlChar *) DIFF_COMMON;
+  diff_common_end.name = (xmlChar *) common_name.c_str();
   diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_common_end.extra = 0;
 
-  diff_old_start.name = (xmlChar *) DIFF_OLD;
+  std::string old_name = diff_namespace + DIFF_OLD;
+  diff_old_start.name = (xmlChar *) old_name.c_str();
   diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_old_start.extra = 0;
 
-  diff_old_end.name = (xmlChar *) DIFF_OLD;
+  diff_old_end.name = (xmlChar *) old_name.c_str();
   diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_old_end.extra = 0;
 
-  diff_new_start.name = (xmlChar *) DIFF_NEW;
+  std::string new_name = diff_namespace + DIFF_NEW;
+  diff_new_start.name = (xmlChar *) new_name.c_str();
   diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_new_start.extra = 0;
 
-  diff_new_end.name = (xmlChar *) DIFF_NEW;
+  diff_new_end.name = (xmlChar *) new_name.c_str();
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
