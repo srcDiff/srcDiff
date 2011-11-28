@@ -57,6 +57,14 @@ class srcDiffTool {
                const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0,
                int language = 0);
 
+void startUnit(const char * language,
+               OPTION_TYPE& options,             // many and varied options                                                               
+               const char* directory,       // root unit directory                                                                   
+               const char* filename,        // root unit filename                                                                    
+               const char* version,         // root unit version                                                                     
+               const char* uri[],           // uri prefixes                                                                          
+               xmlTextWriterPtr writer);
+
   // destructor
   ~srcDiffTool();
 

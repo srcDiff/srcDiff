@@ -56,14 +56,6 @@ xmlNode flush;
 std::vector<xmlNode *> nodes_old;
 std::vector<xmlNode *> nodes_new;
 
-void startUnit(const char * language,
-               OPTION_TYPE& options,             // many and varied options                                                               
-               const char* directory,       // root unit directory                                                                   
-               const char* filename,        // root unit filename                                                                    
-               const char* version,         // root unit version                                                                     
-               const char* uri[],           // uri prefixes                                                                          
-               xmlTextWriterPtr writer);
-
 void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
 // constructor
@@ -326,7 +318,7 @@ srcDiffTool::~srcDiffTool() {
 
 }
 
-void startUnit(const char * language,
+void srcDiffTool::startUnit(const char * language,
                OPTION_TYPE& options,             // many and varied options                                                               
                const char* directory,       // root unit directory                                                                   
                const char* filename,        // root unit filename                                                                    
