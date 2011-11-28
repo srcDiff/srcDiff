@@ -47,6 +47,9 @@ int node_compare(xmlNode * node1, xmlNode * node2) {
   if(node1->type != node2->type || strcmp((const char *)node1->name, (const char *)node2->name) != 0)
     return 1;
 
+  if(strcmp((const char *)node1->ns->prefix, (const char *)node2->ns->prefix) != 0)
+    return 1;
+
   // end if text node contents differ
   if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
     return strcmp((const char *)node1->content, (const char *)node2->content);
