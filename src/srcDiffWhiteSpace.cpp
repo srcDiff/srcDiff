@@ -40,6 +40,10 @@ void output_white_space_nested(reader_state & rbuf_old
     for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend) {
     }
 
+    // set attribute to change
+  //diff_type.children = &whitespace;
+  //diff_old_start.properties = &diff_type;
+  //diff_new_start.properties = &diff_type;
 
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
