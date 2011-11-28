@@ -23,6 +23,10 @@ extern xmlNode diff_old_end;
 extern xmlNode diff_new_start;
 extern xmlNode diff_new_end;
 
+extern xmlAttr diff_type;
+extern xmlNode change;
+extern xmlNode whitespace;
+
 /*
 
   Adds whitespace to a change. Then outputs the change.
@@ -63,6 +67,9 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
   unsigned int begin_new = rbuf_new.last_output;
 
   if(end_old > begin_old && end_new > begin_new) {
+
+    // set attribute to change
+    
 
     if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
