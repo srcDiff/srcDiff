@@ -70,8 +70,8 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
     // set attribute to change
     //diff_type.children = &change;
-    //diff_old_start.properties = &diff_type;
-    //diff_new_start.properties = &diff_type;
+    diff_old_start.properties = &diff_type;
+    diff_new_start.properties = &diff_type;
 
 
 

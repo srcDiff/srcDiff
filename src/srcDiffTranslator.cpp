@@ -28,17 +28,17 @@
 
 #include "xmlrw.h"
 
-const char* DIFF_PREFIX = "diff:";
-const char* DIFF_OLD = "diff:delete";
-const char* DIFF_NEW = "diff:insert";
-const char* DIFF_COMMON = "diff:common";
+extern const char* DIFF_PREFIX = "diff:";
+extern const char* DIFF_OLD = "diff:delete";
+extern const char* DIFF_NEW = "diff:insert";
+extern const char* DIFF_COMMON = "diff:common";
 
-xmlNode diff_common_start;
-xmlNode diff_common_end;
-xmlNode diff_old_start;
-xmlNode diff_old_end;
-xmlNode diff_new_start;
-xmlNode diff_new_end;
+extern xmlNode diff_common_start;
+extern xmlNode diff_common_end;
+extern xmlNode diff_old_start;
+extern xmlNode diff_old_end;
+extern xmlNode diff_new_start;
+extern xmlNode diff_new_end;
 
 /*
   Global structures to store of the collected xml nodes.
