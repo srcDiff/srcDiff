@@ -16,6 +16,10 @@ extern xmlNode diff_old_end;
 extern xmlNode diff_new_start;
 extern xmlNode diff_new_end;
 
+extern xmlAttr diff_type;
+extern xmlNode change;
+extern xmlNode whitespace;
+
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
                                , int operation, writer_state & wstate) {
