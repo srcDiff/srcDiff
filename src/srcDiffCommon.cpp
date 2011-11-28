@@ -67,6 +67,11 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
   int oend = end_old;
   int nend = end_new;
 
+  // set attribute to change
+  diff_type.children = &whitespace;
+  diff_old_start.properties = &diff_type;
+  diff_new_start.properties = &diff_type;
+
   int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
