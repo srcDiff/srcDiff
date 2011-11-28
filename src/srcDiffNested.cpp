@@ -255,7 +255,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_new,  structure_old->at(0)
+      = create_node_set(nodes_old,  structure_old->at(0)
                         , structure_old->back() + 1);
 
     std::vector<std::vector<int> *> next_node_set_new
