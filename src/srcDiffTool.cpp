@@ -122,6 +122,9 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   diff_type.name = (xmlChar *) DIFF_TYPE;
   diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
+  change.name = "text";
+  change.type = (xmlElementType)XML_READER_TYPE_TEXT;
+
   flush.name = (xmlChar *)"text";
   flush.type = (xmlElementType)XML_READER_TYPE_TEXT;
   flush.content = (xmlChar *)"";
