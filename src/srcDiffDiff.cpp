@@ -302,7 +302,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
-  if(edits->length <= edit_next->length) {
+  if(edits->length > edit_next->length) {
   for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
     // TODO: set to first or positive infinity or MAX_INT or whatever it is called
