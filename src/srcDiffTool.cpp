@@ -74,7 +74,7 @@ srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE g
   encoding(DEFAULT_TEXT_ENCODING), global_options(global_options)
 {
 
-  srcDiffTool(language, DEFAULT_TEXT_ENCODING, "UTF-8", srcml_filename, global_options, "", "", "", 0, 8);
+  srcDiffTool(language, DEFAULT_TEXT_ENCODING, DEFAULT_XML_ENCODING, srcml_filename, global_options, "", "", "", (const char**)DEFAULT_URI_PREFIX, 8);
 }
 
 // constructor
