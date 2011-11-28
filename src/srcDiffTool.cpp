@@ -40,6 +40,7 @@ const char* DIFF_PREFIX = "diff:";
 const char* DIFF_OLD = "diff:delete";
 const char* DIFF_NEW = "diff:insert";
 const char* DIFF_COMMON = "diff:common";
+const char* DIFF_TYPE = "type";
 
 xmlNode diff_common_start;
 xmlNode diff_common_end;
@@ -47,6 +48,9 @@ xmlNode diff_old_start;
 xmlNode diff_old_end;
 xmlNode diff_new_start;
 xmlNode diff_new_end;
+xmlAttr diff_type = { 0 };
+
+// special flush node
 xmlNode flush;
 
 /*
@@ -109,6 +113,9 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   diff_new_end.name = (xmlChar *) DIFF_NEW;
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
+
+  diff_type.name = (xmlChar *) DIFF_TYPE;
+  diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
   flush.name = (xmlChar *)"text";
   flush.type = (xmlElementType)XML_READER_TYPE_TEXT;
