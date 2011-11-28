@@ -98,7 +98,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     unsigned int end;
     unsigned int start_pos;
     unsigned int end_pos;
-    if(has_interal_block(structure_old, nodes_old) || strcmp((const char *)nodes_old.at(structure_new->at(0))->name, "block") == 0) {
+    if(has_interal_block(structure_old, nodes_old) || strcmp((const char *)nodes_old.at(structure_old->at(0))->name, "block") == 0) {
 
       for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
         ;
@@ -109,7 +109,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
       start_pos = structure_old->at(start);
       end_pos = structure_old->at(end) - 1;
 
-      if(strcmp((const char *)nodes_old.at(structure_new->at(0))->name, "block") != 0)
+      if(strcmp((const char *)nodes_new.at(structure_new->at(0))->name, "block") != 0)
         start_pos += 2;
       else
         end_pos += 2;
@@ -195,7 +195,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     unsigned int end;
     unsigned int start_pos;
     unsigned int end_pos;
-    if(has_interal_block(structure_new, nodes_new)) {
+    if(has_interal_block(structure_new, nodes_new) || strcmp((const char *)nodes_new.at(structure_new->at(0))->name, "block") == 0) {
 
       for(start = 0; start < structure_new->size() && strcmp((const char *)nodes_new.at(structure_new->at(start))->name, "block") != 0; ++start)
         ;
@@ -206,7 +206,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
       start_pos = structure_new->at(start);
       end_pos = structure_new->at(end) - 1;
 
-      if(strcmp((const char *)nodes_new.at(structure_new->at(0))->name, "block") != 0)
+      if(strcmp((const char *)nodes_old.at(structure_old->at(0))->name, "block") != 0)
         start_pos += 2;
       else
         end_pos += 2;
