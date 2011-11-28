@@ -349,13 +349,13 @@ void srcDiffTool::startUnit(const char * language,
     { UNIT_ATTRIBUTE_LANGUAGE, language },
 
     // directory attribute
-    { UNIT_ATTRIBUTE_DIRECTORY, directory },
+    { UNIT_ATTRIBUTE_DIRECTORY, depth == 0 && isoption(global_options, OPTION_DIRECTORY) ? root_directory : directory },
 
     // filename attribute
-    { UNIT_ATTRIBUTE_FILENAME, filename },
+    { UNIT_ATTRIBUTE_FILENAME, depth == 0 && isoption(global_options, OPTION_FILENAME) ? root_filename : filename },
 
     // version attribute
-    { UNIT_ATTRIBUTE_VERSION, version },
+    { UNIT_ATTRIBUTE_VERSION,  depth == 0 && isoption(global_options, OPTION_VERSION) ? root_version : version },
 
     // position tab setting
     //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
