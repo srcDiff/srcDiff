@@ -38,7 +38,9 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr no
 
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
-     && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) == 0) {
+     && ((delay_operation == DELETE &&strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_old_end.name) == 0)
+         (delay_operation == INSERT && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_new_end.name) == 0)
+         (delay_operation == COMMON && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_common_end.name) == 0)) {
 
     if(delay_operation == DELETE) {
 
