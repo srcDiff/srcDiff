@@ -192,40 +192,40 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     // may need to markup common that does not output common blocks
     output_white_space_all(rbuf_old, rbuf_new, wstate);
     //markup_whitespace(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
-
+x=
     unsigned int start;
     unsigned int end;
     unsigned int start_pos;
     unsigned int end_pos;
-    if(has_interal_block(structure_old, nodes_old)) {
+    if(has_interal_block(structure_new, nodes_new)) {
 
-      for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "block") != 0; ++start)
+      for(start = 0; start < structure_new->size() && strcmp((const char *)nodes_new.at(structure_new->at(start))->name, "block") != 0; ++start)
         ;
 
-      for(end = start + 1; end < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(end))->name, "block") != 0; ++end)
+      for(end = start + 1; end < structure_new->size() && strcmp((const char *)nodes_new.at(structure_new->at(end))->name, "block") != 0; ++end)
         ;
 
-      start_pos = structure_old->at(start);
-      end_pos = structure_old->at(end) - 1;
+      start_pos = structure_new->at(start);
+      end_pos = structure_new->at(end) - 1;
 
-      if(strcmp((const char *)nodes_old.at(structure_new->at(0))->name, "block") != 0)
+      if(strcmp((const char *)nodes_new.at(structure_new->at(0))->name, "block") != 0)
         start_pos += 2;
       else
         end_pos += 2;
 
-    } else if(strcmp((const char *)nodes_old.at(structure_old->at(0))->name, "for") != 0){
+    } else if(strcmp((const char *)nodes_new.at(structure_new->at(0))->name, "for") != 0){
 
-      for(start = 0; start < structure_old->size()
-            && ((xmlReaderTypes)nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
-                || strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "condition") != 0); ++start)
+      for(start = 0; start < structure_new->size()
+            && ((xmlReaderTypes)nodes_new.at(structure_new->at(start))->type != XML_READER_TYPE_END_ELEMENT
+                || strcmp((const char *)nodes_new.at(structure_new->at(start))->name, "condition") != 0); ++start)
         ;
 
       ++start;
 
-      start_pos = structure_old->at(start) + 1;
-      end_pos = structure_old->back();
+      start_pos = structure_new->at(start) + 1;
+      end_pos = structure_new->back();
 
-      if(strcmp((const char *)nodes_old.at(structure_old->at(0))->name, "if") == 0) {
+      if(strcmp((const char *)nodes_new.at(structure_new->at(0))->name, "if") == 0) {
 
         ++start_pos;
         --end_pos;
@@ -234,22 +234,18 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     } else {
 
-      for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") != 0; ++start)
+      for(start = 0; start < structure_new->size() && strcmp((const char *)nodes_new.at(structure_new->at(start))->name, "incr") != 0; ++start)
         ;
 
-      if(!(nodes_old.at(start)->extra & 0x1))
-        for(start = 0; start < structure_old->size() && strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "incr") != 0; ++start)
+      if(!(nodes_new.at(start)->extra & 0x1))
+        for(start = 0; start < structure_new->size() && strcmp((const char *)nodes_new.at(structure_new->at(start))->name, "incr") != 0; ++start)
           ;
 
       start += 3;
-      start_pos = structure_old->at(start) + 1;
-      end_pos = structure_old->back();
+      start_pos = structure_new->at(start) + 1;
+      end_pos = structure_new->back();
 
     }
-
-    // output diff tag begin
-    //output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
-
 
     output_change(rbuf_old, start_pos, rbuf_new, rbuf_new.last_output, wstate);
     //for(unsigned int i = rbuf_old.last_output; i < start_pos; ++i)
