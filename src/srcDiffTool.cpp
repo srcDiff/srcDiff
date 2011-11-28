@@ -124,6 +124,13 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   change.name = "text";
   change.type = (xmlElementType)XML_READER_TYPE_TEXT;
+  change.content = (xmlChar *)"change";
+  change.extra = 0;
+
+  whitespace.name = "text";
+  whitespace.type = (xmlElementType)XML_READER_TYPE_TEXT;
+  whitespace.content = (xmlChar *)"whitespace";
+  whitespace.extra = 0;
 
   flush.name = (xmlChar *)"text";
   flush.type = (xmlElementType)XML_READER_TYPE_TEXT;
