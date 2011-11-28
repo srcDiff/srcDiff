@@ -33,7 +33,8 @@ int main(int argc, char * argv[]) {
 
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
 
-  //srcDiffTool translator = srcDiffTool(1, srcdiff_file, options);
+  srcDiffTool translator = srcDiffTool(1, srcdiff_file, options);
+  translator.translate(argv[1], argv[2], options, 0, 0 /*filename*/, 0, 1);
 
   return 0;
 }
