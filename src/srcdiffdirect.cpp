@@ -29,24 +29,18 @@ int main(int argc, char * argv[]) {
 
   const char * srcdiff_file = "-";
 
-  const char* urisprefix[] = {
-
-    SRCML_SRC_NS_PREFIX_DEFAULT,
-    SRCML_CPP_NS_PREFIX_DEFAULT,
-    SRCML_ERR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-    SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-    SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-    SRCML_DIFF_NS_PREFIX_DEFAULT,
-  };
-
   Language::register_standard_file_extensions();
 
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
 
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, argv[1]);
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, argv[2]);
+  std::string filename = argv[1];
+  filename += "|";
+  filename += argv[2];
+
   srcDiffTool translator = srcDiffTool(1, srcdiff_file, options);
-  translator.translate(argv[1], argv[2], options, 0, 0 /*filename*/, 0, 1);
+  translator.translate(argv[1], argv[2], options, 0, filename.c_str(), 0, 1);
 
   return 0;
 }

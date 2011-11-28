@@ -231,7 +231,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // read to unit
   xmlTextReaderRead(reader_new);
 
-
   xmlNodePtr unit_new = getRealCurrentNode(reader_new);
 
   int is_new = xmlTextReaderRead(reader_new);
