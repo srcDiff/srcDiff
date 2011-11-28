@@ -69,7 +69,11 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
   if(end_old > begin_old && end_new > begin_new) {
 
     // set attribute to change
-    
+    //diff_type.children = &change;
+    //diff_old_start.properties = &diff_type;
+    //diff_new_start.properties = &diff_type;
+
+
 
     if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
