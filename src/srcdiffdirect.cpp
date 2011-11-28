@@ -40,13 +40,13 @@ int main(int argc, char * argv[]) {
   const char * uri[] = {
 
     0,
-    0,
-    0, 
-    0,
-    0,
-    0, 
-    0, 
-    0, 
+    "cpp",
+    "err", 
+    "lit",
+    "op",
+    "type", 
+    "pos", 
+    "diff", 
 
   };
 
