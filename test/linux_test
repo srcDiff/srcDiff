@@ -6,7 +6,7 @@
 #mv linux-3.0.8/ new
 #cd old
 #find . -name "*.h" -o -name "*.c" -o -name "*.cc" > files 
-cat files | gxargs -I% bash -c "cmp --quiet old/% new/% || echo % > list"
+cat files | gxargs -I% bash -c "cmp --quiet old/% new/% || echo %" > list
 #cd ..
 #cd new
 #cat ../old/files | gxargs -I% bash -c "[[ -e % ]] && echo %" > ../files
