@@ -202,7 +202,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer, const char* nam
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
       else if (*p == '>')
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-      else
+     else
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
     }
     break;
@@ -269,6 +269,7 @@ void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
 
     // end now if this is an empty element
     if (isemptyelement) {
+
       xmlTextWriterEndElement(writer);
     }
 

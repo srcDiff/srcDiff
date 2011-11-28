@@ -17,12 +17,12 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr no
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
+  */
 
     if(node->type == XML_READER_TYPE_TEXT)
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
     else
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
   static bool delay = false;
   static int delay_operation = -2;
@@ -37,7 +37,8 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr no
   */
 
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
-  if(delay && (delay_operation != operation)) {
+  if(delay && (delay_operation != operation)
+     && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) == 0) {
 
     if(delay_operation == DELETE) {
 
