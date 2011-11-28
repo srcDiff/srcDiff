@@ -237,7 +237,6 @@ void output_white_space_suffix(reader_state & rbuf_old
 
   //if(ostart < opivot && nstart < npivot) {
 
-    // set attribute to change
     diff_type.children = &whitespace;
     diff_old_start.properties = &diff_type;
     diff_new_start.properties = &diff_type;

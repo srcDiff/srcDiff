@@ -17,6 +17,10 @@ extern xmlNode diff_old_end;
 extern xmlNode diff_new_start;
 extern xmlNode diff_new_end;
 
+extern xmlAttr diff_type;
+extern xmlNode change;
+extern xmlNode whitespace;
+
 /*
 
   Output common elements.
