@@ -68,16 +68,6 @@ std::vector<xmlNode *> nodes_new;
 void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
 // constructor
-srcDiffTool::srcDiffTool(int language, const char* srcml_filename, OPTION_TYPE global_options)
-  : first(true),
-  root_directory(""), root_filename(""), root_version(""),
-  encoding(DEFAULT_TEXT_ENCODING), global_options(global_options)
-{
-
-  srcDiffTool(language, DEFAULT_TEXT_ENCODING, DEFAULT_XML_ENCODING, srcml_filename, global_options, "", "", "", (const char**)DEFAULT_URI_PREFIX, 8);
-}
-
-// constructor
 srcDiffTool::srcDiffTool(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
