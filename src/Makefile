@@ -118,7 +118,7 @@ $(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)
 $(EXE_DIR)srcdiffc : srcdiffc.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTool.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -I ../../../src -I/opt/local/include -L../../../obj $^ $(LIBSRCMLC_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} ../../../obj/srcmlapps.o -o $@
 
-$(EXE_DIR)srcdiff.exe :  srcdiffc.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTool.o
+$(EXE_DIR)srcdiff.exe :  srcdiffc.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTool.o $(OBJ_DIR)mingw32.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -I ../../../src -I/opt/local/include -L../../../obj $^ $(LIBSRCMLC_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} ../../../obj/srcmlapps.o -o $@
 
 $(OBJ_DIR)mingw32.o : mingw32.cpp mingw32.hpp
