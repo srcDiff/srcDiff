@@ -28,10 +28,10 @@
 
 #include "xmlrw.h"
 
-extern const char* DIFF_PREFIX = "diff:";
-extern const char* DIFF_OLD = "diff:delete";
-extern const char* DIFF_NEW = "diff:insert";
-extern const char* DIFF_COMMON = "diff:common";
+const char* D_PREFIX = "diff:";
+const char* D_OLD = "diff:delete";
+const char* D_NEW = "diff:insert";
+const char* D_COMMON = "diff:common";
 
 extern xmlNode diff_common_start;
 extern xmlNode diff_common_end;
@@ -190,27 +190,27 @@ int srcdiff_translate(const char * filename_one, const char * filename_two, int 
   wstate.output_diff.push_back(new_diff);
 
   // diff tags
-  diff_common_start.name = (xmlChar *) DIFF_COMMON;
+  diff_common_start.name = (xmlChar *) D_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.extra = 0;
 
-  diff_common_end.name = (xmlChar *) DIFF_COMMON;
+  diff_common_end.name = (xmlChar *) D_COMMON;
   diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_common_end.extra = 0;
 
-  diff_old_start.name = (xmlChar *) DIFF_OLD;
+  diff_old_start.name = (xmlChar *) D_OLD;
   diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_old_start.extra = 0;
 
-  diff_old_end.name = (xmlChar *) DIFF_OLD;
+  diff_old_end.name = (xmlChar *) D_OLD;
   diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_old_end.extra = 0;
 
-  diff_new_start.name = (xmlChar *) DIFF_NEW;
+  diff_new_start.name = (xmlChar *) D_NEW;
   diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_new_start.extra = 0;
 
-  diff_new_end.name = (xmlChar *) DIFF_NEW;
+  diff_new_end.name = (xmlChar *) D_NEW;
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.extra = 0;
 
