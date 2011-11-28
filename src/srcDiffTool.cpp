@@ -37,9 +37,9 @@
 #include "xmlrw.h"
 
 const char* DIFF_PREFIX = "diff:";
-const char* DIFF_OLD = "delete";
-const char* DIFF_NEW = "insert";
-const char* DIFF_COMMON = "common";
+const char* DIFF_OLD = "diff:delete";
+const char* DIFF_NEW = "diff:insert";
+const char* DIFF_COMMON = "diff:common";
 
 xmlNode diff_common_start;
 xmlNode diff_common_end;
