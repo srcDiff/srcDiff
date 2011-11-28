@@ -31,6 +31,8 @@ int main(int argc, char * argv[]) {
 
   Language::register_standard_file_extensions();
 
+  int language = Language::getLanguageFromFilename(argv[1]);
+
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
 
   std::string filename = argv[1];
@@ -50,8 +52,8 @@ int main(int argc, char * argv[]) {
 
   };
 
-  srcDiffTool translator = srcDiffTool(1, "ISO-8859-1", "UTF-8", srcdiff_file, options, 0, 0, 0, uri, 8);
-  translator.translate(argv[1], argv[2], options, 0, 0 /*filename.c_str()*/, 0, 1);
+  srcDiffTool translator = srcDiffTool(language, "ISO-8859-1", "UTF-8", srcdiff_file, options, 0, 0, 0, uri, 8);
+  translator.translate(argv[1], argv[2], options, 0, 0 /*filename.c_str()*/, 0, language);
 
   return 0;
 }
