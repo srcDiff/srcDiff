@@ -73,8 +73,6 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
     diff_old_start.properties = &diff_type;
     diff_new_start.properties = &diff_type;
 
-
-
     if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
       xmlChar * content_old = nodes_old.at(begin_old)->content;
@@ -145,6 +143,10 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
     rbuf_new.last_output = end_new;
 
   }
+
+  diff_old_start.properties = 0;
+  diff_new_start.properties = 0;
+
 
 }
 
