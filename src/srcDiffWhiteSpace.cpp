@@ -40,11 +40,6 @@ void output_white_space_nested(reader_state & rbuf_old
     for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend) {
     }
 
-    // set attribute to change
-  //diff_type.children = &whitespace;
-  //diff_old_start.properties = &diff_type;
-  //diff_new_start.properties = &diff_type;
-
   markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
@@ -240,6 +235,16 @@ void output_white_space_suffix(reader_state & rbuf_old
     ++npivot;
   }
 
+  //if(ostart < opivot && nstart < npivot) {
+
+    // set attribute to change
+    diff_type.children = &whitespace;
+    diff_old_start.properties = &diff_type;
+    diff_new_start.properties = &diff_type;
+
+    //}
+
+
   if(ostart < opivot) {
 
     // output delete
@@ -276,6 +281,10 @@ void output_white_space_suffix(reader_state & rbuf_old
 
   rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
   rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
+
+
+  diff_old_start.properties = 0;
+  diff_new_start.properties = 0;
 
 }
 
