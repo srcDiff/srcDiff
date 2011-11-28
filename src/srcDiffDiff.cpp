@@ -292,7 +292,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   if(value < 0)
     value = 0;
 
-  return 0;
+  return value;
 }
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
@@ -312,10 +312,8 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
                                           , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
 
-
         old_pos = pos;
         min_similarity = similarity;
-
       }
 
     }
