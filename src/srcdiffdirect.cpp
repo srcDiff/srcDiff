@@ -33,7 +33,7 @@ int main(int argc, char * argv[]) {
 
   int language = Language::getLanguageFromFilename(argv[1]);
 
-  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_XML | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XML | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
 
   std::string filename = argv[1];
   filename += "|";
