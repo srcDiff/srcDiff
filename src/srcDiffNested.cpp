@@ -255,16 +255,16 @@ x=
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_old, start_pos
-                        , end_pos);
+      = create_node_set(nodes_new,  structure_old->at(0)
+                        , structure_old->back() + 1);
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new,  structure_new->at(0)
-                        , structure_new->back() + 1);
+      = create_node_set(nodes_new, start_pos
+                        , end_pos);
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+    output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
     //markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
     output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
