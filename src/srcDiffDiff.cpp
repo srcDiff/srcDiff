@@ -332,9 +332,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
   }
 
-  }
-
-  return; 
+  } else {
 
   for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
@@ -362,6 +360,8 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       *matches = match;
     else
       (*matches)->next = match;
+
+  }
 
   }
 
