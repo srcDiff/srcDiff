@@ -44,8 +44,8 @@ extern xmlNode diff_new_end;
   Global structures to store of the collected xml nodes.
   Base reference structure for all node comparison and output
 */
-std::vector<xmlNode *> nodes_old;
-std::vector<xmlNode *> nodes_new;
+extern std::vector<xmlNode *> nodes_old;
+extern std::vector<xmlNode *> nodes_new;
 
 
 int srcdiff_translate(const char * filename_one, const char * filename_two, int options, xmlTextWriterPtr writer) {
