@@ -306,6 +306,36 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
     // TODO: set to first or positive infinity or MAX_INT or whatever it is called
     int min_similarity = 65535;
+    for(int pos = new_pos; pos < edit_next->length; ++pos) {
+
+      int similarity = 0;
+      if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
+                                          , node_sets_new->at(edit_next->offset_sequence_two + pos))) < min_similarity) {
+
+        new_pos = pos;
+        min_similarity = similarity;
+      }
+
+    }
+
+    offset_pair * match = new offset_pair;
+    match->old_offset = old_pos;
+    match->new_offset = new_pos;
+    match->similarity = min_similarity;
+    match->next = NULL;
+
+    if(old_pos == 0)
+      *matches = match;
+    else
+      (*matches)->next = match;
+
+  }
+
+  /*
+  for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
+
+    // TODO: set to first or positive infinity or MAX_INT or whatever it is called
+    int min_similarity = 65535;
     for(int pos = old_pos; pos < edits->length; ++pos) {
 
       int similarity = 0;
@@ -330,6 +360,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       (*matches)->next = match;
 
   }
+  */
 
 }
 
