@@ -177,11 +177,11 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
             if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
             , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
 
-            //output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
+            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
             //              , INSERT, wstate);
             // syntax mismatch
-            output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-            , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+            //output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+            //, rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
 
             } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
             , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
