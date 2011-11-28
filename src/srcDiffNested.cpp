@@ -247,7 +247,7 @@ x=
 
     }
 
-    output_change(rbuf_old, start_pos, rbuf_new, rbuf_new.last_output, wstate);
+    output_change(rbuf_old, rbuf_old.last_output, rbuf_new, start_pos, wstate);
     //for(unsigned int i = rbuf_old.last_output; i < start_pos; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
