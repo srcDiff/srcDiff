@@ -39,7 +39,7 @@ int main(int argc, char * argv[]) {
 
   const char * uri[] = {
 
-    0,
+    "",
     "cpp",
     "err", 
     "lit",
