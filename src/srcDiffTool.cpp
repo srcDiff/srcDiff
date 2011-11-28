@@ -42,13 +42,18 @@ const char* DIFF_NEW = "diff:insert";
 const char* DIFF_COMMON = "diff:common";
 const char* DIFF_TYPE = "type";
 
-xmlNode diff_common_start;
-xmlNode diff_common_end;
-xmlNode diff_old_start;
-xmlNode diff_old_end;
-xmlNode diff_new_start;
-xmlNode diff_new_end;
+// diff nodes
+xmlNode diff_common_start = { 0 };
+xmlNode diff_common_end = { 0 };
+xmlNode diff_old_start = { 0 };
+xmlNode diff_old_end = { 0 };
+xmlNode diff_new_start = { 0 };
+xmlNode diff_new_end = { 0 };
+
+// diff attribute
 xmlAttr diff_type = { 0 };
+xmlNode change = { 0 };
+xmlNode whitespace = { 0 };
 
 // special flush node
 xmlNode flush;
