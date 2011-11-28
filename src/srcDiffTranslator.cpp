@@ -26,10 +26,6 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#ifdef __MINGW32__
-#include "mingw32.hpp"
-#endif
-
 #include "xmlrw.h"
 
 const char* DIFF_PREFIX = "diff:";
