@@ -316,11 +316,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     if((xmlReaderTypes)nodes_old.at(i)->type == XML_READER_TYPE_TEXT) {
 
-      if(!is_new_line(nodes_old.at(i)))
-         free(nodes_old.at(i)->content);
-
-      nodes_old.at(i)->content = 0;
-
       delete nodes_old.at(i);
 
     }
@@ -329,11 +324,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   for(unsigned int i = 0; i < nodes_new.size(); ++i) {
 
     if((xmlReaderTypes)nodes_new.at(i)->type == XML_READER_TYPE_TEXT) {
-
-      if(!is_new_line(nodes_new.at(i)))
-         free(nodes_new.at(i)->content);
-
-      nodes_new.at(i)->content = 0;
 
       delete nodes_new.at(i);
 
