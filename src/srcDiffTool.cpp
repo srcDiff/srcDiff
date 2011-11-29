@@ -311,8 +311,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   free_node_sets(node_set_old);
   free_node_sets(node_set_new);
 
-  // Because of grouping need to output a common to end grouping
-
+  // Because of grouping need to output a common to end grouping need to deallocate as well
   nodes_old.clear();
   nodes_new.clear();
 
