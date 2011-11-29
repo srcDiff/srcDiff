@@ -71,7 +71,8 @@ void startUnit(const char * language,
   const char* root_directory;
   const char* root_filename;
   const char* root_version;
-  const char* encoding;
+  const char* src_encoding;
+  const char* xml_encoding;
   int language;
   OPTION_TYPE global_options;
   const char** uri;

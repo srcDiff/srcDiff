@@ -83,7 +83,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 				 )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    encoding(src_encoding), language(language), global_options(global_options), uri(uri), tabsize(tabsize)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), uri(uri), tabsize(tabsize)
 {
 
   diff.prefix = (const xmlChar *)uri[7];
@@ -172,7 +172,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   // translate file one
   //translate_to_srcML(path_one, 0, 0, output_srcml_file);
-  translate_to_srcML(language, encoding, "UTF-8", output_srcml_file, local_options, unit_directory, path_one, unit_version, 0, 8);
+  translate_to_srcML(language, src_encoding, "UTF-8", output_srcml_file, local_options, unit_directory, path_one, unit_version, 0, 8);
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_old == NULL) {
@@ -216,7 +216,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     // translate file two
   //translate_to_srcML(path_two, 0, 0, output_srcml_file);
-  translate_to_srcML(language, encoding,  "UTF-8", output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
+  translate_to_srcML(language, src_encoding,  "UTF-8", output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
 
     // create the reader for the new file
     reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
