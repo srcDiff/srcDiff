@@ -486,6 +486,9 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
+    free_node_sets(next_node_set_old);
+    free_node_sets(next_node_set_new);
+
   }
   else {
 
@@ -500,6 +503,8 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
+    free_node_sets(next_node_set_old);
+    free_node_sets(next_node_set_new);
 
   }
 
