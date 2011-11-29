@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <vector>
 
 #include <libxml/xmlreader.h>
