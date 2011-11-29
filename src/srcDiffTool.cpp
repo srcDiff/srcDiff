@@ -91,26 +91,32 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   // diff tags
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_common_start.ns = &diff;
   diff_common_start.extra = 0;
 
   diff_common_end.name = (xmlChar *) DIFF_COMMON;
   diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_common_end.ns = &diff;
   diff_common_end.extra = 0;
 
   diff_old_start.name = (xmlChar *) DIFF_OLD;
   diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_old_start.ns = &diff;
   diff_old_start.extra = 0;
 
   diff_old_end.name = (xmlChar *) DIFF_OLD;
   diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_old_end.ns = &diff;
   diff_old_end.extra = 0;
 
   diff_new_start.name = (xmlChar *) DIFF_NEW;
   diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_new_start.ns = &diff;
   diff_new_start.extra = 0;
 
   diff_new_end.name = (xmlChar *) DIFF_NEW;
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_new_end.ns = &diff;
   diff_new_end.extra = 0;
 
   diff_type.name = (xmlChar *) DIFF_TYPE;
