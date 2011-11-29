@@ -14,7 +14,10 @@
 #include <libxml/xmlwriter.h>
 
 #include "../../src/xmlrw.h"
-#include "../../src/diffrw.h"
+
+const char * XML_VERSION = "1.0";
+const char * output_encoding = "UTF-8";
+const char * XML_DECLARATION_STANDALONE = "yes";
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
