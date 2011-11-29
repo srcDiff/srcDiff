@@ -125,10 +125,10 @@ $(OBJ_DIR)mingw32.o : mingw32.cpp mingw32.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
-	${CXX} -c xmlrw.cpp -O3 $(LIBXML_INCLUDE) -o $@
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h
-	${CXX} -c $< -o $@
+	${CXX} $(CXXFLAGS) -c $< -o $@
 
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*
