@@ -511,3 +511,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
 }
 
+
+void free_node_set(std::vector<std::vector<int> *> node_set) {
+
+}
