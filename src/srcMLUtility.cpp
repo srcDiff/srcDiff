@@ -6,7 +6,7 @@
 extern std::vector<xmlNode *> nodes_old;
 extern std::vector<xmlNode *> nodes_new;
 
-xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
+extern xmlNs diff;// = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
 
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer) {

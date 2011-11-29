@@ -50,6 +50,8 @@ xmlNode diff_old_end = { 0 };
 xmlNode diff_new_start = { 0 };
 xmlNode diff_new_end = { 0 };
 
+xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
+
 // diff attribute
 xmlAttr diff_type = { 0 };
 xmlNode change = { 0 };
