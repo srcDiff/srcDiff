@@ -1673,7 +1673,7 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
       if (file_one[0] == '\0' || file_one[0] == FILELIST_COMMENT)
         continue;
 
-      char * separator = strchr(file_one, ',');
+      char * separator = strchr(file_one, '|');
 
       showinput = true;
 
