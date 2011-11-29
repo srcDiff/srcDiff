@@ -312,6 +312,16 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   free_node_sets(node_set_new);
 
   // Because of grouping need to output a common to end grouping need to deallocate as well
+  for(unsigned int i = 0; i < nodes_old.size(); ++i) {
+
+    xmlFreeNode(nodes_old.at(i));
+  }
+
+  for(unsigned int i = 0; i < nodes_new.size(); ++i) {
+
+    xmlFreeNode(nodes_new.at(i));
+  }
+
   nodes_old.clear();
   nodes_new.clear();
 
