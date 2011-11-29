@@ -86,6 +86,8 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     encoding(src_encoding), language(language), global_options(global_options), uri(uri), tabsize(tabsize)
 {
 
+  diff.prefix = (const xmlChar *)uri[7];
+
   // diff tags
   diff_common_start.name = (xmlChar *) DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
