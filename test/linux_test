@@ -13,7 +13,7 @@
 #cd ..
 
 #cat files | gxargs -I% -P 10 bash -c "../bin/srcdiffc old/% new/% > new/%.xml"
-cat list | gxargs -I% -P 10 bash -c "../bin/srcdiffdirect old/% new/% -o new/%.xml"
+cat list | gxargs -I% -P 10 bash -c "../bin/srcdiff old/% new/% -o new/%.xml"
 
 #cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier old/% -o old/%.1.xml"
 #cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier new/% -o new/%.1.xml"
