@@ -76,10 +76,10 @@ mingw32 :
 $(OBJ_DIR)srcDiffTranslator.o : srcDiffTranslator.cpp srcDiffTranslator.hpp srcDiffTypes.hpp srcMLUtility.hpp srcDiffUtility.hpp srcDiffWhiteSpace.hpp srcDiffCommon.hpp shortest_edit_script.h xmlrw.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcdiffdirect.o : srcdiffdirect.cpp srcDiffTranslator.hpp
+$(OBJ_DIR)srcdiffdirect.o : srcdiffdirect.cpp
 	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcdiff.o : srcdiff.cpp srcDiffTranslator.hpp
+$(OBJ_DIR)srcdiff.o : srcdiff.cpp 
 	$(CXX) $(CXXFLAGS)$(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp
