@@ -514,7 +514,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
 void free_node_sets(std::vector<std::vector<int> *> & node_sets) {
 
-  for(int i = 0; i < node_sets.size(); ++i) {
+  for(unsigned int i = 0; i < node_sets.size(); ++i) {
 
     delete node_sets.at(i);
   }

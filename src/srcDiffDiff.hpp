@@ -47,4 +47,6 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
                       , unsigned int start_new
                       , writer_state & wstate);
 
+void free_node_sets(std::vector<std::vector<int> *> & node_sets);
+
 #endif
