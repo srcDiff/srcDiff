@@ -202,6 +202,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
     }
     else {
 
+      // text node does not need to be copied.
       xmlNodePtr node = getRealCurrentNode(reader);
 
       if(strcmp((const char *)node->name, "unit") == 0)
