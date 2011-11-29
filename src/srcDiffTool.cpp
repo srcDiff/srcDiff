@@ -328,7 +328,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     if(nodes_new.at(i)->type == XML_READER_TYPE_TEXT) {
 
-    delete nodes_new.at(i);
+      if(!is_new_line(nodes_new.at(i)))
+         free(nodes_new.at(i)->content);
+
+      delete nodes_new.at(i);
 
     }
   }
