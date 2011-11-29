@@ -319,6 +319,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
       if(!is_new_line(nodes_old.at(i)))
          free(nodes_old.at(i)->content);
 
+      nodes_old.at(i)->content = 0;
+
       delete nodes_old.at(i);
 
     }
@@ -330,6 +332,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
       if(!is_new_line(nodes_new.at(i)))
          free(nodes_new.at(i)->content);
+
+      nodes_new.at(i)->content = 0;
 
       delete nodes_new.at(i);
 
