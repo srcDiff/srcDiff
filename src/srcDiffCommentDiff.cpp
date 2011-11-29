@@ -137,6 +137,9 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
         // compare as lines
         output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
+        free_node_sets(next_node_set_old);
+        free_node_sets(next_node_set_new);
+
       } else {
 
         // many to many
@@ -261,6 +264,9 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
 
         // compare on word basis
         output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+
+        free_node_sets(next_node_set_old);
+        free_node_sets(next_node_set_new);
 
       } else
 
