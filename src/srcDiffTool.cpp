@@ -315,15 +315,17 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   for(unsigned int i = 0; i < nodes_old.size(); ++i) {
 
   if(nodes_old.at(i)->type == XML_READER_TYPE_TEXT)
-  xmlFreeNode(nodes_old.at(i));
+    delete nodes_old.at(i);
+    //xmlFreeNode(nodes_old.at(i));
   }
 
   for(unsigned int i = 0; i < nodes_new.size(); ++i) {
 
   if(nodes_new.at(i)->type == XML_READER_TYPE_TEXT)
-    xmlFreeNode(nodes_new.at(i));
+    delete nodes_new.at(i);
+  //xmlFreeNode(nodes_new.at(i));
   }
-  
+
   nodes_old.clear();
   nodes_new.clear();
 
