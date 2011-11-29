@@ -3,23 +3,23 @@
 
   Copyright (C) 2002-2011  SDML (www.sdml.info)
 
-  This file is part of the srcML translator.
+  This file is part of the srcDiff translator.
 
-  The srcML translator is free software; you can redistribute it and/or modify
+  The srcDiff translator is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
 
-  The srcML translator is distributed in the hope that it will be useful,
+  The srcDiff translator is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with the srcML translator; if not, write to the Free Software
+  along with the srcDiff translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  Main program to run the srcML translator.
+  Main program to run the srcDiff translator.
 */
 
 #include <cstring>
@@ -157,11 +157,11 @@ using namespace LanguageName;
 
 // output help
 void output_help(const char* name) {
-  printf( "Usage: %s [options] <src_infile>... [-o <srcML_outfile>]\n\n"
+  printf( "Usage: %s [options] <src_infile>... [-o <srcDiff_outfile>]\n\n"
 
-          "Translates C, C++, and Java source code into the XML source-code representation srcML.\n"
+          "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
           "Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n"
-          "Multiple files are stored in a srcML archive.\n\n"
+          "Multiple files are stored in a srcDiff archive.\n\n"
 
           "The source-code language is based on the file extension.  Additional extensions for a language\n"
           "can be registered, and can be directly set using the --language option.\n\n"
@@ -185,7 +185,7 @@ void output_help(const char* name) {
 
   printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   printf("  --%-21s read list of source file names, either FILE or URI, from INPUT\n"
-         "                          to form a srcML archive\n",
+         "                          to form a srcDiff archive\n",
          FILELIST_FLAG_FULL);
   /*
     printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
@@ -194,7 +194,7 @@ void output_help(const char* name) {
   /*
     printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
   */
-  printf("  -%c, --%-17s store output in a srcML archive, default for multiple input files\n",
+  printf("  -%c, --%-17s store output in a srcDiff archive, default for multiple input files\n",
          COMPOUND_FLAG_SHORT, COMPOUND_FLAG);
 
   printf("  -%c, --%-17s expression mode for translating a single expression not in a statement\n",
@@ -282,7 +282,7 @@ void output_help(const char* name) {
          "  " PROGRAM_NAME " --src-encoding=UTF-8 m.cpp m.cpp.xml         "
          "(encoding of input text file is UTF-8)\n"
          "  " PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
-         "(set encoding of srcML file to ISO-8859-1)\n\n");
+         "(set encoding of srcDiff file to ISO-8859-1)\n\n");
 
   printf("www.sdml.info\n"
          "Report bugs to %s\n", EMAIL_ADDRESS);
