@@ -134,9 +134,9 @@ xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
   return node;
 }
 
-xmlNode * split_text(const char * characters_start, const char * characters_end) {
+xNode * split_text(const char * characters_start, const char * characters_end) {
 
-  xmlNode * text = new xmlNode;
+  xNode * text = new xNode;
   text->type = (xmlElementType)XML_READER_TYPE_TEXT;
   text->name = (const xmlChar *)"text";
   const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
