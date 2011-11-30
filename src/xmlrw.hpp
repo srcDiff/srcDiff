@@ -65,7 +65,7 @@ bool operator==(const xNode& n1, const xNode& n2);
 
 xNode* getRealCurrentNode(xmlTextReaderPtr reader);
 
-Node getCurrentXNode(xmlTextReaderPtr reader);
+Node * getCurrentXNode(xmlTextReaderPtr reader);
 
 xNode * split_text(const char * characters_start, const char * characters_end);
 

@@ -33,16 +33,16 @@ typedef std::map<std::string, xNode*> NodeMap;
 NodeMap starttags;
 NodeMap endtags;
 
-Node createInternalNode(xNode & node) {
+Node * createInternalNode(xmlNode & node) {
 
-  Node xnode;
-  xnode.type = node.type;
-  xnode.name = (const char *)node.name;
+  Node * xnode = new Node;
+  xnode->type = node.type;
+  xnode->name = (const char *)node.name;
   if(node.content)
-    xnode.content = (const char *)node.content;
+    xnode->content = (const char *)node.content;
 
-  xnode.ns.href = (const char *)node.ns->href;
-  xnode.ns.prefix = (const char *)node.ns->prefix;
+  xnode->ns.href = (const char *)node.ns->href;
+  xnode->ns.prefix = (const char *)node.ns->prefix;
 
   xmlAttrPtr attribute = node.properties;
   while (attribute) {
@@ -54,11 +54,11 @@ Node createInternalNode(xNode & node) {
     attr.ns.href = (const char *)attribute->ns->href;
     attr.ns.prefix = (const char *)attribute->ns->prefix;    
 
-    xnode.properties.push_back(attr);
+    xnode->properties.push_back(attr);
     attribute = attribute->next;
   }
 
-  xnode.is_empty = node.extra;
+  xnode->is_empty = node.extra;
 
   return xnode;
 }
@@ -81,7 +81,7 @@ xNode* getRealCurrentNode(xmlTextReaderPtr reader) {
   return pnode;
 }
 
-Node getCurrentXNode(xmlTextReaderPtr reader) {
+Node * getCurrentXNode(xmlTextReaderPtr reader) {
 
   xNode* curnode = xmlTextReaderCurrentNode(reader);
 
