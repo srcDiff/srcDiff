@@ -18,6 +18,21 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XML | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+
+const char * uri[] = {
+
+  "",
+  "cpp",
+  "err",
+  "lit",
+  "op",
+  "type",
+  "pos",
+  "diff",
+
+};
+
 int main(int argc, char * argv[]) {
 
   // test for correct input
@@ -33,24 +48,9 @@ int main(int argc, char * argv[]) {
 
   int language = Language::getLanguageFromFilename(argv[1]);
 
-  OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XML | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
-
   std::string filename = argv[1];
   filename += "|";
   filename += argv[2];
-
-  const char * uri[] = {
-
-    "",
-    "cpp",
-    "err", 
-    "lit",
-    "op",
-    "type", 
-    "pos", 
-    "diff", 
-
-  };
 
   srcDiffTool translator = srcDiffTool(language, 0, "UTF-8", srcdiff_file, options, 0, 0, 0, uri, 8);
   translator.translate(argv[1], argv[2], options, 0, 0 /*filename.c_str()*/, 0, language);
