@@ -96,15 +96,24 @@ xNode * createInternalNode(xmlNode & node) {
 
 void freeXNode(xNode * node) {
 
-  if(node->ns)
-    delete node->ns;
+  if(node->ns) {
 
+    if(node->ns->href)
+      free((void *)node->ns->href);
+
+    if(node->ns->prefix)
+      free((void *)node->ns->prefix);
+
+    delete node->ns;
+  }
   while(node->properties) {
 
     xAttr * attr = node->properties;
     node->properties = node->properties->next;
+
+    free((void *)attr->name);
+    free((void *)attr->value);
     delete attr;
-    
   }
   
   delete node;
