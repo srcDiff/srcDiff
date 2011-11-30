@@ -89,8 +89,11 @@ xNode * createInternalNode(xmlNode & node) {
   }
   }
 
-
   xnode->extra = node.extra;
+  xnode->is_empty = node.extra;
+
+  xnode->free = false;
+
   return xnode;
 }
 
@@ -187,10 +190,11 @@ xNode* getCurrentNode(xmlTextReaderPtr reader) {
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
     node = createInternalNode(*curnode);
-    node->extra = xmlTextReaderIsEmptyElement(reader) + 4;
+    node->free = true;
+    node->extra = xmlTextReaderIsEmptyElement(reader);
   } else {
     node = createInternalNode(*curnode);
-    node->extra = 4;
+    node->free = true;
   }
 
   node->type = (xmlElementType) xmlTextReaderNodeType(reader);
@@ -212,7 +216,7 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
   }
   text->ns = 0;
   text->properties = 0;
-  text->extra = 4;
+  text->free = true;
 
   return text;
 }

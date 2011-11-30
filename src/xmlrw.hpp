@@ -58,6 +58,8 @@ struct xNode {
   //xNs * nsDef;
   xAttr * properties;
   unsigned short extra;
+  bool is_empty;
+  bool free;
   
 };
 
