@@ -38,6 +38,7 @@ xNode * createInternalNode(xmlNode & node) {
   xNode * xnode = new xNode;
   xnode->type = node.type;
   xnode->name = strdup((const char *)node.name);
+  xnode->content = 0;
   if(node.content)
     xnode->content = strdup((const char *)node.content);
 
