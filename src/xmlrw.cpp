@@ -37,12 +37,12 @@ xNode * createInternalNode(xmlNode & node) {
 
   xNode * xnode = new xNode;
   xnode->type = node.type;
-  xnode->name = (const char *)node.name;
+  xnode->name = strdup((const char *)node.name);
   if(node.content)
-    xnode->content = (const char *)node.content;
+    xnode->content = strdup((const char *)node.content);
 
-  xnode->ns->href = (const char *)node.ns->href;
-  xnode->ns->prefix = (const char *)node.ns->prefix;
+  xnode->ns->href = strdup((const char *)node.ns->href);
+  xnode->ns->prefix = strdup((const char *)node.ns->prefix);
 
 
   xmlAttrPtr attribute = node.properties;
@@ -52,8 +52,8 @@ xNode * createInternalNode(xmlNode & node) {
 
    xAttr * attr;
    attr = new xAttr;
-   attr->name = (const char *)attribute->name;
-   attr->value = (const char *)attribute->children->content;
+   attr->name = strdup((const char *)attribute->name);
+   attr->value = strdup((const char *)attribute->children->content);
    attr->next = 0;
 
    xnode->properties = attr;;
@@ -63,8 +63,8 @@ xNode * createInternalNode(xmlNode & node) {
   while (attribute) {
 
     xAttr * nattr = new xAttr;
-    nattr->name = (const char *)attribute->name;
-    nattr->value = (const char *)attribute->children->content;
+    nattr->name = strdup((const char *)attribute->name);
+    nattr->value = strdup((const char *)attribute->children->content);
     nattr->next = 0;
 
     attr->next = nattr;
