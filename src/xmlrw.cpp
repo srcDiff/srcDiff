@@ -58,7 +58,7 @@ Node * createInternalNode(xmlNode & node) {
     attribute = attribute->next;
   }
 
-  xnode->is_empty = node.extra;
+  xnode->extra = node.extra;
 
   return xnode;
 }

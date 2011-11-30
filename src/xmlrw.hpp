@@ -57,7 +57,7 @@ struct Node {
   std::string content;
   //xNs * nsDef;
   std::vector<xAttr> properties;
-  bool is_empty;
+  unsigned short extra;
   
 };
 
