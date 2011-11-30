@@ -326,7 +326,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     if((xmlReaderTypes)nodes_old.at(i)->type == XML_READER_TYPE_TEXT) {
 
-      free(nodes_old.at(i));
+      delete nodes_old.at(i);
 
     }
   }
@@ -335,7 +335,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     if((xmlReaderTypes)nodes_new.at(i)->type == XML_READER_TYPE_TEXT) {
 
-      free(nodes_new.at(i));
+      delete nodes_new.at(i);
 
     }
   }

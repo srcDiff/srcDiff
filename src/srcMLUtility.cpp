@@ -145,7 +145,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 
         const char * characters_start = characters;
 
-        xmlNode * text = (xmlNodePtr)malloc(sizeof(xmlNode));
+        xmlNode * text = new xmlNode;
         text->type = (xmlElementType)XML_READER_TYPE_TEXT;
         text->name = (const xmlChar *)"text";
 
@@ -179,7 +179,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 	  // break up ( and )
           if((characters_start + 1) && (*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
-            xmlNode * atext = (xmlNodePtr)malloc(sizeof(xmlNode));
+            xmlNode * atext = new xmlNode;
             atext->type = (xmlElementType)XML_READER_TYPE_TEXT;
             atext->name = (const xmlChar *)"text";
 
