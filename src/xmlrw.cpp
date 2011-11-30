@@ -115,6 +115,9 @@ void freeXNode(xNode * node) {
     free((void *)attr->value);
     delete attr;
   }
+
+  if(node->content)
+    free((void *)node->content);
   
   delete node;
   

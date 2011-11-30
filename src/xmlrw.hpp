@@ -95,6 +95,8 @@ inline bool isendelement(const xmlTextReaderPtr& reader) {
 
 xNode* getCurrentNode(xmlTextReaderPtr reader);
 
+void freeXNode(xNode * node);
+
 void eat_element(xmlTextReaderPtr& reader);
 
 void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
