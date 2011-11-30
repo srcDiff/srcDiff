@@ -74,7 +74,7 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
     diff_old_start.properties = &diff_type;
     diff_new_start.properties = &diff_type;
 
-    if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
+    if(0 && is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
       const char * content_old = nodes_old.at(begin_old)->content;
       const char * content_new = nodes_new.at(begin_new)->content;
