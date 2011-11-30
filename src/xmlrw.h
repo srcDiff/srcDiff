@@ -29,6 +29,13 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+struct xAttr {
+
+  const char * name;
+  const char * value;
+  xAttr * next;
+};
+
 struct xNs {
 
   //xNs * next;
