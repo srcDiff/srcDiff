@@ -87,7 +87,11 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
       for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new)
         ;
 
-      output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)strndup((const char *)content_old, offset_old), COMMON, wstate);
+      char * content = strndup((const char *)content_old, offset_old);
+      
+      output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)content, COMMON, wstate);
+
+      free(content);
 
       if(offset_old < size_old) {
 
