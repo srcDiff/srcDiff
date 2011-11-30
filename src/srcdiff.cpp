@@ -261,6 +261,7 @@ void output_help(const char* name) {
   printf("                            xmlns=\"%s\"\n", SRCML_SRC_NS_URI);
   printf("                            xmlns:%s=\"%s\"\n", SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
   printf("                            xmlns:%s=\"%s\"\n", SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
+  printf("                            xmlns:%s=\"%s\"\n", SRCML_DIFF_NS_PREFIX_DEFAULT, SRCML_DIFF_NS_URI);
 
   printf("\nCPP Markup Options:\n");
 
