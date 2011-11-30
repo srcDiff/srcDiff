@@ -58,6 +58,8 @@ xNode createInternalNode(xmlNode & node) {
     attribute = attribute->next;
   }
 
+  xnode.is_empty = node.extra;
+
   return xnode;
 }
 
