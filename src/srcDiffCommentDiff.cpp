@@ -6,13 +6,13 @@
 #include "srcDiffDiff.hpp"
 
 // global structures defined in main
-extern std::vector<xmlNode *> nodes_old;
-extern std::vector<xmlNode *> nodes_new;
+extern std::vector<xNode *> nodes_old;
+extern std::vector<xNode *> nodes_new;
 
 /*
   Collect paragraphs
 */
-std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
+std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
   std::vector<std::vector<int> *> node_sets;
@@ -47,7 +47,7 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xmlNode
 }
 
 // collect lines
-std::vector<std::vector<int> *> create_comment_line_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
+std::vector<std::vector<int> *> create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
   std::vector<std::vector<int> *> node_sets;
 
