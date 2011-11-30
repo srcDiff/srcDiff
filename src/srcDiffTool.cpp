@@ -278,35 +278,35 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   Language l(language);
   startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, writer);
 
-    // create srcdiff unit
-    xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
+  // create srcdiff unit
+  //xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
-    // output srcdiff unit
-    update_diff_stack(rbuf_old.open_diff, unit, COMMON);
-    update_diff_stack(rbuf_new.open_diff, unit, COMMON);
-    update_diff_stack(wstate.output_diff, unit, COMMON);
+  // output srcdiff unit
+  update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
+  update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
+  update_diff_stack(wstate.output_diff, unit_old, COMMON);
 
-    // run on file level
-    if(is_old || is_new)
-      output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
+  // run on file level
+  if(is_old || is_new)
+    output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
-    // output remaining whitespace
-    output_white_space_all(rbuf_old, rbuf_new, wstate);
+  // output remaining whitespace
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
-    // output srcdiff unit ending tag
-    //if(is_old && is_new)
-    //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+  // output srcdiff unit ending tag
+  //if(is_old && is_new)
+  //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
 
-    output_node(rbuf_old, rbuf_new, &flush, COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, &flush, COMMON, wstate);
 
-    free_node_sets(node_set_old);
-    free_node_sets(node_set_new);
+  free_node_sets(node_set_old);
+  free_node_sets(node_set_new);
 
   if(isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(writer);
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
-    
+
   }
 
   if(unit_old->free)
