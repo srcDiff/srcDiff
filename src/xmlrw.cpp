@@ -117,6 +117,8 @@ void freeXNode(xNode * node) {
     delete attr;
   }
 
+  if(strcmp(node->name, "text") != 0)
+    free((void *)node->name);
 
   if(node->content)
     free((void *)node->content);
@@ -210,6 +212,7 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
   }
   text->ns = 0;
   text->properties = 0;
+  text->extra = 4;
 
   return text;
 }
