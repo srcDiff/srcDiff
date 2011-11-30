@@ -33,29 +33,46 @@ typedef std::map<std::string, xNode*> NodeMap;
 NodeMap starttags;
 NodeMap endtags;
 
-Node * createInternalNode(xmlNode & node) {
+xNode * createInternalNode(xmlNode & node) {
 
-  Node * xnode = new Node;
+  xNode * xnode = new xNode;
   xnode->type = node.type;
   xnode->name = (const char *)node.name;
   if(node.content)
     xnode->content = (const char *)node.content;
 
-  xnode->ns.href = (const char *)node.ns->href;
-  xnode->ns.prefix = (const char *)node.ns->prefix;
+  xnode->ns->href = (const char *)node.ns->href;
+  xnode->ns->prefix = (const char *)node.ns->prefix;
+
 
   xmlAttrPtr attribute = node.properties;
+  xnode->properties = 0;
+
+  if(attribute) {
+
+   xAttr * attr;
+   attr = new xAttr;
+   attr->name = (const char *)attribute->name;
+   attr->value = (const char *)attribute->children->content;
+   attr->next = 0;
+
+   xnode->properties = attr;;
+    
+   attribute = attribute->next;
+    
   while (attribute) {
 
-    xAttr attr;
-    attr.name = (const char *)attribute->name;
-    attr.value = (const char *)attribute->children->content;
+    xAttr * nattr = new xAttr;
+    nattr->name = (const char *)attribute->name;
+    nattr->value = (const char *)attribute->children->content;
+    nattr->next = 0;
 
-    attr.ns.href = (const char *)attribute->ns->href;
-    attr.ns.prefix = (const char *)attribute->ns->prefix;    
-
-    xnode->properties.push_back(attr);
+    attr->next = nattr;
+    attr = nattr;
+    
     attribute = attribute->next;
+
+  }
   }
 
   xnode->extra = node.extra;
@@ -81,9 +98,9 @@ xNode* getRealCurrentNode(xmlTextReaderPtr reader) {
   return pnode;
 }
 
-Node * getCurrentXNode(xmlTextReaderPtr reader) {
+xNode * getCurrentXNode(xmlTextReaderPtr reader) {
 
-  xNode* curnode = xmlTextReaderCurrentNode(reader);
+  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
   curnode->extra = xmlTextReaderIsEmptyElement(reader);
 
@@ -92,9 +109,9 @@ Node * getCurrentXNode(xmlTextReaderPtr reader) {
 
 xNode* getCurrentNode(xmlTextReaderPtr reader) {
 
-  xNode* curnode = xmlTextReaderCurrentNode(reader);
+  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
-  xNode* node = 0;
+  xNode * node = 0;
   if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
 
     NodeMap::iterator lb = starttags.lower_bound((const char*) curnode->name);
@@ -103,7 +120,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader) {
       node = lb->second;
     } else {
 
-      node = xmlCopyNode(curnode, 2);
+      node = createInternalNode(*curnode);
       node->extra = 0;
       starttags.insert(lb, NodeMap::value_type((const char*) curnode->name, node));
     }
@@ -116,16 +133,16 @@ xNode* getCurrentNode(xmlTextReaderPtr reader) {
       node = lb->second;
     } else {
 
-      node = xmlCopyNode(curnode, 2);
+      node = createInternalNode(*curnode);
       node->extra = 0;
       endtags.insert(lb, NodeMap::value_type((const char*) curnode->name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
-    node = xmlCopyNode(curnode, 2);
+    node = createInternalNode(*curnode);
     node->extra = xmlTextReaderIsEmptyElement(reader) + 4;
   } else {
-    node = xmlCopyNode(curnode, 2);
+    node = createInternalNode(*curnode);
     node->extra = 4;
   }
 
@@ -138,9 +155,9 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
 
   xNode * text = new xNode;
   text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-  text->name = (const xmlChar *)"text";
+  text->name = "text";
   const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
-  text->content = (xmlChar *)content;
+  text->content = content;
 
   return text;
 }
@@ -287,9 +304,10 @@ void outputNode(xNode& node, xmlTextWriterPtr writer) {
 
     } else
 
-      xmlTextWriterStartElement(writer, node.name);
+      xmlTextWriterStartElement(writer, (xmlChar *)node.name);
 
     // copy all the namespaces
+    /*
     if(strcmp((const char *)node.name, "unit") == 0) {
       xmlNsPtr ns = node.nsDef;
       while (ns) {
@@ -309,13 +327,14 @@ void outputNode(xNode& node, xmlTextWriterPtr writer) {
         ns = ns->next;
       }
     }
+    */
 
     // copy all the attributes
     {
-      xmlAttrPtr attribute = node.properties;
+      xAttr * attribute = node.properties;
       while (attribute) {
 
-        xmlTextWriterWriteAttribute(writer, attribute->name, attribute->children->content);
+        xmlTextWriterWriteAttribute(writer, (const xmlChar *)attribute->name, (const xmlChar *)attribute->value);
         attribute = attribute->next;
       }
     }
@@ -333,7 +352,7 @@ void outputNode(xNode& node, xmlTextWriterPtr writer) {
     break;
 
   case XML_READER_TYPE_COMMENT:
-    xmlTextWriterWriteComment(writer, node.content);
+    xmlTextWriterWriteComment(writer, (const xmlChar *)node.content);
     break;
 
   case XML_READER_TYPE_TEXT:

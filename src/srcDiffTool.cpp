@@ -43,19 +43,19 @@ const char* DIFF_COMMON = "common";
 const char* DIFF_TYPE = "type";
 
 // diff nodes
-xNode diff_common_start = { 0 };
-xNode diff_common_end = { 0 };
-xNode diff_old_start = { 0 };
-xNode diff_old_end = { 0 };
-xNode diff_new_start = { 0 };
-xNode diff_new_end = { 0 };
+xNode diff_common_start;
+xNode diff_common_end;
+xNode diff_old_start;
+xNode diff_old_end;
+xNode diff_new_start;
+xNode diff_new_end;
 
-xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
+xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 
 // diff attribute
-xmlAttr diff_type = { 0 };
-xNode change = { 0 };
-xNode whitespace = { 0 };
+xAttr diff_type = { 0 };
+const char * change = "change";
+const char * whitespace = "whitespace";
 
 // special flush node
 xNode flush;
@@ -86,55 +86,45 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), uri(uri), tabsize(tabsize)
 {
 
-  diff.prefix = (const xmlChar *)uri[7];
+  diff.prefix = uri[7];
 
   // diff tags
-  diff_common_start.name = (xmlChar *) DIFF_COMMON;
+  diff_common_start.name = DIFF_COMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.ns = &diff;
   diff_common_start.extra = 0;
 
-  diff_common_end.name = (xmlChar *) DIFF_COMMON;
+  diff_common_end.name = DIFF_COMMON;
   diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_common_end.ns = &diff;
   diff_common_end.extra = 0;
 
-  diff_old_start.name = (xmlChar *) DIFF_OLD;
+  diff_old_start.name = DIFF_OLD;
   diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_old_start.ns = &diff;
   diff_old_start.extra = 0;
 
-  diff_old_end.name = (xmlChar *) DIFF_OLD;
+  diff_old_end.name = DIFF_OLD;
   diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_old_end.ns = &diff;
   diff_old_end.extra = 0;
 
-  diff_new_start.name = (xmlChar *) DIFF_NEW;
+  diff_new_start.name = DIFF_NEW;
   diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_new_start.ns = &diff;
   diff_new_start.extra = 0;
 
-  diff_new_end.name = (xmlChar *) DIFF_NEW;
+  diff_new_end.name = DIFF_NEW;
   diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_new_end.ns = &diff;
   diff_new_end.extra = 0;
 
-  diff_type.name = (xmlChar *) DIFF_TYPE;
-  diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
+  diff_type.name = DIFF_TYPE;
+  //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
-  change.name = (xmlChar *)"text";
-  change.type = (xmlElementType)XML_READER_TYPE_TEXT;
-  change.content = (xmlChar *)"change";
-  change.extra = 0;
-
-  whitespace.name = (xmlChar *)"text";
-  whitespace.type = (xmlElementType)XML_READER_TYPE_TEXT;
-  whitespace.content = (xmlChar *)"whitespace";
-  whitespace.extra = 0;
-
-  flush.name = (xmlChar *)"text";
+  flush.name = "text";
   flush.type = (xmlElementType)XML_READER_TYPE_TEXT;
-  flush.content = (xmlChar *)"";
+  flush.content = "";
   flush.extra = 0;
 
   writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
@@ -293,7 +283,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // create srcdiff unit
   xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
-  //// output srcdiff unit
+  // output srcdiff unit
   update_diff_stack(rbuf_old.open_diff, unit, COMMON);
   update_diff_stack(rbuf_new.open_diff, unit, COMMON);
   update_diff_stack(wstate.output_diff, unit, COMMON);

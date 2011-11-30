@@ -45,7 +45,6 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
   // close the input file
   translator.close();
 }
-
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new) {
 
@@ -53,13 +52,14 @@ xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new) {
   xNodePtr unit = unit_old;
 
   // add diff namespace
-  addNamespace(&unit->nsDef, &diff);
+  //addNamespace(&unit->nsDef, &diff);
 
-  merge_filename(unit, unit_new);
+  //merge_filename(unit, unit_new);
 
   return unit;
 }
 
+/*
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
   xmlNsPtr namespaces = *nsDef;
@@ -127,7 +127,7 @@ void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
   }
 
 }
-
+*/
 // collect the differnces
 void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader) {
 

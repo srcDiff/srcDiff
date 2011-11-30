@@ -30,42 +30,44 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-typedef xmlNode xNode;
-typedef xNode * xNodePtr;
-typedef xmlNodePtr xNodePtr;
+//typedef xmlNode xNode;
+//typedef xmlNodePtr xNodePtr;
 
 struct xNs {
 
   //xNs * next;
-  std::string href;
-  std::string prefix;
+  const char * href;
+  const char * prefix;
 
 };
 
 struct xAttr {
 
-  std::string name;
-  std::string value;
-  xNs ns;
+  xAttr * next;
+  const char * name;
+  const char * value;
+  //xNs ns;
 };
 
-struct Node {
+struct xNode {
 
   xmlElementType type;
-  std::string name;
-  xNs ns;
-  std::string content;
+  const char * name;
+  xNs * ns;
+  const char * content;
   //xNs * nsDef;
-  std::vector<xAttr> properties;
+  xAttr * properties;
   unsigned short extra;
   
 };
+
+typedef xNode * xNodePtr;
 
 bool operator==(const xNode& n1, const xNode& n2);
 
 xNode* getRealCurrentNode(xmlTextReaderPtr reader);
 
-Node * getCurrentXNode(xmlTextReaderPtr reader);
+xNode * getCurrentXNode(xmlTextReaderPtr reader);
 
 xNode * split_text(const char * characters_start, const char * characters_end);
 

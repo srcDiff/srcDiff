@@ -21,14 +21,14 @@ const void * node_set_index(int idx, const void *s) {
   return node_sets[idx];
 }
 
-bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
+bool attribute_compare(xAttr * attr1, xAttr * attr2) {
 
-  xmlAttrPtr attr_old = attr1;
-  xmlAttrPtr attr_new = attr2;
+  xAttr * attr_old = attr1;
+  xAttr * attr_new = attr2;
 
   for(; attr_old && attr_new
         && strcmp((const char *)attr_old->name, (const char *)attr_new->name) == 0
-        && strcmp((const char *)attr_old->children->content, (const char *)attr_new->children->content) == 0;
+        && strcmp((const char *)attr_old->value, (const char *)attr_new->value) == 0;
       attr_old = attr_old->next, attr_new = attr_new->next)
     ;
 

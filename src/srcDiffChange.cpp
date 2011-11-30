@@ -24,9 +24,9 @@ extern xNode diff_old_end;
 extern xNode diff_new_start;
 extern xNode diff_new_end;
 
-extern xmlAttr diff_type;
-extern xNode change;
-extern xNode whitespace;
+extern xAttr diff_type;
+extern const char * change;
+extern const char * whitespace;
 
 /*
 
@@ -70,14 +70,14 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
   if(end_old > begin_old && end_new > begin_new) {
 
     // set attribute to change
-    diff_type.children = &change;
+    diff_type.value = change;
     diff_old_start.properties = &diff_type;
     diff_new_start.properties = &diff_type;
 
     if(is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
 
-      xmlChar * content_old = nodes_old.at(begin_old)->content;
-      xmlChar * content_new = nodes_new.at(begin_new)->content;
+      const char * content_old = nodes_old.at(begin_old)->content;
+      const char * content_new = nodes_new.at(begin_new)->content;
 
       int size_old = strlen((const char *)content_old);
       int size_new = strlen((const char *)content_new);
@@ -90,7 +90,7 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
       char * content = strndup((const char *)content_old, offset_old);
       
-      output_text_as_node(rbuf_old, rbuf_new, (xmlChar *)content, COMMON, wstate);
+      output_text_as_node(rbuf_old, rbuf_new, content, COMMON, wstate);
 
       free(content);
 
@@ -102,7 +102,7 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
       } else {
 
-        nodes_old.at(begin_old)->content = (xmlChar *)"";
+        nodes_old.at(begin_old)->content = "";
       }
 
       if(offset_new < size_new) {
@@ -111,7 +111,7 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
       } else {
 
-        nodes_new.at(begin_new)->content = (xmlChar *)"";
+        nodes_new.at(begin_new)->content = "";
       }
 
 

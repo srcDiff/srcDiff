@@ -17,9 +17,9 @@ extern xNode diff_old_end;
 extern xNode diff_new_start;
 extern xNode diff_new_end;
 
-extern xmlAttr diff_type;
-extern xNode change;
-extern xNode whitespace;
+extern xAttr diff_type;
+extern const char * change;
+extern const char * whitespace;
 
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new
@@ -238,7 +238,7 @@ void output_white_space_suffix(reader_state & rbuf_old
 
   //if(ostart < opivot && nstart < npivot) {
 
-    diff_type.children = &whitespace;
+    diff_type.value = whitespace;
     diff_old_start.properties = &diff_type;
     diff_new_start.properties = &diff_type;
 

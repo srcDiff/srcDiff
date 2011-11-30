@@ -17,9 +17,9 @@ extern xNode diff_old_end;
 extern xNode diff_new_start;
 extern xNode diff_new_end;
 
-extern xmlAttr diff_type;
-extern xNode change;
-extern xNode whitespace;
+extern xAttr diff_type;
+extern const char * change;
+extern const char * whitespace;
 
 /*
 
@@ -68,7 +68,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
   int nend = end_new;
 
   // set attribute to change
-  diff_type.children = &whitespace;
+  diff_type.value = whitespace;
   diff_old_start.properties = &diff_type;
   diff_new_start.properties = &diff_type;
 

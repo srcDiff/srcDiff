@@ -214,7 +214,7 @@ void update_diff_stack(std::vector<diff_set *> & open_diffs, xNodePtr node, int 
 
 }
 
-void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar * text, int operation
+void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, char * text, int operation
                          , writer_state & wstate) {
 
   if(strlen((char *)text) == 0)
@@ -222,7 +222,7 @@ void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlCh
 
   xNode node;
   node.type = (xmlElementType)XML_READER_TYPE_TEXT;
-  node.name = (const xmlChar *)"text";
+  node.name = "text";
   node.content = text;
 
   output_node(rbuf_old, rbuf_new, &node, operation, wstate);
@@ -230,10 +230,10 @@ void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlCh
 }
 
 
-void output_char(reader_state & rbuf_old, reader_state & rbuf_new, xmlChar character, int operation
+void output_char(reader_state & rbuf_old, reader_state & rbuf_new, char character, int operation
                          , writer_state & wstate) {
 
-  xmlChar buf[2] = { 0 };
+  char buf[2] = { 0 };
   buf[0] = character;
 
   output_text_as_node(rbuf_old, rbuf_new, buf, operation, wstate);
