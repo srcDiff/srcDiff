@@ -87,10 +87,10 @@ xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
     node = xmlCopyNode(curnode, 2);
-    node->extra = xmlTextReaderIsEmptyElement(reader);
+    node->extra = xmlTextReaderIsEmptyElement(reader) + 4;
   } else {
     node = xmlCopyNode(curnode, 2);
-    node->extra = 0;
+    node->extra = 4;
   }
 
   node->type = (xmlElementType) xmlTextReaderNodeType(reader);
