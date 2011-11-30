@@ -43,29 +43,29 @@ const char* DIFF_COMMON = "common";
 const char* DIFF_TYPE = "type";
 
 // diff nodes
-xmlNode diff_common_start = { 0 };
-xmlNode diff_common_end = { 0 };
-xmlNode diff_old_start = { 0 };
-xmlNode diff_old_end = { 0 };
-xmlNode diff_new_start = { 0 };
-xmlNode diff_new_end = { 0 };
+xNode diff_common_start = { 0 };
+xNode diff_common_end = { 0 };
+xNode diff_old_start = { 0 };
+xNode diff_old_end = { 0 };
+xNode diff_new_start = { 0 };
+xNode diff_new_end = { 0 };
 
 xmlNs diff = { 0, XML_LOCAL_NAMESPACE, (const xmlChar *)"http://www.sdml.info/srcDiff", (const xmlChar *)"diff", 0 };
 
 // diff attribute
 xmlAttr diff_type = { 0 };
-xmlNode change = { 0 };
-xmlNode whitespace = { 0 };
+xNode change = { 0 };
+xNode whitespace = { 0 };
 
 // special flush node
-xmlNode flush;
+xNode flush;
 
 /*
   Global structures to store of the collected xml nodes.
   Base reference structure for all node comparison and output
 */
-std::vector<xmlNode *> nodes_old;
-std::vector<xmlNode *> nodes_new;
+std::vector<xNode *> nodes_old;
+std::vector<xNode *> nodes_new;
 
 void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
@@ -185,13 +185,13 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // read to unit
   xmlTextReaderRead(reader_old);
 
-  xmlNodePtr unit_old = getRealCurrentNode(reader_old);
+  xNodePtr unit_old = getRealCurrentNode(reader_old);
 
   // Read past unit tag open
   int is_old = xmlTextReaderRead(reader_old);
 
   // collect if non empty files
-  xmlNodePtr unit_end = NULL;
+  xNodePtr unit_end = NULL;
   if(is_old) {
 
     collect_nodes(&nodes_old, reader_old);
@@ -231,7 +231,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // read to unit
   xmlTextReaderRead(reader_new);
 
-  xmlNodePtr unit_new = getRealCurrentNode(reader_new);
+  xNodePtr unit_new = getRealCurrentNode(reader_new);
 
   int is_new = xmlTextReaderRead(reader_new);
 
@@ -291,7 +291,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
 
   // create srcdiff unit
-  xmlNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
+  xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   //// output srcdiff unit
   update_diff_stack(rbuf_old.open_diff, unit, COMMON);

@@ -5,14 +5,14 @@
 #include <string.h>
 
 // more external variables
-extern xmlNode diff_common_start;
-extern xmlNode diff_common_end;
-extern xmlNode diff_old_start;
-extern xmlNode diff_old_end;
-extern xmlNode diff_new_start;
-extern xmlNode diff_new_end;
+extern xNode diff_common_start;
+extern xNode diff_common_end;
+extern xNode diff_old_start;
+extern xNode diff_old_end;
+extern xNode diff_new_start;
+extern xNode diff_new_end;
 
-void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr node, int operation, writer_state & wstate) {
+void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xNodePtr node, int operation, writer_state & wstate) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -172,7 +172,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlNodePtr no
 
 }
 
-void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, int operation) {
+void update_diff_stack(std::vector<diff_set *> & open_diffs, xNodePtr node, int operation) {
 
   // Skip empty node
   if(node->extra & 0x1)
@@ -186,7 +186,7 @@ void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, in
     open_diffs.push_back(new_diff);
   }
 
-  //xmlNodePtr node = getRealCurrentNode(reader);
+  //xNodePtr node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     open_diffs.back()->open_tags.push_back(node);
@@ -220,7 +220,7 @@ void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, xmlCh
   if(strlen((char *)text) == 0)
     return;
 
-  xmlNode node;
+  xNode node;
   node.type = (xmlElementType)XML_READER_TYPE_TEXT;
   node.name = (const xmlChar *)"text";
   node.content = text;

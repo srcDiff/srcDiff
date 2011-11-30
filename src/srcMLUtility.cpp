@@ -3,8 +3,8 @@
 #include <Language.hpp>
 #include "xmlrw.hpp"
 
-extern std::vector<xmlNode *> nodes_old;
-extern std::vector<xmlNode *> nodes_new;
+extern std::vector<xNode *> nodes_old;
+extern std::vector<xNode *> nodes_new;
 
 extern xmlNs diff;
 
@@ -48,10 +48,10 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 }
 
 // create srcdiff unit
-xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new) {
+xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new) {
 
   // get units from source code
-  xmlNodePtr unit = unit_old;
+  xNodePtr unit = unit_old;
 
   // add diff namespace
   addNamespace(&unit->nsDef, &diff);
@@ -77,9 +77,9 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
 
 }
 
-void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
+void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
 
-  xmlNodePtr unit = unit_old;
+  xNodePtr unit = unit_old;
 
   std::string filename_old = "";
   xmlAttrPtr attr;
@@ -130,7 +130,7 @@ void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new) {
 }
 
 // collect the differnces
-void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader) {
 
   int not_done = 1;
   while(not_done) {
@@ -145,7 +145,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 
         const char * characters_start = characters;
 
-        xmlNode * text = new xmlNode;
+        xNode * text = new xNode;
         text->type = (xmlElementType)XML_READER_TYPE_TEXT;
         text->name = (const xmlChar *)"text";
 
@@ -179,7 +179,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 	  // break up ( and )
           if((characters_start + 1) && (*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
-            xmlNode * atext = new xmlNode;
+            xNode * atext = new xNode;
             atext->type = (xmlElementType)XML_READER_TYPE_TEXT;
             atext->name = (const xmlChar *)"text";
 
@@ -203,7 +203,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
     else {
 
       // text node does not need to be copied.
-      xmlNodePtr node = getRealCurrentNode(reader);
+      xNodePtr node = getRealCurrentNode(reader);
 
       if(strcmp((const char *)node->name, "unit") == 0)
         return;
@@ -220,7 +220,7 @@ void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader) {
 }
 
 // check if node is a indivisable group of three (atomic)
-bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start) {
+bool is_atomic_srcml(std::vector<xNodePtr> * nodes, unsigned start) {
 
   static const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
 
