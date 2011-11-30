@@ -6,20 +6,20 @@
 #include <string>
 
 // global structures defined in main
-extern std::vector<xmlNode *> nodes_old;
-extern std::vector<xmlNode *> nodes_new;
+extern std::vector<xNode *> nodes_old;
+extern std::vector<xNode *> nodes_new;
 
 // more external variables
-extern xmlNode diff_common_start;
-extern xmlNode diff_common_end;
-extern xmlNode diff_old_start;
-extern xmlNode diff_old_end;
-extern xmlNode diff_new_start;
-extern xmlNode diff_new_end;
+extern xNode diff_common_start;
+extern xNode diff_common_end;
+extern xNode diff_old_start;
+extern xNode diff_old_end;
+extern xNode diff_new_start;
+extern xNode diff_new_end;
 
 extern xmlAttr diff_type;
-extern xmlNode change;
-extern xmlNode whitespace;
+extern xNode change;
+extern xNode whitespace;
 
 /*
 

@@ -10,19 +10,19 @@
 #include <string.h>
 
 // global structures defined in main
-extern std::vector<xmlNode *> nodes_old;
-extern std::vector<xmlNode *> nodes_new;
+extern std::vector<xNode *> nodes_old;
+extern std::vector<xNode *> nodes_new;
 
 // more external variables
-extern xmlNode diff_common_start;
-extern xmlNode diff_common_end;
-extern xmlNode diff_old_start;
-extern xmlNode diff_old_end;
-extern xmlNode diff_new_start;
-extern xmlNode diff_new_end;
+extern xNode diff_common_start;
+extern xNode diff_common_end;
+extern xNode diff_old_start;
+extern xNode diff_old_end;
+extern xNode diff_new_start;
+extern xNode diff_new_end;
 
 // collect an entire tag from open tag to closing tag
-void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node_set, int & start) {
+void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_set, int & start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
 
@@ -63,7 +63,7 @@ void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node
 }
 
 // create the node sets for shortest edit script
-std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes, int start, int end) {
+std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
   std::vector<std::vector<int> *> node_sets;
 

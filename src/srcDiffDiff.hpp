@@ -19,9 +19,9 @@ struct offset_pair {
 #define MIN -1
 
 // create sets of nodes
-std::vector<std::vector<int> *> create_node_set(std::vector<xmlNodePtr> & nodes, int start, int end);
+std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
 
-void collect_entire_tag(std::vector<xmlNodePtr> & nodes, std::vector<int> & node_set, int & start);
+void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_set, int & start);
 
 void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
 
