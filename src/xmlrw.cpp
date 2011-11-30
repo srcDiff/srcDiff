@@ -34,7 +34,7 @@ NodeMap starttags;
 NodeMap endtags;
 
 xNode * createInternalNode(xmlNode & node) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   xNode * xnode = new xNode;
 
   xnode->type = node.type;
@@ -48,9 +48,12 @@ xNode * createInternalNode(xmlNode & node) {
 
   if(node.ns) {
 
-    xnode->ns->href = 0;
-    if(node.ns->href)
-      xnode->ns->href = strdup((const char *)node.ns->href);
+    xnode->ns = new xNs;
+
+  xnode->ns->href = 0;
+
+  if(node.ns->href)
+    xnode->ns->href = strdup((const char *)node.ns->href);
 
     xnode->ns->prefix = 0;
     if(node.ns->prefix)
@@ -88,7 +91,6 @@ xNode * createInternalNode(xmlNode & node) {
 
 
   xnode->extra = node.extra;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   return xnode;
 }
 
