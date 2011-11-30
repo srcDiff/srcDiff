@@ -34,7 +34,7 @@
 #include "srcDiffDiff.hpp"
 #include "srcMLUtility.hpp"
 
-#include "xmlrw.h"
+#include "xmlrw.hpp"
 
 const char* DIFF_PREFIX = "diff:";
 const char* DIFF_OLD = "delete";

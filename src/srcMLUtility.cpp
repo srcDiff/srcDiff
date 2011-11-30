@@ -1,7 +1,7 @@
 #include "srcMLUtility.hpp"
 #include <srcMLTranslator.hpp>
 #include <Language.hpp>
-#include "xmlrw.h"
+#include "xmlrw.hpp"
 
 extern std::vector<xmlNode *> nodes_old;
 extern std::vector<xmlNode *> nodes_new;

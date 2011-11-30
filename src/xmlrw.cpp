@@ -25,7 +25,7 @@
 #ifndef __INCLUDED_XMLRW_CPP
 #define __INCLUDED_XMLRW_CPP
 
-#include "xmlrw.h"
+#include "xmlrw.hpp"
 #include <iostream>
 #include <cstring>
 #include <map>

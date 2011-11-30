@@ -124,7 +124,7 @@ $(EXE_DIR)srcdiff.exe :  srcdiff.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffU
 $(OBJ_DIR)mingw32.o : mingw32.cpp mingw32.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.h
+$(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h

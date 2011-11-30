@@ -1,6 +1,6 @@
 #include "srcDiffOutput.hpp"
 #include "shortest_edit_script.h"
-#include "xmlrw.h"
+#include "xmlrw.hpp"
 
 #include <string.h>
 
