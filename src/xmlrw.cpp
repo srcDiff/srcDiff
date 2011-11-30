@@ -96,6 +96,7 @@ xNode * createInternalNode(xmlNode & node) {
 
 void freeXNode(xNode * node) {
 
+  /*
   if(node->ns) {
 
     if(node->ns->href)
@@ -118,7 +119,8 @@ void freeXNode(xNode * node) {
 
   if(node->content)
     free((void *)node->content);
-  
+  */
+
   delete node;
   
 }
