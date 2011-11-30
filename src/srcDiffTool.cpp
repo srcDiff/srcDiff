@@ -278,6 +278,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   Language l(language);
   startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, writer);
 
+  /*
   unsigned int i;
   for(i = 0; i < nodes_old.size() && i < nodes_new.size(); ++i) {
 
@@ -299,6 +300,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
 
   } else {
+  */
 
     // create srcdiff unit
     xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
@@ -324,7 +326,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     free_node_sets(node_set_old);
     free_node_sets(node_set_new);
 
-  }
+    //  }
 
   if(isoption(global_options, OPTION_NESTED)) {
 
