@@ -8,16 +8,16 @@
 #include <string.h>
 
 // global structures defined in main
-extern std::vector<xmlNode *> nodes_old;
-extern std::vector<xmlNode *> nodes_new;
+extern std::vector<xNode *> nodes_old;
+extern std::vector<xNode *> nodes_new;
 
 // more external variables
-extern xmlNode diff_common_start;
-extern xmlNode diff_common_end;
-extern xmlNode diff_old_start;
-extern xmlNode diff_old_end;
-extern xmlNode diff_new_start;
-extern xmlNode diff_new_end;
+extern xNode diff_common_start;
+extern xNode diff_common_end;
+extern xNode diff_old_start;
+extern xNode diff_old_end;
+extern xNode diff_new_start;
+extern xNode diff_new_end;
 
 // tags that can have something nested in them
 const char * block_types[] = { "block", "if", "while", 0 };
@@ -26,7 +26,7 @@ const char * block_types[] = { "block", "if", "while", 0 };
 // tags that can be nested in something else (incomplete)
 const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
-bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
+bool is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
@@ -38,7 +38,7 @@ bool is_block_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes
   return false;
 }
 
-bool is_nest_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
+bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
@@ -50,7 +50,7 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes)
   return false;
 }
 
-bool has_interal_block(std::vector<int> * structure, std::vector<xmlNodePtr> & nodes) {
+bool has_interal_block(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
 
   if(strcmp((const char *)nodes.at(structure->at(0))->name, "block") == 0)
     return false;
@@ -62,8 +62,8 @@ bool has_interal_block(std::vector<int> * structure, std::vector<xmlNodePtr> & n
   return false;
 }
 
-bool is_nestable(std::vector<int> * structure_one, std::vector<xmlNodePtr> & nodes_one
-                 , std::vector<int> * structure_two, std::vector<xmlNodePtr> & nodes_two) {
+bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes_one
+                 , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
 
 
   if(is_nest_type(structure_one, nodes_one) && is_block_type(structure_two, nodes_two)) {

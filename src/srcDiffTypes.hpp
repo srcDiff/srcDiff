@@ -5,11 +5,13 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#include "xmlrw.hpp"
+
 struct diff_set {
 
   int operation;
 
-  std::vector<xmlNodePtr> open_tags;
+  std::vector<xNodePtr> open_tags;
 
 };
 
