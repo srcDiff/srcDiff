@@ -33,6 +33,17 @@ typedef std::map<std::string, xmlNode*> NodeMap;
 NodeMap starttags;
 NodeMap endtags;
 
+xNode createInternalNode(xmlNode & node) {
+
+  xNode xnode;
+  xnode.type = node.type;
+  xnode.name = (const char *)node.name;
+  if(node.content)
+    xnode.content = (const char *)node.content;
+
+  return xnode;
+}
+
 bool operator==(const xmlNode& n1, const xmlNode& n2) {
 
   return n1.type == n2.type &&
