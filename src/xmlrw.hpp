@@ -25,6 +25,7 @@
 #define INCLUDED_XMLRW_HPP
 
 #include <string>
+#include <vector>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
@@ -41,7 +42,6 @@ struct xAttr {
 
   std::string name;
   std::string value;
-  xAttr * next;
   xNs ns;
 };
 
@@ -52,7 +52,7 @@ struct xNode {
   xNs ns;
   std::string content;
   //xNs * nsDef;
-  xmlAttr * properties;
+  std::vector<xmlAttr> properties;
   
 };
 
