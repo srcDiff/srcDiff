@@ -71,16 +71,16 @@ void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int dep
 
 // constructor
 srcDiffTool::srcDiffTool(int language,                // programming language of source code
-				 const char* src_encoding,    // text encoding of source code
-				 const char* xml_encoding,    // xml encoding of result srcML file
-				 const char* srcdiff_filename,  // filename of result srcDiff file
-				 OPTION_TYPE global_options,             // many and varied options
-				 const char* directory,       // root unit directory
-				 const char* filename,        // root unit filename
-				 const char* version,         // root unit version
-				 const char* uri[],           // uri prefixes
-				 int tabsize                  // size of tabs
-				 )
+                         const char* src_encoding,    // text encoding of source code
+                         const char* xml_encoding,    // xml encoding of result srcML file
+                         const char* srcdiff_filename,  // filename of result srcDiff file
+                         OPTION_TYPE global_options,             // many and varied options
+                         const char* directory,       // root unit directory
+                         const char* filename,        // root unit filename
+                         const char* version,         // root unit version
+                         const char* uri[],           // uri prefixes
+                         int tabsize                  // size of tabs
+                         )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
     src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), uri(uri), tabsize(tabsize)
@@ -133,7 +133,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_filename);
 
     exit(1);
-  } 
+  }
 
   if(!isoption(global_options, OPTION_XMLDECL))
     xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
@@ -143,10 +143,10 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 }
 
 // Translate from input stream to output stream
-void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options, 
+void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options,
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
-  
+
   // root unit for compound srcML documents
   if (first && ((global_options & OPTION_NESTED) > 0)) {
 
@@ -168,7 +168,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   if (reader_old == NULL) {
 
     fprintf(stderr, "Unable to open file '%s' as XML", path_one);
-    
+
     exit(1);
   }
 
@@ -204,12 +204,12 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   xmlTextReaderPtr reader_new = NULL;
 
-    // translate file two
+  // translate file two
   //translate_to_srcML(path_two, 0, 0, output_srcml_file);
   translate_to_srcML(language, src_encoding,  xml_encoding, output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
 
-    // create the reader for the new file
-    reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
+  // create the reader for the new file
+  reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_new == NULL) {
 
@@ -244,7 +244,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     Setup readers and writer.
 
-   */
+  */
 
   // delete reader state
   reader_state rbuf_old = { 0 };
@@ -275,44 +275,69 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     Output srcDiff
 
   */
-
   Language l(language);
   startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, writer);
 
+  unsigned int i;
+  for(i = 0; i < nodes_old.size() && i < nodes_new.size(); ++i) {
 
-  // create srcdiff unit
-  xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
+    if(nodes_old.at(i)->type != nodes_new.at(i)->type)
+      break;
 
-  // output srcdiff unit
-  update_diff_stack(rbuf_old.open_diff, unit, COMMON);
-  update_diff_stack(rbuf_new.open_diff, unit, COMMON);
-  update_diff_stack(wstate.output_diff, unit, COMMON);
+    if((xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_TEXT)
+      continue;
 
-  // run on file level
-  if(is_old || is_new)
-  output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
+    if(strcmp(nodes_old.at(i)->content, nodes_new.at(i)->content) != 0)
+      break;
 
-  // output remaining whitespace
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
+  }
 
-  // output srcdiff unit ending tag
-  //if(is_old && is_new)
-  //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+  if(i == nodes_old.size() && i == nodes_new.size()) {
 
-  output_node(rbuf_old, rbuf_new, &flush, COMMON, wstate);
+    for(i = 0; i < nodes_old.size(); ++i)
+      outputNode(*nodes_old.at(i), wstate.writer);
+
+
+  } else {
+
+    // create srcdiff unit
+    xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
+
+    // output srcdiff unit
+    update_diff_stack(rbuf_old.open_diff, unit, COMMON);
+    update_diff_stack(rbuf_new.open_diff, unit, COMMON);
+    update_diff_stack(wstate.output_diff, unit, COMMON);
+
+    // run on file level
+    if(is_old || is_new)
+      output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
+
+    // output remaining whitespace
+    output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+    // output srcdiff unit ending tag
+    //if(is_old && is_new)
+    //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+
+    output_node(rbuf_old, rbuf_new, &flush, COMMON, wstate);
+
+    free_node_sets(node_set_old);
+    free_node_sets(node_set_new);
+
+  }
 
   if(isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(writer);
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
-
+    
   }
 
-  free_node_sets(node_set_old);
-  free_node_sets(node_set_new);
+  if(unit_old->free)
+    freeXNode(unit_old);
 
-  freeXNode(unit_old);
-  freeXNode(unit_new);
+  if(unit_new->free)
+    freeXNode(unit_new);
 
   // Because of grouping need to output a common to end grouping need to deallocate as well
   for(unsigned int i = 0; i < nodes_old.size(); ++i) {
@@ -343,7 +368,7 @@ srcDiffTool::~srcDiffTool() {
 
   xmlTextWriterEndElement(writer);
 
-  // cleanup writer                                                                                                                                  
+  // cleanup writer
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
 
@@ -353,12 +378,12 @@ srcDiffTool::~srcDiffTool() {
 }
 
 void srcDiffTool::startUnit(const char * language,
-               OPTION_TYPE& options,             // many and varied options                                                               
-               const char* directory,       // root unit directory                                                                   
-               const char* filename,        // root unit filename                                                                    
-               const char* version,         // root unit version                                                                     
-               const char* uri[],           // uri prefixes                                                                          
-               xmlTextWriterPtr writer) {
+                            OPTION_TYPE& options,             // many and varied options
+                            const char* directory,       // root unit directory
+                            const char* filename,        // root unit filename
+                            const char* version,         // root unit version
+                            const char* uri[],           // uri prefixes
+                            xmlTextWriterPtr writer) {
 
   static int depth = 0;
 
@@ -410,46 +435,46 @@ void srcDiffTool::startUnit(const char * language,
 
 void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
 
-    // figure out which namespaces are needed
-    char const * const ns[] = {
+  // figure out which namespaces are needed
+  char const * const ns[] = {
 
-      // main srcML namespace declaration always used
-      (depth == 0) ? SRCML_SRC_NS_URI : 0,
+    // main srcML namespace declaration always used
+    (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
-      // main cpp namespace declaration
-      isoption(OPTION_CPP, options) && (isoption(OPTION_NESTED, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+    // main cpp namespace declaration
+    isoption(OPTION_CPP, options) && (isoption(OPTION_NESTED, options) == !outer) ? SRCML_CPP_NS_URI : 0,
 
-      // optional debugging xml namespace
-      (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
+    // optional debugging xml namespace
+    (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
 
-      // optional literal xml namespace
-      (depth == 0) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+    // optional literal xml namespace
+    (depth == 0) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
-      // optional operator xml namespace
-      (depth == 0) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+    // optional operator xml namespace
+    (depth == 0) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
-      // optional modifier xml namespace
-      (depth == 0) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+    // optional modifier xml namespace
+    (depth == 0) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
-      // optional position xml namespace
-      (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
+    // optional position xml namespace
+    (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
-      // optional diff xml namespace
-      (depth == 0) ? SRCML_DIFF_NS_URI : 0,
-    };
+    // optional diff xml namespace
+    (depth == 0) ? SRCML_DIFF_NS_URI : 0,
+  };
 
-    // output the namespaces
-    for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
-      if (!ns[i])
-	continue;
+  // output the namespaces
+  for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
+    if (!ns[i])
+      continue;
 
-      std::string prefix = "xmlns";
-      if (num2prefix[i][0] != '\0') {
-	prefix += ':';
-	prefix += num2prefix[i];
-      }
-
-      xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
+    std::string prefix = "xmlns";
+    if (num2prefix[i][0] != '\0') {
+      prefix += ':';
+      prefix += num2prefix[i];
     }
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
+  }
 }
 
