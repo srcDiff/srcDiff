@@ -107,6 +107,7 @@ void freeXNode(xNode * node) {
 
     delete node->ns;
   }
+
   while(node->properties) {
 
     xAttr * attr = node->properties;
