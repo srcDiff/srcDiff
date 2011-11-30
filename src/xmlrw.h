@@ -29,13 +29,21 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+struct xNs {
+
+  //xNs * next;
+  const char * href;
+  const char * prefix;
+
+};
+
 struct xNode {
 
   xmlElementType type;
   const char * name;
-  xmlNs * ns;
+  xNs * ns;
   const char * content;
-  //xmlNs * nsDef;
+  //xNs * nsDef;
   xmlAttr * properties;
   
 };
