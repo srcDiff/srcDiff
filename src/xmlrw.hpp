@@ -63,6 +63,8 @@ struct xNode {
 
 typedef xNode * xNodePtr;
 
+xNode * createInternalNode(xmlNode & node);
+
 bool operator==(const xNode& n1, const xNode& n2);
 
 xNode* getRealCurrentNode(xmlTextReaderPtr reader);
