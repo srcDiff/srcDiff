@@ -41,6 +41,9 @@ xNode createInternalNode(xmlNode & node) {
   if(node.content)
     xnode.content = (const char *)node.content;
 
+  xnode.ns.href = (const char *)node.ns->href;
+  xnode.ns.prefix = (const char *)node.ns->prefix;
+
   return xnode;
 }
 

@@ -40,7 +40,7 @@ struct xNs {
 
   //xNs * next;
   std::string href;
-  const char * prefix;
+  std::string prefix;
 
 };
 
@@ -48,7 +48,7 @@ struct xNode {
 
   xmlElementType type;
   std::string name;
-  xNs * ns;
+  xNs ns;
   std::string content;
   //xNs * nsDef;
   xmlAttr * properties;
