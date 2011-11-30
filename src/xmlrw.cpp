@@ -134,6 +134,17 @@ xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
   return node;
 }
 
+xmlNode * split_whitespace(const char * characters_start, const char * characters_end) {
+
+  xmlNode * text = new xmlNode;
+  text->type = (xmlElementType)XML_READER_TYPE_TEXT;
+  text->name = (const xmlChar *)"text";
+  const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
+  text->content = (xmlChar *)content;
+
+  return text;
+}
+
 void eat_element(xmlTextReaderPtr& reader) {
   int depth = xmlTextReaderDepth(reader);
   xmlTextReaderRead(reader);
