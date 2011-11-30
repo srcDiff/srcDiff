@@ -44,6 +44,16 @@ xNode createInternalNode(xmlNode & node) {
   xnode.ns.href = (const char *)node.ns->href;
   xnode.ns.prefix = (const char *)node.ns->prefix;
 
+  xmlAttrPtr attribute = node.properties;
+  while (attribute) {
+
+    xAttr attr;
+    attr.name = (const char *)attribute->name;
+    attr.value = (const char *)attribute->children->content;
+    xnode.properties.push_back(attr);
+    attribute = attribute->next;
+  }
+
   return xnode;
 }
 

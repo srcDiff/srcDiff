@@ -52,7 +52,7 @@ struct xNode {
   xNs ns;
   std::string content;
   //xNs * nsDef;
-  std::vector<xmlAttr> properties;
+  std::vector<xAttr> properties;
   
 };
 
