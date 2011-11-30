@@ -29,19 +29,20 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-struct xAttr {
-
-  std::string name;
-  std::string value;
-  xAttr * next;
-};
-
 struct xNs {
 
   //xNs * next;
   std::string href;
   std::string prefix;
 
+};
+
+struct xAttr {
+
+  std::string name;
+  std::string value;
+  xAttr * next;
+  xNs ns;
 };
 
 struct xNode {
