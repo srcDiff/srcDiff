@@ -1691,6 +1691,9 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
         
       *separator = '|';
 
+      if (isoption(options, OPTION_TERMINATE))
+        return;
+
       /*
       // process this command line argument
       srcdiff_file(translator, argv[i], options,
