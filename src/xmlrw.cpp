@@ -28,12 +28,12 @@
 #include <map>
 #include <string>
 
-typedef std::map<std::string, xmlNode*> NodeMap;
+typedef std::map<std::string, xNode*> NodeMap;
 
 NodeMap starttags;
 NodeMap endtags;
 
-Node createInternalNode(xmlNode & node) {
+Node createInternalNode(xNode & node) {
 
   Node xnode;
   xnode.type = node.type;
@@ -63,7 +63,7 @@ Node createInternalNode(xmlNode & node) {
   return xnode;
 }
 
-bool operator==(const xmlNode& n1, const xmlNode& n2) {
+bool operator==(const xNode& n1, const xNode& n2) {
 
   return n1.type == n2.type &&
     (strcmp((char*) n1.name, (char*) n2.name) == 0) && (
@@ -72,9 +72,9 @@ bool operator==(const xmlNode& n1, const xmlNode& n2) {
                                                         );
 }
 
-xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
+xNode* getRealCurrentNode(xmlTextReaderPtr reader) {
 
-  xmlNode* pnode = getCurrentNode(reader);
+  xNode* pnode = getCurrentNode(reader);
 
   //  pnode->extra = xmlTextReaderIsEmptyElement(reader);
 
@@ -83,18 +83,18 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
 
 Node getCurrentXNode(xmlTextReaderPtr reader) {
 
-  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
+  xNode* curnode = xmlTextReaderCurrentNode(reader);
 
   curnode->extra = xmlTextReaderIsEmptyElement(reader);
 
   return createInternalNode(*curnode);
 }
 
-xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
+xNode* getCurrentNode(xmlTextReaderPtr reader) {
 
-  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
+  xNode* curnode = xmlTextReaderCurrentNode(reader);
 
-  xmlNode* node = 0;
+  xNode* node = 0;
   if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
 
     NodeMap::iterator lb = starttags.lower_bound((const char*) curnode->name);
@@ -266,7 +266,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer, const char* nam
 }
 
 // output current XML node in reader
-void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
+void outputNode(xNode& node, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
 

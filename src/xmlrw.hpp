@@ -61,9 +61,9 @@ struct Node {
   
 };
 
-bool operator==(const xmlNode& n1, const xmlNode& n2);
+bool operator==(const xNode& n1, const xNode& n2);
 
-xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
+xNode* getRealCurrentNode(xmlTextReaderPtr reader);
 
 Node getCurrentXNode(xmlTextReaderPtr reader);
 
@@ -91,12 +91,12 @@ inline bool isendelement(const xmlTextReaderPtr& reader) {
   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
 }
 
-xmlNode* getCurrentNode(xmlTextReaderPtr reader);
+xNode* getCurrentNode(xmlTextReaderPtr reader);
 
 void eat_element(xmlTextReaderPtr& reader);
 
 void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
 
-void outputNode(xmlNode& node, xmlTextWriterPtr writer);
+void outputNode(xNode& node, xmlTextWriterPtr writer);
 
 #endif
