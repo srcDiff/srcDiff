@@ -202,6 +202,8 @@ void update_diff_stack(std::vector<diff_set *> & open_diffs, xmlNodePtr node, in
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
   if(open_diffs.back()->open_tags.size() == 0) {
+
+    delete open_diffs.back();
     open_diffs.pop_back();
 
     //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
