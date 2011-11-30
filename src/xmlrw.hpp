@@ -30,6 +30,10 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+typedef xmlNode xNode;
+typedef xNode * xNodePtr;
+typedef xmlNodePtr xNodePtr;
+
 struct xNs {
 
   //xNs * next;
@@ -45,7 +49,7 @@ struct xAttr {
   xNs ns;
 };
 
-struct xNode {
+struct Node {
 
   xmlElementType type;
   std::string name;
@@ -61,7 +65,7 @@ bool operator==(const xmlNode& n1, const xmlNode& n2);
 
 xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
 
-xNode getCurrentXNode(xmlTextReaderPtr reader);
+Node getCurrentXNode(xmlTextReaderPtr reader);
 
 inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
 

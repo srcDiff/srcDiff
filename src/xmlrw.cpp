@@ -33,9 +33,9 @@ typedef std::map<std::string, xmlNode*> NodeMap;
 NodeMap starttags;
 NodeMap endtags;
 
-xNode createInternalNode(xmlNode & node) {
+Node createInternalNode(xmlNode & node) {
 
-  xNode xnode;
+  Node xnode;
   xnode.type = node.type;
   xnode.name = (const char *)node.name;
   if(node.content)
@@ -81,7 +81,7 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
   return pnode;
 }
 
-xNode getCurrentXNode(xmlTextReaderPtr reader) {
+Node getCurrentXNode(xmlTextReaderPtr reader) {
 
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
