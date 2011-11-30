@@ -21,8 +21,8 @@
 
 */
 
-#ifndef _INCLUDED_XMLRW_H
-#define _INCLUDED_XMLRW_H
+#ifndef INCLUDED_XMLRW_HPP
+#define INCLUDED_XMLRW_HPP
 
 #include <string>
 
@@ -31,15 +31,15 @@
 
 struct xAttr {
 
-  const char * name;
-  const char * value;
+  std::string name;
+  std::string value;
   xAttr * next;
 };
 
 struct xNs {
 
   //xNs * next;
-  const char * href;
+  std::string href;
   const char * prefix;
 
 };
@@ -47,9 +47,9 @@ struct xNs {
 struct xNode {
 
   xmlElementType type;
-  const char * name;
+  std::string name;
   xNs * ns;
-  const char * content;
+  std::string content;
   //xNs * nsDef;
   xmlAttr * properties;
   
