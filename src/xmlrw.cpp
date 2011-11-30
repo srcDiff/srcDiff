@@ -116,6 +116,7 @@ void freeXNode(xNode * node) {
     free((void *)attr->value);
     delete attr;
   }
+
   /*
   if(node->content)
     free((void *)node->content);
@@ -201,8 +202,13 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
   xNode * text = new xNode;
   text->type = (xmlElementType)XML_READER_TYPE_TEXT;
   text->name = "text";
-  const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
-  text->content = content;
+  text->content = 0;
+
+  if(characters_start != characters_end) {
+
+     const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
+     text->content = content;
+  }
   text->ns = 0;
   text->properties = 0;
 
