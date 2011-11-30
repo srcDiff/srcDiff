@@ -134,7 +134,7 @@ xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
   return node;
 }
 
-xmlNode * split_whitespace(const char * characters_start, const char * characters_end) {
+xmlNode * split_text(const char * characters_start, const char * characters_end) {
 
   xmlNode * text = new xmlNode;
   text->type = (xmlElementType)XML_READER_TYPE_TEXT;

@@ -67,7 +67,7 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
 
 Node getCurrentXNode(xmlTextReaderPtr reader);
 
-xmlNode * split_whitespace(const char * characters_start, const char * characters_end);
+xmlNode * split_text(const char * characters_start, const char * characters_end);
 
 inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
 

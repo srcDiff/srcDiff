@@ -144,15 +144,13 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader) {
 
         const char * characters_start = characters;
 
-        xNode * text = new xNode;
-        text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-        text->name = (const xmlChar *)"text";
+        xNode * text;
 
         // separate new line
         if(*characters == '\n') {
 
-          text->content = (xmlChar *)"\n";
           ++characters;
+          text = split_text(characters_start, characters);
         }
 
         // separate non-new line whitespace
@@ -163,8 +161,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader) {
 
 	    // kind of want a look up table for this
 	    //const char * content = strndup((const char *)characters_start, characters  - characters_start);
-	    const char * content = strndup((const char *)characters_start, 1);
-	    text->content = (xmlChar *)content;
+            text = split_text(characters_start, characters);
 
         }
 
@@ -178,20 +175,14 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader) {
 	  // break up ( and )
           if((characters_start + 1) && (*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
-            xNode * atext = new xNode;
-            atext->type = (xmlElementType)XML_READER_TYPE_TEXT;
-            atext->name = (const xmlChar *)"text";
-
-            const char * content = strndup((const char *)characters_start, 1);
-            atext->content = (xmlChar *)content;
+            xNode * atext = split_text(characters_start, characters_start + 1);
             nodes->push_back(atext);
             ++characters_start;
 
           }
 
           // Copy the remainder after (
-          const char * content = strndup((const char *)characters_start, characters  - characters_start);
-          text->content = (xmlChar *)content;
+          text = split_text(characters_start, characters);
 
         }
 
