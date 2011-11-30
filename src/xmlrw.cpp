@@ -34,21 +34,31 @@ NodeMap starttags;
 NodeMap endtags;
 
 xNode * createInternalNode(xmlNode & node) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   xNode * xnode = new xNode;
+
   xnode->type = node.type;
+
   xnode->name = strdup((const char *)node.name);
+
   xnode->content = 0;
   if(node.content)
     xnode->content = strdup((const char *)node.content);
+  xnode->ns = 0;
 
-  xnode->ns->href = strdup((const char *)node.ns->href);
-  xnode->ns->prefix = strdup((const char *)node.ns->prefix);
+  if(node.ns) {
 
+    xnode->ns->href = 0;
+    if(node.ns->href)
+      xnode->ns->href = strdup((const char *)node.ns->href);
+
+    xnode->ns->prefix = 0;
+    if(node.ns->prefix)
+      xnode->ns->prefix = strdup((const char *)node.ns->prefix);
+  }
 
   xmlAttrPtr attribute = node.properties;
   xnode->properties = 0;
-
   if(attribute) {
 
    xAttr * attr;
@@ -76,8 +86,9 @@ xNode * createInternalNode(xmlNode & node) {
   }
   }
 
-  xnode->extra = node.extra;
 
+  xnode->extra = node.extra;
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   return xnode;
 }
 
