@@ -5,6 +5,8 @@
 #include <Options.hpp>
 #include <vector>
 
+#include "xmlrw.hpp"
+
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer);
 
@@ -12,12 +14,12 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
                         const char* directory, const char* filename, const char* version, const char* uri[], int tabsize);
 
 // create srcdiff unit
-xmlNodePtr create_srcdiff_unit(xmlNodePtr unit_old, xmlNodePtr unit_new);
+xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new);
 
 void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
-void merge_filename(xmlNodePtr unit_old, xmlNodePtr unit_new);
+void merge_filename(xNodePtr unit_old, xNodePtr unit_new);
 
-bool is_atomic_srcml(std::vector<xmlNodePtr> * nodes, unsigned start);
-void collect_nodes(std::vector<xmlNode *> * nodes, xmlTextReaderPtr reader);
+bool is_atomic_srcml(std::vector<xNodePtr> * nodes, unsigned start);
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader);
 
 #endif

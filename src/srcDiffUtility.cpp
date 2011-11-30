@@ -2,10 +2,11 @@
 #include <string.h>
 #include <vector>
 #include <string>
+#include "xmlrw.hpp"
 
 // global structures defined in main
-extern std::vector<xmlNode *> nodes_old;
-extern std::vector<xmlNode *> nodes_new;
+extern std::vector<xNode *> nodes_old;
+extern std::vector<xNode *> nodes_new;
 
 bool is_change(struct edit * edit_script) {
 
@@ -39,7 +40,7 @@ bool attribute_compare(xmlAttrPtr attr1, xmlAttrPtr attr2) {
 }
 
 // diff node comparison function
-int node_compare(xmlNode * node1, xmlNode * node2) {
+int node_compare(xNode * node1, xNode * node2) {
 
   if (node1 == node2)
     return 0;
@@ -65,20 +66,20 @@ int node_compare(xmlNode * node1, xmlNode * node2) {
   return attribute_compare(node1->properties, node2->properties);
 }
 
-bool is_white_space(xmlNodePtr node) {
+bool is_white_space(xNodePtr node) {
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
 
 }
 
-bool is_new_line(xmlNodePtr node) {
+bool is_new_line(xNodePtr node) {
 
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content[0] == '\n';
 
 }
 
-bool is_text(xmlNodePtr node) {
+bool is_text(xNodePtr node) {
 
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
 }
