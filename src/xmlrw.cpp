@@ -29,6 +29,10 @@
 #include <vector>
 #include <string>
 
+#ifdef __MINGW32__
+#include "mingw32.hpp"
+#endif 
+
 typedef std::map<std::string, xNode*> NodeMap;
 typedef std::vector<std::string> NameList;
 
