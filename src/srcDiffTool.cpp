@@ -315,7 +315,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // Because of grouping need to output a common to end grouping need to deallocate as well
   for(unsigned int i = 0; i < nodes_old.size(); ++i) {
 
-    if((xmlReaderTypes)nodes_old.at(i)->type == XML_READER_TYPE_TEXT) {
+    if(nodes_old.at(i)->extra & 4) {
 
       freeXNode(nodes_old.at(i));
 
@@ -324,7 +324,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   for(unsigned int i = 0; i < nodes_new.size(); ++i) {
 
-    if((xmlReaderTypes)nodes_new.at(i)->type == XML_READER_TYPE_TEXT) {
+    if(nodes_new.at(i)->extra & 4) {
 
       freeXNode(nodes_new.at(i));
 
