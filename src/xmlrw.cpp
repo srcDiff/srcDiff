@@ -94,6 +94,23 @@ xNode * createInternalNode(xmlNode & node) {
   return xnode;
 }
 
+void freeXNode(xNode * node) {
+
+  if(node->ns)
+    delete node->ns;
+
+  while(node->properties) {
+
+    xAttr * attr = node->properties;
+    node->properties = node->properties->next;
+    delete attr;
+    
+  }
+  
+  delete node;
+  
+}
+
 bool operator==(const xNode& n1, const xNode& n2) {
 
   return n1.type == n2.type &&
