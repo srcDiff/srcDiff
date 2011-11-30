@@ -49,7 +49,7 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
 
   xmlNode* pnode = getCurrentNode(reader);
 
-  pnode->extra = xmlTextReaderIsEmptyElement(reader);
+  //  pnode->extra = xmlTextReaderIsEmptyElement(reader);
 
   return pnode;
 }
@@ -68,10 +68,11 @@ xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
     } else {
 
       node = xmlCopyNode(curnode, 2);
+      node->extra = 0;
       starttags.insert(lb, NodeMap::value_type((const char*) curnode->name, node));
     }
 
-  } else if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
+  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
 
     NodeMap::iterator lb = endtags.lower_bound((const char*) curnode->name);
     if (lb != endtags.end() && !(endtags.key_comp()((const char*) curnode->name, lb->first))) {
@@ -80,11 +81,16 @@ xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
     } else {
 
       node = xmlCopyNode(curnode, 2);
+      node->extra = 0;
       endtags.insert(lb, NodeMap::value_type((const char*) curnode->name, node));
     }
 
+  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
+    node = xmlCopyNode(curnode, 2);
+    node->extra = xmlTextReaderIsEmptyElement(reader);
   } else {
     node = xmlCopyNode(curnode, 2);
+    node->extra = 0;
   }
 
   node->type = (xmlElementType) xmlTextReaderNodeType(reader);
