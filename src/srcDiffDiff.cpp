@@ -404,6 +404,8 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   int last_old = 0;
   int last_new = 0;
 
+  offset_pair * matches_save = matches;
+
   for(; matches; matches = matches->next) {
 
     // output diffs until match
@@ -452,6 +454,11 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                    rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
                    , edit_next->offset_sequence_two + edit_next->length - 1, wstate);
 
+  for(; matches_save;) {
+    offset_pair * old_match = matches_save;
+    matches_save = matches_save->next;
+    delete old_match;
+  }
 
 }
 
