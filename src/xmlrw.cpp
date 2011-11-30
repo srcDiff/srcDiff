@@ -26,12 +26,26 @@
 #include <iostream>
 #include <cstring>
 #include <map>
+#include <vector>
 #include <string>
 
 typedef std::map<std::string, xNode*> NodeMap;
+typedef std::vector<std::string> NameList;
 
 NodeMap starttags;
 NodeMap endtags;
+NameList namelist;
+
+std::string* setName(const char* name) {
+
+  NameList::iterator lb = std::find(namelist.begin(), namelist.end(), name);
+  if (lb != namelist.end()) {
+    return &(*lb);
+  } else {
+    namelist.push_back(name);
+    return &namelist.back();
+  }
+}
 
 xNode * createInternalNode(xmlNode & node) {
 
