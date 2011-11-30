@@ -61,6 +61,8 @@ bool operator==(const xmlNode& n1, const xmlNode& n2);
 
 xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
 
+xNode getCurrentXNode(xmlTextReaderPtr reader);
+
 inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
 
   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&

@@ -81,6 +81,15 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
   return pnode;
 }
 
+xNode getCurrentXNode(xmlTextReaderPtr reader) {
+
+  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
+
+  curnode->extra = xmlTextReaderIsEmptyElement(reader);
+
+  return createInternalNode(*curnode);
+}
+
 xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
 
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
