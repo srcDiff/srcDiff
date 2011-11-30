@@ -29,6 +29,17 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+struct xNode {
+
+  xmlElementType type;
+  const char * name;
+  xmlNs * ns;
+  const char * content;
+  //xmlNs * nsDef;
+  xmlAttr * properties;
+  
+};
+
 bool operator==(const xmlNode& n1, const xmlNode& n2);
 
 xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
