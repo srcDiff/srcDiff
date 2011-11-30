@@ -1689,7 +1689,7 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
 
       srcdiff_text(translator, file_one, file_two, options, poptions.language, count, skipped, error, showinput, shownumber);
         
-      *separator = ',';
+      *separator = '|';
 
       /*
       // process this command line argument
