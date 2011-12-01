@@ -46,7 +46,7 @@ endif
 #libsrcml include
 LIBSRCML_INCLUDE = -I ../../../src
 ifdef MINGW32
-LIBSRCML_LIB = ${DLL_DIR}/libsrcml.dll
+LIBSRCML_LIB = ../../../bin/libsrcml.dll
 else
 LIBSRCML_LIB = -L ../bin/ -lsrcml
 LIBSRCMLC_LIB = -L ../../../bin/ -lsrcml
@@ -119,7 +119,7 @@ $(EXE_DIR)srcdiff : srcdiff.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtilit
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -I ../../../src -I/opt/local/include -L../../../obj $^ $(LIBSRCMLC_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} ../../../obj/srcmlapps.o -o $@
 
 $(EXE_DIR)srcdiff.exe :  srcdiff.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTool.o $(OBJ_DIR)mingw32.o
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -I ../../../src -I/opt/local/include -L../../../obj $^ $(LIBSRCMLC_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} ../../../obj/srcmlapps.o -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -I ../../../src -I/opt/local/include -L../../../obj $^ $(LIBSRCML_LIB) $(LDFLAGS) ${XML_LIB_SRCDIFF} ${XML_IO_LIB} ../../../obj/srcmlapps.o -o $@
 
 $(OBJ_DIR)mingw32.o : mingw32.cpp mingw32.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
