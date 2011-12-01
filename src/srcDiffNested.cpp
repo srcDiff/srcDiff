@@ -32,6 +32,9 @@ bool is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
+  if(strcmp(nodes.at(structure->at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
+    return false;
+
   for(int i = 0; block_types[i]; ++i)
     if(strcmp((const char *)nodes.at(structure->at(0))->name, block_types[i]) == 0)
       return true;
