@@ -20,11 +20,12 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 // tags that can have something nested in them
-const char * block_types[] = { "block", "if", "while", 0 };
+const char * block_types[] = { "if", 0 };
 //const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 // tags that can be nested in something else (incomplete)
-const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
+const char * nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+// const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
 bool is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
 
@@ -68,7 +69,7 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
 
   if(is_nest_type(structure_one, nodes_one) && is_block_type(structure_two, nodes_two)) {
 
-    if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, block_types[0]) != 0) {
+    if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, "block") != 0) {
 
       return true;
 
