@@ -415,12 +415,13 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
     // output diff tag
     output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
+  }
+
     rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
     rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
 
     diff_old_start.properties = 0;
     diff_new_start.properties = 0;
 
-  }
 
 }
