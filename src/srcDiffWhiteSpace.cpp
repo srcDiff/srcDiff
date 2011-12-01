@@ -364,30 +364,33 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
   diff_old_start.properties = &diff_type;
   diff_new_start.properties = &diff_type;
 
+  int ostart = begin_old;
+  int nstart = begin_new
+
+  // advance whitespace while matches
+  for(; ostart < nodes_old.size() && nstart < nodes_new.size()
+        && is_white_space(nodes_old.at(ostart)) && is_white_space(nodes_new.at(nstart))
+        && node_compare(nodes_old.at(ostart), nodes_new.at(nstart)) == 0; ++ostart, ++nstart)
+    ;
+
+  if(begin_old < ostart) {
+
+    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+    
+    for(unsigned int i = begin_old; i < ostart; ++i)
+      output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+    
+    output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+
+  }
+
   int opivot = oend;
   int npivot = nend;
 
-  int ostart = begin_old;
-  int nstart = begin_new
-  // advance whitespace while matches
-  for(; oend < nodes_old.size() && nend < nodes_new.size()
-        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
-        && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
+  for(; opivot > ostart && npivot > nstart && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
     ;
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-  for(unsigned int i = ostart; i < oend; ++i)
-    output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
-
-
-
-  for(; opivot > begin_old && npivot > begin_new && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-    ;
-
-  if(opivot < begin_old || npivot < begin_new) {
+  if(opivot < ostart || npivot < nstart) {
 
     opivot = oend;
     npivot = nend;
@@ -398,11 +401,11 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
     ++npivot;
   }
 
-  if(begin_old < opivot) {
+  if(ostart < opivot) {
 
     output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-    for(int k = begin_old; k < opivot; ++k)
+    for(int k = ostart; k < opivot; ++k)
       output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
     // output diff tag
@@ -410,7 +413,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
 
   }
 
-  if(begin_new < npivot) {
+  if(nstart < npivot) {
 
     output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
