@@ -433,22 +433,21 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
     } else {
 
-            if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
-            , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
+            if(is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
+            , nodes_old, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), nodes_new)) {
 
-	      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two), INSERT, wstate);
+	      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), INSERT, wstate);
 
-            } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
-            , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
+            } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
+            , nodes_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), nodes_old)) {
 
-            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
-            , DELETE, wstate);
+            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), DELETE, wstate);
 
             } else {
 
               // syntax mismatch
-              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1, wstate);
             }
 
     }
