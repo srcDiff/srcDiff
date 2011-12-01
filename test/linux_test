@@ -13,7 +13,7 @@
 #cd ..
 
 #cat files | gxargs -I% -P 10 bash -c "../bin/srcdiffc old/% new/% > new/%.xml"
-cat list | gxargs -I% -P 10 bash -c "../bin/srcdiff old/% new/% -o new/%.xml"
+cat list | gxargs -I% -P 10 bash -c "../bin/srcdiff --literal --operator --modifier old/% new/% -o new/%.xml"
 
 #cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier old/% -o old/%.1.xml"
 #cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier new/% -o new/%.1.xml"
@@ -23,5 +23,5 @@ cat list | gxargs -I% -P 10 bash -c "../bin/srcdiff old/% new/% -o new/%.xml"
 
 #cat files | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 1 new/%.xml | cmp old/%.1.xml /dev/stdin"
 #cat files | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 2 new/%.xml | cmp new/%.1.xml /dev/stdin"
-cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 1 new/%.xml | cmp old/%.1.xml /dev/stdin"
-cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 2 new/%.xml | cmp new/%.1.xml /dev/stdin"
+#cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 1 new/%.xml | cmp old/%.1.xml /dev/stdin"
+#cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 2 new/%.xml | cmp new/%.1.xml /dev/stdin"

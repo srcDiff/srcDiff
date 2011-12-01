@@ -14,7 +14,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include "../../src/xmlrw.h"
+#include "../../src/xmlrw.hpp"
 
 const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
@@ -57,10 +57,10 @@ int main(int argc, char * argv[]) {
     bool exited_out_diff = false;
     bool wait_out_diff = false;
     bool end_wait_diff = false;
-    std::vector<xmlNode *> buffer;
+    std::vector<xNode *> buffer;
     while(xmlTextReaderRead(reader) == 1) {
 
-      xmlNodePtr node = getRealCurrentNode(reader);
+      xNodePtr node = getRealCurrentNode(reader);
 
       if(!exited_out_diff && strcmp((const char *)node->name, "old") == 0) {
 
@@ -73,7 +73,7 @@ int main(int argc, char * argv[]) {
 
       if(wait_out_diff && strcmp((const char *)node->name, "new") == 0) {
 
-        node->name = (const xmlChar *)"old";
+        node->name = "old";
 
         wait_out_diff = false;
         end_wait_diff = true;
@@ -98,7 +98,7 @@ int main(int argc, char * argv[]) {
 
           xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
 
-          buffer = std::vector<xmlNode *>();
+          buffer = std::vector<xNode *>();
         } else 
           wait_out_diff = true;
 
@@ -124,11 +124,11 @@ int main(int argc, char * argv[]) {
 
 
         end_wait_diff = false;
-        buffer = std::vector<xmlNode *>();
+        buffer = std::vector<xNode *>();
       }
 
       if(strcmp((const char *)node->name, "new") == 0)
-        node->name = (const xmlChar *)"old";
+        node->name = "old";
 
       outputNode(*node, writer);
     }
