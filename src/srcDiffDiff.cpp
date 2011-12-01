@@ -263,8 +263,6 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
-  //unsigned int length = node_set_new->size();
-
   if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
 
