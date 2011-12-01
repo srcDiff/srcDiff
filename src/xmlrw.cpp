@@ -28,6 +28,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #ifdef __MINGW32__
 #include "mingw32.hpp"
