@@ -286,7 +286,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
       break;
 
     if((xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_TEXT
-    || (xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
+    && (xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
       continue;
 
     if(strcmp(nodes_old.at(i)->name, nodes_new.at(i)->nmae) != 0)
