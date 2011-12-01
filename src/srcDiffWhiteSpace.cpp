@@ -42,7 +42,7 @@ void output_white_space_nested(reader_state & rbuf_old
     }
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-  
+
   markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -69,7 +69,7 @@ void output_white_space_statement(reader_state & rbuf_old, reader_state & rbuf_n
     ++nend;
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-  
+
   markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -91,7 +91,7 @@ void output_white_space_all(reader_state & rbuf_old
     ;
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-  
+
   markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -109,14 +109,14 @@ void output_white_space_pure_statement_end(reader_state & rbuf_old
   // advance whitespace after targeted end
   if(operation == DELETE) {
     if(oend < nodes_old.size() && is_new_line(nodes_old.at(oend)))
-      ++oend; 
-    }
+      ++oend;
+  }
   else if(operation == INSERT)
     if(nend < nodes_new.size() && is_new_line(nodes_new.at(nend)))
       ++nend;
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-  
+
   markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -145,7 +145,7 @@ void output_white_space_match_most(reader_state & rbuf_old
     --nend;
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-  
+
   markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -171,9 +171,9 @@ void output_white_space_most(reader_state & rbuf_old
 
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
- 
+
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-  
+
   markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -198,7 +198,7 @@ void output_white_space_prefix(reader_state & rbuf_old
 
     Change back to if's when not collecting whitespace as single nodes
 
-   */
+  */
   // may only match here, but belongs as part of pure change
   unsigned int save_oend = oend;
   unsigned int save_nend = nend;
@@ -211,10 +211,10 @@ void output_white_space_prefix(reader_state & rbuf_old
 
   if(oend > 0 && !is_new_line(nodes_old.at(oend - 1)))
     oend = save_oend;
-  
+
   if(nend > 0 && !is_new_line(nodes_new.at(nend - 1)))
     nend = save_nend;
-  
+
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   for(unsigned int i = ostart; i < oend; ++i)
@@ -262,11 +262,11 @@ void output_white_space_suffix(reader_state & rbuf_old
 
   //if(ostart < opivot && nstart < npivot) {
 
-    diff_type.value = whitespace;
-    diff_old_start.properties = &diff_type;
-    diff_new_start.properties = &diff_type;
+  diff_type.value = whitespace;
+  diff_old_start.properties = &diff_type;
+  diff_new_start.properties = &diff_type;
 
-    //}
+  //}
 
 
   if(ostart < opivot) {
@@ -353,75 +353,73 @@ void advance_white_space_suffix(reader_state & rbuf_old
 
 void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate) {
 
-void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate) {
+    int begin_old = rbuf_old.last_output;
+    int begin_new = rbuf_new.last_output;
 
-  int begin_old = rbuf_old.last_output;
-  int begin_new = rbuf_new.last_output;
+    int oend = end_old;
+    int nend = end_new;
 
-  int oend = end_old;
-  int nend = end_new;
+    // set attribute to change
+    diff_type.value = whitespace;
+    diff_old_start.properties = &diff_type;
+    diff_new_start.properties = &diff_type;
 
-  // set attribute to change
-  diff_type.value = whitespace;
-  diff_old_start.properties = &diff_type;
-  diff_new_start.properties = &diff_type;
+    int opivot = oend;
+    int npivot = nend;
 
-  int opivot = oend;
-  int npivot = nend;
-  
-      for(; opivot > begin_old && npivot > begin_new && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-        ;
+    for(; opivot > begin_old && npivot > begin_new && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
+      ;
 
-      if(opivot < begin_old || npivot < j) {
+    if(opivot < begin_old || npivot < begin_new) {
 
-        opivot = oend;
-        npivot = nend;
+      opivot = oend;
+      npivot = nend;
 
-      } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
+    } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
 
-        ++opivot;
-        ++npivot;
-      }
+      ++opivot;
+      ++npivot;
+    }
 
-        if(begin_old < opivot) {
+    if(begin_old < opivot) {
 
-        output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-        for(int k = i; k < opivot; ++k)
-          output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
-        
-        // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+      for(int k = begin_old; k < opivot; ++k)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
-        }
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
-        if(begin_new < npivot) {
+    }
 
-        output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+    if(begin_new < npivot) {
 
-        for(int k = j; k < npivot; ++k)
+      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+
+      for(int k = begin_new; k < npivot; ++k)
         output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
-        // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
-        }
+    }
 
-        if(opivot < olength) {
+    if(opivot < olength) {
 
-          output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+      output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-        for(int k = opivot; k < olength; ++k)
+      for(int k = opivot; k < olength; ++k)
         output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
-        // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
-  rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
-  rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
+      rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
+      rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
 
-  diff_old_start.properties = 0;
-  diff_new_start.properties = 0;
+      diff_old_start.properties = 0;
+      diff_new_start.properties = 0;
 
-}
+    }
 
