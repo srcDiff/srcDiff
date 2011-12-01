@@ -181,7 +181,8 @@ xNode* getCurrentNode(xmlTextReaderPtr reader) {
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
   xNode * node = 0;
-  if (0 &&!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
+  if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0
+      && strcmp((const char *)curnode->ns->href, "http://www.sdml.info/srcML/cpp") != 0) {
 
     NodeMap::iterator lb = starttags.lower_bound((const char*) curnode->name);
     if (lb != starttags.end() && !(starttags.key_comp()((const char*) curnode->name, lb->first))) {
@@ -194,7 +195,8 @@ xNode* getCurrentNode(xmlTextReaderPtr reader) {
       starttags.insert(lb, NodeMap::value_type((const char*) curnode->name, node));
     }
 
-  } else if (0 && xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
+  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT
+             && strcmp((const char *)curnode->ns->href, "http://www.sdml.info/srcML/cpp") != 0) {
 
     NodeMap::iterator lb = endtags.lower_bound((const char*) curnode->name);
     if (lb != endtags.end() && !(endtags.key_comp()((const char*) curnode->name, lb->first))) {
