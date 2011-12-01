@@ -367,6 +367,23 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
   int opivot = oend;
   int npivot = nend;
 
+  int ostart = begin_old;
+  int nstart = begin_new
+  // advance whitespace while matches
+  for(; oend < nodes_old.size() && nend < nodes_new.size()
+        && is_white_space(nodes_old.at(oend)) && is_white_space(nodes_new.at(nend))
+        && node_compare(nodes_old.at(oend), nodes_new.at(nend)) == 0; ++oend, ++nend)
+    ;
+
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+
+  for(unsigned int i = ostart; i < oend; ++i)
+    output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
+
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+
+
+
   for(; opivot > begin_old && npivot > begin_new && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
     ;
 
