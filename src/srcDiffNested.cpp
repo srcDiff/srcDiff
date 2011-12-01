@@ -87,7 +87,7 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
 void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(operation == DELETE) {
 
     // may need to markup common that does not output common blocks
@@ -135,8 +135,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    output_white_space_all(rbuf_old, rbuf_new, wstate);
-    //    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
     //markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
     output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
@@ -197,8 +196,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    output_white_space_all(rbuf_old, rbuf_new, wstate);
-    //    output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
+    output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
     //markup_whitespace(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
     output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
