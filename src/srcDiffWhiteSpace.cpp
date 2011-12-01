@@ -365,10 +365,10 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
   diff_new_start.properties = &diff_type;
 
   int ostart = begin_old;
-  int nstart = begin_new
+  int nstart = begin_new;
 
   // advance whitespace while matches
-  for(; ostart < nodes_old.size() && nstart < nodes_new.size()
+  for(; ostart < oend && nstart < nend
         && is_white_space(nodes_old.at(ostart)) && is_white_space(nodes_new.at(nstart))
         && node_compare(nodes_old.at(ostart), nodes_new.at(nstart)) == 0; ++ostart, ++nstart)
     ;
@@ -417,7 +417,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
 
     output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-    for(int k = begin_new; k < npivot; ++k)
+    for(int k = nstart; k < npivot; ++k)
       output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
     // output diff tag
