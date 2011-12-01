@@ -364,8 +364,8 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
 
   }
 
-  int opivot = oend;
-  int npivot = nend;
+  int opivot = oend - 1;
+  int npivot = nend - 1;
 
   for(; opivot > ostart && npivot > nstart && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
     ;
