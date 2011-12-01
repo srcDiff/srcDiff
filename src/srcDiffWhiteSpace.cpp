@@ -353,73 +353,74 @@ void advance_white_space_suffix(reader_state & rbuf_old
 
 void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate) {
 
-    int begin_old = rbuf_old.last_output;
-    int begin_new = rbuf_new.last_output;
+  int begin_old = rbuf_old.last_output;
+  int begin_new = rbuf_new.last_output;
 
-    int oend = end_old;
-    int nend = end_new;
+  int oend = end_old;
+  int nend = end_new;
 
-    // set attribute to change
-    diff_type.value = whitespace;
-    diff_old_start.properties = &diff_type;
-    diff_new_start.properties = &diff_type;
+  // set attribute to change
+  diff_type.value = whitespace;
+  diff_old_start.properties = &diff_type;
+  diff_new_start.properties = &diff_type;
 
-    int opivot = oend;
-    int npivot = nend;
+  int opivot = oend;
+  int npivot = nend;
 
-    for(; opivot > begin_old && npivot > begin_new && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
-      ;
+  for(; opivot > begin_old && npivot > begin_new && node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) == 0; --opivot, --npivot)
+    ;
 
-    if(opivot < begin_old || npivot < begin_new) {
+  if(opivot < begin_old || npivot < begin_new) {
 
-      opivot = oend;
-      npivot = nend;
+    opivot = oend;
+    npivot = nend;
 
-    } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
+  } else if(node_compare(nodes_old.at(opivot), nodes_new.at(npivot)) != 0) {
 
-      ++opivot;
-      ++npivot;
-    }
+    ++opivot;
+    ++npivot;
+  }
 
-    if(begin_old < opivot) {
+  if(begin_old < opivot) {
 
-      output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-      for(int k = begin_old; k < opivot; ++k)
-        output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
+    for(int k = begin_old; k < opivot; ++k)
+      output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
-      // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
+    // output diff tag
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
-    }
+  }
 
-    if(begin_new < npivot) {
+  if(begin_new < npivot) {
 
-      output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
-      for(int k = begin_new; k < npivot; ++k)
-        output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
+    for(int k = begin_new; k < npivot; ++k)
+      output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
-      // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
+    // output diff tag
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
-    }
+  }
 
-    if(opivot < olength) {
+  if(opivot < oend) {
 
-      output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-      for(int k = opivot; k < olength; ++k)
-        output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
+    for(int k = opivot; k < oend; ++k)
+      output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
-      // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+    // output diff tag
+    output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
-      rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
-      rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
+    rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
+    rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
 
-      diff_old_start.properties = 0;
-      diff_new_start.properties = 0;
+    diff_old_start.properties = 0;
+    diff_new_start.properties = 0;
 
-    }
+  }
 
+}
