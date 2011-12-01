@@ -44,7 +44,7 @@ void output_common(reader_state & rbuf_old, unsigned int end_old
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   // output common nodes
-  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
+  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
 
   // may need to take out all occurences afterwards except on pure deletes of this after something
   //output_white_space_statement(rbuf_old, rbuf_new, wstate);
@@ -59,7 +59,7 @@ void output_common(reader_state & rbuf_old, unsigned int end_old
   Output of same syntactical entities, but possible whitespace differences.
 
 */
-void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate) {
+void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate) {
 
   int begin_old = rbuf_old.last_output;
   int begin_new = rbuf_new.last_output;
