@@ -87,7 +87,7 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
 void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(operation == DELETE) {
 
     // may need to markup common that does not output common blocks
