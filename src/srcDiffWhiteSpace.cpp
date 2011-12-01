@@ -41,11 +41,7 @@ void output_white_space_nested(reader_state & rbuf_old
     for(; nend < nodes_new.size() && is_white_space(nodes_new.at(nend)); ++nend) {
     }
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
 
@@ -68,11 +64,7 @@ void output_white_space_statement(reader_state & rbuf_old, reader_state & rbuf_n
   if(nend < nodes_new.size() && is_new_line(nodes_new.at(nend)))
     ++nend;
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
 
@@ -92,7 +84,7 @@ void output_white_space_all(reader_state & rbuf_old
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
@@ -115,11 +107,7 @@ void output_white_space_pure_statement_end(reader_state & rbuf_old
     if(nend < nodes_new.size() && is_new_line(nodes_new.at(nend)))
       ++nend;
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
 
@@ -144,11 +132,7 @@ void output_white_space_match_most(reader_state & rbuf_old
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
 
@@ -172,11 +156,7 @@ void output_white_space_most(reader_state & rbuf_old
   if(rbuf_new.last_output < nend && (is_white_space(nodes_new.at(nend - 1)) && !is_new_line(nodes_new.at(nend - 1))))
     --nend;
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+  markup_whitespace(rbuf_old, oend, rbuf_new, nend, wstate);
 
 }
 

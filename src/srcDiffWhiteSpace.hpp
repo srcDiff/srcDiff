@@ -47,4 +47,6 @@ void advance_white_space_suffix(reader_state & rbuf_old
                                 , reader_state & rbuf_new
                                 , int & end_new);
 
+void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate);
+
 #endif
