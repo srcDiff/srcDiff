@@ -470,10 +470,11 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
                       , unsigned int start_new
                       , writer_state & wstate) {
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
+
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
 
