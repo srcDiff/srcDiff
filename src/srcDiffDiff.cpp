@@ -412,15 +412,10 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     if(matches->similarity == MIN) {
 
 
-      output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
-
-
-      markup_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
                         , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
                         , wstate);
-
-      output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
     } else if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
                            , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
