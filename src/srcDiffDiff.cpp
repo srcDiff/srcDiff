@@ -174,12 +174,12 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
         } else {
 
-            if(0 && is_nestable(node_sets_old->at(edits->offset_sequence_one)
+            if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
             , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
 
 	      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two), INSERT, wstate);
 
-            } else if(0 && is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
+            } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
             , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
@@ -431,12 +431,12 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
     } else {
 
-            if(0 && is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
+            if(is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
             , nodes_old, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), nodes_new)) {
 
 	      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), INSERT, wstate);
 
-            } else if(0 && is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
+            } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
             , nodes_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), nodes_old)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), DELETE, wstate);
