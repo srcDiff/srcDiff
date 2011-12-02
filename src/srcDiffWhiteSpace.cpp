@@ -275,6 +275,8 @@ void output_white_space_suffix(reader_state & rbuf_old
 
   }
 
+  if(opivot < oend) {
+
   // output common
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
@@ -282,6 +284,8 @@ void output_white_space_suffix(reader_state & rbuf_old
     output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
+
+  }
 
   rbuf_old.last_output = oend > (signed)rbuf_old.last_output ? oend : rbuf_old.last_output;
   rbuf_new.last_output = nend > (signed)rbuf_new.last_output ? nend : rbuf_new.last_output;
