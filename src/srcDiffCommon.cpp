@@ -38,10 +38,14 @@ void output_common(reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
-  // output common tag if needed
-  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+  if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
+    return;
+
+  // output common tag if needed
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
   // output common nodes
   markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
