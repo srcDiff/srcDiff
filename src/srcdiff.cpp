@@ -274,17 +274,17 @@ void output_help(const char* name) {
   printf("  --%-21s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
 
   printf("Examples:  \n"
-         "  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
-         "  " PROGRAM_NAME " m.cpp          (read from file m.cpp, write to standard output)\n"
-         "  " PROGRAM_NAME " m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
+         //"  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
+         "  " PROGRAM_NAME " m.cpp n.cpp              (compute difference of m.cpp and n.cpp, write to standard output)\n"
+         "  " PROGRAM_NAME " m.cpp n.cpp -o diff.cpp.xml (compute difference of m.cpp and n.cpp, write to file diff.cpp.xml)\n"
          "\n"
-         "  " PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n"
+         "  " PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n"
          "\n"
-         "  " PROGRAM_NAME " --directory=src --filename=m.cpp m.cpp -o m.cpp.xml "
-         "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
-         "  " PROGRAM_NAME " --src-encoding=UTF-8 m.cpp m.cpp.xml         "
-         "(encoding of input text file is UTF-8)\n"
-         "  " PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
+         "  " PROGRAM_NAME " --directory=src --filename=diff.cpp m.cpp n.cpp -o diff.cpp.xml "
+         "(element unit attributes dir \"src\", filename \"diff.cpp\")\n"
+         "  " PROGRAM_NAME " --src-encoding=UTF-8 m.cpp n.cpp -o diff.cpp.xml         "
+         "(encoding of input text files are UTF-8)\n"
+         "  " PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp n.cpp diff.cpp.xml    "
          "(set encoding of srcDiff file to ISO-8859-1)\n\n");
 
   printf("www.sdml.info\n"
