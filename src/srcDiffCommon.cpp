@@ -38,6 +38,8 @@ void output_common(reader_state & rbuf_old, unsigned int end_old
   unsigned int oend = end_old;
   unsigned int nend = end_new;
 
+  if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
+    return;
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
