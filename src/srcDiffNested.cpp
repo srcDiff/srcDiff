@@ -96,6 +96,10 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate) {
 
+  diff_type.value = change;
+  diff_old_start.properties = &diff_type;
+  diff_new_start.properties = &diff_type;
+      
   if(operation == DELETE) {
 
     // may need to markup common that does not output common blocks
@@ -221,6 +225,10 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     //markup_common(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
 
   }
+
+  diff_old_start.properties = 0;
+  diff_new_start.properties = 0;
+
 }
 
 /*
