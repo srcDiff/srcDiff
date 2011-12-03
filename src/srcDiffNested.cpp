@@ -19,6 +19,11 @@ extern xNode diff_old_end;
 extern xNode diff_new_start;
 extern xNode diff_new_end;
 
+// diff attribute
+xAttr diff_type = { 0 };
+const char * change = "change";
+const char * whitespace = "whitespace";
+
 // tags that can have something nested in them
 const char * block_types[] = { "if", 0 };
 //const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
