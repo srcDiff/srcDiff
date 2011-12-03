@@ -283,9 +283,9 @@ void output_help(const char* name) {
          "  " PROGRAM_NAME " --directory=src --filename=diff.cpp m.cpp n.cpp -o diff.cpp.xml "
          "(element unit attributes dir \"src\", filename \"diff.cpp\")\n"
          "  " PROGRAM_NAME " --src-encoding=UTF-8      m.cpp n.cpp -o diff.cpp.xml    "
-         "(encoding of input text files are UTF-8)\n"
+         "       (encoding of input text files are UTF-8)\n"
          "  " PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp n.cpp -o diff.cpp.xml    "
-         "(set encoding of srcDiff file to ISO-8859-1)\n\n");
+         "       (set encoding of srcDiff file to ISO-8859-1)\n\n");
 
   printf("www.sdml.info\n"
          "Report bugs to %s\n", EMAIL_ADDRESS);
