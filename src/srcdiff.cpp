@@ -206,9 +206,9 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s set the input source encoding to ENC (default:  %s)\n\n",
          SRC_ENCODING_FLAG_SHORT, SRC_ENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
-  printf("  -%c, --%-17s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+  //printf("  -%c, --%-17s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  -%c, --%-17s immediate output while parsing, default for keyboard input\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
+  //printf("  -%c, --%-17s immediate output while parsing, default for keyboard input\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
   printf("  -%c, --%-17s markup translation errors, namespace %s\n",
          DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
@@ -243,6 +243,7 @@ void output_help(const char* name) {
   printf("  --%-21s markup type modifiers, namespace \"%s\"\n",
          MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
+  /*
   printf("\nLine/Column Position:\n");
 
   printf("  --%-21s include line/column attributes, namespace \"%s\"\n",
@@ -250,6 +251,7 @@ void output_help(const char* name) {
 
   printf("  --%-21s set tabs NUMBER characters apart.  Default is %d\n",
          TABS_FLAG_FULL, 8);
+  */
 
   printf("\nPrefix Options:\n");
 
