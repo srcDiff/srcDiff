@@ -130,6 +130,8 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
       //diff_new_start.properties = &diff_type;
       
     output_change(rbuf_old, start_pos, rbuf_new, rbuf_new.last_output, wstate);
+
+    output_white_space_suffix(rbuf_old, rbuf_new, wstate);
     //for(unsigned int i = rbuf_old.last_output; i < start_pos; ++i)
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
     //rbuf_old.last_output = start_pos;
@@ -195,6 +197,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     //output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
     //rbuf_old.last_output = start_pos;
+    output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
