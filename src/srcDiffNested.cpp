@@ -96,11 +96,9 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate) {
 
-  if(operation == DELETE) {
+  output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
-    // may need to markup common that does not output common blocks
-    output_white_space_all(rbuf_old, rbuf_new, wstate);
-    //markup_common(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
+  if(operation == DELETE) {
 
     unsigned int start;
     unsigned int end;
@@ -164,10 +162,6 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     //markup_common(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
 
   } else {
-
-    // may need to markup common that does not output common blocks
-    output_white_space_all(rbuf_old, rbuf_new, wstate);
-    //markup_common(rbuf_old, structure_old->at(0), rbuf_new, rbuf_new.last_output, wstate);
 
     unsigned int start;
     unsigned int end;
