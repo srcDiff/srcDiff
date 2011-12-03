@@ -98,12 +98,12 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
-  if(operation == DELETE) {
+  unsigned int start;
+  //unsigned int end;
+  unsigned int start_pos;
+  unsigned int end_pos;
 
-    unsigned int start;
-    unsigned int end;
-    unsigned int start_pos;
-    unsigned int end_pos;
+  if(operation == DELETE) {
 
       for(start = 0; start < structure_old->size()
             && ((xmlReaderTypes)nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_END_ELEMENT
@@ -164,11 +164,6 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     //markup_common(rbuf_old, rbuf_old.last_output, rbuf_new, rbuf_new.last_output, wstate);
 
   } else {
-
-    unsigned int start;
-    unsigned int end;
-    unsigned int start_pos;
-    unsigned int end_pos;
 
       for(start = 0; start < structure_new->size()
             && ((xmlReaderTypes)nodes_new.at(structure_new->at(start))->type != XML_READER_TYPE_END_ELEMENT
