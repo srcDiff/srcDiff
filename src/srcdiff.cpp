@@ -160,7 +160,7 @@ void output_help(const char* name) {
   printf( "Usage: %s [options] <old_src_infile new_src_infile>... [-o <srcDiff_outfile>]\n\n"
 
           "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
-          "Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n"
+          //"Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n"
           "Multiple files are stored in a srcDiff archive.\n\n"
 
           "The source-code language is based on the file extension.  Additional extensions for a language\n"
