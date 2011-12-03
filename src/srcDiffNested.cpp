@@ -127,9 +127,9 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     // output diff tag begin
     //output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
-      diff_type.value = change;
-      diff_old_start.properties = &diff_type;
-      diff_new_start.properties = &diff_type;
+      //diff_type.value = change;
+      //diff_old_start.properties = &diff_type;
+      //diff_new_start.properties = &diff_type;
       
     output_change(rbuf_old, start_pos, rbuf_new, rbuf_new.last_output, wstate);
     //for(unsigned int i = rbuf_old.last_output; i < start_pos; ++i)
@@ -191,9 +191,9 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
       }
 
-      diff_type.value = change;
-      diff_old_start.properties = &diff_type;
-      diff_new_start.properties = &diff_type;
+      //diff_type.value = change;
+      //diff_old_start.properties = &diff_type;
+      //diff_new_start.properties = &diff_type;
 
 
     output_change(rbuf_old, rbuf_old.last_output, rbuf_new, start_pos, wstate);
@@ -231,8 +231,8 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   }
 
-  diff_old_start.properties = 0;
-  diff_new_start.properties = 0;
+  //diff_old_start.properties = 0;
+  //diff_new_start.properties = 0;
 
 }
 
