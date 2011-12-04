@@ -111,7 +111,9 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 
 
   if(strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr_stmt") != 0
-     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "decl_stmt") != 0)
+     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "decl_stmt") != 0
+     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0
+     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "init") != 0)
   return true;
 
   int olength = node_sets_old->at(start_old)->size();
