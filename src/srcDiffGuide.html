@@ -7,18 +7,11 @@
   </head>
   <body>
 
-    <h1>srcDiff Guide</h1>
+    <h1>General Guide to srcDiff</h1>
 
     <p>This is a general guide to the srcDiff format, both in generation
-      and querying.</p>
-
-    <p>The srcDiff format is an extension to srcML.  The namespace is:
-</p>
-<pre>
-http://www.sdml.info/srcDiff
-</pre>
-
-    <p>with a default prefix is <code>diff</code>.  The namespace
+      and querying.  The srcDiff format is an extension of srcML with the namespace
+      <code>http://www.sdml.info/srcDiff</code> and a default prefix is <code>diff</code>.  The namespace
     primarily consists of the elements:
 </p>
 
@@ -74,7 +67,7 @@ http://www.sdml.info/srcDiff
   format:
 </p>
 
-<pre>
+<pre style="text-align : center">
 srcdiff.exe v1\main.cpp v2\main.cpp -o main.cpp.xml
 </pre>
 
@@ -90,7 +83,7 @@ arguments, or by creating a file list.  The file list is in the
 following form:
 </p>
 
-<pre>
+<pre style="text-align : center">
 v1\main.cpp|v2\main.cpp
 v1\f.hpp|v2\f.hpp
 v1\f.cpp|v2\f.cpp
@@ -111,22 +104,42 @@ would allow someone to specify two tar files consisting of two
 different releases of a project.
 </p>
 
-<h3>srcDiff Queries</h3>
-
 <p>
-The srcDiff elements form an axis through the document.  These can be
-combined with the srcML elements in a query.  Here are a number of
-typical situations:
+Once in the srcDiff format, <code>srcml2src</code> can also be
+used to work with srcDiff files.  Many of the options can be applied
+to a particular version of the code using the new
+option <code>--revision</code> which allows the selection of the first or
+second version of the document.  To extract the first version of the
+code the command is:
 </p>
 
+<pre style="text-align : center">
+srcdiff.exe --revision 1 main.cpp.xml
+</pre
+
 <p>
-To find if a particular part of the code is deleted, we look at the
-srcDiff element that it is directly contained in, since the srcDiff
-elements may be nested.  For example, to find all deleted functions
-the query would be:
+This selection of the particular version in the srcDiff file for
+processing can be applied to almost all other options in srcml2src.
+For example, to extract all the code in the files from the first
+version the command is:
 </p>
 
-<pre>
+<pre style="text-align : center">
+srcdiff.exe --revision 1 --to-dir=. main.cpp.xml
+</pre
+
+<h3>Querying srcDiff</h3>
+
+<p>
+The srcDiff elements form a difference axis through the document,
+which can be combined with the srcML elements in a query.  To find if
+a particular part of the code is deleted, we look at the srcDiff
+element that it is directly contained in, since the srcDiff elements
+may be nested.  For example, to find all deleted functions the query
+would be:
+</p>
+
+<pre style="text-align : center">
 //src:function[ancestor::diff:*[1][self::diff:delete]]
 </pre>
 
@@ -137,7 +150,7 @@ resulting element is checked to see that it is a delete.  While the
 predicate may be verbose, it is actually computed quite efficiently
 since the XPath evaluator must keep track of any open elements.
 Finding inserted srcML can be done in a similar fashion by checking
-for a <code>self::diff:delete</code>.
+for a <code>self::diff:insert</code>.
 </p>
 
 <p>
@@ -147,19 +160,105 @@ example, to find all functions that contain deleted content the query
 would be:
 </p>
 
-<pre>
+<pre style="text-align : center">
 //src:function[descendant::diff:delete]
 </pre>
 
 <p>
 The predicate <code>descendant::diff:delete</code> finds
-the first containing srcDiff element in the reverse direction.  This
-resulting element is checked to see that it is a delete.  While the
-predicate may be verbose, it is actually computed quite efficiently
-since the XPath evaluator must keep track of any open elements.
-Finding inserted srcML can be done in a similar fashion by checking
-for a <code>self::diff:delete</code>.
+any delete that is inside the function.  In this case
+the predicate is much less verbose, but requires traversing the entire
+tree inside the src:function.
+Finding contained srcML can be done in a similar fashion with the predicate
+<code>descendant::diff:insert</code>.
 </p>
+
+<p>
+In order to make queries involving srcDiff more convenient and easier
+to use, a set of XPath extensions function has been created to
+hide much of these complexities.  These extension functions are directly
+available for use as in XPath queries and XSLT programs in the srcML
+tool <code>srcml2src</code>.  The definitions for them are included so
+they can also be used in other XPath tools.  The functions are
+used as predicates to filter the srcML content.
+</p>
+
+<table align="center">
+<tr>
+<th>Function</th><th>Description</th>
+</tr>
+
+<tr>
+<td style="vertical-align : top"><code>diff:deleted()</code></td><td>srcML was deleted<br/>
+  Equivalency:  <code>ancestor::diff:*[1][self::diff:delete]</code></td>
+</tr>
+
+<tr>
+<td style="vertical-align : top"><code>diff:inserted()</code></td><td>srcML was inserted<br/>
+Equivalency:  <code>ancestor::diff:*[1][self::diff:insert]</code></td>
+</tr>
+
+<tr>
+<td style="vertical-align : top"><code>diff:common()</code></td><td>srcML was common to
+  both versions<br/>
+Equivalency: <code>not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])</code>
+</td>
+</tr>
+
+<tr>
+<td style="vertical-align :
+  top"><code>diff:difference()</code></td><td>srcML was inserted or deleted<br/>
+Equivalency: <code>ancestor::diff:*[1][self::diff:insert or self::diff:delete]</code>
+</td>
+</tr>
+
+<tr>
+<td style="vertical-align :
+  top"><code>diff:changed()</code></td><td>srcML contains
+  content that were deleted and directly replaced by inserted source<br/>
+Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
+</td>
+</tr>
+
+<tr>
+<td style="vertical-align :
+  top"><code>diff:hasdelete()</code></td><td>srcML contains
+  content that was deleted<br/>
+  Equivalency:  <code>descendant::diff:delete[1]</code></td>
+</tr>
+
+<tr>
+<td style="vertical-align :
+           top"><code>diff:hasinsert()</code></td><td>srcML
+  contains content that was inserted<br/>
+Equivalency:  <code>descendant::diff:insert[1]</code></td>
+</tr>
+
+<tr>
+<td style="vertical-align :
+  top"><code>diff:hascommon()</code></td><td>srcML contains
+  content that are common to both versions<br/>
+  Equivalency: <code>self::*[not(descendant::diff:*) or descendant::diff:common]</code>
+</td>
+</tr>
+
+<tr>
+<td style="vertical-align :
+  top"><code>diff:hasdifference()</code></td><td>srcML contains
+  content that was deleted or inserted<br/>
+Equivalency: <code>descendant::diff:*[self::diff:insert or self::diff:delete]</code>
+</td>
+</tr>
+
+<tr>
+<td style="vertical-align :
+  top"><code>diff:haschange()</code></td><td>srcML contains
+  content that was deleted and directly replaced by inserted source<br/>
+Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
+</td>
+</tr>
+
+</table>
 
   </body>
 </html>
