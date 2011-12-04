@@ -197,12 +197,12 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
           if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
-
+            fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
             output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
 
           } else {
-
+            fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
             // syntax mismatch
             output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
                                       , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
@@ -457,17 +457,17 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                            , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
               && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-      if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
-                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
+      if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
+                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
 
-        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
-                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
+        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
+                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate);
 
       } else {
 
         // syntax mismatch
-        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1, wstate);
       }
 
     } else {
