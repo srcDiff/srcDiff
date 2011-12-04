@@ -120,7 +120,7 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   if(nlength > olength)
     max_length = nlength;
 
-  return 2 * similarity < max_length;
+  return 3 * similarity < max_length;
 
 }
 
