@@ -111,6 +111,8 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 
   return true;
 
+  compute_similarity(node_sets_old.at(start_old), node_sets_new.at(start_new);
+
 }
 
 /*
