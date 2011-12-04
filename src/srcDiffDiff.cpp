@@ -103,6 +103,16 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
 }
 
+bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                      , unsigned int start_old
+                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , unsigned int start_new
+                      , writer_state & wstate) {
+
+  return true;
+
+}
+
 /*
 
   Outputs diff on each level.  First, Common areas as well as inserts and deletes
@@ -169,8 +179,18 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
                         , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
            && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-          output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
-                           , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
+          if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
+                                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
+
+               output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
+                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
+
+             } else {
+
+              // syntax mismatch
+              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+             }
 
         } else {
 
