@@ -109,14 +109,18 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
                       , unsigned int start_new
                       , writer_state & wstate) {
 
-  return true;
+  //return true;
 
   int olength = node_sets_old->at(start_old)->size();
   int nlength = node_sets_new->at(start_new)->size();
 
   int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
-  return false;
+  int max_length = nlength;
+  if(nlength > olength)
+    max_length = nlength;
+
+  return 2 * similarity < max_length;
 
 }
 
