@@ -41,21 +41,21 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_s
     if(is_white_space(nodes.at(start)))
       continue;
 
-      //      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
-      //else
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
+    //      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
+    //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
+    //else
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
 
-      node_set.push_back(start);
+    node_set.push_back(start);
 
-      // opening tags
-      if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_ELEMENT
-         && !(nodes.at(start)->extra & 0x1))
-        ++is_open;
+    // opening tags
+    if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_ELEMENT
+       && !(nodes.at(start)->extra & 0x1))
+      ++is_open;
 
-      // closing tags
-      else if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_END_ELEMENT)
-        --is_open;
+    // closing tags
+    else if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_END_ELEMENT)
+      --is_open;
 
   }
 
@@ -104,10 +104,10 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 }
 
 bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate) {
+                     , unsigned int start_old
+                     , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                     , unsigned int start_new
+                     , writer_state & wstate) {
 
   //return true;
 
@@ -179,7 +179,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");
-      
+
       // 1-1
       if(edits->length == edit_next->length && edits->length == 1
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
@@ -191,37 +191,37 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
            && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
 
           if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
-                                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
+                             , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
 
-               output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
-                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
+            output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
+                             , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
 
-             } else {
+          } else {
 
-              // syntax mismatch
-              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
-             }
+            // syntax mismatch
+            output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+          }
 
         } else {
 
-            if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
-            , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
+          if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
+                         , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
 
-	      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two), INSERT, wstate);
+            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two), INSERT, wstate);
 
-            } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
-            , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
+          } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
+                                , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
-            , DELETE, wstate);
+                          , DELETE, wstate);
 
-            } else {
+          } else {
 
-              // syntax mismatch
-              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
-            }
+            // syntax mismatch
+            output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                                      , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+          }
 
         }
 
@@ -328,65 +328,65 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
   edit * edit_next = edit_script->next;
 
   if(edits->length > edit_next->length) {
-  for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
+    for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
-    // TODO: set to first or positive infinity or MAX_INT or whatever it is called
-    int min_similarity = 65535;
-    for(int pos = old_pos; pos < edits->length; ++pos) {
+      // TODO: set to first or positive infinity or MAX_INT or whatever it is called
+      int min_similarity = 65535;
+      for(int pos = old_pos; pos < edits->length; ++pos) {
 
-      int similarity = 0;
-      if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
-                                          , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
+        int similarity = 0;
+        if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
+                                            , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
 
-        old_pos = pos;
-        min_similarity = similarity;
+          old_pos = pos;
+          min_similarity = similarity;
+        }
+
       }
 
+      offset_pair * match = new offset_pair;
+      match->old_offset = old_pos;
+      match->new_offset = new_pos;
+      match->similarity = min_similarity;
+      match->next = NULL;
+
+      if(new_pos == 0)
+        *matches = match;
+      else
+        (*matches)->next = match;
+
     }
-
-    offset_pair * match = new offset_pair;
-    match->old_offset = old_pos;
-    match->new_offset = new_pos;
-    match->similarity = min_similarity;
-    match->next = NULL;
-
-    if(new_pos == 0)
-      *matches = match;
-    else
-      (*matches)->next = match;
-
-  }
 
   } else {
 
-  for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
+    for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
-    // TODO: set to first or positive infinity or MAX_INT or whatever it is called
-    int min_similarity = 65535;
-    for(int pos = new_pos; pos < edit_next->length; ++pos) {
+      // TODO: set to first or positive infinity or MAX_INT or whatever it is called
+      int min_similarity = 65535;
+      for(int pos = new_pos; pos < edit_next->length; ++pos) {
 
-      int similarity = 0;
-      if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
-                                          , node_sets_new->at(edit_next->offset_sequence_two + pos))) < min_similarity) {
+        int similarity = 0;
+        if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
+                                            , node_sets_new->at(edit_next->offset_sequence_two + pos))) < min_similarity) {
 
-        new_pos = pos;
-        min_similarity = similarity;
+          new_pos = pos;
+          min_similarity = similarity;
+        }
+
       }
 
+      offset_pair * match = new offset_pair;
+      match->old_offset = old_pos;
+      match->new_offset = new_pos;
+      match->similarity = min_similarity;
+      match->next = NULL;
+
+      if(old_pos == 0)
+        *matches = match;
+      else
+        (*matches)->next = match;
+
     }
-
-    offset_pair * match = new offset_pair;
-    match->old_offset = old_pos;
-    match->new_offset = new_pos;
-    match->similarity = min_similarity;
-    match->next = NULL;
-
-    if(old_pos == 0)
-      *matches = match;
-    else
-      (*matches)->next = match;
-
-  }
 
   }
 
@@ -445,44 +445,44 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
       output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
-                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
-                        , wstate);
+                    , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
+                    , wstate);
 
     } else if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
                            , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
               && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-          if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
-                                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
+      if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
+                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
 
-               output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
-                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
+        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
+                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
 
-             } else {
+      } else {
 
-              // syntax mismatch
-              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
-                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
-             }
+        // syntax mismatch
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
+      }
 
     } else {
 
-            if(is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
-            , nodes_old, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), nodes_new)) {
+      if(is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
+                     , nodes_old, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), nodes_new)) {
 
-	      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), INSERT, wstate);
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), INSERT, wstate);
 
-            } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
-            , nodes_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), nodes_old)) {
+      } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
+                            , nodes_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), nodes_old)) {
 
-            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), DELETE, wstate);
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), DELETE, wstate);
 
-            } else {
+      } else {
 
-              // syntax mismatch
-              output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
-                                        , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1, wstate);
-            }
+        // syntax mismatch
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1, wstate);
+      }
 
     }
 
@@ -529,11 +529,11 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
       = create_node_set(nodes_old, node_sets_old->at(start_old)->at(1)
-                                     , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
+                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
     std::vector<std::vector<int> *> next_node_set_new
       = create_node_set(nodes_new, node_sets_new->at(start_new)->at(1)
-                                     , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
+                        , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
