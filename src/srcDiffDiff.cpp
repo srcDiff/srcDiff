@@ -197,12 +197,12 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
           if(go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
-            fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
             output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
 
           } else {
-            fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
             // syntax mismatch
             output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one)->back() + 1
                                       , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)->back() + 1, wstate);
