@@ -6,25 +6,25 @@ src2srcml --literal --operator --modifier $2 -o $2.xml
 
 ../bin/srcdiff --literal --operator --modifier $1 $2 > temp;
 
-srcml2src  --diff 1 temp -o old;
-srcml2src --diff 2 temp -o new;
+srcml2src  --revision 1 temp -o old;
+srcml2src --revision 2 temp -o new;
 diff old $1;
 diff new $2
 
-srcml2src --xml --diff 1 temp -o old;
-srcml2src --xml --diff 2 temp -o new;
+srcml2src --xml --revision 1 temp -o old;
+srcml2src --xml --revision 2 temp -o new;
 diff old $1.xml;
 diff new $2.xml
 
 ../bin/srcdiff --literal --operator --modifier $2 $1 > temp;
 
-srcml2src  --diff 1 temp -o old;
-srcml2src --diff 2 temp -o new;
+srcml2src  --revision 1 temp -o old;
+srcml2src --revision 2 temp -o new;
 diff old $2;
 diff new $1
 
-srcml2src --xml --diff 1 temp -o old;
-srcml2src --xml --diff 2 temp -o new;
+srcml2src --xml --revision 1 temp -o old;
+srcml2src --xml --revision 2 temp -o new;
 diff old $2.xml;
 diff new $1.xml
 

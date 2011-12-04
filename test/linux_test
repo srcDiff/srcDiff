@@ -21,7 +21,7 @@ cat list | gxargs -I% -P 10 bash -c "../bin/srcdiff --literal --operator --modif
 #cat  files | gxargs -I% -P 10 bash -c "../bin/srcdiff --srcml old/%.1.xml new/%.1.xml > new/%.xml"
 
 
-#cat files | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 1 new/%.xml | cmp old/%.1.xml /dev/stdin"
-#cat files | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 2 new/%.xml | cmp new/%.1.xml /dev/stdin"
-#cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 1 new/%.xml | cmp old/%.1.xml /dev/stdin"
-#cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --diff 2 new/%.xml | cmp new/%.1.xml /dev/stdin"
+#cat files | gxargs -I% -P 10 bash -c "srcml2src --xml --revision 1 new/%.xml | cmp old/%.1.xml /dev/stdin"
+#cat files | gxargs -I% -P 10 bash -c "srcml2src --xml --revision 2 new/%.xml | cmp new/%.1.xml /dev/stdin"
+cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --revision 1 new/%.xml | cmp old/%.1.xml /dev/stdin"
+cat list | gxargs -I% -P 10 bash -c "srcml2src --xml --revision 2 new/%.xml | cmp new/%.1.xml /dev/stdin"
