@@ -109,7 +109,10 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
                      , unsigned int start_new
                      , writer_state & wstate) {
 
-  //return true;
+
+  if(strcmp(nodes_old.at(node_sets_old->at(start_old))->name, "expr_stmt")
+  != 0 && strcmp(nodes_old.at(node_sets_old->at(start_old))->name, "decl_stmt") != 0)
+  return true;
 
   int olength = node_sets_old->at(start_old)->size();
   int nlength = node_sets_new->at(start_new)->size();
