@@ -101,11 +101,21 @@ srcdiff.exe --files-from list.txt -o project.xml
 </pre>
 
 <p>
-The code for the input options to srcdiff are taken from the code in
+The code for the input options to <code>srcdiff</code> are taken from the code in
 src2srcml, and we expect to eventually be able to handle all the input variations
 of src2srcml in the srcdiff tool, e.g., input from tar archives.  This
 would allow someone to specify two tar files consisting of two
 different releases of a project.
+</p>
+
+<p>
+
+  <code>srcdiff</code> has an option <code>--method</code> that changes how differences are marked up. This
+  can be any number of things such as changing the granularity of the mark up.
+  Currently, only two methods <code>raw</code> and <code>collect</code> exist.  Both affect
+  source granularity mark up of expression and declaration statements. <code>raw</code>
+  produces very fine granularity and <code>collect</code> reduces the granularity.
+
 </p>
 
 <p>
