@@ -124,6 +124,20 @@ srcdiff.exe --method raw v1\main.cpp v2\main.cpp
 </pre>
 
 <p>
+  If v1\main.cpp contained <code>int n = a + b</code> and
+  v2\main.cpp contained <code>int m = c + d</code>.
+  <br/>
+  With <code>collect</code> the following is produced (srcML removed for brevity).
+  <br/>
+  <code>&lt;diff:delete type="change"&gt;int n = a + b;&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;int m = c + d;&lt;/diff:insert&gt;</code>
+  With <code>raw</code> the following would occur.
+  <br/>
+  
+</p>
+
+
+
+<p>
 Once in the srcDiff format, <code>srcml2src</code> can also be
 used to work with srcDiff files.  Many of the options can be applied
 to a particular version of the code using the new
