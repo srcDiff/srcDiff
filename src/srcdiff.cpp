@@ -873,6 +873,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
+      process_method(optarg, poptions) {
+
       break;
 
     case QUIET_FLAG_SHORT:
