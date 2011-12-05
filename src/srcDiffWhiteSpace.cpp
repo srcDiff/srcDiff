@@ -361,7 +361,7 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
 
     output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
     
-    for(unsigned int i = begin_old; i < ostart; ++i)
+    for(int i = begin_old; i < ostart; ++i)
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
     
     output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
