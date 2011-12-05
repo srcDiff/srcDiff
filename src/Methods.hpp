@@ -42,9 +42,6 @@ inline bool ismethod(OPTION_TYPE options, OPTION_TYPE flag) {
 }
 
 // @srcdiff
-const OPTION_TYPE OPTION_COLLECT       = ull(1) << 0;
-
-// @srcdiff
-const OPTION_TYPE OPTION_RAW       = ull(1) << 1;
+const OPTION_TYPE OPTION_RAW       = ull(1) << 0;
 
 #endif

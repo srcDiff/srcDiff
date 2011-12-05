@@ -361,6 +361,9 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
 
+// process_method
+int process_method(char * optarg, process_options & poptions);
+
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
 int main(int argc, char* argv[]) {
@@ -870,9 +873,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      if(strcmp(optarg, "verbose") == 0)
-	poptions.method |= 1;
-
       break;
 
     case QUIET_FLAG_SHORT:
@@ -1058,6 +1058,17 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
   return optind;
 }
+
+int process_method(char * optarg, process_options & poptions) {
+
+  if(strcmp(optarg, "collect") == 0)
+    poptions.method &= ~OPTION_RAW;
+
+  if(strcmp(optarg, "raw") == 0)
+    poptions.method |= OPTION_RAW;
+
+}
+
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int) {
