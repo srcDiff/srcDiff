@@ -41,9 +41,8 @@ inline bool ismethod(OPTION_TYPE options, OPTION_TYPE flag) {
   return (flag & options) > 0;
 }
 
-const char * COLLECT_METHOD = "collect";
-const char * RAW_METHOD = "raw";
-
+const char * const COLLECT_METHOD = "collect";
+const char * const RAW_METHOD = "raw";
 
 // @srcdiff
 const OPTION_TYPE OPTION_RAW       = ull(1) << 0;
