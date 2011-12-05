@@ -264,7 +264,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   rbuf_new.open_diff.push_back(&new_diff);
 
   // writer state
-  writer_state wstate = { 0 ];
+  writer_state wstate = { 0 };
   wstate.writer = writer;
 
   wstate.method = method;
