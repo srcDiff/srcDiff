@@ -41,6 +41,7 @@ class srcDiffTool {
 		  const char* xml_encoding,
 		  const char* srcml_filename,
 		  OPTION_TYPE global_options,
+		  OPTION_TYPE diff_options,
 		  const char* directory,
 		  const char* filename,
 		  const char* version,
@@ -75,6 +76,7 @@ void startUnit(const char * language,
   const char* xml_encoding;
   int language;
   OPTION_TYPE global_options;
+  OPTION_TYPE diff_options;
   const char** uri;
   int tabsize;
   xmlBuffer * output_srcml_file;

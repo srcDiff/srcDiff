@@ -527,6 +527,7 @@ int main(int argc, char* argv[]) {
                                poptions.xml_encoding,
                                poptions.srcdiff_filename,
                                options,
+			       poptions.method,
                                poptions.given_directory,
                                poptions.given_filename,
                                poptions.given_version,
