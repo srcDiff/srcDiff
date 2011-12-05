@@ -102,8 +102,8 @@ srcdiff.exe --files-from list.txt -o project.xml
 
 <p>
 The code for the input options to <code>srcdiff</code> is taken from the code in
-src2srcml, and we expect to eventually be able to handle all the input variations
-of src2srcml in the <code>srcdiff</code> tool, e.g., input from tar archives.  This
+<code>src2srcml</code>, and we expect to eventually be able to handle all the input variations
+of <code>src2srcml</code> in the <code>srcdiff</code> tool, e.g., input from tar archives.  This
 would allow someone to specify two tar files consisting of two
 different releases of a project.
 </p>
@@ -118,18 +118,18 @@ code the command is:
 </p>
 
 <pre style="text-align : center">
-srcdiff.exe --revision 1 main.cpp.xml
+srcml2src.exe --revision 1 main.cpp.xml
 </pre>
 
 <p>
 This selection of the particular version in the srcDiff file for
-processing can be applied to almost all other options in srcml2src.
+processing can be applied to almost all other options in <code>srcml2src</code>.
 For example, to extract all the code in the files from the first
 version to the current directory, the command is:
 </p>
 
 <pre style="text-align : center">
-srcdiff.exe --revision 1 --to-dir=. project.xml
+srcml2src.exe --revision 1 --to-dir=. project.xml
 </pre>
 
 <h3>Querying srcDiff</h3>
