@@ -280,8 +280,9 @@ void output_help(const char* name) {
   printf("srcDiff Method:\n");
 
   printf("  --%-21s select srcDiff granularity and markup methods\n", METHOD_FLAG);
+  printf();
 
-
+  printf("\n");
 
   printf("Examples:  \n"
          //"  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
@@ -1069,10 +1070,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 void process_method(char * optarg, process_options & poptions) {
 
-  if(strcmp(optarg, "collect") == 0)
+  if(strcmp(optarg, COLLECT_METHOD) == 0)
     poptions.method &= ~OPTION_RAW;
 
-  else if(strcmp(optarg, "raw") == 0)
+  else if(strcmp(optarg, RAW_METHOD) == 0)
     poptions.method |= OPTION_RAW;
 
   else {
