@@ -114,9 +114,14 @@ different releases of a project.
   can be any number of things such as changing the granularity of the mark up.
   Currently, only two methods <code>raw</code> and <code>collect</code> exist.  Both affect
   source granularity mark up of expression and declaration statements. <code>raw</code>
-  produces very fine granularity and <code>collect</code> reduces the granularity.
+  produces very fine granularity and <code>collect</code> reduces the granularity.  The default
+  is <code>collect</code>.  The command to change to use the raw method is:
 
 </p>
+
+<pre style="text-align : center">
+srcdiff.exe --method raw v1\main.cpp v2\main.cpp
+</pre>
 
 <p>
 Once in the srcDiff format, <code>srcml2src</code> can also be
