@@ -417,8 +417,8 @@ desired data.  For example, to find all conditions in deleted functions:
 
 <p>
 When querying srcDiff it is important to remember that unless
-specified, the result will include all the results, regardless if it
-was inserted, deleted, or unchanged.  The following will find if all
+specified, the result will include all elements, regardless if they
+were inserted, deleted, or unchanged.  The following will find if all
 inserted conditions inside of a function that is in common (i.e., the
 function was not inserted or deleted):
 </p>
@@ -426,6 +426,63 @@ function was not inserted or deleted):
 <pre style="text-align : center">
 //src:function[diff:common()]//src:condition[diff:deleted()]
 </pre>
+
+<p>
+More examples can be found in the following table:
+</p>
+
+<table align="center">
+<tr>
+<th>Query</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>Parameters deleted from function definitions:</td>
+<td>
+<pre>
+//src:function[diff:common()]//src:param[diff:deleted()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Parameters inserted to function definitions:</td>
+<td>
+<pre>
+//src:function[diff:common()]//src:param[diff:inserted()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Parameters which exist in both versions, but contain a change:</td>
+<td>
+<pre>
+//src:function[diff:common()]//src:param[diff:hasdifference()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Parameters whose name was changed:</td>
+<td>
+<pre>
+//src:function[diff:common()]//src:param[diff:common]/src:name[diff:hasdifference()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Parameters whose type was changed:</td>
+<td>
+<pre>
+//src:function[diff:common()]//src:param[diff:common]/src:type[diff:hasdifference()]
+</pre>
+</td>
+</tr>
+
+</table>
 
 <pre>
 
