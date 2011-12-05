@@ -30,9 +30,10 @@ struct reader_state {
 // stores information during xml Text Writer processing
 struct writer_state {
 
+  xmlTextWriterPtr writer;
+
   OPTION_TYPE & method;
 
-  xmlTextWriterPtr writer;
   std::vector<diff_set *> output_diff;
 
 };
