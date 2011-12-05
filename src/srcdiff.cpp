@@ -31,6 +31,7 @@
 #include "srcmlapps.hpp"
 #include "srcmlns.hpp"
 #include "Options.hpp"
+#include "Methods.hpp"
 #include "project.hpp"
 #include "Language.hpp"
 #include "srcMLTranslator.hpp"
