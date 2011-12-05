@@ -406,7 +406,7 @@ int main(int argc, char* argv[]) {
       0,
       DEFAULT_TABSIZE,
       { false, false, false, false, false, false },
-      0
+      OPTION_GROUP
     };
 
   // process command-line arguments

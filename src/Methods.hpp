@@ -47,4 +47,10 @@ const char * const RAW_METHOD = "raw";
 // @srcdiff
 const OPTION_TYPE OPTION_RAW       = ull(1) << 0;
 
+const char * const GROUP_DIFF_METHOD = "group-diff";
+const char * const NO_GROUP_DIFF_METHOD = "no-group-diff";
+
+// @srcdiff
+const OPTION_TYPE OPTION_GROUP       = ull(1) << 1;
+
 #endif
