@@ -868,7 +868,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      fprintf(stderr, "HERE:%s\n", optarg);
+      if(strcmp(optarg, "verbose") == 0)
+	poptions.method |= 1;
 
       break;
 
