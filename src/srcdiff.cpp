@@ -236,7 +236,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s set the version attribute to VER\n\n",
          SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
 
-  printf("Markup Extensions:\n");
+  printf("srcML Markup Extensions:\n");
 
   printf("  --%-21s markup literal values, namespace \"%s\"\n",
          LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
@@ -276,6 +276,12 @@ void output_help(const char* name) {
 
   printf("  --%-21s markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
   printf("  --%-21s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
+
+  printf("srcDiff Method:\n");
+
+  printf("  --%-21s select srcDiff granularity and markup methods\n", METHOD_FLAG);
+
+
 
   printf("Examples:  \n"
          //"  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
