@@ -1081,6 +1081,12 @@ void process_method(char * optarg, process_options & poptions) {
       else if(strcmp(method, RAW_METHOD) == 0)
         poptions.method |= OPTION_RAW;
 
+      else if(strcmp(method, NO_GROUP_METHOD) == 0)
+        poptions.method &= ~OPTION_GROUP;
+
+      else if(strcmp(method, GROUP_METHOD) == 0)
+        poptions.method |= OPTION_GROUP;
+
       else {
 
         fprintf(stderr, "Invalid argument to --method: '%s'\n", optarg);
