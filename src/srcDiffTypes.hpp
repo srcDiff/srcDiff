@@ -4,6 +4,7 @@
 #include <vector>
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
+#include <Options.hpp>
 
 #include "xmlrw.hpp"
 
@@ -28,6 +29,8 @@ struct reader_state {
 
 // stores information during xml Text Writer processing
 struct writer_state {
+
+  OPTION_TYPE & method;
 
   xmlTextWriterPtr writer;
   std::vector<diff_set *> output_diff;
