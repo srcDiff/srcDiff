@@ -280,7 +280,8 @@ void output_help(const char* name) {
   printf("srcDiff Method:\n");
 
   printf("  --%-21s select srcDiff granularity and markup methods\n", METHOD_FLAG);
-  printf();
+  printf("                            %s - collect adequately different statements/substatements", COLLECT_METHOD);
+  printf("                            %s - markup with fine granularity", COLLECT_METHOD);
 
   printf("\n");
 
