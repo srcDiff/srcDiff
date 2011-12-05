@@ -7,10 +7,9 @@
   </head>
   <body>
 
-    <h1>General Guide to srcDiff</h1>
+    <h2>General Guide to srcDiff</h2>
 
-    <p>This is a general guide to the srcDiff format, both in generation
-      and querying.  The srcDiff format is an extension of srcML with the namespace
+    <p>The srcDiff format is an extension of srcML with the namespace
       <code>http://www.sdml.info/srcDiff</code> and a default prefix is <code>diff</code>.  The namespace
     primarily consists of the elements:
 </p>
@@ -35,9 +34,9 @@
       versions contain all content that is in common, i.e., not
       contained in a srcDiff element, or is directly in
       a <code>&lt;diff:common&gt;</code> element.  The first version
-      additionally includes the contents of
-      the <code>&lt;diff:delete&gt;</code> element.  The second
-      version additionally includes the contents of
+      also includes the contents of
+      the <code>&lt;diff:delete&gt;</code> element, and the second
+      version also includes the contents of
       the <code>&lt;diff:insert&gt;</code> elements.
     </p>
 
@@ -48,7 +47,7 @@
     </p>
 
     <p>
-      srcDiff elements can include an attribute for special cases:
+      The srcDiff element uses the attribute <cite>type</cite> for special cases:
     </p>
 
     <ul>
@@ -83,7 +82,7 @@ arguments, or by creating a file list.  The file list is in the
 following form:
 </p>
 
-<pre style="text-align : center">
+<pre style="text-align : left">
 v1\main.cpp|v2\main.cpp
 v1\f.hpp|v2\f.hpp
 v1\f.cpp|v2\f.cpp
@@ -93,8 +92,13 @@ v1\f.cpp|v2\f.cpp
 Each pair of files is listed on a single line.  The two filenames are
 separated by a vertical bar '|'.  The filename attribute of the srcML
 element <code>&lt;unit&gt;</code> also contains both filenames
-separated in the same manner.
+separated in the same manner.  To build a srcDiff archive from the
+given file list the command is:
 </p>
+
+<pre style="text-align : center">
+srcdiff.exe --files-from list.txt -o project.xml
+</pre>
 
 <p>
 The code for the input options to srcdiff are taken from the code in
@@ -121,12 +125,12 @@ srcdiff.exe --revision 1 main.cpp.xml
 This selection of the particular version in the srcDiff file for
 processing can be applied to almost all other options in srcml2src.
 For example, to extract all the code in the files from the first
-version the command is:
+version to the current directory, the command is:
 </p>
 
 <pre style="text-align : center">
-srcdiff.exe --revision 1 --to-dir=. main.cpp.xml
-</pre
+srcdiff.exe --revision 1 --to-dir=. project.xml
+</pre>
 
 <h3>Querying srcDiff</h3>
 
@@ -212,12 +216,18 @@ Equivalency: <code>ancestor::diff:*[1][self::diff:insert or self::diff:delete]</
 </td>
 </tr>
 
+<!--
 <tr>
 <td style="vertical-align :
   top"><code>diff:changed()</code></td><td>srcML contains
   content that were deleted and directly replaced by inserted source<br/>
 Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
 </td>
+</tr>
+-->
+<tr>
+<td> <br/></td>
+<td> </td>
 </tr>
 
 <tr>
@@ -250,6 +260,7 @@ Equivalency: <code>descendant::diff:*[self::diff:insert or self::diff:delete]</c
 </td>
 </tr>
 
+<!--
 <tr>
 <td style="vertical-align :
   top"><code>diff:haschange()</code></td><td>srcML contains
@@ -257,8 +268,136 @@ Equivalency: <code>descendant::diff:*[self::diff:insert or self::diff:delete]</c
 Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
 </td>
 </tr>
+-->
 
 </table>
+
+<p>
+We will now show some examples of how srcDiff can be queried using the
+extension functions, or the equivalent direct XPath.
+</p>
+
+<table align="center">
+<tr>
+<th>Query</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>Deleted functions:</td>
+<td>
+<pre>
+//src:function[diff:deleted()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Inserted functions:</td>
+<td>
+<pre>
+//src:function[diff:inserted()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Common functions (in both versions):</td>
+<td>
+<pre>
+//src:function[diff:common()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Inserted or deleted functions:</td>
+<td>
+<pre>
+//src:function[diff:difference()]
+</pre>
+</td>
+</tr>
+
+<!--
+<tr>
+<td>Functions which were part of a insert or delete:</td>
+<td>
+<pre>
+//src:function[diff:changed()]
+</pre>
+</td>
+</tr>
+-->
+
+<tr>
+<td>Function which contains a delete:</td>
+<td>
+<pre>
+//src:function[diff:hasdelete()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Function which contains an insert:</td>
+<td>
+<pre>
+//src:function[diff:hasinsert()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Function which has content in common:</td>
+<td>
+<pre>
+//src:function[diff:hascommon()]
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Function contains inserts or deletes:</td>
+<td>
+<pre>
+//src:function[diff:hasdifference()]
+</pre>
+</td>
+</tr>
+
+</table>
+
+<p>
+The results of these queries can be further refined to give the
+desired data.  For example, to find all conditions in deleted functions:
+</p>
+
+<pre style="text-align : center">
+//src:function[diff:deleted()]//src:condition
+</pre>
+
+<p>
+When querying srcDiff it is important to remember that unless
+specified, the result will include all the results, regardless if it
+was inserted, deleted, or unchanged.  The following will find if all
+inserted conditions inside of a function that is in common (i.e., the
+function was not inserted or deleted):
+</p>
+
+<pre style="text-align : center">
+//src:function[diff:common()]//src:condition[diff:deleted()]
+</pre>
+
+<pre>
+
+
+
+
+
+
+
+</pre>
 
   </body>
 </html>
