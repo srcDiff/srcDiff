@@ -109,34 +109,6 @@ different releases of a project.
 </p>
 
 <p>
-
-  <code>srcdiff</code> has an option <code>--method</code> that changes how differences are marked up. This
-  can be any number of things such as changing the granularity of the mark up.
-  Currently, only two methods <code>raw</code> and <code>collect</code> exist.  Both affect
-  source granularity mark up of expression and declaration statements. <code>raw</code>
-  produces very fine granularity and <code>collect</code> reduces the granularity.  The default
-  is <code>collect</code>.  The command to change to use the raw method is:
-
-</p>
-
-<pre style="text-align : center">
-srcdiff.exe --method raw v1\main.cpp v2\main.cpp
-</pre>
-
-<!--
-<pre>
-  If v1\main.cpp contained <code>int n = a + b</code> and
-  v2\main.cpp contained <code>int m = c + d</code>.
-
-  With <code>collect</code> the following is produced (srcML removed for brevity):
-  <code>&lt;diff:delete type="change"&gt;int n = a + b;&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;int m = c + d;&lt;/diff:insert&gt;</code>
-
-  With <code>raw</code> the following would occur:
-  <code>int &lt;diff:delete type="change"&gt;n&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;m&lt;/diff:insert&gt; = &lt;diff:delete type="change"&gt;a&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;c&lt;/diff:insert&gt; + &lt;diff:delete type="change"&gt;b&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;d&lt;/diff:insert&gt;</code>
-</pre>
--->
-
-<p>
 Once in the srcDiff format, <code>srcml2src</code> can also be
 used to work with srcDiff files.  Many of the options can be applied
 to a particular version of the code using the new
@@ -481,6 +453,38 @@ More examples can be found in the following table:
 </tr>
 
 </table>
+
+<h2>srcDiff Markup Method</h2>
+
+<p>
+
+  <code>srcdiff</code> has an option <code>--method</code> that changes how differences are marked up. This
+  can be any number of things such as changing the granularity of the mark up.
+  Currently, only two methods <code>raw</code> and <code>collect</code> exist.  Both affect
+  source granularity mark up of expression and declaration statements. <code>raw</code>
+  produces very fine granularity and <code>collect</code> reduces the granularity.  The default
+  is <code>collect</code>.  The command to change to use the raw method is:
+
+</p>
+
+<pre style="text-align : center">
+srcdiff.exe --method raw v1\main.cpp v2\main.cpp
+</pre>
+
+<!--
+<pre>
+  If v1\main.cpp contained <code>int n = a + b</code> and
+  v2\main.cpp contained <code>int m = c + d</code>.
+
+  With <code>collect</code> the following is produced (srcML removed for brevity):
+  <code>&lt;diff:delete type="change"&gt;int n = a + b;&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;int m = c + d;&lt;/diff:insert&gt;</code>
+
+  With <code>raw</code> the following would occur:
+  <code>int &lt;diff:delete type="change"&gt;n&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;m&lt;/diff:insert&gt; = &lt;diff:delete type="change"&gt;a&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;c&lt;/diff:insert&gt; + &lt;diff:delete type="change"&gt;b&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;d&lt;/diff:insert&gt;</code>
+</pre>
+-->
+
+
 
 <pre>
 
