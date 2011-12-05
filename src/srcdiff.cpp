@@ -341,6 +341,7 @@ struct process_options
   const char* given_version;
   int tabsize;
   bool prefixchange[num_prefixes];
+  OPTION_TYPE method;
 };
 
 process_options* gpoptions = 0;
@@ -392,7 +393,8 @@ int main(int argc, char* argv[]) {
       0,
       0,
       DEFAULT_TABSIZE,
-      { false, false, false, false, false, false }
+      { false, false, false, false, false, false },
+      0
     };
 
   // process command-line arguments
