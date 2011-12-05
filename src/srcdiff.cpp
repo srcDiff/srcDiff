@@ -1071,7 +1071,7 @@ void process_method(char * optarg, process_options & poptions) {
 
   else {
 
-    fprintf(stderr, "Invalid argument '%s'\n", optarg);
+    fprintf(stderr, "Invalid argument to --method: '%s'\n", optarg);
     exit(STATUS_INVALID_ARGUMENT);
 
   }
