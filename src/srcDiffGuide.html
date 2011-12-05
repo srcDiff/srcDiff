@@ -454,55 +454,45 @@ More examples can be found in the following table:
 
 </table>
 
-<h2>srcDiff Markup Method</h2>
+<h2>srcDiff Difference Marking</h2>
 
 <p>
-
-  <code>srcdiff</code> has an option <code>--method</code> that changes how differences are marked up. This
-  can be any number of things such as changing the granularity of the mark up.
-  Currently, only two methods <code>raw</code> and <code>collect</code> exist.
-
+The addition of syntactic structure in differencing allows for more
+then one way to mark the same set of differences.  In order to allow
+for choices, <code>srcdiff</code> has the option <cite>--method</cite>
+that changes how differences are collected and grouped.  The two
+current methods are:
 </p>
 
 <p>
-
-  <code>collect</code> reduces the source mark up granularity of expression and declaration statements (default).
-  For example, a declaration with many individual internal changes will be marked up as a change to the entire declaration
-  statement (collected).
-
+<strong><code>raw</code></strong> marks each individual change down to
+  the name level.  For example, if only the change was inside of a
+  declaration where <code>int n = a + b;</code> became <code>int m = c
+  + d;</code>, then this would be marked as 3 individual changes:
+  'a'->'b', 'c'->'d', and 'b'->'d'.
 </p>
 
 <p>
-
-  <code>raw</code> increases the source mark up granularity of expression and declaration statements.
-  For example, a declaration with many individual internal changes will each be marked up separately.
-
+<strong><code>collect</code></strong> reduces the granularity of expression and declaration statements.
+  For example, if only the change was inside of a
+  declaration where <code>int n = a + b;</code> became <code>int m = c
+  + d;</code>, then this would be marked as one large change, 'int n =
+  a + b;'->'int m = c + d;'.  Note that single changes would still be
+  individually marked, e.g., 'a + b'->'c + d'.
 </p>
 
 <p>
-
-  The command to change to use the raw method is:
-
+The <code>collect</code> method is the default.  To use
+the <code>raw</code> method the command is:
 </p>
 
 <pre style="text-align : center">
-srcdiff.exe --method raw v1\main.cpp v2\main.cpp
+srcdiff.exe --method=raw v1\main.cpp v2\main.cpp
 </pre>
 
-<!--
-<pre>
-  If v1\main.cpp contained <code>int n = a + b</code> and
-  v2\main.cpp contained <code>int m = c + d</code>.
-
-  With <code>collect</code> the following is produced (srcML removed for brevity):
-  <code>&lt;diff:delete type="change"&gt;int n = a + b;&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;int m = c + d;&lt;/diff:insert&gt;</code>
-
-  With <code>raw</code> the following would occur:
-  <code>int &lt;diff:delete type="change"&gt;n&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;m&lt;/diff:insert&gt; = &lt;diff:delete type="change"&gt;a&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;c&lt;/diff:insert&gt; + &lt;diff:delete type="change"&gt;b&lt;/diff:delete&gt;&lt;diff:insert type="change"&gt;d&lt;/diff:insert&gt;</code>
-</pre>
--->
-
-
+<p>
+We believe this category may grow in the future.
+</p>
 
 <pre>
 
