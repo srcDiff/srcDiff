@@ -203,16 +203,16 @@ Equivalency:  <code>ancestor::diff:*[1][self::diff:insert]</code></td>
 </tr>
 
 <tr>
-<td style="vertical-align : top"><code>diff:common()</code></td><td>srcML was common to
-  both versions<br/>
-Equivalency: <code>not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])</code>
+<td style="vertical-align :
+  top"><code>diff:difference()</code></td><td>srcML was inserted or deleted<br/>
+Equivalency: <code>ancestor::diff:*[1][self::diff:insert or self::diff:delete]</code>
 </td>
 </tr>
 
 <tr>
-<td style="vertical-align :
-  top"><code>diff:difference()</code></td><td>srcML was inserted or deleted<br/>
-Equivalency: <code>ancestor::diff:*[1][self::diff:insert or self::diff:delete]</code>
+<td style="vertical-align : top"><code>diff:common()</code></td><td>srcML was common to
+  both versions<br/>
+Equivalency: <code>not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])</code>
 </td>
 </tr>
 
