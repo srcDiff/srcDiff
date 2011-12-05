@@ -1071,18 +1071,23 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 void process_method(char * optarg, process_options & poptions) {
 
-  if(strcmp(optarg, COLLECT_METHOD) == 0)
-    poptions.method &= ~OPTION_RAW;
+  char * option;
+  while((option = strsep(&option, ",") != NULL) {
 
-  else if(strcmp(optarg, RAW_METHOD) == 0)
-    poptions.method |= OPTION_RAW;
+      if(strcmp(optarg, COLLECT_METHOD) == 0)
+        poptions.method &= ~OPTION_RAW;
 
-  else {
+      else if(strcmp(optarg, RAW_METHOD) == 0)
+        poptions.method |= OPTION_RAW;
 
-    fprintf(stderr, "Invalid argument to --method: '%s'\n", optarg);
-    exit(STATUS_INVALID_ARGUMENT);
+      else {
 
-  }
+        fprintf(stderr, "Invalid argument to --method: '%s'\n", optarg);
+        exit(STATUS_INVALID_ARGUMENT);
+
+      }
+
+    }
 
 }
 
