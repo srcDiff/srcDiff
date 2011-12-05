@@ -470,11 +470,15 @@ More examples can be found in the following table:
 <p>
 
   <code>collect</code> reduces the source mark up granularity of expression and declaration statements (default).
+  For example, a declaration with many individual internal changes will be marked up as a change to the entire declaration
+  statement (collected).
+
 </p>
 
 <p>
 
   <code>raw</code> increases the source mark up granularity of expression and declaration statements.
+  For example, a declaration with many individual internal changes will each be marked up separately.
 
 </p>
 
