@@ -32,7 +32,7 @@ struct writer_state {
 
   xmlTextWriterPtr writer;
 
-  OPTION_TYPE & method;
+  OPTION_TYPE method;
 
   std::vector<diff_set *> output_diff;
 
