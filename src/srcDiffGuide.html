@@ -244,6 +244,14 @@ Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
 Equivalency:  <code>descendant::diff:insert[1]</code></td>
 </tr>
 
+<tr>
+<td style="vertical-align :
+  top"><code>diff:hasdifference()</code></td><td>srcML contains
+  content that was deleted or inserted<br/>
+Equivalency: <code>descendant::diff:*[self::diff:insert or self::diff:delete]</code>
+</td>
+</tr>
+
 <!--
 <tr>
 <td style="vertical-align :
@@ -253,14 +261,6 @@ Equivalency:  <code>descendant::diff:insert[1]</code></td>
 </td>
 </tr>
 -->
-
-<tr>
-<td style="vertical-align :
-  top"><code>diff:hasdifference()</code></td><td>srcML contains
-  content that was deleted or inserted<br/>
-Equivalency: <code>descendant::diff:*[self::diff:insert or self::diff:delete]</code>
-</td>
-</tr>
 
 <!--
 <tr>
