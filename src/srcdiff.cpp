@@ -111,6 +111,9 @@ const int OLD_FILENAME_FLAG_CODE = 256 + 8;
 const char* const RECURSIVE_FLAG = "recursive";
 const int RECURSIVE_FLAG_CODE = 256 + 9;
 
+const char* const METHOD_FLAG = "method";
+const int METHOD_FLAG_CODE = 256 + 10;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
