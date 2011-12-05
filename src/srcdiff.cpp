@@ -1071,8 +1071,9 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 void process_method(char * optarg, process_options & poptions) {
 
+  char * methods = strdup(optarg);
   char * method;
-  while((method = strsep(&optarg, ",")) != NULL) {
+  while((method = strsep(&methods, ",")) != NULL) {
 
       if(strcmp(method, COLLECT_METHOD) == 0)
         poptions.method &= ~OPTION_RAW;
@@ -1088,6 +1089,8 @@ void process_method(char * optarg, process_options & poptions) {
       }
 
     }
+
+  free(methods);
 
 }
 
