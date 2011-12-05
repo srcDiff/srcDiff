@@ -22,8 +22,8 @@
   Options for translation output.
 */
 
-#ifndef INCLUDED_OPTION_HPP
-#define INCLUDED_OPTION_HPP
+#ifndef INCLUDED_METHOD_HPP
+#define INCLUDED_METHOD_HPP
 
 #ifdef __GNUC__
   typedef unsigned long long OPTION_TYPE;
@@ -37,12 +37,14 @@
 #define ull(a) a##i64
 #endif
 
-inline bool isoption(OPTION_TYPE options, OPTION_TYPE flag) {
+inline bool ismethod(OPTION_TYPE options, OPTION_TYPE flag) {
   return (flag & options) > 0;
 }
 
-// 
 // @srcdiff
-const OPTION_TYPE OPTION_DEBUG       = ull(1) << 0;
+const OPTION_TYPE OPTION_COLLECT       = ull(1) << 0;
+
+// @srcdiff
+const OPTION_TYPE OPTION_RAW       = ull(1) << 1;
 
 #endif
