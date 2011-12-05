@@ -159,11 +159,13 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
       // whitespace delete
       // output diff tag
 
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+      for(; i < oend && is_white_space(nodes_old.at(i)); ++i)
+        output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
 
       // output diff tag
       output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
+      --i;
       --j;
 
     } else if(is_white_space(nodes_new.at(j))) {
@@ -172,12 +174,14 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
       //whitespace insert
       // output diff tag
 
-      output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
+      for(; j < nend && is_white_space(nodes_new.at(j)); ++j)
+        output_node(rbuf_old, rbuf_new, nodes_new.at(j), INSERT, wstate);
 
       // output diff tag
       output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
       --i;
+      --j;
 
     } else if(is_text(nodes_old.at(i)) && is_text(nodes_new.at(j))) {
 
