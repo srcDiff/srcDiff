@@ -2,7 +2,7 @@
 
 char * strndup(const char * s1, size_t n) {
 
-  char * dest = (char *)malloc(n * sizeof(char) + 1);
+  char * dest = (char *)malloc((n + 1) * sizeof(char));
 
   memcpy(dest, s1, n);
 
