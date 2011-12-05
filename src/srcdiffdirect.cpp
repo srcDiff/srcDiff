@@ -52,7 +52,7 @@ int main(int argc, char * argv[]) {
   filename += "|";
   filename += argv[2];
 
-  srcDiffTool translator = srcDiffTool(language, 0, "UTF-8", srcdiff_file, options, 0, 0, 0, uri, 8);
+  srcDiffTool translator = srcDiffTool(language, 0, "UTF-8", srcdiff_file, options, 0, 0, 0, 0, uri, 8);
   translator.translate(argv[1], argv[2], options, 0, filename.c_str(), 0, language);
 
   return 0;
