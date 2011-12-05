@@ -1081,10 +1081,10 @@ void process_method(char * optarg, process_options & poptions) {
       else if(strcmp(method, RAW_METHOD) == 0)
         poptions.method |= OPTION_RAW;
 
-      else if(strcmp(method, NO_GROUP_METHOD) == 0)
+      else if(strcmp(method, NO_GROUP_DIFF_METHOD) == 0)
         poptions.method &= ~OPTION_GROUP;
 
-      else if(strcmp(method, GROUP_METHOD) == 0)
+      else if(strcmp(method, GROUP_DIFF_METHOD) == 0)
         poptions.method |= OPTION_GROUP;
 
       else {
