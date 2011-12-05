@@ -75,7 +75,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
                          const char* xml_encoding,    // xml encoding of result srcML file
                          const char* srcdiff_filename,  // filename of result srcDiff file
                          OPTION_TYPE global_options,             // many and varied options
-			 OPTION_TYPE diff_options,
+			 OPTION_TYPE method,
                          const char* directory,       // root unit directory
                          const char* filename,        // root unit filename
                          const char* version,         // root unit version
@@ -84,7 +84,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
                          )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), uri(uri), tabsize(tabsize)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize)
 {
 
   diff.prefix = uri[7];
