@@ -1066,8 +1066,12 @@ void process_method(char * optarg, process_options & poptions) {
   if(strcmp(optarg, "collect") == 0)
     poptions.method &= ~OPTION_RAW;
 
-  if(strcmp(optarg, "raw") == 0)
+  else if(strcmp(optarg, "raw") == 0)
     poptions.method |= OPTION_RAW;
+
+  else
+    exit(STATUS_INVALID_ARGUMENT);
+  
 
 }
 
