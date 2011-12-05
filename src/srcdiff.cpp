@@ -657,6 +657,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
+    { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -858,6 +859,15 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case RECURSIVE_FLAG_CODE:
       options |= OPTION_RECURSIVE;
+      break;
+
+    case METHOD_FLAG_CODE:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      fprintf(stderr, "HERE:%s\n", optarg);
+
       break;
 
     case QUIET_FLAG_SHORT:
