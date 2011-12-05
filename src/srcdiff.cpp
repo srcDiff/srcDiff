@@ -1069,9 +1069,10 @@ void process_method(char * optarg, process_options & poptions) {
   else if(strcmp(optarg, "raw") == 0)
     poptions.method |= OPTION_RAW;
 
-  else
+  else {
+    fprintf(stderr, "Invalid argument '%s'", optarg);
     exit(STATUS_INVALID_ARGUMENT);
-  
+  }
 
 }
 
