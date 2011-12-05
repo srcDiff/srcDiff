@@ -247,7 +247,7 @@ Equivalency:  <code>descendant::diff:insert[1]</code></td>
 <tr>
 <td style="vertical-align :
   top"><code>diff:hascommon()</code></td><td>srcML contains
-  content that are common to both versions<br/>
+  content that are common to both versions (assumes surrounding context is common)<br/>
   Equivalency: <code>self::*[not(descendant::diff:*) or descendant::diff:common]</code>
 </td>
 </tr>
@@ -349,7 +349,7 @@ extension functions, or the equivalent direct XPath.
 </tr>
 
 <tr>
-<td>Function which has content in common:</td>
+<td>Function which has content in common (assumes deleted and inserted functions are filtered out):</td>
 <td>
 <pre>
 //src:function[diff:hascommon()]
