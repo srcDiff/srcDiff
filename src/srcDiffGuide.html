@@ -10,7 +10,7 @@
     <h2>General Guide to srcDiff</h2>
 
     <p>The srcDiff format is an extension of srcML with the namespace
-      <code>http://www.sdml.info/srcDiff</code> and a default prefix is <code>diff</code>.  The namespace
+      <code>http://www.sdml.info/srcDiff</code> and the default prefix is <code>diff</code>.  The namespace
     primarily consists of the elements:
 </p>
 
@@ -220,7 +220,7 @@ Equivalency: <code>ancestor::diff:*[1][self::diff:insert or self::diff:delete]</
 <tr>
 <td style="vertical-align :
   top"><code>diff:changed()</code></td><td>srcML contains
-  content that were deleted and directly replaced by inserted source<br/>
+  content that was deleted and directly replaced by inserted source<br/>
 Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
 </td>
 </tr>
