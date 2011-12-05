@@ -362,7 +362,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
 int process_args(int argc, char* argv[], process_options & poptions);
 
 // process_method
-int process_method(char * optarg, process_options & poptions);
+void process_method(char * optarg, process_options & poptions);
 
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
@@ -873,7 +873,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      process_method(optarg, poptions) {
+      process_method(optarg, poptions);
 
       break;
 
@@ -1061,7 +1061,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
   return optind;
 }
 
-int process_method(char * optarg, process_options & poptions) {
+void process_method(char * optarg, process_options & poptions) {
 
   if(strcmp(optarg, "collect") == 0)
     poptions.method &= ~OPTION_RAW;

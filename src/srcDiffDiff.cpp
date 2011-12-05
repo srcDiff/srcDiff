@@ -8,6 +8,7 @@
 #include "srcDiffNested.hpp"
 
 #include <string.h>
+#include "Methods.hpp"
 
 // global structures defined in main
 extern std::vector<xNode *> nodes_old;
