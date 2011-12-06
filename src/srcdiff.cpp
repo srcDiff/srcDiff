@@ -1737,6 +1737,15 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
 
       char * separator = strchr(file_one, '|');
 
+      // remove any end whitespace
+      // TODO:  Extract function, and use elsewhere
+      for (char* p = separator- 1; p != file_one; --p) {
+        if (isspace(*p))
+          *p = 0;
+        else
+          break;
+      }
+
       showinput = true;
 
       *separator = 0;
@@ -1744,6 +1753,15 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
       char * file_two = separator + 1;
         
       file_two += strspn(file_two, " \t\f");
+
+      // remove any end whitespace
+      // TODO:  Extract function, and use elsewhere
+      for (char* p = file_two + strlen(file_two) - 1; p != file_two; --p) {
+        if (isspace(*p))
+          *p = 0;
+        else
+          break;
+      }
 
       std::string filename = file_one;
       filename += "|";
