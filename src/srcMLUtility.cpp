@@ -36,14 +36,26 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
   srcMLTranslator translator(language, output_buffer, options);
   //srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
 
+  try {
+
   // set input file (must be done)
   translator.setInput(filename);
 
+
   // translate file
   translator.translate(filename, directory, filename, version, language);
+  } catch(...) {
 
   // close the input file
   translator.close();
+
+  throw FileError();
+
+  }
+
+  // close the input file
+  translator.close();
+
 }
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new) {

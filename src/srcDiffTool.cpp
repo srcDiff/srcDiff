@@ -195,8 +195,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   }
 
-  xmlBufferEmpty(output_srcml_file);
-
   xmlFreeTextReader(reader_old);
 
   // group nodes
@@ -207,6 +205,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     fprintf(stderr, "Unable to open file '%s'\n", path_one);
     
   }
+
+  xmlBufferEmpty(output_srcml_file);
 
   /*
 
