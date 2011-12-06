@@ -338,6 +338,8 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
+  struct offset_pair * curmatch;
+
   if(edits->length > edit_next->length) {
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
@@ -361,11 +363,14 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       match->similarity = min_similarity;
       match->next = NULL;
 
-      if(new_pos == 0)
-        *matches = match;
-      else
-        (*matches)->next = match;
+      if(new_pos == 0) {
 
+        *matches = match;
+        curmatch = match;
+
+      } else {
+        curmatch->next = match;
+      }
     }
 
   } else {
@@ -386,17 +391,23 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
+
       offset_pair * match = new offset_pair;
       match->old_offset = old_pos;
       match->new_offset = new_pos;
       match->similarity = min_similarity;
       match->next = NULL;
 
-      if(old_pos == 0)
-        *matches = match;
-      else
-        (*matches)->next = match;
+      if(old_pos == 0) {
 
+        *matches = match;
+        curmatch = match;
+
+      } else {
+        curmatch->next = match;
+      }
     }
 
   }
@@ -429,7 +440,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
@@ -443,6 +454,8 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   offset_pair * matches_save = matches;
 
   for(; matches; matches = matches->next) {
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))->name);
 
     // output diffs until match
     output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old,
@@ -462,7 +475,6 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     } else if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
                            , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
               && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
-
       if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                          , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
 
