@@ -131,7 +131,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
 
   if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", srcdiff_filename);
+    fprintf(stderr, "Unable to open file '%s' as XML\n", srcdiff_filename);
 
     exit(1);
   }
@@ -174,7 +174,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   if (reader_old == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", path_one);
+    fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
 
     exit(1);
   }
@@ -205,7 +205,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   } catch(...) {
 
-    fprintf(stderr, "Unable to open file '%s'", path_one);
+    fprintf(stderr, "Unable to open file '%s'\n", path_one);
     
   }
 
@@ -224,7 +224,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   } catch(...) {
 
-    fprintf(stderr, "Unable to open file '%s'", path_two);
+    fprintf(stderr, "Unable to open file '%s'\n", path_two);
     
   }
 
@@ -233,7 +233,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   if (reader_new == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", path_two);
+    fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
 
     exit(1);
   }
