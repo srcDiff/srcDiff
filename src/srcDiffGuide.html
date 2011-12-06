@@ -475,16 +475,16 @@
       the name level.  For example, if only the change was inside of a
       declaration where <code>int n = a + b;</code> became <code>int m = c
         + d;</code>, then this would be marked as 3 individual changes:
-      'a'->'b', 'c'->'d', and 'b'->'d'.
+      <code>'a'->'b'</code>, <code>'c'->'d'</code>, and <code>'b'->'d'</code>.
     </p>
 
     <p>
       <strong><code>collect</code></strong> reduces the granularity of expression and declaration statements.
       For example, if only the change was inside of a
       declaration where <code>int n = a + b;</code> became <code>int m = c
-        + d;</code>, then this would be marked as one large change, 'int n =
-      a + b;'->'int m = c + d;'.  Note that single changes would still be
-      individually marked, e.g., 'a + b'->'c + d'.
+        + d;</code>, then this would be marked as one large change, <code>'int n =
+      a + b;'->'int m = c + d;'</code>.  Note that single changes would still be
+      individually marked, e.g., <code>'a + b'->'c + d'</code>.
     </p>
 
     <p>
