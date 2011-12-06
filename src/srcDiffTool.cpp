@@ -344,37 +344,15 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   } else if(nodes_old.empty()) {
 
-    if(isoption(global_options, OPTION_NESTED)) {
-
-    outputNode(diff_new_start, wstate.writer);
-    update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
-    update_diff_stack(rbuf_new.open_diff, unit_new, INSERT);
-    update_diff_stack(wstate.output_diff, unit_new, INSERT);
-
-    } else {
-
     update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
     update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
     update_diff_stack(wstate.output_diff, unit_new, COMMON);
 
-    }
-
   } else {
-
-    if(isoption(global_options, OPTION_NESTED)) {
-
-    outputNode(diff_old_start, wstate.writer);
-    update_diff_stack(rbuf_old.open_diff, unit_old, DELETE);
-    update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
-    update_diff_stack(wstate.output_diff, unit_old, DELETE);
-
-    } else {
 
     update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
     update_diff_stack(wstate.output_diff, unit_old, COMMON);
-
-    }
 
   }
 
@@ -402,17 +380,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   if(isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(writer);
-
-    if(nodes_old.empty()) {
-
-    outputNode(diff_new_end, wstate.writer);
-      
-    } else if(nodes_new.empty()) {
-
-    outputNode(diff_old_end, wstate.writer);
-
-    }
-
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
 
   }
