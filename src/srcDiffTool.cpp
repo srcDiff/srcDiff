@@ -338,6 +338,24 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
     update_diff_stack(wstate.output_diff, unit_old, COMMON);
 
+  } else if(nodes_old.empty() && nodes_new.empty()) {
+
+    update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
+    update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
+    update_diff_stack(wstate.output_diff, &diff_common_start, COMMON);
+
+  } else if(nodes_old.empty()) {
+
+    update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
+    update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
+    update_diff_stack(wstate.output_diff, unit_new, COMMON);
+
+  } else {
+
+    update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
+    update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
+    update_diff_stack(wstate.output_diff, unit_old, COMMON);
+
   }
 
   // run on file level
