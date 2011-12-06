@@ -166,30 +166,16 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   translate_to_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options, unit_directory, path_one, unit_version, 0, 8);
 
-  } catch(...) {
-
-    fprintf(stderr, "Unable to open file '%s'", path_one);
-    
-  }
-
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_old == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", path_one);
+    fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
 
     exit(1);
   }
 
-  // read to unit
-  xmlTextReaderRead(reader_old);
 
-  xNodePtr unit_old = getRealCurrentNode(reader_old);
-
-  // Read past unit tag open
-  int is_old = xmlTextReaderRead(reader_old);
-
-  // collect if non empty files
   xNodePtr unit_end = NULL;
   if(is_old) {
 
@@ -202,8 +188,15 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   xmlFreeTextReader(reader_old);
 
+
   // group nodes
   std::vector<std::vector<int> *> node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
+
+  } catch(...) {
+
+    fprintf(stderr, "Unable to open file '%s'\n", path_one);
+    
+  }
 
   /*
 
@@ -219,18 +212,12 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     translate_to_srcML(language, src_encoding,  xml_encoding, output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
 
-  } catch(...) {
-
-    fprintf(stderr, "Unable to open file '%s'", path_two);
-    
-  }
-
   // create the reader for the new file
   reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_new == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML", path_two);
+    fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
 
     exit(1);
   }
@@ -256,6 +243,12 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xmlFreeTextReader(reader_new);
 
   std::vector<std::vector<int> *> node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
+
+  } catch(...) {
+
+    fprintf(stderr, "Unable to open file '%s'\n", path_two);
+    
+  }
 
   /*
 
