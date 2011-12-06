@@ -136,9 +136,6 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     exit(1);
   }
 
-  if(!isoption(global_options, OPTION_XMLDECL))
-    xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
-
   output_srcml_file = xmlBufferCreate();
 
 }
@@ -320,6 +317,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   } else {
   */
+
   // create srcdiff unit
   //xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
@@ -341,6 +339,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
     update_diff_stack(wstate.output_diff, &diff_common_start, COMMON);
+
+    return;
 
   } else if(nodes_old.empty()) {
 
@@ -437,6 +437,9 @@ void srcDiffTool::startUnit(const char * language,
                             xmlTextWriterPtr writer) {
 
   static int depth = 0;
+
+  if(depth == 0 && !isoption(global_options, OPTION_XMLDECL))
+    xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   // start of main tag
   std::string maintag = uri[0];
