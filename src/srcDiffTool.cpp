@@ -200,8 +200,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xmlFreeTextReader(reader_old);
 
   // group nodes
-  create_node_set(nodes_old, 0, nodes_old.size());
-
+  node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
 
   } catch(...) {
 
