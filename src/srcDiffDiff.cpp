@@ -394,9 +394,6 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
-
       offset_pair * match = new offset_pair;
       match->old_offset = old_pos;
       match->new_offset = new_pos;
@@ -446,7 +443,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
@@ -460,8 +457,6 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   offset_pair * matches_save = matches;
 
   for(; matches; matches = matches->next) {
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->name);
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))->name);
 
     // output diffs until match
     output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + last_old,
