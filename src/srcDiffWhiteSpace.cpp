@@ -242,9 +242,9 @@ void output_white_space_suffix(reader_state & rbuf_old
 
   //if(ostart < opivot && nstart < npivot) {
 
-  diff_type.value = whitespace;
-  diff_old_start.properties = &diff_type;
-  diff_new_start.properties = &diff_type;
+  //diff_type.value = whitespace;
+  //diff_old_start.properties = &diff_type;
+  //diff_new_start.properties = &diff_type;
 
   //}
 
