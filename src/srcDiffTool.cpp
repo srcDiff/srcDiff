@@ -370,6 +370,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     } else {
 
+    update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
+    update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
+    update_diff_stack(wstate.output_diff, unit_old, COMMON);
+
     }
 
   }
@@ -392,7 +396,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   free_node_sets(node_set_old);
   free_node_sets(node_set_new);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // } 
 
   if(isoption(global_options, OPTION_NESTED)) {
