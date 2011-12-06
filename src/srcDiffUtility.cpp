@@ -21,6 +21,19 @@ const void * node_set_index(int idx, const void *s) {
   return node_sets[idx];
 }
 
+const void * node_index(int idx, const void *s) {
+  std::vector<int> & node_set = *(std::vector<int> *)s;
+  return &node_set[idx];
+}
+
+int node_index_compare(const void * node1, const void * node2) {
+
+  int a;
+  int b;
+
+}
+
+
 bool attribute_compare(xAttr * attr1, xAttr * attr2) {
 
   xAttr * attr_old = attr1;

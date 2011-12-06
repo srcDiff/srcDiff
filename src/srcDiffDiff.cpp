@@ -85,7 +85,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
-v        collect_entire_tag(nodes, *node_set, i);
+        collect_entire_tag(nodes, *node_set, i);
 
       } else {
 
