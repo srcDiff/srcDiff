@@ -162,8 +162,16 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xmlTextReaderPtr reader_old = NULL;
 
   // translate file one
-  //translate_to_srcML(path_one, 0, 0, output_srcml_file);
+  try {
+
   translate_to_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options, unit_directory, path_one, unit_version, 0, 8);
+
+  } catch(...) {
+
+    fprintf(stderr, "Unable to open file '%s'", path_one);
+    
+  }
+
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
   if (reader_old == NULL) {
@@ -206,8 +214,16 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xmlTextReaderPtr reader_new = NULL;
 
   // translate file two
-  //translate_to_srcML(path_two, 0, 0, output_srcml_file);
-  translate_to_srcML(language, src_encoding,  xml_encoding, output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
+
+  try {
+
+    translate_to_srcML(language, src_encoding,  xml_encoding, output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
+
+  } catch(...) {
+
+    fprintf(stderr, "Unable to open file '%s'", path_two);
+    
+  }
 
   // create the reader for the new file
   reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
