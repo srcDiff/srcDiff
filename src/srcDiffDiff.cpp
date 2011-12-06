@@ -196,7 +196,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
                         , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
            && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-          if(ismethod(wstate.method, OPTION_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
+          if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
 
             output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
@@ -458,7 +458,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                            , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
               && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-      if(ismethod(wstate.method, OPTION_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
+      if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                          , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
 
         output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset

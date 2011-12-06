@@ -6,6 +6,8 @@
 #include <libxml/xmlwriter.h>
 #include <Options.hpp>
 
+#include "Methods.hpp"
+
 #include "xmlrw.hpp"
 
 struct diff_set {
@@ -32,7 +34,7 @@ struct writer_state {
 
   xmlTextWriterPtr writer;
 
-  OPTION_TYPE method;
+  METHOD_TYPE method;
 
   std::vector<diff_set *> output_diff;
 

@@ -26,9 +26,9 @@
 #define INCLUDED_METHOD_HPP
 
 #ifdef __GNUC__
-  typedef unsigned long long OPTION_TYPE;
+  typedef unsigned long long METHOD_TYPE;
 #else
-  typedef unsigned __int64 OPTION_TYPE;
+  typedef unsigned __int64 METHOD_TYPE;
 #endif
 
 #ifdef __GNUC__
@@ -37,7 +37,7 @@
 #define ull(a) a##i64
 #endif
 
-inline bool ismethod(OPTION_TYPE options, OPTION_TYPE flag) {
+inline bool ismethod(METHOD_TYPE options, METHOD_TYPE flag) {
   return (flag & options) > 0;
 }
 
@@ -45,12 +45,12 @@ const char * const COLLECT_METHOD = "collect";
 const char * const RAW_METHOD = "raw";
 
 // @srcdiff
-const OPTION_TYPE OPTION_RAW       = ull(1) << 0;
+const OPTION_TYPE METHOD_RAW       = ull(1) << 0;
 
 const char * const GROUP_DIFF_METHOD = "group-diff";
 const char * const NO_GROUP_DIFF_METHOD = "no-group-diff";
 
 // @srcdiff
-const OPTION_TYPE OPTION_GROUP       = ull(1) << 1;
+const OPTION_TYPE METHOD_GROUP       = ull(1) << 1;
 
 #endif

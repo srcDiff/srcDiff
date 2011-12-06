@@ -350,7 +350,7 @@ struct process_options
   const char* given_version;
   int tabsize;
   bool prefixchange[num_prefixes];
-  OPTION_TYPE method;
+  METHOD_TYPE method;
 };
 
 process_options* gpoptions = 0;
@@ -1076,16 +1076,16 @@ void process_method(char * optarg, process_options & poptions) {
   while((method = strsep(&methods, ",")) != NULL) {
 
       if(strcmp(method, COLLECT_METHOD) == 0)
-        poptions.method &= ~OPTION_RAW;
+        poptions.method &= ~METHOD_RAW;
 
       else if(strcmp(method, RAW_METHOD) == 0)
-        poptions.method |= OPTION_RAW;
+        poptions.method |= METHOD_RAW;
 
       else if(strcmp(method, NO_GROUP_DIFF_METHOD) == 0)
-        poptions.method &= ~OPTION_GROUP;
+        poptions.method &= ~METHOD_GROUP;
 
       else if(strcmp(method, GROUP_DIFF_METHOD) == 0)
-        poptions.method |= OPTION_GROUP;
+        poptions.method |= METHOD_GROUP;
 
       else {
 

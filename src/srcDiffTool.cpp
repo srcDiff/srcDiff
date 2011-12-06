@@ -75,7 +75,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
                          const char* xml_encoding,    // xml encoding of result srcML file
                          const char* srcdiff_filename,  // filename of result srcDiff file
                          OPTION_TYPE global_options,             // many and varied options
-			 OPTION_TYPE method,
+			 METHOD_TYPE method,
                          const char* directory,       // root unit directory
                          const char* filename,        // root unit filename
                          const char* version,         // root unit version
