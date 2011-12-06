@@ -330,7 +330,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   //xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   // output srcdiff unit
-
   if(!nodes_old.empty() && !nodes_new.empty()) {
 
     update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
@@ -382,10 +381,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   }
 
-  if(unit_old->free)
+  if(unit_old && unit_old->free)
     freeXNode(unit_old);
 
-  if(unit_new->free)
+  if(unit_new && unit_new->free)
     freeXNode(unit_new);
 
   // Because of grouping need to output a common to end grouping need to deallocate as well
