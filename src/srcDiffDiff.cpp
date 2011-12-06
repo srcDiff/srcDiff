@@ -85,7 +85,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
-        collect_entire_tag(nodes, *node_set, i);
+v        collect_entire_tag(nodes, *node_set, i);
 
       } else {
 
@@ -121,6 +121,11 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   int nlength = node_sets_new->at(start_new)->size();
 
   int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
+
+  //edit * edit_script;
+  //int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
+  //                                    (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+
 
   int max_length = nlength;
   if(nlength > olength)
