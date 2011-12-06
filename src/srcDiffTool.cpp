@@ -171,7 +171,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   if (reader_old == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
+    if(!isoption(global_options, OPTION_QUIET))
+       fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
 
     exit(1);
   }
@@ -199,7 +200,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   } catch(...) {
 
-    fprintf(stderr, "Unable to open file '%s'\n", path_one);
+    if(!isoption(global_options, OPTION_QUIET))
+      fprintf(stderr, "Unable to open file '%s'\n", path_one);
     
   }
 
@@ -225,7 +227,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   if (reader_new == NULL) {
 
-    fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
+    if(!isoption(global_options, OPTION_QUIET))
+      fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
 
     exit(1);
   }
@@ -252,7 +255,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   } catch(...) {
 
-    fprintf(stderr, "Unable to open file '%s'\n", path_two);
+    if(!isoption(global_options, OPTION_QUIET))
+      fprintf(stderr, "Unable to open file '%s'\n", path_two);
     
   }
 
