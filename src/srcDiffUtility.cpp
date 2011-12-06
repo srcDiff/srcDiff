@@ -28,8 +28,8 @@ const void * node_index(int idx, const void *s) {
 
 int node_index_compare(const void * node1, const void * node2) {
 
-  int a = *(int *)node1;
-  int b = *(int *)node2;
+  //int a = *(int *)node1;
+  //int b = *(int *)node2;
 
   return 1;
 }
