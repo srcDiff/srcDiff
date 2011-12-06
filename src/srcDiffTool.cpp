@@ -374,7 +374,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   free_node_sets(node_set_old);
   free_node_sets(node_set_new);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // } 
 
   if(isoption(global_options, OPTION_NESTED)) {
