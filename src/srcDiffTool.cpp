@@ -402,7 +402,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   if(isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(writer);
-    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
 
     if(nodes_old.empty()) {
 
@@ -413,7 +412,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     outputNode(diff_old_end, wstate.writer);
 
     }
-   
+
+    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+
   }
 
   if(unit_old && unit_old->free)
