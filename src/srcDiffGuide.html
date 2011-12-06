@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xml:lang="en" lang="en">
-  <head>
 
     <title>srcDiff Guide</title>
 
   </head>
   <body>
 
-    <h2>General Guide to srcDiff</h2>
+    <h1>General Guide to srcDiff</h1>
 
     <p>The srcDiff format is an extension of srcML with the namespace
-      <code>http://www.sdml.info/srcDiff</code> and the default prefix is <code>diff</code>.  The namespace
+    <code>http://www.sdml.info/srcDiff</code> with a default prefix <code>diff</code>.  The namespace
       primarily consists of the elements:
     </p>
 
@@ -59,10 +58,10 @@
         inserts and deletes.</li>
     </ul>
 
-    <h3>Generating srcDiff</h3>
+    <h2>Generating srcDiff</h2>
 
     <p>
-      The srcDiff format is produced by a primarily syntax
+      The srcDiff format is produced primarily with a syntax
       differencing approach with careful attention paid to whitespace
       and other formatting.  The differences are computed down to the
       individual, low-level syntax, e.g., identifier, operator.
@@ -73,9 +72,7 @@
       format:
     </p>
 
-    <pre style="text-align : center">
-      srcdiff.exe v1\main.cpp v2\main.cpp -o main.cpp.xml
-    </pre>
+    <pre style="text-align : center">srcdiff.exe v1\main.cpp v2\main.cpp -o main.cpp.xml</pre>
 
     <p>Note that the <code>srcdiff</code> tool internally takes care of the conversion
       to srcML.
@@ -89,11 +86,9 @@
       following form:
     </p>
 
-    <pre style="text-align : left">
-      v1\main.cpp|v2\main.cpp
-      v1\f.hpp|v2\f.hpp
-      v1\f.cpp|v2\f.cpp
-    </pre>
+    <pre style="text-align : left">      v1\main.cpp | v2\main.cpp
+      v1\f.hpp | v2\f.hpp
+      v1\f.cpp | v2\f.cpp    </pre>
 
     <p>
       Each pair of files is listed on a single line.  The two filenames are
@@ -103,29 +98,29 @@
       given file list the command is:
     </p>
 
-    <pre style="text-align : center">
-      srcdiff.exe --files-from list.txt -o project.xml
-    </pre>
+    <pre style="text-align : center">srcdiff.exe --files-from list.txt -o project.xml</pre>
 
     <p>
-      Conversion to the srcDiff format is quite fast.  It takes no
-      more then 3 times the speed of converting a single input file to
-      srcML.  Note that each part of the pair of input files has to be
-      converted (internally) to srcML.
+      Conversion to the srcDiff format from source-code files is quite
+      fast, typically about times the speed of converting a
+      single file to srcML.  Note that each part of the pair of
+      input files has to be converted (internally) to srcML, so the
+      computation of the difference is about 50% of the time needed
+      for conversion to srcML.
     </p>
 
     <p>
       Once in the srcDiff format, <code>srcml2src</code> can also be
-      used to work with srcDiff files.  Many of the options can be applied
-      to a particular version of the code using the new
-      option <code>--revision</code> which allows the selection of the first or
-      second version of the document.  To extract the first version of the
-      code the command is:
+      used to work with srcDiff files.  Many of the options
+      of <code>srcml2src</code> can be applied to a particular version
+      of the code using the new option <code>--revision</code> which
+      allows the selection of the first or second version of the
+      document.  This option is not available in the current general
+      release of srcML, but is available in the srcDiff directory.  To
+      extract the first version of the code the command is:
     </p>
 
-    <pre style="text-align : center">
-      srcml2src.exe --revision 1 main.cpp.xml
-    </pre>
+    <pre style="text-align : center">srcml2src.exe --revision 1 main.cpp.xml</pre>
 
     <p>
       This selection of the particular version in the srcDiff file for
@@ -134,11 +129,9 @@
       version to the current directory, the command is:
     </p>
 
-    <pre style="text-align : center">
-      srcml2src.exe --revision 1 --to-dir=. project.xml
-    </pre>
+    <pre style="text-align : center">srcml2src.exe --revision 1 --to-dir=. project.xml</pre>
 
-    <h3>Querying srcDiff</h3>
+    <h2>Querying srcDiff</h2>
 
     <p>
       The srcDiff elements form a difference axis through the document,
@@ -149,9 +142,7 @@
       would be:
     </p>
 
-    <pre style="text-align : center">
-      //src:function[ancestor::diff:*[1][self::diff:delete]]
-    </pre>
+    <pre style="text-align : center">//src:function[ancestor::diff:*[1][self::diff:delete]]</pre>
 
     <p>
       The first part of the predicate <code>ancestor::diff:*[1]</code> finds
@@ -170,9 +161,7 @@
       would be:
     </p>
 
-    <pre style="text-align : center">
-      //src:function[descendant::diff:delete]
-    </pre>
+    <pre style="text-align : center">//src:function[descendant::diff:delete]</pre>
 
     <p>
       The predicate <code>descendant::diff:delete</code> finds
@@ -386,11 +375,8 @@
       desired data.  For example, to find all conditions in deleted functions:
     </p>
 
-    <pre style="text-align : center">
-      //src:function[diff:deleted()]//src:condition
-    </pre>
+    <pre style="text-align : center">//src:function[diff:deleted()]//src:condition</pre>
 
-    <p>
       When querying srcDiff it is important to remember that unless
       specified, the result will include all elements, regardless if they
       were inserted, deleted, or unchanged.  The following will find if all
@@ -398,9 +384,7 @@
       function was not inserted or deleted):
     </p>
 
-    <pre style="text-align : center">
-      //src:function[diff:common()]//src:condition[diff:deleted()]
-    </pre>
+    <pre style="text-align : center">//src:function[diff:common()]//src:condition[diff:deleted()]</pre>
 
     <p>
       More examples can be found in the following table:
@@ -471,35 +455,74 @@
 
     <p>
       <strong><code>raw</code></strong> marks each individual change down to
-      the name level.  For example, if only the change was inside of a
+      the name level.  For example, if the only change was the
       declaration where <code>int n = a + b;</code> became <code>int m = c
         + d;</code>, then this would be marked as 3 individual changes:
-      <code>'a'->'b'</code>, <code>'c'->'d'</code>, and <code>'b'->'d'</code>.
+      <code>'n'->'m'</code>, <code>'a'->'c'</code>, and <code>'b'->'d'</code>.
     </p>
 
     <p>
-      <strong><code>collect</code></strong> reduces the granularity of expression and declaration statements.
-      For example, if only the change was inside of a
+      <strong><code>collect</code></strong>
+      and attempts to collect changes into a more meaningful result.
+      The motivation behind this is that if almost all the identifiers
+      in an expression (declaration) are changed, then the entire
+      expression (declaration) was changed.
+      For example, if the only change was the 
       declaration where <code>int n = a + b;</code> became <code>int m = c
         + d;</code>, then this would be marked as one large change, <code>'int n =
-      a + b;'->'int m = c + d;'</code>.  Note that single changes would still be
-      individually marked, e.g., <code>'a + b'->'c + d'</code>.
+      a + b;'->'int m = c + d;'</code>.  Note that solitary small changes would still be
+      individually marked, e.g., <code>'a + b'->'c + d'</code>.  This
+      is still being refined as to in which situation the collection
+      is being performed.
     </p>
+
+<!--
+<table align="center" style="border : 1px solid black">
+<caption>Effect of Methods on Differences where Version 1 is <code>int n = a + b;</code></caption>
+<tr>
+<th>Version 2</th><th>raw</th><th>collect</th>
+</tr>
+
+<tr>
+<td><code>int m = c + d;</code></td>
+<td><code>'n'->'m'</code>, <code>'a'->'c'</code>, and <code>'b'->'d'</code></td>
+<td><code>'int n = a + b;'->'int m = c + d;'</code></td>
+</td>
+
+<tr>
+<td><code>int m = a + d;</code></td>
+<td><code>'n'->'m'</code> and <code>'b'->'d'</code></td>
+<td><code>'int n = a + b;'->'int m = a + d;'</code></td>
+</td>
+
+<tr>
+<td><code>int n = c + d;</code></td>
+<td><code>'a'->'c'</code>, and <code>'b'->'d'</code></td>
+<td><code>'a + b'->'c + d'</code></td>
+</td>
+
+<tr>
+<td><code>int n = a + d;</code></td>
+<td><code>'b'->'d'</code></td>
+<td><code>'b'->'d'</code></td>
+</td>
+
+</tr>
+
+</table>
+-->
+    <p>
+      The method <strong><code>collect</code></strong> is the default.  To use
+      the method <strong><code>raw</code></strong> the command is:
+    </p>
+
+    <pre style="text-align : center">srcdiff.exe --method=raw v1\main.cpp v2\main.cpp</pre>
 
     <p>
-      The <strong><code>collect</code></strong> method is the default.  To use
-      the <strong><code>raw</code></strong> method the command is:
+      We believe that this category of options will grow in the future.
     </p>
 
-    <pre style="text-align : center">
-      srcdiff.exe --method=raw v1\main.cpp v2\main.cpp
-    </pre>
-
-    <p>
-      We believe this category may grow in the future.
-    </p>
-
-    <h3>Limitations</h3>
+    <h2>Limitations</h2>
 
     <p>
       The current implementation has some limitations:
