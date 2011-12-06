@@ -164,6 +164,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   int is_old = 0;
   xNodePtr unit_end = NULL;
   std::vector<std::vector<int> *> node_set_old;
+
   // translate file one
   try {
 
@@ -330,9 +331,14 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   //xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
 
   // output srcdiff unit
-  update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
-  update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
-  update_diff_stack(wstate.output_diff, unit_old, COMMON);
+
+  if(!nodes_old.empty() && !nodes_new.empty()) {
+
+    update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
+    update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
+    update_diff_stack(wstate.output_diff, unit_old, COMMON);
+
+  }
 
   // run on file level
   if(is_old || is_new)
