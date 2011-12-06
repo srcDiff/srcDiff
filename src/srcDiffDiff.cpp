@@ -369,7 +369,10 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
         curmatch = match;
 
       } else {
+
         curmatch->next = match;
+        curmatch = curmatch->next;
+
       }
     }
 
@@ -406,7 +409,10 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
         curmatch = match;
 
       } else {
+
         curmatch->next = match;
+        curmatch = curmatch->next;
+
       }
     }
 
