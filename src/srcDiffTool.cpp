@@ -400,6 +400,16 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     xmlTextWriterEndElement(writer);
     xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
 
+    if(nodes_old.empty()) {
+
+    outputNode(diff_new_end, wstate.writer);
+      
+    } else if(nodes_new.empty()) {
+
+    outputNode(diff_old_end, wstate.writer);
+
+    }
+   
   }
 
   if(unit_old && unit_old->free)
