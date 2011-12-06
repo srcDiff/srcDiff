@@ -215,17 +215,13 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   */
 
   xmlTextReaderPtr reader_new = NULL;
-
+  xNodePtr unit_new = 0;
+  int is_new = 0;
+  std::vector<std::vector<int> *> node_set_new;
   // translate file two
   try {
 
     translate_to_srcML(language, src_encoding,  xml_encoding, output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
-
-  } catch(...) {
-
-    fprintf(stderr, "Unable to open file '%s'\n", path_two);
-    
-  }
 
   // create the reader for the new file
   reader_new = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
@@ -240,9 +236,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // read to unit
   xmlTextReaderRead(reader_new);
 
-  xNodePtr unit_new = getRealCurrentNode(reader_new);
+  unit_new = getRealCurrentNode(reader_new);
 
-  int is_new = xmlTextReaderRead(reader_new);
+  is_new = xmlTextReaderRead(reader_new);
 
   // collect if non empty files
   if(is_new) {
@@ -253,11 +249,17 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   }
 
-  xmlBufferEmpty(output_srcml_file);
-
   xmlFreeTextReader(reader_new);
 
-  std::vector<std::vector<int> *> node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
+  node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
+
+  } catch(...) {
+
+    fprintf(stderr, "Unable to open file '%s'\n", path_two);
+    
+  }
+
+  xmlBufferEmpty(output_srcml_file);
 
   /*
 
