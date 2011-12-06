@@ -160,17 +160,14 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   // create the reader for the old file
   xmlTextReaderPtr reader_old = NULL;
-
+  xNodePtr unit_old = 0;
+  int is_old = 0;
+  xNodePtr unit_end = NULL;
+  std::vector<std::vector<int> *> node_set_old;
   // translate file one
   try {
 
   translate_to_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options, unit_directory, path_one, unit_version, 0, 8);
-
-  } catch(...) {
-
-    fprintf(stderr, "Unable to open file '%s'", path_one);
-    
-  }
 
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
 
@@ -184,13 +181,12 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // read to unit
   xmlTextReaderRead(reader_old);
 
-  xNodePtr unit_old = getRealCurrentNode(reader_old);
+  unit_old = getRealCurrentNode(reader_old);
 
   // Read past unit tag open
-  int is_old = xmlTextReaderRead(reader_old);
+  is_old = xmlTextReaderRead(reader_old);
 
   // collect if non empty files
-  xNodePtr unit_end = NULL;
   if(is_old) {
 
     collect_nodes(&nodes_old, reader_old);
@@ -203,7 +199,14 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xmlFreeTextReader(reader_old);
 
   // group nodes
-  std::vector<std::vector<int> *> node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
+  create_node_set(nodes_old, 0, nodes_old.size());
+
+
+  } catch(...) {
+
+    fprintf(stderr, "Unable to open file '%s'", path_one);
+    
+  }
 
   /*
 
@@ -214,7 +217,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xmlTextReaderPtr reader_new = NULL;
 
   // translate file two
-
   try {
 
     translate_to_srcML(language, src_encoding,  xml_encoding, output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
