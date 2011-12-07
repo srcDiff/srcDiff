@@ -1542,7 +1542,7 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
     // special test for dir with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist_old[i]->d_type == DT_DIR)
+    if (namelist_old[i]->d_type == DT_DIR && namelist_new[i]->d_type == DT_DIR )
       continue;
 #endif
 
@@ -1550,19 +1550,27 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
     filename.replace(basesize, std::string::npos, namelist_old[i]->d_name);
 
     // handle directories later after all the filenames
-    struct stat instat = { 0 };
-    int stat_status = stat(filename.c_str(), &instat);
-    if (stat_status)
+    struct stat instat_old = { 0 };
+    int stat_status_old = stat(filename.c_str(), &instat_old);
+
+    filename.replace(basesize, std::string::npos, namelist_new[i]->d_name);
+
+    // handle directories later after all the filenames
+    struct stat instat_new = { 0 };
+    int stat_status_new = stat(filename.c_str(), &instat_new);
+
+
+    if (stat_status_old && stat_status_new)
       continue;
 
     // stat test for dir
 #ifndef _DIRENT_HAVE_D_TYPE
-    if (S_ISDIR(instat.st_mode))
+    if (S_ISDIR(instat_old.st_mode))
       continue;
 #endif
 
     // make sure that we are not processing the output file
-    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+    if (instat_old.st_ino == outstat.st_ino && instat_old.st_dev == outstat.st_dev) {
       fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
               "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
 
