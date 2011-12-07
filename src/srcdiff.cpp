@@ -1522,7 +1522,7 @@ int dir_filter(struct dirent* d) {
   return dir_filter((const struct dirent*)d);
 }
 
-bool is_dir(struct dirent * file, const char * filename) {
+int is_dir(struct dirent * file, const char * filename) {
 
 #ifdef _DIRENT_HAVE_D_TYPE
   if (file->d_type == DT_DIR)
@@ -1533,7 +1533,31 @@ bool is_dir(struct dirent * file, const char * filename) {
   // handle directories later after all the filenames
   struct stat instat = { 0 };
 
-  return stat(filename, &instat);
+  int stat_status = stat(filename, &instat);
+
+  if(stat_status)
+    return stat_status;
+
+  if(S_ISDIR(instat.st_mode))
+    return 1;
+
+  return 0;
+
+}
+
+int is_output_file(const char * filename, const struct stat & outstat) {
+
+  struct stat instat = { 0 };
+
+  int stat_status = stat(filename, &instat);
+
+  if(stat_status)
+    return stat_status;
+
+  if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
+    return 1;
+
+  return 0;
 
 }
 
@@ -1578,36 +1602,17 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
       // path with current filename
       filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
-      // handle directories later after all the filenames
-      struct stat instat_old = { 0 };
-      int stat_status_old = stat(filename_old.c_str(), &instat_old);
-
       filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
-      // handle directories later after all the filenames
-      struct stat instat_new = { 0 };
-      int stat_status_new = stat(filename_new.c_str(), &instat_new);
-
-
-      if (stat_status_old && stat_status_new) {
+      if(is_dir(namelist_old[i], filename_old.c_str()) && is_dir(namelist_old[i], filename_new.c_str())) {
 
         ++i;
         ++j;
         continue;
       }
-
-      // stat test for dir
-#ifndef _DIRENT_HAVE_D_TYPE
-      if (S_ISDIR(instat_old.st_mode) && S_ISDIR(instat_new.st_mode)) {
-
-        ++i;
-        ++j;
-        continue;
-      }
-#endif
 
       // make sure that we are not processing the output file
-      if (instat_old.st_ino == outstat.st_ino && instat_old.st_dev == outstat.st_dev) {
+      if (is_output_file(filename_old.c_str(), outstat) == 1 || is_output_file(filename_new.c_str(), outstat) == 1) {
         fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
                 "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
 
