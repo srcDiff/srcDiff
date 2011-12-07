@@ -1522,6 +1522,22 @@ int dir_filter(struct dirent* d) {
   return dir_filter((const struct dirent*)d);
 }
 
+bool is_dir(struct dirent * file, const char * filename) {
+
+#ifdef _DIRENT_HAVE_D_TYPE
+  if (file->d_type == DT_DIR)
+    return true;
+#endif
+
+    // path with current filename
+    // handle directories later after all the filenames
+    struct stat instat = { 0 };
+    
+    return stat(filename, &instat);
+
+
+}
+
 void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
