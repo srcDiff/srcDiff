@@ -130,6 +130,10 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 
   std::vector<int> node_set_new;
 
+  for(int i = 0; i < nlength; ++i)
+    if(is_text(nodes_new.at(node_sets_new->at(start_new)->at(i)) && !is_white_space(nodes_new.at(node_sets_new->at(start_new)->at(i))));
+       node_set_new.push_back(node_sets_new->at(start_new)->at(i));
+
   //edit * edit_script;
   //int distance = shortest_edit_script(node_sets_old->at(start_old)->size(), (void *)node_sets_old->at(start_old), node_sets_new->at(start_new)->size()
   //                                  (void *)node_sets_new->at(start_new), node_set_syntax_compare, node_set_index, &edit_script);
