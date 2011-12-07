@@ -410,6 +410,8 @@ int main(int argc, char* argv[]) {
       METHOD_GROUP
     };
 
+  gpoptions = &poptions;
+
   // process command-line arguments
   int curarg = process_args(argc, argv, poptions);
 
@@ -1181,8 +1183,8 @@ void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* pat
     return;
   }
 
-srcdiff_text(translator, path_one, path_two, options, language, count, skipped,
-                  error, showinput, shownumber);
+  srcdiff_text(translator, path_one, path_two, options, language, count, skipped,
+               error, showinput, shownumber);
 }
 
 void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
@@ -1494,16 +1496,18 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 
 void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
+
   // by default, all dirs are treated as an archive
   translator.set_nested();
 
   // record the stat info on the output file
+
   struct stat outstat = { 0 };
-  stat(poptions.srcdiff_filename, &outstat);
+  stat(gpoptions->srcdiff_filename, &outstat);
 
   showinput = true;
 
-  srcdiff_dir(translator, directory_old, directory_new, poptions, count, skipped, error, showinput, shownumber, outstat);
+  srcdiff_dir(translator, directory_old, directory_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
 // file/directory names to ignore when processing a directory
