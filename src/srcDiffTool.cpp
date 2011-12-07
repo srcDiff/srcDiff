@@ -536,7 +536,7 @@ void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int dep
   }
 }
 
-void set_nested(bool is_nested) {
+void srcDiffTool::set_nested(bool is_nested) {
 
   if(is_nested)
     global_options |= OPTION_NESTED;
