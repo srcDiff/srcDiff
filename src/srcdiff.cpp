@@ -1199,6 +1199,9 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
 
   // Remove eventually
   int real_language = language ? language : Language::getLanguageFromFilename(path_one);
+
+  real_language = real_language ? real_language : Language::getLanguageFromFilename(path_two);
+
   if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
     local_options |= OPTION_CPP;
 
