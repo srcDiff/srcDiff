@@ -1766,11 +1766,15 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     // all done with this directory
     for (int i = 0; i < n; ++i)
       free(namelist_old[i]);
-    free(namelist_old);
+
+    if(n)
+      free(namelist_old);
 
     for (int j = 0; j < m; ++j)
       free(namelist_new[j]);
-    free(namelist_new);
+
+    if(m)
+      free(namelist_new);
 
 #else
 
