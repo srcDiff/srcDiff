@@ -1769,18 +1769,24 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     
     }
 
+    if(n >= 0) {
+
     // all done with this directory
     for (int i = 0; i < n; ++i)
       free(namelist_old[i]);
 
-    if(n >= 0)
-      free(namelist_old);
+    free(namelist_old);
+
+    }
+
+    if(m >= 0) {
 
     for (int j = 0; j < m; ++j)
       free(namelist_new[j]);
 
-    if(m >= 0)
-      free(namelist_new);
+    free(namelist_new);
+
+    }
 
 #else
 
