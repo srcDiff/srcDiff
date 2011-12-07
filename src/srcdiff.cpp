@@ -1676,12 +1676,12 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
       }
 
-      if (is_output_file(filename_old.c_str(), outstat) == 1) {
+      if (is_output_file(filename_new.c_str(), outstat) == 1) {
         fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
                 "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
 
         ++skipped;
-        ++i;
+        ++j;
         continue;
       }
 
