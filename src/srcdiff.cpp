@@ -1357,7 +1357,7 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 
       // once any source archive is input, then we have to assume nested not just locally
       if (isarchive) {
-        options |= OPTION_NESTED;
+	translator.set_nested();
         save_options |= OPTION_NESTED;
         showinput = true;
         //        shownumber = true;
@@ -1496,7 +1496,7 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 void srcdiff_dir_top(srcDiffTool& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
-  options |= OPTION_NESTED;
+  translator.set_nested();
 
   // record the stat info on the output file
   struct stat outstat = { 0 };
