@@ -1523,8 +1523,8 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
-  struct dirent **namelist;
-  int n = scandir(directory, &namelist, dir_filter, alphasort);
+  struct dirent **namelist_old;
+  int n = scandir(directory, &namelist_old, dir_filter, alphasort);
   if (n < 0) {
     return;
   }
@@ -1540,12 +1540,12 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
     // special test for dir with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist[i]->d_type == DT_DIR)
+    if (namelist_old[i]->d_type == DT_DIR)
       continue;
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, namelist[i]->d_name);
+    filename.replace(basesize, std::string::npos, namelist_old[i]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat = { 0 };
@@ -1591,12 +1591,12 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
     // special test with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist[i]->d_type != DT_DIR)
+    if (namelist_old[i]->d_type != DT_DIR)
       continue;
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, namelist[i]->d_name);
+    filename.replace(basesize, std::string::npos, namelist_old[i]->d_name);
 
     // already handled other types of files
 #ifndef _DIRENT_HAVE_D_TYPE
@@ -1611,8 +1611,8 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
   // all done with this directory
   for (int i = 0; i < n; i++)
-    free(namelist[i]);
-  free(namelist);
+    free(namelist_old[i]);
+  free(namelist_old);
 
 #else
 
