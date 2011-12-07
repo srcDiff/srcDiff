@@ -1601,7 +1601,7 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
     // special test with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist_old[i]->d_type != DT_DIR)
+    if (namelist_old[i]->d_type != DT_DIR && namelist_new[i]->d_type != DT_DIR)
       continue;
 #endif
 
@@ -1610,10 +1610,13 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
     // already handled other types of files
 #ifndef _DIRENT_HAVE_D_TYPE
-    struct stat instat = { 0 };
-    int stat_status = stat(filename.c_str(), &instat);
-    if (!stat_status && !S_ISDIR(instat.st_mode))
+    struct stat instat_old = { 0 };
+    int stat_status_old = stat(filename.c_str(), &instat_old);
+    struct stat instat_new = { 0 };
+    int stat_status_new = stat(filename.c_str(), &instat_new);
+    if (!stat_status_old && !S_ISDIR(instat_old.st_mode) && !stat_status_old && !S_ISDIR(instat_old.st_mode))
       continue;
+
 #endif
 
     srcdiff_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
