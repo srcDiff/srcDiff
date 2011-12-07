@@ -1529,7 +1529,7 @@ int is_dir(struct dirent * file, const char * filename) {
 
 #ifdef _DIRENT_HAVE_D_TYPE
   if (file->d_type == DT_DIR)
-    return true;
+    return 1;
 #endif
 
   // path with current filename
