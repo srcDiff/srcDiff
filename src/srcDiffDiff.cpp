@@ -122,6 +122,14 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 
   int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
+  std::vector<int> node_set_old;
+
+  for(int i = 0; i < olength; ++i)
+    if(is_text(nodes_old.at(node_sets_old->at(start_old)->at(i)) && !is_white_space(nodes_old.at(node_sets_old->at(start_old)->at(i))));
+       node_set_old.push_back(node_sets_old->at(start_old)->at(i));
+
+  std::vector<int> node_set_new;
+
   //edit * edit_script;
   //int distance = shortest_edit_script(node_sets_old->at(start_old)->size(), (void *)node_sets_old->at(start_old), node_sets_new->at(start_new)->size()
   //                                  (void *)node_sets_new->at(start_new), node_set_syntax_compare, node_set_index, &edit_script);
