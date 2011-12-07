@@ -25,6 +25,7 @@
 #include "srcDiffTool.hpp"
 #include "srcmlns.hpp"
 #include "srcmlapps.hpp"
+#include "srcMLTranslator.hpp"
 #include "shortest_edit_script.h"
 #include "srcDiffUtility.hpp"
 #include "srcDiffWhiteSpace.hpp"
@@ -165,6 +166,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // translate file one
   try {
 
+    if(!path_one || path_one[0] == 0)
+      throw FileError();
+
   translate_to_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options, unit_directory, path_one, unit_version, 0, 8);
 
   reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
@@ -219,6 +223,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   std::vector<std::vector<int> *> node_set_new;
   // translate file two
   try {
+
+    if(!path_two || path_two[0] == 0)
+      throw FileError();
 
     translate_to_srcML(language, src_encoding,  xml_encoding, output_srcml_file, local_options, unit_directory, path_two, unit_version, 0, 8);
 
