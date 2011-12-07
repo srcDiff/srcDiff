@@ -117,20 +117,20 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
      && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "init") != 0)
   return true;
 
-  int olength = node_sets_old->at(start_old)->size();
-  int nlength = node_sets_new->at(start_new)->size();
+  unsigned int olength = node_sets_old->at(start_old)->size();
+  unsigned int nlength = node_sets_new->at(start_new)->size();
 
   //int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
   std::vector<int> node_set_old;
 
-  for(int i = 0; i < olength; ++i)
+  for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(nodes_old.at(node_sets_old->at(start_old)->at(i))))
       node_set_old.push_back(node_sets_old->at(start_old)->at(i));
 
   std::vector<int> node_set_new;
 
-  for(int i = 0; i < nlength; ++i)
+  for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(nodes_new.at(node_sets_new->at(start_new)->at(i))))
       node_set_new.push_back(node_sets_new->at(start_new)->at(i));
 
@@ -139,7 +139,7 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 				      (void *)&node_set_new, node_index_compare, node_index, &edit_script);
 
   edit * edits = edit_script;
-  int similarity = 0;
+  unsigned int similarity = 0;
   for(; edits; edits = edits->next) {
 
     if(is_change(edits))
