@@ -1531,10 +1531,10 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   }
 
   // start of path from directory name
-  std::string filename = directory_old;
-  if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
-    filename += PATH_SEPARATOR;
-  int basesize = filename.length();
+  std::string filename_old = directory_old;
+  if (!filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
+    filename_old += PATH_SEPARATOR;
+  int basesize = filename_old.length();
 
   // process all non-directory files
   for (int i = 0; i < n; i++) {
@@ -1546,17 +1546,17 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, namelist_old[i]->d_name);
+    filename_old.replace(basesize, std::string::npos, namelist_old[i]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat_old = { 0 };
-    int stat_status_old = stat(filename.c_str(), &instat_old);
+    int stat_status_old = stat(filename_old.c_str(), &instat_old);
 
-    filename.replace(basesize, std::string::npos, namelist_new[i]->d_name);
+    filename_old.replace(basesize, std::string::npos, namelist_new[i]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat_new = { 0 };
-    int stat_status_new = stat(filename.c_str(), &instat_new);
+    int stat_status_new = stat(filename_old.c_str(), &instat_new);
 
 
     if (stat_status_old && stat_status_new)
@@ -1580,7 +1580,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     // translate the file listed in the input file using the directory and filename extracted from the path
     /*
     srcdiff_text(translator,
-                 filename.c_str(),
+                 filename_old.c_str(),
                  options,
                  0,
                  0,
@@ -1605,20 +1605,20 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, namelist_old[i]->d_name);
+    filename_old.replace(basesize, std::string::npos, namelist_old[i]->d_name);
 
     // already handled other types of files
 #ifndef _DIRENT_HAVE_D_TYPE
     struct stat instat_old = { 0 };
-    int stat_status_old = stat(filename.c_str(), &instat_old);
+    int stat_status_old = stat(filename_old.c_str(), &instat_old);
     struct stat instat_new = { 0 };
-    int stat_status_new = stat(filename.c_str(), &instat_new);
+    int stat_status_new = stat(filename_old.c_str(), &instat_new);
     if (!stat_status_old && !S_ISDIR(instat_old.st_mode) && !stat_status_old && !S_ISDIR(instat_old.st_mode))
       continue;
 
 #endif
 
-    srcdiff_dir(translator, filename.c_str(), filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    srcdiff_dir(translator, filename_old.c_str(), filename_old.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
@@ -1639,10 +1639,10 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   }
 
   // start of path from directory name
-  std::string filename = directory;
-  if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
-    filename += PATH_SEPARATOR;
-  int basesize = filename.length();
+  std::string filename_old = directory;
+  if (!filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
+    filename_old += PATH_SEPARATOR;
+  int basesize = filename_old.length();
 
   // process all non-directory files
   while (struct dirent* entry = readdir(dirp)) {
@@ -1658,17 +1658,17 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, entry->d_name);
+    filename_old.replace(basesize, std::string::npos, entry->d_name);
 
     // handle directories later after all the filenames
     struct stat instat = { 0 };
-    int stat_status = stat(filename.c_str(), &instat);
+    int stat_status = stat(filename_old.c_str(), &instat);
     if (!stat_status && S_ISDIR(instat.st_mode)) {
       continue;
     }
 
     // make sure that we are not processing the output file
-    if (strcmp(filename.c_str(), poptions.srcdiff_filename) == 0) {
+    if (strcmp(filename_old.c_str(), poptions.srcdiff_filename) == 0) {
       fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
               "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
 
@@ -1679,7 +1679,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     // translate the file listed in the input file using the directory and filename extracted from the path
     /*
     srcdiff_text(translator,
-                 filename.c_str(),
+                 filename_old.c_str(),
                  options,
                  0,
                  0,
@@ -1711,15 +1711,15 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, entry->d_name);
+    filename_old.replace(basesize, std::string::npos, entry->d_name);
 
     // already handled other types of files
     struct stat instat = { 0 };
-    int stat_status = stat(filename.c_str(), &instat);
+    int stat_status = stat(filename_old.c_str(), &instat);
     if (!stat_status && !S_ISDIR(instat.st_mode))
       continue;
 
-    srcdiff_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    srcdiff_dir(translator, filename_old.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
