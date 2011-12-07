@@ -361,7 +361,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
 
 // translate a file, maybe an archive
-void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+                  int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
 void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber);
@@ -1172,17 +1173,18 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+                  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // handle local directories specially
   struct stat instat = { 0 };
-  int stat_status = stat(path, &instat);
+  int stat_status = stat(path_one, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    srcdiff_dir_top(translator, path, path, *gpoptions, count, skipped, error, showinput, shownumber);
+    srcdiff_dir_top(translator, path_one, path_two, *gpoptions, count, skipped, error, showinput, shownumber);
     return;
   }
 
-  srcdiff_archive(translator, path, options, dir, root_filename, version, language, tabsize, count, skipped,
+srcdiff_text(translator, path_one, path_two, options, language, count, skipped,
                   error, showinput, shownumber);
 }
 
