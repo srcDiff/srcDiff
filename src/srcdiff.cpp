@@ -1178,7 +1178,7 @@ void srcdiff_file(srcDiffTool& translator, const char* path, OPTION_TYPE& option
   struct stat instat = { 0 };
   int stat_status = stat(path, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    srcdiff_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
+    srcdiff_dir_top(translator, path, path, *gpoptions, count, skipped, error, showinput, shownumber);
     return;
   }
 
@@ -1504,7 +1504,7 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
 
   showinput = true;
 
-  srcdiff_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
+  srcdiff_dir(translator, directory_old, directory_new, poptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
 // file/directory names to ignore when processing a directory
@@ -1525,14 +1525,14 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   // collect the filenames in alphabetical order
   struct dirent **namelist_old;
   struct dirent **namelist_new;
-  int n = scandir(directory, &namelist_old, dir_filter, alphasort);
-  int m = scandir(directory, &namelist_new, dir_filter, alphasort);
+  int n = scandir(directory_old, &namelist_old, dir_filter, alphasort);
+  int m = scandir(directory_new, &namelist_new, dir_filter, alphasort);
   if (n < 0 && m < 0) {
     return;
   }
 
   // start of path from directory name
-  std::string filename = directory;
+  std::string filename = directory_old;
   if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
     filename += PATH_SEPARATOR;
   int basesize = filename.length();
@@ -1619,7 +1619,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
 #endif
 
-    srcdiff_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    srcdiff_dir(translator, filename.c_str(), filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
