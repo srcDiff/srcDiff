@@ -1535,7 +1535,6 @@ bool is_dir(struct dirent * file, const char * filename) {
     
     return stat(filename, &instat);
 
-
 }
 
 void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
@@ -1565,7 +1564,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   for (int i = 0, j = 0; i < n && j < m; ++i, ++j) {
 
     int comparison = 0;
-    while((comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name))) {
+    while(i < n && j < m && (comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name))) {
 
         if(comparison < 0)
           ++i;
