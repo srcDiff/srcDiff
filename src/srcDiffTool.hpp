@@ -68,6 +68,8 @@ void startUnit(const char * language,
   // destructor
   ~srcDiffTool();
 
+  void set_nested(bool is_nested = true);
+
  private:
 
   bool first;
