@@ -601,7 +601,7 @@ int main(int argc, char* argv[]) {
       // from the full path
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
 
-        srcdiff_text(translator, argv[i], argv[i + 1], options, poptions.language, count, skipped, error, showinput, shownumber);
+        srcdiff_file(translator, argv[i], argv[i + 1], options, poptions.language, count, skipped, error, showinput, shownumber);
                      
         /*
         // process this command line argument
