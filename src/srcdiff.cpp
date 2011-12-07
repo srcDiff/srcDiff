@@ -1702,9 +1702,15 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     //    return;
 
     // go back and process directories
-    for (int i = 0, j = 0; i < n && j < m;) {
+    for (int i = 0, j = 0; i < n || j < m;) {
 
-    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+    int comparison;
+    if(i < n && j < m) 
+       comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+    else if (i < n)
+      comparison = -1;
+    else
+      comparison = 1;
 
     if(!comparison) {
 
