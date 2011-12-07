@@ -356,8 +356,8 @@ struct process_options
 process_options* gpoptions = 0;
 
 void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir_top(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir(srcDiffTool& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
 void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
 
 // translate a file, maybe an archive
@@ -1493,7 +1493,7 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
   } while (isarchive && isAnythingOpen(context));
 }
 
-void srcdiff_dir_top(srcDiffTool& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   translator.set_nested();
@@ -1519,7 +1519,7 @@ int dir_filter(struct dirent* d) {
   return dir_filter((const struct dirent*)d);
 }
 
-void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
