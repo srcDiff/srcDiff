@@ -1642,7 +1642,17 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
         ++i;
         continue;
-      } else {
+      }
+
+      if (is_output_file(filename_old.c_str(), outstat) == 1) {
+        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
+
+        ++skipped;
+        ++i;
+        continue;
+      }
+
 
         /*
         srcdiff_text(translator,
@@ -1654,8 +1664,6 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
         */
         ++i;
 
-      }
-
     } else {
 
       if(is_dir(namelist_new[j], filename_new.c_str())) {
@@ -1663,7 +1671,16 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
         ++j;
         continue;
 
-      } else {
+      }
+
+      if (is_output_file(filename_old.c_str(), outstat) == 1) {
+        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
+
+        ++skipped;
+        ++i;
+        continue;
+      }
         /*
         srcdiff_text(translator,
                      "",
@@ -1673,7 +1690,6 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
                      count, skipped, error, showinput, shownumber);
         */
         ++j;
-      }
 
     }
   }
