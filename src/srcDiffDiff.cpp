@@ -138,6 +138,12 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   int distance = shortest_edit_script(node_set_old.size(), (void *)&node_set_old, node_set_new.size(),
 				      (void *)&node_set_new, node_index_compare, node_index, &edit_script);
 
+  edit * edits = edit_script;
+  similarity = 0;
+  for(; edits; edits = edits->next)
+    ++similarity;
+    ;
+
   free_shortest_edit_script(edit_script);
 
   int max_length = nlength;
