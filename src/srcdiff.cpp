@@ -1591,9 +1591,15 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   int basesize_new = filename_new.length();
 
   // process all non-directory files
-  for (int i = 0, j = 0; i < n && j < m;) {
+  for (int i = 0, j = 0; i < n || j < m;) {
 
-    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+    int comparison;
+    if(i < n && j < m) 
+       comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+    else if (i < n)
+      comparison = -1;
+    else
+      comparison = 1;
 
     if(!comparison) {
 
@@ -1767,13 +1773,13 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     for (int i = 0; i < n; ++i)
       free(namelist_old[i]);
 
-    if(n)
+    if(n >= 0)
       free(namelist_old);
 
     for (int j = 0; j < m; ++j)
       free(namelist_new[j]);
 
-    if(m)
+    if(m >= 0)
       free(namelist_new);
 
 #else
