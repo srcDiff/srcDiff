@@ -1534,7 +1534,12 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   std::string filename_old = directory_old;
   if (!filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
     filename_old += PATH_SEPARATOR;
-  int basesize = filename_old.length();
+  int basesize_old = filename_old.length();
+
+  std::string filename_new = directory_new;
+  if (!filename_new.empty() && filename_new[filename_new.size() - 1] != PATH_SEPARATOR)
+    filename_new += PATH_SEPARATOR;
+  int basesize_new = filename_new.length();
 
   // process all non-directory files
   for (int i = 0; i < n; i++) {
@@ -1546,13 +1551,13 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename_old.replace(basesize, std::string::npos, namelist_old[i]->d_name);
+    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat_old = { 0 };
     int stat_status_old = stat(filename_old.c_str(), &instat_old);
 
-    filename_old.replace(basesize, std::string::npos, namelist_new[i]->d_name);
+    filename_old.replace(basesize_old, std::string::npos, namelist_new[i]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat_new = { 0 };
@@ -1605,7 +1610,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename_old.replace(basesize, std::string::npos, namelist_old[i]->d_name);
+    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
     // already handled other types of files
 #ifndef _DIRENT_HAVE_D_TYPE
@@ -1642,7 +1647,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   std::string filename_old = directory;
   if (!filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
     filename_old += PATH_SEPARATOR;
-  int basesize = filename_old.length();
+  int basesize_old = filename_old.length();
 
   // process all non-directory files
   while (struct dirent* entry = readdir(dirp)) {
@@ -1658,7 +1663,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename_old.replace(basesize, std::string::npos, entry->d_name);
+    filename_old.replace(basesize_old, std::string::npos, entry->d_name);
 
     // handle directories later after all the filenames
     struct stat instat = { 0 };
@@ -1711,7 +1716,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 #endif
 
     // path with current filename
-    filename_old.replace(basesize, std::string::npos, entry->d_name);
+    filename_old.replace(basesize_old, std::string::npos, entry->d_name);
 
     // already handled other types of files
     struct stat instat = { 0 };
