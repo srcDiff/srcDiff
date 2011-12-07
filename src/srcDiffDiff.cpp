@@ -140,9 +140,13 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 
   edit * edits = edit_script;
   similarity = 0;
-  for(; edits; edits = edits->next)
+  for(; edits; edits = edits->next) {
+
+    if(is_change(edits))
+      edits = edits->next;
+
     ++similarity;
-    ;
+  }
 
   free_shortest_edit_script(edit_script);
 
