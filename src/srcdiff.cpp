@@ -1524,8 +1524,10 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
 
   // collect the filenames in alphabetical order
   struct dirent **namelist_old;
+  struct dirent **namelist_new;
   int n = scandir(directory, &namelist_old, dir_filter, alphasort);
-  if (n < 0) {
+  int m = scandir(directory, &namelist_new, dir_filter, alphasort);
+  if (n < 0 && m < 0) {
     return;
   }
 
