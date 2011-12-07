@@ -28,10 +28,10 @@ const void * node_index(int idx, const void *s) {
 
 int node_index_compare(const void * node1, const void * node2) {
 
-  //int a = *(int *)node1;
-  //int b = *(int *)node2;
+  xNodePtr node_old = nodes_old.at(*(int *)node1);
+  xNodePtr node_new = nodes_new.at(*(int *)node2);
 
-  return 1;
+  return node_compare(node_old, node_new);
 }
 
 
