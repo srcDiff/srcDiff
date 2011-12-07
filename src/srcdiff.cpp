@@ -1561,11 +1561,11 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     struct stat instat_old = { 0 };
     int stat_status_old = stat(filename_old.c_str(), &instat_old);
 
-    filename_old.replace(basesize_old, std::string::npos, namelist_new[i]->d_name);
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[i]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat_new = { 0 };
-    int stat_status_new = stat(filename_old.c_str(), &instat_new);
+    int stat_status_new = stat(filename_new.c_str(), &instat_new);
 
 
     if (stat_status_old && stat_status_new)
@@ -1616,18 +1616,20 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     // path with current filename
     filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[i]->d_name);
+
     // already handled other types of files
 #ifndef _DIRENT_HAVE_D_TYPE
     struct stat instat_old = { 0 };
     int stat_status_old = stat(filename_old.c_str(), &instat_old);
     struct stat instat_new = { 0 };
-    int stat_status_new = stat(filename_old.c_str(), &instat_new);
+    int stat_status_new = stat(filename_new.c_str(), &instat_new);
     if (!stat_status_old && !S_ISDIR(instat_old.st_mode) && !stat_status_old && !S_ISDIR(instat_old.st_mode))
       continue;
 
 #endif
 
-    srcdiff_dir(translator, filename_old.c_str(), filename_old.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    srcdiff_dir(translator, filename_old.c_str(), filename_new.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
