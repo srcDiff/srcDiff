@@ -1627,6 +1627,10 @@ void srcdiff_dir(srcDiffTool& translator, const char* directory, process_options
     free(namelist_old[i]);
   free(namelist_old);
 
+  for (int i = 0; i < m; i++)
+    free(namelist_new[i]);
+  free(namelist_new);
+
 #else
 
   // try to open the found directory
