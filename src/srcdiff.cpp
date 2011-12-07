@@ -1541,8 +1541,10 @@ int is_dir(struct dirent * file, const char * filename) {
   if(stat_status)
     return stat_status;
 
+#ifndef _DIRENT_HAVE_D_TYPE
   if(S_ISDIR(instat.st_mode))
     return 1;
+#endif
 
   return 0;
 
@@ -1570,6 +1572,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   // collect the filenames in alphabetical order
   struct dirent **namelist_old;
   struct dirent **namelist_new;
+
   int n = scandir(directory_old, &namelist_old, dir_filter, alphasort);
   int m = scandir(directory_new, &namelist_new, dir_filter, alphasort);
   if (n < 0 && m < 0) {
@@ -1594,20 +1597,12 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
     if(!comparison) {
 
-      // special test for dir with no stat needed
-      if (namelist_old[i]->d_type == DT_DIR && namelist_new[j]->d_type == DT_DIR ) {
-
-        ++i;
-        ++j;
-        continue;
-      }
-
       // path with current filename
       filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
       filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
-      if(is_dir(namelist_old[i], filename_old.c_str()) && is_dir(namelist_old[i], filename_new.c_str())) {
+      if(is_dir(namelist_old[i], filename_old.c_str()) && is_dir(namelist_new[j], filename_new.c_str())) {
 
         ++i;
         ++j;
@@ -1701,31 +1696,71 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     //    return;
 
     // go back and process directories
-    for (int i = 0, j = 0; i < n && j < m; ++i, ++j) {
+    for (int i = 0, j = 0; i < n && j < m;) {
 
-      // special test with no stat needed
-#ifdef _DIRENT_HAVE_D_TYPE
-      if (namelist_old[i]->d_type != DT_DIR && namelist_new[j]->d_type != DT_DIR)
-        continue;
-#endif
+    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+
+    if(!comparison) {
 
       // path with current filename
       filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
       filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
-      // already handled other types of files
-#ifndef _DIRENT_HAVE_D_TYPE
-      struct stat instat_old = { 0 };
-      int stat_status_old = stat(filename_old.c_str(), &instat_old);
-      struct stat instat_new = { 0 };
-      int stat_status_new = stat(filename_new.c_str(), &instat_new);
-      if (!stat_status_old && !S_ISDIR(instat_old.st_mode) && !stat_status_old && !S_ISDIR(instat_old.st_mode))
+      if(is_dir(namelist_old[i], filename_old.c_str()) != 1 && is_dir(namelist_new[j], filename_new.c_str()) != 1) {
+
+        ++i;
+        ++j;
+        continue;
+      }
+
+      // translate the file listed in the input file using the directory and filename extracted from the path
+      srcdiff_dir(translator,
+                   filename_old.c_str(),
+                   filename_new.c_str(),
+                   poptions,
+                  count, skipped, error, showinput, shownumber, outstat);
+
+      ++i;
+      ++j;
+
+    } else if(comparison < 0) {
+
+      filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+
+      if(is_dir(namelist_old[i], filename_old.c_str()) != 1) {
+
+        ++i;
+        continue;
+      }
+
+        srcdiff_dir(translator,
+                     filename_old.c_str(),
+                     "",
+                     poptions,
+                    count, skipped, error, showinput, shownumber, outstat);
+
+        ++i;
+
+    } else {
+
+      if(is_dir(namelist_new[j], filename_new.c_str()) != 1) {
+
+        ++j;
         continue;
 
-#endif
+      }
 
-      srcdiff_dir(translator, filename_old.c_str(), filename_new.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+        srcdiff_dir(translator,
+                     "",
+                     filename_new.c_str(),
+                     poptions,
+                    count, skipped, error, showinput, shownumber, outstat);
+
+        ++j;
+
+    }
+    
     }
 
     // all done with this directory
