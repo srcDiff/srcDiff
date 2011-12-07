@@ -1546,11 +1546,11 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   int basesize_new = filename_new.length();
 
   // process all non-directory files
-  for (int i = 0; i < n; i++) {
+  for (int i = 0, j = 0; i < n && j < m; ++i, ++j) {
 
     // special test for dir with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist_old[i]->d_type == DT_DIR && namelist_new[i]->d_type == DT_DIR )
+    if (namelist_old[i]->d_type == DT_DIR && namelist_new[j]->d_type == DT_DIR )
       continue;
 #endif
 
@@ -1561,7 +1561,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     struct stat instat_old = { 0 };
     int stat_status_old = stat(filename_old.c_str(), &instat_old);
 
-    filename_new.replace(basesize_new, std::string::npos, namelist_new[i]->d_name);
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat_new = { 0 };
@@ -1602,18 +1602,18 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   //    return;
 
   // go back and process directories
-  for (int i = 0; i < n; i++) {
+  for (int i = 0, j = 0; i < n && j < m; ++i, ++j) {
 
     // special test with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist_old[i]->d_type != DT_DIR && namelist_new[i]->d_type != DT_DIR)
+    if (namelist_old[i]->d_type != DT_DIR && namelist_new[j]->d_type != DT_DIR)
       continue;
 #endif
 
     // path with current filename
     filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
-    filename_new.replace(basesize_new, std::string::npos, namelist_new[i]->d_name);
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // already handled other types of files
 #ifndef _DIRENT_HAVE_D_TYPE
@@ -1630,12 +1630,12 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   }
 
   // all done with this directory
-  for (int i = 0; i < n; i++)
+  for (int i = 0; i < n; ++i)
     free(namelist_old[i]);
   free(namelist_old);
 
-  for (int i = 0; i < m; i++)
-    free(namelist_new[i]);
+  for (int j = 0; j < m; ++j)
+    free(namelist_new[j]);
   free(namelist_new);
 
 #else
