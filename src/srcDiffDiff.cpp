@@ -125,14 +125,14 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   std::vector<int> node_set_old;
 
   for(int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_sets_old->at(start_old)->at(i)) && !is_white_space(nodes_old.at(node_sets_old->at(start_old)->at(i))));
-       node_set_old.push_back(node_sets_old->at(start_old)->at(i));
+    if(is_text(nodes_old.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(nodes_old.at(node_sets_old->at(start_old)->at(i))))
+      node_set_old.push_back(node_sets_old->at(start_old)->at(i));
 
   std::vector<int> node_set_new;
 
   for(int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_sets_new->at(start_new)->at(i)) && !is_white_space(nodes_new.at(node_sets_new->at(start_new)->at(i))));
-       node_set_new.push_back(node_sets_new->at(start_new)->at(i));
+    if(is_text(nodes_new.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(nodes_new.at(node_sets_new->at(start_new)->at(i))))
+      node_set_new.push_back(node_sets_new->at(start_new)->at(i));
 
   //edit * edit_script;
   //int distance = shortest_edit_script(node_set_old.size(), (void *)&node_set_old, node_set_new.size()
