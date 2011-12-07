@@ -1573,7 +1573,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
     // stat test for dir
 #ifndef _DIRENT_HAVE_D_TYPE
-    if (S_ISDIR(instat_old.st_mode))
+    if (S_ISDIR(instat_old.st_mode) && S_ISDIR(instat_new.st_mode))
       continue;
 #endif
 
@@ -1587,17 +1587,14 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    /*
+
     srcdiff_text(translator,
                  filename_old.c_str(),
+                 filename_new.c_str(),
                  options,
-                 0,
-                 0,
-                 poptions.given_version,
                  poptions.language,
-                 poptions.tabsize,
                  count, skipped, error, showinput, shownumber);
-    */
+
   }
 
   // no need to handle subdirectories, unless recursive
