@@ -1573,6 +1573,9 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
         
       }
 
+    if(i == n && j == m)
+      return;
+
     // special test for dir with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
     if (namelist_old[i]->d_type == DT_DIR && namelist_new[j]->d_type == DT_DIR )
