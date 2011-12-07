@@ -248,13 +248,13 @@ void output_help(const char* name) {
          MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
   /*
-  printf("\nLine/Column Position:\n");
+    printf("\nLine/Column Position:\n");
 
-  printf("  --%-21s include line/column attributes, namespace \"%s\"\n",
-         POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
+    printf("  --%-21s include line/column attributes, namespace \"%s\"\n",
+    POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
 
-  printf("  --%-21s set tabs NUMBER characters apart.  Default is %d\n",
-         TABS_FLAG_FULL, 8);
+    printf("  --%-21s set tabs NUMBER characters apart.  Default is %d\n",
+    TABS_FLAG_FULL, 8);
   */
 
   printf("\nPrefix Options:\n");
@@ -429,7 +429,7 @@ int main(int argc, char* argv[]) {
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
   if (input_arg_count / 2 > 1)
-  options |= OPTION_NESTED;
+    options |= OPTION_NESTED;
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
   /*
@@ -538,16 +538,16 @@ int main(int argc, char* argv[]) {
 
     // translator from input to output using determined language
     srcDiffTool translator(poptions.language,
-                               poptions.src_encoding,
-                               poptions.xml_encoding,
-                               poptions.srcdiff_filename,
-                               options,
-			       poptions.method,
-                               poptions.given_directory,
-                               poptions.given_filename,
-                               poptions.given_version,
-                               urisprefix,
-                               poptions.tabsize);
+                           poptions.src_encoding,
+                           poptions.xml_encoding,
+                           poptions.srcdiff_filename,
+                           options,
+                           poptions.method,
+                           poptions.given_directory,
+                           poptions.given_filename,
+                           poptions.given_version,
+                           urisprefix,
+                           poptions.tabsize);
 
 
     bool showinput = false;
@@ -604,7 +604,7 @@ int main(int argc, char* argv[]) {
       for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
 
         srcdiff_file(translator, argv[i], argv[i + 1], options, poptions.language, count, skipped, error, showinput, shownumber);
-                     
+
         /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
@@ -1075,26 +1075,26 @@ void process_method(char * optarg, process_options & poptions) {
   char * method;
   while((method = strsep(&methods, ",")) != NULL) {
 
-      if(strcmp(method, COLLECT_METHOD) == 0)
-        poptions.method &= ~METHOD_RAW;
+    if(strcmp(method, COLLECT_METHOD) == 0)
+      poptions.method &= ~METHOD_RAW;
 
-      else if(strcmp(method, RAW_METHOD) == 0)
-        poptions.method |= METHOD_RAW;
+    else if(strcmp(method, RAW_METHOD) == 0)
+      poptions.method |= METHOD_RAW;
 
-      else if(strcmp(method, NO_GROUP_DIFF_METHOD) == 0)
-        poptions.method &= ~METHOD_GROUP;
+    else if(strcmp(method, NO_GROUP_DIFF_METHOD) == 0)
+      poptions.method &= ~METHOD_GROUP;
 
-      else if(strcmp(method, GROUP_DIFF_METHOD) == 0)
-        poptions.method |= METHOD_GROUP;
+    else if(strcmp(method, GROUP_DIFF_METHOD) == 0)
+      poptions.method |= METHOD_GROUP;
 
-      else {
+    else {
 
-        fprintf(stderr, "Invalid argument to --method: '%s'\n", optarg);
-        exit(STATUS_INVALID_ARGUMENT);
-
-      }
+      fprintf(stderr, "Invalid argument to --method: '%s'\n", optarg);
+      exit(STATUS_INVALID_ARGUMENT);
 
     }
+
+  }
 
   free(methods);
 
@@ -1190,38 +1190,38 @@ void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* pat
 void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
-        // Do not nest individual files
-        OPTION_TYPE local_options = options & ~OPTION_NESTED;
+  // Do not nest individual files
+  OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
-        std::string filename = path_one;
-        filename += "|";
-        filename += path_two;
+  std::string filename = path_one;
+  filename += "|";
+  filename += path_two;
 
-        // Remove eventually
-        int real_language = language ? language : Language::getLanguageFromFilename(path_one);
-        if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
-          local_options |= OPTION_CPP;
+  // Remove eventually
+  int real_language = language ? language : Language::getLanguageFromFilename(path_one);
+  if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
+    local_options |= OPTION_CPP;
 
-        if (!real_language && !isoption(options, OPTION_QUIET)) {
-              fprintf(stderr, !shownumber ? "Skipped '%s|%s':  Unregistered extension.\n" :
-                      "    - '%s|%s'\tSkipped: Unregistered extension.\n",
-                      path_one, path_two);
+  if (!real_language && !isoption(options, OPTION_QUIET)) {
+    fprintf(stderr, !shownumber ? "Skipped '%s|%s':  Unregistered extension.\n" :
+            "    - '%s|%s'\tSkipped: Unregistered extension.\n",
+            path_one, path_two);
 
-          ++skipped;
+    ++skipped;
 
-          return;
-        }
+    return;
+  }
 
-        ++count;
+  ++count;
 
-        if(showinput && !isoption(local_options, OPTION_QUIET))
-          fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
-        
-        translator.translate(path_one, path_two, local_options,
-                             0, //poptions.given_directory,
-                             filename.c_str(),
-                             0, //poptions.given_version,
-                             real_language);
+  if(showinput && !isoption(local_options, OPTION_QUIET))
+    fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
+
+  translator.translate(path_one, path_two, local_options,
+                       0, //poptions.given_directory,
+                       filename.c_str(),
+                       0, //poptions.given_version,
+                       real_language);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
@@ -1230,96 +1230,96 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
 
   try {
 
-    bool foundfilename = true;
+  bool foundfilename = true;
 
-    std::string unit_filename = path;
-    if (root_filename)
-      unit_filename = root_filename;
-    else if (strcmp(path, STDIN))
-      unit_filename = path;
-    else
-      foundfilename = false;
+  std::string unit_filename = path;
+  if (root_filename)
+  unit_filename = root_filename;
+  else if (strcmp(path, STDIN))
+  unit_filename = path;
+  else
+  foundfilename = false;
 
-    // language based on extension, if not specified
+  // language based on extension, if not specified
 
-    // 1) language may have been explicitly specified
-    int reallanguage = language;
+  // 1) language may have been explicitly specified
+  int reallanguage = language;
 
-    // 2) try from the filename (basically the extension)
-    if (!reallanguage)
-      reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
+  // 2) try from the filename (basically the extension)
+  if (!reallanguage)
+  reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
 
-    // error if can't find a language
-    if (!reallanguage) {
+  // error if can't find a language
+  if (!reallanguage) {
 
-      if (!isoption(options, OPTION_QUIET)) {
-        if (unit_filename == "-")
-          fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
-        else
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
-                  "    - %s\tSkipped: Unregistered extension.\n",
-                  unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-      }
+  if (!isoption(options, OPTION_QUIET)) {
+  if (unit_filename == "-")
+  fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
+  else
+  fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
+  "    - %s\tSkipped: Unregistered extension.\n",
+  unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+  }
 
-      ++skipped;
+  ++skipped;
 
-      return;
-    }
+  return;
+  }
 
-    // turnon cpp namespace for non Java-based languages
-    if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
-      options |= OPTION_CPP;
+  // turnon cpp namespace for non Java-based languages
+  if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
+  options |= OPTION_CPP;
 
-    // open up the file
-       void* context = translator.setInput(path);
+  // open up the file
+  void* context = translator.setInput(path);
 
-    // check if file is bad
-    if (!context || archiveReadStatus(context) < 0 ) {
-      fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+  // check if file is bad
+  if (!context || archiveReadStatus(context) < 0 ) {
+  fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
 
-      options = save_options;
-      ++error;
+  options = save_options;
+  ++error;
 
-      return;
-    }
-   /
-    // another file
-    ++count;
+  return;
+  }
+  /
+  // another file
+  ++count;
 
 
-    const char* c_filename = clean_filename(unit_filename.c_str());
+  const char* c_filename = clean_filename(unit_filename.c_str());
 
-    // output the currently processed filename
-    if (!isoption(options, OPTION_QUIET) && shownumber)
-      fprintf(stderr, "%5d %s\n", count, c_filename);
+  // output the currently processed filename
+  if (!isoption(options, OPTION_QUIET) && shownumber)
+  fprintf(stderr, "%5d %s\n", count, c_filename);
 
-    // translate the file
-       translator.translate(path, dir,
-                         foundfilename ? c_filename : 0,
-                         version, reallanguage);
-   
+  // translate the file
+  translator.translate(path, dir,
+  foundfilename ? c_filename : 0,
+  version, reallanguage);
+
   } catch (FileError) {
 
-    // output tracing information about the input file
-    if (showinput && !isoption(options, OPTION_QUIET)) {
+  // output tracing information about the input file
+  if (showinput && !isoption(options, OPTION_QUIET)) {
 
-      // output the currently processed filename
-      fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
-      fprintf(stderr, "\tError: Unable to open file.\n");
+  // output the currently processed filename
+  fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
+  fprintf(stderr, "\tError: Unable to open file.\n");
 
-    } else {
+  } else {
 
-      if (dir)
-        fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, path);
-      else
-        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-    }
+  if (dir)
+  fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, path);
+  else
+  fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+  }
 
-    ++error;
+  ++error;
   }
 
   options = save_options;
-*/
+  */
 }
 
 void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
@@ -1341,10 +1341,10 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
     try {
 
       /*      // open up the file
-      if (firstopen)
-        context = translator.setInput(path);
-        else*/
-        context = getContext();
+              if (firstopen)
+              context = translator.setInput(path);
+              else*/
+      context = getContext();
 
       // check if file is bad
       if (!context || archiveReadStatus(context) < 0 ) {
@@ -1358,7 +1358,7 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 
       // once any source archive is input, then we have to assume nested not just locally
       if (isarchive) {
-	translator.set_nested();
+        translator.set_nested();
         save_options |= OPTION_NESTED;
         showinput = true;
         //        shownumber = true;
@@ -1450,13 +1450,13 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 
       // open up the file
       /*      if (!firstopen)
-        context = translator.setInput(path);
+              context = translator.setInput(path);
       */
 
       // translate the file
       /*      translator.translate(path, dir,
-                           foundfilename ? c_filename : 0,
-                           version, reallanguage);
+              foundfilename ? c_filename : 0,
+              version, reallanguage);
       */
     } catch (FileError) {
 
@@ -1529,11 +1529,11 @@ bool is_dir(struct dirent * file, const char * filename) {
     return true;
 #endif
 
-    // path with current filename
-    // handle directories later after all the filenames
-    struct stat instat = { 0 };
-    
-    return stat(filename, &instat);
+  // path with current filename
+  // handle directories later after all the filenames
+  struct stat instat = { 0 };
+
+  return stat(filename, &instat);
 
 }
 
@@ -1561,287 +1561,334 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   int basesize_new = filename_new.length();
 
   // process all non-directory files
-  for (int i = 0, j = 0; i < n && j < m; ++i, ++j) {
+  for (int i = 0, j = 0; i < n && j < m;) {
 
-    int comparison = 0;
-    while(i < n && j < m && (comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name))) {
+    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
 
-        if(comparison < 0)
-          ++i;
-        else
-          ++j;
-        
+    if(!comparison) {
+
+      // special test for dir with no stat needed
+      if (namelist_old[i]->d_type == DT_DIR && namelist_new[j]->d_type == DT_DIR ) {
+
+        ++i;
+        ++j;
+        continue;
+      }
+
+      // path with current filename
+      filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+
+      // handle directories later after all the filenames
+      struct stat instat_old = { 0 };
+      int stat_status_old = stat(filename_old.c_str(), &instat_old);
+
+      filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+
+      // handle directories later after all the filenames
+      struct stat instat_new = { 0 };
+      int stat_status_new = stat(filename_new.c_str(), &instat_new);
+
+
+      if (stat_status_old && stat_status_new) {
+
+        ++i;
+        ++j;
+        continue;
+      }
+
+      // stat test for dir
+#ifndef _DIRENT_HAVE_D_TYPE
+      if (S_ISDIR(instat_old.st_mode) && S_ISDIR(instat_new.st_mode)) {
+
+        ++i;
+        ++j;
+        continue;
+      }
+#endif
+
+      // make sure that we are not processing the output file
+      if (instat_old.st_ino == outstat.st_ino && instat_old.st_dev == outstat.st_dev) {
+        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
+
+        ++skipped;
+        ++i;
+        ++j;
+        continue;
+      }
+
+      // translate the file listed in the input file using the directory and filename extracted from the path
+
+      srcdiff_text(translator,
+                   filename_old.c_str(),
+                   filename_new.c_str(),
+                   options,
+                   poptions.language,
+                   count, skipped, error, showinput, shownumber);
+
+      ++i;
+      ++j;
+
+    } else if(comparison < 0) {
+
+      filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+
+      if(is_dir(namelist_old[i], filename_old.c_str())) {
+
+        ++i;
+        continue;
+      } else {
+
+        /*
+        srcdiff_text(translator,
+                     filename_old.c_str(),
+                     "",
+                     options,
+                     poptions.language,
+                     count, skipped, error, showinput, shownumber);
+        */
+        ++i;
+
+      }
+
+    } else {
+
+      if(is_dir(namelist_new[j], filename_new.c_str())) {
+
+        ++j;
+        continue;
+
+      } else {
+        /*
+        srcdiff_text(translator,
+                     "",
+                     filename_new.c_str(),
+                     options,
+                     poptions.language,
+                     count, skipped, error, showinput, shownumber);
+        */
+        ++j;
+      }
+
+    }
+  }
+    // no need to handle subdirectories, unless recursive
+    //  if (!isoption(options, OPTION_RECURSIVE))
+    //    return;
+
+    // go back and process directories
+    for (int i = 0, j = 0; i < n && j < m; ++i, ++j) {
+
+      // special test with no stat needed
+#ifdef _DIRENT_HAVE_D_TYPE
+      if (namelist_old[i]->d_type != DT_DIR && namelist_new[j]->d_type != DT_DIR)
+        continue;
+#endif
+
+      // path with current filename
+      filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+
+      filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+
+      // already handled other types of files
+#ifndef _DIRENT_HAVE_D_TYPE
+      struct stat instat_old = { 0 };
+      int stat_status_old = stat(filename_old.c_str(), &instat_old);
+      struct stat instat_new = { 0 };
+      int stat_status_new = stat(filename_new.c_str(), &instat_new);
+      if (!stat_status_old && !S_ISDIR(instat_old.st_mode) && !stat_status_old && !S_ISDIR(instat_old.st_mode))
+        continue;
+
+#endif
+
+      srcdiff_dir(translator, filename_old.c_str(), filename_new.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
     }
 
-    if(i >= n && j >= m)
-      continue;
+    // all done with this directory
+    for (int i = 0; i < n; ++i)
+      free(namelist_old[i]);
+    free(namelist_old);
 
-    // special test for dir with no stat needed
-#ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist_old[i]->d_type == DT_DIR && namelist_new[j]->d_type == DT_DIR )
-      continue;
-#endif
-
-    // path with current filename
-    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
-
-    // handle directories later after all the filenames
-    struct stat instat_old = { 0 };
-    int stat_status_old = stat(filename_old.c_str(), &instat_old);
-
-    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
-
-    // handle directories later after all the filenames
-    struct stat instat_new = { 0 };
-    int stat_status_new = stat(filename_new.c_str(), &instat_new);
-
-
-    if (stat_status_old && stat_status_new)
-      continue;
-
-    // stat test for dir
-#ifndef _DIRENT_HAVE_D_TYPE
-    if (S_ISDIR(instat_old.st_mode) && S_ISDIR(instat_new.st_mode))
-      continue;
-#endif
-
-    // make sure that we are not processing the output file
-    if (instat_old.st_ino == outstat.st_ino && instat_old.st_dev == outstat.st_dev) {
-      fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-              "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
-
-      ++skipped;
-      continue;
-    }
-
-    // translate the file listed in the input file using the directory and filename extracted from the path
-
-    srcdiff_text(translator,
-                 filename_old.c_str(),
-                 filename_new.c_str(),
-                 options,
-                 poptions.language,
-                 count, skipped, error, showinput, shownumber);
-
-  }
-
-  // no need to handle subdirectories, unless recursive
-  //  if (!isoption(options, OPTION_RECURSIVE))
-  //    return;
-
-  // go back and process directories
-  for (int i = 0, j = 0; i < n && j < m; ++i, ++j) {
-
-    // special test with no stat needed
-#ifdef _DIRENT_HAVE_D_TYPE
-    if (namelist_old[i]->d_type != DT_DIR && namelist_new[j]->d_type != DT_DIR)
-      continue;
-#endif
-
-    // path with current filename
-    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
-
-    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
-
-    // already handled other types of files
-#ifndef _DIRENT_HAVE_D_TYPE
-    struct stat instat_old = { 0 };
-    int stat_status_old = stat(filename_old.c_str(), &instat_old);
-    struct stat instat_new = { 0 };
-    int stat_status_new = stat(filename_new.c_str(), &instat_new);
-    if (!stat_status_old && !S_ISDIR(instat_old.st_mode) && !stat_status_old && !S_ISDIR(instat_old.st_mode))
-      continue;
-
-#endif
-
-    srcdiff_dir(translator, filename_old.c_str(), filename_new.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
-  }
-
-  // all done with this directory
-  for (int i = 0; i < n; ++i)
-    free(namelist_old[i]);
-  free(namelist_old);
-
-  for (int j = 0; j < m; ++j)
-    free(namelist_new[j]);
-  free(namelist_new);
+    for (int j = 0; j < m; ++j)
+      free(namelist_new[j]);
+    free(namelist_new);
 
 #else
 
-  // try to open the found directory
-  DIR* dirp = opendir(directory);
-  if (!dirp) {
-    return;
-  }
-
-  // start of path from directory name
-  std::string filename_old = directory;
-  if (!filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
-    filename_old += PATH_SEPARATOR;
-  int basesize_old = filename_old.length();
-
-  // process all non-directory files
-  while (struct dirent* entry = readdir(dirp)) {
-
-    // filter out the usual suspects
-    if (!dir_filter(entry))
-      continue;
-
-    // special test with no stat needed
-#ifdef _DIRENT_HAVE_D_TYPE
-    if (entry->d_type == DT_DIR)
-      continue;
-#endif
-
-    // path with current filename
-    filename_old.replace(basesize_old, std::string::npos, entry->d_name);
-
-    // handle directories later after all the filenames
-    struct stat instat = { 0 };
-    int stat_status = stat(filename_old.c_str(), &instat);
-    if (!stat_status && S_ISDIR(instat.st_mode)) {
-      continue;
+    // try to open the found directory
+    DIR* dirp = opendir(directory);
+    if (!dirp) {
+      return;
     }
 
-    // make sure that we are not processing the output file
-    if (strcmp(filename_old.c_str(), poptions.srcdiff_filename) == 0) {
-      fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-              "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
+    // start of path from directory name
+    std::string filename_old = directory;
+    if (!filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
+      filename_old += PATH_SEPARATOR;
+    int basesize_old = filename_old.length();
 
-      ++skipped;
-      continue;
-    }
+    // process all non-directory files
+    while (struct dirent* entry = readdir(dirp)) {
 
-    // translate the file listed in the input file using the directory and filename extracted from the path
-    /*
-    srcdiff_text(translator,
-                 filename_old.c_str(),
-                 options,
-                 0,
-                 0,
-                 poptions.given_version,
-                 poptions.language,
-                 poptions.tabsize,
-                 count, skipped, error, showinput, shownumber);
-    */
-  }
-
-  // no need to handle subdirectories, unless recursive
-  //  if (!isoption(options, OPTION_RECURSIVE))
-  //    return;
-
-  // go back and process directories
-  rewinddir(dirp);
-  while (struct dirent* entry = readdir(dirp)) {
-
-    // skip standard UNIX filenames, and . files
-    // TODO:  Skip . and .. by default, but should we announce others?  E.g., .svn?
-    // filter out the usual suspects
-    if (!dir_filter(entry))
-      continue;
-
-    // special test with no stat needed
-#ifdef _DIRENT_HAVE_D_TYPE
-    if (entry->d_type != DT_DIR)
-      continue;
-#endif
-
-    // path with current filename
-    filename_old.replace(basesize_old, std::string::npos, entry->d_name);
-
-    // already handled other types of files
-    struct stat instat = { 0 };
-    int stat_status = stat(filename_old.c_str(), &instat);
-    if (!stat_status && !S_ISDIR(instat.st_mode))
-      continue;
-
-    srcdiff_dir(translator, filename_old.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
-  }
-
-  // all done with this directory
-  closedir(dirp);
-
-#endif
-}
-
-void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
-
-  try {
-
-    // translate all the filenames listed in the named file
-    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(poptions.fname);
-    char* file_one;
-    if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-      exit(1);
-    }
-
-    while ((file_one = uriinput.readline())) {
-
-      // skip over whitespace
-      // TODO:  Other types of whitespace?  backspace?
-      file_one += strspn(file_one, " \t\f");
-
-      // skip blank lines or comment lines
-      if (file_one[0] == '\0' || file_one[0] == FILELIST_COMMENT)
+      // filter out the usual suspects
+      if (!dir_filter(entry))
         continue;
 
-      char * separator = strchr(file_one, '|');
+      // special test with no stat needed
+#ifdef _DIRENT_HAVE_D_TYPE
+      if (entry->d_type == DT_DIR)
+        continue;
+#endif
 
-      // remove any end whitespace
-      // TODO:  Extract function, and use elsewhere
-      for (char* p = separator- 1; p != file_one; --p) {
-        if (isspace(*p))
-          *p = 0;
-        else
-          break;
+      // path with current filename
+      filename_old.replace(basesize_old, std::string::npos, entry->d_name);
+
+      // handle directories later after all the filenames
+      struct stat instat = { 0 };
+      int stat_status = stat(filename_old.c_str(), &instat);
+      if (!stat_status && S_ISDIR(instat.st_mode)) {
+        continue;
       }
 
-      showinput = true;
+      // make sure that we are not processing the output file
+      if (strcmp(filename_old.c_str(), poptions.srcdiff_filename) == 0) {
+        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
 
-      *separator = 0;
-
-      char * file_two = separator + 1;
-        
-      file_two += strspn(file_two, " \t\f");
-
-      // remove any end whitespace
-      // TODO:  Extract function, and use elsewhere
-      for (char* p = file_two + strlen(file_two) - 1; p != file_two; --p) {
-        if (isspace(*p))
-          *p = 0;
-        else
-          break;
+        ++skipped;
+        continue;
       }
 
-      std::string filename = file_one;
-      filename += "|";
-      filename += file_two;
-
-      srcdiff_text(translator, file_one, file_two, options, poptions.language, count, skipped, error, showinput, shownumber);
-        
-      *separator = '|';
-
-      if (isoption(options, OPTION_TERMINATE))
-        return;
-
+      // translate the file listed in the input file using the directory and filename extracted from the path
       /*
-      // process this command line argument
-      srcdiff_file(translator, argv[i], options,
-      input_arg_count == 1 ? poptions.given_directory : 0,
-      input_arg_count == 1 ? poptions.given_filename : 0,
-      input_arg_count == 1 ? poptions.given_version : 0,
-      poptions.language,
-      poptions.tabsize,
-      count, skipped, error, showinput, shownumber);
+        srcdiff_text(translator,
+        filename_old.c_str(),
+        options,
+        0,
+        0,
+        poptions.given_version,
+        poptions.language,
+        poptions.tabsize,
+        count, skipped, error, showinput, shownumber);
       */
-
     }
 
-  } catch (URIStreamFileError) {
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.fname);
-    exit(STATUS_INPUTFILE_PROBLEM);
+    // no need to handle subdirectories, unless recursive
+    //  if (!isoption(options, OPTION_RECURSIVE))
+    //    return;
+
+    // go back and process directories
+    rewinddir(dirp);
+    while (struct dirent* entry = readdir(dirp)) {
+
+      // skip standard UNIX filenames, and . files
+      // TODO:  Skip . and .. by default, but should we announce others?  E.g., .svn?
+      // filter out the usual suspects
+      if (!dir_filter(entry))
+        continue;
+
+      // special test with no stat needed
+#ifdef _DIRENT_HAVE_D_TYPE
+      if (entry->d_type != DT_DIR)
+        continue;
+#endif
+
+      // path with current filename
+      filename_old.replace(basesize_old, std::string::npos, entry->d_name);
+
+      // already handled other types of files
+      struct stat instat = { 0 };
+      int stat_status = stat(filename_old.c_str(), &instat);
+      if (!stat_status && !S_ISDIR(instat.st_mode))
+        continue;
+
+      srcdiff_dir(translator, filename_old.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    }
+
+    // all done with this directory
+    closedir(dirp);
+
+#endif
   }
 
-}
+  void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
+
+    try {
+
+      // translate all the filenames listed in the named file
+      // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+      URIStream uriinput(poptions.fname);
+      char* file_one;
+      if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
+        fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+        exit(1);
+      }
+
+      while ((file_one = uriinput.readline())) {
+
+        // skip over whitespace
+        // TODO:  Other types of whitespace?  backspace?
+        file_one += strspn(file_one, " \t\f");
+
+        // skip blank lines or comment lines
+        if (file_one[0] == '\0' || file_one[0] == FILELIST_COMMENT)
+          continue;
+
+        char * separator = strchr(file_one, '|');
+
+        // remove any end whitespace
+        // TODO:  Extract function, and use elsewhere
+        for (char* p = separator- 1; p != file_one; --p) {
+          if (isspace(*p))
+            *p = 0;
+          else
+            break;
+        }
+
+        showinput = true;
+
+        *separator = 0;
+
+        char * file_two = separator + 1;
+
+        file_two += strspn(file_two, " \t\f");
+
+        // remove any end whitespace
+        // TODO:  Extract function, and use elsewhere
+        for (char* p = file_two + strlen(file_two) - 1; p != file_two; --p) {
+          if (isspace(*p))
+            *p = 0;
+          else
+            break;
+        }
+
+        std::string filename = file_one;
+        filename += "|";
+        filename += file_two;
+
+        srcdiff_text(translator, file_one, file_two, options, poptions.language, count, skipped, error, showinput, shownumber);
+
+        *separator = '|';
+
+        if (isoption(options, OPTION_TERMINATE))
+          return;
+
+        /*
+        // process this command line argument
+        srcdiff_file(translator, argv[i], options,
+        input_arg_count == 1 ? poptions.given_directory : 0,
+        input_arg_count == 1 ? poptions.given_filename : 0,
+        input_arg_count == 1 ? poptions.given_version : 0,
+        poptions.language,
+        poptions.tabsize,
+        count, skipped, error, showinput, shownumber);
+        */
+
+      }
+
+    } catch (URIStreamFileError) {
+      fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.fname);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+
+  }
