@@ -590,12 +590,9 @@ int main(int argc, char* argv[]) {
     } else if (input_arg_count == 0) {
 
       // translate from standard input using any directory, filename and version given on the command line
-      srcdiff_file(translator, STDIN, options,
-                   poptions.given_directory,
-                   poptions.given_filename,
-                   poptions.given_version,
+      srcdiff_file(translator, STDIN, STDIN, options,
                    poptions.language,
-                   poptions.tabsize, count, skipped, error, showinput, shownumber);
+                   count, skipped, error, showinput, shownumber);
 
       // translate filenames from the command line
     } else {
