@@ -1571,10 +1571,10 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
         else
           ++j;
         
-      }
+    }
 
-    if(i == n && j == m)
-      return;
+    if(i >= n && j >= m)
+      continue;
 
     // special test for dir with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
