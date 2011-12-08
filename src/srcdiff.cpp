@@ -1664,8 +1664,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     srcdiff_text(translator,
                  comparison <= 0 ? (++i, filename_old.c_str()) : "",
                  comparison >= 0 ? (++j, filename_new.c_str()) : "",
-                 0,
-                 0,
+                 directory_length_old,
+                 directory_length_new,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
@@ -1692,8 +1692,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     srcdiff_text(translator,
                  filename_old.c_str(),
                  "",
-                 0,
-                 0,
+                 directory_length_old,
+                 directory_length_new,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
@@ -1720,8 +1720,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     srcdiff_text(translator,
                  "",
                  filename_new.c_str(),
-                 0,
-                 0,
+                 directory_length_old,
+                 directory_length_new,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
