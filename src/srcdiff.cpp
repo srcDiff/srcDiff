@@ -357,7 +357,8 @@ process_options* gpoptions = 0;
 
 void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
+                 process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
 void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
 
 // translate a file, maybe an archive
@@ -1529,9 +1530,12 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
 
   }
 
+  int directory_length_old = strlen(directory_old);
+  int directory_length_new = strlen(directory_new);
+
   translator.set_root_directory(poptions.given_directory ? poptions.given_directory : directory.c_str());
 
-  srcdiff_dir(translator, directory_old, directory_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
+  srcdiff_dir(translator, directory_old, directory_length_old, directory_new, directory_length_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
 // file/directory names to ignore when processing a directory
@@ -1593,7 +1597,9 @@ void noteSkipped(bool shownumber, const process_options& options) {
           "    - %s\tSkipped: Output file.\n", options.srcdiff_filename);
 }
 
-void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
+                 process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
@@ -1750,7 +1756,9 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     // process these directories
     srcdiff_dir(translator,
                 comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                directory_length_old,
                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                directory_length_new,
                 poptions,
                 count, skipped, error, showinput, shownumber, outstat);
   }
@@ -1774,8 +1782,10 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
     // process this directory
     srcdiff_dir(translator,
-                 filename_old.c_str(),
+                filename_old.c_str(),
+                directory_length_old,
                  "",
+                directory_length_new,
                 poptions,
                 count, skipped, error, showinput, shownumber, outstat);
   }
