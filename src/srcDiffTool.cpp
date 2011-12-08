@@ -204,6 +204,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   } catch(...) {
 
+    is_old = -1;
+
     if(!isoption(global_options, OPTION_QUIET))
       fprintf(stderr, "Unable to open file '%s'\n", path_one);
     
@@ -261,6 +263,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
 
   } catch(...) {
+
+    is_new = -1;
 
     if(!isoption(global_options, OPTION_QUIET))
       fprintf(stderr, "Unable to open file '%s'\n", path_two);
@@ -351,7 +355,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
     update_diff_stack(wstate.output_diff, &diff_common_start, COMMON);
 
-    return;
+    if(is_old == -1 && is_new == -1)
+      return;
 
   } else if(nodes_old.empty()) {
 
