@@ -1201,10 +1201,6 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
     filename += "|";
     filename += path_two;
 
-  } else {
-
-    version = version ? version :"1|2";
-
   }
 
   // Remove eventually
@@ -1233,7 +1229,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
   translator.translate(path_one, path_two, local_options,
                        0, //poptions.given_directory,
                        filename.c_str(),
-                       version,
+                       0,
                        real_language);
 
   /*
