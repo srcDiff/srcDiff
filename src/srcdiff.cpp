@@ -1199,8 +1199,6 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
   OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
   std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
-  const char * version = gpoptions->given_version;
-
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
 
     filename += "|";
