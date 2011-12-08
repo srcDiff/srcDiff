@@ -1194,8 +1194,13 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
   OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
   std::string filename = path_one;
-  filename += "|";
-  filename += path_two;
+
+  if(strcmp(path_one, path_two) != 0) {
+
+    filename += "|";
+    filename += path_two;
+
+  }
 
   // Remove eventually
   int real_language = language ? language : Language::getLanguageFromFilename(path_one);
