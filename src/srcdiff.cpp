@@ -1195,13 +1195,13 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
   // Do not nest individual files
   OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
-  std::string filename = path_one;
+  std::string filename = path_one + directory_length_old;
   const char * version = gpoptions->given_version;
 
-  if(strcmp(path_one, path_two) != 0) {
+  if(strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
 
     filename += "|";
-    filename += path_two;
+    filename += path_two + directory_length_new;
 
   }
 
