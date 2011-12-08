@@ -365,6 +365,7 @@ void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* pat
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
 void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+                  int directory_length_old, int directory_length_new,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 
 // setup options and collect info from arguments
@@ -1183,11 +1184,12 @@ void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* pat
     return;
   }
 
-  srcdiff_text(translator, path_one, path_two, options, language, count, skipped,
+  srcdiff_text(translator, path_one, path_two, 0, 0, options, language, count, skipped,
                error, showinput, shownumber);
 }
 
 void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+                  int directory_length_old, int directory_length_new,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // Do not nest individual files
@@ -1654,6 +1656,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     srcdiff_text(translator,
                  comparison <= 0 ? (++i, filename_old.c_str()) : "",
                  comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                 0,
+                 0,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
@@ -1680,6 +1684,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     srcdiff_text(translator,
                  filename_old.c_str(),
                  "",
+                 0,
+                 0,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
@@ -1706,6 +1712,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     srcdiff_text(translator,
                  "",
                  filename_new.c_str(),
+                 0,
+                 0,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
@@ -1791,6 +1799,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     srcdiff_text(translator,
                  filename_old.c_str(),
                  "",
+                 0,
+                 0,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
@@ -1962,7 +1972,7 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
       filename += "|";
       filename += file_two;
 
-      srcdiff_text(translator, file_one, file_two, options, poptions.language, count, skipped, error, showinput, shownumber);
+      srcdiff_text(translator, file_one, file_two, 0, 0, options, poptions.language, count, skipped, error, showinput, shownumber);
 
       *separator = '|';
 
