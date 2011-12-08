@@ -560,4 +560,15 @@ void srcDiffTool::set_root_directory(const char * root_directory) {
 
 
   this->root_directory = root_directory;
+
+  int length = strlen(root_directory);
+
+  dir_length_old = index(root_directory, '|') - root_directory;
+
+  if(dir_length_old == length) {
+
+    dir_length_new = dir_length_old;
+  } else
+    dir_length_new = length - dir_length_old;
+
 }
