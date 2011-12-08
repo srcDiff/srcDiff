@@ -1530,8 +1530,8 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
 
   }
 
-  int directory_length_old = strlen(directory_old);
-  int directory_length_new = strlen(directory_new);
+  int directory_length_old = strlen(directory_old) + 1;
+  int directory_length_new = strlen(directory_new) + 1;
 
   translator.set_root_directory(poptions.given_directory ? poptions.given_directory : directory.c_str());
 
