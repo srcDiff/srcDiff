@@ -1227,7 +1227,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
   translator.translate(path_one, path_two, local_options,
-                       0, //poptions.given_directory,
+                       gpoptions->given_directory,
                        filename.c_str(),
                        0,
                        real_language);
@@ -1515,6 +1515,12 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
   stat(gpoptions->srcdiff_filename, &outstat);
 
   showinput = true;
+
+  std::string directory = directory_old;
+  directory += "|";
+  directory += directory_new;
+
+  poptions.given_directory = poptions.given_directory ? poptions.given_directory : directory.c_str();
 
   srcdiff_dir(translator, directory_old, directory_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
 }
