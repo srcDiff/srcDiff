@@ -1607,11 +1607,11 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // skip directories
-    if(is_dir(namelist_old[i], filename_old.c_str())) {
+    if(is_dir(namelist_old[i], filename_old.c_str()) == 1) {
       ++i;
       continue;
     }
-    if(is_dir(namelist_new[j], filename_new.c_str())) {
+    if(is_dir(namelist_new[j], filename_new.c_str()) == 1) {
       ++j;
       continue;
     }
@@ -1649,7 +1649,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
     // skip directories
-    if(is_dir(namelist_old[i], filename_old.c_str()))
+    if(is_dir(namelist_old[i], filename_old.c_str()) == 1)
       continue;
 
     // skip over output file
@@ -1675,7 +1675,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // skip directories
-    if(is_dir(namelist_new[j], filename_new.c_str()))
+    if(is_dir(namelist_new[j], filename_new.c_str()) == 1)
       continue;
 
     // skip over output file
@@ -1708,11 +1708,11 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // skip non-directories
-    if(!is_dir(namelist_old[i], filename_old.c_str())) {
+    if(is_dir(namelist_old[i], filename_old.c_str()) != 1) {
       ++i;
       continue;
     }
-    if(!is_dir(namelist_new[j], filename_new.c_str())) {
+    if(is_dir(namelist_new[j], filename_new.c_str()) != 1) {
       ++j;
       continue;
     }
@@ -1735,7 +1735,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
     // skip non-directories
-    if(!is_dir(namelist_old[i], filename_old.c_str()))
+    if(is_dir(namelist_old[i], filename_old.c_str()) != 1)
       continue;
 
     // skip over output file
@@ -1760,7 +1760,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // skip non-directories
-    if(!is_dir(namelist_new[j], filename_new.c_str()))
+    if(is_dir(namelist_new[j], filename_new.c_str()) != 1)
       continue;
 
     // skip over output file
