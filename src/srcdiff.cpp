@@ -1566,6 +1566,12 @@ int is_output_file(const char * filename, const struct stat & outstat) {
 
 }
 
+void noteSkipped(bool shownumber, const process_options& options) {
+
+  fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+          "    - %s\tSkipped: Output file.\n", options.srcdiff_filename);
+}
+
 void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
@@ -1575,6 +1581,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
   int n = scandir(directory_old, &namelist_old, dir_filter, alphasort);
   int m = scandir(directory_new, &namelist_new, dir_filter, alphasort);
+  // TODO:  Fix error handling.  What if one is in error?
   if (n < 0 && m < 0) {
     return;
   }
@@ -1601,29 +1608,23 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
       // skip directories
       if(is_dir(namelist_old[i], filename_old.c_str())) {
-
         ++i;
         continue;
       }
       if(is_dir(namelist_new[j], filename_new.c_str())) {
-
         ++j;
         continue;
       }
 
       // skip over output file
       if (is_output_file(filename_old.c_str(), outstat) == 1) {
-        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
-
+        noteSkipped(shownumber, poptions);
         ++i;
         ++skipped;
         continue;
       }
       if (is_output_file(filename_new.c_str(), outstat) == 1) {
-        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
-
+        noteSkipped(shownumber, poptions);
         ++j;
         ++skipped;
         continue;
@@ -1656,8 +1657,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
       // skip over output file
       if (is_output_file(filename_old.c_str(), outstat) == 1) {
-        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
+        noteSkipped(shownumber, poptions);
         ++skipped;
         continue;
       }
@@ -1683,8 +1683,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
       // skip over output file
       if (is_output_file(filename_new.c_str(), outstat) == 1) {
-        fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-                "    - %s\tSkipped: Output file.\n", poptions.srcdiff_filename);
+        noteSkipped(shownumber, poptions);
         ++skipped;
         continue;
       }
@@ -1778,24 +1777,14 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
     
     }
 
-    if(n >= 0) {
-
     // all done with this directory
     for (int i = 0; i < n; ++i)
       free(namelist_old[i]);
-
     free(namelist_old);
-
-    }
-
-    if(m >= 0) {
 
     for (int j = 0; j < m; ++j)
       free(namelist_new[j]);
-
     free(namelist_new);
-
-    }
 
 #else
 
