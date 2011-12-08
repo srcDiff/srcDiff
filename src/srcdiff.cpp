@@ -1517,10 +1517,15 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
   showinput = true;
 
   std::string directory = directory_old;
-  directory += "|";
-  directory += directory_new;
 
-  poptions.given_directory = poptions.given_directory ? poptions.given_directory : directory.c_str();
+  if(strcmp(directory_old, directory_new) != 0) {
+
+    directory += "|";
+    directory += directory_new;
+
+  }
+
+  translator.set_root_directory(poptions.given_directory ? poptions.given_directory : directory.c_str());
 
   srcdiff_dir(translator, directory_old, directory_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
 }
