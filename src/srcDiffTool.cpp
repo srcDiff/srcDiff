@@ -555,3 +555,9 @@ void srcDiffTool::set_nested(bool is_nested) {
   else
     global_options &= ~OPTION_NESTED;
 }
+
+void srcDiffTool::set_root_directory(const char * root_directory) {
+
+
+  this->root_directory = root_directory;
+}

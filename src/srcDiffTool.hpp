@@ -70,6 +70,8 @@ void startUnit(const char * language,
 
   void set_nested(bool is_nested = true);
 
+  void set_root_directory(const char * root_directory);
+
  private:
 
   bool first;
