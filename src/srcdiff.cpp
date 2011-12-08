@@ -1204,7 +1204,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
 
     filename += "|";
-    filename += path_two + directory_length_new;
+    filename += path_two[0] ? path_two + directory_length_new : path_two;
 
   }
 
