@@ -1630,16 +1630,13 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
       continue;
     }
 
+    // is this a common, inserted, or deleted file?
     int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
-
-    // find the filenames
-    const char* leftfilename  = comparison <= 0 ? (++i, filename_old.c_str()) : "";
-    const char* rightfilename = comparison >= 0 ? (++j, filename_new.c_str()) : "";
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     srcdiff_text(translator,
-                 leftfilename,
-                 rightfilename,
+                 comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
@@ -1671,7 +1668,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
                  count, skipped, error, showinput, shownumber);
   }
 
-  // process all non-directory files that are remaining in the old version
+  // process all non-directory files that are remaining in the new version
   for ( ; j < m; ++j) {
 
     // form the full path
@@ -1701,80 +1698,85 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
   //  if (!isoption(options, OPTION_RECURSIVE))
   //    return;
 
-  // go back and process directories
-  for (int i = 0, j = 0; i < n || j < m;) {
+  // process all directories
+  i = 0;
+  j = 0;
+  while (i < n && j < m) {
 
-    int comparison;
-    if(i < n && j < m)
-      comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
-    else if (i < n)
-      comparison = -1;
-    else
-      comparison = 1;
+    // form the full path
+    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
-    if(!comparison) {
-
-      // path with current filename
-      filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
-
-      filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
-
-      if(is_dir(namelist_old[i], filename_old.c_str()) != 1 && is_dir(namelist_new[j], filename_new.c_str()) != 1) {
-
-        ++i;
-        ++j;
-        continue;
-      }
-
-      // translate the file listed in the input file using the directory and filename extracted from the path
-      srcdiff_dir(translator,
-                  filename_old.c_str(),
-                  filename_new.c_str(),
-                  poptions,
-                  count, skipped, error, showinput, shownumber, outstat);
-
+    // skip non-directories
+    if(!is_dir(namelist_old[i], filename_old.c_str())) {
       ++i;
+      continue;
+    }
+    if(!is_dir(namelist_new[j], filename_new.c_str())) {
       ++j;
-
-    } else if(comparison < 0) {
-
-      filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
-
-      if(is_dir(namelist_old[i], filename_old.c_str()) != 1) {
-
-        ++i;
-        continue;
-      }
-
-      srcdiff_dir(translator,
-                  filename_old.c_str(),
-                  "",
-                  poptions,
-                  count, skipped, error, showinput, shownumber, outstat);
-
-      ++i;
-
-    } else {
-
-      filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
-
-      if(is_dir(namelist_new[j], filename_new.c_str()) != 1) {
-
-        ++j;
-        continue;
-
-      }
-
-      srcdiff_dir(translator,
-                  "",
-                  filename_new.c_str(),
-                  poptions,
-                  count, skipped, error, showinput, shownumber, outstat);
-
-      ++j;
-
+      continue;
     }
 
+    // is this a common, inserted, or deleted directory?
+    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+
+    // process these directories
+    srcdiff_dir(translator,
+                comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                poptions,
+                count, skipped, error, showinput, shownumber, outstat);
+  }
+
+  // process all directories that remain in the old version
+  for ( ; i < n; ++i) {
+
+    // form the full path
+    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+
+    // skip non-directories
+    if(!is_dir(namelist_old[i], filename_old.c_str()))
+      continue;
+
+    // skip over output file
+    if (is_output_file(filename_old.c_str(), outstat) == 1) {
+      noteSkipped(shownumber, poptions);
+      ++skipped;
+      continue;
+    }
+
+    // process this directory
+    srcdiff_dir(translator,
+                 filename_old.c_str(),
+                 "",
+                poptions,
+                count, skipped, error, showinput, shownumber, outstat);
+  }
+
+  // process all directories that remain in the new version
+  for ( ; j < m; ++j) {
+
+    // form the full path
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+
+    // skip non-directories
+    if(!is_dir(namelist_new[j], filename_new.c_str()))
+      continue;
+
+    // skip over output file
+    if (is_output_file(filename_new.c_str(), outstat) == 1) {
+      noteSkipped(shownumber, poptions);
+      ++skipped;
+      continue;
+    }
+
+    // process this directory
+    srcdiff_text(translator,
+                 filename_old.c_str(),
+                 "",
+                 options,
+                 poptions.language,
+                 count, skipped, error, showinput, shownumber);
   }
 
   // all done with this directory
