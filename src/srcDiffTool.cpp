@@ -356,7 +356,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     update_diff_stack(wstate.output_diff, &diff_common_start, COMMON);
 
     if(is_old == -1 && is_new == -1)
-      return;
+      exit(STATUS_INPUTFILE_PROBLEM);
 
   } else if(nodes_old.empty()) {
 
