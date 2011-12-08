@@ -364,8 +364,9 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
 void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
-void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two,
                   int directory_length_old, int directory_length_new,
+                  OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 
 // setup options and collect info from arguments
@@ -1188,8 +1189,9 @@ void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* pat
                error, showinput, shownumber);
 }
 
-void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two,
                   int directory_length_old, int directory_length_new,
+                  OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // Do not nest individual files
