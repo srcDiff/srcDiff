@@ -1669,6 +1669,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, const char
 
     } else {
 
+      filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+
       if(is_dir(namelist_new[j], filename_new.c_str())) {
 
         ++j;
