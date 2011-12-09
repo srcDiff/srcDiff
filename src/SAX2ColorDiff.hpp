@@ -10,11 +10,8 @@
 
 #include <libxml/parser.h>
 
-enum operation { COMMON, DELETE, INSERT };
-
 struct source_diff {
 
-  operation op;
   std::vector<int> * in_diff;
 };
 
