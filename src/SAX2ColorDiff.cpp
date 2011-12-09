@@ -61,9 +61,10 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   struct source_diff * data = (source_diff *)ctxt->_private;
 
   if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
+
     if(strcmp((const char *)localname, "common") == 0)
       data->in_diff->push_back(COMMON);
-    else if(strcmp((const char *)localname, "delete") =v= 0)
+    else if(strcmp((const char *)localname, "delete") == 0)
       data->in_diff->push_back(DELETE);
     else if(strcmp((const char *)localname, "insert") == 0)
       data->in_diff->push_back(INSERT);
@@ -93,7 +94,12 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(data->in_diff->back() == data->op || data->in_diff->back() == COMMON) {
+  if(diff->in_diff->back() == COMMON)
+    fprintf(stdout, "%s", common_color);
+  else if(diff->in_diff->back() == DELETE)
+    fprintf(stdout, "%s", delete_color);
+  else
+    fprintf(stdout, "%s", insert_color);
 
     for (int i = 0; i < len; ++i) {
 
@@ -107,8 +113,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
         fprintf(stdout, "%c", (char)ch[i]);
 
     }
-
-  }
 
 }
 
