@@ -10,6 +10,7 @@
 #include <vector>
 #include <libxml/parserInternals.h>
 #include "SAX2ExtractsrcML.hpp"
+#include "shortest_edit_script.h"
 
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * infile);
