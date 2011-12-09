@@ -60,7 +60,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
+  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0)
       data->in_diff->push_back(COMMON);
@@ -78,7 +78,7 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
+  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
        || strcmp((const char *)localname, "old") == 0
@@ -94,9 +94,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  if(diff->in_diff->back() == COMMON)
+  if(data->in_diff->back() == COMMON)
     fprintf(stdout, "%s", common_color);
-  else if(diff->in_diff->back() == DELETE)
+  else if(data->in_diff->back() == DELETE)
     fprintf(stdout, "%s", delete_color);
   else
     fprintf(stdout, "%s", insert_color);
