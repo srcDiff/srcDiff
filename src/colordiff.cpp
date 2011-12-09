@@ -22,7 +22,6 @@ int main(int argc, char * argv[]) {
   if(argc < 1) {
 
     srcdiff_file = (char *)"-";
-    diff = atoi(argv[1]);
   }
   else {
 
@@ -30,7 +29,7 @@ int main(int argc, char * argv[]) {
   }
 
   // create the ctxt
-  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcML_file);
+  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff_file);
 
   // setup sax handler
   xmlSAXHandler sax = factory();
