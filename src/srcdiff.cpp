@@ -1632,11 +1632,11 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // skip directories
-    if(is_dir(namelist_old[i], filename_old.c_str()) == 1) {
+    if(is_dir(namelist_old[i], filename_old.c_str()) != 0) {
       ++i;
       continue;
     }
-    if(is_dir(namelist_new[j], filename_new.c_str()) == 1) {
+    if(is_dir(namelist_new[j], filename_new.c_str()) != 0) {
       ++j;
       continue;
     }
@@ -1676,11 +1676,11 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
 
     // skip directories
-    if(is_dir(namelist_old[i], filename_old.c_str()) == 1)
+    if(is_dir(namelist_old[i], filename_old.c_str()) != 0)
       continue;
 
     // skip over output file
-    if (is_output_file(filename_old.c_str(), outstat) == 1) {
+    if (is_output_file(filename_old.c_str(), outstat) != 0) {
       noteSkipped(shownumber, poptions);
       ++skipped;
       continue;
@@ -1704,11 +1704,11 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
 
     // skip directories
-    if(is_dir(namelist_new[j], filename_new.c_str()) == 1)
+    if(is_dir(namelist_new[j], filename_new.c_str()) != 0)
       continue;
 
     // skip over output file
-    if (is_output_file(filename_new.c_str(), outstat) == 1) {
+    if (is_output_file(filename_new.c_str(), outstat) != 0) {
       noteSkipped(shownumber, poptions);
       ++skipped;
       continue;
@@ -1809,8 +1809,8 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     srcdiff_text(translator,
                  filename_old.c_str(),
                  "",
-                 0,
-                 0,
+                 directory_length_old,
+                 directory_length_new,
                  options,
                  poptions.language,
                  count, skipped, error, showinput, shownumber);
