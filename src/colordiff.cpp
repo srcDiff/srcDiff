@@ -18,7 +18,7 @@ static void parseDocument(xmlParserCtxtPtr ctxt);
 
 int main(int argc, char * argv[]) {
 
-  char * srcML_file;
+  char * srcdiff_file;
   if(argc < 1) {
 
     srcdiff_file = (char *)"-";
