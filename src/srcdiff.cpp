@@ -1806,14 +1806,13 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     }
 
     // process this directory
-    srcdiff_text(translator,
-                 filename_old.c_str(),
-                 "",
-                 directory_length_old,
-                 directory_length_new,
-                 options,
-                 poptions.language,
-                 count, skipped, error, showinput, shownumber);
+    srcdiff_dir(translator,
+                "",
+                directory_length_old,
+                filename_new.c_str(),
+                directory_length_new,
+                poptions,
+                count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
