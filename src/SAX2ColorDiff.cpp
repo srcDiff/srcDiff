@@ -9,7 +9,7 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include "SAX2ExtractsrcML.hpp"
+#include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
 
 const char * const common_color = "[[1m\1^[[0m|g";

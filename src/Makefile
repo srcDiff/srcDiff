@@ -131,13 +131,13 @@ $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h
 	${CXX} $(CXXFLAGS) -c $< -o $@
 
 $(EXE_DIR)colordiffc : colordiff.o SAXColorDiff.o
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(XML_LIB_SRCDIFF) $^ -o $@
 
 $(OBJ_DIR)colordiffc.o : colordiff.cpp SAXColorDiff.hpp
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $< -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)SAXColorDiff.o :  SAXColorDiff.cpp SAXColorDiff.hpp
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $< -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*
