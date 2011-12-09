@@ -1613,12 +1613,12 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
 
   // start of path from directory name
   std::string filename_old = directory_old;
-  if (!filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
+  if (filename_old != "" && !filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
     filename_old += PATH_SEPARATOR;
   int basesize_old = filename_old.length();
 
   std::string filename_new = directory_new;
-  if (!filename_new.empty() && filename_new[filename_new.size() - 1] != PATH_SEPARATOR)
+  if (filename_new != "" && !filename_new.empty() && filename_new[filename_new.size() - 1] != PATH_SEPARATOR)
     filename_new += PATH_SEPARATOR;
   int basesize_new = filename_new.length();
 
