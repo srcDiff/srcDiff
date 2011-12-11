@@ -327,9 +327,9 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
+  /*
   if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
     return MIN;
-
 
   unsigned int leftptr;
   for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size()
@@ -349,8 +349,42 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
   if(value < 0)
     value = 0;
+  */
 
-  return value;
+  unsigned int olength = node_set_old->size();
+  unsigned int nlength = node_set_new->size();
+
+  //int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
+
+  std::vector<int> node_set_old_text;
+
+  for(unsigned int i = 0; i < olength; ++i)
+    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
+      node_set_old_text.push_back(node_set_old->at(i));
+
+  std::vector<int> node_set_new_text;
+
+  for(unsigned int i = 0; i < nlength; ++i)
+    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
+      node_set_new_text.push_back(node_set_new->at(i));
+
+  edit * edit_script;
+  shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
+				      (void *)&node_set_new_text, node_index_compare, node_index, &edit_script);
+
+  edit * edits = edit_script;
+  unsigned int similarity = 0;
+  for(; edits; edits = edits->next) {
+
+    if(is_change(edits))
+      edits = edits->next;
+
+    ++similarity;
+  }
+
+  free_shortest_edit_script(edit_script);
+
+  return similarity;
 }
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
