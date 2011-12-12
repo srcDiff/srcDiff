@@ -97,6 +97,22 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   } else {
 
+    if(tracer.elements.size() > 0) {
+
+      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string((const char *)localname));
+
+      if(pos != tracer.diff_stack.back().children.end()) {
+
+        ++tracer.diff_stack.back().children[std::string((const char *)localname)];
+
+      } else {
+
+        tracer.diff_stack.back().children[std::string((const char *)localname)] = 1;
+
+      }
+
+    }
+
     element curelement;
     curelement.name = (const char *)localname;
     if(prefix)
@@ -165,6 +181,22 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
+    if(tracer.elements.size() > 0) {
+
+      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string((const char *)localname));
+
+      if(pos != tracer.diff_stack.back().children.end()) {
+
+        ++tracer.diff_stack.back().children[std::string((const char *)localname)];
+
+      } else {
+
+        tracer.diff_stack.back().children[std::string((const char *)localname)] = 1;
+
+      }
+
+    }
 
     if(tracer.elements.size() > 0) {
 

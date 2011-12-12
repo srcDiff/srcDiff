@@ -25,6 +25,8 @@ struct diff {
   int operation;
   int level;
 
+  std::map<std::string, int> children;
+
 };
 
 struct element {
