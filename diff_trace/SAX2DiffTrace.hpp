@@ -48,6 +48,9 @@ class SAX2DiffTrace {
 
   bool output;
 
+  std::string filename_old;
+  std::string filename_new;
+
   std::vector<element> elements;
   std::vector<diff> diff_stack;
 

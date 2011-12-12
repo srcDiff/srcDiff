@@ -74,6 +74,41 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
+  if(strcmp((const char *)localname, "unit") == 0) {
+
+    int idx = find_attribute_index(nb_attributes, attributes, "filename");
+
+    if(idx != -1) {
+
+      int length = attributes[idx + 4] - attributes[idx + 3];
+
+      const char * filename = strndup((const char *)attributes[idx + 3], length);
+
+      char * sep = index(filename, '|');
+
+      if(sep < (filename + length)) {
+
+        *sep = '\0';
+
+        tracer.filename_old = filename;
+
+        tracer.filename_new = sep + 1;
+
+        *sep = '|';
+
+      } else {
+
+        tracer.filename_old = filename;
+
+        tracer.filename_new = filename;
+
+
+      }
+
+    }
+
+  }
+
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     diff curdiff = { 0 };
