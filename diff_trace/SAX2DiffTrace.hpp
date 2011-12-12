@@ -31,6 +31,7 @@ struct element {
 
   std::string name;
   std::string prefix;
+  std::string uri;
 
 };
 

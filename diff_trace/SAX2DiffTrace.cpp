@@ -104,6 +104,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     else
       curelement.prefix = "";
 
+    curelement.uri = (const char *)URI;
+
     tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
 
@@ -160,6 +162,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       element curelement;
       curelement.name = "text()";
       curelement.prefix = "";
+      curelement.uri = "";
 
       tracer.elements.push_back(curelement);
 
@@ -185,6 +188,8 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     if(tracer.elements.at(i).prefix != "")
       fprintf(stdout, "%s:%s/", tracer.elements.at(i).prefix.c_str(), tracer.elements.at(i).name.c_str());
+    else if(tracer.elements.at(i).uri == "www.sdml.info/srcML")
+      fprintf(stdout, "src:%s/", tracer.elements.at(i).name.c_str());
     else
       fprintf(stdout, "%s/", tracer.elements.at(i).name.c_str());
 
@@ -192,6 +197,8 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   if(tracer.elements.back().prefix != "")
     fprintf(stdout, "%s:%s\n", tracer.elements.back().prefix.c_str(), tracer.elements.back().name.c_str());
+  else if(tracer.elements.back().uri == "www.sdml.info/srcML")
+    fprintf(stdout, "src:%s\n", tracer.elements.back().name.c_str());
   else
     fprintf(stdout, "%s\n", tracer.elements.back().name.c_str());
 
