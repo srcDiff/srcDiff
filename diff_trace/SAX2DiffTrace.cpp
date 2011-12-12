@@ -47,6 +47,11 @@ void SAX2DiffTrace::startDocument(void * ctx) {
 
   tracer.output = false;
 
+    diff startdiff = { 0 };
+    startdiff.operation = COMMON;
+
+    tracer.diff_stack.push_back(startdiff);
+
 }
 
 void SAX2DiffTrace::endDocument(void * ctx) {
@@ -89,6 +94,13 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
   } else {
 
     tracer.elements.push_back((char *)localname);
+    ++tracer.diff_stack.back().level;
+
+  }
+
+  if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
+
+    output_diff(tracer);
 
   }
 
@@ -106,6 +118,11 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
        || strcmp((const char *)localname, "new") == 0)
       tracer.diff_stack.pop_back();
 
+  } else {
+
+    tracer.elements.pop_back();
+    --tracer.diff_stack.back().level;
+
   }
 
 }
@@ -122,7 +139,9 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
 
-void output_diff(SAX2DiffTrace * pstate, int numelements) {
+void output_diff(SAX2DiffTrace & tracer) {
+
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
 }
 

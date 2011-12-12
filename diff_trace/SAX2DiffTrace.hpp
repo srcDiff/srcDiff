@@ -71,7 +71,7 @@ class SAX2DiffTrace {
   // helper methods
 
   // output a difference formatted as an Xpath
-  friend void output_diff(SAX2DiffTrace * pstate, int numelements);
+  friend void output_diff(SAX2DiffTrace & tracer);
 
 };
 

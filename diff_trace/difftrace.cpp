@@ -31,6 +31,7 @@ int main(int argc, char **argv) {
 
   // Create SAX object and add to context
   SAX2DiffTrace tracer;
+
   ctxt->userData = &tracer;
   
   // set up the SAX parser and add to context
