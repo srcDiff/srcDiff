@@ -99,7 +99,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     element curelement;
     curelement.name = (const char *)localname;
-    curelement.prefix = (const char *)prefix;
+    if(prefix)
+      curelement.prefix = (const char *)prefix;
+    else
+      curelement.prefix = "";
 
     tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
