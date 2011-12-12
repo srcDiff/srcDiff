@@ -138,10 +138,10 @@ void characters(void* ctx, const xmlChar* ch, int len) {
         const char * old_color = diff_color_common;
         const char * new_color = diff_color_common;
 
-        if(data->line_old < data->lines_old.size() && data->lines_old.at(i))
+        if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old))
           old_color = diff_color_old;
 
-        if(data->line_new < data->lines_new.size() && data->lines_new.at(i))
+        if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
           new_color = diff_color_new;
 
         fprintf(stdout, "%s%d-%s%d\t", old_color, data->line_old, new_color, data->line_new);
