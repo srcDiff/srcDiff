@@ -14,13 +14,14 @@
 
 const char * const normal_color = "\x1B[0m";
 
-const char * const common_color = "\x1B[1;30;49m";
-const char * const delete_color = "\x1B[1;31;49m";
-const char * const insert_color = "\x1B[1;34;49m";
+const char * const common_color = "\x1B[1;30m";
+const char * const delete_color = "\x1B[1;31m";
+const char * const insert_color = "\x1B[1;34m";
 
-const char * const diff_color_common = "\x1B[0;39;49m";
-const char * const diff_color_old = "\x1B[0;32;49m";
-const char * const diff_color_new = "\x1B[0;35;49m";
+const char * const diff_color_common = "\x1B[0;49m";
+const char * const diff_color_change = "\x1B[1;42m";
+const char * const diff_color_old = "\x1B[1;41m";
+const char * const diff_color_new = "\x1B[1;43m";
 
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -53,16 +54,19 @@ void startDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  const char * old_color = diff_color_common;
-  const char * new_color = diff_color_common;
+  const char * back_color = diff_color_common;
+
+  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
+     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
+    back_color = diff_color_change;
 
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old))
-    old_color = diff_color_old;
+    back_color = diff_color_old;
 
   if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
-    new_color = diff_color_new;
+    back_color = diff_color_new;
 
-  fprintf(stdout, "%s%d%s-%s%d\t", old_color, data->line_old, normal_color, new_color, data->line_new);
+  fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
 
 }
 
@@ -148,16 +152,19 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         }
 
-        const char * old_color = diff_color_common;
-        const char * new_color = diff_color_common;
+  const char * back_color = diff_color_common;
 
-        if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old))
-          old_color = diff_color_old;
+  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
+     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
+    back_color = diff_color_change;
 
-        if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
-          new_color = diff_color_new;
+  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old))
+    back_color = diff_color_old;
 
-        fprintf(stdout, "%s%d%s-%s%d\t", old_color, data->line_old, normal_color, new_color, data->line_new);
+  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
+    back_color = diff_color_new;
+
+  fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
 
       }
 
