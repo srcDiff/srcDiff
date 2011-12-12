@@ -218,14 +218,15 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     }
 
-    if(i > 0 && tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)]) {
+    element += tracer.elements.at(i).name.c_str();
+
+    if(i > 0) {
 
       int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
 
       char * buffer = (char *)malloc(sizeof(char) * count);
 
-      snprintf(buffer, count, "%d", count);
-
+      snprintf(buffer, count + 1, "%d", count);
 
       element += "[";
       element += buffer;
@@ -235,7 +236,6 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     }
 
-    element += tracer.elements.at(i).name.c_str();
     element += "/";
 
     fprintf(stdout, "%s", element.c_str());
