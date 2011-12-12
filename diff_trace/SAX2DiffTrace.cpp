@@ -258,6 +258,11 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 void output_diff(SAX2DiffTrace & tracer) {
 
+  if(tracer.diff_stack.back().operation == DELETE)
+    fprintf(stdout, "Delete:\t");
+  else
+    fprintf(stdout, "Insert:\t");
+
   fprintf(stdout, "/");
 
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
