@@ -135,7 +135,16 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         }
 
-        fprintf(stdout, "%s%d-%s%d\t", diff_color_common, data->line_old, diff_color_common, data->line_new);
+        const char * old_color = diff_color_common;
+        const char * new_color = diff_color_common;
+
+        if(data->line_old < data->lines_old.size() && data->lines_old.at(i))
+          old_color = diff_color_old;
+
+        if(data->line_new < data->lines_new.size() && data->lines_new.at(i))
+          new_color = diff_color_new;
+
+        fprintf(stdout, "%s%d-%s%d\t", old_color, data->line_old, new_color, data->line_new);
 
       }
 
