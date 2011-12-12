@@ -68,8 +68,6 @@ int main(int argc, char * argv[]) {
 
     }
 
-    in >> temp;
-
   }
 
   // create the ctxt
