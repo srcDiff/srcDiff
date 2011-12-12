@@ -33,6 +33,8 @@ struct element {
   std::string prefix;
   std::string uri;
 
+  std::map<std::string, int> children;
+
 };
 
 // class definition
