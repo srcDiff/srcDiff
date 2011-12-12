@@ -14,14 +14,14 @@
 
 const char * const normal_color = "\x1B[0m";
 
-const char * const common_color = "\x1B[1;30m";
-const char * const delete_color = "\x1B[1;31m";
-const char * const insert_color = "\x1B[1;34m";
+const char * const common_color = "\x1B[30m";
+const char * const delete_color = "\x1B[31m";
+const char * const insert_color = "\x1B[34m";
 
-const char * const diff_color_common = "\x1B[49m";
-const char * const diff_color_change = "\x1B[42m";
-const char * const diff_color_old = "\x1B[41m";
-const char * const diff_color_new = "\x1B[43m";
+const char * const diff_color_common = "\x1B[0;49m";
+const char * const diff_color_change = "\x1B[1;42m";
+const char * const diff_color_old = "\x1B[1;41m";
+const char * const diff_color_new = "\x1B[1;43m";
 
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
