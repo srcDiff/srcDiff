@@ -14,6 +14,7 @@
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 #include <iostream>
+#include <utility>
 
 #include "SAX2DiffTrace.hpp"
 #include "../src/shortest_edit_script.h"
@@ -163,8 +164,18 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     if(strcmp((const char *)localname, "common") == 0
        || strcmp((const char *)localname, "delete") == 0
-       || strcmp((const char *)localname, "insert") == 0)
+       || strcmp((const char *)localname, "insert") == 0) {
+
+
+      for(std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.begin();
+          pos != tracer.diff_stack.back().children.end(); ++pos) {
+
+        tracer.elements.back().children[pos->first] -= pos->second;
+      }
+
       tracer.diff_stack.pop_back();
+
+    }
 
   } else {
 
@@ -184,15 +195,15 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     if(tracer.elements.size() > 0) {
 
-      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string((const char *)localname));
+      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string("text()"));
 
       if(pos != tracer.diff_stack.back().children.end()) {
 
-        ++tracer.diff_stack.back().children[std::string((const char *)localname)];
+        ++tracer.diff_stack.back().children[std::string("text()")];
 
       } else {
 
-        tracer.diff_stack.back().children[std::string((const char *)localname)] = 1;
+        tracer.diff_stack.back().children[std::string("text()")] = 1;
 
       }
 
