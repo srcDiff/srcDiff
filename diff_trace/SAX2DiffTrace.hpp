@@ -27,6 +27,13 @@ struct diff {
 
 };
 
+struct element {
+
+  std::string name;
+  std::string prefix;
+
+};
+
 // class definition
 class SAX2DiffTrace {
 
@@ -36,7 +43,7 @@ class SAX2DiffTrace {
 
   bool output;
 
-  std::vector<std::string> elements;
+  std::vector<element> elements;
   std::vector<diff> diff_stack;
 
  public:

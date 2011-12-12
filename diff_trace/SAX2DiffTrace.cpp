@@ -97,7 +97,11 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   } else {
 
-    tracer.elements.push_back((char *)localname);
+    element curelement;
+    curelement.name = (const char *)localname;
+    curelement.prefix = (const char *)prefix;
+
+    tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
 
   }
@@ -150,7 +154,11 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     if(i == len && tracer.diff_stack.back().level == 0) {
 
-      tracer.elements.push_back("text()");
+      element curelement;
+      curelement.name = "text()";
+      curelement.prefix = "";
+
+      tracer.elements.push_back(curelement);
 
       output_diff(tracer);
 
@@ -172,10 +180,17 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
 
-    fprintf(stdout, "src:%s/", tracer.elements.at(i).c_str());
+    if(tracer.elements.at(i).prefix.c_str() != "")
+      fprintf(stdout, "%s:%s/", tracer.elements.at(i).prefix.c_str(), tracer.elements.at(i).name.c_str());
+    else
+      fprintf(stdout, "%s/", tracer.elements.at(i).name.c_str());
 
   }
-  fprintf(stdout, "src:%s\n", tracer.elements.back().c_str());
+
+  if(tracer.elements.at(i).prefix.c_str() != "")
+    fprintf(stdout, "%s:%s\n", tracer.elements.back().prefix.c_str(), tracer.elements.back().name.c_str());
+  else
+    fprintf(stdout, "%s\n", tracer.elements.back().name.c_str());
 
 }
 
