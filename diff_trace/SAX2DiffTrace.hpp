@@ -20,29 +20,19 @@
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
-#include <mba/diff.h>
-
 // class definition
 class SAX2DiffTrace {
 
  private:
 
-  // members
-  int DIFF_TYPE;
-
-  int numedits;
-  int editpos;
-  int linecount;
-  int columncount;
   bool output;
   bool readconstruct;
   bool readsignature;
   bool waitoutput;
   std::string function;
 
-  struct varray * diff_edits;
-  std::vector<struct diff_edit> column_diffs;
   const char* filename;
+
   xmlSAXHandler * sax;
 
   std::vector<std::string> start_stack;
@@ -54,7 +44,7 @@ class SAX2DiffTrace {
  public:
 
   // constructor
-  SAX2DiffTrace(int nedits, struct varray *ses, std::vector<struct diff_edit> columnoffsets, int difftype);
+  SAX2DiffTrace();
 
   // sax factory
   static xmlSAXHandler factory();
@@ -66,13 +56,21 @@ class SAX2DiffTrace {
   static void endDocument(void * ctx);
 
   // characters
-  static void characters(void * ctx, const xmlChar* ch, int len);
+  static void characters(void* ctx, const xmlChar* ch, int len);
+
 
   // startElement
-  static void startElement(void * ctx, const xmlChar * name, const xmlChar ** attrs);
+  static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar** attributes);
+
 
   // endElement
-  static void endElement(void * ctx, const xmlChar * name);
+  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+
+  // comments
+  static void comments(void* ctx, const xmlChar* ch);
+
 
   // helper methods
   // get the next difference for processing 
