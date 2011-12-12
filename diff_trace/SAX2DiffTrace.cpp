@@ -109,13 +109,14 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
 
+    if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
+
+      output_diff(tracer);
+
+    }
+
   }
 
-  if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
-
-    output_diff(tracer);
-
-  }
 
 }
 
@@ -129,8 +130,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
-       || strcmp((const char *)localname, "old") == 0
-       || strcmp((const char *)localname, "new") == 0)
+       || strcmp((const char *)localname, "insert") == 0
+       || strcmp((const char *)localname, "delete") == 0)
       tracer.diff_stack.pop_back();
 
   } else {
@@ -157,7 +158,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-    if(i == len && tracer.diff_stack.back().level == 0) {
+  if(tracer.diff_stack.back().operation != COMMON && len != 0 && i != len && tracer.diff_stack.back().level == 0) {
 
       element curelement;
       curelement.name = "text()";
