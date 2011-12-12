@@ -12,7 +12,8 @@
 #include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
 
-const char * const common_color = "\x1B[1m";
+const char * const normal_color = "\x1B[0;0;0m";
+const char * const common_color = "\x1B[1;0;0m";
 const char * const delete_color = "\x1B[1;31;47m";
 const char * const insert_color = "\x1B[1;34;47m";
 
@@ -43,14 +44,14 @@ xmlSAXHandler factory() {
 void startDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
-  fprintf(stdout, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
+
 }
 
 void endDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  fprintf(stdout, "\n");
+  fprintf(stdout, "%s\n", normal_color);
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
