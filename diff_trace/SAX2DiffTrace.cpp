@@ -42,8 +42,11 @@ xmlSAXHandler SAX2DiffTrace::factory() {
 
 void SAX2DiffTrace::startDocument(void * ctx) {
 
-  // fprintf(stderr, "%s\n\n", __FUNCTION__);
-  fprintf(stdout, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
+
+  tracer.output = false;
+
 }
 
 void SAX2DiffTrace::endDocument(void * ctx) {
@@ -59,16 +62,33 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
                              const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  SAX2DiffTrace & data = *(SAX2DiffTrace *)ctxt->_private;
+  SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
-    if(strcmp((const char *)localname, "common") == 0)
-      data.diff_stack.push_back(COMMON);
-    else if(strcmp((const char *)localname, "delete") == 0)
-      data.diff_stack.push_back(DELETE);
-    else if(strcmp((const char *)localname, "insert") == 0)
-      data.diff_stack.push_back(INSERT);
+    diff curdiff = { 0 };
+
+    if(strcmp((const char *)localname, "common") == 0) {
+
+      curdiff.operation = COMMON;
+
+    } else if(strcmp((const char *)localname, "delete") == 0) {
+
+      tracer.output = true;
+      curdiff.operation = DELETE;
+
+    } else if(strcmp((const char *)localname, "insert") == 0) {
+
+      tracer.output = true;
+      curdiff.operation = INSERT;
+
+    }
+
+    tracer.diff_stack.push_back(curdiff);
+
+  } else {
+
+    tracer.elements.push_back((char *)localname);
 
   }
 
@@ -77,14 +97,14 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  SAX2DiffTrace & data = *(SAX2DiffTrace *)ctxt->_private;
+  SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
        || strcmp((const char *)localname, "old") == 0
        || strcmp((const char *)localname, "new") == 0)
-      data.diff_stack.pop_back();
+      tracer.diff_stack.pop_back();
 
   }
 
@@ -93,20 +113,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  SAX2DiffTrace & data = *(SAX2DiffTrace *)ctxt->_private;
-
-    for (int i = 0; i < len; ++i) {
-
-      if ((char)ch[i] == '&')
-        fprintf(stdout,"&amp;");
-      else if ((char)ch[i] == '<')
-        fprintf(stdout, "&lt;");
-      else if ((char)ch[i] == '>')
-        fprintf(stdout, "&gt;");
-      else
-        fprintf(stdout, "%c", (char)ch[i]);
-
-    }
+  SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
 }
 

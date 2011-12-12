@@ -20,6 +20,13 @@
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
+struct diff {
+
+  int operation;
+  int level;
+
+};
+
 // class definition
 class SAX2DiffTrace {
 
@@ -27,9 +34,10 @@ class SAX2DiffTrace {
 
   xmlSAXHandler * sax;
 
-  std::vector<std::string> elements;
+  bool output;
 
-  std::vector<int> diff_stack;
+  std::vector<std::string> elements;
+  std::vector<diff> diff_stack;
 
  public:
 
