@@ -41,13 +41,13 @@ int main(int argc, char * argv[]) {
   char operation;
   while(in >> operation) {
 
-    int start;
+    unsigned int start;
     in >> start;
 
     char temp;
     in >> temp;
 
-    int end;
+    unsigned int end;
     in >> end;
 
     if(operation == 'i') {
@@ -55,10 +55,16 @@ int main(int argc, char * argv[]) {
       while(lines_old.size() < start)
         lines_old.push_back(false);
 
-      while(lines_old.size() < end)
-        lines_old.push_back(false);
+      while(lines_old.size() <= end)
+        lines_old.push_back(true);
 
     } else {
+
+      while(lines_new.size() < start)
+        lines_new.push_back(false);
+
+      while(lines_new.size() <= end)
+        lines_new.push_back(true);
 
     }
 
