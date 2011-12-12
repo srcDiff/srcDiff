@@ -317,7 +317,18 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     element += tracer.elements.at(i).name.c_str();
 
-    if(i > 0) {
+    if(tracer.elements.at(i).name == "unit") {
+
+      element += "[";
+
+      if(tracer.diff_stack.back().operation == DELETE)
+        element += tracer.filename_old;
+      else
+        element += tracer.filename_new;
+
+      element += "]";
+
+    } else if(i > 0) {
 
       int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
 
@@ -354,7 +365,19 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     element += tracer.elements.back().name.c_str();
 
-    if(tracer.elements.size() > 1) {
+    if(tracer.elements.back().name == "unit") {
+
+      element += "[";
+
+      if(tracer.diff_stack.back().operation == DELETE)
+        element += tracer.filename_old;
+      else
+        element += tracer.filename_new;
+
+      element += "]";
+
+
+    } else if(tracer.elements.size() > 1) {
 
       int count = tracer.elements.at(tracer.elements.size() - 2).children[std::string(tracer.elements.back().name)];
 
