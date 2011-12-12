@@ -106,7 +106,23 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     curelement.uri = (const char *)URI;
 
-    std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string((const char *)localname));
+    //curelement.children = std::map<std::string, int>();
+
+    if(tracer.elements.size() > 0) {
+
+      std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string((const char *)localname));
+
+      if(pos == tracer.elements.back().children.end()) {
+
+        ++tracer.elements.back().children[std::string((const char *)localname)];
+
+      } else {
+
+        tracer.elements.back().children[std::string((const char *)localname)] = 1;
+
+      }
+    
+    }
 
     tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
