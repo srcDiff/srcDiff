@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include <fstream>
 #include <libxml/parserInternals.h>
 #include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
@@ -27,7 +28,43 @@ int main(int argc, char * argv[]) {
 
     srcdiff_file = argv[1];
   }
-  fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, srcdiff_file);
+
+  std::vector<bool> lines_old;
+  std::vector<bool> lines_new;
+
+  // make 1 offset
+  lines_old.push_back(false);
+  lines_new.push_back(false);
+
+  std::fstream in(argv[2]);
+
+  char operation;
+  while(in >> operation) {
+
+    int start;
+    in >> start;
+
+    char temp;
+    in >> temp;
+
+    int end;
+    in >> end;
+
+    if(operation == 'i') {
+
+      while(lines_old.size() < start)
+        lines_old.push_back(false);
+
+      while(lines_old.size() < end)
+        lines_old.push_back(false);
+
+    } else {
+
+    }
+
+    in >> temp;
+
+  }
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff_file);
