@@ -12,8 +12,8 @@
 
 struct source_diff {
 
-  int line_old;
-  int line_new;
+  unsigned int line_old;
+  unsigned int line_new;
   std::vector<int> * in_diff;
 
   std::vector<bool> & lines_old;
