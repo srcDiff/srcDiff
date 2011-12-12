@@ -93,8 +93,8 @@ void endDocument(void* ctx) {
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		     const xmlChar** attributes) {
+                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
@@ -170,76 +170,78 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   fprintf(stdout, "%s", back_color);
 
-    for (int i = 0; i < len; ++i) {
+  for (int i = 0; i < len; ++i) {
 
-      if ((char)ch[i] == '&')
-        fprintf(stdout,"&amp;");
-      else if ((char)ch[i] == '<')
-        fprintf(stdout, "&lt;");
-      else if ((char)ch[i] == '>')
-        fprintf(stdout, "&gt;");
-      else
-        fprintf(stdout, "%c", (char)ch[i]);
+    if ((char)ch[i] == '&')
+      fprintf(stdout,"&amp;");
+    else if ((char)ch[i] == '<')
+      fprintf(stdout, "&lt;");
+    else if ((char)ch[i] == '>')
+      fprintf(stdout, "&gt;");
+    else if((char)ch[i] != '\n')
+      fprintf(stdout, "%c", (char)ch[i]);
 
-      if((char)ch[i] == '\n') {
+    if((char)ch[i] == '\n') {
 
-        if(data->in_diff->back() == COMMON) {
+      if(data->in_diff->back() == COMMON) {
 
-          ++data->line_old;
-          ++data->line_new;
+        ++data->line_old;
+        ++data->line_new;
 
-        } else if(data->in_diff->back() == DELETE) {
+      } else if(data->in_diff->back() == DELETE) {
 
-          ++data->line_old;
+        ++data->line_old;
 
-        } else {
-          ++data->line_new;
-
-        }
-
-  const char * back_color = diff_color_common;
-
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
-
-    //data->lines_old.at(data->line_old) = false;
-    //data->lines_new.at(data->line_new) = false;
-
-    back_color = diff_color_change;
-
-  }
-
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
-
-    //data->lines_old.at(data->line_old) = false;
-
-    back_color = diff_color_old;
-
-  }
-
-  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
-
-    //data->lines_new.at(data->line_new) = false;
-
-    back_color = diff_color_new;
-
-  }
-
-  // clear color before output line
-  fprintf(stdout, "\x1B[39;m");
-  fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
+      } else {
+        ++data->line_new;
 
       }
 
-      if(data->in_diff->back() == COMMON)
-        fprintf(stdout, "%s", common_color);
-      else if(data->in_diff->back() == DELETE)
-        fprintf(stdout, "%s", delete_color);
-      else
-        fprintf(stdout, "%s", insert_color);
+      const char * back_color = diff_color_common;
+
+      if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
+         && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+
+        //data->lines_old.at(data->line_old) = false;
+        //data->lines_new.at(data->line_new) = false;
+
+        back_color = diff_color_change;
+
+      }
+
+      if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+
+        //data->lines_old.at(data->line_old) = false;
+
+        back_color = diff_color_old;
+
+      }
+
+      if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+
+        //data->lines_new.at(data->line_new) = false;
+
+        back_color = diff_color_new;
+
+      }
+
+      // clear color before output line
+      fprintf(stdout, "\x1B[39;m");
+      fprintf(stdout, "%c", (char)'\n');
+      fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
+
 
 
     }
+
+    if(data->in_diff->back() == COMMON)
+      fprintf(stdout, "%s", common_color);
+    else if(data->in_diff->back() == DELETE)
+      fprintf(stdout, "%s", delete_color);
+    else
+      fprintf(stdout, "%s", insert_color);
+
+  }
 
 }
 
