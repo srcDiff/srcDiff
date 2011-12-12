@@ -32,15 +32,15 @@ int main(int argc, char **argv) {
   // Create SAX object and add to context
   SAX2DiffTrace tracer;
 
-  ctxt->userData = &tracer;
+  ctxt->_private = &tracer;
   
   // set up the SAX parser and add to context
   xmlSAXHandler sax = SAX2DiffTrace::factory();
   ctxt->sax = &sax;
-  
+
   // process the document
   xmlParseDocument(ctxt);
-  
+
   // null the SAX parser so can be freed
   ctxt->sax = NULL;
 

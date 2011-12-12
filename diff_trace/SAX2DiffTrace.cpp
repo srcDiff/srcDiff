@@ -45,17 +45,19 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
+  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   tracer.output = false;
 
-    diff startdiff = { 0 };
-    startdiff.operation = COMMON;
+  diff startdiff = { 0 };
+  startdiff.operation = COMMON;
 
-    tracer.diff_stack.push_back(startdiff);
+  tracer.diff_stack.push_back(startdiff);
 
 }
 
 void SAX2DiffTrace::endDocument(void * ctx) {
-
+  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
@@ -68,6 +70,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
+
+  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
@@ -111,6 +115,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
+  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
@@ -132,11 +138,14 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
+  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
-  // fprintf(stderr, "%s\n\n", __FUNCTION__);
+  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 void output_diff(SAX2DiffTrace & tracer) {
