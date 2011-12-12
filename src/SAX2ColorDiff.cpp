@@ -13,9 +13,9 @@
 #include "shortest_edit_script.h"
 
 const char * const normal_color = "\x1B[0m";
-const char * const common_color = "\x1B[1;30;49m";
-const char * const delete_color = "\x1B[1;32;45m";
-const char * const insert_color = "\x1B[1;34;46m";
+const char * const common_color = "\x1B[1;39;49m";
+const char * const delete_color = "\x1B[1;30;41m";
+const char * const insert_color = "\x1B[1;30;46m";
 
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
