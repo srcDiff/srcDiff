@@ -58,7 +58,6 @@ class SAX2DiffTrace {
   // characters
   static void characters(void* ctx, const xmlChar* ch, int len);
 
-
   // startElement
   static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -73,8 +72,7 @@ class SAX2DiffTrace {
 
 
   // helper methods
-  // get the next difference for processing 
-  friend struct diff_edit * get_next_diff(SAX2DiffTrace * pstate);
+
   // output a difference formatted as an Xpath
   friend void output_diff(SAX2DiffTrace * pstate, int numelements);
 
