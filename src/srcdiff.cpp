@@ -1519,34 +1519,43 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
 
   showinput = true;
 
-  std::string directory = directory_old;
-
-  if(strcmp(directory_old, directory_new) != 0) {
-
-    directory += "|";
-    directory += directory_new;
-
-  }
-
   int directory_length_old = strlen(directory_old);
 
-  if(directory_old[directory_length_old - 1] != '/') {
+  char * dold = (char *)directory_old;
 
-    ++directory_length_old;
+  char * dnew = (char *)directory_new;
+
+  if(dold[directory_length_old - 1] == '/') {
+
+    dold[directory_length_old - 1] = '\0';
 
   }
+
+  ++directory_length_old;
 
   int directory_length_new = strlen(directory_new);
 
-  if(directory_new[directory_length_new - 1] != '/') {
+  if(dnew[directory_length_new - 1] == '/') {
 
-    ++directory_length_new;
+    dnew[directory_length_new - 1] = '\0';
+
+  }
+
+  ++directory_length_new;
+
+
+  std::string directory = dold;
+
+  if(strcmp(dold, dnew) != 0) {
+
+    directory += "|";
+    directory += dnew;
 
   }
 
   translator.set_root_directory(poptions.given_directory ? poptions.given_directory : directory.c_str());
 
-  srcdiff_dir(translator, directory_old, directory_length_old, directory_new, directory_length_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
+  srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
 // file/directory names to ignore when processing a directory
