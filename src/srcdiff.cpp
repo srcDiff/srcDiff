@@ -1508,7 +1508,6 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
 
 void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
-
   // by default, all dirs are treated as an archive
   translator.set_nested();
 
