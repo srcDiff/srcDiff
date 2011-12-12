@@ -224,8 +224,11 @@ void output_diff(SAX2DiffTrace & tracer) {
 
       char * buffer = (char *)malloc(sizeof(char) * count);
 
+      snprintf(buffer, count, "%d", count);
+
+
       element += "[";
-      element += itoa(count, buffer, "10");
+      element += buffer;
       element += "]";
 
       free(buffer);
