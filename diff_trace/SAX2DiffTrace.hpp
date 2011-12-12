@@ -29,7 +29,7 @@ class SAX2DiffTrace {
 
   std::vector<std::string> elements;
 
-  std::vector<int> diff_elements;
+  std::vector<int> diff_stack;
 
  public:
 

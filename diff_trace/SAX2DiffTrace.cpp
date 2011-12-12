@@ -64,11 +64,11 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0)
-      data.diff_elements.push_back(COMMON);
+      data.diff_stack.push_back(COMMON);
     else if(strcmp((const char *)localname, "delete") == 0)
-      data.diff_elements.push_back(DELETE);
+      data.diff_stack.push_back(DELETE);
     else if(strcmp((const char *)localname, "insert") == 0)
-      data.diff_elements.push_back(INSERT);
+      data.diff_stack.push_back(INSERT);
 
   }
 
@@ -84,7 +84,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     if(strcmp((const char *)localname, "common") == 0
        || strcmp((const char *)localname, "old") == 0
        || strcmp((const char *)localname, "new") == 0)
-      data.diff_elements.pop_back();
+      data.diff_stack.pop_back();
 
   }
 
