@@ -172,13 +172,17 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   for (int i = 0; i < len; ++i) {
 
+    /*
     if ((char)ch[i] == '&')
       fprintf(stdout,"&amp;");
     else if ((char)ch[i] == '<')
       fprintf(stdout, "&lt;");
     else if ((char)ch[i] == '>')
       fprintf(stdout, "&gt;");
-    else if((char)ch[i] != '\n')
+    else
+    */
+
+    if((char)ch[i] != '\n')
       fprintf(stdout, "%c", (char)ch[i]);
 
     if((char)ch[i] == '\n') {
