@@ -188,7 +188,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     if(tracer.elements.at(i).prefix != "")
       fprintf(stdout, "%s:%s/", tracer.elements.at(i).prefix.c_str(), tracer.elements.at(i).name.c_str());
-    else if(tracer.elements.at(i).uri == "www.sdml.info/srcML")
+    else if(tracer.elements.at(i).uri == "http://www.sdml.info/srcML/src")
       fprintf(stdout, "src:%s/", tracer.elements.at(i).name.c_str());
     else
       fprintf(stdout, "%s/", tracer.elements.at(i).name.c_str());
@@ -197,7 +197,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   if(tracer.elements.back().prefix != "")
     fprintf(stdout, "%s:%s\n", tracer.elements.back().prefix.c_str(), tracer.elements.back().name.c_str());
-  else if(tracer.elements.back().uri == "www.sdml.info/srcML")
+  else if(tracer.elements.back().uri == "http://www.sdml.info/srcML/src")
     fprintf(stdout, "src:%s\n", tracer.elements.back().name.c_str());
   else
     fprintf(stdout, "%s\n", tracer.elements.back().name.c_str());
