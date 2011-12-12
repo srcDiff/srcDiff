@@ -18,9 +18,9 @@ const char * const common_color = "\x1B[30m";
 const char * const delete_color = "\x1B[31m";
 const char * const insert_color = "\x1B[34m";
 
-const char * const diff_color_common = "\x1B[0;49m";
-const char * const diff_color_change = "\x1B[1;42m";
-const char * const diff_color_old = "\x1B[1;41m";
+const char * const diff_color_common = "\x1B[49m";
+const char * const diff_color_change = "\x1B[1;46m";
+const char * const diff_color_old = "\x1B[1;42m";
 const char * const diff_color_new = "\x1B[1;43m";
 
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -63,17 +63,13 @@ void startDocument(void* ctx) {
     //data->lines_new.at(data->line_new) = false;
     back_color = diff_color_change;
 
-  }
-
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+  } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
     //data->lines_old.at(data->line_old) = false;
 
     back_color = diff_color_old;
 
-  }
-
-  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+  } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
     //data->lines_new.at(data->line_new) = false;
 
@@ -150,17 +146,13 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     back_color = diff_color_change;
 
-  }
-
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+  } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
     //data->lines_old.at(data->line_old) = false;
 
     back_color = diff_color_old;
 
-  }
-
-  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+  } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
     //data->lines_new.at(data->line_new) = false;
 
@@ -211,17 +203,13 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         back_color = diff_color_change;
 
-      }
-
-      if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+      } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
         //data->lines_old.at(data->line_old) = false;
 
         back_color = diff_color_old;
 
-      }
-
-      if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+      } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
         //data->lines_new.at(data->line_new) = false;
 
@@ -230,11 +218,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       }
 
       // clear color before output line
-      fprintf(stdout, "\x1B[39;m");
+      fprintf(stdout, "\x1B[39;49m");
       fprintf(stdout, "%c", (char)'\n');
       fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
-
-
 
     }
 
