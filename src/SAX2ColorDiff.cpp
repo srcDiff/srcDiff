@@ -44,6 +44,7 @@ xmlSAXHandler factory() {
 void startDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
+  fprintf(stdout, "1-1\t\n");
 
 }
 
@@ -112,6 +113,34 @@ void characters(void* ctx, const xmlChar* ch, int len) {
         fprintf(stdout, "&gt;");
       else
         fprintf(stdout, "%c", (char)ch[i]);
+
+      if((char)ch[i] == '\n') {
+
+        if(data->in_diff->back() == COMMON) {
+
+          ++data->line_old;
+          ++data->line_new;
+
+        } else if(data->in_diff->back() == DELETE) {
+
+          ++data->line_old;
+
+        } else {
+          ++data->line_new;
+
+        }
+
+        fprintf(stdout, "%s%d-%d\t", normal_color, data->line_old, data->line_new);
+
+      }
+
+      if(data->in_diff->back() == COMMON)
+        fprintf(stdout, "%s", common_color);
+      else if(data->in_diff->back() == DELETE)
+        fprintf(stdout, "%s", delete_color);
+      else
+        fprintf(stdout, "%s", insert_color);
+
 
     }
 
