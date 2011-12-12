@@ -2,7 +2,7 @@
 
 ../bin/srcdiff --literal --operator --modifier $1 $2 -o temp.xml
 
-diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-format="" srcDiffDiff.cpp srcDiffCommon.cpp | tr '\\n' '\n' | sed '/^$/d' > temp.txt
+diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-format="" $1 $2 | tr '\\n' '\n' | sed '/^$/d' > temp.txt
 
 ../bin/colordiffc temp.xml temp.txt
 
