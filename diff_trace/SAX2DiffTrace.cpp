@@ -319,14 +319,14 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     if(tracer.elements.at(i).name == "unit") {
 
-      element += "[";
+      element += "[@filename=\"";
 
       if(tracer.diff_stack.back().operation == DELETE)
         element += tracer.filename_old;
       else
         element += tracer.filename_new;
 
-      element += "]";
+      element += "\"]";
 
     } else if(i > 0) {
 
@@ -402,7 +402,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 // index of attribute in attributes
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute) {
 
-  for (int i = 0, index = 0; attributes[index]; ++i, index += 2)
+  for (int i = 0, index = 0; attributes[index]; ++i, index += 5)
     if (strcmp((const char*) attributes[index], attribute) == 0)
       return index;
 
