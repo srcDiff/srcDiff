@@ -218,6 +218,20 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     }
 
+    if(i > 0 && tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)]) {
+
+      int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
+
+      char * buffer = (char *)malloc(sizeof(char) * count);
+
+      element += "[";
+      element += itoa(count, buffer, "10");
+      element += "]";
+
+      free(buffer);
+
+    }
+
     element += tracer.elements.at(i).name.c_str();
     element += "/";
 
@@ -239,8 +253,9 @@ void output_diff(SAX2DiffTrace & tracer) {
     }
 
     element += tracer.elements.back().name.c_str();
-    element += "/";
+    element += "\n";
 
+    fprintf(stdout, "%s", element.c_str());
 
 }
 
