@@ -183,14 +183,14 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
 
-    if(tracer.elements.at(i).prefix.c_str() != "")
+    if(tracer.elements.at(i).prefix != "")
       fprintf(stdout, "%s:%s/", tracer.elements.at(i).prefix.c_str(), tracer.elements.at(i).name.c_str());
     else
       fprintf(stdout, "%s/", tracer.elements.at(i).name.c_str());
 
   }
 
-  if(tracer.elements.back().prefix.c_str() != "")
+  if(tracer.elements.back().prefix != "")
     fprintf(stdout, "%s:%s\n", tracer.elements.back().prefix.c_str(), tracer.elements.back().name.c_str());
   else
     fprintf(stdout, "%s\n", tracer.elements.back().name.c_str());
