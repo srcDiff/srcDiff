@@ -187,7 +187,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   }
 
-  if(tracer.elements.at(i).prefix.c_str() != "")
+  if(tracer.elements.back().prefix.c_str() != "")
     fprintf(stdout, "%s:%s\n", tracer.elements.back().prefix.c_str(), tracer.elements.back().name.c_str());
   else
     fprintf(stdout, "%s\n", tracer.elements.back().name.c_str());
