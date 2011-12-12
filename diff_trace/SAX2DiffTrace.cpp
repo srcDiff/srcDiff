@@ -106,8 +106,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     curelement.uri = (const char *)URI;
 
-    //curelement.children = std::map<std::string, int>();
-
     if(tracer.elements.size() > 0) {
 
       std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string((const char *)localname));
@@ -183,6 +181,22 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     curelement.prefix = "";
     curelement.uri = "";
 
+    if(tracer.elements.size() > 0) {
+
+      std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string("text()"));
+
+      if(pos == tracer.elements.back().children.end()) {
+
+        ++tracer.elements.back().children[std::string("text()")];
+
+      } else {
+
+        tracer.elements.back().children[std::string("text()")] = 1;
+
+      }
+
+    }
+
     tracer.elements.push_back(curelement);
 
     output_diff(tracer);
@@ -256,6 +270,23 @@ void output_diff(SAX2DiffTrace & tracer) {
     }
 
     element += tracer.elements.back().name.c_str();
+
+    if(tracer.elements.size() > 1) {
+
+      int count = tracer.elements.at(tracer.elements.size() - 2).children[std::string(tracer.elements.back().name)];
+
+      char * buffer = (char *)malloc(sizeof(char) * count);
+
+      snprintf(buffer, count + 1, "%d", count);
+
+      element += "[";
+      element += buffer;
+      element += "]";
+
+      free(buffer);
+
+    }
+
     element += "\n";
 
     fprintf(stdout, "%s", element.c_str());
