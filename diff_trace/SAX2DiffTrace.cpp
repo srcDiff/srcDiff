@@ -22,7 +22,7 @@
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
 std::string & trim_string(std::string & source);
 
-xmlSAXHandler factory() {
+xmlSAXHandler SAX2DiffTrace::factory() {
 
   xmlSAXHandler sax = { 0 };
 
