@@ -25,26 +25,15 @@ class SAX2DiffTrace {
 
  private:
 
-  bool output;
-  bool readconstruct;
-  bool readsignature;
-  bool waitoutput;
-  std::string function;
-
-  const char* filename;
-
   xmlSAXHandler * sax;
 
-  std::vector<std::string> start_stack;
   std::vector<std::string> elements;
-  std::vector<std::string> labels;
-  std::vector<int> lastcharacterdepth;
-  std::vector<std::map<std::string, int> > blocks;
+
+  std::vector<int> diff_elements;
 
  public:
 
   // constructor
-  SAX2DiffTrace();
 
   // sax factory
   static xmlSAXHandler factory();
