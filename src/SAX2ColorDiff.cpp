@@ -81,8 +81,8 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
-       || strcmp((const char *)localname, "old") == 0
-       || strcmp((const char *)localname, "new") == 0)
+       || strcmp((const char *)localname, "delete") == 0
+       || strcmp((const char *)localname, "insert") == 0)
       data->in_diff->pop_back();
 
   }
