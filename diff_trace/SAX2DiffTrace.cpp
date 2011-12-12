@@ -140,6 +140,24 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
+  int i;
+  for(i = 0; i < len; ++i) {
+
+    if(!isspace((char)ch[i]))
+       break;
+
+  }
+
+    if(i == len && tracer.diff_stack.back().level == 0) {
+
+      tracer.elements.push_back("text()");
+
+      output_diff(tracer);
+
+      tracer.elements.pop_back();
+
+    }
+
 }
 
 void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
@@ -150,7 +168,7 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 void output_diff(SAX2DiffTrace & tracer) {
 
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.back().c_str());
 
 }
 
