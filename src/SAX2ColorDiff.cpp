@@ -12,9 +12,9 @@
 #include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
 
-const char * const common_color = "[[1m\1^[[0m";
-const char * const delete_color = "[[1;31m\1^[[0m";
-const char * const insert_color = "[[1;34m\1^[[0m";
+const char * const common_color = "\x1B[1m";
+const char * const delete_color = "\x1B[1;31;47m";
+const char * const insert_color = "\x1B[1;34;47m";
 
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,

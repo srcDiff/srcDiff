@@ -27,6 +27,7 @@ int main(int argc, char * argv[]) {
 
     srcdiff_file = argv[1];
   }
+  fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, srcdiff_file);
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff_file);
