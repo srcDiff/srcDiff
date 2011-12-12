@@ -168,7 +168,14 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 void output_diff(SAX2DiffTrace & tracer) {
 
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.back().c_str());
+  fprintf(stdout, "/");
+
+  for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
+
+    fprintf(stdout, "src:%s/", tracer.elements.at(i).c_str());
+
+  }
+  fprintf(stdout, "src:%s\n", tracer.elements.back().c_str());
 
 }
 
