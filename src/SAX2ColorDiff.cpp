@@ -62,7 +62,7 @@ void startDocument(void* ctx) {
   if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
     new_color = diff_color_new;
 
-  fprintf(stdout, "%s%d-%s%d\t", old_color, data->line_old, new_color, data->line_new);
+  fprintf(stdout, "%s%d%s-%s%d\t", old_color, data->line_old, normal_color, new_color, data->line_new);
 
 }
 
@@ -157,7 +157,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
         if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
           new_color = diff_color_new;
 
-        fprintf(stdout, "%s%d-%s%d\t", old_color, data->line_old, new_color, data->line_new);
+        fprintf(stdout, "%s%d%s-%s%d\t", old_color, data->line_old, normal_color, new_color, data->line_new);
 
       }
 
