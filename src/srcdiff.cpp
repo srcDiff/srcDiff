@@ -1530,13 +1530,19 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
 
   int directory_length_old = strlen(directory_old);
 
-  if(directory_old[directory_length_old - 1] != '/')
+  if(directory_old[directory_length_old - 1] != '/') {
+
     ++directory_length_old;
+
+  }
 
   int directory_length_new = strlen(directory_new);
 
-  if(directory_new[directory_length_new - 1] != '/')
+  if(directory_new[directory_length_new - 1] != '/') {
+
     ++directory_length_new;
+
+  }
 
   translator.set_root_directory(poptions.given_directory ? poptions.given_directory : directory.c_str());
 
