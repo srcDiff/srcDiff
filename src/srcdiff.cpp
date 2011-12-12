@@ -1525,24 +1525,27 @@ void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const 
 
   char * dnew = (char *)directory_new;
 
-  if(dold[directory_length_old - 1] == '/') {
+  if(dold[directory_length_old - 1] != '/') {
+
+    ++directory_length_old;
+
+  } else {
 
     dold[directory_length_old - 1] = '\0';
 
   }
 
-  ++directory_length_old;
-
   int directory_length_new = strlen(directory_new);
 
-  if(dnew[directory_length_new - 1] == '/') {
+  if(dnew[directory_length_new - 1] != '/') {
+
+    ++directory_length_new;
+
+  } else {
 
     dnew[directory_length_new - 1] = '\0';
 
   }
-
-  ++directory_length_new;
-
 
   std::string directory = dold;
 
