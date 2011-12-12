@@ -57,14 +57,29 @@ void startDocument(void* ctx) {
   const char * back_color = diff_color_common;
 
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
+     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+
+    data->lines_old.at(data->line_old) = false;
+    data->lines_new.at(data->line_new) = false;
     back_color = diff_color_change;
 
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old))
+  }
+
+  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+
+    data->lines_old.at(data->line_old) = false;
+
     back_color = diff_color_old;
 
-  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
+  }
+
+  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+
+    data->lines_new.at(data->line_new) = false;
+
     back_color = diff_color_new;
+
+  }
 
   fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
 
@@ -155,14 +170,29 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   const char * back_color = diff_color_common;
 
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
+     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+
+    data->lines_old.at(data->line_old) = false;
+    data->lines_new.at(data->line_new) = false;
     back_color = diff_color_change;
 
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old))
+  }
+
+  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+
+    data->lines_old.at(data->line_old) = false;
+
     back_color = diff_color_old;
 
-  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new))
+  }
+
+  if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+
+    data->lines_new.at(data->line_new) = false;
+
     back_color = diff_color_new;
+
+  }
 
   fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
 
