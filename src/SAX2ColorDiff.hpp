@@ -15,6 +15,9 @@ struct source_diff {
   int line_old;
   int line_new;
   std::vector<int> * in_diff;
+
+  std::vector<bool> & lines_old;
+  std::vector<bool> & lines_new;
 };
 
 xmlSAXHandler factory();

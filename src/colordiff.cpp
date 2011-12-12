@@ -82,7 +82,7 @@ int main(int argc, char * argv[]) {
   std::vector<int> * stack = new std::vector<int>();
   stack->push_back(COMMON);
 
-  struct source_diff data = { 1, 1, stack };
+  struct source_diff data = { 1, 1, stack, lines_old, lines_new };
 
   ctxt->_private = &data;
 
