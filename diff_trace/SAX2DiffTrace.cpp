@@ -65,8 +65,8 @@ void SAX2DiffTrace::endDocument(void * ctx) {
 }
 
 void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                             const xmlChar** attributes) {
+                                   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                   const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
@@ -121,7 +121,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         tracer.elements.back().children[std::string((const char *)localname)] = 1;
 
       }
-    
+
     }
 
     tracer.elements.push_back(curelement);
@@ -172,24 +172,24 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   for(i = 0; i < len; ++i) {
 
     if(!isspace((char)ch[i]))
-       break;
+      break;
 
   }
 
   if(tracer.diff_stack.back().operation != COMMON && len != 0 && i != len && tracer.diff_stack.back().level == 0) {
 
-      element curelement;
-      curelement.name = "text()";
-      curelement.prefix = "";
-      curelement.uri = "";
+    element curelement;
+    curelement.name = "text()";
+    curelement.prefix = "";
+    curelement.uri = "";
 
-      tracer.elements.push_back(curelement);
+    tracer.elements.push_back(curelement);
 
-      output_diff(tracer);
+    output_diff(tracer);
 
-      tracer.elements.pop_back();
+    tracer.elements.pop_back();
 
-    }
+  }
 
 }
 
@@ -205,21 +205,42 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
 
-    if(tracer.elements.at(i).prefix != "")
-      fprintf(stdout, "%s:%s/", tracer.elements.at(i).prefix.c_str(), tracer.elements.at(i).name.c_str());
-    else if(tracer.elements.at(i).uri == "http://www.sdml.info/srcML/src")
-      fprintf(stdout, "src:%s/", tracer.elements.at(i).name.c_str());
-    else
-      fprintf(stdout, "%s/", tracer.elements.at(i).name.c_str());
+    std::string element = "";
+
+    if(tracer.elements.at(i).prefix != "") {
+
+      element += tracer.elements.at(i).prefix.c_str();
+      element += ":";
+
+    } else if(tracer.elements.at(i).uri == "http://www.sdml.info/srcML/src") {
+
+      element += "src:";
+
+    }
+
+    element += tracer.elements.at(i).name.c_str();
+    element += "/";
+
+    fprintf(stdout, "%s", element.c_str());
 
   }
 
-  if(tracer.elements.back().prefix != "")
-    fprintf(stdout, "%s:%s\n", tracer.elements.back().prefix.c_str(), tracer.elements.back().name.c_str());
-  else if(tracer.elements.back().uri == "http://www.sdml.info/srcML/src")
-    fprintf(stdout, "src:%s\n", tracer.elements.back().name.c_str());
-  else
-    fprintf(stdout, "%s\n", tracer.elements.back().name.c_str());
+    std::string element = "";
+
+    if(tracer.elements.back().prefix != "") {
+
+      element += tracer.elements.back().prefix.c_str();
+      element += ":";
+
+    } else if(tracer.elements.back().uri == "http://www.sdml.info/srcML/src") {
+
+      element += "src:";
+
+    }
+
+    element += tracer.elements.back().name.c_str();
+    element += "/";
+
 
 }
 
