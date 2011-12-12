@@ -225,6 +225,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
+  // clear color before output line
+  fprintf(stdout, "\x1B[39;m");
   fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
 
       }

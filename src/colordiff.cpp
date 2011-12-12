@@ -70,8 +70,8 @@ int main(int argc, char * argv[]) {
 
   }
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, lines_old.size());
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, lines_new.size());
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, lines_old.size());
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, lines_new.size());
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff_file);
