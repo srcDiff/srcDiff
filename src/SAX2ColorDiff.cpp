@@ -13,9 +13,14 @@
 #include "shortest_edit_script.h"
 
 const char * const normal_color = "\x1B[0m";
+
 const char * const common_color = "\x1B[1;30;49m";
 const char * const delete_color = "\x1B[1;31;49m";
 const char * const insert_color = "\x1B[1;34;49m";
+
+const char * const diff_color_common = "\x1B[0;39;49m";
+const char * const diff_color_old = "\x1B[0;32;49m";
+const char * const diff_color_new = "\x1B[0;35;49m";
 
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -130,7 +135,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         }
 
-        fprintf(stdout, "%s%d-%s%d\t", normal_color, data->line_old, normal_color, data->line_new);
+        fprintf(stdout, "%s%d-%s%d\t", diff_color_common, data->line_old, diff_color_common, data->line_new);
 
       }
 
