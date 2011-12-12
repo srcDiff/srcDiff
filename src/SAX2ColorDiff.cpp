@@ -12,7 +12,7 @@
 #include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
 
-const char * const common_color = "[[1m\1^[[0m|g";
+const char * const common_color = "[[1m\1^[[0m";
 const char * const delete_color = "[[1;31m\1^[[0m";
 const char * const insert_color = "[[1;34m\1^[[0m";
 

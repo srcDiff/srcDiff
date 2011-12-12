@@ -333,6 +333,8 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
   if(value < 0)
     value = 0;
+
+  return value;
   */
 
   unsigned int olength = node_set_old->size();
@@ -369,6 +371,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   free_shortest_edit_script(edit_script);
 
   return similarity;
+
 }
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
