@@ -130,7 +130,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         }
 
-        fprintf(stdout, "%s%d-%d\t", normal_color, data->line_old, data->line_new);
+        fprintf(stdout, "%s%d-%s%d\t", normal_color, data->line_old, normal_color, data->line_new);
 
       }
 
