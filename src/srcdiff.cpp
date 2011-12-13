@@ -1215,8 +1215,8 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
     local_options |= OPTION_CPP;
 
   if (!real_language && !isoption(options, OPTION_QUIET)) {
-    fprintf(stderr, !shownumber ? "Skipped '%s|%s':  Unregistered extension.\n" :
-            "    - '%s|%s'\tSkipped: Unregistered extension.\n",
+    fprintf(stderr, !shownumber ? "Skipped '%s|%s':  Unregistered extension\n" :
+            "    - '%s|%s'\tSkipped: Unregistered extension\n",
             path_one, path_two);
 
     ++skipped;
@@ -1407,8 +1407,8 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
       if (archiveIsDir(context)) {
 
         if (!isoption(options, OPTION_QUIET))
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Is a directory.\n" :
-                  "    - %s\tSkipped: Is a directory.\n", unit_filename.c_str());
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Directory\n" :
+                  "    - %s\tSkipped: Directory\n", unit_filename.c_str());
 
         ++skipped;
 
@@ -1434,8 +1434,8 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
           if (unit_filename == "-")
             fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
           else
-            fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
-                    "    - %s\tSkipped: Unregistered extension.\n",
+            fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
+                    "    - %s\tSkipped: Unregistered extension\n",
                     unit_filename.c_str() ? unit_filename.c_str() : "standard input");
         }
 
