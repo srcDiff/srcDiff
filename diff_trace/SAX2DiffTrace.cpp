@@ -257,7 +257,14 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
         output_diff(tracer);
 
-        tracer.output = false;
+        if(tracer.diff_stack.back().operation == COMMON 
+           || (tracer.diff_stack.back().operation == DELETE
+               && tracer.elements.at(tracer.collect_node_pos).signature_new.at(tracer.elements.at(tracer.collect_node_pos).signature_new.size() - 1) == ')')
+           || (tracer.diff_stack.back().operation == INSERT
+               && tracer.elements.at(tracer.collect_node_pos).signature_old.at(tracer.elements.at(tracer.collect_node_pos).signature_old.size() - 1) == ')'))
+          tracer.output = false;
+        else
+          tracer.collect = true;
 
       }
     }
