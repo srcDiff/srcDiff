@@ -476,9 +476,13 @@ std::string & trim_string(std::string & source) {
   //fprintf(stderr, "%s\n", source.c_str());
 
   std::string::iterator pos;
-  for(pos = source.begin(); (pos + 1) != source.end(); ++pos)
+  for(pos = source.begin(); (pos + 1) != source.end();)
     if(isspace(*pos) && isspace(*(pos + 1)))
       pos = source.erase(pos);
+    else if(isspace(*pos) && *(pos + 1) == ',')
+      pos = source.erase(pos);
+    else
+      ++pos;
 
   return source;
 }
