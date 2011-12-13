@@ -252,7 +252,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
       tracer.collect = false;
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       if(tracer.output) {
 
         output_diff(tracer);
@@ -490,7 +490,7 @@ std::string & trim_string(std::string & source) {
   //fprintf(stderr, "%s\n", source.c_str());
 
   std::string::iterator pos;
-  for(pos = source.begin(); (pos + 1) != source.end();)
+  for(pos = source.begin(); pos != source.end() && (pos + 1) != source.end();)
     if(isspace(*pos) && isspace(*(pos + 1)))
       pos = source.erase(pos);
     else if(isspace(*pos) && *(pos + 1) == ',')
