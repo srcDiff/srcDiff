@@ -40,7 +40,7 @@ background-color:white;
 .diff_change
 {
 
-background-color:cyan;
+background-color:yellow;
 font-weight:bold;
 
 }
@@ -48,7 +48,7 @@ font-weight:bold;
 .diff_delete
 {
 
-background-color:yellow;
+background-color:pink;
 font-weight:bold;
 
 }
@@ -56,7 +56,7 @@ font-weight:bold;
 .diff_insert
 {
 
-background-color:pink;
+background-color:cyan;
 font-weight:bold;
 
 }
