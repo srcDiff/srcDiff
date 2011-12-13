@@ -95,7 +95,8 @@ void startDocument(void* ctx) {
   fprintf(stdout, "</head>");
   fprintf(stdout, "<body>");
   fprintf(stdout, "<pre>");
-  fprintf(stdout, "<span %s>%d-%d\t", span_out.c_str(), data->line_old, data->line_new);
+  fprintf(stdout, "%d-%d",  data->line_old, data->line_new);
+  fprintf(stdout, "<span %s>\t", span_out.c_str());
 
 }
 
@@ -239,8 +240,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       // clear color before output line
       fprintf(stdout, "</span><span class=\"%s\">", normal_color);
-      fprintf(stdout, "%c", (char)'\n');
-      fprintf(stdout, "</span><span %s>%d-%d\t", span_out.c_str(), data->line_old, data->line_new);
+      fprintf(stdout, "%c%d-%d", (char)'\n', data->line_old, data->line_new);
+      fprintf(stdout, "</span><span %s>\t", span_out.c_str());
 
     }
 
