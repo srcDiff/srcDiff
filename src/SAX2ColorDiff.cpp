@@ -63,7 +63,7 @@ void startDocument(void* ctx) {
   else
     span_class += insert_color;
 
-  span_class += "\" class=\"";
+  span_class += " ";
 
   std::string span_out = span_class;
 
@@ -159,7 +159,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   else
     span_class += insert_color;
 
-  span_class += "\" class=\"";
+  span_class += " ";
 
   std::string span_out = span_class;
 
@@ -253,7 +253,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
     else
       span_class += insert_color;
 
-    span_class += "\" class=\"";
+    span_class += " ";
 
   }
 
