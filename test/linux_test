@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #tar xf linux-2.6.39.4.tar.bz2
-#tar xf linux-3.0.8.tar.bz2
+#tar xf linux-3.0.9.tar.bz2
 #mv linux-2.6.39.4/ old
-#mv linux-3.0.8/ new
+#mv linux-3.0.9/ new
 #cd old
 #find . -name "*.h" -o -name "*.c" -o -name "*.cc" > files 
 #cat files | gxargs -I% bash -c "cmp --quiet old/% new/% || echo %" > list
