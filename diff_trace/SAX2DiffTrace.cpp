@@ -159,9 +159,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
         ++tracer.diff_stack.back().children[std::string((const char *)localname)];
 
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
-
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, tracer.diff_stack.back().children[std::string((const char *)localname)]);
       } else {
 
         tracer.diff_stack.back().children[std::string((const char *)localname)] = 1;
@@ -169,8 +166,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
 
     }
-
-
 
     element curelement;
     curelement.name = (const char *)localname;
@@ -240,7 +235,9 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       for(std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.begin();
           pos != tracer.diff_stack.back().children.end(); ++pos) {
 
-        tracer.elements.back().children[pos->first] -= pos->second;
+        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, pos->first.c_str());
+        //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, pos->second);
+        //tracer.elements.back().children[pos->first] -= pos->second;
       }
 
       tracer.diff_stack.pop_back();
@@ -348,8 +345,6 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 void output_diff(SAX2DiffTrace & tracer) {
 
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
   if(tracer.diff_stack.back().operation == DELETE)
     fprintf(stdout, "Delete:\t");
   else
@@ -372,8 +367,6 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     }
 
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
     element += tracer.elements.at(i).name.c_str();
 
     if(tracer.elements.at(i).name == "unit") {
@@ -395,8 +388,6 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     } else if(i > 0) {
       int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
-
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, count);
 
       char * buffer = (char *)malloc(sizeof(char) * count);
 
