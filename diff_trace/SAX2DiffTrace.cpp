@@ -151,7 +151,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   } else {
 
-    if(tracer.elements.size() > 0) {
+    if(tracer.elements.size() > 0 && tracer.diff_stack.back().level == 0) {
 
       std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string((const char *)localname));
 
@@ -199,7 +199,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       
       if((tracer.collect = is_collect((const char *)localname, (const char *)prefix)))
         tracer.collect_node_pos = tracer.elements.size() - 1;
-
       
     }
 
@@ -237,7 +236,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
         //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, pos->first.c_str());
         //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, pos->second);
-        //tracer.elements.back().children[pos->first] -= pos->second;
+        tracer.elements.back().children[pos->first.c_str()] -= pos->second;
       }
 
       tracer.diff_stack.pop_back();
@@ -279,7 +278,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-      if(tracer.elements.size() > 0) {
+  if(tracer.elements.size() > 0  && tracer.diff_stack.back().level == 0) {
 
       std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string("text()"));
 
