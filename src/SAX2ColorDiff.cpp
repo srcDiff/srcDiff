@@ -12,16 +12,16 @@
 #include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
 
-const char * const normal_color = "\x1B[0m";
+const char * const normal_color = "normal";
 
-const char * const common_color = "\x1B[30m";
-const char * const delete_color = "\x1B[31m";
-const char * const insert_color = "\x1B[34m";
+const char * const common_color = "common";
+const char * const delete_color = "delete";
+const char * const insert_color = "insert";
 
-const char * const diff_color_common = "\x1B[49m";
-const char * const diff_color_change = "\x1B[1;46m";
-const char * const diff_color_old = "\x1B[1;42m";
-const char * const diff_color_new = "\x1B[1;43m";
+const char * const diff_color_common = "diff_common";
+const char * const diff_color_change = "diff_change";
+const char * const diff_color_delete = "diff_delete";
+const char * const diff_color_insert = "diff_insert";
 
 void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -59,25 +59,23 @@ void startDocument(void* ctx) {
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
-    //data->lines_old.at(data->line_old) = false;
-    //data->lines_new.at(data->line_new) = false;
     back_color = diff_color_change;
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
-
-    //data->lines_old.at(data->line_old) = false;
 
     back_color = diff_color_old;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-    //data->lines_new.at(data->line_new) = false;
-
     back_color = diff_color_new;
 
   }
 
-  fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
+  fprintf(stdout, "<html>");
+  fprintf(stdout, "<head>");
+  fprintf(stdout, "</head>");
+  fprintf(stdout, "<body>");
+  fprintf(stdout, "<span class=\"%s\"> %d-%d\t", back_color, data->line_old, data->line_new);
 
 }
 
@@ -86,6 +84,8 @@ void endDocument(void* ctx) {
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
   fprintf(stdout, "%s\n", normal_color);
+  fprintf(stdout, "</body>");
+  fprintf(stdout, "</html>");
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -132,11 +132,11 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   const char * back_color = diff_color_common;
 
   if(data->in_diff->back() == COMMON)
-    fprintf(stdout, "%s", common_color);
+    fprintf(stdout, "</span><span class=\"%s\">", common_color);
   else if(data->in_diff->back() == DELETE)
-    fprintf(stdout, "%s", delete_color);
+    fprintf(stdout, "</span><span class=\"%s\">", delete_color);
   else
-    fprintf(stdout, "%s", insert_color);
+    fprintf(stdout, "</span><span class=\"%s\">", insert_color);
 
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
@@ -224,12 +224,12 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     }
 
-    if(data->in_diff->back() == COMMON)
-      fprintf(stdout, "%s", common_color);
-    else if(data->in_diff->back() == DELETE)
-      fprintf(stdout, "%s", delete_color);
-    else
-      fprintf(stdout, "%s", insert_color);
+  if(data->in_diff->back() == COMMON)
+    fprintf(stdout, "</span><span class=\"%s\">", common_color);
+  else if(data->in_diff->back() == DELETE)
+    fprintf(stdout, "</span><span class=\"%s\">", delete_color);
+  else
+    fprintf(stdout, "</span><span class=\"%s\">", insert_color);
 
   }
 
