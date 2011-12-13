@@ -3,6 +3,7 @@
 
 color:black;
 background-color:white;
+font-weight:normal;
 
 }
 
@@ -17,6 +18,7 @@ color:black;
 {
 
 color:red;
+font-weight:bold;
 
 }
 
@@ -24,6 +26,7 @@ color:red;
 {
 
 color:blue;
+font-weight:bold;
 
 }
 
@@ -38,6 +41,7 @@ background-color:white;
 {
 
 background-color:cyan;
+font-weight:bold;
 
 }
 
@@ -45,6 +49,7 @@ background-color:cyan;
 {
 
 background-color:yellow;
+font-weight:bold;
 
 }
 
@@ -52,5 +57,6 @@ background-color:yellow;
 {
 
 background-color:green;
+font-weight:bold;
 
 }
