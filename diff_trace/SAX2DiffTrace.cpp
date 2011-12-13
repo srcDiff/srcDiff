@@ -251,8 +251,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       tracer.collect = false;
 
-      tracer.elements.at(tracer.collect_node_pos).signature = trim_string(tracer.elements.at(tracer.collect_node_pos).signature);
-
       if(tracer.output) {
 
         output_diff(tracer);
@@ -273,7 +271,10 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect) {
 
-    tracer.elements.at(tracer.collect_node_pos).signature.append((const char *)ch, (const char *)ch + len);
+    std::string temp;
+    temp.append((const char *)ch, (const char *)ch + len);
+
+    tracer.elements.at(tracer.collect_node_pos).signature += trim_string(temp);
 
   }
 
