@@ -63,11 +63,11 @@ void startDocument(void* ctx) {
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
-    back_color = diff_color_old;
+    back_color = diff_color_delete;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-    back_color = diff_color_new;
+    back_color = diff_color_insert;
 
   }
 
@@ -141,26 +141,19 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
-    //data->lines_old.at(data->line_old) = false;
-    //data->lines_new.at(data->line_new) = false;
-
     back_color = diff_color_change;
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
-    //data->lines_old.at(data->line_old) = false;
-
-    back_color = diff_color_old;
+    back_color = diff_color_insert;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-    //data->lines_new.at(data->line_new) = false;
-
-    back_color = diff_color_new;
+    back_color = diff_color_delete;
 
   }
 
-  fprintf(stdout, "%s", back_color);
+  fprintf(stdout, "</span><span class=\"%s\">", back_color);
 
   for (int i = 0; i < len; ++i) {
 
@@ -198,30 +191,23 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
          && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
-        //data->lines_old.at(data->line_old) = false;
-        //data->lines_new.at(data->line_new) = false;
-
         back_color = diff_color_change;
 
       } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
-        //data->lines_old.at(data->line_old) = false;
-
-        back_color = diff_color_old;
+        back_color = diff_color_delete;
 
       } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-        //data->lines_new.at(data->line_new) = false;
-
-        back_color = diff_color_new;
+        back_color = diff_color_insert;
 
       }
 
       // clear color before output line
-      fprintf(stdout, "\x1B[39;49m");
+      fprintf(stdout, "</span><span class=\"%s\">", normal_color);
       fprintf(stdout, "%c", (char)'\n');
-      fprintf(stdout, "%s%d-%d\t", back_color, data->line_old, data->line_new);
-
+      fprintf(stdout, "</span><span class=\"%s\">%d-%d\t", back_color, data->line_old, data->line_new);
+    
     }
 
   if(data->in_diff->back() == COMMON)
