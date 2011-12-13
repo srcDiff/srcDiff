@@ -248,7 +248,9 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       tracer.collect = false;
 
-      //output_diff();
+      tracer.elements.at(tracer.collect_node_pos).signature = trim_string(tracer.elements.at(tracer.collect_node_pos).signature);
+
+      //output_diff(tracer);
     }
 
   }
