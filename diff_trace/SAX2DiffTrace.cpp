@@ -205,10 +205,11 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
-      if(!tracer.collect)
+
+      //if(!tracer.collect)
         output_diff(tracer);
-      else
-        tracer.output = true;
+        //else
+        //tracer.output = true;
 
     }
 
@@ -254,7 +255,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(tracer.output) {
 
-        output_diff(tracer);
+        //output_diff(tracer);
 
         tracer.output = false;
 
@@ -276,39 +277,22 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
-    if(tracer.elements.size() > 0) {
-
-      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string("text()"));
-
-      if(pos != tracer.diff_stack.back().children.end()) {
-
-        ++tracer.diff_stack.back().children[std::string("text()")];
-
-      } else {
-
-        tracer.diff_stack.back().children[std::string("text()")] = 1;
-
-      }
-
-    }
-
     if(tracer.elements.size() > 0) {
 
       std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string("text()"));
 
       if(pos != tracer.elements.back().children.end()) {
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         ++tracer.elements.back().children[std::string("text()")];
 
       } else {
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         tracer.elements.back().children[std::string("text()")] = 1;
 
       }
 
     }
+
 
   int i;
   for(i = 0; i < len; ++i) {
@@ -343,6 +327,8 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 void output_diff(SAX2DiffTrace & tracer) {
 
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(tracer.diff_stack.back().operation == DELETE)
     fprintf(stdout, "Delete:\t");
   else
@@ -364,6 +350,8 @@ void output_diff(SAX2DiffTrace & tracer) {
       element += "src:";
 
     }
+
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     element += tracer.elements.at(i).name.c_str();
 
@@ -387,6 +375,8 @@ void output_diff(SAX2DiffTrace & tracer) {
     } else if(i > 0) {
 
       int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
+
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, count);
 
       char * buffer = (char *)malloc(sizeof(char) * count);
 
