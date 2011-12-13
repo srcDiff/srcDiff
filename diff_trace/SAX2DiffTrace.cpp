@@ -385,9 +385,9 @@ void output_diff(SAX2DiffTrace & tracer) {
       element += "[@filename=\"";
 
       if(tracer.diff_stack.back().operation == DELETE)
-        element += tracer.filename_old;
+        element += tracer.elements.at(i).signature_old;
       else
-        element += tracer.filename_new;
+        element += tracer.elements.at(i).signature_new;
 
       element += "\"]";
 
@@ -443,9 +443,9 @@ void output_diff(SAX2DiffTrace & tracer) {
       element += "[";
 
       if(tracer.diff_stack.back().operation == DELETE)
-        element += tracer.filename_old;
+        element += tracer.elements.back().signature_old;
       else
-        element += tracer.filename_new;
+        element += tracer.elements.back().signature_new;
 
       element += "]";
 
