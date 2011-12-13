@@ -54,7 +54,7 @@ void startDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  std::string span_class;
+  std::string span_class = "class=\"";
 
   if(data->in_diff->back() == COMMON)
     span_class = common_color;
@@ -63,7 +63,7 @@ void startDocument(void* ctx) {
   else
     span_class = insert_color;
 
-  span_class += "-";
+  span_class += "\" class=\"";
 
   std::string span_out = span_class;
 
@@ -86,12 +86,15 @@ void startDocument(void* ctx) {
 
   }
 
+  span_class += "\"";
+
+
   fprintf(stdout, "<html>");
   fprintf(stdout, "<head>");
   fprintf(stdout, "</head>");
   fprintf(stdout, "<body>");
   fprintf(stdout, "<pre>");
-  fprintf(stdout, "<span class=\"%s\">%d-%d\t", span_out.c_str(), data->line_old, data->line_new);
+  fprintf(stdout, "<span %s>%d-%d\t", span_out.c_str(), data->line_old, data->line_new);
 
 }
 
@@ -146,7 +149,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  std::string span_class;
+  std::string span_class = "class=\"";
 
   if(data->in_diff->back() == COMMON)
     span_class = common_color;
@@ -155,7 +158,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   else
     span_class = insert_color;
 
-  span_class += "-";
+  span_class += "\" class=\"";
 
   std::string span_out = span_class;
 
@@ -178,7 +181,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-  fprintf(stdout, "</span><span class=\"%s\">", span_out.c_str());
+  span_class += "\"";
+
+  fprintf(stdout, "</span><span %s>", span_out.c_str());
 
   for (int i = 0; i < len; ++i) {
 
@@ -207,7 +212,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       }
 
-      std::string span_out = span_class;
+
+  std::string span_out = span_class;
 
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
@@ -228,10 +234,12 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
+  span_class += "\"";
+
   // clear color before output line
   fprintf(stdout, "</span><span class=\"%s\">", normal_color);
   fprintf(stdout, "%c", (char)'\n');
-  fprintf(stdout, "</span><span class=\"%s\">%d-%d\t", span_out.c_str(), data->line_old, data->line_new);
+  fprintf(stdout, "</span><span %s>%d-%d\t", span_out.c_str(), data->line_old, data->line_new);
     
     }
 
@@ -242,7 +250,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   else
     span_class = insert_color;
 
-  span_class += "-";
+  span_class += "\" class=\"";
 
   }
 
