@@ -94,41 +94,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
-  if(strcmp((const char *)localname, "unit") == 0) {
-
-    int idx = find_attribute_index(nb_attributes, attributes, "filename");
-
-    if(idx != -1) {
-
-      int length = attributes[idx + 4] - attributes[idx + 3];
-
-      const char * filename = strndup((const char *)attributes[idx + 3], length);
-
-      char * sep = index(filename, '|');
-
-      if(sep < (filename + length)) {
-
-        *sep = '\0';
-
-        tracer.filename_old = filename;
-
-        tracer.filename_new = sep + 1;
-
-        *sep = '|';
-
-      } else {
-
-        tracer.filename_old = filename;
-
-        tracer.filename_new = filename;
-
-
-      }
-
-    }
-
-  }
-
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     diff curdiff = { 0 };
@@ -175,6 +140,41 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       curelement.prefix = "";
 
     curelement.uri = (const char *)URI;
+
+  if(strcmp((const char *)localname, "unit") == 0) {
+
+    int idx = find_attribute_index(nb_attributes, attributes, "filename");
+
+    if(idx != -1) {
+
+      int length = attributes[idx + 4] - attributes[idx + 3];
+
+      const char * filename = strndup((const char *)attributes[idx + 3], length);
+
+      char * sep = index(filename, '|');
+
+      if(sep < (filename + length)) {
+
+        *sep = '\0';
+
+        curelement.signature_old = filename;
+
+        curelement.signature_new = sep + 1;
+
+        *sep = '|';
+
+      } else {
+
+        curelement.signature_old = filename;
+
+        curelement.signature_new = filename;
+
+
+      }
+
+    }
+
+  }
 
     if(tracer.elements.size() > 0) {
 
@@ -379,8 +379,8 @@ void output_diff(SAX2DiffTrace & tracer) {
     element += tracer.elements.at(i).name.c_str();
 
     if(tracer.elements.at(i).name == "unit"
-       && ((tracer.diff_stack.back().operation == DELETE && tracer.filename_old != "")
-           || (tracer.diff_stack.back().operation == INSERT && tracer.filename_new != ""))) {
+       && ((tracer.diff_stack.back().operation == DELETE && tracer.elements.at(i).signature_old != "")
+           || (tracer.diff_stack.back().operation == INSERT && tracer.elements.at(i).signature_new != ""))) {
 
       element += "[@filename=\"";
 
@@ -437,8 +437,8 @@ void output_diff(SAX2DiffTrace & tracer) {
     element += tracer.elements.back().name.c_str();
 
     if(tracer.elements.back().name == "unit"
-       && ((tracer.diff_stack.back().operation == DELETE && tracer.filename_old != "")
-           || (tracer.diff_stack.back().operation == INSERT && tracer.filename_new != ""))) {
+       && ((tracer.diff_stack.back().operation == DELETE && tracer.elements.back().signature_old != "")
+           || (tracer.diff_stack.back().operation == INSERT && tracer.elements.back().signature_new != ""))) {
 
       element += "[";
 
