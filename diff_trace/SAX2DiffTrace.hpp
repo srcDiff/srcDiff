@@ -35,6 +35,8 @@ struct element {
   std::string prefix;
   std::string uri;
 
+  std::string signature;
+
   std::map<std::string, int> children;
 
 };
@@ -48,6 +50,7 @@ class SAX2DiffTrace {
 
   bool output;
   bool collect;
+  unsigned int collect_node_pos;
 
   std::string filename_old;
   std::string filename_new;

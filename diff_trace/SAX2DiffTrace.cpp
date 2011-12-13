@@ -151,9 +151,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   } else {
 
-    if(!tracer.collect)
-      tracer.collect = is_collect((const char *)localname, (const char *)prefix);
-
     if(tracer.elements.size() > 0) {
 
       std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string((const char *)localname));
@@ -197,6 +194,14 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
+
+    if(!tracer.collect) {
+      
+      if((tracer.collect = is_collect((const char *)localname, (const char *)prefix)))
+        tracer.collect_node_pos = tracer.elements.size() - 1;
+
+      
+    }
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
@@ -254,6 +259,12 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
+
+  if(tracer.collect) {
+
+    tracer.elements.at(tracer.collect_node_pos).signature.append((const char *)ch, (const char *)ch + len);
+
+  }
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
