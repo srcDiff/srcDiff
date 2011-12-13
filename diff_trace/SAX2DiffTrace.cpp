@@ -249,6 +249,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix)) {
 
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
+      trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
       tracer.collect = false;
 
@@ -272,7 +273,15 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect) {
 
-    tracer.elements.at(tracer.collect_node_pos).signature_old.append((const char *)ch, (const char *)ch + len);
+    if(tracer.diff_stack.back().operation == COMMON) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_old.append((const char *)ch, (const char *)ch + len);
+      tracer.elements.at(tracer.collect_node_pos).signature_new.append((const char *)ch, (const char *)ch + len);
+
+    } else if(tracer.diff_stack.back().operation == DELETE)
+      tracer.elements.at(tracer.collect_node_pos).signature_old.append((const char *)ch, (const char *)ch + len);
+    else
+      tracer.elements.at(tracer.collect_node_pos).signature_new.append((const char *)ch, (const char *)ch + len);
 
   }
 
