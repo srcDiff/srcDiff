@@ -74,11 +74,11 @@ void startDocument(void* ctx) {
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
-    span_out = span_class + diff_color_change;
+    span_out = span_class + diff_color_delete;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-    span_out = span_class + diff_color_change;
+    span_out = span_class + diff_color_insert;
 
   } else {
 
@@ -170,11 +170,11 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
-    span_out = span_class + diff_color_change;
+    span_out = span_class + diff_color_delete;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-    span_out = span_class + diff_color_change;
+    span_out = span_class + diff_color_insert;
 
   } else {
 
@@ -223,11 +223,11 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
-        span_out = span_class + diff_color_change;
+        span_out = span_class + diff_color_delete;
 
       } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-        span_out = span_class + diff_color_change;
+        span_out = span_class + diff_color_insert;
 
       } else {
 
