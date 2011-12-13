@@ -442,7 +442,11 @@ void output_diff(SAX2DiffTrace & tracer) {
     } else if(is_collect(tracer.elements.back().name.c_str(), tracer.elements.back().prefix.c_str())) {
 
         element += "[src:signature(\"";
-        element += tracer.elements.back().signature_old;
+
+        if(tracer.diff_stack.back().operation == DELETE)
+          element += tracer.elements.back().signature_old;
+        else
+          element += tracer.elements.back().signature_new;
         element += "\")]";
 
     } else if(tracer.elements.size() > 1) {
