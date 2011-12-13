@@ -91,7 +91,7 @@ void startDocument(void* ctx) {
   fprintf(stdout, "</head>");
   fprintf(stdout, "<body>");
   fprintf(stdout, "<pre>");
-  fprintf(stdout, "<span class=\"%s\"> %d-%d\t", span_out.c_str(), data->line_old, data->line_new);
+  fprintf(stdout, "<span class=\"%s\">%d-%d\t", span_out.c_str(), data->line_old, data->line_new);
 
 }
 
