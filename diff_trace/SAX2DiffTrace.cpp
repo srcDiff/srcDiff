@@ -248,7 +248,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix)) {
 
-      trim_string(tracer.elements.at(tracer.collect_node_pos).signature);
+      trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
 
       tracer.collect = false;
 
@@ -272,7 +272,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect) {
 
-    tracer.elements.at(tracer.collect_node_pos).signature.append((const char *)ch, (const char *)ch + len);
+    tracer.elements.at(tracer.collect_node_pos).signature_old.append((const char *)ch, (const char *)ch + len);
 
   }
 
@@ -380,7 +380,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     } else if(is_collect(tracer.elements.at(i).name.c_str(), tracer.elements.at(i).prefix.c_str())) {
 
         element += "[src:signature(\"";
-        element += tracer.elements.at(i).signature;
+        element += tracer.elements.at(i).signature_old;
         element += "\")]";
 
     } else if(i > 0) {
@@ -433,7 +433,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     } else if(is_collect(tracer.elements.back().name.c_str(), tracer.elements.back().prefix.c_str())) {
 
         element += "[src:signature(\"";
-        element += tracer.elements.back().signature;
+        element += tracer.elements.back().signature_old;
         element += "\")]";
 
     } else if(tracer.elements.size() > 1) {
