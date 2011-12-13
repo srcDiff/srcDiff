@@ -252,7 +252,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
       tracer.collect = false;
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       if(tracer.output) {
 
         output_diff(tracer);
