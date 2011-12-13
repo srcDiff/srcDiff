@@ -78,12 +78,24 @@ static bool is_collect(const char * name, const char * prefix) {
   if(strcmp(name, "function_decl") == 0)
     return true;
 
+  if(strcmp(name, "class") == 0)
+    return true;
+
+  if(strcmp(name, "struct") == 0)
+    return true;
+
+  if(strcmp(name, "union") == 0)
+    return true;
+
   return false;
 }
 
 static bool is_end_collect(const char * name, const char * prefix, const char * context) {
 
-  if(strcmp(name, "parameter_list") == 0)
+  if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
+    return true;
+
+  if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
     return true;
 
   return false;
