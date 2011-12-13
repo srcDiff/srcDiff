@@ -47,6 +47,7 @@ class SAX2DiffTrace {
   xmlSAXHandler * sax;
 
   bool output;
+  bool collect;
 
   std::string filename_old;
   std::string filename_new;

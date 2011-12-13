@@ -49,6 +49,7 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   tracer.output = false;
+  tracer.collect = false;
 
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
@@ -63,6 +64,25 @@ void SAX2DiffTrace::endDocument(void * ctx) {
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
   fprintf(stdout, "\n");
+}
+
+static bool is_collect(const char * name, const char * prefix) {
+
+  if(strcmp(name, "function") == 0)
+    return true;
+
+  if(strcmp(name, "function_decl") == 0)
+    return true;
+
+  return false;
+}
+
+static bool is_end_collect(const char * name, const char * prefix) {
+
+  if(strcmp(name, "parameter_list") == 0)
+    return true;
+
+  return false;
 }
 
 void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -119,12 +139,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     } else if(strcmp((const char *)localname, "delete") == 0) {
 
-      tracer.output = true;
       curdiff.operation = DELETE;
 
     } else if(strcmp((const char *)localname, "insert") == 0) {
 
-      tracer.output = true;
       curdiff.operation = INSERT;
 
     }
@@ -132,6 +150,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     tracer.diff_stack.push_back(curdiff);
 
   } else {
+
+    if(!tracer.collect)
+      tracer.collect = is_collect((const char *)localname, (const char *)prefix);
 
     if(tracer.elements.size() > 0) {
 
@@ -216,6 +237,14 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     tracer.elements.pop_back();
     --tracer.diff_stack.back().level;
+
+    if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix)) {
+
+
+      tracer.collect = false;
+
+      //output_diff();
+    }
 
   }
 
