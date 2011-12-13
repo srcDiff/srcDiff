@@ -360,7 +360,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     fprintf(stdout, "Insert:\t");
 
   fprintf(stdout, "/");
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
 
     std::string element = "";
@@ -378,7 +378,9 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     element += tracer.elements.at(i).name.c_str();
 
-    if(tracer.elements.at(i).name == "unit") {
+    if(tracer.elements.at(i).name == "unit"
+       && ((tracer.diff_stack.back().operation == DELETE && tracer.filename_old != "")
+           || (tracer.diff_stack.back().operation == INSERT && tracer.filename_new != ""))) {
 
       element += "[@filename=\"";
 
@@ -434,7 +436,9 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     element += tracer.elements.back().name.c_str();
 
-    if(tracer.elements.back().name == "unit") {
+    if(tracer.elements.back().name == "unit"
+       && ((tracer.diff_stack.back().operation == DELETE && tracer.filename_old != "")
+           || (tracer.diff_stack.back().operation == INSERT && tracer.filename_new != ""))) {
 
       element += "[";
 
