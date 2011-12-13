@@ -1,4 +1,4 @@
-#normal
+.normal
 {
 
 color:black;
@@ -6,49 +6,49 @@ background-color:white;
 
 }
 
-#common
+.common
 {
 
 color:black;
 
 }
 
-#delete
+.delete
 {
 
 color:red;
 
 }
 
-#insert
+.insert
 {
 
 color:blue;
 
 }
 
-#diff_common
+.diff_common
 {
 
 background-color:white;
 
 }
 
-#diff_change
+.diff_change
 {
 
 background-color:cyan;
 
 }
 
-#diff_delete
+.diff_delete
 {
 
 background-color:yellow;
 
 }
 
-#diff_insert
+.diff_insert
 {
 
 background-color:green;
