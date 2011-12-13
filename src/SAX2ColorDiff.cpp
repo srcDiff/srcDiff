@@ -91,7 +91,7 @@ void startDocument(void* ctx) {
 
   fprintf(stdout, "<html>");
   fprintf(stdout, "<head>");
-  fprintf(stdout, "<link href=\"diffcolor.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
+  fprintf(stdout, "<link href=\"colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
   fprintf(stdout, "</head>");
   fprintf(stdout, "<body>");
   fprintf(stdout, "<pre>");
