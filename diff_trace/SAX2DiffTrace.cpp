@@ -56,6 +56,10 @@ void SAX2DiffTrace::startDocument(void * ctx) {
 
   tracer.diff_stack.push_back(startdiff);
 
+  tracer.is_delete = false;
+  tracer.is_insert = false;
+
+
 }
 
 void SAX2DiffTrace::endDocument(void * ctx) {
@@ -113,6 +117,13 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     }
 
     tracer.diff_stack.push_back(curdiff);
+
+    if(tracer.collect)
+        if(tracer.diff_stack.back().operation == DELETE)
+          tracer.is_delete = true;
+        else if(tracer.diff_stack.back().operation == INSERT)
+          tracer.is_insert = true;
+
 
   } else {
 
@@ -207,9 +218,16 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       if(!tracer.collect)
         output_diff(tracer);
-      else
+      else {
+
+        if(tracer.diff_stack.back().operation == DELETE)
+          tracer.is_delete = true;
+        else if(tracer.diff_stack.back().operation == INSERT)
+          tracer.is_insert = true;
+
           tracer.output = true;
 
+      }
     }
 
   }
@@ -255,7 +273,34 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(tracer.output) {
 
-        output_diff(tracer);
+        if(tracer.is_delete) {
+
+          diff curdiff = { 0 };
+          curdiff.operation = DELETE;
+
+          tracer.diff_stack.push_back(curdiff);
+
+          output_diff(tracer);
+
+          tracer.pop_back();
+
+        }
+
+        if(tracer.is_insert) {
+
+          diff curdiff = { 0 };
+          curdiff.operation = INSERT;
+
+          tracer.diff_stack.push_back(curdiff);
+
+          output_diff(tracer);
+
+          tracer.pop_back();
+
+        }
+
+        tracer.is_delete = false;
+        tracer.is_insert = false;
 
         tracer.output = false;
 
@@ -337,8 +382,16 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     if(!tracer.collect)
       output_diff(tracer);
-    else
+    else {
+
+        if(tracer.diff_stack.back().operation == DELETE)
+          tracer.is_delete = true;
+        else if(tracer.diff_stack.back().operation == INSERT)
+          tracer.is_insert = true;
+
       tracer.output = true;
+
+    }
 
     tracer.elements.pop_back();
 
