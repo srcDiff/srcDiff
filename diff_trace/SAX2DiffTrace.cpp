@@ -205,10 +205,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
 
-      //if(!tracer.collect)
+      if(!tracer.collect)
         output_diff(tracer);
-        //else
-        //tracer.output = true;
+      else
+          tracer.output = true;
 
     }
 
@@ -234,8 +234,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       for(std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.begin();
           pos != tracer.diff_stack.back().children.end(); ++pos) {
 
-        //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, pos->first.c_str());
-        //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, pos->second);
         tracer.elements.back().children[pos->first.c_str()] -= pos->second;
       }
 
@@ -256,7 +254,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(tracer.output) {
 
-        //output_diff(tracer);
+        output_diff(tracer);
 
         tracer.output = false;
 
