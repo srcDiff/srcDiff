@@ -282,7 +282,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
           output_diff(tracer);
 
-          tracer.pop_back();
+          tracer.diff_stack.pop_back();
 
         }
 
@@ -295,7 +295,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
           output_diff(tracer);
 
-          tracer.pop_back();
+          tracer.diff_stack.pop_back();
 
         }
 
