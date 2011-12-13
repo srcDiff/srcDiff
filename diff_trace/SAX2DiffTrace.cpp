@@ -81,7 +81,7 @@ static bool is_collect(const char * name, const char * prefix) {
   return false;
 }
 
-static bool is_end_collect(const char * name, const char * prefix) {
+static bool is_end_collect(const char * name, const char * prefix, const char * context) {
 
   if(strcmp(name, "parameter_list") == 0)
     return true;
@@ -264,7 +264,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     tracer.elements.pop_back();
     --tracer.diff_stack.back().level;
 
-    if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix)) {
+    if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
