@@ -86,7 +86,7 @@ void startDocument(void* ctx) {
 
   }
 
-  span_class += "\"";
+  span_out += "\"";
 
 
   fprintf(stdout, "<html>");
@@ -181,7 +181,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-  span_class += "\"";
+  span_out += "\"";
 
   fprintf(stdout, "</span><span %s>", span_out.c_str());
 
@@ -234,7 +234,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-  span_class += "\"";
+  span_out += "\"";
 
   // clear color before output line
   fprintf(stdout, "</span><span class=\"%s\">", normal_color);
