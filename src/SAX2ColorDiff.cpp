@@ -1,5 +1,5 @@
 /*
-  SAX2ExtractSource.cpp
+  SAX2ColorDiff.cpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu

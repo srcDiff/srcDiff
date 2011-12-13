@@ -1,5 +1,5 @@
 /*
-  ExtractsrcML.cpp
+  colordiff.cpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu

@@ -1,12 +1,12 @@
 /*
-  SAX2ExtractSource.hpp
+  SAX2ColorDiff.hpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu
 */
 
-#ifndef INCLUDED_SAX2EXTRACTSOURCE_HPP
-#define INCLUDED_SAX2EXTRACTSOURCE_HPP
+#ifndef INCLUDED_SAX2COLORDIFF_HPP
+#define INCLUDED_SAX2COLORDIFF_HPP
 
 #include <libxml/parser.h>
 
