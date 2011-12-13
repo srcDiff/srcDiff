@@ -54,20 +54,35 @@ void startDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  const char * back_color = diff_color_common;
+  std::string span_class;
+
+  if(data->in_diff->back() == COMMON)
+    span_class = common_color;
+  else if(data->in_diff->back() == DELETE)
+    span_class = delete_color;
+  else
+    span_class = insert_color;
+
+  span_class += "-";
+
+  std::string span_out = span_class;
 
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
-    back_color = diff_color_change;
+      span_out = span_class + diff_color_change;
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
-    back_color = diff_color_delete;
+      span_out = span_class + diff_color_change;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
-    back_color = diff_color_insert;
+      span_out = span_class + diff_color_change;
+
+  } else {
+
+      span_out = span_class + diff_color_common;
 
   }
 
@@ -75,7 +90,7 @@ void startDocument(void* ctx) {
   fprintf(stdout, "<head>");
   fprintf(stdout, "</head>");
   fprintf(stdout, "<body>");
-  fprintf(stdout, "<span class=\"%s\"> %d-%d\t", back_color, data->line_old, data->line_new);
+  fprintf(stdout, "<span class=\"%s\"> %d-%d\t", span_out.c_str(), data->line_old, data->line_new);
 
 }
 
