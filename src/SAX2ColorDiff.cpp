@@ -90,6 +90,7 @@ void startDocument(void* ctx) {
   fprintf(stdout, "<head>");
   fprintf(stdout, "</head>");
   fprintf(stdout, "<body>");
+  fprintf(stdout, "<pre>");
   fprintf(stdout, "<span class=\"%s\"> %d-%d\t", span_out.c_str(), data->line_old, data->line_new);
 
 }
@@ -99,6 +100,7 @@ void endDocument(void* ctx) {
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
   fprintf(stdout, "%s\n", normal_color);
+  fprintf(stdout, "</pre>");
   fprintf(stdout, "</body>");
   fprintf(stdout, "</html>");
 }
