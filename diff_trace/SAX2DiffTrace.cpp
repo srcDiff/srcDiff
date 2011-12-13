@@ -372,7 +372,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     } else if(is_collect(tracer.elements.at(i).name.c_str(), tracer.elements.at(i).prefix.c_str())) {
 
-        element += "[signature=(\"\"";
+        element += "[src:signature(\"\"";
         element += tracer.elements.at(i).signature;
         element += "\")]";
 
@@ -424,6 +424,11 @@ void output_diff(SAX2DiffTrace & tracer) {
 
       element += "]";
 
+    } else if(is_collect(tracer.elements.back().name.c_str(), tracer.elements.back().prefix.c_str())) {
+
+        element += "[src:signature(\"\"";
+        element += tracer.elements.back().signature;
+        element += "\")]";
 
     } else if(tracer.elements.size() > 1) {
 
