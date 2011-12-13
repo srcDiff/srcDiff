@@ -370,6 +370,12 @@ void output_diff(SAX2DiffTrace & tracer) {
 
       element += "\"]";
 
+    } else if(is_collect(tracer.elements.at(i).name.c_str(), tracer.elements.at(i).prefix.c_str())) {
+
+        element += "[signature=(\"\"";
+        element += tracer.elements.at(i).signature;
+        element += "\")]";
+
     } else if(i > 0) {
 
       int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
