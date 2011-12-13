@@ -159,6 +159,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
         ++tracer.diff_stack.back().children[std::string((const char *)localname)];
 
+        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, tracer.diff_stack.back().children[std::string((const char *)localname)]);
       } else {
 
         tracer.diff_stack.back().children[std::string((const char *)localname)] = 1;
@@ -166,6 +169,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
 
     }
+
+
 
     element curelement;
     curelement.name = (const char *)localname;
@@ -277,22 +282,38 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
+      if(tracer.elements.size() > 0) {
+
+      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string("text()"));
+
+       if(pos != tracer.diff_stack.back().children.end()) {
+
+         ++tracer.diff_stack.back().children[std::string("text()")];
+
+       } else {
+
+          tracer.diff_stack.back().children[std::string("text()")] = 1;
+
+      }
+
+     }
+
+
     if(tracer.elements.size() > 0) {
 
       std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string("text()"));
 
       if(pos != tracer.elements.back().children.end()) {
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         ++tracer.elements.back().children[std::string("text()")];
 
       } else {
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         tracer.elements.back().children[std::string("text()")] = 1;
 
       }
 
     }
-
 
   int i;
   for(i = 0; i < len; ++i) {
@@ -373,7 +394,6 @@ void output_diff(SAX2DiffTrace & tracer) {
         element += "\")]";
 
     } else if(i > 0) {
-
       int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
 
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, count);
