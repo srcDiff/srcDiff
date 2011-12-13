@@ -6,11 +6,11 @@
 #mv linux-3.0.9/ new
 #cd old
 #find . -name "*.h" -o -name "*.c" -o -name "*.cc" > files 
-#cat files | gxargs -I% bash -c "cmp --quiet old/% new/% || echo %" > list
 #cd ..
 #cd new
 #cat ../old/files | gxargs -I% bash -c "[[ -e % ]] && echo %" > ../files
 #cd ..
+#cat files | gxargs -I% bash -c "cmp --quiet old/% new/% || echo %" > list
 
 #cat files | gxargs -I% -P 10 bash -c "../bin/srcdiffc old/% new/% > new/%.xml"
 cat list | gxargs -I% -P 10 bash -c "../bin/srcdiff --literal --operator --modifier old/% new/% -o new/%.xml"
