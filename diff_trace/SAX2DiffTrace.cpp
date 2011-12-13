@@ -360,7 +360,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     fprintf(stdout, "Insert:\t");
 
   fprintf(stdout, "/");
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
 
     std::string element = "";
