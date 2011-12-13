@@ -10,7 +10,7 @@ CUT=/usr/bin/cut
 VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops -g #-fno-rtti
+CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops #-g -fno-rtti
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
