@@ -477,6 +477,8 @@ std::string & trim_string(std::string & source) {
   //fprintf(stderr, "%s\n", source.c_str());
 
   std::string::iterator pos;
-  for(pos = source.begin(); pos != source.end() && isspace(*pos) && isspace(*(pos + 1)); ++pos);
+  for(pos = source.begin(); (pos + 1) != source.end() && isspace(*pos) && isspace(*(pos + 1)); ++pos)
+    source.erase(pos);
+
   return source;
 }
