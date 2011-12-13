@@ -246,6 +246,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     tracer.elements.pop_back();
     --tracer.diff_stack.back().level;
 
+    trim_string(tracer.elements.at(tracer.collect_node_pos).signature);
+
     if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix)) {
 
 
@@ -271,10 +273,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect) {
 
-    std::string temp;
-    temp.append((const char *)ch, (const char *)ch + len);
-
-    tracer.elements.at(tracer.collect_node_pos).signature += trim_string(temp);
+    tracer.elements.at(tracer.collect_node_pos).signature.append((const char *)ch, (const char *)ch + len);
 
   }
 
@@ -477,7 +476,7 @@ std::string & trim_string(std::string & source) {
 
   //fprintf(stderr, "%s\n", source.c_str());
 
-  int pos;
-  for(pos = source.size() - 2; pos >= 0 && source[pos] == ' ' && source[pos + 1] == ' '; --pos);
-  return source.erase(pos + 2);
+  std::string::iterator pos;
+  for(pos = source.begin(); pos != source.end() && isspace(*pos) && isspace(*(pos + 1)); ++pos);
+  return source;
 }
