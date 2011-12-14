@@ -398,7 +398,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       element += "src:";
 
     }
-
       element += curelement.name.c_str();
 
     if(curelement.name == "unit"
@@ -430,6 +429,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       element += "[";
 
+      // might not always work rework with old
     if(nextelement.prefix != "") {
 
       element += nextelement.prefix.c_str();
@@ -439,9 +439,10 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       element += "src:";
 
-    }
-
+    } else if(nextelement.name != "")
       element += nextelement.name.c_str();
+    else
+      element += "name";
 
       element += "=\"";
 
@@ -496,7 +497,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     if(i > 0)
       count = tracer.elements.at(i - 1).children_old[std::string(tracer.elements.at(i).name)];
  
-    std::string element = create_string_from_element(tracer.elements.at(i), tracer.elements.at(i - 1), count, tracer.diff_stack.back().operation);
+    std::string element = create_string_from_element(tracer.elements.at(i), tracer.elements.at(i + 1), count, tracer.diff_stack.back().operation);
 
     element += "/";
 
