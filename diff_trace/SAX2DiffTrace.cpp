@@ -303,8 +303,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
         }
 
-        tracer.missed_diff_types.erase();
-        tracer.missed_diffs.erase();
+        tracer.missed_diff_types.clear();
+        tracer.missed_diffs.clear();
 
         tracer.output = false;
 
