@@ -204,7 +204,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(tracer.elements.size() > 0) {
 
       std::string tag;
-      if(prefix && strcmp((const char *)prefix, "") == 0) {
+      if(prefix && strcmp((const char *)prefix, "") != 0) {
 
         tag += (const char *)prefix;
         tag += ":";
