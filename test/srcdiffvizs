@@ -5,7 +5,3 @@ filename=$(gmktemp --suffix=.html)
 ../test/srcdiffviz $1 $2 > $filename
 
 open -a Safari.app $filename
-
-sleep 3;
-
-rm $filename
