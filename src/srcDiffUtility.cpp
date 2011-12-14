@@ -59,6 +59,9 @@ int node_compare(xNode * node1, xNode * node2) {
   if (node1 == node2)
     return 0;
 
+  if(node1->is_empty != node2->is_empty)
+    return 1;
+
   if(node1->type != node2->type || strcmp((const char *)node1->name, (const char *)node2->name) != 0)
     return 1;
 

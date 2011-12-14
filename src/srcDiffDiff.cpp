@@ -314,10 +314,9 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
-  if(1 || !(olength > 0 && nlength > 0
-       && (xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type == XML_READER_TYPE_ELEMENT
-       && (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type == XML_READER_TYPE_ELEMENT
-       && node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) == 0)) {
+  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
 
     if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
       return MIN;
