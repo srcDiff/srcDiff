@@ -412,7 +412,7 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 }
 
-std::string create_string_from_element(element curelement, int operation) {
+std::string create_string_from_element(element curelement, int count, int operation) {
 
     std::string element = "";
 
@@ -451,9 +451,7 @@ std::string create_string_from_element(element curelement, int operation) {
         element += curelement.signature_new;
       element += "\")]";
 
-    } else if(i > 0) {
-
-      int count = tracer.elements.at(i - 1).children[std::string(curelement.name)];
+    } else if(count > 0) {
 
       int temp_count = count;
       int length;
@@ -490,7 +488,11 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
 
-    std::string element = create_string_from_element(tracer.elements.at(i), tracer.diff_stack.back());
+    int count = 0;
+    if(i > 0)
+      count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
+ 
+    std::string element = create_string_from_element(tracer.elements.at(i), count, tracer.diff_stack.back());
 
     element += "/";
 
