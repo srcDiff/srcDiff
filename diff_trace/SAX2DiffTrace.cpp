@@ -290,7 +290,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
           tracer.diff_stack.push_back(temp_diff);
 
           for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-            tracer.elements.push_back(tracer.missed_diffs.at(i).at(j);
+            tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
             
           output_diff(tracer);
 
