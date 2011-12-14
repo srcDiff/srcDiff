@@ -277,7 +277,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(strcmp((const char *)localname, "name") == 0) {
 
-        std::string pre = (const char *)prefix + ":name=\"";
+        std::string pre = (const char *)prefix;
+        pre += ":name=\"";
 
         tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "\"";
         tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "\"";
