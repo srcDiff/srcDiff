@@ -25,8 +25,6 @@ struct diff {
   int operation;
   int level;
 
-  std::map<std::string, int> children;
-
 };
 
 struct element {
@@ -38,7 +36,8 @@ struct element {
   std::string signature_old;
   std::string signature_new;
 
-  std::map<std::string, int> children;
+  std::map<std::string, int> children_old;
+  std::map<std::string, int> children_new;
 
 };
 

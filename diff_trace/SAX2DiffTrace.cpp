@@ -132,31 +132,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   } else {
 
-    if(tracer.elements.size() > 0 && tracer.diff_stack.back().level == 0) {
-
-      std::string tag;
-      if(prefix && strcmp((const char *)prefix, "") != 0) {
-
-        tag += (const char *)prefix;
-        tag += ":";
-
-      }
-      tag += (const char *)localname;
-
-      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(tag);
-
-      if(pos != tracer.diff_stack.back().children.end()) {
-
-        ++tracer.diff_stack.back().children[tag];
-
-      } else {
-
-        tracer.diff_stack.back().children[tag] = 1;
-
-      }
-
-    }
-
     element curelement;
     curelement.name = (const char *)localname;
     if(prefix)
@@ -212,15 +187,15 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
       tag += (const char *)localname;
 
-      std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(tag);
+      std::map<std::string, int>::iterator pos = tracer.elements.back().children_old.find(tag);
 
-      if(pos != tracer.elements.back().children.end()) {
+      if(pos != tracer.elements.back().children_old.end()) {
 
-        ++tracer.elements.back().children[tag];
+        ++tracer.elements.back().children_old[tag];
 
       } else {
 
-        tracer.elements.back().children[tag] = 1;
+        tracer.elements.back().children_old[tag] = 1;
 
       }
 
@@ -276,10 +251,10 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
        || strcmp((const char *)localname, "insert") == 0) {
 
 
-      for(std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.begin();
-          pos != tracer.diff_stack.back().children.end(); ++pos) {
+      for(std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children_old.begin();
+          pos != tracer.diff_stack.back().children_old.end(); ++pos) {
 
-        tracer.elements.back().children[pos->first.c_str()] -= pos->second;
+        tracer.elements.back().children_old[pos->first.c_str()] -= pos->second;
       }
 
       tracer.diff_stack.pop_back();
@@ -367,33 +342,17 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   }
   /*
 
-  if(tracer.elements.size() > 0  && tracer.diff_stack.back().level == 0) {
-
-    std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string("text()"));
-
-    if(pos != tracer.diff_stack.back().children.end()) {
-
-      ++tracer.diff_stack.back().children[std::string("text()")];
-
-    } else {
-
-      tracer.diff_stack.back().children[std::string("text()")] = 1;
-
-    }
-
-  }
-
   if(tracer.elements.size() > 0) {
 
-    std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string("text()"));
+    std::map<std::string, int>::iterator pos = tracer.elements.back().children_old.find(std::string("text()"));
 
-    if(pos != tracer.elements.back().children.end()) {
+    if(pos != tracer.elements.back().children_old.end()) {
 
-      ++tracer.elements.back().children[std::string("text()")];
+      ++tracer.elements.back().children_old[std::string("text()")];
 
     } else {
 
-      tracer.elements.back().children[std::string("text()")] = 1;
+      tracer.elements.back().children_old[std::string("text()")] = 1;
 
     }
 
@@ -538,7 +497,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     int count = 0;
     if(i > 0)
-      count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
+      count = tracer.elements.at(i - 1).children_old[std::string(tracer.elements.at(i).name)];
  
     std::string element = create_string_from_element(tracer.elements.at(i), count, tracer.diff_stack.back().operation);
 
@@ -550,7 +509,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     int count = 0;
     if(tracer.elements.size() > 1)
-      count = tracer.elements.at(tracer.elements.size() - 2).children[std::string(tracer.elements.back().name)];
+      count = tracer.elements.at(tracer.elements.size() - 2).children_old[std::string(tracer.elements.back().name)];
  
     std::string element = create_string_from_element(tracer.elements.back(), count, tracer.diff_stack.back().operation);
 
