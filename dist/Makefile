@@ -33,6 +33,7 @@ BIN_DIR=${SRC_DIR_BASE}/bin
 DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../bin
+SRCML_SRC=../../../src
 
 # srcml library
 LIBSRCML_DLL=${DLL_DIR}/libsrcml.dll
@@ -40,16 +41,14 @@ LIBSRCML_DLL=${DLL_DIR}/libsrcml.dll
 # executables
 SRCDIFF_BIN=srcdiff
 SRCDIFF_EXE=srcdiff.exe
-
 SRCDIFF_PATH=${BIN_DIR}/${SRCDIFF_BIN}
-
 WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRCDIFF_EXE}
-LIBSRCML_DLL=${BIN_DIR}/libsrcml.dll
 
-DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
-WIN_DOC_FILES=${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
-DIST_FILES=${DOC_FILES} ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
-WIN_DIST_FILES=${WIN_DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
+# doc
+#DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
+#WIN_DOC_FILES=${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
+DIST_FILES=${SRCDIFF_PATH} 
+WIN_DIST_FILES=${WIN_SRCDIFF_PATH} ${DLL_DIR}/*.dll
 
 # generate files
 all : src bin
@@ -66,7 +65,6 @@ exp :
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj --native-eol LF
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin --native-eol LF
-	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc --native-eol LF
 
 clean :
 	make cleansrc
@@ -81,20 +79,21 @@ cleansrc :
 src : ${SRC_TAR_GZ} ${SRC_ZIP}
 
 ${SRC_TAR_GZ} : exp
-	tar czf $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
+	tar czf $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR}
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
-	zip -orql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
+	zip -orql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR}
 	unzip -qt $@
 
 ##
 # bin
 bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
+	cd ${SRCML_SRC} && make clean
+	cd ${SRCML_SRC} && make DYNAMIC=1
 	cd ${SRC_DIR} && make
-	cd ${DOC_DIR} && make
-	strip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
+	strip ${SRCDIFF_PATH}
 	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
@@ -110,15 +109,9 @@ windows : ${SRC_ZIP}
 
 windowsdyn : ${SRC_ZIP}
 	unzip -aq ${SRC_ZIP}
-	cd ${SRC_DIR} && make mingw32 DYNAMIC=1 DLL_DIR=${DLL_DIR}
-	cd ${SRC_DIR} && make cleanbuild && make
-	cd ${DOC_DIR} && make clean && make
-	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
+	cd ${SRCML_SRC} && make mingw32 DYNAMIC=1
+	cd ${SRC_DIR} && make mingw32
+	i686-pc-mingw32-strip ${WIN_SRCDIFF_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
-	${CP} ../dlls/*.dll ${WIN_BASE}
-	${CP} ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
-	unix2dos ${WIN_BASE}/*.html
-	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
-
-dll :
-	echo ${DLL_DIR}
+	${CP} ${DLL_DIR}/*.dll ${WIN_BASE}
+	zip -oql ${WIN_ZIP} ${WIN_BASE}/srcdiff.exe ${WIN_BASE}/*.dll 
