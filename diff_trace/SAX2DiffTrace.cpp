@@ -475,6 +475,8 @@ std::string create_string_from_element(element curelement, int count, int operat
 
     }
 
+    return element;
+
 }
 
 void output_diff(SAX2DiffTrace & tracer) {
