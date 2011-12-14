@@ -101,6 +101,26 @@ static bool is_end_collect(const char * name, const char * prefix, const char * 
   return false;
 }
 
+void add_child(std::map<std::string, int> children, std::string child) {
+
+  std::map<std::string, int>::iterator pos = children.find(child)
+
+  if(tracer.diff_stack.back().operation == COMMON) {
+    
+    if(pos != children.end()) {
+
+      ++children[tag];
+
+    } else {
+
+      children[tag] = 1;
+
+    }
+
+  }
+
+}
+
 void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                    const xmlChar** attributes) {
@@ -187,20 +207,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
       tag += (const char *)localname;
 
-      std::map<std::string, int>::iterator pos = tracer.elements.back().children_old.find(tag);
+      //
 
-      if(pos != tracer.elements.back().children_old.end()) {
-
-        ++tracer.elements.back().children_old[tag];
-
-      } else {
-
-        tracer.elements.back().children_old[tag] = 1;
-
-      }
 
     }
-
     tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
 
