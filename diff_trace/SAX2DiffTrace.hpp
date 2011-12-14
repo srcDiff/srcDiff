@@ -53,7 +53,7 @@ class SAX2DiffTrace {
   bool collect;
   unsigned int collect_node_pos;
 
-  std::vector<int> > missed_diff_types;  
+  std::vector<int> missed_diff_types;  
   std::vector<std::vector<element> > missed_diffs;  
 
   std::string filename_old;
