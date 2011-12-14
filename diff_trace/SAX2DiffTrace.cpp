@@ -226,7 +226,12 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       else {
 
-        //tracer.missed_diffs.push_back();
+        std::vector<element> temp_stack;
+
+        for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
+          temp_stack.push_back(tracer.elements.at(i));
+
+        tracer.missed_diffs.push_back(temp_stack);
 
         tracer.output = true;
 
@@ -361,12 +366,15 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     else {
 
         if(tracer.diff_stack.back().operation == DELETE)
-          tracer.is_delete = true;
-        else if(tracer.diff_stack.back().operation == INSERT)
-          tracer.is_insert = true;
+        std::vector<element> temp_stack;
 
-      tracer.output = true;
+        for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
+          temp_stack.push_back(tracer.elements.at(i));
 
+        tracer.missed_diffs.push_back(temp_stack);
+
+        tracer.output = true;
+      
     }
 
     tracer.elements.pop_back();
