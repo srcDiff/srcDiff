@@ -340,8 +340,8 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
-  if(olength > 0 && nlength > 0 && node_compare(nodes_old.at(node_set_old->at(1)), nodes_new.at(node_set_new->at(1))) != 0)
-    return 65535;
+  if(olength > 0 && nlength > 0 && node_compare(nodes_old.at(node_set_old->at(1)), nodes_newx.at(node_set_new->at(1))) != 0)
+    return 65534;
 
   //int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
@@ -390,7 +390,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
       // TODO: set to first or positive infinity or MAX_INT or whatever it is called
-      int min_similarity = 65535;
+      int min_similarity = 65534;
       for(int pos = old_pos; pos < edits->length; ++pos) {
 
         int similarity = 0;
