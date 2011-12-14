@@ -207,10 +207,23 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
       tag += (const char *)localname;
 
-      //
+      if(tracer.diff_stack.back().operation == COMMON) {
 
+        add_child(tracer.elements.back().children_old, tag);
+        add_child(tracer.elements.back().children_new, tag);
+
+      } else if(tracer.diff_stack.back().operation == DELETE) {
+
+        add_child(tracer.elements.back().children_old, tag);
+
+      } else {
+
+        add_child(tracer.elements.back().children_new, tag);
+
+      }
 
     }
+
     tracer.elements.push_back(curelement);
     ++tracer.diff_stack.back().level;
 
