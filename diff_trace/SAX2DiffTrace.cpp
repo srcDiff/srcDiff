@@ -103,21 +103,17 @@ static bool is_end_collect(const char * name, const char * prefix, const char * 
 
 void add_child(std::map<std::string, int> children, std::string child) {
 
-  std::map<std::string, int>::iterator pos = children.find(child)
+  std::map<std::string, int>::iterator pos = children.find(child);
 
-  if(tracer.diff_stack.back().operation == COMMON) {
-    
     if(pos != children.end()) {
 
-      ++children[tag];
+      ++children[child];
 
     } else {
 
-      children[tag] = 1;
+      children[child] = 1;
 
     }
-
-  }
 
 }
 
