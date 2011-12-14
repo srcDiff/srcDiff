@@ -114,7 +114,7 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   if(strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr_stmt") != 0
      && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "decl_stmt") != 0
      && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
-  return true;
+    return true;
 
   unsigned int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
@@ -208,7 +208,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
            && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
 
           if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
-                             , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
+                                                                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
 
             output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one
                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate);
@@ -311,42 +311,45 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
-  /*
-  if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
-    return MIN;
-
-  unsigned int leftptr;
-  for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size()
-        && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr)
-    ;
-
-  unsigned int rightptr;
-  for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
-        && node_compare(nodes_old.at(node_set_old->at(node_set_old->size() - rightptr)),
-                        nodes_new.at(node_set_new->at(node_set_new->size() - rightptr))) == 0; ++rightptr)
-    ;
-
-  int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
-  int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
-
-  int value = ((old_diff > new_diff) ? old_diff : new_diff);
-
-  if(value < 0)
-    value = 0;
-
-  return value;
-  */
-
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
+
+  if(!(olength > 0 && nlength > 0
+       && (xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type == XML_READER_TYPE_ELEMENT
+       && (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type == XML_READER_TYPE_ELEMENT
+       && node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) == 0)) {
+
+    if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
+      return MIN;
+
+    unsigned int leftptr;
+    for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size()
+          && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr)
+      ;
+
+    unsigned int rightptr;
+    for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
+          && node_compare(nodes_old.at(node_set_old->at(node_set_old->size() - rightptr)),
+                          nodes_new.at(node_set_new->at(node_set_new->size() - rightptr))) == 0; ++rightptr)
+      ;
+
+    int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
+    int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
+
+    int value = ((old_diff > new_diff) ? old_diff : new_diff);
+
+    if(value < 0)
+      value = 0;
+
+    return value;
+
+  }
 
   if(olength > 0 && nlength > 0
      && ((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type == XML_READER_TYPE_ELEMENT
          || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type == XML_READER_TYPE_ELEMENT)
      && node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0)
     return 65534;
-
-  //int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
   std::vector<int> node_set_old_text;
 
@@ -362,7 +365,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
   edit * edit_script;
   shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-				      (void *)&node_set_new_text, node_index_compare, node_index, &edit_script);
+                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script);
 
   edit * edits = edit_script;
   unsigned int similarity = 0;
@@ -393,7 +396,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
       // TODO: set to first or positive infinity or MAX_INT or whatever it is called
-      int min_similarity = 65534;
+      int min_similarity = 65535;
       for(int pos = old_pos; pos < edits->length; ++pos) {
 
         int similarity = 0;
@@ -516,7 +519,6 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     // correct could only be whitespace
     if(matches->similarity == MIN) {
 
-
       output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
 
                     , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
@@ -526,7 +528,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                            , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
               && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
       if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
-                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
+                                                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
 
         output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                          , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate);
