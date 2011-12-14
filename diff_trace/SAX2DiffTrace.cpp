@@ -101,7 +101,7 @@ static bool is_end_collect(const char * name, const char * prefix, const char * 
   return false;
 }
 
-void add_child(std::map<std::string, int> children, std::string child) {
+void add_child(std::map<std::string, int> & children, std::string & child) {
 
   std::map<std::string, int>::iterator pos = children.find(child);
 
