@@ -466,12 +466,12 @@ std::string create_string_from_element(element curelement, int count, int operat
               || strcmp(curelement.name.c_str(), "struct") == 0
               || strcmp(curelement.name.c_str(), "union") == 0) {
 
-      element += "[src:name=\"";
+      element += "[";
       if(operation == DELETE)
         element += curelement.signature_old;
       else
         element += curelement.signature_new;
-      element += "\")]";
+      element += "]";
 
     } else if(count > 0) {
 
