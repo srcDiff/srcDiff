@@ -32,7 +32,10 @@ OBJ_DIR=${SRC_DIR_BASE}/obj
 BIN_DIR=${SRC_DIR_BASE}/bin
 DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
-DLL_DIR=../../dlls
+DLL_DIR=../../../bin
+
+# srcml library
+LIBSRCML_DLL=${DLL_DIR}/libsrcml.dll
 
 # executables
 SRCDIFF_BIN=srcdiff
