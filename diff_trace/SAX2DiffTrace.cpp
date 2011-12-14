@@ -365,6 +365,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.at(tracer.collect_node_pos).signature_new.append((const char *)ch, (const char *)ch + len);
 
   }
+  /*
 
   if(tracer.elements.size() > 0  && tracer.diff_stack.back().level == 0) {
 
@@ -382,7 +383,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-
   if(tracer.elements.size() > 0) {
 
     std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string("text()"));
@@ -399,6 +399,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
+  */
+
   int i;
   for(i = 0; i < len; ++i) {
 
@@ -406,7 +408,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       break;
 
   }
-
+  
   if(tracer.diff_stack.back().operation != COMMON && len != 0 && i != len && tracer.diff_stack.back().level == 0) {
 
     element curelement;
@@ -459,7 +461,7 @@ std::string create_string_from_element(element curelement, int count, int operat
 
     }
 
-    element += curelement.name.c_str();
+      element += curelement.name.c_str();
 
     if(curelement.name == "unit"
        && ((operation == DELETE && curelement.signature_old != "")
