@@ -500,63 +500,15 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   }
 
-  std::string element = "";
+    int count = 0;
+    if(tracer.elements.size() > 1)
+      count = tracer.elements.at(tracer.elements.size() - 2).children[std::string(tracer.elements.back().name)];
+ 
+    std::string element = create_string_from_element(tracer.elements.back(), count, tracer.diff_stack.back().operation);
 
-  if(tracer.elements.back().prefix != "") {
+    element += "\n";
 
-    element += tracer.elements.back().prefix.c_str();
-    element += ":";
-
-  } else if(tracer.elements.back().uri == "http://www.sdml.info/srcML/src") {
-
-    element += "src:";
-
-  }
-
-  element += tracer.elements.back().name.c_str();
-
-  if(tracer.elements.back().name == "unit"
-     && ((tracer.diff_stack.back().operation == DELETE && tracer.elements.back().signature_old != "")
-         || (tracer.diff_stack.back().operation == INSERT && tracer.elements.back().signature_new != ""))) {
-
-    element += "[";
-
-    if(tracer.diff_stack.back().operation == DELETE)
-      element += tracer.elements.back().signature_old;
-    else
-      element += tracer.elements.back().signature_new;
-
-    element += "]";
-
-  } else if(is_collect(tracer.elements.back().name.c_str(), tracer.elements.back().prefix.c_str())) {
-
-    element += "[src:signature(\"";
-
-    if(tracer.diff_stack.back().operation == DELETE)
-      element += tracer.elements.back().signature_old;
-    else
-      element += tracer.elements.back().signature_new;
-    element += "\")]";
-
-  } else if(tracer.elements.size() > 1) {
-
-    int count = tracer.elements.at(tracer.elements.size() - 2).children[std::string(tracer.elements.back().name)];
-
-    char * buffer = (char *)malloc(sizeof(char) * count);
-
-    snprintf(buffer, count + 1, "%d", count);
-
-    element += "[";
-    element += buffer;
-    element += "]";
-
-    free(buffer);
-
-  }
-
-  element += "\n";
-
-  fprintf(stdout, "%s", element.c_str());
+    fprintf(stdout, "%s", element.c_str());
 
 }
 
