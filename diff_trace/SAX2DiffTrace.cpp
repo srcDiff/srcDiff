@@ -280,6 +280,20 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
+      if(strcmp((const char *)localname, "name") == 0) {
+
+          std::string pre;
+         if(!prefix || strcmp((const char *)prefix, "") == 0)
+             pre += "src";
+        else
+            pre += (const char *)prefix;
+         pre += ":name=\"";
+
+          tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "\"";
+         tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "\"";
+
+        }
+
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
@@ -428,29 +442,11 @@ std::string create_string_from_element(element & curelement, element & nexteleme
               || strcmp(curelement.name.c_str(), "union") == 0) {
 
       element += "[";
-
-      // might not always work rework with old
-    if(nextelement.prefix != "") {
-
-      element += nextelement.prefix.c_str();
-      element += ":";
-
-    } else if(nextelement.uri == "http://www.sdml.info/srcML/src") {
-
-      element += "src:";
-
-    } else if(nextelement.name != "")
-      element += nextelement.name.c_str();
-    else
-      element += "name";
-
-      element += "=\"";
-
       if(operation == DELETE)
         element += curelement.signature_old;
       else
         element += curelement.signature_new;
-      element += "\"]";
+      element += "]";
 
     } else if(count > 0) {
 
