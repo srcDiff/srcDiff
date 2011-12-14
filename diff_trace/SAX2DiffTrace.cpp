@@ -157,40 +157,40 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     curelement.uri = (const char *)URI;
 
-  if(strcmp((const char *)localname, "unit") == 0) {
+    if(strcmp((const char *)localname, "unit") == 0) {
 
-    int idx = find_attribute_index(nb_attributes, attributes, "filename");
+      int idx = find_attribute_index(nb_attributes, attributes, "filename");
 
-    if(idx != -1) {
+      if(idx != -1) {
 
-      int length = attributes[idx + 4] - attributes[idx + 3];
+        int length = attributes[idx + 4] - attributes[idx + 3];
 
-      const char * filename = strndup((const char *)attributes[idx + 3], length);
+        const char * filename = strndup((const char *)attributes[idx + 3], length);
 
-      char * sep = index(filename, '|');
+        char * sep = index(filename, '|');
 
-      if(sep < (filename + length)) {
+        if(sep < (filename + length)) {
 
-        *sep = '\0';
+          *sep = '\0';
 
-        curelement.signature_old = filename;
+          curelement.signature_old = filename;
 
-        curelement.signature_new = sep + 1;
+          curelement.signature_new = sep + 1;
 
-        *sep = '|';
+          *sep = '|';
 
-      } else {
+        } else {
 
-        curelement.signature_old = filename;
+          curelement.signature_old = filename;
 
-        curelement.signature_new = filename;
+          curelement.signature_new = filename;
 
+
+        }
 
       }
 
     }
-
-  }
 
     if(tracer.elements.size() > 0) {
 
@@ -212,10 +212,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     ++tracer.diff_stack.back().level;
 
     if(!tracer.collect) {
-      
+
       if((tracer.collect = is_collect((const char *)localname, (const char *)prefix)))
         tracer.collect_node_pos = tracer.elements.size() - 1;
-      
+
     }
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
@@ -281,8 +281,13 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(tracer.output) {
 
-        output_diff(tracer);
-        
+        for(unsigned int i = 0; i < tracer.missed_diffs.size(); ++i) {
+
+          output_diff(tracer);
+
+        }
+
+
         tracer.output = false;
 
       }
@@ -313,36 +318,36 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.elements.size() > 0  && tracer.diff_stack.back().level == 0) {
 
-      std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string("text()"));
+    std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children.find(std::string("text()"));
 
-       if(pos != tracer.diff_stack.back().children.end()) {
+    if(pos != tracer.diff_stack.back().children.end()) {
 
-         ++tracer.diff_stack.back().children[std::string("text()")];
+      ++tracer.diff_stack.back().children[std::string("text()")];
 
-       } else {
+    } else {
 
-          tracer.diff_stack.back().children[std::string("text()")] = 1;
-
-      }
-
-     }
-
-
-    if(tracer.elements.size() > 0) {
-
-      std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string("text()"));
-
-      if(pos != tracer.elements.back().children.end()) {
-
-        ++tracer.elements.back().children[std::string("text()")];
-
-      } else {
-
-        tracer.elements.back().children[std::string("text()")] = 1;
-
-      }
+      tracer.diff_stack.back().children[std::string("text()")] = 1;
 
     }
+
+  }
+
+
+  if(tracer.elements.size() > 0) {
+
+    std::map<std::string, int>::iterator pos = tracer.elements.back().children.find(std::string("text()"));
+
+    if(pos != tracer.elements.back().children.end()) {
+
+      ++tracer.elements.back().children[std::string("text()")];
+
+    } else {
+
+      tracer.elements.back().children[std::string("text()")] = 1;
+
+    }
+
+  }
 
   int i;
   for(i = 0; i < len; ++i) {
@@ -365,16 +370,15 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       output_diff(tracer);
     else {
 
-        if(tracer.diff_stack.back().operation == DELETE)
-        std::vector<element> temp_stack;
+      std::vector<element> temp_stack;
 
-        for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
-          temp_stack.push_back(tracer.elements.at(i));
+      for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
+        temp_stack.push_back(tracer.elements.at(i));
 
-        tracer.missed_diffs.push_back(temp_stack);
+      tracer.missed_diffs.push_back(temp_stack);
 
-        tracer.output = true;
-      
+      tracer.output = true;
+
     }
 
     tracer.elements.pop_back();
@@ -430,12 +434,12 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     } else if(is_collect(tracer.elements.at(i).name.c_str(), tracer.elements.at(i).prefix.c_str())) {
 
-        element += "[src:signature(\"";
-        if(tracer.diff_stack.back().operation == DELETE)
-          element += tracer.elements.at(i).signature_old;
-        else
-          element += tracer.elements.at(i).signature_new;
-        element += "\")]";
+      element += "[src:signature(\"";
+      if(tracer.diff_stack.back().operation == DELETE)
+        element += tracer.elements.at(i).signature_old;
+      else
+        element += tracer.elements.at(i).signature_new;
+      element += "\")]";
 
     } else if(i > 0) {
 
@@ -469,63 +473,63 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   }
 
-    std::string element = "";
+  std::string element = "";
 
-    if(tracer.elements.back().prefix != "") {
+  if(tracer.elements.back().prefix != "") {
 
-      element += tracer.elements.back().prefix.c_str();
-      element += ":";
+    element += tracer.elements.back().prefix.c_str();
+    element += ":";
 
-    } else if(tracer.elements.back().uri == "http://www.sdml.info/srcML/src") {
+  } else if(tracer.elements.back().uri == "http://www.sdml.info/srcML/src") {
 
-      element += "src:";
+    element += "src:";
 
-    }
+  }
 
-    element += tracer.elements.back().name.c_str();
+  element += tracer.elements.back().name.c_str();
 
-    if(tracer.elements.back().name == "unit"
-       && ((tracer.diff_stack.back().operation == DELETE && tracer.elements.back().signature_old != "")
-           || (tracer.diff_stack.back().operation == INSERT && tracer.elements.back().signature_new != ""))) {
+  if(tracer.elements.back().name == "unit"
+     && ((tracer.diff_stack.back().operation == DELETE && tracer.elements.back().signature_old != "")
+         || (tracer.diff_stack.back().operation == INSERT && tracer.elements.back().signature_new != ""))) {
 
-      element += "[";
+    element += "[";
 
-      if(tracer.diff_stack.back().operation == DELETE)
-        element += tracer.elements.back().signature_old;
-      else
-        element += tracer.elements.back().signature_new;
+    if(tracer.diff_stack.back().operation == DELETE)
+      element += tracer.elements.back().signature_old;
+    else
+      element += tracer.elements.back().signature_new;
 
-      element += "]";
+    element += "]";
 
-    } else if(is_collect(tracer.elements.back().name.c_str(), tracer.elements.back().prefix.c_str())) {
+  } else if(is_collect(tracer.elements.back().name.c_str(), tracer.elements.back().prefix.c_str())) {
 
-        element += "[src:signature(\"";
+    element += "[src:signature(\"";
 
-        if(tracer.diff_stack.back().operation == DELETE)
-          element += tracer.elements.back().signature_old;
-        else
-          element += tracer.elements.back().signature_new;
-        element += "\")]";
+    if(tracer.diff_stack.back().operation == DELETE)
+      element += tracer.elements.back().signature_old;
+    else
+      element += tracer.elements.back().signature_new;
+    element += "\")]";
 
-    } else if(tracer.elements.size() > 1) {
+  } else if(tracer.elements.size() > 1) {
 
-      int count = tracer.elements.at(tracer.elements.size() - 2).children[std::string(tracer.elements.back().name)];
+    int count = tracer.elements.at(tracer.elements.size() - 2).children[std::string(tracer.elements.back().name)];
 
-      char * buffer = (char *)malloc(sizeof(char) * count);
+    char * buffer = (char *)malloc(sizeof(char) * count);
 
-      snprintf(buffer, count + 1, "%d", count);
+    snprintf(buffer, count + 1, "%d", count);
 
-      element += "[";
-      element += buffer;
-      element += "]";
+    element += "[";
+    element += buffer;
+    element += "]";
 
-      free(buffer);
+    free(buffer);
 
-    }
+  }
 
-    element += "\n";
+  element += "\n";
 
-    fprintf(stdout, "%s", element.c_str());
+  fprintf(stdout, "%s", element.c_str());
 
 }
 
