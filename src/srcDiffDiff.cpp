@@ -314,7 +314,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
-  if(!(olength > 0 && nlength > 0
+  if(1 || !(olength > 0 && nlength > 0
        && (xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type == XML_READER_TYPE_ELEMENT
        && (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type == XML_READER_TYPE_ELEMENT
        && node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) == 0)) {
@@ -389,7 +389,6 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
   if(edits->length > edit_next->length) {
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
-      // TODO: set to first or positive infinity or MAX_INT or whatever it is called
       int min_similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
                                               , node_sets_new->at(edit_next->offset_sequence_two + new_pos));
       for(int pos = old_pos; pos < edits->length; ++pos) {
@@ -427,7 +426,6 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
-      // TODO: set to first or positive infinity or MAX_INT or whatever it is called
       int min_similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
                                               , node_sets_new->at(edit_next->offset_sequence_two + new_pos));
       for(int pos = new_pos; pos < edit_next->length; ++pos) {
