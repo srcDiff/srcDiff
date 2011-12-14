@@ -492,7 +492,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     if(i > 0)
       count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
  
-    std::string element = create_string_from_element(tracer.elements.at(i), count, tracer.diff_stack.back());
+    std::string element = create_string_from_element(tracer.elements.at(i), count, tracer.diff_stack.back().operation);
 
     element += "/";
 
