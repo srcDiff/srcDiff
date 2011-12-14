@@ -250,13 +250,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
        || strcmp((const char *)localname, "delete") == 0
        || strcmp((const char *)localname, "insert") == 0) {
 
-
-      for(std::map<std::string, int>::iterator pos = tracer.diff_stack.back().children_old.begin();
-          pos != tracer.diff_stack.back().children_old.end(); ++pos) {
-
-        tracer.elements.back().children_old[pos->first.c_str()] -= pos->second;
-      }
-
       tracer.diff_stack.pop_back();
 
     }
@@ -340,6 +333,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.at(tracer.collect_node_pos).signature_new.append((const char *)ch, (const char *)ch + len);
 
   }
+
   /*
 
   if(tracer.elements.size() > 0) {
