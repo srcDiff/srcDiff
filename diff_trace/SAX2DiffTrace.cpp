@@ -282,7 +282,9 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(tracer.output) {
 
-        for(unsigned int i = 0; i < tracer.missed_diff_types.size(); ++i) {
+        int num_missed = tracer.missed_diff_types.size();
+
+        for(unsigned int i = 0; i < num_missed; ++i) {
 
           diff temp_diff = { 0 };
           temp_diff.operation = tracer.missed_diff_types.at(i);
@@ -301,6 +303,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
         }
 
+        tracer.missed_diff_types.erase();
+        tracer.missed_diffs.erase();
 
         tracer.output = false;
 
