@@ -412,6 +412,73 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 }
 
+void output_element(element curelement) {
+
+    std::string element = "";
+
+    if(curelement.prefix != "") {
+
+      element += curelement.prefix.c_str();
+      element += ":";
+
+    } else if(curelement.uri == "http://www.sdml.info/srcML/src") {
+
+      element += "src:";
+
+    }
+
+    element += curelement.name.c_str();
+
+    if(curelement.name == "unit"
+       && ((tracer.diff_stack.back().operation == DELETE && curelement.signature_old != "")
+           || (tracer.diff_stack.back().operation == INSERT && curelement.signature_new != ""))) {
+
+      element += "[@filename=\"";
+
+      if(tracer.diff_stack.back().operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+
+      element += "\"]";
+
+    } else if(is_collect(curelement.name.c_str(), curelement.prefix.c_str())) {
+
+      element += "[src:signature(\"";
+      if(tracer.diff_stack.back().operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+      element += "\")]";
+
+    } else if(i > 0) {
+
+      int count = tracer.elements.at(i - 1).children[std::string(curelement.name)];
+
+      int temp_count = count;
+      int length;
+      for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+        ;
+
+      if(count == 0)
+        ++length;
+
+      ++length;
+
+      char * buffer = (char *)malloc(sizeof(char) * length);
+
+      snprintf(buffer, length, "%d", count);
+
+      element += "[";
+      element += buffer;
+      element += "]";
+
+      free(buffer);
+
+    }
+
+}
+
 void output_diff(SAX2DiffTrace & tracer) {
 
   if(tracer.diff_stack.back().operation == DELETE)
