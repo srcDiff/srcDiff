@@ -1854,6 +1854,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
 
 #else
 
+  /*
   // try to open the found directory
   DIR* dirp = opendir(directory);
   if (!dirp) {
@@ -1899,7 +1900,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    /*
+
       srcdiff_text(translator,
       filename_old.c_str(),
       options,
@@ -1909,7 +1910,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
       poptions.language,
       poptions.tabsize,
       count, skipped, error, showinput, shownumber);
-    */
+    
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1946,6 +1947,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
 
   // all done with this directory
   closedir(dirp);
+*/
 
 #endif
 }
