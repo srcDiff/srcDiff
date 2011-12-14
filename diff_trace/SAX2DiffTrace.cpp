@@ -442,7 +442,19 @@ std::string create_string_from_element(element curelement, int count, int operat
 
       element += "\"]";
 
-    } else if(is_collect(curelement.name.c_str(), curelement.prefix.c_str())) {
+    } else if(strcmp(curelement.name.c_str(), "function") == 0
+              || strcmp(curelement.name.c_str(), "function_decl") == 0) {
+
+      element += "[src:signature(\"";
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+      element += "\")]";
+
+    } else if(strcmp(curelement.name.c_str(), "class") == 0
+              || strcmp(curelement.name.c_str(), "struct") == 0
+              || strcmp(curelement.name.c_str(), "union") == 0) {
 
       element += "[src:signature(\"";
       if(operation == DELETE)
