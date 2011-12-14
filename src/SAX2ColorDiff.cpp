@@ -104,7 +104,7 @@ void endDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  fprintf(stdout, "%s\n", normal_color);
+  fprintf(stdout, "</span><span class=\"%s\"/>", normal_color);
   fprintf(stdout, "</pre>");
   fprintf(stdout, "</body>");
   fprintf(stdout, "</html>");
