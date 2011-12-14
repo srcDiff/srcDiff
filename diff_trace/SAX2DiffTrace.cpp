@@ -412,7 +412,7 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 }
 
-void output_element(element curelement) {
+std::string create_string_from_element(element curelement, int operation) {
 
     std::string element = "";
 
@@ -430,12 +430,12 @@ void output_element(element curelement) {
     element += curelement.name.c_str();
 
     if(curelement.name == "unit"
-       && ((tracer.diff_stack.back().operation == DELETE && curelement.signature_old != "")
-           || (tracer.diff_stack.back().operation == INSERT && curelement.signature_new != ""))) {
+       && ((operation == DELETE && curelement.signature_old != "")
+           || (operation == INSERT && curelement.signature_new != ""))) {
 
       element += "[@filename=\"";
 
-      if(tracer.diff_stack.back().operation == DELETE)
+      if(operation == DELETE)
         element += curelement.signature_old;
       else
         element += curelement.signature_new;
@@ -445,7 +445,7 @@ void output_element(element curelement) {
     } else if(is_collect(curelement.name.c_str(), curelement.prefix.c_str())) {
 
       element += "[src:signature(\"";
-      if(tracer.diff_stack.back().operation == DELETE)
+      if(operation == DELETE)
         element += curelement.signature_old;
       else
         element += curelement.signature_new;
@@ -490,68 +490,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
 
-    std::string element = "";
-
-    if(tracer.elements.at(i).prefix != "") {
-
-      element += tracer.elements.at(i).prefix.c_str();
-      element += ":";
-
-    } else if(tracer.elements.at(i).uri == "http://www.sdml.info/srcML/src") {
-
-      element += "src:";
-
-    }
-
-    element += tracer.elements.at(i).name.c_str();
-
-    if(tracer.elements.at(i).name == "unit"
-       && ((tracer.diff_stack.back().operation == DELETE && tracer.elements.at(i).signature_old != "")
-           || (tracer.diff_stack.back().operation == INSERT && tracer.elements.at(i).signature_new != ""))) {
-
-      element += "[@filename=\"";
-
-      if(tracer.diff_stack.back().operation == DELETE)
-        element += tracer.elements.at(i).signature_old;
-      else
-        element += tracer.elements.at(i).signature_new;
-
-      element += "\"]";
-
-    } else if(is_collect(tracer.elements.at(i).name.c_str(), tracer.elements.at(i).prefix.c_str())) {
-
-      element += "[src:signature(\"";
-      if(tracer.diff_stack.back().operation == DELETE)
-        element += tracer.elements.at(i).signature_old;
-      else
-        element += tracer.elements.at(i).signature_new;
-      element += "\")]";
-
-    } else if(i > 0) {
-
-      int count = tracer.elements.at(i - 1).children[std::string(tracer.elements.at(i).name)];
-
-      int temp_count = count;
-      int length;
-      for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-        ;
-
-      if(count == 0)
-        ++length;
-
-      ++length;
-
-      char * buffer = (char *)malloc(sizeof(char) * length);
-
-      snprintf(buffer, length, "%d", count);
-
-      element += "[";
-      element += buffer;
-      element += "]";
-
-      free(buffer);
-
-    }
+    std::string element = create_string_from_element(tracer.elements.at(i), tracer.diff_stack.back());
 
     element += "/";
 
