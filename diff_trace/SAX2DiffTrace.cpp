@@ -353,26 +353,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-  /*
-
-  if(tracer.elements.size() > 0) {
-
-    std::map<std::string, int>::iterator pos = tracer.elements.back().children_old.find(std::string("text()"));
-
-    if(pos != tracer.elements.back().children_old.end()) {
-
-      ++tracer.elements.back().children_old[std::string("text()")];
-
-    } else {
-
-      tracer.elements.back().children_old[std::string("text()")] = 1;
-
-    }
-
-  }
-
-  */
-
   int i;
   for(i = 0; i < len; ++i) {
 
