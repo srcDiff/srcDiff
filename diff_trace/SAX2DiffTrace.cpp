@@ -275,6 +275,15 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
+      if(strcmp((const char *)localname, "name") == 0) {
+
+        std::string pre = (const char *)prefix + ":name=\"";
+
+        tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "\"";
+        tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "\"";
+
+      }
+
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
       trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
@@ -456,7 +465,7 @@ std::string create_string_from_element(element curelement, int count, int operat
               || strcmp(curelement.name.c_str(), "struct") == 0
               || strcmp(curelement.name.c_str(), "union") == 0) {
 
-      element += "[src:signature(\"";
+      element += "[src:name=\"";
       if(operation == DELETE)
         element += curelement.signature_old;
       else
