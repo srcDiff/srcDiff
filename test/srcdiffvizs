@@ -6,4 +6,6 @@ filename=$(gmktemp --suffix=.html)
 
 open -a Safari.app $filename
 
+sleep 3;
 
+rm $filename
