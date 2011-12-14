@@ -1,9 +1,4 @@
 #!/bin/bash
 
-../bin/srcdiff --literal --operator --modifier $1 $2 -o temp.xml
+../bin/colordiffc <(../bin/srcdiff --literal --operator --modifier $1 $2) <(diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-format="" $1 $2 | tr '\\n' '\n' | sed '/^$/d')
 
-diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-format="" $1 $2 | tr '\\n' '\n' | sed '/^$/d' > temp.txt
-
-../bin/colordiffc temp.xml temp.txt
-
-rm temp.xml temp.txt
