@@ -27,7 +27,7 @@ xmlSAXHandler SAX2DiffTrace::factory() {
 
   xmlSAXHandler sax = { 0 };
 
-  sax.initialized    = XML_SAX2_MAGIC;
+  sax.initialized = XML_SAX2_MAGIC;
 
   sax.startDocument = &SAX2DiffTrace::startDocument;
   sax.endDocument = &SAX2DiffTrace::endDocument;
@@ -398,7 +398,7 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 }
 
-std::string create_string_from_element(element curelement, int count, int operation) {
+std::string create_string_from_element(element & curelement, element & nextelement, int count, int operation) {
 
     std::string element = "";
 
@@ -479,6 +479,8 @@ std::string create_string_from_element(element curelement, int count, int operat
 
 void output_diff(SAX2DiffTrace & tracer) {
 
+  static element null_element;
+
   if(tracer.diff_stack.back().operation == DELETE)
     fprintf(stdout, "Delete:\t");
   else
@@ -492,7 +494,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     if(i > 0)
       count = tracer.elements.at(i - 1).children_old[std::string(tracer.elements.at(i).name)];
  
-    std::string element = create_string_from_element(tracer.elements.at(i), count, tracer.diff_stack.back().operation);
+    std::string element = create_string_from_element(tracer.elements.at(i), tracer.elements.at(i - 1), count, tracer.diff_stack.back().operation);
 
     element += "/";
 
@@ -504,7 +506,7 @@ void output_diff(SAX2DiffTrace & tracer) {
     if(tracer.elements.size() > 1)
       count = tracer.elements.at(tracer.elements.size() - 2).children_old[std::string(tracer.elements.back().name)];
  
-    std::string element = create_string_from_element(tracer.elements.back(), count, tracer.diff_stack.back().operation);
+    std::string element = create_string_from_element(tracer.elements.back(), null_element, count, tracer.diff_stack.back().operation);
 
     element += "\n";
 
