@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ext=$(basename $1 | cut -d'.' -f 2)
+
+v1filename=$(gmktemp --suffix=.$ext)
+v2filename=$(gmktemp --suffix=.$ext)
+
+svn cat $1@$2 > $v1filename
+svn cat $1@$3 > $v2filename
+
+../test/srcdiffviz $v1filename $v2filename
+
