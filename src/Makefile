@@ -44,7 +44,12 @@ XML_LIB_SRCDIFF=${DLL_DIR}/libxml2.dll -lregex -liberty
 endif
 
 #libsrcml include
+ifdef DIST
+LIBSRCML_INCLUDE = -I ../../srcml-src/src
+else
 LIBSRCML_INCLUDE = -I ../../../src
+endif
+
 ifdef MINGW32
 LIBSRCML_LIB = ../../../bin/libsrcml.dll
 else
