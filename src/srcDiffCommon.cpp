@@ -86,7 +86,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
 
     else if(is_white_space(nodes_old.at(i)) && is_white_space(nodes_new.at(j))) {
-
+      
       int olength = i;
       int nlength = j;
 
@@ -96,6 +96,9 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
       for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
         ;
 
+      markup_whitespace(rbuf_old, olength, rbuf_new, nlength, wstate);
+
+      /*
       int opivot = olength - 1;
       int npivot = nlength - 1;
 
@@ -118,7 +121,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
         output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
         for(int k = i; k < opivot; ++k)
-        output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
+          output_node(rbuf_old, rbuf_new, nodes_old.at(k), DELETE, wstate);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
@@ -130,7 +133,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
         output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
         for(int k = j; k < npivot; ++k)
-        output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
+          output_node(rbuf_old, rbuf_new, nodes_new.at(k), INSERT, wstate);
 
         // output diff tag
         output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
@@ -142,7 +145,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
           //output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
         for(int k = opivot; k < olength; ++k)
-        output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
+          output_node(rbuf_old, rbuf_new, nodes_old.at(k), COMMON, wstate);
 
         // output diff tag
         //output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
@@ -152,7 +155,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
         i = olength - 1;
 
         j = nlength - 1;
-
+      */
     } else if(is_white_space(nodes_old.at(i))) {
 
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
