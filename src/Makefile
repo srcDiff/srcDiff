@@ -57,7 +57,7 @@ LIBSRCML_LIB = -L ../../../bin/ -lsrcml
 endif
 
 ifdef DIST
-LIBSRCML_LIB = -L ../../../../../bin/
+LIBSRCML_LIB = -L ../../../../../bin/ -L ../../../../../obj/
 endif
 
 # libarchive
