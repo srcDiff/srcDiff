@@ -28,7 +28,7 @@
 #define SRCDIFFTOOL_HPP
 
 #include "Language.hpp"
-#include "srcMLOutput.hpp"
+#include <Options.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
