@@ -65,6 +65,7 @@ exp :
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj --native-eol LF
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin --native-eol LF
+	svn export -r${REVISION} ${SVN_URL}/include/ ${SRC_DIR_BASE}/include --native-eol LF
 
 clean :
 	make cleansrc
@@ -90,9 +91,9 @@ ${SRC_ZIP} : exp
 # bin
 bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
-	cd ${SRCML_SRC} && make clean
-	cd ${SRCML_SRC} && make DYNAMIC=1
-	cd ${SRC_DIR} && make
+	#	cd ${SRCML_SRC} && make clean
+	#	cd ${SRCML_SRC} && make DYNAMIC=1
+	cd ${SRC_DIR} && make clean && make
 	strip ${SRCDIFF_PATH}
 	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
 	tar czf ${UNIX_TAR_GZ} ${BASE}
