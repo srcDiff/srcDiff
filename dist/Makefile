@@ -42,7 +42,8 @@ LIBSRCML_DLL=${DLL_DIR}/libsrcml.dll
 SRCDIFF_BIN=srcdiff
 SRCDIFF_EXE=srcdiff.exe
 SRCDIFF_PATH=${BIN_DIR}/${SRCDIFF_BIN}
-WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRCDIFF_EXE}
+WIN_SRCDIFF_PATH=${BIN_DIR}/${SRCDIFF_EXE}
+
 
 # doc
 #DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
@@ -103,6 +104,7 @@ bin : ${SRC_TAR_GZ}
 
 windows : ${SRC_ZIP}
 	unzip -aq ${SRC_ZIP}
+	svn export -r${SRCML_REVISION} ${SRCML_SVN_URL}/src/ srcml-src --native-eol LF
 	cd ${SRC_DIR} && make clean && make mingw32 DIST=1
 	i686-pc-mingw32-strip ${WIN_SRCDIFF_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
