@@ -137,6 +137,10 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   if(size_new < min_length)
     min_length = size_new;
 
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, size_old);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, size_new);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, similarity);
+
   return 3 * similarity <= min_length;
 
 }
@@ -364,10 +368,17 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   unsigned int similarity = 0;
   for(; edits; edits = edits->next) {
 
-    if(is_change(edits))
+    if(is_change(edits)) {
+
+      similarity += edits->length > edits->next->length ? edits->length : edits->next->length;
+
       edits = edits->next;
 
-    ++similarity;
+    } else {
+
+      similarity += edits->length;
+
+    }
   }
 
   free_shortest_edit_script(edit_script);
