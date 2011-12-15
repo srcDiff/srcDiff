@@ -27,7 +27,7 @@
 #ifndef SRCDIFFTOOL_HPP
 #define SRCDIFFTOOL_HPP
 
-#include <Language.hpp>
+#include "Language.hpp"
 #include <Options.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
