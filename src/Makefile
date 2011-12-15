@@ -33,7 +33,6 @@ ANTLR_LIB += -lantlr
 
 LDFLAGS=$(ANTLR_LIB)
 
-DLL_DIR=../dlls
 # libxml
 LIBXML_INCLUDE=-I/usr/include/libxml2
 
@@ -52,6 +51,7 @@ endif
 
 ifdef MINGW32
 LIBSRCML_LIB = ../../../bin/libsrcml.dll
+DLL_DIR=../../../bin/
 else
 LIBSRCML_LIB = -L ../../../bin/ -lsrcml
 endif
@@ -59,6 +59,7 @@ endif
 ifdef DIST
 ifdef MINGW32
 LIBSRCML_LIB = ../../../../../bin/libsrcml.dll
+DLL_DIR=../../../../../bin/
 else
 LIBSRCML_LIB = -L ../../../../../bin/ -lsrcml
 endif
