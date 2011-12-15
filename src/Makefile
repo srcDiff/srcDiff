@@ -57,7 +57,11 @@ LIBSRCML_LIB = -L ../../../bin/ -lsrcml
 endif
 
 ifdef DIST
+ifdef MINGW32
+LIBSRCML_LIB = ../../../../../bin/libsrcml.dll
+else
 LIBSRCML_LIB = -L ../../../../../bin/ -lsrcml
+endif
 endif
 
 # libarchive
