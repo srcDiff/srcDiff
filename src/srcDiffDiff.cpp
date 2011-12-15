@@ -137,10 +137,6 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   if(size_new < min_length)
     min_length = size_new;
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, size_old);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, size_new);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, similarity);
-
   return 3 * similarity <= min_length;
 
 }
