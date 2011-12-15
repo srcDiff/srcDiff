@@ -103,18 +103,7 @@ bin : ${SRC_TAR_GZ}
 
 windows : ${SRC_ZIP}
 	unzip -aq ${SRC_ZIP}
-	cd ${SRC_DIR} && make mingw32
-	cd ${SRC_DIR} && make cleanbuild && make
-	cd ${DOC_DIR} && make
-	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
-	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
-	unix2dos ${WIN_BASE}/*.html
-	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
-
-windowsdyn : ${SRC_ZIP}
-	unzip -aq ${SRC_ZIP}
-	cd ${SRCML_SRC} && make mingw32 DYNAMIC=1
-	cd ${SRC_DIR} && make mingw32
+	cd ${SRC_DIR} && make mingw32 DIST=1
 	i686-pc-mingw32-strip ${WIN_SRCDIFF_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
 	${CP} ${DLL_DIR}/*.dll ${WIN_BASE}
