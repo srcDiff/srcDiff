@@ -89,12 +89,77 @@ void startDocument(void* ctx) {
   span_out += "\"";
 
 
-  fprintf(stdout, "<html>");
-  fprintf(stdout, "<head>");
-  fprintf(stdout, "<link href=\"http://www.sdml.info/projects/srcml/ex/colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
-  fprintf(stdout, "</head>");
-  fprintf(stdout, "<body>");
-  fprintf(stdout, "<pre>");
+  fprintf(stdout, "<html>\n");
+  fprintf(stdout, "<head>\n");
+  fprintf(stdout, "<style type=\"text/css\">\n");
+  fprintf(stdout, ".normal\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "color:black;\n");
+  fprintf(stdout, "background-color:white;\n");
+  fprintf(stdout, "font-weight:normal;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, ".common\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "color:black;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, ".delete\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "color:red;\n");
+  fprintf(stdout, "font-weight:bold;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, ".insert\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "color:blue;\n");
+  fprintf(stdout, "font-weight:bold;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, ".diff_common\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "background-color:white;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, ".diff_change\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "background-color:yellow;\n");
+  fprintf(stdout, "font-weight:bold;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, ".diff_delete\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "background-color:pink;\n");
+  fprintf(stdout, "font-weight:bold;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, ".diff_insert\n");
+  fprintf(stdout, "{\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "background-color:cyan;\n");
+  fprintf(stdout, "font-weight:bold;\n");
+  fprintf(stdout, "\n");
+  fprintf(stdout, "}\n");
+  fprintf(stdout, "</style>\n");
+
+  //fprintf(stdout, "<link href=\"http://www.sdml.info/projects/srcml/ex/colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>");
+  fprintf(stdout, "</head>\n");
+  fprintf(stdout, "<body>\n");
+  fprintf(stdout, "<pre>\n");
   fprintf(stdout, "%d-%d",  data->line_old, data->line_new);
   fprintf(stdout, "<span %s>\t", span_out.c_str());
 
@@ -105,9 +170,9 @@ void endDocument(void* ctx) {
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
   fprintf(stdout, "</span><span class=\"%s\"/>", normal_color);
-  fprintf(stdout, "</pre>");
-  fprintf(stdout, "</body>");
-  fprintf(stdout, "</html>");
+  fprintf(stdout, "</pre>\n");
+  fprintf(stdout, "</body>\n");
+  fprintf(stdout, "</html>\n");
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
