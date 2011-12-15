@@ -45,7 +45,7 @@ endif
 
 #libsrcml include
 ifdef DIST
-LIBSRCML_INCLUDE = -I ../../srcml-src/src
+LIBSRCML_INCLUDE = -I ../../srcml-src/
 else
 LIBSRCML_INCLUDE = -I ../../../src
 endif
