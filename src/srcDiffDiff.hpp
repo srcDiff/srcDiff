@@ -25,6 +25,7 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_s
 
 void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
 
+int compute_collect_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new);
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new);
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
