@@ -103,7 +103,7 @@ bin : ${SRC_TAR_GZ}
 
 windows : ${SRC_ZIP}
 	unzip -aq ${SRC_ZIP}
-	cd ${SRC_DIR} && make mingw32 DIST=1
+	cd ${SRC_DIR} && make clean && make mingw32 DIST=1
 	i686-pc-mingw32-strip ${WIN_SRCDIFF_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
 	${CP} ${DLL_DIR}/*.dll ${WIN_BASE}
