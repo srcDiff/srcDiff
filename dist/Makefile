@@ -14,7 +14,7 @@ CP=${firstword ${wildcard /opt/local/bin/gcp /bin/cp}}
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk/srcdiff/trunk
 
 # file name base
-BASE=srcdiff
+BASE=srcDiff
 WIN_BASE=${BASE}-Win
 
 # generated compressed files
