@@ -95,7 +95,7 @@ ${SRC_ZIP} : exp
 bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
 	#	cd ${SRCML_SRC} && make clean
-	#	cd ${SRCML_SRC} && make DYNAMIC=1
+	cd ${SRCML_SRC} && make DYNAMIC=1
 	svn export -r${SRCML_REVISION} ${SRCML_SVN_URL}/src/ srcml-src --native-eol LF
 	cd ${SRC_DIR} && make clean && make DIST=1
 	strip ${SRCDIFF_PATH}
