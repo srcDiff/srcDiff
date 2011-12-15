@@ -81,6 +81,8 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
   int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(i));    
+
     if(node_compare(nodes_old.at(i), nodes_new.at(j)) == 0)
 
       output_node(rbuf_old, rbuf_new, nodes_old.at(i), COMMON, wstate);
@@ -96,9 +98,8 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
       for(; nlength < nend && is_white_space(nodes_new.at(nlength)); ++nlength)
         ;
 
-      markup_whitespace(rbuf_old, olength, rbuf_new, nlength, wstate);
+      //markup_whitespace(rbuf_old, olength, rbuf_new, nlength, wstate);
 
-      /*
       int opivot = olength - 1;
       int npivot = nlength - 1;
 
@@ -155,7 +156,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
         i = olength - 1;
 
         j = nlength - 1;
-      */
+
     } else if(is_white_space(nodes_old.at(i))) {
 
       output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
