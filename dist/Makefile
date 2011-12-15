@@ -55,6 +55,10 @@ all : src bin
 
 REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
 
+# srcml
+SRCML_SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk/
+SRCML_REVISION=$(strip $(shell svn info ${SRCML_SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
+
 # export the directories
 exp :
 	@echo ${REVISION}
@@ -65,7 +69,6 @@ exp :
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj --native-eol LF
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin --native-eol LF
-	svn export -r${REVISION} ${SVN_URL}/include/ ${SRC_DIR_BASE}/include --native-eol LF
 
 clean :
 	make cleansrc
@@ -93,10 +96,12 @@ bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
 	#	cd ${SRCML_SRC} && make clean
 	#	cd ${SRCML_SRC} && make DYNAMIC=1
-	cd ${SRC_DIR} && make clean && make
+	svn export -r${SRCML_REVISION} ${SRCML_SVN_URL}/src/ srcml-src --native-eol LF
+	cd ${SRC_DIR} && make clean && make DIST=1
 	strip ${SRCDIFF_PATH}
 	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
 	tar czf ${UNIX_TAR_GZ} ${BASE}
+	rm -rf srcml-src
 
 windows : ${SRC_ZIP}
 	unzip -aq ${SRC_ZIP}
