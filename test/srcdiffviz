@@ -7,4 +7,4 @@ diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-form
 
 ../bin/colordiffc temp1 temp2
 
-rm temp1 rm temp2
+rm temp1 temp2
