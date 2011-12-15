@@ -113,6 +113,7 @@ void startDocument(void* ctx) {
   fprintf(stdout, "\n");
   fprintf(stdout, "color:red;\n");
   fprintf(stdout, "font-weight:bold;\n");
+  //fprintf(stdout, "text-decoration:line-through;\n");
   fprintf(stdout, "\n");
   fprintf(stdout, "}\n");
   fprintf(stdout, "\n");
@@ -121,6 +122,7 @@ void startDocument(void* ctx) {
   fprintf(stdout, "\n");
   fprintf(stdout, "color:blue;\n");
   fprintf(stdout, "font-weight:bold;\n");
+  //fprintf(stdout, "text-decoration:underline;\n");
   fprintf(stdout, "\n");
   fprintf(stdout, "}\n");
   fprintf(stdout, "\n");

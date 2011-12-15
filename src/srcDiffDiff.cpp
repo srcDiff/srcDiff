@@ -116,7 +116,7 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
      && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
     return true;
 
-  unsigned int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
+  unsigned int similarity = compute_collect_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
   unsigned int olength = node_sets_old->at(start_old)->size();
   unsigned int nlength = node_sets_new->at(start_new)->size();
