@@ -237,6 +237,7 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
   }
   text->ns = 0;
   text->properties = 0;
+  text->is_empty = true;
   text->free = true;
 
   return text;
