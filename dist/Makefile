@@ -75,7 +75,7 @@ clean :
 	rm -fR  ${SRC_TAR_GZ} ${UNIX_TAR_GZ} ${SRC_ZIP} ${WIN_ZIP} rm -fR srcml-src
 
 cleansrc :
-	rm -fR ${SRC_DIR_BASE} ${BASE} ${WIN_BASE}
+	rm -fR ${SRC_DIR_BASE} ${BASE} ${WIN_BASE} srcml-src
 
 ##
 # src
