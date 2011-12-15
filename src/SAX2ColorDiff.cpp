@@ -142,7 +142,7 @@ void startDocument(void* ctx) {
   fprintf(stdout, ".diff_delete\n");
   fprintf(stdout, "{\n");
   fprintf(stdout, "\n");
-  fprintf(stdout, "background-color:pink;\n");
+  fprintf(stdout, "background-color:#FA8258;\n");
   fprintf(stdout, "font-weight:bold;\n");
   fprintf(stdout, "\n");
   fprintf(stdout, "}\n");
@@ -150,7 +150,7 @@ void startDocument(void* ctx) {
   fprintf(stdout, ".diff_insert\n");
   fprintf(stdout, "{\n");
   fprintf(stdout, "\n");
-  fprintf(stdout, "background-color:cyan;\n");
+  fprintf(stdout, "background-color:#CED8F6;\n");
   fprintf(stdout, "font-weight:bold;\n");
   fprintf(stdout, "\n");
   fprintf(stdout, "}\n");
