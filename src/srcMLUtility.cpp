@@ -60,11 +60,11 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
 void create_nodes_from_srcML_thread(void * arguments) {
 
-  create_nodes_args * args = (create_nodes_args *)arguments;
+  create_nodes_args & args = *(create_nodes_args *)arguments;
   /*
-    create_nodes_from_srcML(language, src_encoding, xml_encoding, output_buffer, options,
-    directory, filename, version, uri, tabsize,
-                             nodes, unit_start, no_error) {
+    create_nodes_from_srcML(args.language, args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
+    args.directory, args.filename, args.version, args.uri, args.tabsize,
+                             args.nodes, args.unit_start, args.no_error) {
   */
 }
 
