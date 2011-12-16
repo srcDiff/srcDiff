@@ -61,55 +61,63 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 int create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                 const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
 
+  xmlTextReaderPtr reader = NULL;
+  xNodePtr unit_start = 0;
+  int no_error = 0;
+  xNodePtr unit_end = NULL;
+  std::vector<std::vector<int> *> node_set;
+
   // translate file one
   try {
 
     if(!filename || filename[0] == 0)
       throw FileError();
 
-  translate_to_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options, unit_directory, filename, unit_version, 0, 8);
+  translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, 0, 8);
 
-  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
+  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, 0);
 
-  if (reader_old == NULL) {
+  if (reader == NULL) {
 
-    if(!isoption(global_options, OPTION_QUIET))
+    if(!isoption(options, OPTION_QUIET))
        fprintf(stderr, "Unable to open file '%s' as XML\n", filename);
 
     exit(1);
   }
 
   // read to unit
-  xmlTextReaderRead(reader_old);
+  xmlTextReaderRead(reader);
 
-  unit_old = getRealCurrentNode(reader_old);
+  unit_start = getRealCurrentNode(reader);
 
   // Read past unit tag open
-  is_old = xmlTextReaderRead(reader_old);
+  no_error = xmlTextReaderRead(reader);
 
   // collect if non empty files
-  if(is_old) {
+  if(no_error) {
 
-    collect_nodes(&nodes_old, reader_old);
-    unit_end = getRealCurrentNode(reader_old);
+    collect_nodes(&nodes_old, reader);
+    unit_end = getRealCurrentNode(reader);
 
   }
 
-  xmlFreeTextReader(reader_old);
+  xmlFreeTextReader(reader);
 
   // group nodes
-  node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
+  //node_set = create_node_set(nodes_old, 0, nodes_old.size());
 
   } catch(...) {
 
-    is_old = -1;
+    no_error = -1;
 
     //if(!isoption(global_options, OPTION_QUIET))
     //fprintf(stderr, "Unable to open file '%s'\n", filename);
     
   }
 
-  xmlBufferEmpty(output_srcml_file);
+  xmlBufferEmpty(output_buffer);
+
+  return no_error;
 
 }
 
