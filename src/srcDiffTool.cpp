@@ -164,7 +164,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   int is_old = 0;
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
-                                 , unit_directory, path_one, unit_version, 0, 8
+                                 , unit_directory, path_one, unit_version, uri, 8
                                  , nodes_old, &unit_old, is_old };
   pthread_t thread_old;
   pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old);
@@ -183,7 +183,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   int is_new = 0;
   create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
-                                 , unit_directory, path_two, unit_version, 0, 8
+                                 , unit_directory, path_two, unit_version, uri, 8
                                  , nodes_new, &unit_new, is_new };
 
   pthread_t thread_new;
