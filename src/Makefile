@@ -76,6 +76,8 @@ IO_LIB=../../../obj/libxml_archive_read.o ../../../obj/libxml_archive_write.o
 
 LDFLAGS+=$(XML_IO_LIB)
 
+LDFLAGS+= -lpthread
+
 # project dirs
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
