@@ -13,6 +13,9 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
 void translate_to_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                         const char* directory, const char* filename, const char* version, const char* uri[], int tabsize);
 
+int create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+                            const char* directory, const char* filename, const char* version, const char* uri[], int tabsize);
+
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new);
 

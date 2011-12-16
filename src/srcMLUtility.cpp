@@ -57,6 +57,62 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
   translator.close();
 
 }
+
+int create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+                const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
+
+  // translate file one
+  try {
+
+    if(!filename || filename[0] == 0)
+      throw FileError();
+
+  translate_to_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options, unit_directory, filename, unit_version, 0, 8);
+
+  reader_old = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file), output_srcml_file->use, 0, 0, 0);
+
+  if (reader_old == NULL) {
+
+    if(!isoption(global_options, OPTION_QUIET))
+       fprintf(stderr, "Unable to open file '%s' as XML\n", filename);
+
+    exit(1);
+  }
+
+  // read to unit
+  xmlTextReaderRead(reader_old);
+
+  unit_old = getRealCurrentNode(reader_old);
+
+  // Read past unit tag open
+  is_old = xmlTextReaderRead(reader_old);
+
+  // collect if non empty files
+  if(is_old) {
+
+    collect_nodes(&nodes_old, reader_old);
+    unit_end = getRealCurrentNode(reader_old);
+
+  }
+
+  xmlFreeTextReader(reader_old);
+
+  // group nodes
+  node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
+
+  } catch(...) {
+
+    is_old = -1;
+
+    //if(!isoption(global_options, OPTION_QUIET))
+    //fprintf(stderr, "Unable to open file '%s'\n", filename);
+    
+  }
+
+  xmlBufferEmpty(output_srcml_file);
+
+}
+
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new) {
 
