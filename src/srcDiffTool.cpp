@@ -167,10 +167,17 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
                                  , unit_directory, path_one, unit_version, uri, 8
                                  , nodes_old, &unit_old, is_old };
   pthread_t thread_old;
-  pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old);
-  //create_nodes_from_srcML_thread((void *)&args_old);
+  if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
-  pthread_join(thread_old, NULL);
+    is_old = -2;
+    
+  }
+
+  if(is_old != -2 && pthread_join(thread_old, NULL)) {
+
+    is_old = -2;
+
+  }
 
   /*
 
@@ -187,16 +194,23 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
                                  , nodes_new, &unit_new, is_new };
 
   pthread_t thread_new;
-  pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new);
-  //create_nodes_from_srcML_thread((void *)&args_new);
+  if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
 
-  pthread_join(thread_new, NULL);
+    is_new = -2;
 
-  if(is_old && is_old != -1)
+  }
+
+  if(is_new != -2 && pthread_join(thread_new, NULL)) {
+
+    is_new = -2;
+
+  }
+
+  if(is_old && is_old > -1)
     node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
 
 
-  if(is_new && is_new != -1)
+  if(is_new && is_new > -1)
     node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
 
   /*
@@ -281,7 +295,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
     update_diff_stack(wstate.output_diff, &diff_common_start, COMMON);
 
-    if(is_old == -1 && is_new == -1)
+    if(is_old <= -1 && is_new <= -1)
       return;
     //      exit(STATUS_INPUTFILE_PROBLEM);
 
