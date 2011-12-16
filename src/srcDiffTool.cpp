@@ -62,6 +62,8 @@ const char * whitespace = "whitespace";
 // special flush node
 xNode flush;
 
+static const char * urisprefix[7];
+
 /*
   Global structures to store of the collected xml nodes.
   Base reference structure for all node comparison and output
@@ -140,6 +142,9 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 
   output_srcml_file_old = xmlBufferCreate();
   output_srcml_file_new = xmlBufferCreate();
+
+  for(int i = 0; i < 8; ++i)
+    urisprefix[i] = uri[i];
 
 }
 
