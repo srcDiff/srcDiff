@@ -162,9 +162,11 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   std::vector<std::vector<int> *> node_set_old;
 
   int is_old = 0;
-  create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file_old, local_options
-                          , unit_directory, path_one, unit_version, 0, 8
-                          , nodes_old, &unit_old, is_old);
+  create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
+                                 , unit_directory, path_one, unit_version, 0, 8
+                                 , nodes_old, &unit_old, is_old };
+
+  create_nodes_from_srcML_thread((void *)&args_old);
 
   if(is_old && is_old != -1)
     node_set_old = create_node_set(nodes_old, 0, nodes_old.size());

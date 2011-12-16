@@ -18,7 +18,7 @@ struct create_nodes_args {
   const char* directory;
   const char* filename;
   const char* version;
-  const char* uri[];
+  const char** uri;
   int tabsize;
 
   // returns
