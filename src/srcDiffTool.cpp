@@ -166,6 +166,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
                           , unit_directory, path_one, unit_version, 0, 8
                           , nodes_old, &unit_old);
 
+  node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
+
   /*
   // translate file one
   try {
