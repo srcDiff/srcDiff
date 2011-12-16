@@ -76,7 +76,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
                          const char* xml_encoding,    // xml encoding of result srcML file
                          const char* srcdiff_filename,  // filename of result srcDiff file
                          OPTION_TYPE global_options,             // many and varied options
-			 METHOD_TYPE method,
+                         METHOD_TYPE method,
                          const char* directory,       // root unit directory
                          const char* filename,        // root unit filename
                          const char* version,         // root unit version
@@ -161,8 +161,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   std::vector<std::vector<int> *> node_set_old;
 
   int is_old = create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options
-                          , unit_directory, path_one, unit_version, 0, 8
-                          , nodes_old, &unit_old);
+                                       , unit_directory, path_one, unit_version, 0, 8
+                                       , nodes_old, &unit_old);
+
   if(is_old && is_old != -1)
     node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
 
@@ -176,8 +177,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   std::vector<std::vector<int> *> node_set_new;
 
   int is_new = create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options
-                          , unit_directory, path_two, unit_version, 0, 8
-                          , nodes_new, &unit_new);
+                                       , unit_directory, path_two, unit_version, 0, 8
+                                       , nodes_new, &unit_new);
+
   if(is_new && is_new != -1)
     node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
 
@@ -214,31 +216,31 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   wstate.output_diff.push_back(&output_diff);
 
   /*
-  unsigned int i;
-  for(i = 0; i < nodes_old.size() && i < nodes_new.size(); ++i) {
+    unsigned int i;
+    for(i = 0; i < nodes_old.size() && i < nodes_new.size(); ++i) {
 
-   if(nodes_old.at(i)->type != nodes_new.at(i)->type)
-      break;
+    if(nodes_old.at(i)->type != nodes_new.at(i)->type)
+    break;
 
     if((xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_TEXT
     && (xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
-      continue;
+    continue;
 
     if(strcmp(nodes_old.at(i)->name, nodes_new.at(i)->name) != 0)
-      break;
+    break;
 
     if(strcmp(nodes_old.at(i)->content, nodes_new.at(i)->content) != 0)
-      break;
+    break;
 
-  }
+    }
 
-  if(i == nodes_old.size() && i == nodes_new.size()) {
+    if(i == nodes_old.size() && i == nodes_new.size()) {
 
     for(i = 0; i < nodes_old.size(); ++i)
-      outputNode(*nodes_old.at(i), wstate.writer);
+    outputNode(*nodes_old.at(i), wstate.writer);
 
 
-  } else {
+    } else {
   */
 
   // create srcdiff unit
@@ -265,7 +267,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     if(is_old == -1 && is_new == -1)
       return;
-      //      exit(STATUS_INPUTFILE_PROBLEM);
+    //      exit(STATUS_INPUTFILE_PROBLEM);
 
   } else if(nodes_old.empty()) {
 
@@ -300,7 +302,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   free_node_sets(node_set_old);
   free_node_sets(node_set_new);
 
-  // } 
+  // }
 
   if(isoption(global_options, OPTION_NESTED)) {
 
