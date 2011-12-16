@@ -66,6 +66,8 @@ void * create_nodes_from_srcML_thread(void * arguments) {
     args.directory, args.filename, args.version, args.uri, args.tabsize,
                             args.nodes, args.unit_start, args.no_error);
 
+    return NULL;
+
 }
 
 
