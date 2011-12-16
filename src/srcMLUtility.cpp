@@ -58,7 +58,7 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
 }
 
-void create_nodes_from_srcML_thread(void * arguments) {
+void * create_nodes_from_srcML_thread(void * arguments) {
 
   create_nodes_args & args = *(create_nodes_args *)arguments;
 

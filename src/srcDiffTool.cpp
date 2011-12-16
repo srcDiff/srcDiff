@@ -34,6 +34,7 @@
 #include "srcDiffOutput.hpp"
 #include "srcDiffDiff.hpp"
 #include "srcMLUtility.hpp"
+#include "pthread.h"
 
 #include "xmlrw.hpp"
 
@@ -165,11 +166,9 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, 0, 8
                                  , nodes_old, &unit_old, is_old };
-
-  create_nodes_from_srcML_thread((void *)&args_old);
-
-  if(is_old && is_old != -1)
-    node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
+  pthread_t * thread_old;
+  pthread_create(thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old);
+  //create_nodes_from_srcML_thread((void *)&args_old);
 
   /*
 
@@ -185,7 +184,17 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
                                  , unit_directory, path_two, unit_version, 0, 8
                                  , nodes_new, &unit_new, is_new };
 
-  create_nodes_from_srcML_thread((void *)&args_new);
+  pthread_t * thread_new;
+  pthread_create(thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new);
+  //create_nodes_from_srcML_thread((void *)&args_new);
+
+  pthread_join(*thread_old, NULL);
+  pthread_join(*thread_new, NULL);
+
+
+  if(is_old && is_old != -1)
+    node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
+
 
   if(is_new && is_new != -1)
     node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
