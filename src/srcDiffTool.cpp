@@ -62,8 +62,6 @@ const char * whitespace = "whitespace";
 // special flush node
 xNode flush;
 
-static const char * urisrcml[7];
-
 /*
   Global structures to store of the collected xml nodes.
   Base reference structure for all node comparison and output
@@ -143,9 +141,6 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   output_srcml_file_old = xmlBufferCreate();
   output_srcml_file_new = xmlBufferCreate();
 
-  for(int i = 0; i < 8; ++i)
-    urisrcml[i] = uri[i];
-
 }
 
 // Translate from input stream to output stream
@@ -169,7 +164,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   int is_old = 0;
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
-                                 , unit_directory, path_one, unit_version, urisrcml, 8
+                                 , unit_directory, path_one, unit_version, uri, 8
                                  , nodes_old, &unit_old, is_old };
   pthread_t thread_old;
   pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old);
@@ -188,7 +183,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   int is_new = 0;
   create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
-                                 , unit_directory, path_two, unit_version, urisrcml, 8
+                                 , unit_directory, path_two, unit_version, uri, 8
                                  , nodes_new, &unit_new, is_new };
 
   pthread_t thread_new;
