@@ -157,12 +157,17 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   first = false;
 
   // create the reader for the old file
-  xmlTextReaderPtr reader_old = NULL;
+  //xmlTextReaderPtr reader_old = NULL;
   xNodePtr unit_old = 0;
   int is_old = 0;
   xNodePtr unit_end = NULL;
   std::vector<std::vector<int> *> node_set_old;
 
+  create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options
+                          , unit_directory, path_one, unit_version, 0, 8
+                          , nodes_old, &unit_old);
+
+  /*
   // translate file one
   try {
 
@@ -212,6 +217,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   }
 
   xmlBufferEmpty(output_srcml_file);
+  */
 
   /*
 
