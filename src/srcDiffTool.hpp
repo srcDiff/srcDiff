@@ -85,7 +85,8 @@ void startUnit(const char * language,
   METHOD_TYPE method;
   const char** uri;
   int tabsize;
-  xmlBuffer * output_srcml_file;
+  xmlBuffer * output_srcml_file_old;
+  xmlBuffer * output_srcml_file_new;
   xmlTextWriterPtr writer;
 
 };
