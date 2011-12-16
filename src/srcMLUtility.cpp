@@ -34,8 +34,7 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
                 const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
 
   // create translator object
-  srcMLTranslator translator(language, output_buffer, options);
-  //srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
+  srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
 
   try {
 
@@ -85,7 +84,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
     if(!filename || filename[0] == 0)
       throw FileError();
 
-  translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, 0, 8);
+  translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
 
   reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, 0);
 
