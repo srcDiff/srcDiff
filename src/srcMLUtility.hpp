@@ -15,7 +15,7 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
 int create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                             const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
-                            std::vector<xNode *> & nodes, xNodePtr * unit_start);
+                            std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error);
 
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new);

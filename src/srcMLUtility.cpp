@@ -58,12 +58,11 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
 }
 
-int create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
-                            const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
-                            std::vector<xNode *> & nodes, xNodePtr * unit_start) {
-
+void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+                             const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error) {
+  
   xmlTextReaderPtr reader = NULL;
-  int no_error = 0;
   xNodePtr unit_end = NULL;
   //std::vector<std::vector<int> *> node_set;
 
@@ -116,8 +115,6 @@ int create_nodes_from_srcML(int language, const char* src_encoding, const char* 
   }
 
   xmlBufferEmpty(output_buffer);
-
-  return no_error;
 
 }
 

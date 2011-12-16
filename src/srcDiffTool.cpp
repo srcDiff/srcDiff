@@ -160,9 +160,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xNodePtr unit_old = 0;
   std::vector<std::vector<int> *> node_set_old;
 
-  int is_old = create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options
-                                       , unit_directory, path_one, unit_version, 0, 8
-                                       , nodes_old, &unit_old);
+  int is_old = 0;
+  create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options
+                          , unit_directory, path_one, unit_version, 0, 8
+                          , nodes_old, &unit_old, is_old);
 
   if(is_old && is_old != -1)
     node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
@@ -176,9 +177,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   xNodePtr unit_new = 0;
   std::vector<std::vector<int> *> node_set_new;
 
-  int is_new = create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options
-                                       , unit_directory, path_two, unit_version, 0, 8
-                                       , nodes_new, &unit_new);
+  int is_new = 0;
+  create_nodes_from_srcML(language, src_encoding, xml_encoding, output_srcml_file, local_options
+                          , unit_directory, path_two, unit_version, 0, 8
+                          , nodes_new, &unit_new, is_new);
 
   if(is_new && is_new != -1)
     node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
