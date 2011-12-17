@@ -59,6 +59,9 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.is_delete = false;
   tracer.is_insert = false;
 
+  tracer.collect_text_delete = false;
+  tracer.collect_text_insert = false;
+
 
 }
 
@@ -147,6 +150,21 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     tracer.diff_stack.push_back(curdiff);
 
   } else {
+
+      if(tracer.diff_stack.back().operation == COMMON) {
+
+        tracer.collect_text_delete = false;
+        tracer.collect_text_insert = false;
+
+      } else if(tracer.diff_stack.back().operation == DELETE) {
+
+        tracer.collect_text_delete = false;
+
+      } else {
+
+        tracer.collect_text_insert = false;
+
+      }
 
     element curelement;
     curelement.name = (const char *)localname;
@@ -275,6 +293,21 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   } else {
 
+      if(tracer.diff_stack.back().operation == COMMON) {
+
+        tracer.collect_text_delete = false;
+        tracer.collect_text_insert = false;
+
+      } else if(tracer.diff_stack.back().operation == DELETE) {
+
+        tracer.collect_text_delete = false;
+
+      } else {
+
+        tracer.collect_text_insert = false;
+
+      }
+
     tracer.elements.pop_back();
     --tracer.diff_stack.back().level;
 
@@ -361,6 +394,35 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
+  std::string tag = "text()";
+
+  if(tracer.diff_stack.back().operation == COMMON) {
+
+    if(tracer.collect_text_delete)
+      add_child(tracer.elements.back().children_old, tag);
+
+    if(tracer.collect_text_insert)
+      add_child(tracer.elements.back().children_new, tag);
+
+    tracer.collect_text_delete = true;
+    tracer.collect_text_insert = true;
+
+  } else if(tracer.diff_stack.back().operation == DELETE) {
+
+    if(tracer.collect_text_delete)
+      add_child(tracer.elements.back().children_old, tag);
+
+    tracer.collect_text_delete = true;
+
+  } else {
+
+    if(tracer.collect_text_insert)
+      add_child(tracer.elements.back().children_new, tag);
+
+    tracer.collect_text_insert = true;
+
+  }
+
   int i;
   for(i = 0; i < len; ++i) {
 
@@ -368,7 +430,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       break;
 
   }
-  
+
   if(tracer.diff_stack.back().operation != COMMON && len != 0 && i != len && tracer.diff_stack.back().level == 0) {
 
     element curelement;
