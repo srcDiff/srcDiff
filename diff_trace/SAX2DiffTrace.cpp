@@ -550,11 +550,6 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   static element null_element;
 
-  if(tracer.diff_stack.back().operation == DELETE)
-    fprintf(stdout, "Delete:\t");
-  else
-    fprintf(stdout, "Insert:\t");
-
   for(unsigned int i = 0; i < tracer.elements.size(); ++i) {
 
     int count = 0;
@@ -573,7 +568,12 @@ void output_diff(SAX2DiffTrace & tracer) {
     fprintf(stdout, "%s", element.c_str());
 
   }
-  
+
+  if(tracer.diff_stack.back().operation == DELETE)
+    fprintf(stdout, "/hasdelete()");
+  else
+    fprintf(stdout, "/hasinsert()");
+
   fprintf(stdout, "%s", "\n");
 
 }
