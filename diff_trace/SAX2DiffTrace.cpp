@@ -555,8 +555,6 @@ void output_diff(SAX2DiffTrace & tracer) {
   else
     fprintf(stdout, "Insert:\t");
 
-  fprintf(stdout, "/");
-
   for(unsigned int i = 0; i < tracer.elements.size(); ++i) {
 
     int count = 0;
@@ -566,11 +564,11 @@ void output_diff(SAX2DiffTrace & tracer) {
     element next_element = null_element;
     if((i + 1) < tracer.elements.size())
       next_element = tracer.elements.at(i + 1);
-       
-    std::string element = create_string_from_element(tracer.elements.at(i), next_element, count, tracer.diff_stack.back().operation);
 
-    if((i + 1) < tracer.elements.size())
-      element += "/";
+    std::string element = "/";
+
+    element += create_string_from_element(tracer.elements.at(i), next_element, count, tracer.diff_stack.back().operation);
+
 
     fprintf(stdout, "%s", element.c_str());
 
