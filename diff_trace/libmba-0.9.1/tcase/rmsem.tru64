@@ -1,5 +1,0 @@
-for i in `ipcs -s | grep miallen | awk '{ print $2 }'`
-do
-echo $i
-ipcrm -s $i
-done
