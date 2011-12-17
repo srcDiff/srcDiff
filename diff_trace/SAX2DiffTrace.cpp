@@ -545,9 +545,9 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       element += " and ";
       if(operation == DELETE)
-        element += "isdelete()";
+        element += "deleted()";
       else
-        element += "isinsert()";
+        element += "inserted()";
 
     }
 
