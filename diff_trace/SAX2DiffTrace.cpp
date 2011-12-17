@@ -408,12 +408,12 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     tracer.collect_text_insert = true;
 
   } else if(tracer.diff_stack.back().operation == DELETE) {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     if(!tracer.collect_text_delete)
       add_child(tracer.elements.back().children_old, tag);
 
     tracer.collect_text_delete = true;
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   } else {
 
     if(!tracer.collect_text_insert)
