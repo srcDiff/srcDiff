@@ -535,7 +535,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
               || strcmp(curelement.name.c_str(), "struct") == 0
               || strcmp(curelement.name.c_str(), "union") == 0) {
 
-      element += "and ";
+      element += " and ";
       if(operation == DELETE)
         element += curelement.signature_old;
       else
@@ -543,7 +543,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     } if(strcmp(nextelement.name.c_str(), "") == 0) {
 
-      element += "and ";
+      element += " and ";
       if(operation == DELETE)
         element += "hasdelete()";
       else
@@ -579,11 +579,6 @@ void output_diff(SAX2DiffTrace & tracer) {
     fprintf(stdout, "%s", element.c_str());
 
   }
-
-  if(tracer.diff_stack.back().operation == DELETE)
-    fprintf(stdout, "/hasdelete()");
-  else
-    fprintf(stdout, "/hasinsert()");
 
   fprintf(stdout, "%s", "\n");
 
