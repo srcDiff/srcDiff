@@ -569,7 +569,8 @@ void output_diff(SAX2DiffTrace & tracer) {
        
     std::string element = create_string_from_element(tracer.elements.at(i), next_element, count, tracer.diff_stack.back().operation);
 
-    element += "/";
+    if((i + 1) < tracer.elements.size())
+      element += "/";
 
     fprintf(stdout, "%s", element.c_str());
 
