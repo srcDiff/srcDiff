@@ -564,8 +564,21 @@ void output_diff(SAX2DiffTrace & tracer) {
   for(unsigned int i = 0; i < tracer.elements.size(); ++i) {
 
     int count = 0;
-    if(i > 0)
-      count = tracer.elements.at(i - 1).children_old[tracer.elements.at(i).prefix + tracer.elements.at(i).name];
+    if(i > 0) {
+
+      std::string tag;
+      if(tracer.elements.at(i).prefix != "") {
+
+        tag += tracer.elements.at(i).prefix;
+        tag += ":";
+
+      }
+
+      tag += tracer.elements.at(i).name;
+
+      count = tracer.elements.at(i - 1).children_old[tag];
+
+    }
 
     element next_element = null_element;
     if((i + 1) < tracer.elements.size())
