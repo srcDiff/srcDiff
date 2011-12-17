@@ -484,41 +484,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     }
       element += curelement.name.c_str();
 
-    if(curelement.name == "unit"
-       && ((operation == DELETE && curelement.signature_old != "")
-           || (operation == INSERT && curelement.signature_new != ""))) {
-
-      element += "[@filename=\"";
-
-      if(operation == DELETE)
-        element += curelement.signature_old;
-      else
-        element += curelement.signature_new;
-
-      element += "\"]";
-
-    } else if(strcmp(curelement.name.c_str(), "function") == 0
-              || strcmp(curelement.name.c_str(), "function_decl") == 0) {
-
-      element += "[src:signature(\"";
-      if(operation == DELETE)
-        element += curelement.signature_old;
-      else
-        element += curelement.signature_new;
-      element += "\")]";
-
-    } else if(strcmp(curelement.name.c_str(), "class") == 0
-              || strcmp(curelement.name.c_str(), "struct") == 0
-              || strcmp(curelement.name.c_str(), "union") == 0) {
-
-      element += "[";
-      if(operation == DELETE)
-        element += curelement.signature_old;
-      else
-        element += curelement.signature_new;
-      element += "]";
-
-    } else if(count > 0) {
+    if(count > 0) {
 
       int temp_count = count;
       int length;
@@ -536,11 +502,56 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       element += "[";
       element += buffer;
-      element += "]";
+      //element += "]";
 
       free(buffer);
 
     }
+
+    if(curelement.name == "unit"
+       && ((operation == DELETE && curelement.signature_old != "")
+           || (operation == INSERT && curelement.signature_new != ""))) {
+
+      element += "[@filename=\"";
+
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+
+      element += "\"";
+
+    } else if(strcmp(curelement.name.c_str(), "function") == 0
+              || strcmp(curelement.name.c_str(), "function_decl") == 0) {
+
+      element += " and src:signature(\"";
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+      element += "\")";
+
+    } else if(strcmp(curelement.name.c_str(), "class") == 0
+              || strcmp(curelement.name.c_str(), "struct") == 0
+              || strcmp(curelement.name.c_str(), "union") == 0) {
+
+      element += "and ";
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+
+    } if(strcmp(nextelement.name.c_str(), "") == 0) {
+
+      element += "and ";
+      if(operation == DELETE)
+        element += "hasdelete()";
+      else
+        element += "hasinsert()";
+
+    }
+
+    element += "]";
 
     return element;
 
