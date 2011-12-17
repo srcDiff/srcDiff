@@ -557,29 +557,25 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   fprintf(stdout, "/");
 
-  for(unsigned int i = 0; i < tracer.elements.size() - 1; ++i) {
+  for(unsigned int i = 0; i < tracer.elements.size(); ++i) {
 
     int count = 0;
     if(i > 0)
       count = tracer.elements.at(i - 1).children_old[std::string(tracer.elements.at(i).name)];
- 
-    std::string element = create_string_from_element(tracer.elements.at(i), tracer.elements.at(i + 1), count, tracer.diff_stack.back().operation);
+
+    element next_element = null_element;
+    if((i + 1) < tracer.elements.size())
+      next_element = tracer.elements.at(i + 1);
+       
+    std::string element = create_string_from_element(tracer.elements.at(i), next_element, count, tracer.diff_stack.back().operation);
 
     element += "/";
 
     fprintf(stdout, "%s", element.c_str());
 
   }
-
-    int count = 0;
-    if(tracer.elements.size() > 1)
-      count = tracer.elements.at(tracer.elements.size() - 2).children_old[std::string(tracer.elements.back().name)];
- 
-    std::string element = create_string_from_element(tracer.elements.back(), null_element, count, tracer.diff_stack.back().operation);
-
-    element += "\n";
-
-    fprintf(stdout, "%s", element.c_str());
+  
+  fprintf(stdout, "%s", "\n");
 
 }
 
