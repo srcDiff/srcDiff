@@ -541,7 +541,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       else
         element += curelement.signature_new;
 
-    } if(strcmp(nextelement.name.c_str(), "") == 0) {
+    }/* else if(strcmp(nextelement.name.c_str(), "") == 0) {
 
       element += " and ";
       if(operation == DELETE)
@@ -549,7 +549,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       else
         element += "inserted()";
 
-    }
+        }*/
 
     element += "]";
 
@@ -560,6 +560,11 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 void output_diff(SAX2DiffTrace & tracer) {
 
   static element null_element;
+
+  if(tracer.diff_stack.back().operation == DELETE)
+        fprintf(stdout, "delete(");
+      else
+        fprintf(stdout, "insert(");
 
   for(unsigned int i = 0; i < tracer.elements.size(); ++i) {
 
@@ -593,7 +598,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   }
 
-  fprintf(stdout, "%s", "\n");
+  fprintf(stdout, "%s", ")\n");
 
 }
 
