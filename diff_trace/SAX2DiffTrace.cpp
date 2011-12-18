@@ -315,7 +315,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(strcmp((const char *)localname, "name") == 0) {
 
-          std::string pre;
+          std::string pre = "./";
           if(!prefix || strcmp((const char *)prefix, "") == 0) {
 
             if(strcmp((const char *)URI, "http://www.sdml.info/srcML/src") == 0)
@@ -328,10 +328,10 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
           }
 
-          pre += "name=\'";
+          pre += "name='";
 
-          tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "\'";
-         tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "\'";
+          tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+          tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
         }
 
@@ -500,7 +500,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       snprintf(buffer, length, "%d", count);
 
-      element += "[";
+      element += "[position()=";
       element += buffer;
       //element += "]";
 
@@ -512,24 +512,24 @@ std::string create_string_from_element(element & curelement, element & nexteleme
        && ((operation == DELETE && curelement.signature_old != "")
            || (operation == INSERT && curelement.signature_new != ""))) {
 
-      element += "[@filename=\'";
+      element += "[@filename='";
 
       if(operation == DELETE)
         element += curelement.signature_old;
       else
         element += curelement.signature_new;
 
-      element += "\'";
+      element += "'";
 
     } else if(strcmp(curelement.name.c_str(), "function") == 0
               || strcmp(curelement.name.c_str(), "function_decl") == 0) {
 
-      element += " and src:signature(\'";
+      element += " and src:signature('";
       if(operation == DELETE)
         element += curelement.signature_old;
       else
         element += curelement.signature_new;
-      element += "\')";
+      element += "')";
 
     } else if(strcmp(curelement.name.c_str(), "class") == 0
               || strcmp(curelement.name.c_str(), "struct") == 0
