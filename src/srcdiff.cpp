@@ -1368,7 +1368,7 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
               if (firstopen)
               context = translator.setInput(path);
               else*/
-      context = getContext();
+      //context = getContext();
 
       // check if file is bad
       if (!context || archiveReadStatus(context) < 0 ) {
@@ -1378,7 +1378,7 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
       }
 
       // so, do we have an archive?
-      isarchive = isArchiveRead(context);
+      //isarchive = isArchiveRead(context);
 
       // once any source archive is input, then we have to assume nested not just locally
       if (isarchive) {
@@ -1389,7 +1389,8 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
       }
 
       // output tracing information about the input file
-      if (showinput && isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
+      //if (showinput && isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
+      if (showinput && !isoption(options, OPTION_QUIET)) {
 
         // output the currently processed filename
         fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
