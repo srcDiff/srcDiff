@@ -116,7 +116,6 @@ int process_args(int argc, char * argv[], long & options)
 
           options |= OPTION_WHITESPACE;
 
-          exit(SUCCESS);
           break;
 
 
