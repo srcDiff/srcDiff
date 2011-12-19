@@ -541,6 +541,7 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
+  /*
   // all input is through libarchive
   if (!isoption(options, OPTION_FILELIST)) {
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
@@ -548,6 +549,7 @@ int main(int argc, char* argv[]) {
       exit(1);
     }
   }
+  */
 
   try {
 
@@ -1878,11 +1880,12 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
     URIStream uriinput(poptions.fname);
     char* file_one;
+    /*
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
       exit(1);
     }
-
+    */
     while ((file_one = uriinput.readline())) {
 
       // skip over whitespace

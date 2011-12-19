@@ -14,6 +14,7 @@
 #define COMMON -1
 #define INSERT 0
 #define DELETE 1
+#define CHANGE 2
 
 // single edit script
 struct edit {
