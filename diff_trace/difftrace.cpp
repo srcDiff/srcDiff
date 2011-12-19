@@ -32,12 +32,17 @@ int process_args(int, char**, long & options);
 */
 int main(int argc, char **argv) {
 
-  // Create context for first file
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(argv[1], XML_PARSE_COMPACT);
-
   long options = 0;
 
   int curarg = process_args(argc, argv, options); 
+
+  const char * srcdiff_file = "-";
+
+  if(curarg < argc)
+    srcdiff_file = argv[curarg];
+
+  // Create context for first file
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(srcdiff_file, XML_PARSE_COMPACT);
 
   // Create SAX object and add to context
   SAX2DiffTrace tracer(options);
