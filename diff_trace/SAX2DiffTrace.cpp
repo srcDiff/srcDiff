@@ -446,6 +446,11 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     curelement.prefix = "";
     curelement.uri = "";
 
+    if((tracer.options & OPTION_WHITESPACE) && i == len)
+      if(tracer.diff_stack.back().operation == DELETE)
+        for(int i = 0; i < len; ++i)
+          curelement.signature_old += (char)ch[i];
+
     tracer.elements.push_back(curelement);
 
     if(!tracer.collect)
@@ -549,7 +554,19 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       else
         element += curelement.signature_new;
 
-    }/* else if(strcmp(nextelement.name.c_str(), "") == 0) {
+    } else if(strcmp(curelement.name.c_str(), "text()") == 0
+              && (strcmp(curelement.signature_old.c_str(), "") != 0
+                  || strcmp(curelement.signature_new.c_str(), "") != 0)) {
+
+      element += " and ";
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+
+    }
+
+    /* else if(strcmp(nextelement.name.c_str(), "") == 0) {
 
       element += " and ";
       if(operation == DELETE)
