@@ -82,7 +82,7 @@ int process_args(int argc, char * argv[], long & options)
     {
       // get option
       int option_index = 0;
-      int c = getopt_long(argc, argv, "hvl:e:s:", cliargs, &option_index);
+      int c = getopt_long(argc, argv, "hvw", cliargs, &option_index);
 
       // finished
       if(c == -1)
