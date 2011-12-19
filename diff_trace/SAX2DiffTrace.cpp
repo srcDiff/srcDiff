@@ -17,6 +17,7 @@
 #include <utility>
 
 #include "SAX2DiffTrace.hpp"
+#include "difftraceapps.hpp"
 #include "../src/shortest_edit_script.h"
 
 SAX2DiffTrace::SAX2DiffTrace(long & options) 
@@ -436,7 +437,9 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-  if(tracer.diff_stack.back().operation != COMMON && len != 0 && i != len && tracer.diff_stack.back().level == 0) {
+  if(tracer.diff_stack.back().operation != COMMON
+     && ((tracer.options & OPTION_WHITESPACE) || (len != 0 && i != len))
+     && tracer.diff_stack.back().level == 0) {
 
     element curelement;
     curelement.name = "text()";
