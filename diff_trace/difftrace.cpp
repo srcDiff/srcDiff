@@ -1,8 +1,8 @@
 /*
-  diff_match_patch_srcML.cpp
+  difftrace
 
   Take two source code files and compute the difference using
-  mba, then form the absolute XPath using SAX.
+  srcdiff, then form the absolute XPath using SAX.
 
   Michael J. Decker
   mjd52@zips.uakron.edu
@@ -18,8 +18,14 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <libxml/parserInternals.h>
+#include <getopt.h>
 
+#include "difftraceapps.hpp"
 #include "SAX2DiffTrace.hpp"
+
+void output_help(int argc, char * argv[]);
+void output_version(int argc, char * argv[]);
+int process_args(int, char**);
 
 /*
   Main method of program
@@ -50,3 +56,60 @@ int main(int argc, char **argv) {
   return 0;
 }
 
+int process_args(int argc, char * argv[])
+{
+  // command line argument struct for getopt                                                                                                           
+  struct option cliargs[] = {
+    { HELP_FLAG, no_argument, NULL, HELP_FLAG_SHORT },
+    { VERSION_FLAG, no_argument, NULL, VERSION_FLAG_SHORT },
+    { 0, 0, 0, 0}
+  };
+
+  // process all options                                                                                                                               
+  char * endstr;
+  long val = 0;
+  while(1)
+    {
+      // get option                                                                                                                                      
+      int option_index = 0;
+      int c = getopt_long(argc, argv, "hvl:e:s:", cliargs, &option_index);
+
+      // finished                                                                                                                                        
+      if(c == -1)
+        break;
+
+      // error                                                                                                                                           
+      if(c == '?')
+        {
+          fprintf(stderr, "Try %s --%s for more information.\n", argv[0], HELP_FLAG);
+          exit(INVALID_OPTION);
+        }
+
+      // process command line arguments                                                                                                                  
+      switch(c)
+        {
+        case HELP_FLAG_SHORT:
+
+          output_help(argc, argv);
+
+          exit(SUCCESS);
+          break;
+
+    default:
+      //fprintf(stderr, "Invalid Option: %s\n", optarg);                                                                                             
+      exit(INVALID_OPTION);
+      break;
+    };
+}
+
+// return position                                                                                                                                   
+return optind;
+}
+
+void output_help(int argc, char * argv[]) {
+
+}
+
+void output_version(int argc, char * argv[]) {
+
+}
