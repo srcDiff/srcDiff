@@ -558,11 +558,12 @@ std::string create_string_from_element(element & curelement, element & nexteleme
               && (strcmp(curelement.signature_old.c_str(), "") != 0
                   || strcmp(curelement.signature_new.c_str(), "") != 0)) {
 
-      element += " and ";
+      element += " and .='";
       if(operation == DELETE)
         element += curelement.signature_old;
       else
         element += curelement.signature_new;
+      element += "'";
 
     }
 
