@@ -46,6 +46,8 @@ class SAX2DiffTrace {
 
  private:
 
+  long & options;
+
   xmlSAXHandler * sax;
 
   bool output;
@@ -71,6 +73,7 @@ class SAX2DiffTrace {
  public:
 
   // constructor
+  SAX2DiffTrace(int & options);
 
   // sax factory
   static xmlSAXHandler factory();

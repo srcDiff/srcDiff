@@ -19,6 +19,11 @@
 #include "SAX2DiffTrace.hpp"
 #include "../src/shortest_edit_script.h"
 
+SAX2DiffTrace::SAX2DiffTrace(long & options) 
+  : options(options) {
+
+}
+
 // helper method
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
 std::string & trim_string(std::string & source);

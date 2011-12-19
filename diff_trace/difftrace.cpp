@@ -25,7 +25,7 @@
 
 void output_help(int argc, char * argv[]);
 void output_version(int argc, char * argv[]);
-int process_args(int, char**, long options);
+int process_args(int, char**, long & options);
 
 /*
   Main method of program
@@ -35,8 +35,12 @@ int main(int argc, char **argv) {
   // Create context for first file
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(argv[1], XML_PARSE_COMPACT);
 
+  long options = 0;
+
+  int curarg = process_args(argc, argv, options); 
+
   // Create SAX object and add to context
-  SAX2DiffTrace tracer;
+  SAX2DiffTrace tracer(options);
 
   ctxt->_private = &tracer;
   
@@ -56,7 +60,7 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-int process_args(int argc, char * argv[], long options)
+int process_args(int argc, char * argv[], long & options)
 {
   // command line argument struct for getopt                                                                                                           
   struct option cliargs[] = {
