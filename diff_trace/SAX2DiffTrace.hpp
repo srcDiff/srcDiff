@@ -73,7 +73,7 @@ class SAX2DiffTrace {
  public:
 
   // constructor
-  SAX2DiffTrace(int & options);
+  SAX2DiffTrace(long & options);
 
   // sax factory
   static xmlSAXHandler factory();
