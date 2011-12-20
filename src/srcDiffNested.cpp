@@ -26,8 +26,7 @@ extern const char * change;
 extern const char * whitespace;
 
 // tags that can have something nested in them
-const char * block_types[] = { "if", "while", "for", "function", 0 };
-//const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
+const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 // tags that can be nested in something else (incomplete)
 const char * nest_types[] = { "expr_stmt", "decl_stmt", 0 };
