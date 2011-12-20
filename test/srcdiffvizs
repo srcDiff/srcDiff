@@ -1,7 +1,21 @@
 #!/bin/bash
 
-filename=$(gmktemp --suffix=.html)
+os=$(uname)
+
+MKTEMP="/opt/local/bin/gmktemp"
+
+if [[ $os != "Darwin" ]] 
+then
+
+    MKTEMP="/bin/mktemp"
+
+fi
+
+filename=$(${MKTEMP} --suffix=.html)
 
 ../test/srcdiffviz $1 $2 > $filename
 
-open -a Safari.app $filename
+if [[ $os == "Darwin" ]] 
+then
+    open -a Safari.app $filename
+fi
