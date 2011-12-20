@@ -31,8 +31,6 @@ ANTLR_LIB=-L${ANTLR_LIB_DIR}
 endif 
 ANTLR_LIB += -lantlr
 
-LDFLAGS=$(ANTLR_LIB)
-
 # libxml
 LIBXML_INCLUDE=-I/usr/include/libxml2
 
@@ -42,7 +40,7 @@ else
 XML_LIB_SRCDIFF=${DLL_DIR}/libxml2.dll -lregex -liberty
 endif
 
-LDFLAGS+=$(XML_LIB_SRCDIFF)
+LDFLAGS=$(XML_LIB_SRCDIFF)
 
 #libsrcml include
 ifdef DIST
@@ -75,7 +73,7 @@ IO_LIB_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
 IO_LIB=../../../obj/libxml_archive_read.o ../../../obj/libxml_archive_write.o
 
 LDFLAGS+=$(XML_IO_LIB)
-
+LDFLAGS+=$(ANTLR_LIB)
 LDFLAGS+= -lpthread
 
 # project dirs
@@ -133,7 +131,7 @@ $(OBJ_DIR)srcDiffCommentDiff.o : srcDiffCommentDiff.cpp srcDiffCommentDiff.hpp s
 $(OBJ_DIR)srcDiffDiff.o : srcDiffDiff.cpp srcDiffDiff.hpp srcDiffCommon.hpp srcDiffOutput.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(EXE_DIR)srcdiffdirect : srcdiffdirect.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTool.o
+$(EXE_DIR)srcdiffdirect : $(OBJ_DIR)srcdiffdirect.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTool.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -I/opt/local/include $^ $(LDFLAGS) -o $@
 
 $(EXE_DIR)srcdiff : srcdiff.cpp $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTool.o
