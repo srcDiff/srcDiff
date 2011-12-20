@@ -171,7 +171,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
       end_pos = node_set.at(match)->at(0) - 1;
 
-      for(; end_pos > structure_old->at(0) && is_white_space(nodes_old.at(end_pos)); --end_pos)
+      for(; (signed)end_pos > structure_old->at(0) && is_white_space(nodes_old.at(end_pos)); --end_pos)
         ;
 
       ++end_pos;
@@ -212,7 +212,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
       end_pos = node_set.at(match)->at(0) - 1;
 
-      for(; end_pos > structure_new->at(0) && is_white_space(nodes_new.at(end_pos)); --end_pos)
+      for(; (signed)end_pos > structure_new->at(0) && is_white_space(nodes_new.at(end_pos)); --end_pos)
         ;
 
       ++end_pos;
