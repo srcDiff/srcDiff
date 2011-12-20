@@ -4,6 +4,7 @@
 #include "srcDiffChange.hpp"
 #include "srcDiffOutput.hpp"
 #include "srcDiffDiff.hpp"
+#include "srcDiffUtility.hpp"
 
 #include <string.h>
 
@@ -92,6 +93,32 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
   return false;
 }
 
+// create the node sets for shortest edit script
+std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNode * type) {
+
+  std::vector<std::vector<int> *> node_sets;
+
+  // runs on a subset of base array
+  for(int i = start; i < end; ++i) {
+
+    if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT && node_compare(nodes.at(i), type) == 0) {
+      
+      std::vector <int> * node_set = new std::vector <int>;
+
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
+
+      collect_entire_tag(nodes, *node_set, i);
+
+      node_sets.push_back(node_set);
+
+    }
+
+  }
+
+  return node_sets;
+
+}
+
 void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate) {
@@ -105,6 +132,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   if(operation == DELETE) {
 
+    /*
       for(start = 0; start < structure_old->size()
             && ((xmlReaderTypes)nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_ELEMENT
                 || strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "then") != 0); ++start)
@@ -138,7 +166,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
 
     output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
-
+    */
   } else {
 
       for(start = 0; start < structure_new->size()
