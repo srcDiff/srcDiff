@@ -119,6 +119,34 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
 }
 
+int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * match) {
+
+  int match_pos = 0;
+  int match_similarity = 0;
+  if(node_set.size() > 0) {
+
+    match_pos = 0;
+    match_similarity = compute_collect_similarity(node_set.at(0), match);
+
+  } else
+    return 1;
+
+  for(unsigned int i = 1; i < node_set.size(); ++i) {
+
+    int similarity;
+    if((similarity = compute_collect_similarity(node_set.at(1), match)) < match_similarity) {
+
+      match_pos = i;
+      match_similarity = similarity;
+
+    }
+
+  }
+
+  return match_pos;
+
+}
+
 void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new
                    , int operation, writer_state & wstate) {
