@@ -147,7 +147,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options,
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // root unit for compound srcML documents
   if (first && ((global_options & OPTION_NESTED) > 0)) {
 
@@ -172,10 +172,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     is_old = -2;
     
   }
-
-
-  if(!isoption(global_options, OPTION_THREAD))
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(!isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
 
@@ -203,9 +199,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     is_new = -2;
 
   }
-
-  if(isoption(global_options, OPTION_THREAD))
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
 
