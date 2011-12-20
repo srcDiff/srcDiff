@@ -166,6 +166,24 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
   int match = best_match(node_set, structure_new);
 
   end_pos = node_set.at(match)->at(0);
+
+  output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+
+    output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+
+    // collect subset of nodes
+    std::vector<std::vector<int> *> next_node_set_old
+      = create_node_set(nodes_old, end_pos, node_set.at(match)->back() + 1);
+
+    std::vector<std::vector<int> *> next_node_set_new
+      = create_node_set(nodes_new,  structure_new->at(0)
+                        , structure_new->back() + 1);
+
+    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+
+    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+
+    output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
  
     /*
       for(start = 0; start < structure_old->size()
