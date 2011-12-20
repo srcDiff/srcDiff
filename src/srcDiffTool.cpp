@@ -165,7 +165,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   int is_old = 0;
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
-                                 , nodes_old, &unit_old, is_old };
+                                 , nodes_old, &unit_old, is_old, node_set_old };
   pthread_t thread_old;
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
@@ -185,7 +185,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   int is_new = 0;
   create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
-                                 , nodes_new, &unit_new, is_new };
+                                 , nodes_new, &unit_new, is_new , node_set_new};
 
   pthread_t thread_new;
   if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
@@ -206,13 +206,14 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   }
 
+  /*
   if(is_old && is_old > -1)
     node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
 
 
   if(is_new && is_new > -1)
     node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
-
+  */
   /*
 
     Setup readers and writer.
