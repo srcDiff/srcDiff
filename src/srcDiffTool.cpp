@@ -173,12 +173,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     
   }
 
-  if(is_old != -2 && pthread_join(thread_old, NULL)) {
-
-    is_old = -2;
-
-  }
-
   /*
 
     Input for file two
@@ -197,6 +191,12 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
 
     is_new = -2;
+
+  }
+
+  if(is_old != -2 && pthread_join(thread_old, NULL)) {
+
+    is_old = -2;
 
   }
 
