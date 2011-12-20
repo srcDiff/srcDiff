@@ -163,6 +163,10 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_old, structure_old->at(0), structure_old->back() + 1
       , nodes_new.at(structure_new->at(0)));
 
+  int match = best_match(node_set, structure_new);
+
+  end_pos = node_set.at(match)->at(0);
+ 
     /*
       for(start = 0; start < structure_old->size()
             && ((xmlReaderTypes)nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_ELEMENT
