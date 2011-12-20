@@ -173,6 +173,12 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     
   }
 
+  if(!isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
+
+    is_old = -2;
+
+  }
+
   /*
 
     Input for file two
@@ -194,7 +200,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   }
 
-  if(is_old != -2 && pthread_join(thread_old, NULL)) {
+  if(isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
 
     is_old = -2;
 
