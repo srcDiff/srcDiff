@@ -114,8 +114,39 @@ void * create_node_set_thread(void * arguments) {
 
 }
 
-void create_node_sets(std::vector<xNodePtr> & nodes_old, int start_old, int end_old, std::vector<std::vector<int> *> node_set_old
-                      , std::vector<xNodePtr> & nodes_new, int start_new, int end_new, std::vector<std::vector<int> *> node_set_new) {
+void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, std::vector<std::vector<int> *> & node_set_old
+                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, std::vector<std::vector<int> *> & node_set_new) {
+
+  create_node_set_args args_old = { nodes_delete, start_old, end_old, node_set_old };
+
+  pthread_t thread_old;
+  if(pthread_create(&thread_old, NULL, create_node_set_thread, (void *)&args_old)) {
+
+    exit(1);
+    
+  }
+
+  create_node_set_args args_new = { nodes_insert, start_new, end_new, node_set_new };
+
+  pthread_t thread_new;
+  if(pthread_create(&thread_new, NULL, create_node_set_thread, (void *)&args_new)) {
+
+    exit(1);
+
+  }
+
+  if(pthread_join(thread_old, NULL)) {
+
+    exit(1);
+
+  }
+
+  if( pthread_join(thread_new, NULL)) {
+
+    exit(1);
+
+  }
+
 
 }
 

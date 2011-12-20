@@ -33,8 +33,8 @@ struct create_node_set_args {
 
 };
 
-void create_node_sets(std::vector<xNodePtr> & nodes_old, int start_old, int end_old, std::vector<std::vector<int> *> node_set_old
-                     , std::vector<xNodePtr> & nodes_new, int start_new, int end_new, std::vector<std::vector<int> *> node_set_new);
+void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, std::vector<std::vector<int> *> & node_set_old
+                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, std::vector<std::vector<int> *> & node_set_new);
 
 void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_set, int & start);
 
