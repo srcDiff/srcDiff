@@ -20,5 +20,5 @@ then
     open -a Safari.app $filename
 
 else 
-    cat $filename
+    firefox $filename
 fi
