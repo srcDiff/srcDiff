@@ -227,7 +227,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
       tag += (const char *)localname;
 
-      if((tracer.options & OPTION_SRCDIFF_RELATIVE) || tracer.diff_stack.back().operation == COMMON) {
+      if(tracer.diff_stack.back().operation == COMMON) {
 
         add_child(tracer.elements.back().children_old, tag);
         add_child(tracer.elements.back().children_new, tag);
@@ -402,7 +402,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   std::string tag = "text()";
 
-  if((tracer.options & OPTION_SRCDIFF_RELATIVE) || tracer.diff_stack.back().operation == COMMON) {
+  if(tracer.diff_stack.back().operation == COMMON) {
 
     if(!tracer.collect_text_delete)
       add_child(tracer.elements.back().children_old, tag);
@@ -410,11 +410,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     if(!tracer.collect_text_insert)
       add_child(tracer.elements.back().children_new, tag);
 
-    if(!(tracer.options & OPTION_SRCDIFF_RELATIVE)) {
-
       tracer.collect_text_delete = true;
       tracer.collect_text_insert = true;
-    }
 
   } else if(tracer.diff_stack.back().operation == DELETE) {
 
