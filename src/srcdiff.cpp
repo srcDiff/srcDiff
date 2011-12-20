@@ -122,6 +122,9 @@ const int RECURSIVE_FLAG_CODE = 256 + 9;
 const char* const METHOD_FLAG = "method";
 const int METHOD_FLAG_CODE = 256 + 10;
 
+const char* const THREAD_FLAG = "thread";
+const int THREAD_FLAG_CODE = 256 + 11;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -690,6 +693,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
+    { THREAD_FLAG, required_argument, NULL, THREAD_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -899,6 +903,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       process_method(optarg, poptions);
+
+      break;
+
+    case THREAD_FLAG_CODE:
+
+      options |= OPTION_THREAD;
 
       break;
 
