@@ -357,7 +357,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 
 int compute_collect_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
@@ -392,7 +392,7 @@ int compute_collect_similarity(std::vector<int> * node_set_old, std::vector<int>
     return value;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   std::vector<int> node_set_old_text;
 
   for(unsigned int i = 0; i < olength; ++i)

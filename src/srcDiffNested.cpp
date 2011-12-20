@@ -119,14 +119,17 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
 }
 
-int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * match) {
+int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * match, int operation) {
 
   int match_pos = 0;
   int match_similarity = 0;
   if(node_set.size() > 0) {
 
     match_pos = 0;
-    match_similarity = compute_collect_similarity(node_set.at(0), match);
+    if(operation == DELETE)
+      match_similarity = compute_collect_similarity(node_set.at(0), match);
+    else
+      match_similarity = compute_collect_similarity(match, node_set.at(0));
 
   } else
     return 1;
@@ -134,7 +137,9 @@ int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * ma
   for(unsigned int i = 1; i < node_set.size(); ++i) {
 
     int similarity;
-    if((similarity = compute_collect_similarity(node_set.at(1), match)) < match_similarity) {
+    if((similarity = 
+        (operation == DELETE) ? compute_collect_similarity(node_set.at(i), match) : compute_collect_similarity(match, node_set.at(i)))
+       < match_similarity) {
 
       match_pos = i;
       match_similarity = similarity;
@@ -160,7 +165,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_old, structure_old->at(0), structure_old->back() + 1
                                                                , nodes_new.at(structure_new->at(0)));
 
-    int match = best_match(node_set, structure_new);
+    int match = best_match(node_set, structure_new, DELETE);
 
     end_pos = node_set.at(match)->at(0);
 
@@ -183,11 +188,11 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
 
   } else {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_new, structure_new->at(0), structure_new->back() + 1
                                                                , nodes_old.at(structure_old->at(0)));
 
-    int match = best_match(node_set, structure_old);
+    int match = best_match(node_set, structure_old, INSERT);
 
     end_pos = node_set.at(match)->at(0);
 
