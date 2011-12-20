@@ -64,7 +64,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
     create_nodes_from_srcML(args.language, args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
     args.directory, args.filename, args.version, args.uri, args.tabsize,
-                            args.nodes, args.unit_start, args.no_error, args.node_set);
+                            args.nodes, args.unit_start, args.no_error);
 
     return NULL;
 
@@ -73,7 +73,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
 void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
-                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, std::vector<std::vector<int> *> & node_set) {
+                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error) {
   
   xmlTextReaderPtr reader = NULL;
   xNodePtr unit_end = NULL;
@@ -116,7 +116,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   xmlFreeTextReader(reader);
 
   // group nodes
-  node_set = create_node_set(nodes, 0, nodes.size());
+  //node_set = create_node_set(nodes, 0, nodes.size());
 
   } catch(...) {
 
