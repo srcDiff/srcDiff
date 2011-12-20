@@ -102,7 +102,7 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
   for(int i = start; i < end; ++i) {
 
     if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT && node_compare(nodes.at(i), type) == 0) {
-      
+
       std::vector <int> * node_set = new std::vector <int>;
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
@@ -153,21 +153,18 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
-  unsigned int start;
-  //unsigned int end;
-  unsigned int start_pos;
   unsigned int end_pos;
 
   if(operation == DELETE) {
 
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_old, structure_old->at(0), structure_old->back() + 1
-      , nodes_new.at(structure_new->at(0)));
+                                                               , nodes_new.at(structure_new->at(0)));
 
-  int match = best_match(node_set, structure_new);
+    int match = best_match(node_set, structure_new);
 
-  end_pos = node_set.at(match)->at(0);
+    end_pos = node_set.at(match)->at(0);
 
-  output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+    output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
     output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
@@ -184,60 +181,17 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
 
     output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
- 
-    /*
-      for(start = 0; start < structure_old->size()
-            && ((xmlReaderTypes)nodes_old.at(structure_old->at(start))->type != XML_READER_TYPE_ELEMENT
-                || strcmp((const char *)nodes_old.at(structure_old->at(start))->name, "then") != 0); ++start)
-        ;
 
-      ++start;
-
-      start_pos = structure_old->at(start);
-      end_pos = structure_old->back() - 1;
-
-
-      //diff_type.value = change;
-      //diff_old_start.properties = &diff_type;
-      //diff_new_start.properties = &diff_type;
-      
-    output_change(rbuf_old, start_pos, rbuf_new, rbuf_new.last_output, wstate);
-
-    output_white_space_suffix(rbuf_old, rbuf_new, wstate);
-
-    // collect subset of nodes
-    std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_old, start_pos
-                        , end_pos);
-
-    std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new,  structure_new->at(0)
-                        , structure_new->back() + 1);
-
-    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
-
-    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
-
-    output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
-    */
   } else {
 
-      for(start = 0; start < structure_new->size()
-            && ((xmlReaderTypes)nodes_new.at(structure_new->at(start))->type != XML_READER_TYPE_ELEMENT
-                || strcmp((const char *)nodes_new.at(structure_new->at(start))->name, "then") != 0); ++start)
-        ;
+    std::vector<std::vector<int> *> node_set = create_node_set(nodes_new, structure_new->at(0), structure_new->back() + 1
+                                                               , nodes_old.at(structure_old->at(0)));
 
-      ++start;
+    int match = best_match(node_set, structure_old);
 
-      start_pos = structure_new->at(start);
-      end_pos = structure_new->back() - 1;
+    end_pos = node_set.at(match)->at(0);
 
-      //diff_type.value = change;
-      //diff_old_start.properties = &diff_type;
-      //diff_new_start.properties = &diff_type;
-
-
-    output_change(rbuf_old, rbuf_old.last_output, rbuf_new, start_pos, wstate);
+    output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
 
     output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
@@ -247,12 +201,11 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                         , structure_old->back() + 1);
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new, start_pos
-                        , end_pos);
+      = create_node_set(nodes_new, end_pos, node_set.at(match)->back() + 1);
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
+    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
 
     output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
 
