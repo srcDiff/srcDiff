@@ -169,7 +169,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     if(match < node_set.size()) {
 
-      end_pos = node_set.at(match)->at(0);
+      end_pos = node_set.at(match)->at(0) - 1;
 
       output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
@@ -205,7 +205,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     if(match < node_set.size()) {
 
-      end_pos = node_set.at(match)->at(0);
+      end_pos = node_set.at(match)->at(0) - 1;
 
       output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
 
