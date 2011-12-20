@@ -205,7 +205,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+    output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
 
     output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
 
