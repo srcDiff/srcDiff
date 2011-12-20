@@ -127,9 +127,9 @@ int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * ma
 
     match_pos = 0;
     if(operation == DELETE)
-      match_similarity = compute_collect_similarity(node_set.at(0), match);
+      match_similarity = compute_similarity(node_set.at(0), match);
     else
-      match_similarity = compute_collect_similarity(match, node_set.at(0));
+      match_similarity = compute_similarity(match, node_set.at(0));
 
   } else
     return 1;
@@ -138,7 +138,7 @@ int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * ma
 
     int similarity;
     if((similarity =
-        (operation == DELETE) ? compute_collect_similarity(node_set.at(i), match) : compute_collect_similarity(match, node_set.at(i)))
+        (operation == DELETE) ? compute_similarity(node_set.at(i), match) : compute_similarity(match, node_set.at(i)))
        < match_similarity) {
 
       match_pos = i;

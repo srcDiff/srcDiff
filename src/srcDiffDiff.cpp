@@ -163,7 +163,7 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
      && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
     return true;
 
-  unsigned int similarity = compute_collect_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
+  unsigned int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
 
   unsigned int olength = node_sets_old->at(start_old)->size();
   unsigned int nlength = node_sets_new->at(start_new)->size();
@@ -356,7 +356,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 }
 
 
-int compute_collect_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
+int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
@@ -365,31 +365,10 @@ int compute_collect_similarity(std::vector<int> * node_set_old, std::vector<int>
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
 
-    //return olength + nlength;
-
-    if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
-      return MIN;
-
-    unsigned int leftptr;
-    for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size()
-          && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr)
-      ;
-
-    unsigned int rightptr;
-    for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
-          && node_compare(nodes_old.at(node_set_old->at(node_set_old->size() - rightptr)),
-                          nodes_new.at(node_set_new->at(node_set_new->size() - rightptr))) == 0; ++rightptr)
-      ;
-
-    int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
-    int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
-
-    int value = ((old_diff > new_diff) ? old_diff : new_diff);
-
-    if(value < 0)
-      value = 0;
-
-    return value;
+    if(olength > nlength)
+      return 2 * olength;
+    else
+      return 2 * nlength;
 
   }
 
@@ -432,7 +411,7 @@ int compute_collect_similarity(std::vector<int> * node_set_old, std::vector<int>
 
 }
 
-int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
+int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
