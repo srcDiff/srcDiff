@@ -180,7 +180,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
     output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
 
-    output_change(rbuf_old,  structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+    output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
 
   } else {
 
