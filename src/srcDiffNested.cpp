@@ -188,7 +188,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
 
   } else {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_new, structure_new->at(0), structure_new->back() + 1
                                                                , nodes_old.at(structure_old->at(0)));
 
