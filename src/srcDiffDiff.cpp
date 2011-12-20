@@ -114,6 +114,12 @@ void * create_node_set_thread(void * arguments) {
 
 }
 
+void create_node_sets(std::vector<xNodePtr> & nodes_old, int start_old, int end_old, std::vector<std::vector<int> *> node_set_old
+                      , std::vector<xNodePtr> & nodes_new, int start_new, int end_new, std::vector<std::vector<int> *> node_set_new) {
+
+}
+
+
 bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                      , unsigned int start_old
                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
