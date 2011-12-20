@@ -741,13 +741,12 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
   else {
 
     // collect subset of nodes
-    std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_old, node_sets_old->at(start_old)->at(1)
-                        , node_sets_old->at(start_old)->back());
+    std::vector<std::vector<int> *> next_node_set_old;
+    std::vector<std::vector<int> *> next_node_set_new;
 
-    std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new, node_sets_new->at(start_new)->at(1)
-                        , node_sets_new->at(start_new)->back());
+    create_node_sets(nodes_old, node_sets_old->at(start_old)->at(1), node_sets_old->at(start_old)->back(), next_node_set_old
+                     , nodes_new, node_sets_new->at(start_new)->at(1), node_sets_new->at(start_new)->back(), next_node_set_new);
+
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
