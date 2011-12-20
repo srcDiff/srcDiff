@@ -26,7 +26,7 @@ extern const char * change;
 extern const char * whitespace;
 
 // tags that can have something nested in them
-const char * block_types[] = { "if", 0 };
+const char * block_types[] = { "if", "while", "for", "function", 0 };
 //const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 // tags that can be nested in something else (incomplete)
@@ -137,7 +137,7 @@ int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * ma
   for(unsigned int i = 1; i < node_set.size(); ++i) {
 
     int similarity;
-    if((similarity = 
+    if((similarity =
         (operation == DELETE) ? compute_collect_similarity(node_set.at(i), match) : compute_collect_similarity(match, node_set.at(i)))
        < match_similarity) {
 
@@ -165,54 +165,71 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_old, structure_old->at(0), structure_old->back() + 1
                                                                , nodes_new.at(structure_new->at(0)));
 
-    int match = best_match(node_set, structure_new, DELETE);
+    unsigned int match = best_match(node_set, structure_new, DELETE);
 
-    end_pos = node_set.at(match)->at(0);
+    if(match < node_set.size()) {
 
-    output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+      end_pos = node_set.at(match)->at(0);
 
-    output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+      output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
-    // collect subset of nodes
-    std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_old, end_pos, node_set.at(match)->back() + 1);
+      output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
-    std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new,  structure_new->at(0)
-                        , structure_new->back() + 1);
+      // collect subset of nodes
+      std::vector<std::vector<int> *> next_node_set_old
+        = create_node_set(nodes_old, end_pos, node_set.at(match)->back() + 1);
 
-    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+      std::vector<std::vector<int> *> next_node_set_new
+        = create_node_set(nodes_new,  structure_new->at(0)
+                          , structure_new->back() + 1);
 
-    output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
 
-    output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+      output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+
+      output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+
+      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+
+    } else {
+
+      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
+
+    }
 
   } else {
 
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_new, structure_new->at(0), structure_new->back() + 1
                                                                , nodes_old.at(structure_old->at(0)));
 
-    int match = best_match(node_set, structure_old, INSERT);
+    unsigned int match = best_match(node_set, structure_old, INSERT);
 
-    end_pos = node_set.at(match)->at(0);
+    if(match < node_set.size()) {
 
-    output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
+      end_pos = node_set.at(match)->at(0);
 
-    output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
 
-    // collect subset of nodes
-    std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_old,  structure_old->at(0)
-                        , structure_old->back() + 1);
+      output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
-    std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new, end_pos, node_set.at(match)->back() + 1);
+      // collect subset of nodes
+      std::vector<std::vector<int> *> next_node_set_old
+        = create_node_set(nodes_old,  structure_old->at(0)
+                          , structure_old->back() + 1);
 
-    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+      std::vector<std::vector<int> *> next_node_set_new
+        = create_node_set(nodes_new, end_pos, node_set.at(match)->back() + 1);
 
-    output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
+      output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
+      output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
+
+      output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
+
+    } else {
+
+      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
+
+    }
 
   }
 
