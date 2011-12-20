@@ -104,6 +104,16 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
 }
 
+void * create_node_set_thread(void * arguments) {
+
+  create_node_set_args & args = *(create_node_set_args *)arguments;
+
+  args.node_sets = create_node_set(args.nodes, args.start, args.end);
+
+  return NULL;
+
+}
+
 bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                      , unsigned int start_old
                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new

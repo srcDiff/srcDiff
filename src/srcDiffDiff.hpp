@@ -18,8 +18,20 @@ struct offset_pair {
 
 #define MIN -1
 
+
 // create sets of nodes
 std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
+
+void * create_node_set_thread(void * arguments);
+
+struct create_node_set_args {
+
+  std::vector<xNodePtr> & nodes;
+  int start;
+  int end;
+  std::vector<std::vector<int> *> & node_sets;
+
+};
 
 void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_set, int & start);
 
