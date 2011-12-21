@@ -49,8 +49,8 @@ const nest_info nesting[] = {
 
   { "block", basic_nest_types, 0 },
   { "if", if_nest_types, 0 },
-  { "while", while_basic_nest_types },
-  { "for", for_basic_nest_types, 0 },
+  { "while", while_nest_types },
+  { "for", for_nest_types, 0 },
   { "function", function_nest_types, 0 },
   { 0, 0, 0 }
 

@@ -366,9 +366,9 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
      || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
 
     if(olength > nlength)
-      return 2 * olength;
+      return 2 * olength + 1;
     else
-      return 2 * nlength;
+      return 2 * nlength + 1;
 
   }
 
