@@ -25,36 +25,55 @@ extern xAttr diff_type;
 extern const char * change;
 extern const char * whitespace;
 
-// tags that can have something nested in them
-const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
+struct nest_info {
+
+  const char * type;
+
+  const char ** nest_items;
+
+};
+
+const char * nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+
+// tags that can have something nested in them (incomplete)
+const nest_info nesting[] = {
+    { "block", nest_types },
+    { "if", nest_types },
+    { "while", nest_types },
+    { "for", nest_types },
+    { "function", nest_types },
+    { 0, 0 }
+};
+
+//const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
 
 // tags that can be nested in something else (incomplete)
-const char * nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+//
 // const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
-bool is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
+int is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
-    return false;
+    return 0;
 
   if(strcmp(nodes.at(structure->at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
-    return false;
+    return 0;
 
-  for(int i = 0; block_types[i]; ++i)
-    if(strcmp((const char *)nodes.at(structure->at(0))->name, block_types[i]) == 0)
-      return true;
+  for(int i = 0; nesting[i].type; ++i)
+    if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[i].type) == 0)
+      return i;
 
-  return false;
+  return 0;
 }
 
-bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
+bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, int type_index) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-  for(int i = 0; nest_types[i]; ++i)
-    if(strcmp((const char *)nodes.at(structure->at(0))->name, nest_types[i]) == 0)
-      return true;
+  //for(int i = 0; nesting[type_index].nest_info[i]; ++i)
+  //if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].nest_info[i]) == 0)
+  //return true;
 
   return false;
 }
@@ -74,8 +93,9 @@ bool has_interal_block(std::vector<int> * structure, std::vector<xNodePtr> & nod
 bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
 
+  int block = is_block_type(structure_two, nodes_two);
 
-  if(is_nest_type(structure_one, nodes_one) && is_block_type(structure_two, nodes_two)) {
+  if(!block && is_nest_type(structure_one, nodes_one, block)) {
 
     if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, "block") != 0) {
 
