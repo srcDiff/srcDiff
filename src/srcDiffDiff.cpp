@@ -123,7 +123,7 @@ void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int e
   if(pthread_create(&thread_old, NULL, create_node_set_thread, (void *)&args_old)) {
 
     exit(1);
-    
+
   }
 
   create_node_set_args args_new = { nodes_insert, start_new, end_new, node_set_new };
@@ -361,8 +361,8 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_set_old->at(0))->name);
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
 
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
@@ -498,19 +498,21 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
   struct offset_pair * curmatch = 0;
 
-  fprintf(stderr, "HERE\n");
+  /*
+    fprintf(stderr, "HERE\n");
 
-  for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
+    for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
 
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
 
-  }
+    }
 
-  for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
+    for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
 
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
 
-  }
+    }
+  */
 
   fprintf(stderr, "HERE\n");
 
@@ -534,22 +536,33 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
-      offset_pair * match = new offset_pair;
-      match->old_offset = old_pos;
-      match->new_offset = new_pos;
-      match->similarity = min_similarity;
-      match->next = NULL;
 
-      if(new_pos == 0) {
+      int olength = node_sets_old->at(edits->offset_sequence_one + old_pos)->size();
+      int nlength = node_sets_new->at(edit_next->offset_sequence_two + new_pos)->size();
 
-        *matches = match;
-        curmatch = match;
+      int max_size = 2 * olength;
+      if(nlength > olength)
+        max_size = 2 * nlength;
 
-      } else {
+      if(min_similarity < max_size) {
 
-        curmatch->next = match;
-        curmatch = curmatch->next;
+        offset_pair * match = new offset_pair;
+        match->old_offset = old_pos;
+        match->new_offset = new_pos;
+        match->similarity = min_similarity;
+        match->next = NULL;
 
+        if(new_pos == 0) {
+
+          *matches = match;
+          curmatch = match;
+
+        } else {
+
+          curmatch->next = match;
+          curmatch = curmatch->next;
+
+        }
       }
     }
 
@@ -574,22 +587,34 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
-      offset_pair * match = new offset_pair;
-      match->old_offset = old_pos;
-      match->new_offset = new_pos;
-      match->similarity = min_similarity;
-      match->next = NULL;
 
-      if(old_pos == 0) {
+      int olength = node_sets_old->at(edits->offset_sequence_one + old_pos)->size();
+      int nlength = node_sets_new->at(edit_next->offset_sequence_two + new_pos)->size();
 
-        *matches = match;
-        curmatch = match;
+      int max_size = 2 * olength;
+      if(nlength > olength)
+        max_size = 2 * nlength;
 
-      } else {
 
-        curmatch->next = match;
-        curmatch = curmatch->next;
+      if(min_similarity < max_size) {
 
+        offset_pair * match = new offset_pair;
+        match->old_offset = old_pos;
+        match->new_offset = new_pos;
+        match->similarity = min_similarity;
+        match->next = NULL;
+
+        if(old_pos == 0) {
+
+          *matches = match;
+          curmatch = match;
+
+        } else {
+
+          curmatch->next = match;
+          curmatch = curmatch->next;
+
+        }
       }
     }
 
