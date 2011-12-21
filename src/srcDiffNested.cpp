@@ -31,18 +31,23 @@ struct nest_info {
 
   const char ** nest_items;
 
+  const char ** possible_nest_items;
+
 };
 
-const char * nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * basic_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * function_nest_types[] = { "if", "while", "for", "expr_stmt", "decl_stmt", 0 };
 
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {
-    { "block", nest_types },
-    { "if", nest_types },
-    { "while", nest_types },
-    { "for", nest_types },
-    { "function", nest_types },
-    { 0, 0 }
+
+  { "block", basic_nest_types, 0 },
+  { "if", basic_nest_types, 0 },
+  { "while", basic_nest_types },
+  { "for", basic_nest_types, 0 },
+  { "function", function_nest_types, 0 },
+  { 0, 0, 0 }
+
 };
 
 //const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
