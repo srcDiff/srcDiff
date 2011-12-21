@@ -534,10 +534,6 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
-
       int olength = node_sets_old->at(edits->offset_sequence_one + old_pos)->size();
       int nlength = node_sets_new->at(edit_next->offset_sequence_two + new_pos)->size();
 
@@ -600,10 +596,6 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
         max_size = 2 * nlength;
 
       if(min_similarity < max_size) {
-
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
 
         offset_pair * match = new offset_pair;
         match->old_offset = old_pos;
