@@ -39,13 +39,14 @@ struct nest_info {
 // possible is mostly for block and may need to have to test for internal block structure
 
 const char * basic_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * function_nest_types[] = { "if", "while", "for", "expr_stmt", "decl_stmt", 0 };
+const char * if_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
+const char * function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
 
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {
 
   { "block", basic_nest_types, 0 },
-  { "if", basic_nest_types, 0 },
+  { "if", if_nest_types, 0 },
   { "while", basic_nest_types },
   { "for", basic_nest_types, 0 },
   { "function", function_nest_types, 0 },
