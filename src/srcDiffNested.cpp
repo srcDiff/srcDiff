@@ -40,6 +40,8 @@ struct nest_info {
 
 const char * basic_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
 const char * if_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
+const char * while_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
+const char * for_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
 const char * function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
 
 // tags that can have something nested in them (incomplete)
@@ -47,8 +49,8 @@ const nest_info nesting[] = {
 
   { "block", basic_nest_types, 0 },
   { "if", if_nest_types, 0 },
-  { "while", basic_nest_types },
-  { "for", basic_nest_types, 0 },
+  { "while", while_basic_nest_types },
+  { "for", for_basic_nest_types, 0 },
   { "function", function_nest_types, 0 },
   { 0, 0, 0 }
 
