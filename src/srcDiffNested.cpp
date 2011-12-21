@@ -54,16 +54,16 @@ const nest_info nesting[] = {
 int is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
-    return 0;
+    return -1;
 
   if(strcmp(nodes.at(structure->at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
-    return 0;
+    return -1;
 
   for(int i = 0; nesting[i].type; ++i)
     if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[i].type) == 0)
       return i;
 
-  return 0;
+  return -1;
 }
 
 bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, int type_index) {
@@ -95,7 +95,9 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
 
   int block = is_block_type(structure_two, nodes_two);
 
-  if(!block && is_nest_type(structure_one, nodes_one, block)) {
+  if(block != -1 && is_nest_type(structure_one, nodes_one, block)) {
+
+    return true;
 
     if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, "block") != 0) {
 
