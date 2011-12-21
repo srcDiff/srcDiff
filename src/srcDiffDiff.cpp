@@ -567,6 +567,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       } else {
 
         old_pos = save_pos;
+        --new_pos;
 
       }
     }
@@ -624,6 +625,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       } else {
 
         new_pos = save_pos;
+        --old_pos;
 
       }
     }
