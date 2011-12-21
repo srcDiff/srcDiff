@@ -35,6 +35,9 @@ struct nest_info {
 
 };
 
+// may need to change collection algorithm to gather full and nested of same type and match based on that
+// possible is mostly for block and may need to have to test for internal block structure
+
 const char * basic_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
 const char * function_nest_types[] = { "if", "while", "for", "expr_stmt", "decl_stmt", 0 };
 
