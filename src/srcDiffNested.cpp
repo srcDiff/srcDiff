@@ -71,9 +71,9 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, i
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-  //for(int i = 0; nesting[type_index].nest_info[i]; ++i)
-  //if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].nest_info[i]) == 0)
-  //return true;
+  for(int i = 0; nesting[type_index].nest_items[i]; ++i)
+    if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].nest_items[i]) == 0)
+      return true;
 
   return false;
 }
