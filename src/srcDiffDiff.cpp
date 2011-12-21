@@ -361,6 +361,9 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_set_old->at(0))->name);
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
@@ -478,6 +481,8 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
   }
 
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, similarity);
+
   free_shortest_edit_script(edit_script);
 
   return similarity;
@@ -498,7 +503,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
       int min_similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
                                               , node_sets_new->at(edit_next->offset_sequence_two + new_pos));
-      for(int pos = old_pos; pos < edits->length; ++pos) {
+      for(int pos = old_pos + 1; pos < edits->length; ++pos) {
 
         int similarity = 0;
         if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
@@ -510,6 +515,9 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
+      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
       offset_pair * match = new offset_pair;
       match->old_offset = old_pos;
       match->new_offset = new_pos;
@@ -535,7 +543,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
       int min_similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
                                               , node_sets_new->at(edit_next->offset_sequence_two + new_pos));
-      for(int pos = new_pos; pos < edit_next->length; ++pos) {
+      for(int pos = new_pos + 1; pos < edit_next->length; ++pos) {
 
         int similarity = 0;
         if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
@@ -547,6 +555,9 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
+      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
+      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
       offset_pair * match = new offset_pair;
       match->old_offset = old_pos;
       match->new_offset = new_pos;
