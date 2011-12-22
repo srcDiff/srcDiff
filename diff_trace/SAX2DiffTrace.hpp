@@ -36,6 +36,7 @@ struct element {
   std::string signature_old;
   std::string signature_new;
 
+  std::map<std::string, int> children;
   std::map<std::string, int> children_old;
   std::map<std::string, int> children_new;
 
@@ -62,7 +63,6 @@ class SAX2DiffTrace {
 
   bool is_delete;
   bool is_insert;
-
 
   bool collect_text_delete;
   bool collect_text_insert;

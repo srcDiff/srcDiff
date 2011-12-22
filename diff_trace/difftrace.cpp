@@ -73,7 +73,7 @@ int process_args(int argc, char * argv[], long & options)
     { HELP_FLAG, no_argument, NULL, HELP_FLAG_SHORT },
     { VERSION_FLAG, no_argument, NULL, VERSION_FLAG_SHORT },
     { WHITESPACE_FLAG, no_argument, NULL, WHITESPACE_FLAG_SHORT },
-    { SRCDIFF_RELATIVE_FLAG, no_argument, NULL, SRCDIFF_RELATIVE_FLAG_SHORT },
+    { SRCML_RELATIVE_FLAG, no_argument, NULL, SRCML_RELATIVE_FLAG_SHORT },
     { 0, 0, 0, 0}
 
   };
@@ -119,9 +119,9 @@ int process_args(int argc, char * argv[], long & options)
 
           break;
 
-        case SRCDIFF_RELATIVE_FLAG_SHORT:
+        case SRCML_RELATIVE_FLAG_SHORT:
 
-          options |= OPTION_SRCDIFF_RELATIVE;
+          options |= OPTION_SRCML_RELATIVE;
 
           break;
 

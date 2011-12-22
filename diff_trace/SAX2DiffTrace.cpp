@@ -227,6 +227,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
       tag += (const char *)localname;
 
+      add_child(tracer.elements.back().children, tag);
+
       if(tracer.diff_stack.back().operation == COMMON) {
 
         add_child(tracer.elements.back().children_old, tag);
@@ -401,6 +403,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   }
 
   std::string tag = "text()";
+
+  add_child(tracer.elements.back().children, tag);
 
   if(tracer.diff_stack.back().operation == COMMON) {
 
