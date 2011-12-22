@@ -126,7 +126,16 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
 
   int block = is_block_type(structure_two, nodes_two);
 
-  if(block != -1 && is_nest_type(structure_one, nodes_one, block)) {
+  if(block == -1)
+    return false;
+
+  if(is_nest_type(structure_one, nodes_one, block)) {
+
+    return true;
+
+  }
+
+  if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
 
     return true;
 
