@@ -492,7 +492,7 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
                        , std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, offset_pair ** matches) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
@@ -551,7 +551,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
         match->similarity = min_similarity;
         match->next = NULL;
 
-        if(new_pos == 0) {
+        if(*matches == 0) {
 
           *matches = match;
           curmatch = match;
@@ -604,7 +604,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
         match->similarity = min_similarity;
         match->next = NULL;
 
-        if(old_pos == 0) {
+        if(*matches == 0) {
 
           *matches = match;
           curmatch = match;
@@ -623,7 +623,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
     }
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 }
 
 void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
