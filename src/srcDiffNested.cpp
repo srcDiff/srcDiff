@@ -163,6 +163,9 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
     if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT && node_compare(nodes.at(i), type) == 0) {
 
+      // save position to collect internal of same type on all levels
+      int save_start = i;
+
       std::vector <int> * node_set = new std::vector <int>;
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
@@ -170,6 +173,9 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
       collect_entire_tag(nodes, *node_set, i);
 
       node_sets.push_back(node_set);
+
+      // collect type on all levels
+      i = save_start;
 
     }
 
