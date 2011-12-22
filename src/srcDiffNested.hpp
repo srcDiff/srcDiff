@@ -7,7 +7,7 @@
 bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two);
 
-bool has_interal_block(std::vector<int> * structure, std::vector<xNodePtr> & nodes);
+bool has_internal_structure(std::vector<int> * structure, std::vector<xNodePtr> & nodes, const char * type);
 
 void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                    , reader_state & rbuf_new ,std::vector<int> * structure_new

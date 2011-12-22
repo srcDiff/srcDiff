@@ -95,7 +95,23 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, i
   return false;
 }
 
-bool has_interal_structure(std::vector<int> * structure, std::vector<xNodePtr> & nodes, const char * type) {
+bool is_possible_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes
+                           , std::vector<int> * structure_other, std::vector<xNodePtr> & nodes_other, int type_index) {
+
+  if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
+    return false;
+
+  for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
+    if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].possible_nest_items[i]) == 0
+       && has_internal_structure(structure_other, nodes_other, (const char *)nodes.at(structure->at(0))->name))
+      return true;
+
+  return false;
+}
+
+
+
+bool has_internal_structure(std::vector<int> * structure, std::vector<xNodePtr> & nodes, const char * type) {
 
   for(unsigned int i = 1; i < structure->size(); ++i)
     if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
@@ -114,16 +130,6 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
 
     return true;
 
-    if(strcmp((const char *)nodes_one.at(structure_one->at(0))->name, "block") != 0) {
-
-      return true;
-
-    } else {
-
-      if(has_interal_block(structure_two, nodes_two))
-        return true;
-
-    }
   }
 
   return false;
