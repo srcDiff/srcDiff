@@ -604,10 +604,14 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   static element null_element;
 
-  if(tracer.diff_stack.back().operation == DELETE)
-        fprintf(stdout, "delete(");
-      else
-        fprintf(stdout, "insert(");
+  if(tracer.options & OPTION_SRCML_RELATIVE) {
+
+    if(tracer.diff_stack.back().operation == DELETE)
+      fprintf(stdout, "delete(");
+    else
+      fprintf(stdout, "insert(");
+
+  }
 
   for(unsigned int i = 0; i < tracer.elements.size(); ++i) {
 
@@ -641,7 +645,14 @@ void output_diff(SAX2DiffTrace & tracer) {
 
   }
 
-  fprintf(stdout, "%s", ")\n");
+  if(tracer.options & OPTION_SRCML_RELATIVE) {
+
+    fprintf(stdout, "%s", ")");
+  
+  }
+
+  fprintf(stdout, "%s", "\n");
+
 
 }
 
