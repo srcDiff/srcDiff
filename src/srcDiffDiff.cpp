@@ -574,7 +574,7 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
       int min_similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
                                               , node_sets_new->at(edit_next->offset_sequence_two + new_pos));
 
-      int save_pos = new_pos - 1;
+      int save_pos = new_pos;
       for(int pos = new_pos + 1; pos < edit_next->length; ++pos) {
 
         int similarity = 0;
