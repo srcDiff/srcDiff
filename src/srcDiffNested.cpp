@@ -95,13 +95,11 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, i
   return false;
 }
 
-bool has_interal_block(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
-
-  if(strcmp((const char *)nodes.at(structure->at(0))->name, "block") == 0)
-    return false;
+bool has_interal_structure(std::vector<int> * structure, std::vector<xNodePtr> & nodes, const char * type) {
 
   for(unsigned int i = 1; i < structure->size(); ++i)
-    if(strcmp((const char *)nodes.at(structure->at(i))->name, "block") == 0)
+    if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
+              && strcmp((const char *)nodes.at(structure->at(i))->name, type) == 0)
       return true;
 
   return false;
