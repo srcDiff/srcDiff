@@ -184,7 +184,7 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   if(size_new < min_length)
     min_length = size_new;
 
-  return 3 * similarity <= min_length;
+  return 3 * similarity <= 2 * min_length;
 
 }
 
