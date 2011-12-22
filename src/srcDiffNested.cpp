@@ -41,8 +41,8 @@ struct nest_info {
 const char * basic_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
 const char * if_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
 const char * else_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * while_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
-const char * for_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
+const char * while_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * for_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
 const char * function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
 
 const char * basic_possible_nest_types[] = { "block", 0 };
@@ -64,12 +64,6 @@ const nest_info nesting[] = {
   { 0, 0, 0 }
 
 };
-
-//const char * block_types[] = { "block", "if", "while", "for", "function", 0 };
-
-// tags that can be nested in something else (incomplete)
-//
-// const char * nest_types[] = { "block", "expr_stmt", "decl_stmt", 0 };
 
 int is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
 
