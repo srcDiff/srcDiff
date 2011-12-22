@@ -627,7 +627,12 @@ void output_diff(SAX2DiffTrace & tracer) {
 
       tag += tracer.elements.at(i).name;
 
-      count = tracer.elements.at(i - 1).children_old[tag];
+      if(!(tracer.options & OPTION_SRCML_RELATIVE))
+        count = tracer.elements.at(i - 1).children[tag];
+      else if(tracer.diff_stack.back().operation == DELETE)
+        count = tracer.elements.at(i - 1).children_old[tag];
+      else
+        count = tracer.elements.at(i - 1).children_new[tag];
 
     }
 
