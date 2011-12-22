@@ -156,34 +156,11 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     tracer.diff_stack.push_back(curdiff);
 
-    if(!(tracer.options & OPTION_SRCML_RELATIVE)) {
+  } 
+  
+  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
-      element curelement;
-      curelement.name = (const char *)localname;
-      if(prefix)
-        curelement.prefix = (const char *)prefix;
-      else
-        curelement.prefix = "";
-
-      curelement.uri = (const char *)URI;
-
-      std::string tag;
-      if(prefix && strcmp((const char *)prefix, "") != 0) {
-
-        tag += (const char *)prefix;
-        tag += ":";
-
-      }
-
-      tag += (const char *)localname;
-
-      add_child(tracer.elements.back().children, tag);
-
-      tracer.elements.push_back(curelement);
-
-    }
-
-  } else {
+    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0) {
 
       if(tracer.diff_stack.back().operation == COMMON) {
 
@@ -199,6 +176,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         tracer.collect_text_insert = false;
 
       }
+    }
 
     element curelement;
     curelement.name = (const char *)localname;
@@ -237,7 +215,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
           curelement.signature_new = filename;
 
-
         }
 
       }
@@ -275,7 +252,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     }
 
     tracer.elements.push_back(curelement);
-    ++tracer.diff_stack.back().level;
+
+    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
+      ++tracer.diff_stack.back().level;
 
     if(!tracer.collect) {
 
@@ -323,16 +302,13 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
        || strcmp((const char *)localname, "delete") == 0
        || strcmp((const char *)localname, "insert") == 0) {
 
-        tracer.diff_stack.pop_back();
+      tracer.diff_stack.pop_back();
 
-      if(!(tracer.options & OPTION_SRCML_RELATIVE)) {
-
-        tracer.elements.pop_back();
-
-      }
     }
 
   } else {
+
+    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0) {
 
       if(tracer.diff_stack.back().operation == COMMON) {
 
@@ -348,9 +324,13 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
         tracer.collect_text_insert = false;
 
       }
+    }
 
-    tracer.elements.pop_back();
-    --tracer.diff_stack.back().level;
+    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE))
+      tracer.elements.pop_back();
+
+    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
+      --tracer.diff_stack.back().level;
 
     if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
