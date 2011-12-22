@@ -302,9 +302,13 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
     update_diff_stack(wstate.output_diff, &diff_common_start, COMMON);
 
-    if(is_old <= -1 && is_new <= -1)
-      return;
-    //      exit(STATUS_INPUTFILE_PROBLEM);
+    if(is_old <= -1 && is_new <= -1) {
+
+      fprintf(stderr, "Error with file '%s' and file '%s'\n", path_one, path_two);
+
+      exit(STATUS_INPUTFILE_PROBLEM);
+
+    }
 
   } else if(nodes_old.empty()) {
 
