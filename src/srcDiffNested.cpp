@@ -44,14 +44,20 @@ const char * while_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
 const char * for_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
 const char * function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
 
+const char * basic_possible_nest_types[] = { "block", 0 };
+const char * if_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * while_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * for_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * function_possible_nest_types[] = { 0 };
+
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {
 
-  { "block", basic_nest_types, 0 },
-  { "if", if_nest_types, 0 },
-  { "while", while_nest_types },
-  { "for", for_nest_types, 0 },
-  { "function", function_nest_types, 0 },
+  { "block", basic_nest_types, basic_possible_nest_types },
+  { "if", if_nest_types, if_possible_nest_types },
+  { "while", while_nest_types, while_possible_nest_types },
+  { "for", for_nest_types, for_possible_nest_types },
+  { "function", function_nest_types, function_possible_nest_types },
   { 0, 0, 0 }
 
 };
