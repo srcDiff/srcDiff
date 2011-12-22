@@ -91,6 +91,9 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, i
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
+  if(strcmp(nodes.at(structure->at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
+    return -1;
+
   for(int i = 0; nesting[type_index].nest_items[i]; ++i)
     if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].nest_items[i]) == 0)
       return true;
@@ -103,6 +106,9 @@ bool is_possible_nest_type(std::vector<int> * structure, std::vector<xNodePtr> &
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
+
+  if(strcmp(nodes.at(structure->at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
+    return -1;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
     if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].possible_nest_items[i]) == 0
