@@ -496,6 +496,8 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
+  *matches = 0;
+
   struct offset_pair * curmatch = 0;
 
   /*
