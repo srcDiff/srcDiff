@@ -167,6 +167,20 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       curelement.uri = (const char *)URI;
 
+      std::string tag;
+      if(prefix && strcmp((const char *)prefix, "") != 0) {
+
+        tag += (const char *)prefix;
+        tag += ":";
+
+      }
+
+      tag += (const char *)localname;
+
+      add_child(tracer.elements.back().children, tag);
+
+      tracer.elements.push_back(curelement);
+
     }
 
   } else {
