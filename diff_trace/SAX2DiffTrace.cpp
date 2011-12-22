@@ -499,7 +499,6 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 }
 
 std::string create_string_from_element(element & curelement, element & nextelement, int count, int operation) {
-
     std::string element = "";
 
     if(curelement.prefix != "") {
