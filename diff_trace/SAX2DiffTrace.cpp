@@ -153,7 +153,21 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
+
     tracer.diff_stack.push_back(curdiff);
+
+    if(!(tracer.options & OPTION_SRCML_RELATIVE)) {
+
+      element curelement;
+      curelement.name = (const char *)localname;
+      if(prefix)
+        curelement.prefix = (const char *)prefix;
+      else
+        curelement.prefix = "";
+
+      curelement.uri = (const char *)URI;
+
+    }
 
   } else {
 
@@ -295,8 +309,13 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
        || strcmp((const char *)localname, "delete") == 0
        || strcmp((const char *)localname, "insert") == 0) {
 
-      tracer.diff_stack.pop_back();
+        tracer.diff_stack.pop_back();
 
+      if(!(tracer.options & OPTION_SRCML_RELATIVE)) {
+
+        tracer.elements.pop_back();
+
+      }
     }
 
   } else {
