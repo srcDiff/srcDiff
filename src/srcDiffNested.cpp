@@ -40,12 +40,14 @@ struct nest_info {
 
 const char * basic_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
 const char * if_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
+const char * else_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
 const char * while_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
 const char * for_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
 const char * function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
 
 const char * basic_possible_nest_types[] = { "block", 0 };
 const char * if_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * else_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * while_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * for_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * function_possible_nest_types[] = { 0 };
@@ -55,6 +57,7 @@ const nest_info nesting[] = {
 
   { "block", basic_nest_types, basic_possible_nest_types },
   { "if", if_nest_types, if_possible_nest_types },
+  { "else", else_nest_types, else_possible_nest_types },
   { "while", while_nest_types, while_possible_nest_types },
   { "for", for_nest_types, for_possible_nest_types },
   { "function", function_nest_types, function_possible_nest_types },
@@ -213,7 +216,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   if(operation == DELETE) {
 
-    std::vector<std::vector<int> *> node_set = create_node_set(nodes_old, structure_old->at(0), structure_old->back() + 1
+    std::vector<std::vector<int> *> node_set = create_node_set(nodes_old, structure_old->at(1), structure_old->back()
                                                                , nodes_new.at(structure_new->at(0)));
 
     unsigned int match = best_match(node_set, structure_new, DELETE);
@@ -254,7 +257,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   } else {
 
-    std::vector<std::vector<int> *> node_set = create_node_set(nodes_new, structure_new->at(0), structure_new->back() + 1
+    std::vector<std::vector<int> *> node_set = create_node_set(nodes_new, structure_new->at(1), structure_new->back()
                                                                , nodes_old.at(structure_old->at(0)));
 
     unsigned int match = best_match(node_set, structure_old, INSERT);
