@@ -177,7 +177,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, xNodePtr node
 void update_diff_stack(std::vector<diff_set *> & open_diffs, xNodePtr node, int operation) {
 
   // Skip empty node
-  if(node->extra & 0x1)
+  if(node->is_empty)
     return;
 
   if(open_diffs.back()->operation != operation) {

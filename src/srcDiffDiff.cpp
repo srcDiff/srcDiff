@@ -29,7 +29,7 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_s
 
   node_set.push_back(start);
 
-  if(nodes.at(start)->extra & 0x1)
+  if(nodes.at(start)->is_empty)
     return;
 
   ++start;
@@ -42,16 +42,11 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_s
     if(is_white_space(nodes.at(start)))
       continue;
 
-    //      if(nodes->at(start)->type == XML_READER_TYPE_TEXT)
-    //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->content);
-    //else
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(start)->name);
-
     node_set.push_back(start);
 
     // opening tags
     if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_ELEMENT
-       && !(nodes.at(start)->extra & 0x1))
+       && !(nodes.at(start)->is_empty))
       ++is_open;
 
     // closing tags
