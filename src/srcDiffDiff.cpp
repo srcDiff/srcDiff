@@ -142,9 +142,7 @@ void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int e
 
   }
 
-
 }
-
 
 bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                      , unsigned int start_old
