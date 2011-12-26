@@ -486,6 +486,15 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
                        , std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, offset_pair ** matches) {
 
+  /*
+
+    Possible dynamic programming solution.  Sum similarities choosing left top or diagonal,
+    picking smallest.  Unmatching has a high cost 1 less than a syntax mismatch.  So, it is chosen over
+    a syntax mismatch.  Not sure yet, but left and diagonal probably add cost, and top might be a straight copy
+    or a copy plus a unmatch.
+
+  */
+
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
