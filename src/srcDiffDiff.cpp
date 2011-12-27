@@ -348,6 +348,8 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 }
 
+const int MAX_INT = (unsigned)-1 >> 1;
+
 
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
@@ -361,10 +363,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
 
-    if(olength > nlength)
-      return 2 * olength + 1;
-    else
-      return 2 * nlength + 1;
+      return MAX_INT;
 
   }
 
@@ -519,8 +518,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         int similarity = compute_similarity(node_sets_old->at(j), node_sets_new->at(i));
 
-        if(similarity == 65535)
-          similarity = 65534;
+        if(similarity == MAX_INT)
+          similarity = MAX_INT - 1;
 
         int min_similarity = -1;
         int direction = 0;
@@ -531,7 +530,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           min_similarity = differences[i * nlength + (j - 1)].similarity + similarity;
 
           if(differences[i * nlength + (j - 1)].marked)
-            min_similarity = 65534 - differences[i * nlength + (j - 1)].last_similarity;
+            min_similarity = (MAX_INT - 1) - differences[i * nlength + (j - 1)].last_similarity;
 
           direction = 1;
 
@@ -543,7 +542,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
           if(differences[(i - 1) * nlength + j].marked) {
 
-            temp_similarity = 65534 - differences[(i - 1) * nlength + j].last_similarity;
+            temp_similarity = (MAX_INT - 1) - differences[(i - 1) * nlength + j].last_similarity;
 
           }
 
@@ -569,7 +568,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         }
 
-        if(similarity != 65534)
+        if(similarity != (MAX_INT - 1))
           differences[i * nlength + j].marked = true;
         else
           differences[i * nlength + j].marked = false;
@@ -577,12 +576,12 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         if(direction == 1) {
 
           differences[i * nlength + (j - 1)].marked = false;
-          differences[i * nlength + (j - 1)].last_similarity = 65534;
+          differences[i * nlength + (j - 1)].last_similarity = MAX_INT - 1;
 
         } else if(direction == 2) {
 
           differences[(i - 1) * nlength + j].marked = false;
-          differences[(i - 1) * nlength + j].last_similarity = 65534;
+          differences[(i - 1) * nlength + j].last_similarity = MAX_INT - 1;
 
         }
 
@@ -644,7 +643,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
       break;
 
     }
-      
 
   } 
 
