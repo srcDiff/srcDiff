@@ -516,7 +516,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       for(int j = 0; j < olength; ++j) {
 
-        int similarity = compute_similarity(node_sets_old->at(edit_script->offset_sequence_one + j), node_sets_new->at(edit_script->next->offset_sequence_two + i));
+        int similarity = compute_similarity(node_sets_old->at(edit_script->offset_sequence_one + j)
+                                            , node_sets_new->at(edit_script->next->offset_sequence_two + i));
 
         if(similarity == MAX_INT)
           similarity = MAX_INT - 1;
@@ -821,7 +822,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches = NULL;
 
-  match_differences(node_sets_old, node_sets_new, edit_script, &matches);
+  match_differences_dynamic(node_sets_old, node_sets_new, edit_script, &matches);
 
   int last_old = 0;
   int last_new = 0;
