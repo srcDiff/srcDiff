@@ -506,6 +506,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   */
 
+  *matches = 0;
+
   int olength = node_sets_old->size();
   int nlength = node_sets_new->size();
   
@@ -643,6 +645,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
       
 
   } 
+
+  *matches = last_match;
 
   free(differences);
 
