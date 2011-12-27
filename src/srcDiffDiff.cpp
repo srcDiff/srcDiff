@@ -482,7 +482,7 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
 }
 
-void match_differences(std::vector<std::vector<int> *> * node_sets_old
+void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
                        , std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, offset_pair ** matches) {
 
@@ -494,6 +494,29 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
     or a copy plus a unmatch.
 
   */
+  int olength = node_sets_old->size();
+  int nlength = node_sets_new->size();
+  
+  int * differences = (int *)malloc(olength * nlength);
+
+  // first row
+  for(int i = 0; i < nlength; ++i) {
+
+      for(int j = 0; j < olength; ++j) {
+
+        differences[i * nlength + j] = compute_similarity(node_sets_old->at(j), node_sets_new->at(i));
+
+      }
+
+  }
+
+  free(differences);
+
+}
+
+void match_differences(std::vector<std::vector<int> *> * node_sets_old
+                       , std::vector<std::vector<int> *> * node_sets_new
+                       , edit * edit_script, offset_pair ** matches) {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
