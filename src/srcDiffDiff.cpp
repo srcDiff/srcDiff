@@ -516,26 +516,34 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         int min_similarity = similarity;
 
-        if(j > 0)
-          min_similarity = differences[i * nlength + (j - 1)].similarity + 65534 + similarity;
+        if(j > 0) {
 
-        if(i > 0 && (min_similarity == -1 || differences[(i - 1) * nlength + j].similarity + 65534 + similarity < min_similarity))
-           min_similarity = differences[(i - 1) * nlength + j].similarity + 65534 + similarity;
+          min_similarity = differences[i * nlength + (j - 1)].similarity + similarity;
 
+        }
 
-        if(i > 0 && j > 0 && (differences[(i - 1) * nlength + (j - 1)].similarity + similarity) < min_similarity)
+        if(i > 0 && (min_similarity == -1 || differences[(i - 1) * nlength + j].similarity + similarity < min_similarity)) {
+
+           min_similarity = differences[(i - 1) * nlength + j].similarity + similarity;
+
+        }
+
+        if(i > 0 && j > 0 && (differences[(i - 1) * nlength + (j - 1)].similarity + similarity) < min_similarity) {
+
           min_similarity = differences[(i - 1) * nlength + (j - 1)].similarity + similarity;
+
+        }
 
         if(i == 0 && j == 0) {
 
           if(similarity == 65535) {
 
-          min_similarity = similarity - 1;
-          differences[i * nlength + j].marked = false;
+            min_similarity = similarity - 1;
+            differences[i * nlength + j].marked = false;
 
           } else {
 
-          differences[i * nlength + j].marked = true;
+            differences[i * nlength + j].marked = true;
 
           }
 
