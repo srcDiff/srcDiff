@@ -831,7 +831,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches = NULL;
 
-  match_differences_dynamic(node_sets_old, node_sets_new, edit_script, &matches);
+  match_differences(node_sets_old, node_sets_new, edit_script, &matches);
 
   int last_old = 0;
   int last_new = 0;
