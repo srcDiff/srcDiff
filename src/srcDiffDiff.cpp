@@ -482,6 +482,14 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
 }
 
+struct difference {
+
+  int similarity;
+  int last_similarity;
+  bool marked;
+
+};
+
 void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
                        , std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, offset_pair ** matches) {
@@ -494,10 +502,11 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
     or a copy plus a unmatch.
 
   */
+
   int olength = node_sets_old->size();
   int nlength = node_sets_new->size();
   
-  int * differences = (int *)malloc(olength * nlength);
+  difference * differences = (difference *)malloc(olength * nlength * sizeof(difference));
 
   for(int i = 0; i < nlength; ++i) {
 
@@ -508,19 +517,19 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         int min_similarity = -1;
 
         if(j > 0)
-          min_similarity = differences[i * nlength + (j - 1)] + 65534 + similarity;
+          min_similarity = differences[i * nlength + (j - 1)].similarity + 65534 + similarity;
 
-        if(i > 0 && (min_similarity == -1 || differences[(i - 1) * nlength + j] + 65534 + similarity < min_similarity))
-           min_similarity = differences[(i - 1) * nlength + j] + 65534 + similarity;
+        if(i > 0 && (min_similarity == -1 || differences[(i - 1) * nlength + j].similarity + 65534 + similarity < min_similarity))
+           min_similarity = differences[(i - 1) * nlength + j].similarity + 65534 + similarity;
 
 
-        if(i > 0 && j > 0 && (differences[(i - 1) * nlength + (j - 1)] + similarity) < min_similarity)
-          min_similarity = differences[(i - 1) * nlength + (j - 1)] + similarity;
+        if(i > 0 && j > 0 && (differences[(i - 1) * nlength + (j - 1)].similarity + similarity) < min_similarity)
+          min_similarity = differences[(i - 1) * nlength + (j - 1)].similarity + similarity;
 
         if(i == 0 && j == 0 && similarity == 65535)
           min_similarity = similarity - 1;
 
-        differences[i * nlength + j] = min_similarity;
+        differences[i * nlength + j].similarity = min_similarity;
 
       }
 
