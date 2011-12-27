@@ -488,6 +488,8 @@ struct difference {
   int last_similarity;
   bool marked;
   int direction;
+  unsigned int opos;
+  unsigned int npos;
 
 };
 
@@ -582,9 +584,12 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           differences[(i - 1) * nlength + j].last_similarity = 65534;
 
         }
+
         differences[i * nlength + j].last_similarity = similarity;
         differences[i * nlength + j].last_similarity = similarity;
         differences[i * nlength + j].similarity = min_similarity;
+        differences[i * nlength + j].opos = j;
+        differences[i * nlength + j].npos = i;
 
       }
 
