@@ -659,7 +659,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   *matches = last_match;
 
   free(differences);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
