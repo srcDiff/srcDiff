@@ -514,7 +514,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         int similarity = compute_similarity(node_sets_old->at(j), node_sets_new->at(i));
 
-        int min_similarity = -1;
+        int min_similarity = similarity;
 
         if(j > 0)
           min_similarity = differences[i * nlength + (j - 1)].similarity + 65534 + similarity;
@@ -526,8 +526,20 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         if(i > 0 && j > 0 && (differences[(i - 1) * nlength + (j - 1)].similarity + similarity) < min_similarity)
           min_similarity = differences[(i - 1) * nlength + (j - 1)].similarity + similarity;
 
-        if(i == 0 && j == 0 && similarity == 65535)
+        if(i == 0 && j == 0) {
+
+          if(similarity == 65535) {
+
           min_similarity = similarity - 1;
+          differences[i * nlength + j].marked = false;
+
+          } else {
+
+          differences[i * nlength + j].marked = true;
+
+          }
+
+        }
 
         differences[i * nlength + j].similarity = min_similarity;
 
