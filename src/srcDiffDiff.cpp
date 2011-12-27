@@ -499,12 +499,28 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   
   int * differences = (int *)malloc(olength * nlength);
 
-  // first row
   for(int i = 0; i < nlength; ++i) {
 
       for(int j = 0; j < olength; ++j) {
 
-        differences[i * nlength + j] = compute_similarity(node_sets_old->at(j), node_sets_new->at(i));
+        int similarity = compute_similarity(node_sets_old->at(j), node_sets_new->at(i));
+
+        int min_similarity = -1;
+
+        if(j > 0)
+          min_similarity = differences[i * nlength + (j - 1)] + 65534 + similarity;
+
+        if(i > 0 && (min_similarity == -1 || differences[(i - 1) * nlength + j] + 65534 + similarity < min_similarity))
+           min_similarity = differences[(i - 1) * nlength + j] + 65534 + similarity;
+
+
+        if(i > 0 && j > 0 && (differences[(i - 1) * nlength + (j - 1)] + similarity) < min_similarity)
+          min_similarity = differences[(i - 1) * nlength + (j - 1)] + similarity;
+
+        if(i == 0 && j == 0 && similarity == 65535)
+          min_similarity = similarity - 1;
+
+        differences[i * nlength + j] = min_similarity;
 
       }
 
