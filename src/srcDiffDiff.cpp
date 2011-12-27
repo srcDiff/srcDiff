@@ -521,7 +521,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           similarity = 65534;
 
         int min_similarity = -1;
-        int marked = false;
         int direction = 0;
 
         if(j > 0) {
@@ -594,6 +593,56 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
       }
 
   }
+
+  offset_pair * last_match = NULL;
+  for(int i = nlength - 1, j = olength - 1; i > 0 ||  j > 0;) {
+
+    if(differences[i * nlength + j].marked) {
+
+        offset_pair * match = new offset_pair;
+        match->old_offset = differences[i * nlength + j].opos;
+        match->new_offset = differences[i * nlength + j].npos;
+        match->similarity = differences[i * nlength + j].similarity;
+        match->next = last_match;
+
+        last_match = match;
+
+    }
+
+    switch(differences[i * nlength + j].direction) {
+
+    case 0:
+      
+      --i;
+      --j;
+
+      break;
+
+    case 1:
+
+      --j;
+
+      break;
+
+    case 2:
+
+      --i;
+
+      break;
+
+    case 3:
+
+      --i;
+      --j;
+      break;
+
+    default:
+      break;
+
+    }
+      
+
+  } 
 
   free(differences);
 
