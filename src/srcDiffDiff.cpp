@@ -514,7 +514,12 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         int similarity = compute_similarity(node_sets_old->at(j), node_sets_new->at(i));
 
-        int min_similarity = similarity;
+        if(similarity == 65535)
+          similarity = 65534;
+
+        int min_similarity = -1;
+        int marked = false;
+        int direction = 0;
 
         if(j > 0) {
 
@@ -524,39 +529,53 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           if(differences[i * nlength + (j - 1)].marked)
             min_similarity = 65534 - differences[i * nlength + (j - 1)].last_similarity;
 
-          differences[i * nlength + (j - 1)].last_similarity = similarity;
+          direction = 1;
 
-        }
+         }
 
-        if(i > 0 && (min_similarity == -1 || differences[(i - 1) * nlength + j].similarity + similarity < min_similarity)) {
+        if(i > 0) {
 
-           min_similarity = differences[(i - 1) * nlength + j].similarity + similarity;
+          int temp_similarity = differences[(i - 1) * nlength + j].similarity + similarity;
 
-        }
+          if(differences[(i - 1) * nlength + j].marked) {
 
-        if(i > 0 && j > 0 && (differences[(i - 1) * nlength + (j - 1)].similarity + similarity) < min_similarity) {
-
-          min_similarity = differences[(i - 1) * nlength + (j - 1)].similarity + similarity;
-
-        }
-
-        if(i == 0 && j == 0) {
-
-          if(similarity == 65535) {
-
-            min_similarity = similarity - 1;
-            differences[i * nlength + j].marked = false;
-
-          } else {
-
-            differences[i * nlength + j].marked = true;
+            temp_similarity = 65534 - differences[(i - 1) * nlength + j].last_similarity;
 
           }
 
-          differences[i * nlength + j].last_similarity = min_similarity;
+          if(temp_similarity < min_similarity) {
+
+            min_similarity = temp_similarity;
+            direction = 2;
+             
+          }
 
         }
 
+        if(i > 0 && j > 0) {
+
+          int temp_similarity = differences[(i - 1) * nlength + (j - 1)].similarity + similarity;
+
+          if(temp_similarity < min_similarity) {
+
+            min_similarity = temp_similarity;
+            direction = 3;
+            
+          }
+
+        }
+
+        if(similarity != 65534)
+          differences[i * nlength + j].marked = true;
+        else
+          differences[i * nlength + j].marked = false;
+
+        if(direction == 1)
+          differences[i * nlength + (j - 1)].marked = false;          
+        else if(direction == 2)
+          differences[(i - 1) * nlength + j].marked = false;
+
+        differences[i * nlength + j].last_similarity = similarity;
         differences[i * nlength + j].similarity = min_similarity;
 
       }
