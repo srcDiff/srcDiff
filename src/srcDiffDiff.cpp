@@ -521,21 +521,18 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         int similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + j)
                                             , node_sets_new->at(edit_next->offset_sequence_two + i));
 
-        if(similarity == MAX_INT)
-          similarity = MAX_INT - 1;
-
-        int min_similarity = MAX_INT - 1;
+        int min_similarity = MAX_INT;
         int direction = 0;
         int marked = true;
 
         // need to check if old similarity + unmatch this is less than unmatch and similarity
         if(j > 0) {
 
-          min_similarity = differences[i * nlength + (j - 1)].similarity + (MAX_INT - 1);
+          min_similarity = differences[i * nlength + (j - 1)].similarity + MAX_INT;
 
           if(differences[i * nlength + (j - 1)].marked && similarity < differences[i * nlength + (j - 1)].last_similarity) {
            
-            min_similarity = differences[(i - 1) * nlength + j].similarity + (MAX_INT - 1) - differences[i * nlength + (j - 1)].last_similarity + similarity;
+            min_similarity = (differences[(i - 1) * nlength + j].similarity - differences[i * nlength + (j - 1)].last_similarity) + MAX_INT + similarity;
             marked = false;
 
           }
@@ -547,11 +544,11 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         // need to check if old similarity + unmatch this is less than unmatch and similarity
         if(i > 0) {
 
-          int temp_similarity = differences[(i - 1) * nlength + j].similarity + (MAX_INT - 1);
+          int temp_similarity = differences[(i - 1) * nlength + j].similarity + MAX_INT;
 
           if(differences[(i - 1) * nlength + j].marked && similarity < differences[(i - 1) * nlength + j].last_similarity) {
 
-            temp_similarity = differences[(i - 1) * nlength + j].similarity + (MAX_INT - 1) - differences[(i - 1) * nlength + j].last_similarity + similarity;
+            temp_similarity = (differences[(i - 1) * nlength + j].similarity - differences[(i - 1) * nlength + j].last_similarity) + MAX_INT + similarity;
             marked = false;
 
           }
@@ -578,7 +575,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         }
 
-        if(similarity != (MAX_INT - 1))
+        if(similarity != MAX_INT)
           differences[i * nlength + j].marked = true;
         else
           differences[i * nlength + j].marked = false;
@@ -586,12 +583,12 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         if(direction == 1) {
 
           differences[i * nlength + (j - 1)].marked = marked;
-          differences[i * nlength + (j - 1)].last_similarity = MAX_INT - 1;
+          differences[i * nlength + (j - 1)].last_similarity = MAX_INT;
 
         } else if(direction == 2) {
 
           differences[(i - 1) * nlength + j].marked = marked;
-          differences[(i - 1) * nlength + j].last_similarity = MAX_INT - 1;
+          differences[(i - 1) * nlength + j].last_similarity = MAX_INT;
 
         }
 
