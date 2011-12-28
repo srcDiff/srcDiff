@@ -527,6 +527,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   fprintf(stderr, "HERE\n");
   */
 
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   *matches = 0;
 
   int olength = edits->length;
@@ -586,8 +588,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
             num_unmatched = j;
 
           unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
-
-          if(differences[(i - 1) * olength + j].marked && temp_similarity_match < temp_similarity) {
+          if(temp_similarity_match < temp_similarity) {
 
             temp_similarity = temp_similarity_match;
             //marked_top = false;
@@ -595,7 +596,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           }
 
           if(temp_similarity < min_similarity) {
-
             min_similarity = temp_similarity;
 
             direction = 2;
@@ -629,7 +629,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         } else {
 
-          //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
         }
 
