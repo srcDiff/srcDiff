@@ -561,7 +561,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
             min_similarity = temp_similarity;
             last_similarity_left = similarity;
-            //marked_left = false;
+            marked_left = false;
 
           }
 
@@ -584,7 +584,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
             temp_similarity = temp_similarity_match;
             last_similarity_top = similarity;
-            //marked_top = false;
+            marked_top = false;
 
           }
 
@@ -612,12 +612,12 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         if(direction == 1) {
 
-          //differences[i * nlength + (j - 1)].marked = marked_left;
+          differences[i * nlength + (j - 1)].marked = marked_left;
           differences[i * nlength + (j - 1)].last_similarity = last_similarity_left;
 
         } else if(direction == 2) {
 
-          //differences[(i - 1) * nlength + j].marked = marked_top;
+          differences[(i - 1) * nlength + j].marked = marked_top;
           differences[(i - 1) * nlength + j].last_similarity = last_similarity_top;
 
         }
