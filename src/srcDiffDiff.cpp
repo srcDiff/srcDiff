@@ -509,8 +509,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   *matches = 0;
 
-  int olength = node_sets_old->size();
-  int nlength = node_sets_new->size();
+  int olength = edits->length;
+  int nlength = edit_next->length;
 
   difference * differences = (difference *)malloc((olength + 1) * (nlength + 1) * sizeof(difference));
 
@@ -679,24 +679,6 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
   *matches = 0;
 
   struct offset_pair * curmatch = 0;
-
-  /*
-    fprintf(stderr, "HERE\n");
-
-    for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
-
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
-
-    }
-
-    for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
-
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
-
-    }
-
-  fprintf(stderr, "HERE\n");
-  */
 
   if(edits->length > edit_next->length) {
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
