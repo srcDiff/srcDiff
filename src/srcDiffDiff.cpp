@@ -507,7 +507,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
-  /*
     fprintf(stderr, "HERE\n");
 
     for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
@@ -516,6 +515,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     }
 
+    fprintf(stderr, "HERE\n");
+
     for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
 
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
@@ -523,7 +524,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
     }
 
   fprintf(stderr, "HERE\n");
-  */
 
   *matches = 0;
 
@@ -571,7 +571,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         if(i > 0) {
 
           int temp_similarity = differences[(i - 1) * nlength + j].similarity + MAX_INT;
-          last_similarity_left = MAX_INT;
+          last_similarity_top = MAX_INT;
 
           if(differences[(i - 1) * nlength + j].marked && similarity < differences[(i - 1) * nlength + j].last_similarity) {
 
@@ -633,8 +633,10 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   offset_pair * last_match = NULL;
   for(int i = nlength - 1, j = olength - 1; i >= 0 ||  j >= 0;) {
-    if(differences[i * nlength + j].marked) {
 
+    if(differences[i * nlength + j].marked) {
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
         offset_pair * match = new offset_pair;
         match->old_offset = differences[i * nlength + j].opos;
         match->new_offset = differences[i * nlength + j].npos;
