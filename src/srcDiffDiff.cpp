@@ -532,7 +532,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   int olength = edits->length;
   int nlength = edit_next->length;
 
-  size_t mem_size = (olength + 2) * (nlength + 2) * sizeof(difference);
+  size_t mem_size = olength * nlength * sizeof(difference);
 
   difference * differences = (difference *)malloc(mem_size);
 
