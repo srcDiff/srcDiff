@@ -543,9 +543,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       for(int j = 0; j < olength; ++j) {
 
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
-
         int similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + j)
                                             , node_sets_new->at(edit_next->offset_sequence_two + i));
 
@@ -618,17 +615,17 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         }
 
         if(direction == 1) {
-          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
           //differences[i * nlength + (j - 1)].marked = marked_left;
           //differences[i * nlength + (j - 1)].last_similarity = last_similarity_left;
 
         } else if(direction == 2) {
-          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
           //differences[(i - 1) * nlength + j].marked = marked_top;
           //differences[(i - 1) * nlength + j].last_similarity = last_similarity_top;
 
         } else {
-          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 
         }
 
@@ -642,8 +639,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           differences[i * nlength + j].marked = true;
         else
           differences[i * nlength + j].marked = false;
-
-        fprintf(stderr, "HERE: %s %s %d %llu\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
 
         differences[i * nlength + j].similarity = min_similarity;
         differences[i * nlength + j].opos = j;
@@ -688,18 +683,18 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     case 1:
 
-      --i;
+      --j;
 
       break;
 
     case 2:
 
-      --j;
+      --i;
 
       break;
 
     case 3:
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       --i;
       --j;
 
