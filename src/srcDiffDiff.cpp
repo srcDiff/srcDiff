@@ -527,7 +527,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   fprintf(stderr, "HERE\n");
   */
 
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   *matches = 0;
 
@@ -629,7 +629,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         } else {
 
-          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+          //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
         }
 
@@ -643,6 +643,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           differences[i * olength + j].marked = true;
         else
           differences[i * olength + j].marked = false;
+
+        //fprintf(stderr, "HERE: %s %s %d %llu\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
 
         differences[i * olength + j].similarity = min_similarity;
         differences[i * olength + j].opos = j;
