@@ -585,11 +585,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         }
 
-        if(similarity != MAX_INT)
-          differences[i * nlength + j].marked = true;
-        else
-          differences[i * nlength + j].marked = false;
-
         if(direction == 1) {
 
           differences[i * nlength + (j - 1)].marked = marked_left;
@@ -601,6 +596,11 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           differences[(i - 1) * nlength + j].last_similarity = last_similarity_top;
 
         }
+
+        if(similarity != MAX_INT)
+          differences[i * nlength + j].marked = true;
+        else
+          differences[i * nlength + j].marked = false;
 
         differences[i * nlength + j].last_similarity = similarity;
         differences[i * nlength + j].last_similarity = similarity;
@@ -639,13 +639,13 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     case 1:
 
-      --j;
+      --i;
 
       break;
 
     case 2:
 
-      --i;
+      --j;
 
       break;
 
@@ -838,7 +838,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches = NULL;
 
-  match_differences(node_sets_old, node_sets_new, edit_script, &matches);
+  match_differences_dynamic(node_sets_old, node_sets_new, edit_script, &matches);
 
   int last_old = 0;
   int last_new = 0;
