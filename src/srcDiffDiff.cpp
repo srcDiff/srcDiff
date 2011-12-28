@@ -532,12 +532,19 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   int olength = edits->length;
   int nlength = edit_next->length;
 
-  difference * differences = (difference *)malloc((olength + 1) * (nlength + 1) * sizeof(difference));
+  size_t mem_size = (olength + 2) * (nlength + 2) * sizeof(difference);
+
+  difference * differences = (difference *)malloc(mem_size);
+
+  memset(differences, 0, mem_size);
 
   // still need to figure out how to track matching on each path
   for(int i = 0; i < nlength; ++i) {
 
       for(int j = 0; j < olength; ++j) {
+
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
 
         int similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + j)
                                             , node_sets_new->at(edit_next->offset_sequence_two + i));
@@ -642,9 +649,12 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   bool * nlist = (bool *)malloc(nlength * sizeof(bool));
   memset(nlist, 0, nlength * sizeof(bool));
 
-  for(int i = nlength - 1, j = olength - 1; i >= 0 ||  j >= 0;) {
+  for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
     if(differences[i * nlength + j].marked && !(olist[i] || nlist[j])) {
+
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
 
         offset_pair * match = new offset_pair;
         match->old_offset = differences[i * nlength + j].opos;
@@ -662,6 +672,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
     switch(differences[i * nlength + j].direction) {
 
     case 0:
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
       --i;
       --j;
