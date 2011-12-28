@@ -507,6 +507,24 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
+  /*
+    fprintf(stderr, "HERE\n");
+
+    for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
+
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
+
+    }
+
+    for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
+
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
+
+    }
+
+  fprintf(stderr, "HERE\n");
+  */
+
   *matches = 0;
 
   int olength = edits->length;
@@ -615,7 +633,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   offset_pair * last_match = NULL;
   for(int i = nlength - 1, j = olength - 1; i >= 0 ||  j >= 0;) {
-
     if(differences[i * nlength + j].marked) {
 
         offset_pair * match = new offset_pair;
