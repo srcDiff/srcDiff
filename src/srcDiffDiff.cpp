@@ -542,7 +542,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         int similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + j)
                                             , node_sets_new->at(edit_next->offset_sequence_two + i));
 
-        unsigned long long min_similarity = MAX_INT;
+        unsigned long long min_similarity = (unsigned long long)-1;
         int direction = 0;
 
         // need to check if old similarity + unmatch this is less than unmatch and similarity
@@ -564,6 +564,9 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         // need to check if old similarity + unmatch this is less than unmatch and similarity
         if(i > 0) {
+
+          if(direction == 0)
+            direction = 2;
 
           unsigned long long temp_similarity = differences[(i - 1) * nlength + j].similarity + MAX_INT;
 
@@ -610,6 +613,13 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         } else {
 
+
+        }
+
+        if(i == 0 && j == 0) {
+
+          min_similarity = similarity;
+
         }
 
         if(similarity != MAX_INT)
@@ -635,8 +645,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   for(int i = nlength - 1, j = olength - 1; i >= 0 ||  j >= 0;) {
 
     if(differences[i * nlength + j].marked && !(olist[i] || nlist[j])) {
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
+
         offset_pair * match = new offset_pair;
         match->old_offset = differences[i * nlength + j].opos;
         match->new_offset = differences[i * nlength + j].npos;
