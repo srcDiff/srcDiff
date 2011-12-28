@@ -534,6 +534,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   difference * differences = (difference *)malloc((olength + 1) * (nlength + 1) * sizeof(difference));
 
+
+  // still need to figure out how to track matching on each path
   for(int i = 0; i < nlength; ++i) {
 
       for(int j = 0; j < olength; ++j) {
