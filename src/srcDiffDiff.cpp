@@ -482,7 +482,7 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
 struct difference {
 
-  int similarity;
+  unsigned long long similarity;
   int last_similarity;
   bool marked;
   int direction;
@@ -507,6 +507,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
+  /*
     fprintf(stderr, "HERE\n");
 
     for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
@@ -524,6 +525,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
     }
 
   fprintf(stderr, "HERE\n");
+  */
 
   *matches = 0;
 
@@ -621,7 +623,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           differences[i * nlength + j].marked = false;
 
         differences[i * nlength + j].last_similarity = similarity;
-        differences[i * nlength + j].last_similarity = similarity;
         differences[i * nlength + j].similarity = min_similarity;
         differences[i * nlength + j].opos = j;
         differences[i * nlength + j].npos = i;
@@ -635,8 +636,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   for(int i = nlength - 1, j = olength - 1; i >= 0 ||  j >= 0;) {
 
     if(differences[i * nlength + j].marked) {
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
+
         offset_pair * match = new offset_pair;
         match->old_offset = differences[i * nlength + j].opos;
         match->new_offset = differences[i * nlength + j].npos;
