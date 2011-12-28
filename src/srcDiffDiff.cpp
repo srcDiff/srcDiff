@@ -661,7 +661,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
-    if(differences[i * nlength + j].marked && !(olist[i] || nlist[j])) {
+    if(differences[i * olength + j].marked && !(olist[i] || nlist[j])) {
 
         offset_pair * match = new offset_pair;
         match->old_offset = differences[i * olength + j].opos;
