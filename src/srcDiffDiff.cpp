@@ -638,9 +638,14 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   }
 
   offset_pair * last_match = NULL;
-  for(int i = nlength - 1, j = olength - 1; i >= 0 ||  j >= 0;) {
+  bool * olist = (bool *)malloc(olength * sizeof(bool));
+  memset(olist, 0, olength * sizeof(bool));
+  bool * nlist = (bool *)malloc(nlength * sizeof(bool));
+  memset(nlist, 0, nlength * sizeof(bool));
 
-    if(differences[i * nlength + j].marked) {
+  for(int i = nlength - 1, j = olength - 1; i >= 0 &&  j >= 0;) {
+
+    if(differences[i * nlength + j].marked && !(olist[i] || nlist[j])) {
 
         offset_pair * match = new offset_pair;
         match->old_offset = differences[i * nlength + j].opos;
@@ -649,6 +654,9 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         match->next = last_match;
 
         last_match = match;
+
+        olist[i] = true;
+        nlist[j] = true;
 
     }
 
@@ -677,6 +685,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       --i;
       --j;
+
       break;
 
     default:
