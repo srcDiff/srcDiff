@@ -483,7 +483,7 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 struct difference {
 
   unsigned long long similarity;
-  int last_similarity;
+  int num_unmarked;
   bool marked;
   int direction;
   unsigned int opos;
@@ -559,6 +559,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
           min_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
 
+          // maybe need to add
           int num_unmatched = j;
           if(i > j)
             num_unmatched = i;
@@ -583,6 +584,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
           unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity + MAX_INT;
 
+          // maybe need to add
           int num_unmatched = i;
           if(j > i)
             num_unmatched = j;
