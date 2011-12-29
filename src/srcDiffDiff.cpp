@@ -348,7 +348,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 }
 
-const int MAX_INT = 100000;//(unsigned)-1 >> 1;
+const int MAX_INT = 1000000;//(unsigned)-1 >> 1;
 
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
@@ -536,8 +536,6 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   size_t mem_size = olength * nlength * sizeof(difference);
 
   difference * differences = (difference *)malloc(mem_size);
-
-  memset(differences, 0, mem_size);
 
   // still need to figure out how to track matching on each path
   for(int i = 0; i < nlength; ++i) {
