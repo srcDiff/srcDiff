@@ -349,7 +349,7 @@ struct process_options
   // options
   // output filename
   const char* srcdiff_filename;
-  const char* fname;
+  const char* file_list_name;
   const char* input_format;
   const char* output_format;
   int language;
@@ -598,12 +598,12 @@ int main(int argc, char* argv[]) {
     if (isoption(options, OPTION_FILELIST)) {
 
       // if we don't have a filelist yet, get it from the first argument
-      if (!poptions.fname && input_arg_count > 0)
-        poptions.fname = argv[input_arg_start];
+      if (!poptions.file_list_name && input_arg_count > 0)
+        poptions.file_list_name = argv[input_arg_start];
 
       // still no filelist? use stdin
-      if (!poptions.fname)
-        poptions.fname = STDIN;
+      if (!poptions.file_list_name)
+        poptions.file_list_name = STDIN;
 
       // so process the filelist
       srcdiff_filelist(translator, options, poptions, count, skipped, error, showinput, shownumber);
@@ -769,7 +769,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // filelist mode is default nested mode
       options |= OPTION_NESTED;
 
-      poptions.fname = optarg;
+      poptions.file_list_name = optarg;
       break;
 
     case REGISTER_EXT_FLAG_CODE:
@@ -1888,7 +1888,7 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
 
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(poptions.fname);
+    URIStream uriinput(poptions.file_list_name);
     char* file_one;
     /*
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
@@ -1959,7 +1959,7 @@ void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_op
     }
 
   } catch (URIStreamFileError) {
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.fname);
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.file_list_name);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
