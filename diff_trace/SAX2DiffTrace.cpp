@@ -160,8 +160,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
-    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0) {
-
       if(tracer.diff_stack.back().operation == COMMON) {
 
         tracer.collect_text_delete = false;
@@ -176,7 +174,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         tracer.collect_text_insert = false;
 
       }
-    }
 
     element curelement;
     curelement.name = (const char *)localname;
@@ -307,7 +304,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     }
 
   }
-  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0) {
+
+  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
 
@@ -323,10 +321,10 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       tracer.collect_text_insert = false;
 
     }
-  }
 
-  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE))
     tracer.elements.pop_back();
+
+  }
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
