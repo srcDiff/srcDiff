@@ -561,7 +561,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         }
 
-        int num_unmatched = 0;
+        int num_unmatched = MAX_INT;
         int direction = 0;
 
         // need to check if old similarity + unmatch this is less than unmatch and similarity
@@ -666,6 +666,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         if(i == 0 && j == 0) {
 
           min_similarity = similarity;
+          num_unmatched = unmatched;
 
         }
 
