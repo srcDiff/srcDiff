@@ -8,13 +8,6 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-struct diff_nodes {
-
-  std::vector<xNode *> & nodes_old;
-  std::vector<xNode *> & nodes_new;
-
-};
-
 bool is_change(struct edit * edit_script);
 
 // diff node accessor function

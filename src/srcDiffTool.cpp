@@ -90,9 +90,6 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize)
 {
 
-  nodes.nodes_old = nodes_old;
-  nodes.nodes_new = nodes_new;
-
   diff.prefix = uri[7];
 
   // diff tags
