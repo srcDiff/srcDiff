@@ -16,8 +16,21 @@ struct offset_pair {
   offset_pair * next;
 };
 
-#define MIN -1
+struct difference {
 
+  //unsigned long long similarity;
+  int similarity;
+  int num_unmatched;
+  bool marked;
+  int direction;
+  unsigned int opos;
+  unsigned int npos;
+
+};
+
+const int MAX_INT = (unsigned)-1 >> 1;
+
+#define MIN -1
 
 // create sets of nodes
 std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
@@ -42,6 +55,10 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new);
 int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * node_set_new);
+
+void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
+                               , std::vector<std::vector<int> *> * node_sets_new
+                               , edit * edit_script, offset_pair ** matches);
 
 void match_differences(std::vector<std::vector<int> *> * node_sets_old
                        , std::vector<std::vector<int> *> * node_sets_new

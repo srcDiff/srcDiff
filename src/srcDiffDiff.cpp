@@ -348,8 +348,6 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 }
 
-const int MAX_INT = (unsigned)-1 >> 1;
-
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
   unsigned int olength = node_set_old->size();
@@ -362,7 +360,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
 
-      return MAX_INT;
+    return MAX_INT;
 
   }
 
@@ -480,21 +478,9 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
 }
 
-struct difference {
-
-  //unsigned long long similarity;
-  int similarity;
-  int num_unmatched;
-  bool marked;
-  int direction;
-  unsigned int opos;
-  unsigned int npos;
-
-};
-
 void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
-                       , std::vector<std::vector<int> *> * node_sets_new
-                       , edit * edit_script, offset_pair ** matches) {
+                               , std::vector<std::vector<int> *> * node_sets_new
+                               , edit * edit_script, offset_pair ** matches) {
 
   /*
 
@@ -502,6 +488,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
     picking smallest.  Unmatching has a high cost 1 less than a syntax mismatch.  So, it is chosen over
     a syntax mismatch.  Not sure yet, but left and diagonal probably add cost, and top might be a straight copy
     or a copy plus a unmatch.
+
+    Errata: Now minimizing unmatched then minimizing similarity
 
   */
 
@@ -525,7 +513,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     }
 
-  fprintf(stderr, "HERE\n");
+    fprintf(stderr, "HERE\n");
   */
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -542,153 +530,153 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
   // still need to figure out how to track matching on each path
   for(int i = 0; i < nlength; ++i) {
 
-      for(int j = 0; j < olength; ++j) {
+    for(int j = 0; j < olength; ++j) {
 
-        //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
-        //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
+      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
+      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
 
-        int similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + j)
-                                            , node_sets_new->at(edit_next->offset_sequence_two + i));
+      int similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + j)
+                                          , node_sets_new->at(edit_next->offset_sequence_two + i));
 
-        //unsigned long long min_similarity = (unsigned long long)-1;
-        int min_similarity = MAX_INT;
-        int unmatched = 0; 
+      //unsigned long long min_similarity = (unsigned long long)-1;
+      int min_similarity = MAX_INT;
+      int unmatched = 0;
 
-        if(similarity == MAX_INT) {
+      if(similarity == MAX_INT) {
 
-          similarity = 0;
-          unmatched = 1;
-
-        }
-
-        int num_unmatched = MAX_INT;
-        int direction = 0;
-
-        // need to check if old similarity + unmatch this is less than unmatch and similarity
-        if(j > 0) {
-
-          //min_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
-          min_similarity = differences[i * olength + (j - 1)].similarity;
-          num_unmatched = differences[i * olength + (j - 1)].num_unmatched + 1;
-
-          int temp_num_unmatched = j;
-          if(i > j)
-            temp_num_unmatched = i;
-
-          temp_num_unmatched += unmatched;
-
-          //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
-
-          //if(temp_similarity < min_similarity) {
-          if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
-
-            //min_similarity = temp_similarity;
-            min_similarity = similarity;
-            num_unmatched = temp_num_unmatched;
-
-          }
-
-          direction = 1;
-
-         }
-
-        // need to check if old similarity + unmatch this is less than unmatch and similarity
-        if(i > 0) {
-
-          if(direction == 0)
-            direction = 2;
-
-          //unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity + MAX_INT;
-          int temp_similarity = differences[(i - 1) * olength + j].similarity;
-          int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
-
-          int temp_num_unmatched_match = i;
-          if(j > i)
-            temp_num_unmatched_match = j;
-
-          temp_num_unmatched_match += unmatched;
-
-          //unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
-
-          //if(temp_similarity_match < temp_similarity) {
-          if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity < temp_similarity)) {
-
-            temp_similarity = similarity;
-            temp_num_unmatched = temp_num_unmatched_match;
-
-          }
-
-          //if(temp_similarity < min_similarity) {
-          if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
-
-            min_similarity = temp_similarity;
-            num_unmatched = temp_num_unmatched;
-
-            direction = 2;
-             
-          }
-
-        }
-
-        if(i > 0 && j > 0) {
-
-          //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-          int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-          int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
-
-          //if(temp_similarity < min_similarity) {
-          if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < min_similarity)) {
-
-            min_similarity = temp_similarity;
-            num_unmatched = temp_num_unmatched;
-            direction = 3;
-            
-          }
-
-        }
-
-        if(direction == 1) {
-          //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-          //differences[i * olength + (j - 1)].marked = marked_left;
-          //differences[i * olength + (j - 1)].last_similarity = last_similarity_left;
-
-        } else if(direction == 2) {
-          //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-          //differences[(i - 1) * olength + j].marked = marked_top;
-          //differences[(i - 1) * olength + j].last_similarity = last_similarity_top;
-
-        } else {
-
-          //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
-        }
-
-        if(i == 0 && j == 0) {
-
-          min_similarity = similarity;
-          num_unmatched = unmatched;
-
-        }
-
-        if(unmatched != 1) {
-
-          differences[i * olength + j].marked = true;
-
-        } else {
-
-          differences[i * olength + j].marked = false;
-
-        }
-
-        //fprintf(stderr, "HERE: %s %s %d %llu\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
-
-        differences[i * olength + j].similarity = min_similarity;
-        differences[i * olength + j].num_unmatched = num_unmatched;
-        differences[i * olength + j].opos = j;
-        differences[i * olength + j].npos = i;
-        differences[i * olength + j].direction = direction;
+        similarity = 0;
+        unmatched = 1;
 
       }
+
+      int num_unmatched = MAX_INT;
+      int direction = 0;
+
+      // need to check if old similarity + unmatch this is less than unmatch and similarity
+      if(j > 0) {
+
+        //min_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
+        min_similarity = differences[i * olength + (j - 1)].similarity;
+        num_unmatched = differences[i * olength + (j - 1)].num_unmatched + 1;
+
+        int temp_num_unmatched = j;
+        if(i > j)
+          temp_num_unmatched = i;
+
+        temp_num_unmatched += unmatched;
+
+        //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
+
+        //if(temp_similarity < min_similarity) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
+
+          //min_similarity = temp_similarity;
+          min_similarity = similarity;
+          num_unmatched = temp_num_unmatched;
+
+        }
+
+        direction = 1;
+
+      }
+
+      // need to check if old similarity + unmatch this is less than unmatch and similarity
+      if(i > 0) {
+
+        if(direction == 0)
+          direction = 2;
+
+        //unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity + MAX_INT;
+        int temp_similarity = differences[(i - 1) * olength + j].similarity;
+        int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
+
+        int temp_num_unmatched_match = i;
+        if(j > i)
+          temp_num_unmatched_match = j;
+
+        temp_num_unmatched_match += unmatched;
+
+        //unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
+
+        //if(temp_similarity_match < temp_similarity) {
+        if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity < temp_similarity)) {
+
+          temp_similarity = similarity;
+          temp_num_unmatched = temp_num_unmatched_match;
+
+        }
+
+        //if(temp_similarity < min_similarity) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
+
+          min_similarity = temp_similarity;
+          num_unmatched = temp_num_unmatched;
+
+          direction = 2;
+
+        }
+
+      }
+
+      if(i > 0 && j > 0) {
+
+        //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
+        int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
+        int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
+
+        //if(temp_similarity < min_similarity) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < min_similarity)) {
+
+          min_similarity = temp_similarity;
+          num_unmatched = temp_num_unmatched;
+          direction = 3;
+
+        }
+
+      }
+
+      if(direction == 1) {
+        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+        //differences[i * olength + (j - 1)].marked = marked_left;
+        //differences[i * olength + (j - 1)].last_similarity = last_similarity_left;
+
+      } else if(direction == 2) {
+        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+        //differences[(i - 1) * olength + j].marked = marked_top;
+        //differences[(i - 1) * olength + j].last_similarity = last_similarity_top;
+
+      } else {
+
+        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
+      }
+
+      if(i == 0 && j == 0) {
+
+        min_similarity = similarity;
+        num_unmatched = unmatched;
+
+      }
+
+      if(unmatched != 1) {
+
+        differences[i * olength + j].marked = true;
+
+      } else {
+
+        differences[i * olength + j].marked = false;
+
+      }
+
+      //fprintf(stderr, "HERE: %s %s %d %llu\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
+
+      differences[i * olength + j].similarity = min_similarity;
+      differences[i * olength + j].num_unmatched = num_unmatched;
+      differences[i * olength + j].opos = j;
+      differences[i * olength + j].npos = i;
+      differences[i * olength + j].direction = direction;
+
+    }
 
   }
 
@@ -702,16 +690,16 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     if(differences[i * olength + j].marked && !(olist[i] || nlist[j])) {
 
-        offset_pair * match = new offset_pair;
-        match->old_offset = differences[i * olength + j].opos;
-        match->new_offset = differences[i * olength + j].npos;
-        match->similarity = differences[i * olength + j].similarity;
-        match->next = last_match;
+      offset_pair * match = new offset_pair;
+      match->old_offset = differences[i * olength + j].opos;
+      match->new_offset = differences[i * olength + j].npos;
+      match->similarity = differences[i * olength + j].similarity;
+      match->next = last_match;
 
-        last_match = match;
+      last_match = match;
 
-        olist[i] = true;
-        nlist[j] = true;
+      olist[i] = true;
+      nlist[j] = true;
 
     }
 
@@ -749,7 +737,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     }
 
-  } 
+  }
 
   *matches = last_match;
 
