@@ -24,7 +24,8 @@ struct reader_state {
   int stream_source;
   unsigned int last_output;
 
-  // just a pointer not on stack
+  std::vector<xNode *> & nodes;
+
   std::vector<diff_set *> open_diff;
 
 };
