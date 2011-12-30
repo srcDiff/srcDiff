@@ -414,8 +414,8 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
     //return olength + nlength;
 
-    if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
-      return MIN;
+    //if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
+    //return MIN;
 
     unsigned int leftptr;
     for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size()
@@ -911,17 +911,10 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                      rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
                      , edit_next->offset_sequence_two + matches->new_offset - 1, wstate);
 
-    // correct could only be whitespace
-    if(matches->similarity == MIN) {
+    if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
+                    , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
+       && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-      output_common(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
-
-                    , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1
-                    , wstate);
-
-    } else if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
-                           , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
-              && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
       if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                                                                 , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
 
