@@ -577,6 +577,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
           //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
 
+          //if(temp_similarity < min_similarity) {
           if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
 
             //min_similarity = temp_similarity;
@@ -595,23 +596,31 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
           if(direction == 0)
             direction = 2;
 
-          unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity + MAX_INT;
+          //unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity + MAX_INT;
+          unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity;
+          int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
 
-          int num_unmatched = i;
+          int temp_num_unmatched_match = i;
           if(j > i)
-            num_unmatched = j;
+            temp_num_unmatched_match = j;
 
-          unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
+          temp_num_unmatched_match += unmatched;
 
-          if(temp_similarity_match < temp_similarity) {
+          //unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
 
-            temp_similarity = temp_similarity_match;
-            //marked_top = false;
+          //if(temp_similarity_match < temp_similarity) {
+          if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity < temp_similarity)) {
+
+            temp_similarity = similarity;
+            temp_num_unmarched = temp_num_unmatched_match;
 
           }
 
-          if(temp_similarity < min_similarity) {
+          //if(temp_similarity < min_similarity) {
+          if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
+
             min_similarity = temp_similarity;
+            num_unmarched = temp_num_unmatched;
 
             direction = 2;
              
@@ -622,9 +631,10 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
         if(i > 0 && j > 0) {
 
           unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-          int temp_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
+          int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
 
-          if(temp_similarity < min_similarity) {
+          //if(temp_similarity < min_similarity) {
+          if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < min_similarity)) {
 
             min_similarity = temp_similarity;
             direction = 3;
