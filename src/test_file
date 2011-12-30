@@ -1,16 +1,27 @@
 #!/bin/bash
 
-if [[ ! ( -f $1 ) ]]
+run="yes"
+
+if [[ ! -f $1 ]]
 then
 
-    echo "\'$1\' Does not exist."
+    echo "'$1' Does not exist."
+    run="no"
 
 fi
 
 if [[ ! -f $2 ]]
 then
 
-    echo "\'$2\' Does not exist."
+    echo "'$2' Does not exist."
+    run="no"
+
+fi
+
+if [[ $run == "no" ]]
+then
+
+    exit
 
 fi
 
