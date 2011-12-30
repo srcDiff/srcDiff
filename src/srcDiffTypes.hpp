@@ -19,7 +19,9 @@ struct diff_set {
 };
 
 // stores information on state of a single file
-struct reader_state {
+class reader_state {
+
+public:
 
   reader_state(int stream_source, std::vector<xNode *> nodes) 
     : stream_source(stream_source), last_output(0), nodes(nodes) { }
