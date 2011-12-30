@@ -10,8 +10,8 @@
 
 struct diff_nodes {
 
-  std::vector<xNode *> nodes_old;
-  std::vector<xNode *> nodes_new;
+  std::vector<xNode *> & nodes_old;
+  std::vector<xNode *> & nodes_new;
 
 };
 

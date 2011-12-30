@@ -32,6 +32,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#include "srcDiffUtility.hpp"
 #include "Methods.hpp"
 
 class srcDiffTool {
@@ -85,6 +86,7 @@ void startUnit(const char * language,
   METHOD_TYPE method;
   const char** uri;
   int tabsize;
+  diff_nodes nodes;
   xmlBuffer * output_srcml_file_old;
   xmlBuffer * output_srcml_file_new;
   xmlTextWriterPtr writer;

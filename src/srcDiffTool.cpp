@@ -33,7 +33,6 @@
 #include "srcDiffChange.hpp"
 #include "srcDiffOutput.hpp"
 #include "srcDiffDiff.hpp"
-#include "srcDiffUtility.hpp"
 #include "srcMLUtility.hpp"
 #include "pthread.h"
 
@@ -68,8 +67,6 @@ xNode flush;
   Base reference structure for all node comparison and output
 */
 
-diff_nodes nodes;
-
 std::vector<xNode *> nodes_old;
 std::vector<xNode *> nodes_new;
 
@@ -92,6 +89,9 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
     root_directory(directory), root_filename(filename), root_version(version),
     src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize)
 {
+
+  nodes.nodes_old = nodes_old;
+  nodes.nodes_new = nodes_new;
 
   diff.prefix = uri[7];
 
