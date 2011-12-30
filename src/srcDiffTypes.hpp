@@ -44,7 +44,16 @@ public:
 };
 
 // stores information during xml Text Writer processing
-struct writer_state {
+class writer_state {
+
+public:
+
+  void clear() {
+
+    output_diff.clear();
+
+  }
+
 
   xmlTextWriterPtr writer;
 

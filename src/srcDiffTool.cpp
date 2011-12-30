@@ -400,6 +400,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   rbuf_old.clear();
   rbuf_new.clear();
+  wstate.clear();
 
 }
 
