@@ -43,7 +43,8 @@ struct edit * copy_edit(struct edit * edit);
 
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two, int compare(const void *, const void *), const void * accessor(int, const void *), struct edit ** edit_script) {
+int shortest_edit_script(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two, int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), struct edit ** edit_script, void * context) {
+
 
   // center to start building differences
   int center = sequence_one_size;
@@ -65,7 +66,7 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
   // initialization, slide 0 along 0 diagonal and find 1st edit
   int row = 0;
   int column = 0;
-  for(; row < sequence_one_size && row < sequence_two_size && compare(accessor(row, sequence_one), accessor(row, sequence_two)) == 0; ++row)
+  for(; row < sequence_one_size && row < sequence_two_size && compare(accessor(row, sequence_one, context), accessor(row, sequence_two, context), context) == 0; ++row)
     ;
 
   // set 0 diagonal's row of distance and set beginning of script
@@ -147,7 +148,7 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
       script[diagonal] = &edit_pointers[edit_array][edit];
 
       // slide down the diagonal
-      while(row < sequence_one_size && column < sequence_two_size && compare(accessor(row, sequence_one), accessor(column, sequence_two)) == 0) {
+      while(row < sequence_one_size && column < sequence_two_size && compare(accessor(row, sequence_one, context), accessor(column, sequence_two, context), context) == 0) {
 
         ++row;
         ++column;

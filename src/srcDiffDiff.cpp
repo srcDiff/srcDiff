@@ -198,7 +198,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
   edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
 
   if(distance < 0) {
 
@@ -378,7 +378,7 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
   edit * edit_script;
   shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script);
+                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, 0);
 
   edit * edits = edit_script;
   unsigned int similarity = 0;
@@ -454,7 +454,7 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
   edit * edit_script;
   shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script);
+                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, 0);
 
   edit * edits = edit_script;
   unsigned int similarity = 0;

@@ -16,17 +16,17 @@ bool is_change(struct edit * edit_script) {
 }
 
 // diff node accessor function
-const void * node_set_index(int idx, const void *s) {
+const void * node_set_index(int idx, const void *s, const void * context) {
   std::vector<std::vector<int> *> & node_sets = *(std::vector<std::vector<int> *> *)s;
   return node_sets[idx];
 }
 
-const void * node_index(int idx, const void *s) {
+const void * node_index(int idx, const void *s, const void * context) {
   std::vector<int> & node_set = *(std::vector<int> *)s;
   return &node_set[idx];
 }
 
-int node_index_compare(const void * node1, const void * node2) {
+int node_index_compare(const void * node1, const void * node2, const void * context) {
 
   xNodePtr node_old = nodes_old.at(*(int *)node1);
   xNodePtr node_new = nodes_new.at(*(int *)node2);
@@ -102,7 +102,7 @@ bool is_text(xNodePtr node) {
 }
 
 // diff node comparison function
-int node_set_syntax_compare(const void * e1, const void * e2) {
+int node_set_syntax_compare(const void * e1, const void * e2, const void * context) {
   std::vector<int> * node_set1 = (std::vector<int> *)e1;
   std::vector<int> * node_set2 = (std::vector<int> *)e2;
 

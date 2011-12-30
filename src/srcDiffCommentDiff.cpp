@@ -85,7 +85,7 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
 
   edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
 
   if(distance < 0) {
 
@@ -212,7 +212,7 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
 
   edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
 
   if(distance < 0) {
 
@@ -342,7 +342,7 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
 
   edit * edit_script;
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
 
   if(distance < 0) {
 
