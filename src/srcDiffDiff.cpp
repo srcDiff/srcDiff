@@ -348,7 +348,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 }
 
-const int MAX_INT = 1000000;//(unsigned)-1 >> 1;
+const int MAX_INT = (unsigned)-1 >> 1;
 
 int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
 
