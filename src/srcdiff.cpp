@@ -1212,6 +1212,7 @@ void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* pat
 
   srcdiff_text(translator, path_one, path_two, 0, 0, options, language, count, skipped,
                error, showinput, shownumber);
+
 }
 
 void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two,

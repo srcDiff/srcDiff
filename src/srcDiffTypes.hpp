@@ -23,8 +23,8 @@ class reader_state {
 
 public:
 
-  reader_state(int stream_source, std::vector<xNode *> nodes) 
-    : stream_source(stream_source), last_output(0), nodes(nodes) { }
+  reader_state(int source, std::vector<xNode *> xnodes) 
+    : stream_source(source), last_output(0), nodes(xnodes) { }
 
   void clear() {
 

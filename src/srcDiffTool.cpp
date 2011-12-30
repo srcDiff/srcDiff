@@ -230,6 +230,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     Setup readers and writer.
 
   */
+
   diff_set old_diff;
   old_diff.operation = COMMON;
   rbuf_old.open_diff.push_back(&old_diff);
@@ -268,11 +269,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   diff_set output_diff;
   output_diff.operation = COMMON;
   wstate.output_diff.push_back(&output_diff);
-
-  diff_set output_diff;
-  output_diff.operation = COMMON;
-  wstate.output_diff.push_back(&output_diff);
   */
+
   /*
     unsigned int i;
     for(i = 0; i < nodes_old.size() && i < nodes_new.size(); ++i) {
