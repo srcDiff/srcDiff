@@ -542,6 +542,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
       int min_similarity = MAX_INT;
       int unmatched = 0;
 
+      // check if unmatched
       if(similarity == MAX_INT) {
 
         similarity = 0;
@@ -552,7 +553,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
       int num_unmatched = MAX_INT;
       int direction = 0;
 
-      // need to check if old similarity + unmatch this is less than unmatch and similarity
+      // check along x axis to find min difference  (Two possible either unmatch or unmatch all and add similarity
       if(j > 0) {
 
         //min_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
@@ -580,9 +581,10 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
-      // need to check if old similarity + unmatch this is less than unmatch and similarity
+      // check along y axis to find min difference  (Two possible either unmatch or unmatch all and add similarity
       if(i > 0) {
 
+        // may not have been initialized in j > 0
         if(direction == 0)
           direction = 2;
 
@@ -618,6 +620,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
+      // go along diagonal just add similarity and unmatched
       if(i > 0 && j > 0) {
 
         //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
@@ -651,6 +654,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
+      // special case starting node
       if(i == 0 && j == 0) {
 
         min_similarity = similarity;
@@ -658,6 +662,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       }
 
+      // set if marked
       if(unmatched != 1) {
 
         differences[i * olength + j].marked = true;
@@ -670,6 +675,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
       //fprintf(stderr, "HERE: %s %s %d %llu\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
 
+      // update structure
       differences[i * olength + j].similarity = min_similarity;
       differences[i * olength + j].num_unmatched = num_unmatched;
       differences[i * olength + j].opos = j;
@@ -680,6 +686,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   }
 
+  // create match linked list
   offset_pair * last_match = NULL;
   bool * olist = (bool *)malloc(olength * sizeof(bool));
   memset(olist, 0, olength * sizeof(bool));
@@ -688,6 +695,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
+    // only output marked and if has not already been output
     if(differences[i * olength + j].marked && !(olist[i] || nlist[j])) {
 
       offset_pair * match = new offset_pair;
@@ -741,6 +749,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
   *matches = last_match;
 
+  // free memory
   free(differences);
 
 }
