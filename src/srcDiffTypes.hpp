@@ -21,6 +21,17 @@ struct diff_set {
 // stores information on state of a single file
 struct reader_state {
 
+  reader_state(int stream_source, std::vector<xNode *> nodes) 
+    : stream_source(stream_source), last_output(0), nodes(nodes) { }
+
+  void clear() {
+
+    last_output = 0;
+    nodes.clear();
+    open_diff.clear();
+
+  }
+
   int stream_source;
   unsigned int last_output;
 

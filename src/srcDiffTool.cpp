@@ -87,7 +87,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
                          )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(DELETE, nodes_old), rbuf_new(INSERT, nodes_new)
 {
 
   diff.prefix = uri[7];
@@ -131,9 +131,13 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
   flush.content = "";
   flush.extra = 0;
 
-  writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
 
-  if (writer == NULL) {
+  // writer state
+  wstate.writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
+
+  wstate.method = method;
+
+  if (wstate.writer == NULL) {
     fprintf(stderr, "Unable to open file '%s' as XML\n", srcdiff_filename);
 
     exit(1);
@@ -152,8 +156,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // root unit for compound srcML documents
   if (first && ((global_options & OPTION_NESTED) > 0)) {
 
-    startUnit(0, global_options, root_directory, root_filename, root_version, uri, writer);
-    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+    startUnit(0, global_options, root_directory, root_filename, root_version, uri, wstate.writer);
+    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
 
   }
 
@@ -226,7 +230,19 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     Setup readers and writer.
 
   */
+  diff_set old_diff;
+  old_diff.operation = COMMON;
+  rbuf_old.open_diff.push_back(&old_diff);
 
+  diff_set new_diff;
+  new_diff.operation = COMMON;
+  rbuf_new.open_diff.push_back(&new_diff);
+
+  diff_set output_diff;
+  output_diff.operation = COMMON;
+  wstate.output_diff.push_back(&output_diff);
+
+  /*
   // delete reader state
   reader_state rbuf_old = { 0 };
   rbuf_old.stream_source = DELETE;
@@ -253,6 +269,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   output_diff.operation = COMMON;
   wstate.output_diff.push_back(&output_diff);
 
+  diff_set output_diff;
+  output_diff.operation = COMMON;
+  wstate.output_diff.push_back(&output_diff);
+  */
   /*
     unsigned int i;
     for(i = 0; i < nodes_old.size() && i < nodes_new.size(); ++i) {
@@ -326,7 +346,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   }
 
   Language l(language);
-  startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, writer);
+  startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, wstate.writer);
 
   // run on file level
   if(is_old || is_new)
@@ -348,8 +368,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   if(isoption(global_options, OPTION_NESTED)) {
 
-    xmlTextWriterEndElement(writer);
-    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
+    xmlTextWriterEndElement(wstate.writer);
+    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
 
   }
 
@@ -378,19 +398,19 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     }
   }
 
-  nodes_old.clear();
-  nodes_new.clear();
+  rbuf_old.clear();
+  rbuf_new.clear();
 
 }
 
 // destructor
 srcDiffTool::~srcDiffTool() {
 
-  xmlTextWriterEndElement(writer);
+  xmlTextWriterEndElement(wstate.writer);
 
   // cleanup writer
-  xmlTextWriterEndDocument(writer);
-  xmlFreeTextWriter(writer);
+  xmlTextWriterEndDocument(wstate.writer);
+  xmlFreeTextWriter(wstate.writer);
 
   // free the buffer
   xmlBufferFree(output_srcml_file_old);
