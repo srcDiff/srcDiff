@@ -1,5 +1,5 @@
 #ifndef INCLUDED_SRCDIFFUTILITY_HPP
-#define INCLUDED_SRCDIFFUTILITYS_HPP
+#define INCLUDED_SRCDIFFUTILITY_HPP
 
 #include "shortest_edit_script.h"
 

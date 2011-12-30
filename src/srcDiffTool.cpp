@@ -33,6 +33,7 @@
 #include "srcDiffChange.hpp"
 #include "srcDiffOutput.hpp"
 #include "srcDiffDiff.hpp"
+#include "srcDiffUtility.hpp"
 #include "srcMLUtility.hpp"
 #include "pthread.h"
 
@@ -66,6 +67,9 @@ xNode flush;
   Global structures to store of the collected xml nodes.
   Base reference structure for all node comparison and output
 */
+
+diff_nodes nodes;
+
 std::vector<xNode *> nodes_old;
 std::vector<xNode *> nodes_new;
 
