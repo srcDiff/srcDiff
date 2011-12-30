@@ -634,12 +634,13 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
           //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
           int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-          int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
+          int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched + 1;
 
           //if(temp_similarity < min_similarity) {
           if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < min_similarity)) {
 
             min_similarity = temp_similarity;
+            num_unmatched = temp_num_unmatched;
             direction = 3;
             
           }
@@ -906,7 +907,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches = NULL;
 
-  match_differences(node_sets_old, node_sets_new, edit_script, &matches);
+  match_differences_dynamic(node_sets_old, node_sets_new, edit_script, &matches);
 
   int last_old = 0;
   int last_new = 0;
