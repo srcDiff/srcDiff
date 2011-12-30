@@ -670,7 +670,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
         }
 
-        if(similarity != MAX_INT) {
+        if(unmatched != 1) {
 
           differences[i * olength + j].marked = true;
 
