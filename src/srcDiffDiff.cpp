@@ -754,6 +754,9 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
   *matches = last_match;
 
+  free(olist);
+  free(nlist);
+
   // free memory
   free(differences);
 
@@ -911,7 +914,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches = NULL;
 
-  match_differences(rbuf_old.nodes, node_sets_old, rbuf_new.nodes, node_sets_new, edit_script, &matches);
+  match_differences_dynamic(rbuf_old.nodes, node_sets_old, rbuf_new.nodes, node_sets_new, edit_script, &matches);
 
   int last_old = 0;
   int last_new = 0;
