@@ -389,7 +389,7 @@ void srcDiffTool::startUnit(const char * language,
                             const char* uri[],           // uri prefixes
                             xmlTextWriterPtr writer) {
 
-  if(depth == 0 && !isoption(global_options, OPTION_XMLDECL))
+  if(first && !isoption(global_options, OPTION_XMLDECL))
     xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   // start of main tag
@@ -413,13 +413,13 @@ void srcDiffTool::startUnit(const char * language,
     { UNIT_ATTRIBUTE_LANGUAGE, language },
 
     // directory attribute
-    { UNIT_ATTRIBUTE_DIRECTORY, depth == 0 && isoption(global_options, OPTION_DIRECTORY) ? root_directory : directory },
+    { UNIT_ATTRIBUTE_DIRECTORY, first && isoption(global_options, OPTION_DIRECTORY) ? root_directory : directory },
 
     // filename attribute
-    { UNIT_ATTRIBUTE_FILENAME, depth == 0 && isoption(global_options, OPTION_FILENAME) ? root_filename : filename },
+    { UNIT_ATTRIBUTE_FILENAME, first && isoption(global_options, OPTION_FILENAME) ? root_filename : filename },
 
     // version attribute
-    { UNIT_ATTRIBUTE_VERSION,  depth == 0 && isoption(global_options, OPTION_VERSION) ? root_version : version },
+    { UNIT_ATTRIBUTE_VERSION,  first && isoption(global_options, OPTION_VERSION) ? root_version : version },
 
     // position tab setting
     //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
