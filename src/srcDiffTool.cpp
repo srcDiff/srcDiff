@@ -170,7 +170,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   int is_old = 0;
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
-                                 , rbuf_old.nodes, &unit_old, is_old };
+                                 , nodes_old, &unit_old, is_old };
   pthread_t thread_old;
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
@@ -196,7 +196,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   int is_new = 0;
   create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
-                                 , rbuf_new.nodes, &unit_new, is_new };
+                                 , nodes_new, &unit_new, is_new };
 
   pthread_t thread_new;
   if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
@@ -219,11 +219,11 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
 
   if(is_old && is_old > -1)
-    node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
+    node_set_old = create_node_set(nodes_old, 0, nodes_old.size());
 
 
   if(is_new && is_new > -1)
-    node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
+    node_set_new = create_node_set(nodes_new, 0, nodes_new.size());
 
   /*
 
@@ -273,27 +273,27 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   /*
     unsigned int i;
-    for(i = 0; i < rbuf_old.nodes.size() && i < rbuf_new.nodes.size(); ++i) {
+    for(i = 0; i < nodes_old.size() && i < nodes_new.size(); ++i) {
 
-    if(rbuf_old.nodes.at(i)->type != rbuf_new.nodes.at(i)->type)
+    if(nodes_old.at(i)->type != nodes_new.at(i)->type)
     break;
 
-    if((xmlReaderTypes)rbuf_old.nodes.at(i)->type != XML_READER_TYPE_TEXT
-    && (xmlReaderTypes)rbuf_old.nodes.at(i)->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
+    if((xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_TEXT
+    && (xmlReaderTypes)nodes_old.at(i)->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
     continue;
 
-    if(strcmp(rbuf_old.nodes.at(i)->name, rbuf_new.nodes.at(i)->name) != 0)
+    if(strcmp(nodes_old.at(i)->name, nodes_new.at(i)->name) != 0)
     break;
 
-    if(strcmp(rbuf_old.nodes.at(i)->content, rbuf_new.nodes.at(i)->content) != 0)
+    if(strcmp(nodes_old.at(i)->content, nodes_new.at(i)->content) != 0)
     break;
 
     }
 
-    if(i == rbuf_old.nodes.size() && i == rbuf_new.nodes.size()) {
+    if(i == nodes_old.size() && i == nodes_new.size()) {
 
-    for(i = 0; i < rbuf_old.nodes.size(); ++i)
-    outputNode(*rbuf_old.nodes.at(i), wstate.writer);
+    for(i = 0; i < nodes_old.size(); ++i)
+    outputNode(*nodes_old.at(i), wstate.writer);
 
 
     } else {
@@ -309,13 +309,13 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   */
 
   // output srcdiff unit
-  if(!rbuf_old.nodes.empty() && !rbuf_new.nodes.empty()) {
+  if(!nodes_old.empty() && !nodes_new.empty()) {
 
     update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
     update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
     update_diff_stack(wstate.output_diff, unit_old, COMMON);
 
-  } else if(rbuf_old.nodes.empty() && rbuf_new.nodes.empty()) {
+  } else if(nodes_old.empty() && nodes_new.empty()) {
 
     update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
@@ -329,7 +329,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
     }
 
-  } else if(rbuf_old.nodes.empty()) {
+  } else if(nodes_old.empty()) {
 
     update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
     update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
@@ -378,20 +378,20 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     freeXNode(unit_new);
 
   // Because of grouping need to output a common to end grouping need to deallocate as well
-  for(unsigned int i = 0; i < rbuf_old.nodes.size(); ++i) {
+  for(unsigned int i = 0; i < nodes_old.size(); ++i) {
 
-    if(rbuf_old.nodes.at(i)->free) {
+    if(nodes_old.at(i)->free) {
 
-      freeXNode(rbuf_old.nodes.at(i));
+      freeXNode(nodes_old.at(i));
 
     }
   }
 
-  for(unsigned int i = 0; i < rbuf_new.nodes.size(); ++i) {
+  for(unsigned int i = 0; i < nodes_new.size(); ++i) {
 
-    if(rbuf_new.nodes.at(i)->free) {
+    if(nodes_new.at(i)->free) {
 
-      freeXNode(rbuf_new.nodes.at(i));
+      freeXNode(nodes_new.at(i));
 
     }
   }
