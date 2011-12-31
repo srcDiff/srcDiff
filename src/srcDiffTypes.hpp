@@ -18,6 +18,13 @@ struct diff_set {
 
 };
 
+struct diff_nodes {
+
+  std::vector<xNode *> & nodes_old;
+  std::vector<xNode *> & nodes_new;
+
+};
+
 // stores information on state of a single file
 class reader_state {
 
