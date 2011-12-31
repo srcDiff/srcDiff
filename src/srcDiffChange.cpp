@@ -12,10 +12,6 @@
 #include <string.h>
 #include <string>
 
-// global structures defined in main
-extern std::vector<xNode *> nodes_old;
-extern std::vector<xNode *> nodes_new;
-
 // more external variables
 extern xNode diff_common_start;
 extern xNode diff_common_end;
