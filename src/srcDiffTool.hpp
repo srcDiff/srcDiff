@@ -59,12 +59,11 @@ class srcDiffTool {
                int language = 0);
 
 void startUnit(const char * language,
-               OPTION_TYPE& options,             // many and varied options                                                               
-               const char* directory,       // root unit directory                                                                   
-               const char* filename,        // root unit filename                                                                    
-               const char* version,         // root unit version                                                                     
-               const char* uri[],           // uri prefixes                                                                          
-               xmlTextWriterPtr writer);
+               OPTION_TYPE& options,        // many and varied options
+               const char* directory,       // root unit directory
+               const char* filename,        // root unit filename
+               const char* version         // root unit version
+               );
 
 void outputNamespaces(const OPTION_TYPE& options);
 

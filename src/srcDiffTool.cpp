@@ -146,7 +146,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   // root unit for compound srcML documents
   if (first && ((global_options & OPTION_NESTED) > 0)) {
 
-    startUnit(0, global_options, root_directory, root_filename, root_version, uri, wstate.writer);
+    startUnit(0, global_options, root_directory, root_filename, root_version);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
 
     first = false;
@@ -306,7 +306,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   }
 
   Language l(language);
-  startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, wstate.writer);
+  startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version);
 
   first = false;
 
@@ -382,15 +382,14 @@ srcDiffTool::~srcDiffTool() {
 }
 
 void srcDiffTool::startUnit(const char * language,
-                            OPTION_TYPE& options,             // many and varied options
+                            OPTION_TYPE& options,        // many and varied options
                             const char* directory,       // root unit directory
                             const char* filename,        // root unit filename
-                            const char* version,         // root unit version
-                            const char* uri[],           // uri prefixes
-                            xmlTextWriterPtr writer) {
+                            const char* version         // root unit version
+                            ) {
 
   if(first && !isoption(global_options, OPTION_XMLDECL))
-    xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+    xmlTextWriterStartDocument(wstate.writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   // start of main tag
   std::string maintag = uri[0];
@@ -399,7 +398,7 @@ void srcDiffTool::startUnit(const char * language,
   maintag += "unit";
 
   // start of main tag
-  xmlTextWriterStartElement(writer, BAD_CAST maintag.c_str());
+  xmlTextWriterStartElement(wstate.writer, BAD_CAST maintag.c_str());
 
   // outer units have namespaces
   if (!isoption(options, OPTION_NAMESPACEDECL)) {
@@ -431,7 +430,7 @@ void srcDiffTool::startUnit(const char * language,
     if (!attrs[i][1])
       continue;
 
-    xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+    xmlTextWriterWriteAttribute(wstate.writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
   }
 
 }
