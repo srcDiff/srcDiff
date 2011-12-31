@@ -189,7 +189,8 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
 
 }
 
-int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * match, int operation) {
+int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & node_set
+               , std::vector<xNodePtr> & nodes_match, std::vector<int> * match, int operation) {
 
   int match_pos = 0;
   int match_similarity = 0;
@@ -197,9 +198,9 @@ int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * ma
 
     match_pos = 0;
     if(operation == DELETE)
-      match_similarity = compute_similarity(node_set.at(0), match);
+      match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
     else
-      match_similarity = compute_similarity(match, node_set.at(0));
+      match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
 
   } else
     return 1;
@@ -208,7 +209,8 @@ int best_match(std::vector<std::vector<int> *> & node_set, std::vector<int> * ma
 
     int similarity;
     if((similarity =
-        (operation == DELETE) ? compute_similarity(node_set.at(i), match) : compute_similarity(match, node_set.at(i)))
+        (operation == DELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
+        : compute_similarity(nodes_match, match, nodes, node_set.at(i)))
        < match_similarity) {
 
       match_pos = i;
@@ -235,7 +237,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_old, structure_old->at(1), structure_old->back()
                                                                , nodes_new.at(structure_new->at(0)));
 
-    unsigned int match = best_match(node_set, structure_new, DELETE);
+    unsigned int match = best_match(nodes_old, node_set, nodes_new, structure_new, DELETE);
 
     if(match < node_set.size()) {
 
@@ -276,7 +278,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_new, structure_new->at(1), structure_new->back()
                                                                , nodes_old.at(structure_old->at(0)));
 
-    unsigned int match = best_match(node_set, structure_old, INSERT);
+    unsigned int match = best_match(nodes_new, node_set, nodes_old, structure_old, INSERT);
 
     if(match < node_set.size()) {
 

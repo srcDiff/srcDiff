@@ -151,12 +151,12 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
                      , writer_state & wstate) {
 
 
-  if(strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr_stmt") != 0
-     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "decl_stmt") != 0
-     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
+  if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "expr_stmt") != 0
+     && strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "decl_stmt") != 0
+     && strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
     return true;
 
-  unsigned int similarity = compute_similarity(node_sets_old->at(start_old), node_sets_new->at(start_new));
+  unsigned int similarity = compute_similarity(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
 
   unsigned int olength = node_sets_old->at(start_old)->size();
   unsigned int nlength = node_sets_new->at(start_new)->size();
@@ -164,13 +164,13 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
   unsigned int size_old = 0;
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(nodes_old.at(node_sets_old->at(start_old)->at(i))))
+    if(is_text(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))))
       ++size_old;
 
   unsigned int size_new = 0;
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(nodes_new.at(node_sets_new->at(start_new)->at(i))))
+    if(is_text(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))))
       ++size_new;
 
   unsigned int min_length = size_old;
@@ -243,9 +243,9 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
              || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
         // syntax match
-        if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
-                        , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
-           && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
+        if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
+                        , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0
+           && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one)->at(0))->type != XML_READER_TYPE_TEXT) {
 
           if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one
                                                                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two, wstate)) {
@@ -263,12 +263,12 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
         } else {
 
           if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
-                         , nodes_old, node_sets_new->at(edit_next->offset_sequence_two), nodes_new)) {
+                         , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two), INSERT, wstate);
 
           } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
-                                , nodes_new, node_sets_old->at(edits->offset_sequence_one), nodes_old)) {
+                                , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
                           , DELETE, wstate);
@@ -348,12 +348,13 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 }
 
-int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
+int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       std::vector<int> * node_set_new) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
 
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
@@ -403,7 +404,8 @@ int compute_similarity(std::vector<int> * node_set_old, std::vector<int> * node_
 
 }
 
-int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * node_set_new) {
+int compute_similarity_old(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
+                           std::vector<int> * node_set_new) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
@@ -478,8 +480,8 @@ int compute_similarity_old(std::vector<int> * node_set_old, std::vector<int> * n
 
 }
 
-void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
-                               , std::vector<std::vector<int> *> * node_sets_new
+void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<std::vector<int> *> * node_sets_old
+                               , std::vector<xNodePtr> & nodes_new, std::vector<std::vector<int> *> * node_sets_new
                                , edit * edit_script, offset_pair ** matches) {
 
   /*
@@ -501,7 +503,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
 
     }
 
@@ -509,7 +511,7 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
     for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
 
     }
 
@@ -535,8 +537,8 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
       //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
       //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
 
-      int similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + j)
-                                          , node_sets_new->at(edit_next->offset_sequence_two + i));
+      int similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + j)
+                                          , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + i));
 
       //unsigned long long min_similarity = (unsigned long long)-1;
       int min_similarity = MAX_INT;
@@ -754,9 +756,10 @@ void match_differences_dynamic(std::vector<std::vector<int> *> * node_sets_old
 
 }
 
-void match_differences(std::vector<std::vector<int> *> * node_sets_old
-                       , std::vector<std::vector<int> *> * node_sets_new
+void match_differences(std::vector<xNodePtr> & nodes_old, std::vector<std::vector<int> *> * node_sets_old
+                               , std::vector<xNodePtr> & nodes_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, offset_pair ** matches) {
+
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
@@ -768,14 +771,14 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
   if(edits->length > edit_next->length) {
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
-      int min_similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
-                                              , node_sets_new->at(edit_next->offset_sequence_two + new_pos));
+      int min_similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + old_pos)
+                                              , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + new_pos));
       int save_pos = old_pos;
       for(int pos = old_pos + 1; pos < edits->length; ++pos) {
 
         int similarity = 0;
-        if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + pos)
-                                            , node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
+        if((similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + pos)
+                                            , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + new_pos))) < min_similarity) {
 
           old_pos = pos;
           min_similarity = similarity;
@@ -820,15 +823,15 @@ void match_differences(std::vector<std::vector<int> *> * node_sets_old
 
     for(int old_pos = 0, new_pos = 0; old_pos < edits->length && new_pos < edit_next->length; ++old_pos, ++new_pos) {
 
-      int min_similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
-                                              , node_sets_new->at(edit_next->offset_sequence_two + new_pos));
+      int min_similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + old_pos)
+                                              , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + new_pos));
 
       int save_pos = new_pos;
       for(int pos = new_pos + 1; pos < edit_next->length; ++pos) {
 
         int similarity = 0;
-        if((similarity = compute_similarity(node_sets_old->at(edits->offset_sequence_one + old_pos)
-                                            , node_sets_new->at(edit_next->offset_sequence_two + pos))) < min_similarity) {
+        if((similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + old_pos)
+                                            , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + pos))) < min_similarity) {
 
           new_pos = pos;
           min_similarity = similarity;
@@ -905,7 +908,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches = NULL;
 
-  match_differences_dynamic(node_sets_old, node_sets_new, edit_script, &matches);
+  match_differences_dynamic(rbuf_old.nodes, node_sets_old, rbuf_new.nodes, node_sets_new, edit_script, &matches);
 
   int last_old = 0;
   int last_new = 0;
@@ -920,9 +923,9 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                      rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
                      , edit_next->offset_sequence_two + matches->new_offset - 1, wstate);
 
-    if(node_compare(nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
-                    , nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
-       && (xmlReaderTypes)nodes_old.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
+    if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
+                    , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
+       && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
 
       if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
                                                                 , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
@@ -940,12 +943,12 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     } else {
 
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
-                     , nodes_old, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), nodes_new)) {
+                     , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), rbuf_new.nodes)) {
 
         output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), INSERT, wstate);
 
       } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
-                            , nodes_new, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), nodes_old)) {
+                            , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_old.nodes)) {
 
         output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), DELETE, wstate);
 
@@ -989,22 +992,22 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, nodes_old.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
 
   ++rbuf_old.last_output;
   ++rbuf_new.last_output;
 
   // compare subset of nodes
 
-  if(strcmp((const char *)nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+  if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_old, node_sets_old->at(start_old)->at(1)
+      = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new, node_sets_new->at(start_new)->at(1)
+      = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
@@ -1017,11 +1020,11 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(nodes_old, node_sets_old->at(start_old)->at(1)
+      = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->back());
 
     std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(nodes_new, node_sets_new->at(start_new)->at(1)
+      = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->back());
 
     output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
