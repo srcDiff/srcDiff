@@ -402,7 +402,7 @@ void srcDiffTool::startUnit(const char * language,
 
   // outer units have namespaces
   if (!isoption(options, OPTION_NAMESPACEDECL)) {
-    outputNamespaces(options, depth, true);
+    outputNamespaces(options, depth);
   }
 
   // list of attributes
@@ -437,7 +437,7 @@ void srcDiffTool::startUnit(const char * language,
 
 }
 
-void srcDiffTool::outputNamespaces(const OPTION_TYPE& options, int depth, bool outer) {
+void srcDiffTool::outputNamespaces(const OPTION_TYPE& options, int depth) {
 
   // figure out which namespaces are needed
   char const * const ns[] = {
@@ -446,7 +446,7 @@ void srcDiffTool::outputNamespaces(const OPTION_TYPE& options, int depth, bool o
     (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
-    isoption(OPTION_CPP, options) && (isoption(OPTION_NESTED, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+    isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
     (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
