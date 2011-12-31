@@ -402,7 +402,7 @@ void srcDiffTool::startUnit(const char * language,
 
   // outer units have namespaces
   if (!isoption(options, OPTION_NAMESPACEDECL)) {
-    outputNamespaces(writer, options, depth, true);
+    outputNamespaces(options, depth, true);
   }
 
   // list of attributes
@@ -437,7 +437,7 @@ void srcDiffTool::startUnit(const char * language,
 
 }
 
-void srcDiffTool::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
+void srcDiffTool::outputNamespaces(const OPTION_TYPE& options, int depth, bool outer) {
 
   // figure out which namespaces are needed
   char const * const ns[] = {
@@ -478,7 +478,7 @@ void srcDiffTool::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
       prefix += uri[i];
     }
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
+    xmlTextWriterWriteAttribute(wstate.writer, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
   }
 }
 
