@@ -74,10 +74,10 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
     diff_old_start.properties = &diff_type;
     diff_new_start.properties = &diff_type;
 
-    if(0 && is_white_space(nodes_old.at(begin_old)) && is_white_space(nodes_new.at(begin_new))) {
+    if(0 && is_white_space(rbuf_old.nodes.at(begin_old)) && is_white_space(rbuf_new.nodes.at(begin_new))) {
 
-      const char * content_old = nodes_old.at(begin_old)->content;
-      const char * content_new = nodes_new.at(begin_new)->content;
+      const char * content_old = rbuf_old.nodes.at(begin_old)->content;
+      const char * content_new = rbuf_new.nodes.at(begin_new)->content;
 
       int size_old = strlen((const char *)content_old);
       int size_new = strlen((const char *)content_new);
@@ -97,21 +97,21 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
       if(offset_old < size_old) {
 
         // shrink
-        nodes_old.at(begin_old)->content = content_old + offset_old;
+        rbuf_old.nodes.at(begin_old)->content = content_old + offset_old;
         //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
 
       } else {
 
-        nodes_old.at(begin_old)->content = "";
+        rbuf_old.nodes.at(begin_old)->content = "";
       }
 
       if(offset_new < size_new) {
 
-        nodes_new.at(begin_new)->content = content_new + offset_new;
+        rbuf_new.nodes.at(begin_new)->content = content_new + offset_new;
 
       } else {
 
-        nodes_new.at(begin_new)->content = "";
+        rbuf_new.nodes.at(begin_new)->content = "";
       }
 
 
@@ -125,7 +125,7 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
     output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
     for(unsigned int i = begin_old; i < end_old; ++i)
-      output_node(rbuf_old, rbuf_new, nodes_old.at(i), DELETE, wstate);
+      output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), DELETE, wstate);
 
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
@@ -140,7 +140,7 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
     output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
     for(unsigned int i = begin_new; i < end_new; ++i)
-      output_node(rbuf_old, rbuf_new, nodes_new.at(i), INSERT, wstate);
+      output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(i), INSERT, wstate);
 
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
