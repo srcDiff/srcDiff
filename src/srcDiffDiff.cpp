@@ -537,9 +537,6 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
     for(int j = 0; j < olength; ++j) {
 
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
-
       int similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + j)
                                           , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + i));
 
@@ -694,6 +691,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
   // create match linked list
   offset_pair * last_match = NULL;
   bool * olist = (bool *)malloc(olength * sizeof(bool));
+
   memset(olist, 0, olength * sizeof(bool));
   bool * nlist = (bool *)malloc(nlength * sizeof(bool));
   memset(nlist, 0, nlength * sizeof(bool));
@@ -701,9 +699,10 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
   for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
     // only output marked and if has not already been output
-    if(differences[i * olength + j].marked && !(olist[i] || nlist[j])) {
+    if(differences[i * olength + j].marked && !(olist[j] || nlist[i])) {
 
       offset_pair * match = new offset_pair;
+
       match->old_offset = differences[i * olength + j].opos;
       match->new_offset = differences[i * olength + j].npos;
       match->similarity = differences[i * olength + j].similarity;
@@ -759,7 +758,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
   // free memory
   free(differences);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 void match_differences(std::vector<xNodePtr> & nodes_old, std::vector<std::vector<int> *> * node_sets_old
