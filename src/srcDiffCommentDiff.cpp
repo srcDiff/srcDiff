@@ -5,10 +5,6 @@
 #include "srcDiffChange.hpp"
 #include "srcDiffDiff.hpp"
 
-// global structures defined in main
-extern std::vector<xNode *> nodes_old;
-extern std::vector<xNode *> nodes_new;
-
 /*
   Collect paragraphs
 */
@@ -127,11 +123,11 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
 
         // collect subset of nodes
         std::vector<std::vector<int> *> next_node_set_old
-          = create_node_set(nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+          = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         std::vector<std::vector<int> *> next_node_set_new
-          = create_node_set(nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+          = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare as lines
@@ -255,11 +251,11 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
 
         // collect subset of nodes
         std::vector<std::vector<int> *> next_node_set_old
-          = create_node_set(nodes_old, node_sets_old->at(edits->offset_sequence_one)->at(0)
+          = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         std::vector<std::vector<int> *> next_node_set_new
-          = create_node_set(nodes_new, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+          = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare on word basis
