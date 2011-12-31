@@ -193,8 +193,10 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
   //fprintf(stderr, "HERE_DOUBLE\n");
 
   edit * edit_script;
+
+  diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
 
   if(distance < 0) {
 
@@ -350,6 +352,8 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
 
+  diff_nodes dnodes = { nodes_old, nodes_new };
+
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
 
@@ -375,7 +379,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   edit * edit_script;
   shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, 0);
+                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, &dnodes);
 
   edit * edits = edit_script;
   unsigned int similarity = 0;
@@ -405,6 +409,8 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, std::vector<int> *
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
+
+  diff_nodes dnodes = { nodes_old, nodes_new };
 
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
@@ -452,7 +458,7 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, std::vector<int> *
 
   edit * edit_script;
   shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, 0);
+                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, &dnodes);
 
   edit * edits = edit_script;
   unsigned int similarity = 0;
