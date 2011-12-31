@@ -104,8 +104,8 @@ $(OBJ_DIR)srcdiff.o : srcdiff.cpp
 $(OBJ_DIR)srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcDiffUtility.o : srcDiffUtility.cpp srcDiffUtility.hpp shortest_edit_script.h
-	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+$(OBJ_DIR)srcDiffUtility.o : srcDiffUtility.cpp srcDiffUtility.hpp srcDiffTypes.hpp shortest_edit_script.h
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcDiffTool.o : srcDiffTool.cpp srcDiffTool.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@

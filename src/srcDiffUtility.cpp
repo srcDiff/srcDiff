@@ -1,4 +1,5 @@
 #include "srcDiffUtility.hpp"
+#include "srcDiffTypes.hpp"
 #include <string.h>
 #include <vector>
 #include <string>
@@ -28,8 +29,10 @@ const void * node_index(int idx, const void *s, const void * context) {
 
 int node_index_compare(const void * node1, const void * node2, const void * context) {
 
-  xNodePtr node_old = nodes_old.at(*(int *)node1);
-  xNodePtr node_new = nodes_new.at(*(int *)node2);
+  diff_nodes & dnodes = *(diff_nodes *)context;
+
+  xNodePtr node_old = dnodes.nodes_old.at(*(int *)node1);
+  xNodePtr node_new = dnodes.nodes_new.at(*(int *)node2);
 
   return node_compare(node_old, node_new);
 }
