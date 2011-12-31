@@ -3,9 +3,6 @@
 #include <srcMLTranslator.hpp>
 #include <Language.hpp>
 
-extern std::vector<xNode *> nodes_old;
-extern std::vector<xNode *> nodes_new;
-
 extern xmlNs diff;
 
 // converts source code to srcML
