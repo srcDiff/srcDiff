@@ -209,7 +209,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 
   }
 
-
   if(is_old && is_old > -1)
     node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
 
@@ -234,34 +233,6 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   diff_set output_diff;
   output_diff.operation = COMMON;
   wstate.output_diff.push_back(&output_diff);
-
-  /*
-  // delete reader state
-  reader_state rbuf_old = { 0 };
-  rbuf_old.stream_source = DELETE;
-
-  diff_set old_diff;
-  old_diff.operation = COMMON;
-  rbuf_old.open_diff.push_back(&old_diff);
-
-  // insert reader state
-  reader_state rbuf_new = { 0 };
-  rbuf_new.stream_source = INSERT;
-
-  diff_set new_diff;
-  new_diff.operation = COMMON;
-  rbuf_new.open_diff.push_back(&new_diff);
-
-  // writer state
-  writer_state wstate = { 0 };
-  wstate.writer = writer;
-
-  wstate.method = method;
-
-  diff_set output_diff;
-  output_diff.operation = COMMON;
-  wstate.output_diff.push_back(&output_diff);
-  */
 
   /*
     unsigned int i;
