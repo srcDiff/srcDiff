@@ -62,8 +62,6 @@ const char * whitespace = "whitespace";
 // special flush node
 xNode flush;
 
-void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
-
 // constructor
 srcDiffTool::srcDiffTool(int language,                // programming language of source code
                          const char* src_encoding,    // text encoding of source code
@@ -404,7 +402,7 @@ void srcDiffTool::startUnit(const char * language,
 
   // outer units have namespaces
   if (!isoption(options, OPTION_NAMESPACEDECL)) {
-    outputNamespaces(writer, options, depth, true, uri);
+    outputNamespaces(writer, options, depth, true);
   }
 
   // list of attributes
@@ -439,7 +437,7 @@ void srcDiffTool::startUnit(const char * language,
 
 }
 
-void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
+void srcDiffTool::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
 
   // figure out which namespaces are needed
   char const * const ns[] = {
@@ -475,9 +473,9 @@ void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int dep
       continue;
 
     std::string prefix = "xmlns";
-    if (num2prefix[i][0] != '\0') {
+    if (uri[i][0] != '\0') {
       prefix += ':';
-      prefix += num2prefix[i];
+      prefix += uri[i];
     }
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
