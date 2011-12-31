@@ -106,6 +106,9 @@ bool is_text(xNodePtr node) {
 
 // diff node comparison function
 int node_set_syntax_compare(const void * e1, const void * e2, const void * context) {
+
+  diff_nodes & dnodes = *(diff_nodes *)context;
+
   std::vector<int> * node_set1 = (std::vector<int> *)e1;
   std::vector<int> * node_set2 = (std::vector<int> *)e2;
 
@@ -113,20 +116,20 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
 
     // string consecutive non whitespace text nodes
     // TODO:  Why create the string?  Just compare directly as you go through
-    if(is_text(nodes_old.at(node_set1->at(i))) && is_text(nodes_new.at(node_set2->at(j)))) {
+    if(is_text(dnodes.nodes_old.at(node_set1->at(i))) && is_text(dnodes.nodes_new.at(node_set2->at(j)))) {
 
       std::string text1 = "";
-      for(; i < node_set1->size() && is_text(nodes_old.at(node_set1->at(i))); ++i)
-        text1 += (const char *)nodes_old.at(node_set1->at(i))->content;
+      for(; i < node_set1->size() && is_text(dnodes.nodes_old.at(node_set1->at(i))); ++i)
+        text1 += (const char *)dnodes.nodes_old.at(node_set1->at(i))->content;
 
       std::string text2 = "";
-      for(; j < node_set2->size() && is_text(nodes_new.at(node_set2->at(j))); ++j)
-        text2 += (const char *)nodes_new.at(node_set2->at(j))->content;
+      for(; j < node_set2->size() && is_text(dnodes.nodes_new.at(node_set2->at(j))); ++j)
+        text2 += (const char *)dnodes.nodes_new.at(node_set2->at(j))->content;
 
       if(text1 != text2)
         return 1;
 
-    } else if(node_compare(nodes_old.at(node_set1->at(i)), nodes_new.at(node_set2->at(j))))
+    } else if(node_compare(dnodes.nodes_old.at(node_set1->at(i)), dnodes.nodes_new.at(node_set2->at(j))))
       return 1;
     else {
 
