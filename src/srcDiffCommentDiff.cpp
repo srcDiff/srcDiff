@@ -80,8 +80,11 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xNodePtr> & 
 void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
   edit * edit_script;
+
+  diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
+
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
 
   if(distance < 0) {
 
@@ -207,8 +210,11 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
 void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
   edit * edit_script;
+
+  diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
+
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
 
   if(distance < 0) {
 
@@ -337,8 +343,11 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
   //fprintf(stderr, "HERE_DOUBLE\n");
 
   edit * edit_script;
+
+  diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
+
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, 0);
+                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
 
   if(distance < 0) {
 
