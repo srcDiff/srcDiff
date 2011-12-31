@@ -87,7 +87,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
                          )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(DELETE, nodes_old), rbuf_new(INSERT, nodes_new)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(DELETE), rbuf_new(INSERT)
 {
 
   diff.prefix = uri[7];

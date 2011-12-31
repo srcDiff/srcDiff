@@ -23,8 +23,8 @@ class reader_state {
 
 public:
 
-  reader_state(int source, std::vector<xNode *> xnodes) 
-    : stream_source(source), last_output(0), nodes(xnodes) { }
+  reader_state(int source) 
+    : stream_source(source), last_output(0) { }
 
   void clear() {
 
@@ -37,7 +37,7 @@ public:
   int stream_source;
   unsigned int last_output;
 
-  std::vector<xNode *> & nodes;
+  std::vector<xNode *> nodes;
 
   std::vector<diff_set *> open_diff;
 
