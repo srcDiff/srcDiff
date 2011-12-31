@@ -759,7 +759,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
   // free memory
   free(differences);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 }
 
 void match_differences(std::vector<xNodePtr> & nodes_old, std::vector<std::vector<int> *> * node_sets_old
