@@ -690,9 +690,10 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
   // create match linked list
   offset_pair * last_match = NULL;
-  bool * olist = (bool *)malloc(olength * sizeof(bool));
 
+  bool * olist = (bool *)malloc(olength * sizeof(bool));
   memset(olist, 0, olength * sizeof(bool));
+
   bool * nlist = (bool *)malloc(nlength * sizeof(bool));
   memset(nlist, 0, nlength * sizeof(bool));
 
@@ -710,8 +711,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
       last_match = match;
 
-      olist[i] = true;
-      nlist[j] = true;
+      olist[j] = true;
+      nlist[i] = true;
 
     }
 
