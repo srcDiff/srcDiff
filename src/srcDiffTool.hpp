@@ -66,7 +66,7 @@ void startUnit(const char * language,
                const char* uri[],           // uri prefixes                                                                          
                xmlTextWriterPtr writer);
 
-void outputNamespaces(const OPTION_TYPE& options, int depth);
+void outputNamespaces(const OPTION_TYPE& options);
 
   // destructor
   ~srcDiffTool();

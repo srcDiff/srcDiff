@@ -149,9 +149,10 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
     startUnit(0, global_options, root_directory, root_filename, root_version, uri, wstate.writer);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
 
+    first = false;
+
   }
 
-  first = false;
 
   // create the reader for the old file
   xNodePtr unit_old = 0;
@@ -307,6 +308,8 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
   Language l(language);
   startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version, uri, wstate.writer);
 
+  first = false;
+
   // run on file level
   if(is_old || is_new)
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
@@ -386,8 +389,6 @@ void srcDiffTool::startUnit(const char * language,
                             const char* uri[],           // uri prefixes
                             xmlTextWriterPtr writer) {
 
-  static int depth = 0;
-
   if(depth == 0 && !isoption(global_options, OPTION_XMLDECL))
     xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
@@ -402,7 +403,7 @@ void srcDiffTool::startUnit(const char * language,
 
   // outer units have namespaces
   if (!isoption(options, OPTION_NAMESPACEDECL)) {
-    outputNamespaces(options, depth);
+    outputNamespaces(options);
   }
 
   // list of attributes
@@ -433,38 +434,36 @@ void srcDiffTool::startUnit(const char * language,
     xmlTextWriterWriteAttribute(writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
   }
 
-  ++depth;
-
 }
 
-void srcDiffTool::outputNamespaces(const OPTION_TYPE& options, int depth) {
+void srcDiffTool::outputNamespaces(const OPTION_TYPE& options) {
 
   // figure out which namespaces are needed
   char const * const ns[] = {
 
     // main srcML namespace declaration always used
-    (depth == 0) ? SRCML_SRC_NS_URI : 0,
+    first ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
     isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
-    (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
+    first && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
 
     // optional literal xml namespace
-    (depth == 0) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+    first && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
     // optional operator xml namespace
-    (depth == 0) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+    first && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
     // optional modifier xml namespace
-    (depth == 0) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+    first && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
     // optional position xml namespace
-    (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
+    first && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
     // optional diff xml namespace
-    (depth == 0) ? SRCML_DIFF_NS_URI : 0,
+    first ? SRCML_DIFF_NS_URI : 0,
   };
 
   // output the namespaces
