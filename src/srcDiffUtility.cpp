@@ -5,10 +5,6 @@
 #include <string>
 #include "xmlrw.hpp"
 
-// global structures defined in main
-extern std::vector<xNode *> nodes_old;
-extern std::vector<xNode *> nodes_new;
-
 bool is_change(struct edit * edit_script) {
 
   return edit_script->operation == DELETE && edit_script->next != NULL && edit_script->next->operation == INSERT
