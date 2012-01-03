@@ -27,6 +27,7 @@
 #include "srcmlapps.hpp"
 #include "srcMLTranslator.hpp"
 #include "shortest_edit_script.h"
+#include "srcDiffConstants.hpp"
 #include "srcDiffUtility.hpp"
 #include "srcDiffWhiteSpace.hpp"
 #include "srcDiffCommon.hpp"
@@ -37,12 +38,6 @@
 #include "pthread.h"
 
 #include "xmlrw.hpp"
-
-const char* DIFF_PREFIX = "diff:";
-const char* DIFF_OLD = "delete";
-const char* DIFF_NEW = "insert";
-const char* DIFF_COMMON = "common";
-const char* DIFF_TYPE = "type";
 
 // diff nodes
 xNode diff_common_start;
