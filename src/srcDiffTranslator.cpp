@@ -53,7 +53,7 @@ xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 xAttr diff_type = { 0 };
 
 // special flush node
-xNode flush;
+const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, true, false };
 
 // constructor
 srcDiffTranslator::srcDiffTranslator(int language,                // programming language of source code
@@ -108,12 +108,6 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
   diff_type.name = DIFF_TYPE;
   //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
-
-  flush.name = "text";
-  flush.type = (xmlElementType)XML_READER_TYPE_TEXT;
-  flush.content = "";
-  flush.extra = 0;
-
 
   // writer state
   wstate.writer = xmlNewTextWriterFilename(srcdiff_filename, 0);

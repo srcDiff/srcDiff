@@ -24,8 +24,8 @@
   Class for straightforward source code to srcDiff translation
 */
 
-#ifndef SRCDIFFTOOL_HPP
-#define SRCDIFFTOOL_HPP
+#ifndef INCLUDED_SRCDIFFTRANSLATOR_HPP
+#define INCLUDED_SRCDIFFTRANSLATOR_HPP
 
 #include <Language.hpp>
 #include <Options.hpp>
