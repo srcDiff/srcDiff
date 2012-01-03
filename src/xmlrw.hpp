@@ -105,6 +105,6 @@ void eat_element(xmlTextReaderPtr& reader);
 
 void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
 
-void outputNode(xNode& node, xmlTextWriterPtr writer);
+void outputNode(const xNode& node, xmlTextWriterPtr writer);
 
 #endif

@@ -14,7 +14,7 @@ struct diff_set {
 
   int operation;
 
-  std::vector<xNodePtr> open_tags;
+  std::vector<const xNode *> open_tags;
 
 };
 

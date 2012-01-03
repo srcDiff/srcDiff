@@ -364,7 +364,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer, const char* nam
 }
 
 // output current XML node in reader
-void outputNode(xNode& node, xmlTextWriterPtr writer) {
+void outputNode(const xNode& node, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
 
