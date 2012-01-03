@@ -25,34 +25,34 @@ struct nest_info {
 
   const char * type;
 
-  const char ** nest_items;
+  const char * const *  nest_items;
 
-  const char ** possible_nest_items;
+  const char * const * possible_nest_items;
 
 };
 
 // may need to change collection algorithm to gather full and nested of same type and match based on that
 // possible is mostly for block and may need to have to test for internal block structure
 
-const char * block_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * if_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
-const char * else_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * while_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * for_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
-const char * class_nest_types[] = { "decl_stmt", "function_decl", 0 };
-const char * struct_nest_types[] = { "decl_stmt", "function_decl", 0 };
-const char * union_nest_types[] = { "decl_stmt",  "function_decl", 0 };
+const char * const block_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
+const char * const else_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * const while_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * const for_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * const function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
+const char * const class_nest_types[] = { "decl_stmt", "function_decl", 0 };
+const char * const struct_nest_types[] = { "decl_stmt", "function_decl", 0 };
+const char * const union_nest_types[] = { "decl_stmt",  "function_decl", 0 };
 
-const char * block_possible_nest_types[] = { "block", 0 };
-const char * if_possible_nest_types[] = { "block", "if", "while", "for", 0 };
-const char * else_possible_nest_types[] = { "block", "if", "while", "for", 0 };
-const char * while_possible_nest_types[] = { "block", "if", "while", "for", 0 };
-const char * for_possible_nest_types[] = { "block", "if", "while", "for", 0 };
-const char * function_possible_nest_types[] = { 0 };
-const char * class_possible_nest_types[] = { 0 };
-const char * struct_possible_nest_types[] = { 0 };
-const char * union_possible_nest_types[] = { 0 };
+const char * const block_possible_nest_types[] = { "block", 0 };
+const char * const if_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * const else_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * const while_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * const for_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * const function_possible_nest_types[] = { 0 };
+const char * const class_possible_nest_types[] = { 0 };
+const char * const struct_possible_nest_types[] = { 0 };
+const char * const union_possible_nest_types[] = { 0 };
 
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {
