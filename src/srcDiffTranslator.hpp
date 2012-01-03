@@ -35,11 +35,11 @@
 #include "srcDiffTypes.hpp"
 #include "Methods.hpp"
 
-class srcDiffTool {
+class srcDiffTranslator {
  public:
 
   // constructor
-  srcDiffTool(int language,
+  srcDiffTranslator(int language,
 		  const char* src_encoding,
 		  const char* xml_encoding,
 		  const char* srcml_filename,
@@ -68,7 +68,7 @@ void startUnit(const char * language,
 void outputNamespaces(const OPTION_TYPE& options);
 
   // destructor
-  ~srcDiffTool();
+  ~srcDiffTranslator();
 
   void set_nested(bool is_nested = true);
 

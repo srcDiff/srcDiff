@@ -1,5 +1,5 @@
 /*
-  srcDiffTool.cpp
+  srcDiffTranslator.cpp
 
   Copyright (C) 2011  SDML (www.sdml.info)
 
@@ -22,7 +22,7 @@
   Class for straightforward translation from source code to srcDiff
 */
 
-#include "srcDiffTool.hpp"
+#include "srcDiffTranslator.hpp"
 #include "srcmlns.hpp"
 #include "srcmlapps.hpp"
 #include "srcMLTranslator.hpp"
@@ -63,7 +63,7 @@ const char * whitespace = "whitespace";
 xNode flush;
 
 // constructor
-srcDiffTool::srcDiffTool(int language,                // programming language of source code
+srcDiffTranslator::srcDiffTranslator(int language,                // programming language of source code
                          const char* src_encoding,    // text encoding of source code
                          const char* xml_encoding,    // xml encoding of result srcML file
                          const char* srcdiff_filename,  // filename of result srcDiff file
@@ -139,7 +139,7 @@ srcDiffTool::srcDiffTool(int language,                // programming language of
 }
 
 // Translate from input stream to output stream
-void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options,
+void srcDiffTranslator::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options,
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
 
@@ -367,7 +367,7 @@ void srcDiffTool::translate(const char* path_one, const char* path_two, OPTION_T
 }
 
 // destructor
-srcDiffTool::~srcDiffTool() {
+srcDiffTranslator::~srcDiffTranslator() {
 
   xmlTextWriterEndElement(wstate.writer);
 
@@ -381,7 +381,7 @@ srcDiffTool::~srcDiffTool() {
 
 }
 
-void srcDiffTool::startUnit(const char * language,
+void srcDiffTranslator::startUnit(const char * language,
                             OPTION_TYPE& options,        // many and varied options
                             const char* directory,       // root unit directory
                             const char* filename,        // root unit filename
@@ -435,7 +435,7 @@ void srcDiffTool::startUnit(const char * language,
 
 }
 
-void srcDiffTool::outputNamespaces(const OPTION_TYPE& options) {
+void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
 
   // figure out which namespaces are needed
   char const * const ns[] = {
@@ -480,7 +480,7 @@ void srcDiffTool::outputNamespaces(const OPTION_TYPE& options) {
   }
 }
 
-void srcDiffTool::set_nested(bool is_nested) {
+void srcDiffTranslator::set_nested(bool is_nested) {
 
   if(is_nested)
     global_options |= OPTION_NESTED;
@@ -488,7 +488,7 @@ void srcDiffTool::set_nested(bool is_nested) {
     global_options &= ~OPTION_NESTED;
 }
 
-void srcDiffTool::set_root_directory(const char * root_directory) {
+void srcDiffTranslator::set_root_directory(const char * root_directory) {
 
 
   this->root_directory = root_directory;

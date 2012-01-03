@@ -42,7 +42,7 @@
 #include <archive.h>
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
-#include "srcDiffTool.hpp"
+#include "srcDiffTranslator.hpp"
 
 #include <cstring>
 #include <clocale>
@@ -365,17 +365,17 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
+void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir_top(srcDiffTranslator& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir(srcDiffTranslator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
                  process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
+void srcdiff_filelist(srcDiffTranslator& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
 
 // translate a file, maybe an archive
-void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+void srcdiff_file(srcDiffTranslator& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
-void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two,
+void srcdiff_text(srcDiffTranslator& translator, const char* path_one, const char* path_two,
                   int directory_length_old, int directory_length_new,
                   OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber);
@@ -557,7 +557,7 @@ int main(int argc, char* argv[]) {
   try {
 
     // translator from input to output using determined language
-    srcDiffTool translator(poptions.language,
+    srcDiffTranslator translator(poptions.language,
                            poptions.src_encoding,
                            poptions.xml_encoding,
                            poptions.srcdiff_filename,
@@ -1199,7 +1199,7 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
+void srcdiff_file(srcDiffTranslator& translator, const char* path_one, const char* path_two, OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // handle local directories specially
@@ -1215,7 +1215,7 @@ void srcdiff_file(srcDiffTool& translator, const char* path_one, const char* pat
 
 }
 
-void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* path_two,
+void srcdiff_text(srcDiffTranslator& translator, const char* path_one, const char* path_two,
                   int directory_length_old, int directory_length_new,
                   OPTION_TYPE options, int language,
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
@@ -1359,7 +1359,7 @@ void srcdiff_text(srcDiffTool& translator, const char* path_one, const char* pat
   */
 }
 
-void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1532,7 +1532,7 @@ void srcdiff_archive(srcDiffTool& translator, const char* path, OPTION_TYPE& opt
   } while (isarchive && isAnythingOpen(context));
 }
 
-void srcdiff_dir_top(srcDiffTool& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_dir_top(srcDiffTranslator& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   translator.set_nested();
@@ -1645,7 +1645,7 @@ void noteSkipped(bool shownumber, const process_options& options) {
           "    - %s\tSkipped: Output file.\n", options.srcdiff_filename);
 }
 
-void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
+void srcdiff_dir(srcDiffTranslator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
                  process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -1883,7 +1883,7 @@ void srcdiff_dir(srcDiffTool& translator, const char * directory_old, int direct
 #endif
 }
 
-void srcdiff_filelist(srcDiffTool& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
+void srcdiff_filelist(srcDiffTranslator& translator, OPTION_TYPE & options, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
 
   try {
 
