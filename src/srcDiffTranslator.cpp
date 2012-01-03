@@ -52,9 +52,6 @@ xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 // diff attribute
 xAttr diff_type = { 0 };
 
-// special flush node
-const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, true, false };
-
 // constructor
 srcDiffTranslator::srcDiffTranslator(int language,                // programming language of source code
                          const char* src_encoding,    // text encoding of source code

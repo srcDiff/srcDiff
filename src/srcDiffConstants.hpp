@@ -10,4 +10,7 @@ const char * const DIFF_TYPE = "type";
 const char * const change = "change";
 const char * const whitespace = "whitespace";
 
+// special flush node
+const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, true, false };
+
 #endif
