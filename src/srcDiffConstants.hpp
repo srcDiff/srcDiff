@@ -7,4 +7,7 @@ const char * const DIFF_NEW = "insert";
 const char * const DIFF_COMMON = "common";
 const char * const DIFF_TYPE = "type";
 
+const char * const change = "change";
+const char * const whitespace = "whitespace";
+
 #endif

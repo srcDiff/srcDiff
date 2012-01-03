@@ -51,8 +51,6 @@ xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 
 // diff attribute
 xAttr diff_type = { 0 };
-const char * change = "change";
-const char * whitespace = "whitespace";
 
 // special flush node
 xNode flush;

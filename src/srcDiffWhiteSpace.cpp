@@ -1,5 +1,6 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "shortest_edit_script.h"
+#include "srcDiffConstants.hpp"
 #include "srcDiffUtility.hpp"
 #include "srcDiffCommon.hpp"
 #include "srcDiffOutput.hpp"
@@ -13,8 +14,6 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 extern xAttr diff_type;
-extern const char * change;
-extern const char * whitespace;
 
 void output_white_space_nested(reader_state & rbuf_old
                                , reader_state & rbuf_new

@@ -1,4 +1,5 @@
 #include "srcDiffCommon.hpp"
+#include "srcDiffConstants.hpp"
 #include "srcDiffUtility.hpp"
 #include "srcDiffOutput.hpp"
 #include "srcDiffWhiteSpace.hpp"
@@ -14,8 +15,6 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 extern xAttr diff_type;
-extern const char * change;
-extern const char * whitespace;
 
 /*
 
