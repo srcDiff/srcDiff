@@ -557,12 +557,11 @@ std::string create_string_from_element(element & curelement, element & nexteleme
   } else if(strcmp(curelement.name.c_str(), "function") == 0
             || strcmp(curelement.name.c_str(), "function_decl") == 0) {
 
-    element += " and src:signature('";
+    element += " and ";
     if(operation == DELETE)
       element += curelement.signature_old;
     else
       element += curelement.signature_new;
-    element += "')";
 
   } else if(strcmp(curelement.name.c_str(), "class") == 0
             || strcmp(curelement.name.c_str(), "struct") == 0
