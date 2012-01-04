@@ -34,26 +34,26 @@ src2srcml --literal --operator --modifier $2 -o $2.xml
 
 ../bin/srcdiff --literal --operator --modifier $1 $2 -o temp;
 
-srcml2src --revision 1 temp -o old;
-srcml2src --revision 2 temp -o new;
-diff old $1;
-diff new $2
+srcml2src --revision 1 temp -o srcmlold;
+srcml2src --revision 2 temp -o srcmlnew;
+diff srcmlold $1;
+diff srcmlnew $2
 
-srcml2src --xml --revision 1 temp -o old;
-srcml2src --xml --revision 2 temp -o new;
-diff old $1.xml;
-diff new $2.xml
+srcml2src --xml --revision 1 temp -o srcmlold;
+srcml2src --xml --revision 2 temp -o srcmlnew;
+diff srcmlold $1.xml;
+diff srcmlnew $2.xml
 
 ../bin/srcdiff --literal --operator --modifier $2 $1 -o temp;
 
-srcml2src  --revision 1 temp -o old;
-srcml2src --revision 2 temp -o new;
-diff old $2;
-diff new $1
+srcml2src  --revision 1 temp -o srcmlold;
+srcml2src --revision 2 temp -o srcmlnew;
+diff srcmlold $2;
+diff srcmlnew $1
 
-srcml2src --xml --revision 1 temp -o old;
-srcml2src --xml --revision 2 temp -o new;
-diff old $2.xml;
-diff new $1.xml
+srcml2src --xml --revision 1 temp -o srcmlold;
+srcml2src --xml --revision 2 temp -o srcmlnew;
+diff srcmlold $2.xml;
+diff srcmlnew $1.xml
 
 rm -f temp old new $1.xml $2.xml
