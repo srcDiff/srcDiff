@@ -605,7 +605,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         }
 
         //if(temp_similarity < min_similarity) {
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity <= min_similarity)) {
 
           min_similarity = temp_similarity;
           num_unmatched = temp_num_unmatched;
