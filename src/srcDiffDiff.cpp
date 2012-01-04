@@ -653,6 +653,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
         min_similarity = similarity;
         num_unmatched = unmatched;
+        if(unmatched)
+          ++num_unmatched;
 
       }
 
