@@ -235,7 +235,7 @@ void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, char 
 void output_char(reader_state & rbuf_old, reader_state & rbuf_new, char character, int operation
                          , writer_state & wstate) {
 
-  char buf[2] = { 0 };
+  static char buf[2] = { 0 };
   buf[0] = character;
 
   output_text_as_node(rbuf_old, rbuf_new, buf, operation, wstate);
