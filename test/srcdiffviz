@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#../bin/colordiffc <(../bin/srcdiff --literal --operator --modifier $1 $2) <(diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-format="" $1 $2 | tr '\\n' '\n' | sed '/^$/d')
+#../bin/colordiff <(../bin/srcdiff --literal --operator --modifier $1 $2) <(diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-format="" $1 $2 | tr '\\n' '\n' | sed '/^$/d')
 
 ../bin/srcdiff --literal --operator --modifier $1 $2 > temp1
 diff --old-group-format="d%df-%dl\n" --new-group-format="i%dF-%dL\n" --line-format="" $1 $2 | tr '\\n' '\n' | sed '/^$/d' > temp2
 
-../bin/colordiffc temp1 temp2
+../bin/colordiff temp1 temp2
 
 rm temp1 temp2
