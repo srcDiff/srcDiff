@@ -56,4 +56,4 @@ srcml2src --xml --revision 2 temp -o srcmlnew;
 diff srcmlold $2.xml;
 diff srcmlnew $1.xml
 
-rm -f temp old new $1.xml $2.xml
+rm -f temp srcmlold srcmlnew $1.xml $2.xml
