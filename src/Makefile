@@ -83,7 +83,7 @@ OBJ_DIR = ../obj/
 ifdef MINGW32
 EXE = $(EXE_DIR)srcdiff.exe
 else
-EXE = $(EXE_DIR)srcdiffdirect $(EXE_DIR)srcdiff $(EXE_DIR)colordiffc
+EXE = $(EXE_DIR)srcdiffdirect $(EXE_DIR)srcdiff $(EXE_DIR)colordiff
 endif
 
 
@@ -146,7 +146,7 @@ $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.hpp
 $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h
 	${CXX} $(CXXFLAGS) -c $< -o $@
 
-$(EXE_DIR)colordiffc : $(OBJ_DIR)colordiff.o $(OBJ_DIR)SAXColorDiff.o
+$(EXE_DIR)colordiff : $(OBJ_DIR)colordiff.o $(OBJ_DIR)SAXColorDiff.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(XML_LIB_SRCDIFF) $^ -o $@
 
 $(OBJ_DIR)colordiff.o : colordiff.cpp SAX2ColorDiff.hpp

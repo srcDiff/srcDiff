@@ -1,0 +1,59 @@
+#!/bin/bash
+
+run="yes"
+
+if [[ ! -f $1 ]]
+then
+
+    echo "'$1' Does not exist."
+    run="no"
+
+fi
+
+if [[ ! -f $2 ]]
+then
+
+    echo "'$2' Does not exist."
+    run="no"
+
+fi
+
+if [[ $run == "no" ]]
+then
+
+    exit
+
+fi
+
+
+# check srcdiff for a file pair both ways
+
+src2srcml --literal --operator --modifier $1 -o $1.xml
+
+src2srcml --literal --operator --modifier $2 -o $2.xml
+
+../bin/srcdiff --literal --operator --modifier $1 $2 -o temp;
+
+srcml2src --revision 1 temp -o old;
+srcml2src --revision 2 temp -o new;
+diff old $1;
+diff new $2
+
+srcml2src --xml --revision 1 temp -o old;
+srcml2src --xml --revision 2 temp -o new;
+diff old $1.xml;
+diff new $2.xml
+
+../bin/srcdiff --literal --operator --modifier $2 $1 -o temp;
+
+srcml2src  --revision 1 temp -o old;
+srcml2src --revision 2 temp -o new;
+diff old $2;
+diff new $1
+
+srcml2src --xml --revision 1 temp -o old;
+srcml2src --xml --revision 2 temp -o new;
+diff old $2.xml;
+diff new $1.xml
+
+rm -f temp old new $1.xml $2.xml
