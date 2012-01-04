@@ -562,11 +562,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         min_similarity = differences[i * olength + (j - 1)].similarity;
         num_unmatched = differences[i * olength + (j - 1)].num_unmatched + 1;
 
-        int temp_num_unmatched = j;
-        if(i > j)
-          temp_num_unmatched = i;
-
-        temp_num_unmatched += unmatched;
+        int temp_num_unmatched = i + j + unmatched;
 
         //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
 
@@ -594,11 +590,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         int temp_similarity = differences[(i - 1) * olength + j].similarity;
         int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
 
-        int temp_num_unmatched_match = i;
-        if(j > i)
-          temp_num_unmatched_match = j;
-
-        temp_num_unmatched_match += unmatched;
+        int temp_num_unmatched_match = i + j + unmatched;
 
         //unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
 
