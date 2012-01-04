@@ -79,7 +79,9 @@ void SAX2DiffTrace::endDocument(void * ctx) {
   fprintf(stdout, "\n");
 }
 
-bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
+bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, unsigned int & pos) {
+
+  pos = tracer.elements.size() - 1;
 
   if(strcmp(name, "class") == 0)
     return true;
@@ -90,9 +92,9 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
   if(strcmp(name, "union") == 0)
     return true;
 
-  if(tracer.elements.size() > 1) {
+  if(pos > 0) {
 
-    unsigned int pos = tracer.elements.size() -2;
+    --pos;
 
     if(strcmp(tracer.elements.at(pos).name.c_str(), "function") == 0 && strcmp(name, "name") == 0)
       return true;
@@ -261,8 +263,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(!tracer.collect) {
 
-      if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix)))
-        tracer.collect_node_pos = tracer.elements.size() - 1;
+      int pos = 0;
+      if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix, pos)))
+        tracer.collect_node_pos = pos;
 
     }
 
