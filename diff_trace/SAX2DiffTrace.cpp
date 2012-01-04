@@ -567,11 +567,12 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
-    element += "]";
+    element += "[";
     if(operation == DELETE)
       element += curelement.signature_old;
     else
       element += curelement.signature_new;
+    element += "]";
 
   } else if(strcmp(curelement.name.c_str(), "text()") == 0
             && (strcmp(curelement.signature_old.c_str(), "") != 0
