@@ -84,6 +84,10 @@ class SAX2DiffTrace {
   // end document
   static void endDocument(void * ctx);
 
+  static bool is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix);
+  
+  static bool is_end_collect(const char * name, const char * prefix, const char * context);
+
   // characters
   static void characters(void* ctx, const xmlChar* ch, int len);
 

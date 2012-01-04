@@ -79,13 +79,7 @@ void SAX2DiffTrace::endDocument(void * ctx) {
   fprintf(stdout, "\n");
 }
 
-static bool is_collect(const char * name, const char * prefix) {
-
-  if(strcmp(name, "function") == 0)
-    return true;
-
-  if(strcmp(name, "function_decl") == 0)
-    return true;
+static bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
 
   if(strcmp(name, "class") == 0)
     return true;
@@ -96,12 +90,24 @@ static bool is_collect(const char * name, const char * prefix) {
   if(strcmp(name, "union") == 0)
     return true;
 
+  if(tracer.elements.size() > 1) {
+
+    unsigned int pos = tracer.elements.size() -2;
+
+    if(strcmp(tracer.elements.at(pos), "function") == 0 && strcmp(name, "name") == 0)
+      return true;
+
+    if(strcmp(tracer.elements.at(pos), "function_decl") == 0 && strcmp(name, "name") == 0)
+      return true;
+
+  }
+
   return false;
 }
 
-static bool is_end_collect(const char * name, const char * prefix, const char * context) {
+static bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
 
-  if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
+  if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
     return true;
 
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
@@ -255,7 +261,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(!tracer.collect) {
 
-      if((tracer.collect = is_collect((const char *)localname, (const char *)prefix)))
+      if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix)))
         tracer.collect_node_pos = tracer.elements.size() - 1;
 
     }
