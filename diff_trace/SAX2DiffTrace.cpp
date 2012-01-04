@@ -533,9 +533,9 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     snprintf(buffer, length, "%d", count);
 
-    element += "[position()=";
+    element += "[";
     element += buffer;
-    //element += "]";
+    element += "]";
 
     free(buffer);
 
@@ -552,12 +552,12 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     else
       element += curelement.signature_new;
 
-    element += "'";
+    element += "']";
 
   } else if(strcmp(curelement.name.c_str(), "function") == 0
             || strcmp(curelement.name.c_str(), "function_decl") == 0) {
 
-    element += " and ";
+    element += "[";
     if(operation == DELETE)
       element += curelement.signature_old;
     else
@@ -567,7 +567,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
-    element += " and ";
+    element += "]";
     if(operation == DELETE)
       element += curelement.signature_old;
     else
@@ -577,12 +577,12 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             && (strcmp(curelement.signature_old.c_str(), "") != 0
                 || strcmp(curelement.signature_new.c_str(), "") != 0)) {
 
-    element += " and fn:contains(., '";
+    element += "[fn:contains(., '";
     if(operation == DELETE)
       element += curelement.signature_old;
     else
       element += curelement.signature_new;
-    element += "')";
+    element += "')]";
 
   }
 
@@ -595,8 +595,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
      element += "inserted()";
 
      }*/
-
-  element += "]";
 
   return element;
 
