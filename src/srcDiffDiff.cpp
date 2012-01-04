@@ -670,8 +670,10 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
       }
 
-      //fprintf(stderr, "HERE: %s %s %d %llu\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
-      //fprintf(stderr, "HERE: %s %s %d %llu\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
+      //fprintf(stderr, "HERE\n");
+      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
+      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
+      //fprintf(stderr, "HERE\n");
 
       // update structure
       differences[i * olength + j].similarity = min_similarity;
