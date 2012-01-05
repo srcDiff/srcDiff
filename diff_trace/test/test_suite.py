@@ -18,7 +18,7 @@ def run(command, inputs) :
 
     return output
 
-def create_difftrace_xpath_results(srcDiff, xpath_list) :
+def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
 
     difftrace_xpath_results = ""
 
@@ -30,7 +30,7 @@ def create_difftrace_xpath_results(srcDiff, xpath_list) :
 
         command = [srcml2src_utility, "--xslt", strip_units]
 
-        difftrace_xpath_results = xpath_results + run(command, results)
+        difftrace_xpath_results = difftrace_xpath_results + run(command, results)
     
     return difftrace_xpath_results
 
