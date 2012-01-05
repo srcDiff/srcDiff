@@ -100,9 +100,9 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
   return false;
 }
 
-bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, unsigned int & pos) {
+bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
 
-  pos = tracer.elements.size() - 1;
+  unsigned int pos = tracer.elements.size() - 1;
 
   if(strcmp(name, "class") == 0)
     return true;
@@ -307,20 +307,21 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(!tracer.wait) {
 
-      if((tracer.wait = is_wait((const char *)localname, (const char *)prefix)));
+      if((tracer.wait = is_wait((const char *)localname, (const char *)prefix)))
+        tracer.collect_node_pos = tracer.elements.size() - 1;
 
     }
 
     if(tracer.wait && !tracer.collect) {
 
       unsigned int pos = 0;
-      if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix, pos)))
-        tracer.collect_node_pos = pos;
+      if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix)));
 
     }
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
       if(!tracer.wait)
         output_diff(tracer);
