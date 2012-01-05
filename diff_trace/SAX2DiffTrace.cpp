@@ -284,7 +284,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(!tracer.wait) {
 
-      if((tracer.wait = is_wait(tracer, (const char *)localname, (const char *)prefix, pos)));
+      if((tracer.wait = is_wait((const char *)localname, (const char *)prefix)));
 
     }
 
@@ -397,8 +397,16 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       }
 
+      if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new) {
+
       tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
       tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+
+      } else {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "diff:delete='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "diff:insert='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+      }
 
     }
 
@@ -436,14 +444,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       tracer.missed_diffs.clear();
 
       tracer.output = false;
-
-    } else {
-
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
-
-      trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
-      trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
     }
 
@@ -609,22 +609,33 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "function_decl") == 0) {
 
     element += "[";
-    if(operation == DELETE)
-      element += curelement.signature_old;
-    else
-      element += curelement.signature_new;
+    element += curelement.signature_old;
     element += "]";
+
+    if(curelement.signature_old != curelement.signature_new) {
+
+    element += "[";
+    element += curelement.signature_old;
+    element += "]";
+
+    }
 
   } else if(strcmp(curelement.name.c_str(), "class") == 0
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
     element += "[";
-    if(operation == DELETE)
-      element += curelement.signature_old;
-    else
-      element += curelement.signature_new;
+    element += curelement.signature_old;
     element += "]";
+
+    if(curelement.signature_old != curelement.signature_new) {
+
+    element += "[";
+    element += curelement.signature_old;
+    element += "]";
+
+    }
+
 
   } else if(strcmp(curelement.name.c_str(), "text()") == 0
             && (strcmp(curelement.signature_old.c_str(), "") != 0
