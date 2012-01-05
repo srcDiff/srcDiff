@@ -55,7 +55,7 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   tracer.output = false;
-  tracer.collect = false;
+  tracer.wait = false;
 
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
@@ -261,10 +261,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
       ++tracer.diff_stack.back().level;
 
-    if(!tracer.collect) {
+    if(!tracer.wait) {
 
       unsigned int pos = 0;
-      if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix, pos)))
+      if((tracer.wait = is_collect(tracer, (const char *)localname, (const char *)prefix, pos)))
         tracer.collect_node_pos = pos;
 
     }
@@ -272,7 +272,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
 
-      if(!tracer.collect)
+      if(!tracer.wait)
         output_diff(tracer);
 
       else {
@@ -338,7 +338,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
 
-  if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+  if(tracer.wait && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
     std::string pre = "";
     if(strcmp((const char *)localname, "name") == 0) {
@@ -378,7 +378,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
-    tracer.collect = false;
+    tracer.wait = false;
 
     // always a change if wait output since all names
     if(tracer.output) {
@@ -497,7 +497,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     tracer.elements.push_back(curelement);
 
-    if(!tracer.collect)
+    if(!tracer.wait)
       output_diff(tracer);
     else {
 

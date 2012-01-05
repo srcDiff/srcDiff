@@ -52,6 +52,7 @@ class SAX2DiffTrace {
   xmlSAXHandler * sax;
 
   bool output;
+  bool wait;
   bool collect;
   unsigned int collect_node_pos;
 
