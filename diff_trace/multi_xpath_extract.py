@@ -32,11 +32,11 @@ def create_xpath_results(srcDiff, xpath_list) :
     
     return xpath_results
 
-srcDiff_file = open(srcdiff_filename, "r")
+srcDiff_file = open(argv[1], "r")
 srcDiff = srcDiff_file.read()
 srcDiff_file.close()
 
-xpath_file = open(xpath_filename, "r")
+xpath_file = open(argv[2], "r")
 xpath_list = string.split(xpath_file.read(), "\n")
 xpath_file.close()
 
