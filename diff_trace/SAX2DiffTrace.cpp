@@ -393,8 +393,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     std::string pre = "";
     if(strcmp((const char *)localname, "name") == 0) {
 
-      pre += "./";
-
       if(!prefix || strcmp((const char *)prefix, "") == 0) {
 
         if(strcmp((const char *)URI, "http://www.sdml.info/srcML/src") == 0)
