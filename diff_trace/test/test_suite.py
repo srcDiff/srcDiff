@@ -16,7 +16,6 @@ def run(command, inputs) :
 
     return output
 
-
 def create_xpath_results(srcDiff, xpath_list) :
 
     xpath_results = ""
@@ -38,6 +37,6 @@ srcDiff = srcDiff_file.read()
 srcDiff_file.close()
 
 command = [difftrace, sys.argv[1]]
-xpath_list = run(command, "")
+xpath_list = split(run(command, ""), "\n")
 
 print create_xpath_results(srcDiff, xpath_list)
