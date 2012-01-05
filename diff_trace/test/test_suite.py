@@ -22,7 +22,7 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
 
     difftrace_xpath_results = ""
 
-    for xpath in xpath_list :
+    for xpath in difftrace_xpath_list :
 
         command = [srcml2src_utility, "--xpath", xpath]
         
@@ -59,6 +59,6 @@ srcDiff = srcDiff_file.read()
 srcDiff_file.close()
 
 difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(sys.argv[1]))
-srcDiff_xpath_results = create_srcDiff_xpath_list(srcDiff)
+srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
 
 
