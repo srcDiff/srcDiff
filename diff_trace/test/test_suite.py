@@ -40,7 +40,7 @@ def create_difftrace_xpath_list(filename) :
 
     difftrace_xpath_list = string.split(run(command, ""), "\n")
 
-    return diff_trace_xpath_list
+    return difftrace_xpath_list
 
 def create_srcDiff_xpath_results(srcDiff) :
 
