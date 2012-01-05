@@ -615,7 +615,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     if(curelement.signature_old != curelement.signature_new) {
 
     element += "[";
-    element += curelement.signature_new;
+    element += curelement.signature_old;
     element += "]";
 
     }
@@ -631,7 +631,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     if(curelement.signature_old != curelement.signature_new) {
 
     element += "[";
-    element += curelement.signature_new;
+    element += curelement.signature_old;
     element += "]";
 
     }
