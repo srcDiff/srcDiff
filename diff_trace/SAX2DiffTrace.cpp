@@ -56,6 +56,7 @@ void SAX2DiffTrace::startDocument(void * ctx) {
 
   tracer.output = false;
   tracer.wait = false;
+  tracer.collect = false;
 
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
