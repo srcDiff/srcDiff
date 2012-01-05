@@ -5,7 +5,7 @@ import subprocess
 
 def run(command, inputs) :
 
-    process = subprocess.Popen(command, stdin=subprocess.Popen.stdin, stdout=subprocess.Popen.stdout, stderr=subprocess.Popen.stderr)
+    process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     output = process.communicate(inputs)[0]
 
