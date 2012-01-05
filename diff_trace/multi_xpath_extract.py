@@ -23,7 +23,7 @@ srcDiff_file.close()
 xpath_file = open(sys.argv[2], "r")
 xpath_list = string.split(xpath_file.read(), "\n")
 
-xpath_results
+xpath_results = ""
 
 for xpath in xpath_list :
 
@@ -35,3 +35,4 @@ for xpath in xpath_list :
 
     xpath_results = xpath_results + run(command, results)
     
+print xpath_results
