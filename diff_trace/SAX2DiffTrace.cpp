@@ -101,7 +101,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 }
 
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, unsigned int & pos) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   pos = tracer.elements.size() - 1;
 
   if(strcmp(name, "class") == 0)
@@ -124,7 +124,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
       return true;
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   return false;
 }
 
