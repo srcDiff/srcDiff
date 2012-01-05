@@ -32,11 +32,16 @@ def create_xpath_results(srcDiff, xpath_list) :
     
     return xpath_results
 
+def create_xpath_list(filename) :
+
+    command = [difftrace, filename]
+
+    xpath_list = string.split(run(command, ""), "\n")
+
+    return xpath_list
+
 srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
 srcDiff_file.close()
 
-command = [difftrace, sys.argv[1]]
-xpath_list = string.split(run(command, ""), "\n")
-
-print create_xpath_results(srcDiff, xpath_list)
+print create_xpath_results(srcDiff, create_xpath_list(sys.argv[1]))
