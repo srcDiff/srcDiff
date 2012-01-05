@@ -8,6 +8,8 @@ srcml2src_utility = "srcml2src"
 strip_units = "strip_units.xsl"
 difftrace = "../difftrace"
 
+srcDiff_xpath = "//diff:*[not(diff:common)]/node()"
+
 def run(command, inputs) :
 
     process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -39,6 +41,18 @@ def create_xpath_list(filename) :
     xpath_list = string.split(run(command, ""), "\n")
 
     return xpath_list
+
+def create_srcDiff_xpath_list(srcDiff) :
+
+    command = [srcml2src_utility, "--xpath", srcDiff_xpath]
+
+    results = run(command, srcDiff)
+
+    command = [srcml2src_utility, "--xslt", strip_units]
+
+    srcDiff_xpath_list = run(command, results)
+
+    return srcDiff_xpath_list
 
 srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
