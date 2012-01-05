@@ -406,6 +406,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
     tracer.wait = false;
+    tracer.collect = false;
 
     // always a change if wait output since all names
     if(tracer.output) {
