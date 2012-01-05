@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import subprocess
-
+import sys
 
 def run(command, inputs) :
 
@@ -11,4 +11,6 @@ def run(command, inputs) :
 
     return output
 
-print run(["ls"], "")
+
+srcDiff_file = open(sys.argv[1])
+xpath_file = open(sys.argv[2])
