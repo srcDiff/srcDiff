@@ -12,9 +12,12 @@ xmlns:diff="http://www.sdml.info/srcDiff"
 
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+<xsl:output
+method="xml" encoding="UTF-8" omit-xml-declaration="yes" standalone="yes"/>
+
 <xsl:template match="//src:unit[not(//src:unit)]">
 
-<xsl:copy-of select="./"/>
+<xsl:copy-of select="./node()"/>
 
 </xsl:template>
 
