@@ -79,6 +79,26 @@ void SAX2DiffTrace::endDocument(void * ctx) {
   fprintf(stdout, "\n");
 }
 
+bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
+
+  if(strcmp(name, "class") == 0)
+    return true;
+
+  if(strcmp(name, "struct") == 0)
+    return true;
+
+  if(strcmp(name, "union") == 0)
+    return true;
+
+  if(strcmp(name, "function") == 0)
+      return true;
+
+  if(strcmp(name, "function_decl") == 0)
+      return true;
+
+  return false;
+}
+
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, unsigned int & pos) {
 
   pos = tracer.elements.size() - 1;
