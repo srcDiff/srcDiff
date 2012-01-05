@@ -414,14 +414,18 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new ||
        tracer.elements.at(tracer.collect_node_pos).signature_old == "" || tracer.elements.at(tracer.collect_node_pos).signature_new == "") {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+      if(tracer.elements.at(tracer.collect_node_pos).signature_old != "")
+        tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+
+      if(tracer.elements.at(tracer.collect_node_pos).signature_new != "")
+        tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
     } else {
 
       tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
       tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
-      }
+
+    }
 
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
@@ -624,10 +628,10 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     } else {
 
-    if(operation == DELETE)
-      element += curelement.signature_old;
-    else
-      element += curelement.signature_new;
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
 
     }
 
@@ -638,7 +642,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "function_decl") == 0) {
 
 
-    if(!(options & OPTION_SRCML_RELATIVE)) {
+    if(!(options & OPTION_SRCML_RELATIVE) || curelement.signature_old == "" | curelement.signature_new == "") {
 
       element += "[";
       element += curelement.signature_old;
@@ -666,7 +670,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
-    if(!(options & OPTION_SRCML_RELATIVE) || curelement.signature_old == "" || curelement.signature_new == "") {
+    if(!(options & OPTION_SRCML_RELATIVE) || curelement.signature_old == "" | curelement.signature_new == "") {
 
       element += "[";
       element += curelement.signature_old;
