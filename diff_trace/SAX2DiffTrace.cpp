@@ -414,10 +414,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new ||
        tracer.elements.at(tracer.collect_node_pos).signature_old == "" || tracer.elements.at(tracer.collect_node_pos).signature_new == "") {
 
-      if(tracer.elements.at(tracer.collect_node_pos).signature_old != "")
         tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-
-      if(tracer.elements.at(tracer.collect_node_pos).signature_new != "")
         tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
     } else {
