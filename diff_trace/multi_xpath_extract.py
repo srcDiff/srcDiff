@@ -5,6 +5,7 @@ import sys
 import string
 
 srcml2src_utility = "srcml2src"
+strip_units = "strip_units.xsl"
 
 def run(command, inputs) :
 
@@ -22,10 +23,15 @@ srcDiff_file.close()
 xpath_file = open(sys.argv[2], "r")
 xpath_list = string.split(xpath_file.read(), "\n")
 
-
+xpath_results
 
 for xpath in xpath_list :
 
-    command = [srcml2src_utiltiy, "--xpath", xpath]
+    command = [srcml2src_utility, "--xpath", xpath]
 
-    print run(command, srcDiff)
+    results = run(command, srcDiff)
+
+    command = [srcml2src_utility, "--xslt", strip_units]
+
+    xpath_results = xpath_results + run(command, results)
+    
