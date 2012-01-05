@@ -610,12 +610,28 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     element += "[@filename='";
 
+    if(!options & OPTION_SRCML_RELATIVE) {
+
+      element += curelement.signature_old;
+
+      if(curelement.signature_old != curelement.signature_new) {
+
+        element += "|";
+        element += curelement.signature_new;
+
+      }
+
+    } else {
+
     if(operation == DELETE)
       element += curelement.signature_old;
     else
       element += curelement.signature_new;
 
+    }
+
     element += "']";
+
 
   } else if(strcmp(curelement.name.c_str(), "function") == 0
             || strcmp(curelement.name.c_str(), "function_decl") == 0) {
