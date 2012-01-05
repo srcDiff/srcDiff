@@ -665,8 +665,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
           element += curelement.signature_new;
         element += "]";
 
-      }
-
     }
 
   } else if(strcmp(curelement.name.c_str(), "class") == 0
@@ -695,8 +693,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
         else
           element += curelement.signature_new;
         element += "]";
-
-      }
 
     }
 
