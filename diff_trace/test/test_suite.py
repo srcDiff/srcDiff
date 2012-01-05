@@ -18,9 +18,9 @@ def run(command, inputs) :
 
     return output
 
-def create_xpath_results(srcDiff, xpath_list) :
+def create_difftrace_xpath_results(srcDiff, xpath_list) :
 
-    xpath_results = ""
+    difftrace_xpath_results = ""
 
     for xpath in xpath_list :
 
@@ -30,19 +30,19 @@ def create_xpath_results(srcDiff, xpath_list) :
 
         command = [srcml2src_utility, "--xslt", strip_units]
 
-        xpath_results = xpath_results + run(command, results)
+        difftrace_xpath_results = xpath_results + run(command, results)
     
-    return xpath_results
+    return difftrace_xpath_results
 
-def create_xpath_list(filename) :
+def create_difftrace_xpath_list(filename) :
 
     command = [difftrace, filename]
 
-    xpath_list = string.split(run(command, ""), "\n")
+    difftrace_xpath_list = string.split(run(command, ""), "\n")
 
-    return xpath_list
+    return diff_trace_xpath_list
 
-def create_srcDiff_xpath_list(srcDiff) :
+def create_srcDiff_xpath_results(srcDiff) :
 
     command = [srcml2src_utility, "--xpath", srcDiff_xpath]
 
@@ -58,4 +58,7 @@ srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
 srcDiff_file.close()
 
-print create_xpath_results(srcDiff, create_xpath_list(sys.argv[1]))
+difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(sys.argv[1]))
+srcDiff_xpath_results = create_srcDiff_xpath_list(srcDiff)
+
+
