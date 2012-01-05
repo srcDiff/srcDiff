@@ -54,6 +54,10 @@ def create_srcDiff_xpath_results(srcDiff) :
 
     return srcDiff_xpath_list
 
+def diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results) :
+
+    return 
+
 srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
 srcDiff_file.close()
