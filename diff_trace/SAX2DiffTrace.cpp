@@ -101,7 +101,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 }
 
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, unsigned int & pos) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   pos = tracer.elements.size() - 1;
 
   if(strcmp(name, "class") == 0)
@@ -124,7 +124,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
       return true;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   return false;
 }
 
@@ -565,7 +565,7 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 
 }
 
-std::string create_string_from_element(element & curelement, element & nextelement, int count, int operation) {
+std::string create_string_from_element(element & curelement, element & nextelement, int count, int operation, long & options) {
   std::string element = "";
 
   if(curelement.prefix != "") {
@@ -621,7 +621,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "function_decl") == 0) {
 
 
-    if(!tracer.options & OPTION_SRCML_RELATIVE) {
+    if(!options & OPTION_SRCML_RELATIVE) {
 
       element += "[";
       element += curelement.signature_old;
@@ -649,7 +649,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
-    if(!tracer.options & OPTION_SRCML_RELATIVE) {
+    if(!options & OPTION_SRCML_RELATIVE) {
 
       element += "[";
       element += curelement.signature_old;
@@ -743,7 +743,7 @@ void output_diff(SAX2DiffTrace & tracer) {
 
     std::string element = "/";
 
-    element += create_string_from_element(tracer.elements.at(i), next_element, count, tracer.diff_stack.back().operation);
+    element += create_string_from_element(tracer.elements.at(i), next_element, count, tracer.diff_stack.back().operation, tracer.options);
 
 
     fprintf(stdout, "%s", element.c_str());
