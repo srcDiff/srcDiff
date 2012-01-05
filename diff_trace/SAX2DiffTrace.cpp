@@ -187,6 +187,29 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   }
 
+  if(tracer.collect && (strcmp((const char *)localname, "delete") == 0 || strcmp((const char *)localname, "insert") == 0)) {
+
+    std::string diff_string;
+
+      if(!prefix || strcmp((const char *)prefix, "") == 0) {
+
+        diff_string += prefix;
+        diff_string += ":";
+
+      }
+
+      diff_string += local_name;
+
+      diff_string += "='";
+
+      if(tracer.diff_stack.back() == DELETE)
+        tracer.elements.at(tracer.collect_node_pos).signature_old += diff_string;
+
+      else if(tracer.diff_stack.back() == INSERT
+        tracer.elements.at(tracer.collect_node_pos).signature_new += diff_string;
+
+  }
+
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
       if(tracer.diff_stack.back().operation == COMMON) {
