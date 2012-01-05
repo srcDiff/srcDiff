@@ -384,17 +384,17 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       }
 
-      pre += "name/";
+      pre += "name";
 
       if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new) {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
       } else {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "diff:delete='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "diff:insert='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "/diff:delete='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "/diff:insert='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
       }
 
     }
