@@ -191,7 +191,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     std::string diff_string = "/";
 
-      if(!prefix || strcmp((const char *)prefix, "") != 0) {
+      if(prefix || strcmp((const char *)prefix, "") != 0) {
 
         diff_string += (const char *)prefix;
         diff_string += ":";
