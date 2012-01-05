@@ -20,7 +20,7 @@ def run(command, inputs) :
 
 def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
 
-    difftrace_xpath_results = ""
+    difftrace_xpath_results = []
 
     for xpath in difftrace_xpath_list :
 
@@ -30,7 +30,7 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
 
         command = [srcml2src_utility, "--xslt", strip_units]
 
-        difftrace_xpath_results = difftrace_xpath_results + run(command, results)
+        difftrace_xpath_results.append(run(command, results))
     
     return difftrace_xpath_results
 
