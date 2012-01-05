@@ -6,6 +6,7 @@ import string
 
 srcml2src_utility = "srcml2src"
 strip_units = "strip_units.xsl"
+difftrace = "../difftrace"
 
 def run(command, inputs) :
 
@@ -36,8 +37,7 @@ srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
 srcDiff_file.close()
 
-xpath_file = open(sys.argv[2], "r")
-xpath_list = string.split(xpath_file.read(), "\n")
-xpath_file.close()
+command = [difftrace, sys.argv[1]]
+xpath_list = run(command, "")
 
 print create_xpath_results(srcDiff, xpath_list)
