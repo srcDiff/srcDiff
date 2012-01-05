@@ -92,10 +92,10 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
     return true;
 
   if(strcmp(name, "function") == 0)
-      return true;
+    return true;
 
   if(strcmp(name, "function_decl") == 0)
-      return true;
+    return true;
 
   return false;
 }
@@ -191,41 +191,41 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     std::string diff_string = "/";
 
-      if(prefix || strcmp((const char *)prefix, "") != 0) {
+    if(prefix || strcmp((const char *)prefix, "") != 0) {
 
-        diff_string += (const char *)prefix;
-        diff_string += ":";
+      diff_string += (const char *)prefix;
+      diff_string += ":";
 
-      }
+    }
 
-      diff_string += (const char *)localname;
+    diff_string += (const char *)localname;
 
-      diff_string += "='";
+    diff_string += "='";
 
-      if(tracer.diff_stack.back().operation == DELETE)
-        tracer.elements.at(tracer.collect_node_pos).signature_old += diff_string;
+    if(tracer.diff_stack.back().operation == DELETE)
+      tracer.elements.at(tracer.collect_node_pos).signature_old += diff_string;
 
-      else if(tracer.diff_stack.back().operation == INSERT)
-        tracer.elements.at(tracer.collect_node_pos).signature_new += diff_string;
+    else if(tracer.diff_stack.back().operation == INSERT)
+      tracer.elements.at(tracer.collect_node_pos).signature_new += diff_string;
 
   }
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
-      if(tracer.diff_stack.back().operation == COMMON) {
+    if(tracer.diff_stack.back().operation == COMMON) {
 
-        tracer.collect_text_delete = false;
-        tracer.collect_text_insert = false;
+      tracer.collect_text_delete = false;
+      tracer.collect_text_insert = false;
 
-      } else if(tracer.diff_stack.back().operation == DELETE) {
+    } else if(tracer.diff_stack.back().operation == DELETE) {
 
-        tracer.collect_text_delete = false;
+      tracer.collect_text_delete = false;
 
-      } else {
+    } else {
 
-        tracer.collect_text_insert = false;
+      tracer.collect_text_insert = false;
 
-      }
+    }
 
     element curelement;
     curelement.name = (const char *)localname;
@@ -411,13 +411,13 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new) {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+        tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+        tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
       } else {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+        tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+        tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
       }
 
     }
@@ -627,49 +627,49 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       element += curelement.signature_old;
       element += "]";
 
-    if(curelement.signature_old != curelement.signature_new) {
+      if(curelement.signature_old != curelement.signature_new) {
 
-    element += "[";
-    element += curelement.signature_new;
-
-    } else {
-
-    element += "[";
-      if(operation == DELETE)
-        element += curelement.signature_old;
-      else
+        element += "[";
         element += curelement.signature_new;
-    element += "]";
 
-    }
+      } else {
+
+        element += "[";
+        if(operation == DELETE)
+          element += curelement.signature_old;
+        else
+          element += curelement.signature_new;
+        element += "]";
+
+      }
 
     }
 
   } else if(strcmp(curelement.name.c_str(), "class") == 0
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
- 
+
     if(!tracer.options & OPTION_SRCML_RELATIVE) {
 
       element += "[";
       element += curelement.signature_old;
       element += "]";
 
-    if(curelement.signature_old != curelement.signature_new) {
+      if(curelement.signature_old != curelement.signature_new) {
 
-    element += "[";
-    element += curelement.signature_new;
-
-    } else {
-
-    element += "[";
-      if(operation == DELETE)
-        element += curelement.signature_old;
-      else
+        element += "[";
         element += curelement.signature_new;
-    element += "]";
 
-    }
+      } else {
+
+        element += "[";
+        if(operation == DELETE)
+          element += curelement.signature_old;
+        else
+          element += curelement.signature_new;
+        element += "]";
+
+      }
 
     }
 
