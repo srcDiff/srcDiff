@@ -1,0 +1,1 @@
+"//diff:*[not(diff:common)]/node()"
