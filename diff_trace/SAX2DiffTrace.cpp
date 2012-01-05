@@ -409,6 +409,14 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       pre += "name";
 
+    }
+
+    tracer.wait = false;
+    tracer.collect = false;
+
+    // always a change if wait output since all names
+    if(tracer.output) {
+
       if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new) {
 
         tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
@@ -420,16 +428,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
         tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
       }
 
-    }
-
-    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
-    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
-
-    tracer.wait = false;
-    tracer.collect = false;
-
-    // always a change if wait output since all names
-    if(tracer.output) {
+      trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
+      trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
       int num_missed = tracer.missed_diff_types.size();
 
@@ -456,6 +456,14 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       tracer.missed_diffs.clear();
 
       tracer.output = false;
+
+    } else {
+
+        tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+        tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+
+        trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
+        trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
     }
 
