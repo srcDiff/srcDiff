@@ -187,7 +187,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   }
 
-  if(tracer.collect && (strcmp((const char *)localname, "delete") == 0 || strcmp((const char *)localname, "insert") == 0)) {
+  if(tracer.collect && !(tracer.options & OPTION_SRCML_RELATIVE) && (strcmp((const char *)localname, "delete") == 0 || strcmp((const char *)localname, "insert") == 0)) {
 
     std::string diff_string = "/";
 
@@ -610,7 +610,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     element += "[@filename='";
 
-    if(!options & OPTION_SRCML_RELATIVE) {
+    if(!(options & OPTION_SRCML_RELATIVE)) {
 
       element += curelement.signature_old;
 
@@ -637,7 +637,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "function_decl") == 0) {
 
 
-    if(!options & OPTION_SRCML_RELATIVE) {
+    if(!(options & OPTION_SRCML_RELATIVE)) {
 
       element += "[";
       element += curelement.signature_old;
@@ -665,7 +665,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
-    if(!options & OPTION_SRCML_RELATIVE) {
+    if(!(options & OPTION_SRCML_RELATIVE)) {
 
       element += "[";
       element += curelement.signature_old;
