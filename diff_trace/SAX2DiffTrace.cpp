@@ -385,17 +385,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       }
 
       pre += "name/";
-      if(!prefix || strcmp((const char *)prefix, "") == 0) {
-
-        if(strcmp((const char *)URI, "http://www.sdml.info/srcML/src") == 0)
-          pre += "src:";
-
-      } else {
-
-        pre += (const char *)prefix;
-        pre += ":";
-
-      }
 
       if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new) {
 
