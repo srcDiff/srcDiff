@@ -189,7 +189,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   if(tracer.collect && (strcmp((const char *)localname, "delete") == 0 || strcmp((const char *)localname, "insert") == 0)) {
 
-    std::string diff_string;
+    std::string diff_string = "/";
 
       if(!prefix || strcmp((const char *)prefix, "") == 0) {
 
@@ -202,10 +202,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       diff_string += "='";
 
-      if(tracer.diff_stack.back() == DELETE)
+      if(tracer.diff_stack.back().operation == DELETE)
         tracer.elements.at(tracer.collect_node_pos).signature_old += diff_string;
 
-      else if(tracer.diff_stack.back() == INSERT
+      else if(tracer.diff_stack.back().operation == INSERT
         tracer.elements.at(tracer.collect_node_pos).signature_new += diff_string;
 
   }
@@ -416,8 +416,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       } else {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "/diff:delete='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "/diff:insert='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
       }
 
     }
