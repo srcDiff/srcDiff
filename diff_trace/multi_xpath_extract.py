@@ -1,4 +1,4 @@
-#!usr/bin/python
+#!/usr/bin/python
 
 import subprocess
 
@@ -10,3 +10,5 @@ def run(command, inputs) :
     output = process.communicate(inputs)[0]
 
     return output
+
+print run(["ls"])
