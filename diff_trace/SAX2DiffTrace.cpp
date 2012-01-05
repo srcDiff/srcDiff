@@ -388,7 +388,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
 
-  if(tracer.wait && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+  if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
     std::string pre = "";
     if(strcmp((const char *)localname, "name") == 0) {
