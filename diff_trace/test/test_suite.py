@@ -13,6 +13,8 @@ srcDiff_xpath = "//diff:*[not(diff:common)]/node()"
 
 xpath_errors = []
 
+test_count = 0
+
 def run(command, inputs) :
 
     process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -173,10 +175,12 @@ diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_res
 
 output_diff_xpath_results(sys.argv[1], srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
 
+error_count = len(xpath_errors)
+
 print
-print "Test Summary"
+print "Test Summary:\t" + str(error_count) + " errors out of " + str(test_count) + " cases"
 print
 
-for i in range(len(xpath_errors)) :
+for i in range(error_count) :
     print str(i + 1) + ":\t" + xpath_errors[i]
     print "\n"
