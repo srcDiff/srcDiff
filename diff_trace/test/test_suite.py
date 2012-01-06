@@ -48,11 +48,24 @@ def create_srcDiff_xpath_results(srcDiff) :
 
     results = run(command, srcDiff)
 
-    command = [srcml2src_utility, "--xslt", strip_units]
+    command = [srcml2src_utility "--units"]
 
-    srcDiff_xpath_list = run(command, results)
+    num_units = run(command, results)
 
-    return srcDiff_xpath_list
+
+    return srcDiff_xpath_results
+
+def create_srcDiff_xpath_result(srcDiff_results, unit) :
+
+    command = [srcml2src_utility, "--unit", unit]
+
+    srcDiff_xpath_result = run(command, srcDiff_results)
+
+    command = [srcml2src_utility, "--xslt", split_units]
+
+    srcDiff_xpath_result = run(command, srcDiff_xpath_results)
+
+    return srcDiff_xpath_result
 
 def diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results) :
 
