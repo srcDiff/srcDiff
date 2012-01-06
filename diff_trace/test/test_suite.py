@@ -3,6 +3,7 @@
 import subprocess
 import sys
 import string
+import os
 
 srcml2src = "srcml2src"
 xsltproc = "xsltproc"
@@ -182,7 +183,9 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
     return
 
-test_difftrace_on_srcDiff_file(sys.argv[1])
+for srcDiff_filename in os.listdir(suite_directory) :
+
+    test_difftrace_on_srcDiff_file(srcDiff_filename)
 
 error_count = len(xpath_errors)
 
