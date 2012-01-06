@@ -147,6 +147,8 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
     for i in range(num_results, srcDiff_xpath_results_length) :
 
+        globals()['test_count'] += 1
+
         test_case_results += "\033[31m" + str(i + 1) + "\033[0m "
 
         diff_error = "srcDiff:\t'" + srcDiff_xpath_results[i] + "'"
@@ -156,6 +158,8 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
         globals()['xpath_errors'].append(diff_error)
 
     for i in range(num_results, difftrace_xpath_results_length) :
+
+        globals()['test_count'] += 1
 
         test_case_results += "\033[31m" + str(i + 1) + "\033[0m "
 
