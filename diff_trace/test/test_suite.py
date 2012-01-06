@@ -47,7 +47,7 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
 
         command = [srcml2src, "--xslt", strip_units]
 
-        difftrace_xpath_results.append(run(command, difftrace_xpath_result))
+        difftrace_xpath_results.append(string.strip(run(command, difftrace_xpath_result), string.whitespace))
     
     return difftrace_xpath_results
 
@@ -85,7 +85,7 @@ def create_srcDiff_xpath_result(srcDiff_results, unit) :
 
     command = [srcml2src, "--xslt", strip_units]
 
-    srcDiff_xpath_result = run(command, srcDiff_xpath_result)
+    srcDiff_xpath_result = string.strip(run(command, srcDiff_xpath_result), string.whitespace)
 
     return srcDiff_xpath_result
 
