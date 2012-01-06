@@ -137,7 +137,7 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
         test_case_results += "\033[31m" + str(i + 1) + "\033[0m "
 
-        diff_error = "srcDiff:\t'" + srciff_xpath_results[i] + "'"
+        diff_error = "srcDiff:\t'" + srcDiff_xpath_results[i] + "'"
         diff_error += "\n"
         diff_error += "difftrace:\t''"
 
