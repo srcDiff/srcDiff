@@ -217,6 +217,21 @@ print
 print "Test Summary:\t" + str(error_count) + " errors out of " + str(test_count) + " cases"
 print
 
-for i in range(error_count) :
-    print str(i + 1) + ":\t" + xpath_errors[i]
-    print "\n"
+if error_count > 0 :
+
+    print "Errors"
+
+    for i in range(error_count) :
+        print str(i + 1) + ":\t" + xpath_errors[i]
+        print "\n"
+
+run_exception_count = len(run_exceptions)
+
+
+if run_exception_count > 0 :
+
+    print "Errors"
+
+    for i in range(run_exception_count) :
+        print str(i + 1) + ":\t" + run_exceptions[i]
+        print "\n"
