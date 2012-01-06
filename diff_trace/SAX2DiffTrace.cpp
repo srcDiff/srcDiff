@@ -506,7 +506,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     tracer.collect_text_delete = true;
 
-  } else {
+  } else if(tracer.diff_stack.back().operation == INSERT) {
 
     if(!tracer.collect_text_insert)
       add_child(tracer.elements.back().children_new, tag);
