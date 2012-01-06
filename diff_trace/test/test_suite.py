@@ -170,7 +170,7 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
 def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
-    srcDiff_file = open(srcDiff_filename, "r")
+    srcDiff_file = open(suite_directory + "/" + srcDiff_filename, "r")
     srcDiff = srcDiff_file.read()
     srcDiff_file.close()
 
@@ -179,13 +179,13 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
     diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
 
-    output_diff_xpath_results(sys.argv[1], srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
+    output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
 
     return
 
 for srcDiff_filename in os.listdir(suite_directory) :
 
-    test_difftrace_on_srcDiff_file(suite_directory + "/" + srcDiff_filename)
+    test_difftrace_on_srcDiff_file(srcDiff_filename)
 
 error_count = len(xpath_errors)
 
