@@ -149,7 +149,7 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
         diff_error = "srcDiff:\t''"
         diff_error += "\n"
-        diff_error += "difftrace:\t'" + difftrace_xpath_results[i] + "'"
+        diff_error += "difftrace:\t'" + ifftrace_xpath_results[i] + "'"
 
         globals()['xpath_errors'].append(diff_error)
 
