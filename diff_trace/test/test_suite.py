@@ -26,11 +26,11 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
 
         command = [srcml2src_utility, "--xpath", xpath]
         
-        results = run(command, srcDiff)
+        difftrace_results = run(command, srcDiff)
 
         command = [srcml2src_utility, "--xslt", strip_units]
 
-        difftrace_xpath_results.append(run(command, results))
+        difftrace_xpath_results.append(run(command, difftrace_results))
     
     return difftrace_xpath_results
 
