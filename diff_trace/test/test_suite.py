@@ -76,7 +76,7 @@ def diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results) :
 
     diff_error_list = []
 
-    for i in range(min(srcDiff_xpath_results.len, difftrace_xpath_results.len)) :
+    for i in range(min(len(srcDiff_xpath_results), len(difftrace_xpath_results))) :
 
         if srcDiff_xpath_results[i] !=  difftrace_xpath_results[i] :
             diff_error_list.append(i)
