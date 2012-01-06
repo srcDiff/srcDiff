@@ -126,6 +126,8 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
     
     for i in range(num_results) :
 
+        globals()['test_count'] += 1
+
         if i in diff_error_list :
 
             test_case_results += "\033[31m" + str(i + 1) + "\033[0m "
