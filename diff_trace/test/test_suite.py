@@ -11,7 +11,7 @@ strip_units = "strip_units.xsl"
 difftrace = "../difftrace"
 suite_directory = "suite"
 
-srcDiff_xpath = "//diff:*[not(diff:common)]/node()"
+srcDiff_xpath = "//diff:*[not(self::diff:common)]/node()"
 
 xpath_errors = []
 
