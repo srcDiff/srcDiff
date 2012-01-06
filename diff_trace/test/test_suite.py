@@ -32,6 +32,13 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
         
         difftrace_xpath_result = run(command, srcDiff)
 
+        command = [srcml2src, "--units"]
+
+        num_units = run(command, difftrace_xpath_results)
+
+        if num_units != "1" :
+            print "Non unique XPath: " + xpath
+
         command = [srcml2src, "--xml", "--unit", str(1)]
 
         difftrace_xpath_result = run(command, difftrace_xpath_result)
