@@ -66,6 +66,7 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.is_delete = false;
   tracer.is_insert = false;
 
+  tracer.collect_text = false;
   tracer.collect_text_delete = false;
   tracer.collect_text_insert = false;
 

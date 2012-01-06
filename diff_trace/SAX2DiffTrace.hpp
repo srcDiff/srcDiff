@@ -65,6 +65,7 @@ class SAX2DiffTrace {
   bool is_delete;
   bool is_insert;
 
+  bool collect_text;
   bool collect_text_delete;
   bool collect_text_insert;
 
