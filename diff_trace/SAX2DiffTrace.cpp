@@ -468,7 +468,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
-  tracer.collect_text = true;
+  tracer.collect_text = false;
 
 }
 
@@ -566,6 +566,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     tracer.elements.pop_back();
 
   }
+
+  tracer.collect_text = true;
 
 }
 
