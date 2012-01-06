@@ -165,6 +165,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
+  tracer.collect_text = false;
+
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     diff curdiff = { 0 };
@@ -352,6 +354,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
+  tracer.collect_text = false;
+
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
@@ -464,6 +468,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
+  tracer.collect_text = true;
+
 }
 
 void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
@@ -487,7 +493,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   std::string tag = "text()";
 
-  add_child(tracer.elements.back().children, tag);
+  if(!tracer.collect_text)
+    add_child(tracer.elements.back().children, tag);
 
   if(tracer.diff_stack.back().operation == COMMON) {
 
@@ -525,7 +532,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   }
 
   if(tracer.diff_stack.back().operation != COMMON
-     && ((tracer.options & OPTION_WHITESPACE) || (len != 0 && i != len))
+     && ((tracer.options & OPTION_WHITESPACE) || (!tracer.collect_text && len != 0 && i != len))
      && tracer.diff_stack.back().level == 0) {
 
     element curelement;
