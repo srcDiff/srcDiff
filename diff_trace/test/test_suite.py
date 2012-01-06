@@ -191,7 +191,7 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 for srcDiff_filename in os.listdir(suite_directory) :
 
     if os.path.isdir(suite_directory + "/" + srcDiff_filename) :
-                         continue
+        continue
 
     test_difftrace_on_srcDiff_file(srcDiff_filename)
 
