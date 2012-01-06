@@ -321,8 +321,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
       if(!tracer.wait)
         output_diff(tracer);
 
