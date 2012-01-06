@@ -131,7 +131,7 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
     #print "srcDiff: '" + srcDiff_xpath_results[i] + "'"
     #print "difftrace: '" + difftrace_xpath_results[i] + "'"
 
-        return
+    return
 
 srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
