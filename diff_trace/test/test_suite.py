@@ -227,11 +227,10 @@ if error_count > 0 :
 
 run_exception_count = len(run_exceptions)
 
-
 if run_exception_count > 0 :
 
-    print "Errors"
+    print "Run Exceptions"
+    print
 
     for i in range(run_exception_count) :
         print str(i + 1) + ":\t" + run_exceptions[i]
-        print "\n"
