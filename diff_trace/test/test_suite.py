@@ -185,7 +185,7 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
 for srcDiff_filename in os.listdir(suite_directory) :
 
-    test_difftrace_on_srcDiff_file(srcDiff_filename)
+    test_difftrace_on_srcDiff_file(suite_directory + "/" + srcDiff_filename)
 
 error_count = len(xpath_errors)
 
