@@ -532,7 +532,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   }
 
   if(tracer.diff_stack.back().operation != COMMON
-     && ((tracer.options & OPTION_WHITESPACE) || (!tracer.collect_text && len != 0 && i != len))
+     && len != 0 && ((tracer.options & OPTION_WHITESPACE) || (!tracer.collect_text && i != len))
      && tracer.diff_stack.back().level == 0) {
 
     element curelement;
