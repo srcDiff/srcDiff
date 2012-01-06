@@ -166,7 +166,7 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
     return
 
-def test_difftrace(srcDiff_filename) :
+def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
     srcDiff_file = open(srcDiff_filename, "r")
     srcDiff = srcDiff_file.read()
@@ -180,6 +180,8 @@ def test_difftrace(srcDiff_filename) :
     output_diff_xpath_results(sys.argv[1], srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
 
     return
+
+test_difftrace_on_srcDiff_file(sys.argv[1])
 
 error_count = len(xpath_errors)
 
