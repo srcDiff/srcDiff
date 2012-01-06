@@ -5,6 +5,7 @@ import sys
 import string
 
 srcml2src_utility = "srcml2src"
+xsltproc = "xsltproc"
 strip_units = "strip_units.xsl"
 difftrace = "../difftrace"
 
@@ -31,7 +32,7 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
         
         difftrace_results = run(command, srcDiff)
 
-        command = [srcml2src_utility, "--xslt", strip_units]
+        command = [xsltproc, strip_units, "/dev/stdin"]
 
         difftrace_xpath_results.append(run(command, difftrace_results))
     
@@ -69,7 +70,7 @@ def create_srcDiff_xpath_result(srcDiff_results, unit) :
 
     srcDiff_xpath_result = run(command, srcDiff_results)
 
-    command = [srcml2src_utility, "--xslt", strip_units]
+    command = [xsltproc, strip_units, "/dev/stdin"]
 
     srcDiff_xpath_result = run(command, srcDiff_xpath_result)
 
