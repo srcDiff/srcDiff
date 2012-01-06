@@ -174,3 +174,4 @@ print
 
 for i in range(len(xpath_errors)) :
     print str(i + 1) + ":\t" + xpath_errors[i]
+    print "\n\n"
