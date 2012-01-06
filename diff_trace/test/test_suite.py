@@ -24,6 +24,9 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
 
     for xpath in difftrace_xpath_list :
 
+        if xpath == "" :
+            continue
+
         command = [srcml2src_utility, "--xpath", xpath]
         
         difftrace_results = run(command, srcDiff)
@@ -86,8 +89,8 @@ def diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results) :
         if srcDiff_xpath_results[i] !=  difftrace_xpath_results[i] :
             diff_error_list.append(i)
 
-    #diff_error_list.extend(range(num_results, srcDiff_xpath_results_length))
-    #diff_error_list.extend(range(num_results, difftrace_xpath_results_length))
+    diff_error_list.extend(range(num_results, srcDiff_xpath_results_length))
+    diff_error_list.extend(range(num_results, difftrace_xpath_results_length))
 
     return diff_error_list
 
