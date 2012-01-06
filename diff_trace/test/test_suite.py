@@ -11,6 +11,8 @@ difftrace = "../difftrace"
 
 srcDiff_xpath = "//diff:*[not(diff:common)]/node()"
 
+xpath_errors = []
+
 def run(command, inputs) :
 
     process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -106,6 +108,29 @@ def diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results) :
 
     return diff_error_list
 
+def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace_xpath_results, diff_error_list) :
+
+    srcDiff_xpath_results_length = len(srcDiff_xpath_results)
+    difftrace_xpath_results_length = len(difftrace_xpath_results)
+
+    test_case_results = srcDiff_filename + ":\t"
+
+    num_results = min(srcDiff_xpath_results_length, difftrace_xpath_results_length)
+    
+    for i in range(num_results) :
+
+        if i in diff_error_list :
+            test_case_results = test_case_results + "-" + str(i)
+
+        else :
+            test_case_results = test_case_results + str(i)
+
+    # put in check not out of bounds
+    #print "srcDiff: '" + srcDiff_xpath_results[i] + "'"
+    #print "difftrace: '" + difftrace_xpath_results[i] + "'"
+
+        return
+
 srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
 srcDiff_file.close()
@@ -115,13 +140,4 @@ srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
 
 diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
 
-srcDiff_xpath_results_length = len(srcDiff_xpath_results)
-difftrace_xpath_results_length = len(difftrace_xpath_results)
 
-for i in diff_error_list :
-
-    print str(i)
-
-    # put in check not out of bounds
-    print "srcDiff: '" + srcDiff_xpath_results[i] + "'"
-    print "difftrace: '" + difftrace_xpath_results[i] + "'"
