@@ -125,6 +125,8 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
         else :
             test_case_results = test_case_results + str(i)
 
+    print test_case_results
+
     # put in check not out of bounds
     #print "srcDiff: '" + srcDiff_xpath_results[i] + "'"
     #print "difftrace: '" + difftrace_xpath_results[i] + "'"
