@@ -388,6 +388,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
+
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
@@ -412,7 +413,15 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
 
-  if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+  bool end_wait = false;
+  if(tracer.wait && tracer.collect_node_pos == tracer.elements.size()) {
+
+    end_wait = false;
+
+  }
+
+  if(end_wait
+     || (tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))) {
 
     tracer.wait = false;
     tracer.collect = false;
