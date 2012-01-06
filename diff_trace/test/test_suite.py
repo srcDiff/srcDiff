@@ -62,7 +62,7 @@ def create_srcDiff_xpath_results(srcDiff) :
 
 def create_srcDiff_xpath_result(srcDiff_results, unit) :
 
-    command = [srcml2src_utility, "--unit", str(unit)]
+    command = [srcml2src_utility, "--xml", "--unit", str(unit)]
 
     srcDiff_xpath_result = run(command, srcDiff_results)
 
