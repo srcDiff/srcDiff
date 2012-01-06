@@ -123,9 +123,9 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
             test_case_results += "\033[31m" + str(i + 1) + "\033[0m "
 
-            diff_error = "srcDiff: '" + srcDiff_xpath_results[i] + "'"
+            diff_error = "srcDiff:\t'" + srcDiff_xpath_results[i] + "'"
             diff_error += "\n"
-            diff_error += "difftrace: '" + difftrace_xpath_results[i] + "'"
+            diff_error += "difftrace:\t'" + difftrace_xpath_results[i] + "'"
 
             globals()['xpath_errors'].append(diff_error)
 
@@ -137,9 +137,9 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
         test_case_results += "\033[31m" + str(i + 1) + "\033[0m "
 
-        diff_error = "srcDiff: '" + srcDiff_xpath_results[i] + "'"
+        diff_error = "srcDiff:\t'" + srcDiff_xpath_results[i] + "'"
         diff_error += "\n"
-        diff_error += "difftrace: '" + difftrace_xpath_results[i] + "'"
+        diff_error += "difftrace:\t''"
 
         globals()['xpath_errors'].append(diff_error)
 
@@ -147,9 +147,9 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
         test_case_results += "\033[31m" + str(i + 1) + "\033[0m "
 
-        diff_error = "srcDiff: '" + srcDiff_xpath_results[i] + "'"
+        diff_error = "srcDiff:\t''"
         diff_error += "\n"
-        diff_error += "difftrace: '" + difftrace_xpath_results[i] + "'"
+        diff_error += "difftrace:\t'" + difftrace_xpath_results[i] + "'"
 
         globals()['xpath_errors'].append(diff_error)
 
