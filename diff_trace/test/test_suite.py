@@ -4,8 +4,9 @@ import subprocess
 import sys
 import string
 import os
+import os.path
 
-srcml2src = "srcml2src"
+srcml2src = "../../../../bin/srcml2src"
 xsltproc = "xsltproc"
 strip_units = "strip_units.xsl"
 difftrace = "../difftrace"
@@ -184,6 +185,9 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
     return
 
 for srcDiff_filename in os.listdir(suite_directory) :
+
+    if os.path.isdir(suite_directory + "/" + srcDiff_filename) :
+                         continue
 
     test_difftrace_on_srcDiff_file(srcDiff_filename)
 
