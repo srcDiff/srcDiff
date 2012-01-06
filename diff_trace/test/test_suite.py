@@ -46,12 +46,17 @@ def create_srcDiff_xpath_results(srcDiff) :
 
     command = [srcml2src_utility, "--xpath", srcDiff_xpath]
 
-    results = run(command, srcDiff)
+    srcDiff_results = run(command, srcDiff)
 
     command = [srcml2src_utility "--units"]
 
-    num_units = run(command, results)
+    num_units = run(command, srcDiff_results)
 
+    srcDiff_xpath_results = []
+
+    for i in range(1, num_units + 1) :
+
+        srcDiff_xpath_results.append(create_srcDiff_xpath_result(srcDiff_results, i))
 
     return srcDiff_xpath_results
 
