@@ -394,6 +394,9 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
+    tracer.wait = false;
+    tracer.collect = false;
+
     std::string pre = "";
     if(strcmp((const char *)localname, "name") == 0) {
 
@@ -431,9 +434,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
-
-    tracer.wait = false;
-    tracer.collect = false;
 
     // always a change if wait output since all names
     if(tracer.output) {
