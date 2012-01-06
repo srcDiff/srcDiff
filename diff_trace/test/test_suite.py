@@ -153,5 +153,5 @@ output_diff_xpath_results(sys.argv[1], srcDiff_xpath_results, difftrace_xpath_re
 print "Test Summary"
 print
 
-for i in len(xpath_errors) :
+for i in range(len(xpath_errors)) :
     print str(i) + ":\t" + xpath_errors[i]
