@@ -388,7 +388,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
-  if(tracer.wait && tracer.collect_node_pos == tracer.elements.size()) {
+  if(tracer.wait && tracer.collect_node_pos == tracer.elements.size() - 1) {
 
     tracer.wait = false;
     tracer.collect = false;
