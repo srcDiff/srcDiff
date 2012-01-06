@@ -15,6 +15,8 @@ suite_directory = "suite"
 
 srcDiff_xpath = "//diff:*[not(self::diff:common)]/node()"
 
+run_exceptions = []
+
 xpath_errors = []
 
 test_count = 0
@@ -180,12 +182,17 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
     srcDiff = srcDiff_file.read()
     srcDiff_file.close()
 
-    difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(srcDiff))
-    srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
+    try :
 
-    diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
+        difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(srcDiff))
+        srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
 
-    output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
+        diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
+
+        output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
+
+    except Exception :
+        globals()['run_exception'].append(srcDiff_filename)
 
     return
 
