@@ -142,4 +142,4 @@ srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
 
 diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
 
-output_diff_xpath_results(srcDiff_file, srcDiff_xpath_results, difftrace_xpath_results)
+output_diff_xpath_results(srcDiff_file, srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
