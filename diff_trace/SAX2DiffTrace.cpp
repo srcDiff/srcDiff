@@ -388,6 +388,51 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
+  if(tracer.wait && tracer.collect_node_pos == tracer.elements.size()) {
+
+    tracer.wait = false;
+    tracer.collect = false;
+
+    std::string pre = "";
+
+    tracer.elements.at(tracer.collect_node_pos).signature_old = pre;
+    tracer.elements.at(tracer.collect_node_pos).signature_new = pre;
+
+    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
+    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
+
+    // always a change if wait output since all names
+    if(tracer.output) {
+
+      int num_missed = tracer.missed_diff_types.size();
+
+      for(unsigned int i = 0; i < num_missed; ++i) {
+
+        diff temp_diff = { 0 };
+        temp_diff.operation = tracer.missed_diff_types.at(i);
+
+        tracer.diff_stack.push_back(temp_diff);
+
+        for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+          tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
+
+        output_diff(tracer);
+
+        for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+          tracer.elements.pop_back();
+
+        tracer.diff_stack.pop_back();
+
+      }
+
+      tracer.missed_diff_types.clear();
+      tracer.missed_diffs.clear();
+
+      tracer.output = false;
+
+    }
+
+  }
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
@@ -413,15 +458,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
 
-  bool end_wait = false;
-  if(tracer.wait && tracer.collect_node_pos == tracer.elements.size()) {
-
-    end_wait = false;
-
-  }
-
-  if(end_wait
-     || (tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))) {
+  if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
     tracer.wait = false;
     tracer.collect = false;
