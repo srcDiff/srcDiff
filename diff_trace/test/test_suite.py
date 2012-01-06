@@ -5,6 +5,7 @@ import sys
 import string
 import os
 import os.path
+import re
 
 srcml2src = "../../../../bin/srcml2src"
 xsltproc = "xsltproc"
@@ -188,9 +189,17 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
     return
 
+filename_regex = None
+
+if sys.argc > 1 :
+    filename_regex = sys.argv[2]
+
 for srcDiff_filename in os.listdir(suite_directory) :
 
     if os.path.isdir(suite_directory + "/" + srcDiff_filename) :
+        continue
+
+    if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
         continue
 
     test_difftrace_on_srcDiff_file(srcDiff_filename)
