@@ -53,11 +53,11 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
     
     return difftrace_xpath_results
 
-def create_difftrace_xpath_list(filename) :
+def create_difftrace_xpath_list(srcDiff) :
 
-    command = [difftrace, filename]
+    command = [difftrace]
 
-    difftrace_xpath_list = string.split(run(command, ""), "\n")
+    difftrace_xpath_list = string.split(run(command, srcDiff), "\n")
 
     return difftrace_xpath_list
 
@@ -170,7 +170,7 @@ srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
 srcDiff_file.close()
 
-difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(sys.argv[1]))
+difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(srcDiff))
 srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
 
 diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
