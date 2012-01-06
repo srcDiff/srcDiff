@@ -95,5 +95,5 @@ diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_res
 for i in diff_error_list :
 
     print str(i)
-    print "srcDiff" + srcDiff_xpath_results[i]
-    print "difftrace" + difftrace_xpath_results[i]
+    print "srcDiff: '" + srcDiff_xpath_results[i] + "'"
+    print "difftrace: '" + difftrace_xpath_results[i] + "'"
