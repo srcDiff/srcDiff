@@ -120,10 +120,10 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
     for i in range(num_results) :
 
         if i in diff_error_list :
-            test_case_results = test_case_results + "-" + str(i)
+            test_case_results += "-" + str(i) + " "
 
         else :
-            test_case_results = test_case_results + str(i)
+            test_case_results += str(i) + " "
 
     print test_case_results
 
