@@ -103,8 +103,13 @@ srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
 
 diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
 
+srcDiff_xpath_results_length = len(srcDiff_xpath_results)
+difftrace_xpath_results_length = len(difftrace_xpath_results)
+
 for i in diff_error_list :
 
     print str(i)
+
+    # put in check not out of bounds
     print "srcDiff: '" + srcDiff_xpath_results[i] + "'"
     print "difftrace: '" + difftrace_xpath_results[i] + "'"
