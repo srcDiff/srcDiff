@@ -73,7 +73,12 @@ def create_srcDiff_xpath_results(srcDiff) :
 
     for i in range(1, num_units + 1) :
 
-        srcDiff_xpath_results.append(create_srcDiff_xpath_result(srcDiff_results, i))
+        srcDiff_xpath_result = create_srcDiff_xpath_result(srcDiff_results, i);
+
+        if srcDiff_xpath_result == "" :
+            continue
+
+        srcDiff_xpath_results.append(srcDiff_xpath_result)
 
     return srcDiff_xpath_results
 
