@@ -150,8 +150,9 @@ diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_res
 
 output_diff_xpath_results(sys.argv[1], srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
 
+print
 print "Test Summary"
 print
 
 for i in range(len(xpath_errors)) :
-    print str(i) + ":\t" + xpath_errors[i]
+    print str(i + 1) + ":\t" + xpath_errors[i]
