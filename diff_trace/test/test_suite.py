@@ -191,7 +191,7 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
 filename_regex = None
 
-if sys.argc > 1 :
+if len(sys.argv) > 1 :
     filename_regex = sys.argv[2]
 
 for srcDiff_filename in os.listdir(suite_directory) :
