@@ -8,6 +8,7 @@ srcml2src = "srcml2src"
 xsltproc = "xsltproc"
 strip_units = "strip_units.xsl"
 difftrace = "../difftrace"
+suite_directory = "suite"
 
 srcDiff_xpath = "//diff:*[not(diff:common)]/node()"
 
