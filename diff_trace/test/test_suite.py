@@ -192,7 +192,7 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
         output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
 
     except Exception :
-        globals()['run_exception'].append(srcDiff_filename)
+        globals()['run_exceptions'].append(srcDiff_filename)
 
     return
 
