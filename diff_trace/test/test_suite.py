@@ -74,7 +74,14 @@ def create_srcDiff_xpath_result(srcDiff_results, unit) :
 
 def diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results) :
 
-    return 
+    diff_error_list = []
+
+    for i in range(min(srcDiff_xpath_results.len, difftrace_xpath_results.len)) :
+
+        if srcDiff_xpath_results[i] !=  difftrace_xpath_results[i] :
+            diff_error_list.append(i)
+
+    return diff_error_list
 
 srcDiff_file = open(sys.argv[1], "r")
 srcDiff = srcDiff_file.read()
