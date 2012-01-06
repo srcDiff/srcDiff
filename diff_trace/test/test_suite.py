@@ -66,7 +66,7 @@ def create_srcDiff_xpath_result(srcDiff_results, unit) :
 
     srcDiff_xpath_result = run(command, srcDiff_results)
 
-    command = [srcml2src_utility, "--xslt", split_units]
+    command = [srcml2src_utility, "--xslt", strip_units]
 
     srcDiff_xpath_result = run(command, srcDiff_xpath_results)
 
