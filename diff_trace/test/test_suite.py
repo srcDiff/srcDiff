@@ -196,20 +196,26 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
     return
 
-filename_regex = None
+def process_dir(path, filename_regex) :
 
-if len(sys.argv) > 1 :
-    filename_regex = sys.argv[1]
+for srcDiff_filename in os.listdir(path) :
 
-for srcDiff_filename in os.listdir(suite_directory) :
-
-    if os.path.isdir(suite_directory + "/" + srcDiff_filename) :
+    if os.path.isdir(path + "/" + srcDiff_filename) :
         continue
 
     if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
         continue
 
     test_difftrace_on_srcDiff_file(srcDiff_filename)
+
+    return
+
+filename_regex = None
+
+if len(sys.argv) > 1 :
+    filename_regex = sys.argv[1]
+
+process_dir(suite_directory, filename_regex)
 
 error_count = len(xpath_errors)
 
