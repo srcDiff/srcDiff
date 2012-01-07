@@ -198,15 +198,15 @@ def test_difftrace_on_srcDiff_file(srcDiff_filename) :
 
 def process_dir(path, filename_regex) :
 
-for srcDiff_filename in os.listdir(path) :
+    for srcDiff_filename in os.listdir(path) :
 
-    if os.path.isdir(path + "/" + srcDiff_filename) :
-        continue
+        if os.path.isdir(path + "/" + srcDiff_filename) :
+            continue
 
-    if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
-        continue
+        if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
+            continue
 
-    test_difftrace_on_srcDiff_file(srcDiff_filename)
+        test_difftrace_on_srcDiff_file(srcDiff_filename)
 
     return
 
