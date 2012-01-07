@@ -176,9 +176,9 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
 
     return
 
-def test_difftrace_on_srcDiff_file(srcDiff_filename) :
+def test_difftrace_on_srcDiff_file(path, srcDiff_filename) :
 
-    srcDiff_file = open(suite_directory + "/" + srcDiff_filename, "r")
+    srcDiff_file = open(path + "/" + srcDiff_filename, "r")
     srcDiff = srcDiff_file.read()
     srcDiff_file.close()
 
@@ -206,7 +206,7 @@ def process_dir(path, filename_regex) :
         if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
             continue
 
-        test_difftrace_on_srcDiff_file(srcDiff_filename)
+        test_difftrace_on_srcDiff_file(path, srcDiff_filename)
 
     return
 
