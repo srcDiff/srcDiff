@@ -238,6 +238,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   tracer.collect_text = false;
+  tracer.diff_stack.back().output_text = false;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
@@ -437,6 +438,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   tracer.collect_text = false;
+  tracer.diff_stack.back().output_text = false;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
@@ -593,14 +595,13 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
      && len != 0 && ((tracer.options & OPTION_WHITESPACE) || (!tracer.collect_text))
      && tracer.diff_stack.back().level == 0) {
 
-    tracer.diff_stack.back().text_num = tracer.elements.back().children[tag];
     tracer.diff_stack.back().output_text = true;
 
   }
 
   if(tracer.diff_stack.back().operation != COMMON
      && len != 0 && ((tracer.options & OPTION_WHITESPACE)
-                || (tracer.diff_stack.back().output_text && tracer.elements.back().children[tag] == tracer.diff_stack.back().text_num && i != len))
+                || (tracer.diff_stack.back().output_text && i != len))
      && tracer.diff_stack.back().level == 0) {
 
     tracer.diff_stack.back().output_text = false;
