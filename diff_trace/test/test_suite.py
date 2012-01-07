@@ -233,4 +233,4 @@ if run_exception_count > 0 :
     print
 
     for i in range(run_exception_count) :
-        print str(i + 1) + ":\t" + run_exceptions[i]
+        print str(i + 1) + ":\n" + run_exceptions[i]
