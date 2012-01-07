@@ -19,6 +19,8 @@ run_exceptions = []
 
 xpath_errors = []
 
+file_count = 0
+
 test_count = 0
 
 def run(command, inputs) :
@@ -208,6 +210,8 @@ def process_dir(path, filename_regex) :
 
         if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
             continue
+
+        globals()['file_count'] += 1
 
         test_difftrace_on_srcDiff_file(path, srcDiff_filename)
 
