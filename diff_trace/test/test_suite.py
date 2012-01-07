@@ -200,16 +200,29 @@ def process_dir(path, filename_regex) :
 
     for srcDiff_filename in os.listdir(path) :
 
-        if os.path.isdir(path + "/" + srcDiff_filename) :
+        if srcDiff_filename[0] == "." :
             continue
 
-        if srcDiff_filename[0] == "." :
+        if os.path.isdir(path + "/" + srcDiff_filename) :
             continue
 
         if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
             continue
 
         test_difftrace_on_srcDiff_file(path, srcDiff_filename)
+
+    for srcDiff_filename in os.listdir(path) :
+
+        if srcDiff_filename[0] == "." :
+            continue
+
+        if not(os.path.isdir(path + "/" + srcDiff_filename)) :
+            continue
+
+        if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
+            continue
+
+        process_dir(path + "/" + srcDiff_filename, filename_regex)
 
     return
 
