@@ -255,7 +255,7 @@ run_exception_count = len(run_exceptions)
 
 if run_exception_count > 0 :
 
-    print "Run Exceptions"
+    print str(run_exception_count) + " Run Exceptions"
     print
 
     for i in range(run_exception_count) :
