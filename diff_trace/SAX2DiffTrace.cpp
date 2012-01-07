@@ -153,6 +153,9 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
+    // always a change if wait output since all names
+  if(tracer.output) {
+
   int num_missed = tracer.missed_diff_types.size();
 
   for(unsigned int i = 0; i < num_missed; ++i) {
@@ -178,6 +181,7 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
   tracer.missed_diffs.clear();
 
   tracer.output = false;
+  }
 
 }
 
@@ -422,10 +426,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
-    // always a change if wait output since all names
-    if(tracer.output) {
-
-      output_missed(tracer);
+    output_missed(tracer);
 
   }
 
@@ -496,12 +497,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
-    // always a change if wait output since all names
-    if(tracer.output) {
-
-      output_missed(tracer);
-
-    }
+    output_missed(tracer);
 
   }
 
