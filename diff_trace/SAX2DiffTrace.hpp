@@ -24,6 +24,8 @@ struct diff {
 
   int operation;
   int level;
+  int text_num;
+  bool output_text;
 
 };
 
