@@ -216,7 +216,7 @@ def process_dir(path, filename_regex) :
         if srcDiff_filename[0] == "." :
             continue
 
-        if not(os.path.isdir(path + "/" + srcDiff_filename)) :
+        if os.path.isfile(path + "/" + srcDiff_filename) :
             continue
 
         if filename_regex != None and re.match(filename_regex, srcDiff_filename) == None:
