@@ -92,10 +92,19 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
   if(strcmp(name, "class") == 0)
     return true;
 
+  if(strcmp(name, "class_decl") == 0)
+    return true;
+
   if(strcmp(name, "struct") == 0)
     return true;
 
+  if(strcmp(name, "struct_decl") == 0)
+    return true;
+
   if(strcmp(name, "union") == 0)
+    return true;
+
+  if(strcmp(name, "union_decl") == 0)
     return true;
 
   return false;
@@ -118,10 +127,19 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     if(strcmp(tracer.elements.at(pos).name.c_str(), "class") == 0 && strcmp(name, "name") == 0)
       return true;
 
+    if(strcmp(tracer.elements.at(pos).name.c_str(), "class_decl") == 0 && strcmp(name, "name") == 0)
+      return true;
+
     if(strcmp(tracer.elements.at(pos).name.c_str(), "struct") == 0 && strcmp(name, "name") == 0)
       return true;
 
+    if(strcmp(tracer.elements.at(pos).name.c_str(), "struct_decl") == 0 && strcmp(name, "name") == 0)
+      return true;
+
     if(strcmp(tracer.elements.at(pos).name.c_str(), "union") == 0 && strcmp(name, "name") == 0)
+      return true;
+
+    if(strcmp(tracer.elements.at(pos).name.c_str(), "union_decl") == 0 && strcmp(name, "name") == 0)
       return true;
 
   }
@@ -136,6 +154,9 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
 
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "block") == 0)
     return true;
+
+  //if((strcmp(context, "class_decl") == 0 || strcmp(context, "struct_decl") == 0 || strcmp(context, "union_decl") == 0) && strcmp(name, "block") == 0)
+  //return true;
 
   return false;
 }
