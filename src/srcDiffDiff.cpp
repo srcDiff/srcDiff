@@ -6,7 +6,7 @@
 #include "srcDiffCommentDiff.hpp"
 #include "srcDiffWhiteSpace.hpp"
 #include "srcDiffNested.hpp"
-#include <phread.h>
+#include <pthread.h>
 
 #include <string.h>
 #include "Methods.hpp"
