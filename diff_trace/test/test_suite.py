@@ -128,7 +128,7 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
     srcDiff_xpath_results_length = len(srcDiff_xpath_results)
     difftrace_xpath_results_length = len(difftrace_xpath_results)
 
-    test_case_results = srcDiff_filename + ":\t"
+    test_case_results = str(globals()['test_count']) + ". " srcDiff_filename + ":\t"
 
     num_results = min(srcDiff_xpath_results_length, difftrace_xpath_results_length)
     
@@ -194,7 +194,7 @@ def test_difftrace_on_srcDiff_file(path, srcDiff_filename) :
         output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace_xpath_results, diff_error_list)
 
     except Exception :
-        globals()['run_exceptions'].append(srcDiff_filename)
+        globals()['run_exceptions'].append(str(globals()['file_count']) + ": " + srcDiff_filename)
 
     return
 
@@ -259,4 +259,4 @@ if run_exception_count > 0 :
     print
 
     for i in range(run_exception_count) :
-        print str(i + 1) + ":\n" + run_exceptions[i]
+        print run_exceptions[i]
