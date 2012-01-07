@@ -597,7 +597,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
      && len != 0 && ((tracer.options & OPTION_WHITESPACE) || (!tracer.collect_text))
      && tracer.diff_stack.back().level == 0) {
 
-    tracer.diff_stack.back().text_num = 0;
+    tracer.diff_stack.back().text_num = tracer.elements.back().children[tag]
     tracer.diff_stack.back().output_text = true;
 
   }
