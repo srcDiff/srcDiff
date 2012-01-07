@@ -257,8 +257,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
-
     tracer.diff_stack.push_back(curdiff);
 
   }
@@ -446,8 +444,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
        || strcmp((const char *)localname, "delete") == 0
        || strcmp((const char *)localname, "insert") == 0) {
 
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
-
       tracer.diff_stack.pop_back();
 
     }
@@ -538,7 +534,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, tracer.diff_stack.back().level);
+
   if(tracer.collect) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
