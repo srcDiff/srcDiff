@@ -238,6 +238,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   tracer.collect_text = false;
+  tracer.diff_stack.back().output_text = false;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
@@ -437,6 +438,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   tracer.collect_text = false;
+  tracer.diff_stack.back().output_text = false;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
