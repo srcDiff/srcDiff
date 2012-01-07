@@ -128,7 +128,7 @@ def output_diff_xpath_results(srcDiff_filename, srcDiff_xpath_results, difftrace
     srcDiff_xpath_results_length = len(srcDiff_xpath_results)
     difftrace_xpath_results_length = len(difftrace_xpath_results)
 
-    test_case_results = str(globals()['test_count']) + ". " srcDiff_filename + ":\t"
+    test_case_results = str(globals()['test_count']) + ". " + srcDiff_filename + ":\t"
 
     num_results = min(srcDiff_xpath_results_length, difftrace_xpath_results_length)
     
