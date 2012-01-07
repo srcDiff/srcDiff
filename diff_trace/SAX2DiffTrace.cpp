@@ -174,34 +174,40 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
-    // always a change if wait output since all names
+  tracer.wait = false;
+  tracer.collect = false;
+
+  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
+  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
+
+  // always a change if wait output since all names
   if(tracer.output) {
 
-  int num_missed = tracer.missed_diff_types.size();
+    int num_missed = tracer.missed_diff_types.size();
 
-  for(unsigned int i = 0; i < num_missed; ++i) {
+    for(unsigned int i = 0; i < num_missed; ++i) {
 
-    diff temp_diff = { 0 };
-    temp_diff.operation = tracer.missed_diff_types.at(i);
+      diff temp_diff = { 0 };
+      temp_diff.operation = tracer.missed_diff_types.at(i);
 
-    tracer.diff_stack.push_back(temp_diff);
+      tracer.diff_stack.push_back(temp_diff);
 
-    for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-      tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
+      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+        tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
 
-    output_diff(tracer);
+      output_diff(tracer);
 
-    for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-      tracer.elements.pop_back();
+      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+        tracer.elements.pop_back();
 
-    tracer.diff_stack.pop_back();
+      tracer.diff_stack.pop_back();
 
-  }
+    }
 
-  tracer.missed_diff_types.clear();
-  tracer.missed_diffs.clear();
+    tracer.missed_diff_types.clear();
+    tracer.missed_diffs.clear();
 
-  tracer.output = false;
+    tracer.output = false;
   }
 
 }
@@ -388,6 +394,17 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
+    if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+
+      std::string pre = "";
+
+      tracer.elements.at(tracer.collect_node_pos).signature_old = pre;
+      tracer.elements.at(tracer.collect_node_pos).signature_new = pre;
+
+      output_missed(tracer);
+
+    }
+
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
       if(!tracer.wait)
@@ -436,16 +453,10 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   if(tracer.wait && tracer.collect_node_pos == tracer.elements.size() - 1) {
 
-    tracer.wait = false;
-    tracer.collect = false;
-
     std::string pre = "";
 
     tracer.elements.at(tracer.collect_node_pos).signature_old = pre;
     tracer.elements.at(tracer.collect_node_pos).signature_new = pre;
-
-    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
-    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
     output_missed(tracer);
 
@@ -476,9 +487,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     --tracer.diff_stack.back().level;
 
   if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
-
-    tracer.wait = false;
-    tracer.collect = false;
 
     std::string pre = "";
     if(strcmp((const char *)localname, "name") == 0) {
@@ -514,9 +522,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
     }
-
-    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
-    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
 
     output_missed(tracer);
 
