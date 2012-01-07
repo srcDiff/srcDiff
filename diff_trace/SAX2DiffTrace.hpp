@@ -94,6 +94,8 @@ class SAX2DiffTrace {
   
   static bool is_end_collect(const char * name, const char * prefix, const char * context);
 
+  static void output_missed(SAX2DiffTrace & tracer);
+
   // characters
   static void characters(void* ctx, const xmlChar* ch, int len);
 

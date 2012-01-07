@@ -131,19 +131,10 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
 bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const char * context) {
 
-  if(strcmp(name, "function") == 0)
+  if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
     return true;
 
-  if(strcmp(name, "function_decl") == 0)
-    return true;
-
-  if(strcmp(name, "class") == 0)
-    return true;
-
-  if(strcmp(name, "struct") == 0)
-    return true;
-
-  if(strcmp(name, "union") == 0)
+  if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "block") == 0)
     return true;
 
   return false;
@@ -158,6 +149,36 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
     return true;
 
   return false;
+}
+
+void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
+
+  int num_missed = tracer.missed_diff_types.size();
+
+  for(unsigned int i = 0; i < num_missed; ++i) {
+
+    diff temp_diff = { 0 };
+    temp_diff.operation = tracer.missed_diff_types.at(i);
+
+    tracer.diff_stack.push_back(temp_diff);
+
+    for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+      tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
+
+    output_diff(tracer);
+
+    for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+      tracer.elements.pop_back();
+
+    tracer.diff_stack.pop_back();
+
+  }
+
+  tracer.missed_diff_types.clear();
+  tracer.missed_diffs.clear();
+
+  tracer.output = false;
+
 }
 
 void add_child(std::map<std::string, int> & children, std::string & child) {
@@ -404,33 +425,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     // always a change if wait output since all names
     if(tracer.output) {
 
-      int num_missed = tracer.missed_diff_types.size();
-
-      for(unsigned int i = 0; i < num_missed; ++i) {
-
-        diff temp_diff = { 0 };
-        temp_diff.operation = tracer.missed_diff_types.at(i);
-
-        tracer.diff_stack.push_back(temp_diff);
-
-        for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-          tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
-
-        output_diff(tracer);
-
-        for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-          tracer.elements.pop_back();
-
-        tracer.diff_stack.pop_back();
-
-      }
-
-      tracer.missed_diff_types.clear();
-      tracer.missed_diffs.clear();
-
-      tracer.output = false;
-
-    }
+      output_missed(tracer);
 
   }
 
@@ -504,31 +499,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     // always a change if wait output since all names
     if(tracer.output) {
 
-      int num_missed = tracer.missed_diff_types.size();
-
-      for(unsigned int i = 0; i < num_missed; ++i) {
-
-        diff temp_diff = { 0 };
-        temp_diff.operation = tracer.missed_diff_types.at(i);
-
-        tracer.diff_stack.push_back(temp_diff);
-
-        for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-          tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
-
-        output_diff(tracer);
-
-        for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-          tracer.elements.pop_back();
-
-        tracer.diff_stack.pop_back();
-
-      }
-
-      tracer.missed_diff_types.clear();
-      tracer.missed_diffs.clear();
-
-      tracer.output = false;
+      output_missed(tracer);
 
     }
 
@@ -728,15 +699,15 @@ std::string create_string_from_element(element & curelement, element & nexteleme
         element += "]";
 
       }
- 
+
     } else {
 
-        element += "[";
-        if(operation == DELETE)
-          element += curelement.signature_old;
-        else
-          element += curelement.signature_new;
-        element += "]";
+      element += "[";
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+      element += "]";
 
     }
 
@@ -757,15 +728,15 @@ std::string create_string_from_element(element & curelement, element & nexteleme
         element += "]";
 
       }
- 
+
     } else {
 
-        element += "[";
-        if(operation == DELETE)
-          element += curelement.signature_old;
-        else
-          element += curelement.signature_new;
-        element += "]";
+      element += "[";
+      if(operation == DELETE)
+        element += curelement.signature_old;
+      else
+        element += curelement.signature_new;
+      element += "]";
 
     }
 
