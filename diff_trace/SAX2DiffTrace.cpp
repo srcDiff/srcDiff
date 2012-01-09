@@ -405,8 +405,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   if(tracer.collect) {
 
-    std::string tag = "/";
-
     if(prefix || strcmp((const char *)prefix, "") != 0) {
 
       tag += (const char *)prefix;
@@ -430,6 +428,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.elements.at(tracer.collect_node_pos).signature_path_new += tag_string;
 
     }
+
   }
 
     if(tracer.wait && && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
@@ -493,7 +492,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
-  if(tracer.wait && tracer.collect_node_pos == tracer.elements.size() - 1) {
+  if(tracer.wait && !tracer.collect && tracer.collect_node_pos == tracer.elements.size() - 1) {
 
     std::string pre = "";
 
