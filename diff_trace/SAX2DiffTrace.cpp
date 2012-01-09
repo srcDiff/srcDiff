@@ -70,7 +70,6 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.collect_text_delete = false;
   tracer.collect_text_insert = false;
 
-
 }
 
 void SAX2DiffTrace::endDocument(void * ctx) {
@@ -367,6 +366,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         tag += ":";
 
       }
+
       tag += (const char *)localname;
 
       add_child(tracer.elements.back().children, tag);
