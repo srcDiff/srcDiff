@@ -172,6 +172,21 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
   return false;
 }
 
+
+bool SAX2DiffTrace::is_end_collect_and_wait(SAXDiffTrace & tracer, const char * name, const char * prefix, const char * context) {
+
+  if(tracer.elements.size() - 1 != tracer.collect_noe_pos)
+    return false;
+
+  if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
+    return true;
+
+  if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
+    return true;
+
+  return false;
+}
+
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
   tracer.wait = false;
