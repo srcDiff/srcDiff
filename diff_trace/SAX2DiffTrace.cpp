@@ -432,12 +432,15 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(prefix || strcmp((const char *)prefix, "") != 0) {
 
-      tag += (const char *)prefix;
-      tag += ":";
+      tag_old += (const char *)prefix;
+      tag_old += ":";
+      tag_new += (const char *)prefix;
+      tag_new += ":";
 
     }
 
-    tag += (const char *)localname;
+    tag_old += (const char *)localname;
+    tag_new += (const char *)localname;
 
     if(tracer.diff_stack.back().operation == COMMON) {
 
