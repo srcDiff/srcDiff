@@ -161,10 +161,7 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   return false;
 }
 
-bool SAX2DiffTrace::is_end_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
-
-  if((tracer.elements.size() - 1) != tracer.collect_node_pos)
-    return false;
+bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
 
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
     return true;
@@ -499,7 +496,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
 
-  if(tracer.collect && is_end_collect(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+  if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
     std::string pre = "";
     if(strcmp((const char *)localname, "name") == 0) {
