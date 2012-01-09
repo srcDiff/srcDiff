@@ -277,29 +277,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   }
 
-  if(tracer.collect && !(tracer.options & OPTION_SRCML_RELATIVE) && (strcmp((const char *)localname, "delete") == 0 || strcmp((const char *)localname, "insert") == 0)) {
-
-    std::string diff_string = "/";
-
-    if(prefix || strcmp((const char *)prefix, "") != 0) {
-
-      diff_string += (const char *)prefix;
-      diff_string += ":";
-
-    }
-
-    diff_string += (const char *)localname;
-
-    diff_string += "='";
-
-    if(tracer.diff_stack.back().operation == DELETE)
-      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += diff_string;
-
-    else if(tracer.diff_stack.back().operation == INSERT)
-      tracer.elements.at(tracer.collect_node_pos).signature_path_new += diff_string;
-
-  }
-
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
@@ -426,7 +403,36 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+  if(tracer.collect) {
+
+    std::string tag = "/";
+
+    if(prefix || strcmp((const char *)prefix, "") != 0) {
+
+      tag += (const char *)prefix;
+      tag += ":";
+
+    }
+
+    tag += (const char *)localname;
+
+    if(tracer.diff_stack.back().operation == COMMON) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_string;
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_string;
+
+    } else if(tracer.diff_stack.back().operation == DELETE) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_string;
+
+    } else if(tracer.diff_stack.back().operation == INSERT) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new += tag_string;
+
+    }
+  }
+
+    if(tracer.wait && && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       std::string pre = "";
 
