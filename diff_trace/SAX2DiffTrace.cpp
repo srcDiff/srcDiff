@@ -569,6 +569,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   if(tracer.wait && is_end_collect_and_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
+    /*
     std::string pre = "";
     if(strcmp((const char *)localname, "name") == 0) {
 
@@ -588,7 +589,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     }
 
-    /*
+
     if(tracer.elements.at(tracer.collect_node_pos).signature_old.back() == tracer.elements.at(tracer.collect_node_pos).signature_new.back() ||
        tracer.elements.at(tracer.collect_node_pos).signature_old.back() == "" || tracer.elements.at(tracer.collect_node_pos).signature_new.back() == "") {
 
