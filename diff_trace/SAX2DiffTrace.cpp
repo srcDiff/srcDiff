@@ -190,16 +190,16 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 
 bool SAX2DiffTrace::is_end_collect_and_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
 
-  if(tracer.elements.size() - 1 != tracer.collect_node_pos)
+  if(!tracer.wait || tracer.elements.size() - 1 != tracer.collect_node_pos)
     return false;
 
-  if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
-    return true;
+  //if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
+  //return true;
 
-  if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
-    return true;
+  //if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
+  //return true;
 
-  return false;
+  return true;
 }
 
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
@@ -473,14 +473,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.wait && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
-      std::string pre = "";
-
-      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = pre;
-      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = pre;
-
-      tracer.elements.at(tracer.collect_node_pos).signature_name_old.back() = pre;
-      tracer.elements.at(tracer.collect_node_pos).signature_name_new.back() = pre;
-
       output_missed(tracer);
 
     }
@@ -535,12 +527,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(tracer.wait && !tracer.collect && (tracer.collect_node_pos == tracer.elements.size() - 1)) {
 
     std::string pre = "";
-
-    tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = pre;
-    tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = pre;
-
-    tracer.elements.at(tracer.collect_node_pos).signature_name_old.back() = pre;
-    tracer.elements.at(tracer.collect_node_pos).signature_name_new.back() = pre;
 
     output_missed(tracer);
 
