@@ -802,7 +802,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
 
-    if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_name_old != "" && curelement.signature_new != "") {
+      if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_name_old.at(i) != "" && curelement.signature_name_new.at(i) != "") {
 
       element += "[";
       element += curelement.signature_name_old.at(i);
