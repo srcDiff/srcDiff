@@ -580,13 +580,20 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
       tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
 
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+
     } else if(tracer.diff_stack.back().operation == DELETE) {
 
       tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
 
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+
     } else  if(tracer.diff_stack.back().operation == INSERT) {
 
       tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
 
     }
 
