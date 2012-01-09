@@ -35,8 +35,11 @@ struct element {
   std::string prefix;
   std::string uri;
 
-  std::string signature_old;
-  std::string signature_new;
+  std::vector<std::string> signature_path_old;
+  std::vector<std::string> signature_path_new;
+
+  std::vector<std::string> signature_name_old;
+  std::vector<std::string> signature_name_new;
 
   std::map<std::string, int> children;
   std::map<std::string, int> children_old;
