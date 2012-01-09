@@ -757,28 +757,28 @@ std::string create_string_from_element(element & curelement, element & nexteleme
   }
 
   if(curelement.name == "unit"
-     && ((operation == DELETE && curelement.signature_old != "")
-         || (operation == INSERT && curelement.signature_new != ""))) {
+     && ((operation == DELETE && curelement.signature_name_old.back() != "")
+         || (operation == INSERT && curelement.signature_name_new.back() != ""))) {
 
     element += "[@filename='";
 
     if(!(options & OPTION_SRCML_RELATIVE)) {
 
-      element += curelement.signature_old;
+      element += curelement.signature_name_old.back();
 
-      if(curelement.signature_old != curelement.signature_new) {
+      if(curelement.signature_name_old.back() != curelement.signature_name_new.back()) {
 
         element += "|";
-        element += curelement.signature_new;
+        element += curelement.signature_name_new.back();
 
       }
 
     } else {
 
       if(operation == DELETE)
-        element += curelement.signature_old;
+        element += curelement.signature_name_old.back();
       else
-        element += curelement.signature_new;
+        element += curelement.signature_name_new.back();
 
     }
 
