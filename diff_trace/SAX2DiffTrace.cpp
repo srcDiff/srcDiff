@@ -119,7 +119,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
   if(pos > 0) {
 
-    for(pos = pos - 1; pos > traceer.collect_node_pos; --pos) {
+    for(pos = pos - 1; pos > tracer.collect_node_pos; --pos) {
 
       if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name" == 0)
         break;
@@ -153,7 +153,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     */
   }
 
-  return pos == traceer.collect_node_pos;
+  return pos == tracer.collect_node_pos;
 }
 
 bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const char * context) {
@@ -202,7 +202,7 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
   tracer.collect = false;
 
   trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_old.back());
-  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_new.back);
+  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_new.back());
 
   // always a change if wait output since all names
   if(tracer.output) {
@@ -425,10 +425,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     std::string tag_new;
 
     if(tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() != "")
-      tag_old += "/"
+      tag_old += "/";
 
     if(tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() != "")
-      tag_new += "/"
+      tag_new += "/";
 
     if(prefix || strcmp((const char *)prefix, "") != 0) {
 
@@ -456,7 +456,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   }
 
-    if(tracer.wait && && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+  if(tracer.wait && && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       std::string pre = "";
 
