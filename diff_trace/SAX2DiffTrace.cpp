@@ -407,7 +407,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.wait && !tracer.collect) {
 
-      unsigned int pos = 0;
       if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix)));
 
         std::string temp;
