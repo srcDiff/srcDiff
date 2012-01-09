@@ -534,6 +534,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect) {
 
+    // build the path
+
     if(tracer.diff_stack.back().operation == COMMON) {
 
       tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
