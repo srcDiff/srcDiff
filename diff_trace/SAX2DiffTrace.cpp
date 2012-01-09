@@ -338,21 +338,27 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
         char * sep = index(filename, '|');
 
+        curelement.signature_path_old.push_back(std::string());
+        curelement.signature_path_new.push_back(std::string());
+
+        curelement.signature_name_old.push_back(std::string());
+        curelement.signature_name_new.push_back(std::string());
+
         if(sep < (filename + length)) {
 
           *sep = '\0';
 
-          curelement.signature_name_old = filename;
+          curelement.signature_name_old.back() = filename;
 
-          curelement.signature_name_new = sep + 1;
+          curelement.signature_name_new.back() = sep + 1;
 
           *sep = '|';
 
         } else {
 
-          curelement.signature_name_old = filename;
+          curelement.signature_name_old.back() = filename;
 
-          curelement.signature_name_new = filename;
+          curelement.signature_name_new.back() = filename;
 
         }
 
