@@ -830,6 +830,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
+    /*
     if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_old != "" && curelement.signature_new != "") {
 
       element += "[";
@@ -854,6 +855,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       element += "]";
 
     }
+    */
 
   } else if(strcmp(curelement.name.c_str(), "text()") == 0
             && (strcmp(curelement.signature_old.c_str(), "") != 0
