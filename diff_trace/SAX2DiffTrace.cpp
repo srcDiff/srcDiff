@@ -163,6 +163,9 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
 
 bool SAX2DiffTrace::is_end_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
 
+  if((tracer.elements.size() - 1) != tracer.collect_node_pos)
+    return false;
+
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
     return true;
 
