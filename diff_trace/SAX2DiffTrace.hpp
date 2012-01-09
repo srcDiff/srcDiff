@@ -96,7 +96,7 @@ class SAX2DiffTrace {
   
   static bool is_end_collect(const char * name, const char * prefix, const char * context);
 
-  static bool is_end_collect_and_wait(SAXDiffTrace & tracer, const char * name, const char * prefix, const char * context);
+  static bool is_end_collect_and_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context);
 
   static void output_missed(SAX2DiffTrace & tracer);
 

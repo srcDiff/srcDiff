@@ -173,7 +173,7 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 }
 
 
-bool SAX2DiffTrace::is_end_collect_and_wait(SAXDiffTrace & tracer, const char * name, const char * prefix, const char * context) {
+bool SAX2DiffTrace::is_end_collect_and_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
 
   if(tracer.elements.size() - 1 != tracer.collect_noe_pos)
     return false;
