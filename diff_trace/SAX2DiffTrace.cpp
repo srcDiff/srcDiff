@@ -430,8 +430,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       std::string pre = "";
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre;
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre;
+      tracer.elements.at(tracer.collect_node_pos).signature_name_old.back() = pre;
+      tracer.elements.at(tracer.collect_node_pos).signature_name_new.back() = pre;
 
       output_missed(tracer);
 
