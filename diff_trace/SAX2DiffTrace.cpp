@@ -860,7 +860,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     }
     */
 
-  } else if(strcmp(curelement.name.c_str(), "text()") == 0
+  }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
             && (strcmp(curelement.signature_old.c_str(), "") != 0
                 || strcmp(curelement.signature_new.c_str(), "") != 0)) {
 
@@ -872,7 +872,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     element += "')]";
 
   }
-
+   */
   /* else if(strcmp(nextelement.name.c_str(), "") == 0) {
 
      element += " and ";
