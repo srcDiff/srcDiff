@@ -392,8 +392,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.collect && strcmp((const char *)localname, "name") == 0) {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old = "";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = "";
+      tracer.elements.at(tracer.collect_node_pos).signature_old += "/src:name";
+      tracer.elements.at(tracer.collect_node_pos).signature_new += "/src:name";
 
     }
 
