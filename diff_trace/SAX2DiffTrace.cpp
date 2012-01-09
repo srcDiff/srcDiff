@@ -546,8 +546,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     }
 
-    if(tracer.elements.at(tracer.collect_node_pos).signature_old == tracer.elements.at(tracer.collect_node_pos).signature_new ||
-       tracer.elements.at(tracer.collect_node_pos).signature_old == "" || tracer.elements.at(tracer.collect_node_pos).signature_new == "") {
+    if(tracer.elements.at(tracer.collect_node_pos).signature_old.back() == tracer.elements.at(tracer.collect_node_pos).signature_new.back() ||
+       tracer.elements.at(tracer.collect_node_pos).signature_old.back() == "" || tracer.elements.at(tracer.collect_node_pos).signature_new.back() == "") {
 
       if(tracer.elements.at(tracer.collect_node_pos).signature_old != "")
         tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
@@ -579,13 +579,13 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_old.append((const char *)ch, (const char *)ch + len);
-      tracer.elements.at(tracer.collect_node_pos).signature_new.append((const char *)ch, (const char *)ch + len);
+      tracer.elements.at(tracer.collect_node_pos).signature_old.back().append((const char *)ch, (const char *)ch + len);
+      tracer.elements.at(tracer.collect_node_pos).signature_new.back()append((const char *)ch, (const char *)ch + len);
 
     } else if(tracer.diff_stack.back().operation == DELETE)
-      tracer.elements.at(tracer.collect_node_pos).signature_old.append((const char *)ch, (const char *)ch + len);
+      tracer.elements.at(tracer.collect_node_pos).signature_name_old.back()append((const char *)ch, (const char *)ch + len);
     else
-      tracer.elements.at(tracer.collect_node_pos).signature_new.append((const char *)ch, (const char *)ch + len);
+      tracer.elements.at(tracer.collect_node_pos).signature_name_new.back()append((const char *)ch, (const char *)ch + len);
 
   }
 
