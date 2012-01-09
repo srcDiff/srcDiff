@@ -471,7 +471,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(tracer.wait && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+    if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       output_missed(tracer);
 
