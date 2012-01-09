@@ -775,13 +775,13 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_name_old.at(i) != "" && curelement.signature_name_new.at(i) != "") {
 
         element += "[";
-        element += curelement.signature_name_old.at(i);
+        element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
         element += "]";
 
         if(curelement.signature_name_old.at(i) != curelement.signature_name_new.at(i)) {
 
           element += "[";
-          element += curelement.signature_name_new.at(i);
+          element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
           element += "]";
 
         }
@@ -790,7 +790,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
         element += "[";
         if(operation == DELETE)
-          element += curelement.signature_name_old.at(i);
+          element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
         else
           element += curelement.signature_name_new.at(i);
         element += "]";
