@@ -415,11 +415,11 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
         std::string temp;
 
-        tracer.elements.at(tracer.collect_node_pos).signature_path_old.push_back(temp)
-        tracer.elements.at(tracer.collect_node_pos).signature_path_new.push_back(temp)
+        tracer.elements.at(tracer.collect_node_pos).signature_path_old.push_back(temp);
+        tracer.elements.at(tracer.collect_node_pos).signature_path_new.push_back(temp);
 
-        tracer.elements.at(tracer.collect_node_pos).signature_name_old.push_back(temp)
-        tracer.elements.at(tracer.collect_node_pos).signature_name_new.push_back(temp)
+        tracer.elements.at(tracer.collect_node_pos).signature_name_old.push_back(temp);
+        tracer.elements.at(tracer.collect_node_pos).signature_name_new.push_back(temp);
 
       }
 
