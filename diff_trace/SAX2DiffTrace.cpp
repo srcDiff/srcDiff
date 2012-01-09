@@ -126,28 +126,28 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     }
 
     /*
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "function") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "function") == 0 && strcmp(name, "name") == 0)
       return true;
 
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "function_decl") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "function_decl") == 0 && strcmp(name, "name") == 0)
       return true;
 
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "class") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "class") == 0 && strcmp(name, "name") == 0)
       return true;
 
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "class_decl") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "class_decl") == 0 && strcmp(name, "name") == 0)
       return true;
 
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "struct") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "struct") == 0 && strcmp(name, "name") == 0)
       return true;
 
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "struct_decl") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "struct_decl") == 0 && strcmp(name, "name") == 0)
       return true;
 
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "union") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "union") == 0 && strcmp(name, "name") == 0)
       return true;
 
-    if(strcmp(tracer.elements.at(pos).name.c_str(), "union_decl") == 0 && strcmp(name, "name") == 0)
+      if(strcmp(tracer.elements.at(pos).name.c_str(), "union_decl") == 0 && strcmp(name, "name") == 0)
       return true;
     */
   } else {
@@ -404,12 +404,12 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     }
 
     /*
-    if(tracer.collect && strcmp((const char *)localname, "name") == 0) {
+      if(tracer.collect && strcmp((const char *)localname, "name") == 0) {
 
       tracer.elements.at(tracer.collect_node_pos).signature_old = "";
       tracer.elements.at(tracer.collect_node_pos).signature_new = "";
 
-    }
+      }
     */
 
     if(tracer.wait && !tracer.collect) {
@@ -428,47 +428,47 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-  if(0 && tracer.collect) {
+    if(0 && tracer.collect) {
 
-    std::string tag_old;
-    std::string tag_new;
+      std::string tag_old;
+      std::string tag_new;
 
-    if(tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() != "")
-      tag_old += "/";
+      if(tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() != "")
+        tag_old += "/";
 
-    if(tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() != "")
-      tag_new += "/";
+      if(tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() != "")
+        tag_new += "/";
 
-    if(prefix || strcmp((const char *)prefix, "") != 0) {
+      if(prefix || strcmp((const char *)prefix, "") != 0) {
 
-      tag_old += (const char *)prefix;
-      tag_old += ":";
-      tag_new += (const char *)prefix;
-      tag_new += ":";
+        tag_old += (const char *)prefix;
+        tag_old += ":";
+        tag_new += (const char *)prefix;
+        tag_new += ":";
+
+      }
+
+      tag_old += (const char *)localname;
+      tag_new += (const char *)localname;
+
+      if(tracer.diff_stack.back().operation == COMMON) {
+
+        tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_old;
+        tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_new;
+
+      } else if(tracer.diff_stack.back().operation == DELETE) {
+
+        tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_old;
+
+      } else if(tracer.diff_stack.back().operation == INSERT) {
+
+        tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_new;
+
+      }
 
     }
 
-    tag_old += (const char *)localname;
-    tag_new += (const char *)localname;
-
-    if(tracer.diff_stack.back().operation == COMMON) {
-
-      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_old;
-      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_new;
-
-    } else if(tracer.diff_stack.back().operation == DELETE) {
-
-      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_old;
-
-    } else if(tracer.diff_stack.back().operation == INSERT) {
-
-      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_new;
-
-    }
-
-  }
-
-  if(tracer.wait && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+    if(tracer.wait && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       std::string pre = "";
 
@@ -573,41 +573,41 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(tracer.wait && is_end_collect_and_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
     /*
-    std::string pre = "";
-    if(strcmp((const char *)localname, "name") == 0) {
+      std::string pre = "";
+      if(strcmp((const char *)localname, "name") == 0) {
 
       if(!prefix || strcmp((const char *)prefix, "") == 0) {
 
-        if(strcmp((const char *)URI, "http://www.sdml.info/srcML/src") == 0)
-          pre += "src:";
+      if(strcmp((const char *)URI, "http://www.sdml.info/srcML/src") == 0)
+      pre += "src:";
 
       } else {
 
-        pre += (const char *)prefix;
-        pre += ":";
+      pre += (const char *)prefix;
+      pre += ":";
 
       }
 
       pre += "name";
 
-    }
+      }
 
 
-    if(tracer.elements.at(tracer.collect_node_pos).signature_old.back() == tracer.elements.at(tracer.collect_node_pos).signature_new.back() ||
-       tracer.elements.at(tracer.collect_node_pos).signature_old.back() == "" || tracer.elements.at(tracer.collect_node_pos).signature_new.back() == "") {
+      if(tracer.elements.at(tracer.collect_node_pos).signature_old.back() == tracer.elements.at(tracer.collect_node_pos).signature_new.back() ||
+      tracer.elements.at(tracer.collect_node_pos).signature_old.back() == "" || tracer.elements.at(tracer.collect_node_pos).signature_new.back() == "") {
 
       if(tracer.elements.at(tracer.collect_node_pos).signature_old != "")
-        tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
 
       if(tracer.elements.at(tracer.collect_node_pos).signature_new != "")
-        tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
+      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
-    } else {
+      } else {
 
       tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
       tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
-    }
+      }
     */
 
     output_missed(tracer);
@@ -693,7 +693,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.diff_stack.back().operation != COMMON
      && len != 0 && ((tracer.options & OPTION_WHITESPACE)
-                || (tracer.diff_stack.back().output_text && tracer.elements.back().children[tag] == tracer.diff_stack.back().text_num && i != len))
+                     || (tracer.diff_stack.back().output_text && tracer.elements.back().children[tag] == tracer.diff_stack.back().text_num && i != len))
      && tracer.diff_stack.back().level == 0) {
 
     tracer.diff_stack.back().output_text = false;
@@ -704,10 +704,10 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     curelement.uri = "";
 
     /*
-    if((tracer.options & OPTION_WHITESPACE) && i == len)
+      if((tracer.options & OPTION_WHITESPACE) && i == len)
       if(tracer.diff_stack.back().operation == DELETE)
-        for(int i = 0; i < len; ++i)
-          curelement.signature_old += (char)ch[i];
+      for(int i = 0; i < len; ++i)
+      curelement.signature_old += (char)ch[i];
     */
 
     tracer.elements.push_back(curelement);
@@ -817,28 +817,28 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_name_old.at(i) != "" && curelement.signature_name_new.at(i) != "") {
 
-      element += "[";
-      element += curelement.signature_name_old.at(i);
-      element += "]";
+        element += "[";
+        element += curelement.signature_name_old.at(i);
+        element += "]";
 
-      if(curelement.signature_name_old.at(i) != curelement.signature_name_new.at(i)) {
+        if(curelement.signature_name_old.at(i) != curelement.signature_name_new.at(i)) {
+
+          element += "[";
+          element += curelement.signature_name_new.at(i);
+          element += "]";
+
+        }
+
+      } else {
 
         element += "[";
-        element += curelement.signature_name_new.at(i);
+        if(operation == DELETE)
+          element += curelement.signature_name_old.at(i);
+        else
+          element += curelement.signature_name_new.at(i);
         element += "]";
 
       }
-
-    } else {
-
-      element += "[";
-      if(operation == DELETE)
-        element += curelement.signature_name_old.at(i);
-      else
-        element += curelement.signature_name_new.at(i);
-      element += "]";
-
-    }
 
     }
 
@@ -847,7 +847,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             || strcmp(curelement.name.c_str(), "union") == 0) {
 
     /*
-    if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_old != "" && curelement.signature_new != "") {
+      if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_old != "" && curelement.signature_new != "") {
 
       element += "[";
       element += curelement.signature_old;
@@ -855,36 +855,36 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       if(curelement.signature_old != curelement.signature_new) {
 
-        element += "[";
-        element += curelement.signature_new;
-        element += "]";
+      element += "[";
+      element += curelement.signature_new;
+      element += "]";
 
       }
 
-    } else {
+      } else {
 
       element += "[";
       if(operation == DELETE)
-        element += curelement.signature_old;
+      element += curelement.signature_old;
       else
-        element += curelement.signature_new;
+      element += curelement.signature_new;
       element += "]";
 
-    }
+      }
     */
 
   }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
-            && (strcmp(curelement.signature_old.c_str(), "") != 0
-                || strcmp(curelement.signature_new.c_str(), "") != 0)) {
+      && (strcmp(curelement.signature_old.c_str(), "") != 0
+      || strcmp(curelement.signature_new.c_str(), "") != 0)) {
 
-    element += "[fn:contains(., '";
-    if(operation == DELETE)
+      element += "[fn:contains(., '";
+      if(operation == DELETE)
       element += curelement.signature_old;
-    else
+      else
       element += curelement.signature_new;
-    element += "')]";
+      element += "')]";
 
-  }
+      }
    */
   /* else if(strcmp(nextelement.name.c_str(), "") == 0) {
 
