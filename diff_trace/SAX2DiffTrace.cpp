@@ -678,10 +678,12 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     curelement.prefix = "";
     curelement.uri = "";
 
+    /*
     if((tracer.options & OPTION_WHITESPACE) && i == len)
       if(tracer.diff_stack.back().operation == DELETE)
         for(int i = 0; i < len; ++i)
           curelement.signature_old += (char)ch[i];
+    */
 
     tracer.elements.push_back(curelement);
 
