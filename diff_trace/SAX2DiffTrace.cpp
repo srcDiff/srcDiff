@@ -431,46 +431,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(0 && tracer.collect) {
-
-      std::string tag_old;
-      std::string tag_new;
-
-      if(tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() != "")
-        tag_old += "/";
-
-      if(tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() != "")
-        tag_new += "/";
-
-      if(prefix || strcmp((const char *)prefix, "") != 0) {
-
-        tag_old += (const char *)prefix;
-        tag_old += ":";
-        tag_new += (const char *)prefix;
-        tag_new += ":";
-
-      }
-
-      tag_old += (const char *)localname;
-      tag_new += (const char *)localname;
-
-      if(tracer.diff_stack.back().operation == COMMON) {
-
-        tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_old;
-        tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_new;
-
-      } else if(tracer.diff_stack.back().operation == DELETE) {
-
-        tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += tag_old;
-
-      } else if(tracer.diff_stack.back().operation == INSERT) {
-
-        tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_new;
-
-      }
-
-    }
-
     if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       output_missed(tracer);
@@ -558,44 +518,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     tracer.collect = false;
 
   if(0 && tracer.wait && is_end_collect_and_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
-
-    /*
-      std::string pre = "";
-      if(strcmp((const char *)localname, "name") == 0) {
-
-      if(!prefix || strcmp((const char *)prefix, "") == 0) {
-
-      if(strcmp((const char *)URI, "http://www.sdml.info/srcML/src") == 0)
-      pre += "src:";
-
-      } else {
-
-      pre += (const char *)prefix;
-      pre += ":";
-
-      }
-
-      pre += "name";
-
-      }
-
-
-      if(tracer.elements.at(tracer.collect_node_pos).signature_old.back() == tracer.elements.at(tracer.collect_node_pos).signature_new.back() ||
-      tracer.elements.at(tracer.collect_node_pos).signature_old.back() == "" || tracer.elements.at(tracer.collect_node_pos).signature_new.back() == "") {
-
-      if(tracer.elements.at(tracer.collect_node_pos).signature_old != "")
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-
-      if(tracer.elements.at(tracer.collect_node_pos).signature_new != "")
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + "='" + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
-
-      } else {
-
-      tracer.elements.at(tracer.collect_node_pos).signature_old = pre + tracer.elements.at(tracer.collect_node_pos).signature_old + "'";
-      tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
-
-      }
-    */
 
     output_missed(tracer);
 
