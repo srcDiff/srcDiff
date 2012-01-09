@@ -535,6 +535,10 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   if(tracer.collect) {
 
     // build the path
+    for(int pos = tracer.collect_node_pos; pos < tracer.elements.size(); ++pos) {
+
+
+    }
 
     if(tracer.diff_stack.back().operation == COMMON) {
 
