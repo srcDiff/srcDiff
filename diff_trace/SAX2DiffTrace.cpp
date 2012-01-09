@@ -112,12 +112,21 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
 
+  if(strcmp(name, "name") == 0)
+    return false;
+
   unsigned int pos = tracer.elements.size() - 1;
 
   if(pos > 0) {
 
-    --pos;
+    for(pos = pos - 1; pos > traceer.collect_node_pos; --pos) {
 
+      if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name" == 0)
+        break;
+
+    }
+
+    /*
     if(strcmp(tracer.elements.at(pos).name.c_str(), "function") == 0 && strcmp(name, "name") == 0)
       return true;
 
@@ -141,10 +150,10 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
     if(strcmp(tracer.elements.at(pos).name.c_str(), "union_decl") == 0 && strcmp(name, "name") == 0)
       return true;
-
+    */
   }
 
-  return false;
+  return pos == traceer.collect_node_pos;
 }
 
 bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const char * context) {
@@ -401,6 +410,14 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       unsigned int pos = 0;
       if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix)));
 
+        std::string temp;
+
+        curelement.signature_path_old.push_back(temp);
+        curelement.signature_path_new.push_back(temp);
+
+        curelement.signature_name_old.push_back(temp);
+        curelement.signature_name_new.push_back(temp);
+
     }
 
   if(tracer.collect) {
@@ -551,6 +568,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     }
 
+    /*
     if(tracer.elements.at(tracer.collect_node_pos).signature_old.back() == tracer.elements.at(tracer.collect_node_pos).signature_new.back() ||
        tracer.elements.at(tracer.collect_node_pos).signature_old.back() == "" || tracer.elements.at(tracer.collect_node_pos).signature_new.back() == "") {
 
@@ -566,6 +584,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       tracer.elements.at(tracer.collect_node_pos).signature_new = pre + tracer.elements.at(tracer.collect_node_pos).signature_new + "'";
 
     }
+    */
 
     output_missed(tracer);
 
