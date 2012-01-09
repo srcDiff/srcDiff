@@ -204,8 +204,11 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
   tracer.wait = false;
   tracer.collect = false;
 
-  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_old.back());
-  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_new.back());
+  if(!tracer.elements.at(tracer.collect_node_pos).signature_name_old.empty())
+    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_old.back());
+
+  if(!tracer.elements.at(tracer.collect_node_pos).signature_name_new.empty())
+    trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_new.back());
 
   // always a change if wait output since all names
   if(tracer.output) {
