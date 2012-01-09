@@ -192,8 +192,8 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
   tracer.wait = false;
   tracer.collect = false;
 
-  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_old);
-  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_new);
+  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_old.back());
+  trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_new.back);
 
   // always a change if wait output since all names
   if(tracer.output) {
@@ -293,10 +293,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     diff_string += "='";
 
     if(tracer.diff_stack.back().operation == DELETE)
-      tracer.elements.at(tracer.collect_node_pos).signature_old += diff_string;
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() += diff_string;
 
     else if(tracer.diff_stack.back().operation == INSERT)
-      tracer.elements.at(tracer.collect_node_pos).signature_new += diff_string;
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new += diff_string;
 
   }
 
@@ -342,17 +342,17 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
           *sep = '\0';
 
-          curelement.signature_old = filename;
+          curelement.signature_name_old = filename;
 
-          curelement.signature_new = sep + 1;
+          curelement.signature_name_new = sep + 1;
 
           *sep = '|';
 
         } else {
 
-          curelement.signature_old = filename;
+          curelement.signature_name_old = filename;
 
-          curelement.signature_new = filename;
+          curelement.signature_name_new = filename;
 
         }
 
