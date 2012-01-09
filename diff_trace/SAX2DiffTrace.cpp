@@ -622,7 +622,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
-  return;
+
   if(tracer.collect) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
