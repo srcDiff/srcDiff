@@ -453,13 +453,13 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     } else if(tracer.diff_stack.back().operation == INSERT) {
 
-      tracer.elements.at(tracer.collect_node_pos).signature_path_new += tag_new;
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() += tag_new;
 
     }
 
   }
 
-  if(tracer.wait && && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+  if(tracer.wait && !tracer.collect && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       std::string pre = "";
 
