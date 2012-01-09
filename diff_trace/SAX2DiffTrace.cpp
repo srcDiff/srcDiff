@@ -110,7 +110,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 }
 
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
-  return true;
+
   if(strcmp(name, "name") != 0)
     return false;
 
