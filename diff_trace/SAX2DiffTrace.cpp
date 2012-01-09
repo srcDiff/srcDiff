@@ -151,6 +151,10 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     if(strcmp(tracer.elements.at(pos).name.c_str(), "union_decl") == 0 && strcmp(name, "name") == 0)
       return true;
     */
+  } else {
+
+    return false;
+
   }
 
   return pos == tracer.collect_node_pos;
