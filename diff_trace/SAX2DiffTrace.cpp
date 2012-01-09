@@ -110,7 +110,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 }
 
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
-
+  return true;
   if(strcmp(name, "name") != 0)
     return false;
 
@@ -524,6 +524,12 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
+  if(tracer.wait && !tracer.collect && (tracer.collect_node_pos == tracer.elements.size() - 1)) {
+
+    output_missed(tracer);
+
+  }
+
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
@@ -550,12 +556,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))
     tracer.collect = false;
-
-  if(tracer.wait && !tracer.collect && (tracer.collect_node_pos == tracer.elements.size() - 1)) {
-
-    output_missed(tracer);
-
-  }
 
   if(0 && tracer.wait && is_end_collect_and_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
