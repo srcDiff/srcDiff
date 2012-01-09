@@ -121,7 +121,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
   if(pos > 0) {
 
-    for(pos = pos - 1; pos > tracer.collect_node_pos; --pos) {
+    for(; pos > tracer.collect_node_pos; --pos) {
 
       if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name")
         break;
