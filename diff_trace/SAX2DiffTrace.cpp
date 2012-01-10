@@ -597,7 +597,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
       //tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
       //tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
-      tracer.signature_path_offsets_old.back() = offsets
+      tracer.signature_path_offsets_old.back() = offsets;
       tracer.signature_path_old.back() = paths;
       tracer.signature_path_offsets_new.back() = offsets;
       tracer.signature_path_new.back() = paths;
@@ -609,7 +609,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
       //tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
 
-      tracer.signature_path_offsets_old.back() = offsets
+      tracer.signature_path_offsets_old.back() = offsets;
       tracer.signature_path_old.back() = paths;
 
     } else  if(tracer.diff_stack.back().operation == INSERT) {
