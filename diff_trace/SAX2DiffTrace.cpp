@@ -546,8 +546,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect) {
 
-    std::vector<std::string> offsets = "";
-    std::vector<std::string> paths = "";
+    std::vector<std::string> offsets;
+    std::vector<std::string> paths;
 
     // build the path
     for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
@@ -572,8 +572,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         int position = pos - tracer.collect_node_pos + 1;
 
-        tracer.offsets.back().push_back(count);
-        tracer.paths.back().push_back(tag); 
+        offsets.back().push_back(count);
+        paths.back().push_back(tag); 
 
       /*
       element next_element = null_element;
