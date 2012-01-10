@@ -206,7 +206,14 @@ bool SAX2DiffTrace::is_end_collect_and_wait(SAX2DiffTrace & tracer, const char *
   return true;
 }
 
+// rename to end_collect
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
+
+  // form paths
+
+  for(int i = 0; i < signature_path_old.size(); ++i) {
+
+  }
 
   tracer.wait = false;
   tracer.collect = false;
@@ -217,7 +224,6 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
   if(!tracer.elements.at(tracer.collect_node_pos).signature_name_new.empty())
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_new.back());
 
-  // always a change if wait output since all names
   if(tracer.output) {
 
     int num_missed = tracer.missed_diff_types.size();
