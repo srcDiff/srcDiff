@@ -546,7 +546,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect) {
 
-    std::vector<std::string> offsets;
+    std::vector<int> offsets;
     std::vector<std::string> paths;
 
     // build the path
