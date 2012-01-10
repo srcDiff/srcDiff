@@ -429,9 +429,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         std::vector<elements> elements;
 
         tracer.signature_path_old.push_back(elements);
-        tracer.signature_path_offset_old.push_back(offsets);
+        tracer.signature_path_offsets_old.push_back(offsets);
         tracer.signature_path_new.push_back(elements);
-        tracer.signature_path_offset_new.push_back(offsets);
+        tracer.signature_path_offsets_new.push_back(offsets);
 
         tracer.elements.at(tracer.collect_node_pos).signature_path_old.push_back(temp);
         tracer.elements.at(tracer.collect_node_pos).signature_path_new.push_back(temp);
