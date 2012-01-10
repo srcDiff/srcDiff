@@ -84,6 +84,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
 
   translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
 
+  /*
   reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, 0);
 
   if (reader == NULL) {
@@ -111,7 +112,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   }
 
   xmlFreeTextReader(reader);
-
+  */
   // group nodes
   //node_set = create_node_set(nodes, 0, nodes.size());
 
