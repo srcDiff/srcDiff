@@ -533,6 +533,15 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
 }
 
+void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer) {
+
+  for(int i = 0; i < tracer.signature_pos_old.back().size(); ++i) {
+
+
+  }
+
+}
+
 void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
