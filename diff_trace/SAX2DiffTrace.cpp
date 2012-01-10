@@ -25,12 +25,13 @@ SAX2DiffTrace::SAX2DiffTrace(long & options)
 
 }
 
+static element null_element;
+
 // helper method
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
 std::string & trim_string(std::string & source);
 std::string create_string_from_element(element & curelement, element & nextelement, int count, int operation, long & options);
-
-static element null_element;
+std::string create_string_from_element_last_offset(element & curelement, element & nextelement, int offset, int operation, long & options);
 
 xmlSAXHandler SAX2DiffTrace::factory() {
 
@@ -447,7 +448,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       else {
 
-        std::vector<element> temp_stack;
+c        std::vector<element> temp_stack;
 
         for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
           temp_stack.push_back(tracer.elements.at(i));
@@ -542,7 +543,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     // build the path
     for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
 
-      int count = 0;
+      int offset = tracer.collect_node_pos + 1 - pos;
       if(pos > 0) {
 
         std::string tag;
@@ -556,11 +557,11 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
         tag += tracer.elements.at(pos).name;
 
         if(!(tracer.options & OPTION_SRCML_RELATIVE))
-          count = tracer.elements.at(pos - 1).children[tag];
+          offset = tracer.elements.at(pos - 1).children[tag] - pos;
         else if(tracer.diff_stack.back().operation == DELETE)
-          count = tracer.elements.at(pos - 1).children_old[tag];
-        else
-          count = tracer.elements.at(pos - 1).children_new[tag];
+          offset = tracer.elements.at(pos - 1).children_old[tag] - pos;
+        else if(tracer.diff_stack.back().operation == INSERT)
+          offset = tracer.elements.at(pos - 1).children_new[tag] - pos;
 
       }
 
@@ -572,7 +573,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       if(pos != tracer.collect_node_pos + 1)
         path += "/";
 
-      path += create_string_from_element(tracer.elements.at(pos), next_element, count, tracer.diff_stack.back().operation, tracer.options);
+      path += create_string_from_element_last_offset(tracer.elements.at(pos), next_element, offset, tracer.diff_stack.back().operation, tracer.options);
 
     }
     if(tracer.diff_stack.back().operation == COMMON) {
