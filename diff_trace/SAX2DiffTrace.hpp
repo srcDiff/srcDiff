@@ -64,6 +64,12 @@ class SAX2DiffTrace {
   std::vector<int> missed_diff_types;  
   std::vector<std::vector<element> > missed_diffs;  
 
+  std::vector<std::vector<int> > signature_path_offsets_old;  
+  std::vector<std::vector<std::string> > signature_path_old;  
+
+  std::vector<std::vector<int> > signature_path_offsets_new;  
+  std::vector<std::vector<std::string> > signature_path_new;  
+
   std::string filename_old;
   std::string filename_new;
 
@@ -100,6 +106,8 @@ class SAX2DiffTrace {
   static bool is_end_collect(const char * name, const char * prefix, const char * context);
 
   static bool is_end_collect_and_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context);
+
+  static void form_paths(SAX2DiffTrace & tracer);
 
   static void output_missed(SAX2DiffTrace & tracer);
 
