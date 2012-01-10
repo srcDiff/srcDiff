@@ -210,8 +210,33 @@ bool SAX2DiffTrace::is_end_collect_and_wait(SAX2DiffTrace & tracer, const char *
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
   // form paths
-
   for(int i = 0; i < signature_path_old.size(); ++i) {
+
+    if(signature_path_old.old.at(i).empty())
+      continue;
+
+    std::string path = "";
+
+    for(int j = 0; j < signature_path_old.at(i).size(); ++j) {
+      
+      element next_element = null_element;
+      if((j + 1) < signature_path_old.at(i).size();
+         next_element = signature_path_old.at(i).at(j + 1);
+
+         if(j != 0)
+           path += "/";
+
+         path += signature_path_old.at(i).at(j) + "[last()";
+
+         if(signature_offsets_old.at(i).at(j) != 0) {
+           
+           
+
+         }
+
+         path += "]";
+
+    }
 
   }
 
