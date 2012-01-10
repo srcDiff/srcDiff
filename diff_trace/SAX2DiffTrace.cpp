@@ -543,7 +543,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     // build the path
     for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
 
-      int offset = tracer.collect_node_pos + 1 - pos;
+      int offset = (pos + 1) - tracer.collect_node_pos + 1;
       if(pos > 0) {
 
         std::string tag;
@@ -557,11 +557,11 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
         tag += tracer.elements.at(pos).name;
 
         if(!(tracer.options & OPTION_SRCML_RELATIVE))
-          offset = tracer.elements.at(pos - 1).children[tag] - pos;
+          offset = tracer.elements.at(pos - 1).children[tag] - offset;
         else if(tracer.diff_stack.back().operation == DELETE)
-          offset = tracer.elements.at(pos - 1).children_old[tag] - pos;
+          offset = tracer.elements.at(pos - 1).children_old[tag] - offset;
         else if(tracer.diff_stack.back().operation == INSERT)
-          offset = tracer.elements.at(pos - 1).children_new[tag] - pos;
+          offset = tracer.elements.at(pos - 1).children_new[tag] - offset;
 
       }
 
