@@ -196,12 +196,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   if(is_old && is_old > -1) {
 
-  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, 0);
+  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file_old), output_srcml_file_old->use, 0, 0, 0);
 
   if (reader == NULL) {
 
-    if(!isoption(options, OPTION_QUIET))
-       fprintf(stderr, "Unable to open file '%s' as XML\n", filename);
+    if(!isoption(local_options, OPTION_QUIET))
+       fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
 
     exit(1);
   }
@@ -209,8 +209,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // read to unit
   xmlTextReaderRead(reader);
 
-  *unit_start = getRealCurrentNode(reader);
-
+  //*unit_start = 
+  getRealCurrentNode(reader);
+    
   // Read past unit tag open
   is_old = xmlTextReaderRead(reader);
 
@@ -230,12 +231,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   if(is_new && is_new > -1) {
 
-  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, 0);
+  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file_new), output_srcml_file_new->use, 0, 0, 0);
 
   if (reader == NULL) {
 
-    if(!isoption(options, OPTION_QUIET))
-       fprintf(stderr, "Unable to open file '%s' as XML\n", filename);
+    if(!isoption(local_options, OPTION_QUIET))
+       fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
 
     exit(1);
   }
@@ -243,7 +244,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // read to unit
   xmlTextReaderRead(reader);
 
-  *unit_start = getRealCurrentNode(reader);
+  //*unit_start = 
+  getRealCurrentNode(reader);
 
   // Read past unit tag open
   is_new = xmlTextReaderRead(reader);
