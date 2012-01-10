@@ -11,14 +11,14 @@ struct create_nodes_args {
 
   // args
   int language;
-  const char * src_encoding;
-  const char * xml_encoding;
-  xmlBuffer ** output_buffer;
-  OPTION_TYPE & options;
-  const char * directory;
-  const char * filename;
-  const char * version;
-  const char ** uri;
+  const char* src_encoding;
+  const char* xml_encoding;
+  xmlBuffer* output_buffer;
+  OPTION_TYPE& options;
+  const char* directory;
+  const char* filename;
+  const char* version;
+  const char** uri;
   int tabsize;
 
   // returns
@@ -36,7 +36,7 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
 void * create_nodes_from_srcML_thread(void * arguments);
 
-void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer** output_buffer, OPTION_TYPE& options,
+void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                             const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error);
 
