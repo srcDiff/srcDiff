@@ -212,7 +212,7 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
   // form paths
   for(int i = 0; i < tracer.signature_path_old.size(); ++i) {
 
-    if(tracer.signature_path_old.old.at(i).empty())
+    if(tracer.signature_path_old.at(i).empty())
       continue;
 
     std::string path = "";
