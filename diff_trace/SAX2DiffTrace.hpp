@@ -64,13 +64,11 @@ class SAX2DiffTrace {
   std::vector<int> missed_diff_types;  
   std::vector<std::vector<element> > missed_diffs;  
 
-  std::vector<std::vector<int> > signature_path_pos_old;  
   std::vector<std::vector<int> > signature_path_offsets_old;  
-  std::vector<std::vector<std::string> > signature_path_old;  
+  std::vector<std::vector<elements> > signature_path_old;  
 
-  std::vector<std::vector<int> > signature_path_pos_new;  
   std::vector<std::vector<int> > signature_path_offsets_new;  
-  std::vector<std::vector<std::string> > signature_path_new;  
+  std::vector<std::vector<elements> > signature_path_new;  
 
   std::string filename_old;
   std::string filename_new;
