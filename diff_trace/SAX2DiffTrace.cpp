@@ -872,6 +872,7 @@ std::string create_string_from_element_last_offset(element & curelement, element
     element += "src:";
 
   }
+
   element += curelement.name.c_str();
 
   element += "[last()";
@@ -883,9 +884,6 @@ std::string create_string_from_element_last_offset(element & curelement, element
   int length;
   for(length = 0; temp_count > 0; temp_count /= 10, ++length)
     ;
-
-  if(offset == 0)
-    ++length;
 
   ++length;
 
