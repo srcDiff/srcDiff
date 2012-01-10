@@ -60,7 +60,7 @@ int main(int argc, char * argv[]) {
     std::vector<xNode *> buffer;
     while(xmlTextReaderRead(reader) == 1) {
 
-      xNodePtr node = getRealCurrentNode(reader);
+      xNodePtr node = getRealCurrentNode(reader, 1);
 
       if(!exited_out_diff && strcmp((const char *)node->name, "old") == 0) {
 

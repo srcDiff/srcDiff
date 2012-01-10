@@ -38,7 +38,7 @@ bool operator==(const xmlNode& n1, const xmlNode& n2) {
                                                         );
 }
 
-xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
+xmlNode* getRealCurrentNode(xmlTextReaderPtr reader, int context) {
 
   xmlNode* pnode = getCurrentNode(reader);
 
@@ -47,7 +47,7 @@ xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
   return pnode;
 }
 
-xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
+xmlNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
 
   xmlNode* node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 1);
 
