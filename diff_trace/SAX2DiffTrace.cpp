@@ -572,8 +572,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         int position = pos - tracer.collect_node_pos + 1;
 
-        tracer.offsets.back().at(position) = count;
-        tracer.paths.back().at(position) = tag; 
+        tracer.offsets.back().push_back(count);
+        tracer.paths.back().push_back(tag); 
 
       /*
       element next_element = null_element;
