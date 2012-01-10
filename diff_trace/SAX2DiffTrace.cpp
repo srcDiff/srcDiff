@@ -228,11 +228,11 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
          path += tracer.signature_path_old.at(i).at(j) + "[last()";
 
-         if(tracer.signature_offsets_old.at(i).at(j) != 0) {
+         if(tracer.signature_path_offsets_old.at(i).at(j) != 0) {
            
     path +=  " - ";
 
-    int temp_count = tracer.signature_offsets_old.at(i).at(j);
+    int temp_count = tracer.signature_path_offsets_old.at(i).at(j);
     int length;
     for(length = 0; temp_count > 0; temp_count /= 10, ++length)
       ;
@@ -241,7 +241,7 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
     char * buffer = (char *)malloc(sizeof(char) * length);
 
-    snprintf(buffer, length, "%d", tracer.signature_offsets_old.at(i).at(j));
+    snprintf(buffer, length, "%d", tracer.signature_path_offsets_old.at(i).at(j));
 
     path += buffer;
 
@@ -585,17 +585,17 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
   if(operation == COMMON || operation == DELETE) {
-    for(int j = tracer.signature_pos_old.size() - 2; j >= 0; --j) {
+    for(int j = tracer.signature_path_pos_old.size() - 2; j >= 0; --j) {
 
       if(tracer.signature_path_old.at(j).empty())
         continue;
 
-      for(int i = 0; i < tracer.signature_pos_old.back().size(); ++i) {
+      for(int i = 0; i < tracer.signature_path_pos_old.back().size(); ++i) {
 
         if(tracer.signature_path_old.at(j).at(i) != tracer.signature_path_old.back().at(i))
           break;
 
-        if(tracer.signature_pos_old.at(j).at(i) != tracer.signature_pos_old.back().at(i)) {
+        if(tracer.signature_path_pos_old.at(j).at(i) != tracer.signature_path_pos_old.back().at(i)) {
 
           ++tracer.signature_offset_old.at(j).at(i);
 
@@ -609,17 +609,17 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
 
   if(operation == COMMON || operation == INSERTR) {
-    for(int j = tracer.signature_pos_new.size() - 2; j >= 0; --j) {
+    for(int j = tracer.signature_path_pos_new.size() - 2; j >= 0; --j) {
 
       if(tracer.signature_path_new.at(j).empty())
         continue;
 
-      for(int i = 0; i < tracer.signature_pos_new.back().size(); ++i) {
+      for(int i = 0; i < tracer.signature_path_pos_new.back().size(); ++i) {
 
         if(tracer.signature_path_new.at(j).at(i) != tracer.signature_path_new.back().at(i))
           break;
 
-        if(tracer.signature_pos_new.at(j).at(i) != tracer.signature_pos_new.back().at(i)) {
+        if(tracer.signature_path_pos_new.at(j).at(i) != tracer.signature_path_pos_new.back().at(i)) {
 
           ++tracer.signature_offset_new.at(j).at(i);
 
