@@ -47,6 +47,7 @@ NodeMap starttags_new;
 NodeMap endtags_new;
 NameList namelist_new;
 
+/*
 std::string* setName(const char* name) {
 
   NameList::iterator lb = std::find(namelist.begin(), namelist.end(), name);
@@ -57,6 +58,7 @@ std::string* setName(const char* name) {
     return &namelist.back();
   }
 }
+*/
 
 xNode * createInternalNode(xmlNode & node) {
 
@@ -185,14 +187,14 @@ xNode * getCurrentXNode(xmlTextReaderPtr reader) {
 xNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
 
   std::map<std::string, xNode*> & starttags = starttags_old;
-  std::map<std::string, xNode*> & endtag = endtag_old;
+  std::map<std::string, xNode*> & endtags = endtags_old;
   std::vector<std::string> & namelist = namelist_old;
 
   if(context == INSERT) {
 
-    starttags = starttags_old;
-    endtag = endtag_old;
-    namelist =namelist_old;
+    starttags = starttags_new;
+    endtags = endtags_new;
+    namelist = namelist_new;
 
   }
 
