@@ -30,6 +30,8 @@
 #include <string>
 #include <algorithm>
 
+#include "shortest_edit_script.h"
+
 #ifdef __MINGW32__
 #include "mingw32.hpp"
 #endif 
@@ -37,9 +39,13 @@
 typedef std::map<std::string, xNode*> NodeMap;
 typedef std::vector<std::string> NameList;
 
-NodeMap starttags;
-NodeMap endtags;
-NameList namelist;
+NodeMap starttags_old;
+NodeMap endtags_old;
+NameList namelist_old;
+
+NodeMap starttags_new;
+NodeMap endtags_new;
+NameList namelist_new;
 
 std::string* setName(const char* name) {
 
@@ -177,6 +183,18 @@ xNode * getCurrentXNode(xmlTextReaderPtr reader) {
 }
 
 xNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
+
+  std::map<std::string, xNode*> & starttags = starttags_old;
+  std::map<std::string, xNode*> & endtag = endtag_old;
+  std::vector<std::string> & namelist = namelist_old;
+
+  if(context == INSERT) {
+
+    starttags = starttags_old;
+    endtag = endtag_old;
+    namelist =namelist_old;
+
+  }
 
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
