@@ -537,6 +537,12 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer) {
 
   for(int i = 0; i < tracer.signature_pos_old.back().size(); ++i) {
 
+    for(int j = tracer.signature_pos_old.size() - 2; j >= 0; --j) {
+
+      if(tracer.signature_path_old.at(j).at(i) != tracer.signature_path_old.back().at(i))
+        break;
+
+    }
 
   }
 
