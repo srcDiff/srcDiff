@@ -219,36 +219,31 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
     for(int j = 0; j < tracer.signature_path_old.at(i).size(); ++j) {
       
-      element next_element = null_element;
-      if((j + 1) < tracer.signature_path_old.at(i).size());
-         next_element = tracer.signature_path_old.at(i).at(j + 1);
+      if(j != 0)
+        path += "/";
 
-         if(j != 0)
-           path += "/";
+      path += tracer.signature_path_old.at(i).at(j) + "[last()";
 
-         path += tracer.signature_path_old.at(i).at(j) + "[last()";
-
-         if(tracer.signature_path_offsets_old.at(i).at(j) != 0) {
+      if(tracer.signature_path_offsets_old.at(i).at(j) != 0) {
            
-    path +=  " - ";
+        path +=  " - ";
 
-    int temp_count = tracer.signature_path_offsets_old.at(i).at(j);
-    int length;
-    for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-      ;
+        int temp_count = tracer.signature_path_offsets_old.at(i).at(j);
+        int length;
+        for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+          ;
+        
+        ++length;
 
-    ++length;
+        char * buffer = (char *)malloc(sizeof(char) * length);
 
-    char * buffer = (char *)malloc(sizeof(char) * length);
+        snprintf(buffer, length, "%d", tracer.signature_path_offsets_old.at(i).at(j));
 
-    snprintf(buffer, length, "%d", tracer.signature_path_offsets_old.at(i).at(j));
+        path += buffer;
 
-    path += buffer;
-
-    free(buffer);
+        free(buffer);
            
-
-         }
+      }
 
          path += "]";
 
