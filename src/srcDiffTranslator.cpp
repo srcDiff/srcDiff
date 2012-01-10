@@ -145,7 +145,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   int is_old = 0;
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
-                                 , rbuf_old.nodes, &unit_old, is_old };
+                                 , rbuf_old.nodes, &unit_old, is_old, rbuf_old.stream_source };
   pthread_t thread_old;
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
@@ -171,7 +171,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   int is_new = 0;
   create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
-                                 , rbuf_new.nodes, &unit_new, is_new };
+                                 , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
 
   pthread_t thread_new;
   if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
