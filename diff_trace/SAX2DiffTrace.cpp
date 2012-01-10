@@ -443,7 +443,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         curelement.signature_name_old.push_back(temp);
         curelement.signature_name_new.push_back(temp);
 
-        if(sep < (filename + length)) {
+        if(sep != NULL) {
 
           *sep = '\0';
 
