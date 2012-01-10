@@ -543,7 +543,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     // build the path
     for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
 
-      int offset = (pos + 1) - tracer.collect_node_pos + 1;
+      int offset = pos - tracer.collect_node_pos;
       if(pos > 0) {
 
         std::string tag;
