@@ -143,7 +143,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   std::vector<std::vector<int> *> node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { language, src_encoding, xml_encoding, &output_srcml_file_old, local_options
+  create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
                                  , rbuf_old.nodes, &unit_old, is_old };
   pthread_t thread_old;
@@ -169,7 +169,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   std::vector<std::vector<int> *> node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { language, src_encoding, xml_encoding, &output_srcml_file_new, local_options
+  create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
                                  , rbuf_new.nodes, &unit_new, is_new };
 
@@ -192,78 +192,13 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   }
 
-  xmlTextReaderPtr reader = NULL;
-
-  if(is_old != -1) {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-    reader = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file_old), output_srcml_file_old->use, 0, 0, 0);
-
-    if (reader == NULL) {
-
-      if(!isoption(local_options, OPTION_QUIET))
-        fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
-
-      exit(1);
-    }
-    
-    // read to unit
-    xmlTextReaderRead(reader);
-
-    unit_old = getRealCurrentNode(reader);
-
-    // Read past unit tag open
-    is_old = xmlTextReaderRead(reader);
-
-    // collect if non empty files
-    if(is_old) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-      collect_nodes(&rbuf_old.nodes, reader);
-      //unit_end = 
-      getRealCurrentNode(reader);
-
-    }
-
-    xmlFreeTextReader(reader);
-
+  if(is_old && is_old > -1)
     node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
-  }
 
-  reader = NULL;
 
-  if(is_new != -1) {
-
-    reader = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file_new), output_srcml_file_new->use, 0, 0, 0);
-
-    if (reader == NULL) {
-
-      if(!isoption(local_options, OPTION_QUIET))
-        fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
-
-      exit(1);
-    }
-    
-    // read to unit
-    xmlTextReaderRead(reader);
-
-    unit_new = getRealCurrentNode(reader);
-
-    // Read past unit tag open
-    is_new = xmlTextReaderRead(reader);
-
-    // collect if non empty files
-    if(is_new) {
-
-      collect_nodes(&rbuf_new.nodes, reader);
-      //unit_end = 
-      getRealCurrentNode(reader);
-
-    }
-
-    xmlFreeTextReader(reader);
-
+  if(is_new && is_new > -1)
     node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
 
-  }
   /*
 
     Setup readers and writer.
