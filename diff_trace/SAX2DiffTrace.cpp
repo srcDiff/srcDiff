@@ -541,6 +541,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   if(tracer.collect) {
 
     std::vector<int> poss;
+    std::vector<int> offsets;
     std::vector<std::string> paths;
 
     std::string path = "";
@@ -569,6 +570,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
         int position = pos - tracer.collect_node_pos + 1;
 
         poss.push_back(count);
+        offsets.push_back(0);
         paths.push_back(tag); 
 
       element next_element = null_element;
@@ -592,8 +594,10 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
       tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
       tracer.signature_path_pos_old.back() = poss;
+      tracer.signature_path_offsets_old.back() = offsets;
       tracer.signature_path_old.back() = paths;
       tracer.signature_path_pos_new.back() = poss;
+      tracer.signature_path_offsets_new.back() = offsets;
       tracer.signature_path_new.back() = paths;
 
 
@@ -604,6 +608,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
 
       tracer.signature_path_pos_old.back() = poss;
+      tracer.signature_path_offsets_old.back() = offsets;
       tracer.signature_path_old.back() = paths;
 
     } else  if(tracer.diff_stack.back().operation == INSERT) {
@@ -613,6 +618,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
 
       tracer.signature_path_pos_new.back() = poss;
+      tracer.signature_path_offsets_new.back() = offsets;
       tracer.signature_path_new.back() = paths;
 
     }
