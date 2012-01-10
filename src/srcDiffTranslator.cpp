@@ -217,7 +217,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     // collect if non empty files
     if(is_old) {
 
-      collect_nodes(&nodes, reader);
+      collect_nodes(&rbuf_old.nodes, reader);
       //unit_end = 
       getRealCurrentNode(reader);
 
@@ -225,7 +225,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     xmlFreeTextReader(reader);
 
-    node_set_old = create_node_set(&rbuf_old.nodes, 0, rbuf_old.nodes.size());
+    node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
   }
 
   reader = NULL;
@@ -253,7 +253,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     // collect if non empty files
     if(is_new) {
 
-      collect_nodes(&nodes, reader);
+      collect_nodes(&rbuf_new.nodes, reader);
       //unit_end = 
       getRealCurrentNode(reader);
 
