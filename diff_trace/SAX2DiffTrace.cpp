@@ -533,7 +533,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
 }
 
-void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer) {
+void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
     for(int j = tracer.signature_pos_old.size() - 2; j >= 0; --j) {
 

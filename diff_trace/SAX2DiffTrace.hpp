@@ -113,7 +113,7 @@ class SAX2DiffTrace {
 
   static void output_missed(SAX2DiffTrace & tracer);
 
-  static void update_offsets(SAX2DiffTrace & tracer);
+  static void update_offsets(SAX2DiffTrace & tracer, int operation);
 
   // characters
   static void characters(void* ctx, const xmlChar* ch, int len);
