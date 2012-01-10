@@ -180,15 +180,6 @@ xNode* getCurrentNode(xmlTextReaderPtr reader) {
 
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
-  NodeMap & starttags;
-  NodeMap & endtags;
-  NameList & namelist;
-
-  if(context == 0) {
-
-
-  }
-
   xNode * node = 0;
   if (0 && !xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0
       && strcmp((const char *)curnode->ns->href, "http://www.sdml.info/srcML/cpp") != 0) {
