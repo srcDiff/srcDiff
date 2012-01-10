@@ -717,7 +717,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     } else  if(tracer.diff_stack.back().operation == INSERT) {
 
       tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
-w
+
       tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
 
       tracer.signature_path_pos_new.back() = poss;
