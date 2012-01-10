@@ -651,10 +651,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
         tag += tracer.elements.at(pos).prefix;
         tag += ":";
 
-      } else if(tracer.elements.at(pos).uri == "http://www.sdml.info/srcML/src") {
-
-        tag += "src:";
-
       }
 
       tag += tracer.elements.at(pos).name;
@@ -665,6 +661,12 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
         count = tracer.elements.at(pos - 1).children_old[tag];
       else if(tracer.diff_stack.back().operation == INSERT)
         count = tracer.elements.at(pos - 1).children_new[tag];
+
+      if(tracer.elements.at(pos).prefix == "" && tracer.elements.at(pos).uri == "http://www.sdml.info/srcML/src") {
+
+        tag += "src:";
+
+      }
 
       int position = pos - tracer.collect_node_pos + 1;
 
