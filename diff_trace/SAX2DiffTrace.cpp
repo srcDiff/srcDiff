@@ -493,6 +493,12 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
+    if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+
+      output_missed(tracer);
+
+    }
+
     tracer.elements.push_back(curelement);
 
     if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
@@ -529,12 +535,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         tracer.elements.at(tracer.collect_node_pos).signature_name_new.push_back(temp);
 
       }
-
-    }
-
-    if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
-
-      output_missed(tracer);
 
     }
 
