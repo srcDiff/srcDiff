@@ -597,7 +597,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
         if(tracer.signature_path_pos_old.at(j).at(i) != tracer.signature_path_pos_old.back().at(i)) {
 
-          ++tracer.signature_offset_old.at(j).at(i);
+          ++tracer.signature_path_offset_old.at(j).at(i);
 
         }
 
@@ -608,7 +608,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
   }
 
 
-  if(operation == COMMON || operation == INSERTR) {
+  if(operation == COMMON || operation == INSERT) {
     for(int j = tracer.signature_path_pos_new.size() - 2; j >= 0; --j) {
 
       if(tracer.signature_path_new.at(j).empty())
@@ -621,7 +621,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
         if(tracer.signature_path_pos_new.at(j).at(i) != tracer.signature_path_pos_new.back().at(i)) {
 
-          ++tracer.signature_offset_new.at(j).at(i);
+          ++tracer.signature_path_offset_new.at(j).at(i);
 
         }
 
