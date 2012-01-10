@@ -253,6 +253,49 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
   }
 
+  for(int i = 0; i < tracer.signature_path_new.size(); ++i) {
+
+    if(tracer.signature_path_new.at(i).empty())
+      continue;
+
+    std::string path = "";
+
+    for(int j = 0; j < tracer.signature_path_new.at(i).size(); ++j) {
+      
+      if(j != 0)
+        path += "/";
+
+      path += tracer.signature_path_new.at(i).at(j) + "[last()";
+
+      if(tracer.signature_path_offsets_new.at(i).at(j) != 0) {
+           
+        path +=  " - ";
+
+        int temp_count = tracer.signature_path_offsets_new.at(i).at(j);
+        int length;
+        for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+          ;
+        
+        ++length;
+
+        char * buffer = (char *)malloc(sizeof(char) * length);
+
+        snprintf(buffer, length, "%d", tracer.signature_path_offsets_new.at(i).at(j));
+
+        path += buffer;
+
+        free(buffer);
+           
+      }
+
+         path += "]";
+
+    }
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.at(i) = path;
+
+  }
+
   tracer.wait = false;
   tracer.collect = false;
 
