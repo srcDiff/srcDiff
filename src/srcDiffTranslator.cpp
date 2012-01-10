@@ -143,7 +143,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   std::vector<std::vector<int> *> node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
+  create_nodes_args args_old = { language, src_encoding, xml_encoding, &output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
                                  , rbuf_old.nodes, &unit_old, is_old };
   pthread_t thread_old;
@@ -169,7 +169,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   std::vector<std::vector<int> *> node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
+  create_nodes_args args_new = { language, src_encoding, xml_encoding, &output_srcml_file_new, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
                                  , rbuf_new.nodes, &unit_new, is_new };
 
