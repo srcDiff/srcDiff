@@ -448,7 +448,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       else {
 
-c        std::vector<element> temp_stack;
+        std::vector<element> temp_stack;
 
         for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
           temp_stack.push_back(tracer.elements.at(i));
@@ -874,7 +874,7 @@ std::string create_string_from_element_last_offset(element & curelement, element
   }
   element += curelement.name.c_str();
 
-  elememnt += "[last()";
+  element += "[last()";
 
   if(offset != 0) {
     element +=  " - ";
@@ -891,7 +891,7 @@ std::string create_string_from_element_last_offset(element & curelement, element
 
   char * buffer = (char *)malloc(sizeof(char) * length);
 
-  snprintf(buffer, length, "%d", count);
+  snprintf(buffer, length, "%d", offset);
 
   element += buffer;
 
