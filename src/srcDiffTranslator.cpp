@@ -192,75 +192,13 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   }
 
-  xmlTextReaderPtr reader = NULL;
-
-  if(is_old && is_old > -1) {
-
-  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file_old), output_srcml_file_old->use, 0, 0, 0);
-
-  if (reader == NULL) {
-
-    if(!isoption(local_options, OPTION_QUIET))
-       fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
-
-    exit(1);
-  }
-
-  // read to unit
-  xmlTextReaderRead(reader);
-
-  //*unit_start = 
-  getRealCurrentNode(reader);
-    
-  // Read past unit tag open
-  is_old = xmlTextReaderRead(reader);
-
-  // collect if non empty files
-  if(is_old) {
-
-    collect_nodes(&rbuf_old.nodes, reader);
-
-  }
-
-  xmlFreeTextReader(reader);
+  if(is_old && is_old > -1)
     node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
 
-  }
 
-  reader = NULL;
-
-  if(is_new && is_new > -1) {
-
-  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file_new), output_srcml_file_new->use, 0, 0, 0);
-
-  if (reader == NULL) {
-
-    if(!isoption(local_options, OPTION_QUIET))
-       fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
-
-    exit(1);
-  }
-
-  // read to unit
-  xmlTextReaderRead(reader);
-
-  //*unit_start = 
-  getRealCurrentNode(reader);
-
-  // Read past unit tag open
-  is_new = xmlTextReaderRead(reader);
-
-  // collect if non empty files
-  if(is_new) {
-
-    collect_nodes(&rbuf_new.nodes, reader);
-
-  }
-
-  xmlFreeTextReader(reader);
+  if(is_new && is_new > -1)
     node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
 
-  }
   /*
 
     Setup readers and writer.
