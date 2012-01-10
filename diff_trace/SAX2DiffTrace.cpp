@@ -208,6 +208,42 @@ bool SAX2DiffTrace::is_end_collect_and_wait(SAX2DiffTrace & tracer, const char *
 
 void SAX2DiffTrace::form_paths(SAX2DiffTrace & tracer) {
 
+  int num_names_old = tracer.signature_path_old.size();
+  std::string & signature_old = tracer.elements.at(tracer.collect_node_pos).signature_old;
+
+  for(int i = 0; i < num_names; ++i) {
+
+    if(i != 0)
+      signature_old += "/";
+
+    signature_old += tracer.signature_path_old + "[last()";
+    int offset = (num_names - 1) - i;
+
+  if(offset != 0) {
+
+    signature_old +=  " - ";
+
+  int temp_count = offset;
+  int length;
+  for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+    ;
+
+  ++length;
+
+  char * buffer = (char *)malloc(sizeof(char) * length);
+
+  snprintf(buffer, length, "%d", offset);
+
+  signature_old += buffer;
+
+  free(buffer);
+
+  }
+
+  signature_old += "]";
+
+  }
+
 }
 
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
