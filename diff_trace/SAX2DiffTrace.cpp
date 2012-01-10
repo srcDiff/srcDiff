@@ -253,6 +253,10 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
   }
 
+  tracer.signature_path_pos_old.clear();
+  tracer.signature_path_old.clear();
+  tracer.signature_path_offsets_old.clear();
+
   for(int i = 0; i < tracer.signature_path_new.size(); ++i) {
 
     if(tracer.signature_path_new.at(i).empty())
@@ -295,6 +299,10 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
     tracer.elements.at(tracer.collect_node_pos).signature_path_new.at(i) = path;
 
   }
+
+  tracer.signature_path_pos_new.clear();
+  tracer.signature_path_new.clear();
+  tracer.signature_path_offsets_new.clear();
 
   tracer.wait = false;
   tracer.collect = false;
