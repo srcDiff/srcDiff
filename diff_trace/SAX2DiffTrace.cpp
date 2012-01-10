@@ -206,6 +206,10 @@ bool SAX2DiffTrace::is_end_collect_and_wait(SAX2DiffTrace & tracer, const char *
   return true;
 }
 
+void SAX2DiffTrace::form_paths(SAX2DiffTrace & tracer) {
+
+}
+
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
   tracer.wait = false;
