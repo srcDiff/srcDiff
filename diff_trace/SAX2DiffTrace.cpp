@@ -553,28 +553,28 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         }
 
-      tag += tracer.elements.at(pos).name;
+        tag += tracer.elements.at(pos).name;
 
-      if(!(tracer.options & OPTION_SRCML_RELATIVE))
-        count = tracer.elements.at(pos - 1).children[tag];
-      else if(tracer.diff_stack.back().operation == DELETE)
-        count = tracer.elements.at(pos - 1).children_old[tag];
-      else
-        count = tracer.elements.at(pos - 1).children_new[tag];
+        if(!(tracer.options & OPTION_SRCML_RELATIVE))
+          count = tracer.elements.at(pos - 1).children[tag];
+        else if(tracer.diff_stack.back().operation == DELETE)
+          count = tracer.elements.at(pos - 1).children_old[tag];
+        else
+          count = tracer.elements.at(pos - 1).children_new[tag];
+
+      }
+
+      element next_element = null_element;
+      if((pos + 1) < tracer.elements.size())
+        next_element = tracer.elements.at(pos + 1);
+
+
+      if(pos != tracer.collect_node_pos + 1)
+        path += "/";
+
+      path += create_string_from_element(tracer.elements.at(pos), next_element, count, tracer.diff_stack.back().operation, tracer.options);
 
     }
-
-    element next_element = null_element;
-    if((pos + 1) < tracer.elements.size())
-      next_element = tracer.elements.at(pos + 1);
-
-
-    if(pos != tracer.collect_node_pos + 1)
-      path += "/";
-
-    path += create_string_from_element(tracer.elements.at(pos), next_element, count, tracer.diff_stack.back().operation, tracer.options);
-
-  }
     if(tracer.diff_stack.back().operation == COMMON) {
 
       tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
@@ -792,7 +792,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
         if(operation == DELETE)
           element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
         else
-          element += curelement.signature_name_new.at(i);
+          element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
         element += "]";
 
       }
@@ -854,6 +854,53 @@ std::string create_string_from_element(element & curelement, element & nexteleme
      }*/
 
   return element;
+
+}
+
+std::string create_string_from_element_last_offset(element & curelement, element & nextelement, int offset, int operation, long & options) {
+
+  std::string element = "";
+
+  if(curelement.prefix != "") {
+
+    element += curelement.prefix.c_str();
+    element += ":";
+
+  } else if(curelement.uri == "http://www.sdml.info/srcML/src") {
+
+    element += "src:";
+
+  }
+  element += curelement.name.c_str();
+
+  elememnt += "[last()";
+
+  if(offset != 0) {
+    element +=  " - ";
+
+  int temp_count = offset;
+  int length;
+  for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+    ;
+
+  if(offset == 0)
+    ++length;
+
+  ++length;
+
+  char * buffer = (char *)malloc(sizeof(char) * length);
+
+  snprintf(buffer, length, "%d", count);
+
+  element += buffer;
+
+  free(buffer);
+
+  }
+
+  element += "]";
+
+return element;
 
 }
 
