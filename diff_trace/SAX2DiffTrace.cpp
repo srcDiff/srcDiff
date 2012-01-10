@@ -969,7 +969,8 @@ std::string create_string_from_element(element & curelement, element & nexteleme
   }
 
   if(curelement.name == "unit"
-     && ((operation == DELETE && curelement.signature_name_old.back() != "")
+     && ((operation == COMMON && curelement.signature_name_old.back() != "" && curelement.signature_name_new.back() != "")
+         || (operation == DELETE && curelement.signature_name_old.back() != "")
          || (operation == INSERT && curelement.signature_name_new.back() != ""))) {
 
     element += "[@filename='";
