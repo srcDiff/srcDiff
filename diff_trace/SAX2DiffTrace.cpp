@@ -589,7 +589,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   }
 
   if(tracer.wait && is_wait((const char *)localname, (const char *)prefix)) {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     output_missed(tracer);
 
   }
@@ -641,7 +641,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
       for(int i = 0; i < tracer.signature_path_pos_old.back().size(); ++i) {
 
-        if(i > tracer.signature_path_old.at(j).size())
+        if(i >= tracer.signature_path_old.at(j).size())
           break;
 
         if(tracer.signature_path_old.at(j).at(i) != tracer.signature_path_old.back().at(i))
@@ -658,7 +658,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
     }
 
   }
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(operation == COMMON || operation == INSERT) {
     for(int j = tracer.signature_path_pos_new.size() - 2; j >= 0; --j) {
@@ -668,7 +668,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
       for(int i = 0; i < tracer.signature_path_pos_new.back().size(); ++i) {
 
-        if(i > tracer.signature_path_new.at(j).size())
+        if(i >= tracer.signature_path_new.at(j).size())
           break;
 
         if(tracer.signature_path_new.at(j).at(i) != tracer.signature_path_new.back().at(i))
