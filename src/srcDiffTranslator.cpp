@@ -200,8 +200,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     if (reader == NULL) {
 
-      if(!isoption(options, OPTION_QUIET))
-        fprintf(stderr, "Unable to open file '%s' as XML\n", filename);
+      if(!isoption(local_options, OPTION_QUIET))
+        fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
 
       exit(1);
     }
@@ -209,7 +209,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     // read to unit
     xmlTextReaderRead(reader);
 
-    *unit_start = getRealCurrentNode(reader);
+    unit_old = getRealCurrentNode(reader);
 
     // Read past unit tag open
     is_old = xmlTextReaderRead(reader);
@@ -225,7 +225,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     xmlFreeTextReader(reader);
 
-    node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
+    node_set_old = create_node_set(&rbuf_old.nodes, 0, rbuf_old.nodes.size());
   }
 
   reader = NULL;
@@ -236,8 +236,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     if (reader == NULL) {
 
-      if(!isoption(options, OPTION_QUIET))
-        fprintf(stderr, "Unable to open file '%s' as XML\n", filename);
+      if(!isoption(local_options, OPTION_QUIET))
+        fprintf(stderr, "Unable to open file '%s' as XML\n", path_two);
 
       exit(1);
     }
@@ -245,8 +245,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     // read to unit
     xmlTextReaderRead(reader);
 
-    //unit_start = 
-    getRealCurrentNode(reader);
+    unit_new = getRealCurrentNode(reader);
 
     // Read past unit tag open
     is_new = xmlTextReaderRead(reader);
@@ -255,7 +254,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     if(is_new) {
 
       collect_nodes(&nodes, reader);
-      unit_end = getRealCurrentNode(reader);
+      //unit_end = 
+      getRealCurrentNode(reader);
 
     }
 
