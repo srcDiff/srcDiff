@@ -158,7 +158,7 @@ bool operator==(const xNode& n1, const xNode& n2) {
                                                         );
 }
 
-xNode* getRealCurrentNode(xmlTextReaderPtr reader) {
+xNode* getRealCurrentNode(xmlTextReaderPtr reader, int context) {
 
   xNode* pnode = getCurrentNode(reader);
 
@@ -176,9 +176,18 @@ xNode * getCurrentXNode(xmlTextReaderPtr reader) {
   return createInternalNode(*curnode);
 }
 
-xNode* getCurrentNode(xmlTextReaderPtr reader) {
+xNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
 
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
+
+  NodeMap & starttags;
+  NodeMap & endtags;
+  NameList & namelist;
+
+  if(context == 0) {
+
+
+  }
 
   xNode * node = 0;
   if (0 && !xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0
