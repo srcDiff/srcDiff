@@ -191,7 +191,6 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
   std::vector<std::string> * namelist = &namelist_old;
 
   if(context == INSERT) {
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, context);
 
     starttags = &starttags_new;
     endtags = &endtags_new;
