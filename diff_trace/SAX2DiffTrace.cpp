@@ -664,7 +664,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
       if(tracer.elements.at(pos).prefix == "" && tracer.elements.at(pos).uri == "http://www.sdml.info/srcML/src") {
 
-        tag += "src:";
+        tag = "src:" + tag;
 
       }
 
