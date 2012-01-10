@@ -230,6 +230,22 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
          if(signature_offsets_old.at(i).at(j) != 0) {
            
+    path +=  " - ";
+
+    int temp_count = signature_offsets_old.at(i).at(j);
+    int length;
+    for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+      ;
+
+    ++length;
+
+    char * buffer = (char *)malloc(sizeof(char) * length);
+
+    snprintf(buffer, length, "%d", signature_offsets_old.at(i).at(j));
+
+    path += buffer;
+
+    free(buffer);
            
 
          }
