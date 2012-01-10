@@ -685,6 +685,10 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     std::string path = "";
 
     // build the path
+    if((tracer.diff_stack.back().operation == COMMON && (tracer.signature_path_old.back().empty() || tracer.signature_path_new.back().empty())
+        || (tracer.diff_stack.back().operation == DELETE && tracer.signature_path_old.back().empty())
+        || tracer.diff_stack.back().operation == INSERT && tracer.signature_path_new.back().empty())) {
+
     for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
 
       int count = 0;
@@ -737,15 +741,26 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
       tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
       tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+
+      if(tracer.signature_path_old.back().empty()) {
+
       tracer.signature_path_pos_old.back() = poss;
       tracer.signature_path_offsets_old.back() = offsets;
       tracer.signature_path_old.back() = paths;
-      tracer.signature_path_pos_new.back() = poss;
-      tracer.signature_path_offsets_new.back() = offsets;
-      tracer.signature_path_new.back() = paths;
 
-      update_offsets(tracer, COMMON);
+      update_offsets(tracer, DELETE);
 
+      }
+
+      if(tracer.signature_path_old.back().empty()) {
+
+      tracer.signature_path_pos_old.back() = poss;
+      tracer.signature_path_offsets_old.back() = offsets;
+      tracer.signature_path_old.back() = paths;
+
+      update_offsets(tracer, INSERT);
+
+      }
 
     } else if(tracer.diff_stack.back().operation == DELETE) {
 
@@ -773,6 +788,31 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     }
 
+    }
+
+    if(tracer.diff_stack.back().operation == COMMON) {
+
+
+      tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
+      tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+
+    } else if(tracer.diff_stack.back().operation == DELETE) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+
+    } else  if(tracer.diff_stack.back().operation == INSERT) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+
+    }
+    
   }
 
   std::string tag = "text()";
