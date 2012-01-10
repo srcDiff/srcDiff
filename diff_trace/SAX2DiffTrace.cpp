@@ -902,7 +902,13 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
 
   } else if(strcmp(curelement.name.c_str(), "function") == 0
-            || strcmp(curelement.name.c_str(), "function_decl") == 0) {
+            || strcmp(curelement.name.c_str(), "function_decl") == 0
+            || strcmp(curelement.name.c_str(), "class") == 0
+            || strcmp(curelement.name.c_str(), "struct") == 0
+            || strcmp(curelement.name.c_str(), "union") == 0
+            || strcmp(curelement.name.c_str(), "class_decl") == 0
+            || strcmp(curelement.name.c_str(), "struct_decl") == 0
+            || strcmp(curelement.name.c_str(), "union_decl") == 0) {
 
     for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
 
@@ -932,37 +938,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       }
 
     }
-
-  } else if(strcmp(curelement.name.c_str(), "class") == 0
-            || strcmp(curelement.name.c_str(), "struct") == 0
-            || strcmp(curelement.name.c_str(), "union") == 0) {
-
-    /*
-      if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_old != "" && curelement.signature_new != "") {
-
-      element += "[";
-      element += curelement.signature_old;
-      element += "]";
-
-      if(curelement.signature_old != curelement.signature_new) {
-
-      element += "[";
-      element += curelement.signature_new;
-      element += "]";
-
-      }
-
-      } else {
-
-      element += "[";
-      if(operation == DELETE)
-      element += curelement.signature_old;
-      else
-      element += curelement.signature_new;
-      element += "]";
-
-      }
-    */
 
   }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
       && (strcmp(curelement.signature_old.c_str(), "") != 0
