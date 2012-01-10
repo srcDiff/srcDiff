@@ -219,9 +219,6 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
 
     for(int j = 0; j < tracer.signature_path_old.at(i).size(); ++j) {
 
-      if(j > tracer.signature_path_old.at(i).size())
-        break;
-
       if(j != 0)
         path += "/";
 
@@ -264,9 +261,6 @@ void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
     std::string path = "";
 
     for(int j = 0; j < tracer.signature_path_new.at(i).size(); ++j) {
-
-      if(j > tracer.signature_path_new.at(i).size())
-        break;
 
       if(j != 0)
         path += "/";
@@ -636,6 +630,9 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
       for(int i = 0; i < tracer.signature_path_pos_old.back().size(); ++i) {
 
+        if(i > tracer.signature_path_old.at(j).size())
+          break;
+
         if(tracer.signature_path_old.at(j).at(i) != tracer.signature_path_old.back().at(i))
           break;
 
@@ -659,6 +656,9 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
         continue;
 
       for(int i = 0; i < tracer.signature_path_pos_new.back().size(); ++i) {
+
+        if(i > tracer.signature_path_new.at(j).size())
+          break;
 
         if(tracer.signature_path_new.at(j).at(i) != tracer.signature_path_new.back().at(i))
           break;
