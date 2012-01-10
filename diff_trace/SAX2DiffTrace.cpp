@@ -658,7 +658,6 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
     }
 
   }
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(operation == COMMON || operation == INSERT) {
     for(int j = tracer.signature_path_pos_new.size() - 2; j >= 0; --j) {
