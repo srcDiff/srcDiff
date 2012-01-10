@@ -535,18 +535,21 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
 void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer) {
 
-  for(int i = 0; i < tracer.signature_pos_old.back().size(); ++i) {
-
     for(int j = tracer.signature_pos_old.size() - 2; j >= 0; --j) {
 
-      if(tracer.signature_path_old.at(j).at(i) != tracer.signature_path_old.back().at(i))
-        break;
+      if(tracer.signature_path_old.at(j).empty())
+        continue;
 
-      if(tracer.signature_pos_old.at(j).at(i) != tracer.signature_pos_old.back().at(i)) {
+      for(int i = 0; i < tracer.signature_pos_old.back().size(); ++i) {
 
-        ++tracer.signature_offset_old.at(j).at(i);
+        if(tracer.signature_path_old.at(j).at(i) == tracer.signature_path_old.back().at(i))
+          break;
 
-      }
+        if(tracer.signature_pos_old.at(j).at(i) != tracer.signature_pos_old.back().at(i)) {
+
+          ++tracer.signature_offset_old.at(j).at(i);
+
+        }
 
     }
 
