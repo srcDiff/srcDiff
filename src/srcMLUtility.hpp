@@ -25,6 +25,7 @@ struct create_nodes_args {
   std::vector<xNode *> & nodes;
   xNodePtr * unit_start;
   int & no_error;
+  int context;
 
 };
 
@@ -38,7 +39,7 @@ void * create_nodes_from_srcML_thread(void * arguments);
 
 void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                             const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
-                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error);
+                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context);
 
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new);
@@ -47,6 +48,6 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 void merge_filename(xNodePtr unit_old, xNodePtr unit_new);
 
 bool is_atomic_srcml(std::vector<xNodePtr> * nodes, unsigned start);
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader);
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, int context);
 
 #endif

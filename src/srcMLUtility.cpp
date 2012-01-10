@@ -61,7 +61,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
     create_nodes_from_srcML(args.language, args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
     args.directory, args.filename, args.version, args.uri, args.tabsize,
-                            args.nodes, args.unit_start, args.no_error);
+                            args.nodes, args.unit_start, args.no_error, args.context);
 
     return NULL;
 
@@ -70,7 +70,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
 void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
-                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error) {
+                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
   
   xmlTextReaderPtr reader = NULL;
   xNodePtr unit_end = NULL;
@@ -97,7 +97,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   // read to unit
   xmlTextReaderRead(reader);
 
-  *unit_start = getRealCurrentNode(reader);
+  *unit_start = getRealCurrentNode(reader, context);
 
   // Read past unit tag open
   no_error = xmlTextReaderRead(reader);
@@ -105,8 +105,8 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   // collect if non empty files
   if(no_error) {
 
-    collect_nodes(&nodes, reader);
-    unit_end = getRealCurrentNode(reader);
+    collect_nodes(&nodes, reader, context);
+    unit_end = getRealCurrentNode(reader, context);
 
   }
 
@@ -212,7 +212,7 @@ void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
 }
 */
 // collect the differnces
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader) {
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, int context) {
 
   int not_done = 1;
   while(not_done) {
@@ -276,7 +276,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader) {
     else {
 
       // text node does not need to be copied.
-      xNodePtr node = getRealCurrentNode(reader);
+      xNodePtr node = getRealCurrentNode(reader, context);
 
       if(strcmp((const char *)node->name, "unit") == 0)
         return;

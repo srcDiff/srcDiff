@@ -158,9 +158,9 @@ bool operator==(const xNode& n1, const xNode& n2) {
                                                         );
 }
 
-xNode* getRealCurrentNode(xmlTextReaderPtr reader) {
+xNode* getRealCurrentNode(xmlTextReaderPtr reader, int context) {
 
-  xNode* pnode = getCurrentNode(reader);
+  xNode* pnode = getCurrentNode(reader, context);
 
   //  pnode->extra = xmlTextReaderIsEmptyElement(reader);
 
@@ -176,7 +176,7 @@ xNode * getCurrentXNode(xmlTextReaderPtr reader) {
   return createInternalNode(*curnode);
 }
 
-xNode* getCurrentNode(xmlTextReaderPtr reader) {
+xNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
 
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
