@@ -969,9 +969,8 @@ std::string create_string_from_element(element & curelement, element & nexteleme
   }
 
   if(curelement.name == "unit"
-     && ((operation == COMMON && curelement.signature_name_old.back() != "" && curelement.signature_name_new.back() != "")
-         || (operation == DELETE && curelement.signature_name_old.back() != "")
-         || (operation == INSERT && curelement.signature_name_new.back() != ""))) {
+     && !curelement.signature_name_old.empty()
+     && !curelement.signature_name_new.empty()) {
 
     element += "[@filename='";
 
@@ -1147,12 +1146,13 @@ void output_diff(SAX2DiffTrace & tracer) {
     if((i + 1) < tracer.elements.size())
       next_element = tracer.elements.at(i + 1);
 
+
     std::string element = "/";
 
     element += create_string_from_element(tracer.elements.at(i), next_element, count, tracer.diff_stack.back().operation, tracer.options);
 
-
     fprintf(stdout, "%s", element.c_str());
+
 
   }
 
