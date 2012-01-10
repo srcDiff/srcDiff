@@ -186,8 +186,8 @@ def test_difftrace_on_srcDiff_file(path, srcDiff_filename) :
 
     try :
 
-        difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(srcDiff))
         srcDiff_xpath_results = create_srcDiff_xpath_results(srcDiff)
+        difftrace_xpath_results = create_difftrace_xpath_results(srcDiff, create_difftrace_xpath_list(srcDiff))
 
         diff_error_list =  diff_xpath_results(srcDiff_xpath_results, difftrace_xpath_results)
 
