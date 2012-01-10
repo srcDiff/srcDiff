@@ -535,6 +535,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
 void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
+  if(operation == COMMON || operation == DELETE) {
     for(int j = tracer.signature_pos_old.size() - 2; j >= 0; --j) {
 
       if(tracer.signature_path_old.at(j).empty())
@@ -550,6 +551,32 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
           ++tracer.signature_offset_old.at(j).at(i);
 
         }
+
+      }
+
+    }
+
+  }
+
+
+  if(operation == COMMON || operation == INSERTR) {
+    for(int j = tracer.signature_pos_new.size() - 2; j >= 0; --j) {
+
+      if(tracer.signature_path_new.at(j).empty())
+        continue;
+
+      for(int i = 0; i < tracer.signature_pos_new.back().size(); ++i) {
+
+        if(tracer.signature_path_new.at(j).at(i) != tracer.signature_path_new.back().at(i))
+          break;
+
+        if(tracer.signature_pos_new.at(j).at(i) != tracer.signature_pos_new.back().at(i)) {
+
+          ++tracer.signature_offset_new.at(j).at(i);
+
+        }
+
+      }
 
     }
 
@@ -574,28 +601,28 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
 
       int count = 0;
-        std::string tag;
-        if(tracer.elements.at(pos).prefix != "") {
+      std::string tag;
+      if(tracer.elements.at(pos).prefix != "") {
 
-          tag += tracer.elements.at(pos).prefix;
-          tag += ":";
+        tag += tracer.elements.at(pos).prefix;
+        tag += ":";
 
-        }
+      }
 
-        tag += tracer.elements.at(pos).name;
+      tag += tracer.elements.at(pos).name;
 
-        if(!(tracer.options & OPTION_SRCML_RELATIVE))
-          count = tracer.elements.at(pos - 1).children[tag];
-        else if(tracer.diff_stack.back().operation == DELETE)
-          count = tracer.elements.at(pos - 1).children_old[tag];
-        else if(tracer.diff_stack.back().operation == INSERT)
-          count = tracer.elements.at(pos - 1).children_new[tag];
+      if(!(tracer.options & OPTION_SRCML_RELATIVE))
+        count = tracer.elements.at(pos - 1).children[tag];
+      else if(tracer.diff_stack.back().operation == DELETE)
+        count = tracer.elements.at(pos - 1).children_old[tag];
+      else if(tracer.diff_stack.back().operation == INSERT)
+        count = tracer.elements.at(pos - 1).children_new[tag];
 
-        int position = pos - tracer.collect_node_pos + 1;
+      int position = pos - tracer.collect_node_pos + 1;
 
-        poss.push_back(count);
-        offsets.push_back(0);
-        paths.push_back(tag); 
+      poss.push_back(count);
+      offsets.push_back(0);
+      paths.push_back(tag);
 
       element next_element = null_element;
       if((pos + 1) < tracer.elements.size())
@@ -929,26 +956,26 @@ std::string create_string_from_element_last_offset(element & curelement, element
   if(offset != 0) {
     element +=  " - ";
 
-  int temp_count = offset;
-  int length;
-  for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-    ;
+    int temp_count = offset;
+    int length;
+    for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+      ;
 
-  ++length;
+    ++length;
 
-  char * buffer = (char *)malloc(sizeof(char) * length);
+    char * buffer = (char *)malloc(sizeof(char) * length);
 
-  snprintf(buffer, length, "%d", offset);
+    snprintf(buffer, length, "%d", offset);
 
-  element += buffer;
+    element += buffer;
 
-  free(buffer);
+    free(buffer);
 
   }
 
   element += "]";
 
-return element;
+  return element;
 
 }
 
