@@ -195,7 +195,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   xmlTextReaderPtr reader = NULL;
 
   if(is_old != -1) {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     reader = xmlReaderForMemory((const char*) xmlBufferContent(output_srcml_file_old), output_srcml_file_old->use, 0, 0, 0);
 
     if (reader == NULL) {
@@ -216,7 +216,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     // collect if non empty files
     if(is_old) {
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       collect_nodes(&rbuf_old.nodes, reader);
       //unit_end = 
       getRealCurrentNode(reader);

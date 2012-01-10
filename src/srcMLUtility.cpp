@@ -68,8 +68,8 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 }
 
 
-void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
-                             const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer** output_buffer, OPTION_TYPE& options,
+                            const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error) {
   
   //xmlTextReaderPtr reader = NULL;
@@ -82,7 +82,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
     if(!filename || filename[0] == 0)
       throw FileError();
 
-  translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
+  translate_to_srcML(language, src_encoding, xml_encoding, *output_buffer, options, directory, filename, version, uri, 8);
 
   /*
   reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, 0);
@@ -125,7 +125,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
     
   }
 
-  xmlBufferEmpty(output_buffer);
+  xmlBufferEmpty(*output_buffer);
 
 }
 
