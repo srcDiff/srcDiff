@@ -218,7 +218,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // collect if non empty files
   if(is_old) {
 
-    collect_nodes(rbuf_old.nodes, reader);
+    collect_nodes(&rbuf_old.nodes, reader);
 
   }
 
@@ -253,7 +253,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // collect if non empty files
   if(is_new) {
 
-    collect_nodes(rbuf_new.nodes, reader);
+    collect_nodes(&rbuf_new.nodes, reader);
 
   }
 
