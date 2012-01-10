@@ -188,6 +188,9 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
     return true;
 
+  if((strcmp(context, "class_decl") == 0 || strcmp(context, "struct_decl") == 0 || strcmp(context, "union_decl") == 0) && strcmp(name, "name") == 0)
+    return true;
+
   return false;
 }
 
