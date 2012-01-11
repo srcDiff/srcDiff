@@ -1017,7 +1017,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       if(curelement.signature_name_new.at(i) != ""
          && ((curelement.signature_name_old.at(i) + curelement.signature_path_old.at(i)) != (curelement.signature_name_new.at(i) + curelement.signature_path_new.at(i)))) {
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         element += "[";
         element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
         element += "]";
