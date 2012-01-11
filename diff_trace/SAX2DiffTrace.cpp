@@ -928,6 +928,7 @@ void SAX2DiffTrace::comments(void* ctx, const xmlChar* ch) {
 }
 
 std::string create_string_from_element(element & curelement, element & nextelement, int count, int operation, long & options) {
+
   std::string element = "";
 
   if(curelement.prefix != "") {
@@ -1007,8 +1008,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
 
-      if(curelement.signature_name_old.at(i) != "" && curelement.signature_name_new.at(i) != "") {
-
       if(curelement.signature_name_old.at(i) != "") {
 
         element += "[";
@@ -1018,29 +1017,10 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       if(curelement.signature_name_new.at(i) != ""
          && ((curelement.signature_name_old.at(i) + curelement.signature_path_old.at(i)) != (curelement.signature_name_new.at(i) + curelement.signature_path_new.at(i)))) {
-
-          element += "[";
-          element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
-          element += "]";
-
-        }
-
-      } else {
-
-        if(operation == DELETE && curelement.signature_name_old.at(i) != "") {
-
-        element += "[";
-        element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
-        element += "]";
-      }
-
-        if(operation == INSERT && curelement.signature_name_new.at(i) != "") {
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         element += "[";
         element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
         element += "]";
-      }
-
 
       }
 
