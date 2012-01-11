@@ -8,6 +8,9 @@
 #include "srcDiffNested.hpp"
 #include <pthread.h>
 
+
+#include "shortest_edit_script.h"
+
 #include <string.h>
 #include "Methods.hpp"
 
