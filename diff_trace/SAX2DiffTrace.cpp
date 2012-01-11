@@ -1007,7 +1007,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
 
-      if(curelement.signature_name_old.at(i) != "" && curelement.signature_name_old.at(i) != "") {
+      if(curelement.signature_name_old.at(i) != "" && curelement.signature_name_new.at(i) != "") {
 
       if(curelement.signature_name_old.at(i) != "") {
 
