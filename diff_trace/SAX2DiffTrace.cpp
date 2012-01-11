@@ -782,23 +782,31 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
       } else if(tracer.diff_stack.back().operation == DELETE) {
 
-        tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+        if(tracer.signature_path_old.back().empty()) {
 
-        tracer.signature_path_pos_old.back() = poss;
-        tracer.signature_path_offsets_old.back() = offsets;
-        tracer.signature_path_old.back() = paths;
+          tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
 
-        update_offsets(tracer, DELETE);
+          tracer.signature_path_pos_old.back() = poss;
+          tracer.signature_path_offsets_old.back() = offsets;
+          tracer.signature_path_old.back() = paths;
+
+          update_offsets(tracer, DELETE);
+
+        }
 
       } else if(tracer.diff_stack.back().operation == INSERT) {
 
-        tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+        if(tracer.signature_path_old.back().empty()) {
 
-        tracer.signature_path_pos_new.back() = poss;
-        tracer.signature_path_offsets_new.back() = offsets;
-        tracer.signature_path_new.back() = paths;
+          tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
 
-        update_offsets(tracer, INSERT);
+          tracer.signature_path_pos_new.back() = poss;
+          tracer.signature_path_offsets_new.back() = offsets;
+          tracer.signature_path_new.back() = paths;
+
+          update_offsets(tracer, INSERT);
+
+        }
 
       }
 
