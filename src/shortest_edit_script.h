@@ -11,9 +11,9 @@
 #define INCLUDED_SHORTEST_EDIT_SCRIPT_H
 
 // edit constants
-#define COMMON -1
-#define INSERT 0
-#define DELETE 1
+#define SESCOMMON -1
+#define SESINSERT 0
+#define SESDELETE 1
 #define CHANGE 2
 
 // single edit script

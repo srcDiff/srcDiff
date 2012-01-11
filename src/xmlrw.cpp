@@ -190,7 +190,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
   std::map<std::string, xNode*> * endtags = &endtags_old;
   std::vector<std::string> * namelist = &namelist_old;
 
-  if(context == INSERT) {
+  if(context == SESINSERT) {
 
     starttags = &starttags_new;
     endtags = &endtags_new;

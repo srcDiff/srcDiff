@@ -128,13 +128,13 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
       if(diagonal == (center - distance) || (diagonal != (center + distance) && (last_distance[diagonal + 1] >= last_distance[diagonal - 1]))) {
         // move down (set delete operation) and append edit
         row = last_distance[diagonal + 1] + 1;
-        edit_pointers[edit_array][edit].operation = DELETE;
+        edit_pointers[edit_array][edit].operation = SESDELETE;
         edit_pointers[edit_array][edit].previous = script[diagonal + 1];
       } else {
 
         // move right (set insert operation) and append edit
         row = last_distance[diagonal - 1];
-        edit_pointers[edit_array][edit].operation = INSERT;
+        edit_pointers[edit_array][edit].operation = SESINSERT;
         edit_pointers[edit_array][edit].previous = script[diagonal - 1];
       }
 
@@ -262,7 +262,7 @@ int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
     current_edit->length = 1;
 
     // condense insert edit
-    if(current_edit->operation == INSERT)
+    if(current_edit->operation == SESINSERT)
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
             && (current_edit->offset_sequence_one == current_edit->next->offset_sequence_one)) {
