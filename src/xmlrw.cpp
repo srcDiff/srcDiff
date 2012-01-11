@@ -121,7 +121,7 @@ xNode * createInternalNode(xmlNode & node) {
 
   xnode->free = false;
 
-v  return xnode;
+  return xnode;
 }
 
 void freeXNode(xNode * node) {
