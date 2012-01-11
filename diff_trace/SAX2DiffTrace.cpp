@@ -742,8 +742,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           next_element = tracer.elements.at(pos + 1);
 
 
-        if(pos != tracer.collect_node_pos + 1)
-          path += "/";
+        //if(pos != tracer.collect_node_pos + 1)
+        //path += "/";
 
         //path += create_string_from_element(tracer.elements.at(pos), next_element, count, tracer.diff_stack.back().operation, tracer.options);
 
