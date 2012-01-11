@@ -334,7 +334,7 @@ int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
 struct edit * copy_edit(struct edit * edit) {
 
   struct edit * new_edit;
-  if((new_edit = (struct edit *)malloc(sizeof(struct edit))) == NULL)
+  if((new_edit = (struct edit *)calloc(1, sizeof(struct edit))) == NULL)
     return NULL;
 
   // copy contents
