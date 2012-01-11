@@ -756,11 +756,12 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         bool is_empty = tracer.signature_path_old.back().empty();
 
+        if(is_empty) {
+
           tracer.signature_path_pos_old.back() = poss;
           tracer.signature_path_offsets_old.back() = offsets;
           tracer.signature_path_old.back() = paths;
 
-        if(is_empty) {
 
           update_offsets(tracer, DELETE);
 
@@ -768,12 +769,12 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         is_empty = tracer.signature_path_new.back().empty();
 
+        if(is_empty) {
 
           tracer.signature_path_pos_new.back() = poss;
           tracer.signature_path_offsets_new.back() = offsets;
           tracer.signature_path_new.back() = paths;
 
-        if(is_empty) {
 
           update_offsets(tracer, INSERT);
 
