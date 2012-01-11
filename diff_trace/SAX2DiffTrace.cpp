@@ -1007,13 +1007,17 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
 
-      if(!(options & OPTION_SRCML_RELATIVE) && curelement.signature_name_old.at(i) != "" && curelement.signature_name_new.at(i) != "") {
+      if(curelement.signature_name_old.at(i) != "" && curelement.signature_name_old.at(i) != "") {
+
+      if(curelement.signature_name_old.at(i) != "") {
 
         element += "[";
         element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
         element += "]";
+      }
 
-        if(curelement.signature_name_old.at(i) != curelement.signature_name_new.at(i)) {
+      if(curelement.signature_name_new.at(i) != ""
+         && ((curelement.signature_name_old.at(i) + curelement.signature_path_old.at(i)) != (curelement.signature_name_new.at(i) + curelement.signature_path_new.at(i)))) {
 
           element += "[";
           element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
@@ -1023,12 +1027,20 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       } else {
 
+        if(operation == DELETE && curelement.signature_name_old.at(i) != "") {
+
         element += "[";
-        if(operation == DELETE)
-          element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
-        else
-          element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
+        element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
         element += "]";
+      }
+
+        if(operation == INSERT && curelement.signature_name_new.at(i) != "") {
+
+        element += "[";
+        element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
+        element += "]";
+      }
+
 
       }
 
