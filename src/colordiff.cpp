@@ -81,7 +81,7 @@ int main(int argc, char * argv[]) {
   ctxt->sax = &sax;
 
   std::vector<int> * stack = new std::vector<int>();
-  stack->push_back(SESCOMMON);
+  stack->push_back(COMMON);
 
   struct source_diff data = { 1, 1, stack, lines_old, lines_new };
 

@@ -85,7 +85,7 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
       char * content = strndup((const char *)content_old, offset_old);
       
-      output_text_as_node(rbuf_old, rbuf_new, content, SESCOMMON, wstate);
+      output_text_as_node(rbuf_old, rbuf_new, content, COMMON, wstate);
 
       free(content);
 
@@ -117,13 +117,13 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
   if(end_old > begin_old) {
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_old_start, DELETE, wstate);
 
     for(unsigned int i = begin_old; i < end_old; ++i)
-      output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESDELETE, wstate);
+      output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), DELETE, wstate);
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_old_end, DELETE, wstate);
 
     rbuf_old.last_output = end_old;
 
@@ -132,13 +132,13 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
   if(end_new > begin_new) {
 
     // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_new_start, INSERT, wstate);
 
     for(unsigned int i = begin_new; i < end_new; ++i)
-      output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(i), SESINSERT, wstate);
+      output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(i), INSERT, wstate);
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_new_end, INSERT, wstate);
 
     rbuf_new.last_output = end_new;
 
