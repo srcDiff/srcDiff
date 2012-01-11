@@ -6,7 +6,7 @@
 #include "xmlrw.hpp"
 
 bool is_change(struct edit * edit_script) {
-
+  fprintf(stderr, "HERE: %llu\n", edit_script->next != NULL);
   return edit_script->operation == DELETE && edit_script->next != NULL && edit_script->next->operation == INSERT
     && (edit_script->offset_sequence_one + edit_script->length - 1) == edit_script->next->offset_sequence_one;
 

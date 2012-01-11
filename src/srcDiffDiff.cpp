@@ -206,11 +206,6 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     exit(distance);
   }
 
-  fprintf(stderr, "HERE: %d\n", distance);
-  fprintf(stderr, "HERE: %d\n", edit_script->operation);
-  fprintf(stderr, "HERE: %d\n", edit_script->offset_sequence_one);
-  fprintf(stderr, "HERE: %d\n", edit_script->length);
-
   int last_diff_old = 0;
   int last_diff_new = 0;
   int diff_end_old = rbuf_old.last_output;
@@ -240,7 +235,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     edit * edit_next = edits->next;
     if(is_change(edits)) {
 
-      //      fprintf(stderr, "HERE\n");
+      //fprintf(stderr, "HERE\n");
 
       // 1-1
       if(edits->length == edit_next->length && edits->length == 1
@@ -308,7 +303,6 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
       case INSERT:
 
-        //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, 0
                                           , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1,
                                           INSERT, wstate);
@@ -322,7 +316,6 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
       case DELETE:
 
-        //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
                                           , rbuf_new, 0, DELETE, wstate);
 
