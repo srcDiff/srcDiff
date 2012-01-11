@@ -8,7 +8,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-bool is_change(struct edit * edit_script);
+bool is_change(edit * edit_script);
 
 // diff node accessor function
 const void * node_set_index(int idx, const void *s, const void * context);
