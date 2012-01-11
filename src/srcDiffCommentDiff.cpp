@@ -103,12 +103,12 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
     // determine ending position to output
     diff_end_old = rbuf_old.last_output;
     diff_end_new = rbuf_new.last_output;
-    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
+    if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
 
-    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
@@ -156,22 +156,22 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
       // handle pure delete or insert
       switch (edits->operation) {
 
-      case INSERT:
+      case SESINSERT:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, 0
-                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, INSERT, wstate);
+                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, SESINSERT, wstate);
         // update for common
         last_diff_old = edits->offset_sequence_one + 1;
         last_diff_new = edits->offset_sequence_two + edits->length;
 
         break;
 
-      case DELETE:
+      case SESDELETE:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                          , rbuf_new, 0, DELETE, wstate);
+                                          , rbuf_new, 0, SESDELETE, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
@@ -234,12 +234,12 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
     // determine ending position to output
     diff_end_old = rbuf_old.last_output;
     diff_end_new = rbuf_new.last_output;
-    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
+    if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
 
-    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
@@ -286,11 +286,11 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
       // handle pure delete or insert
       switch (edits->operation) {
 
-      case INSERT:
+      case SESINSERT:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, 0
-                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, INSERT, wstate);
+                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, SESINSERT, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + 1;
@@ -298,11 +298,11 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
 
         break;
 
-      case DELETE:
+      case SESDELETE:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                          , rbuf_new, 0, DELETE, wstate);
+                                          , rbuf_new, 0, SESDELETE, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
@@ -366,12 +366,12 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
     // determine ending position to output
     diff_end_old = rbuf_old.last_output;
     diff_end_new = rbuf_new.last_output;
-    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
+    if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
 
-    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
@@ -412,11 +412,11 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
       // handle pure delete or insert
       switch (edits->operation) {
 
-      case INSERT:
+      case SESINSERT:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, 0
-                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, INSERT, wstate);
+                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, SESINSERT, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + 1;
@@ -424,11 +424,11 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
 
         break;
 
-      case DELETE:
+      case SESDELETE:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                          , rbuf_new, 0, DELETE, wstate);
+                                          , rbuf_new, 0, SESDELETE, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
