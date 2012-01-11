@@ -13,7 +13,7 @@
 // edit constants
 const int COMMON = -1;
 const int INSERT = 0;
-const int DELETE = 1;
+const int DELETE = (int)1;
 const int CHANGE = 2;
 
 // single edit script
