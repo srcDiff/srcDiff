@@ -206,6 +206,11 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     exit(distance);
   }
 
+  fprintf(stderr, "HERE: %d\n", distance);
+  fprintf(stderr, "HERE: %d\n", edit_script->operation);
+  fprintf(stderr, "HERE: %d\n", edit_script->offset_sequence_one);
+  fprintf(stderr, "HERE: %d\n", edit_script->length);
+
   int last_diff_old = 0;
   int last_diff_new = 0;
   int diff_end_old = rbuf_old.last_output;
