@@ -193,7 +193,7 @@ int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & 
   if(node_set.size() > 0) {
 
     match_pos = 0;
-    if(operation == DELETE)
+    if(operation == SESDELETE)
       match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
     else
       match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
@@ -205,7 +205,7 @@ int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & 
 
     int similarity;
     if((similarity =
-        (operation == DELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
+        (operation == SESDELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
         : compute_similarity(nodes_match, match, nodes, node_set.at(i)))
        < match_similarity) {
 
@@ -228,12 +228,12 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   unsigned int end_pos;
 
-  if(operation == DELETE) {
+  if(operation == SESDELETE) {
 
     std::vector<std::vector<int> *> node_set = create_node_set(rbuf_old.nodes, structure_old->at(1), structure_old->back()
                                                                , rbuf_new.nodes.at(structure_new->at(0)));
 
-    unsigned int match = best_match(rbuf_old.nodes, node_set, rbuf_new.nodes, structure_new, DELETE);
+    unsigned int match = best_match(rbuf_old.nodes, node_set, rbuf_new.nodes, structure_new, SESDELETE);
 
     if(match < node_set.size()) {
 
@@ -259,7 +259,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-      output_white_space_nested(rbuf_old, rbuf_new, DELETE, wstate);
+      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
       output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
 
@@ -274,7 +274,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     std::vector<std::vector<int> *> node_set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
                                                                , rbuf_old.nodes.at(structure_old->at(0)));
 
-    unsigned int match = best_match(rbuf_new.nodes, node_set, rbuf_old.nodes, structure_old, INSERT);
+    unsigned int match = best_match(rbuf_new.nodes, node_set, rbuf_old.nodes, structure_old, SESINSERT);
 
     if(match < node_set.size()) {
 
@@ -299,7 +299,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-      output_white_space_nested(rbuf_old, rbuf_new, INSERT, wstate);
+      output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 
       output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
 

@@ -67,18 +67,18 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
                          )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(DELETE), rbuf_new(INSERT)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT)
 {
 
   diff.prefix = uri[7];
 
   // diff tags
-  diff_common_start.name = DIFF_COMMON;
+  diff_common_start.name = DIFF_SESCOMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
   diff_common_start.ns = &diff;
   diff_common_start.extra = 0;
 
-  diff_common_end.name = DIFF_COMMON;
+  diff_common_end.name = DIFF_SESCOMMON;
   diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
   diff_common_end.ns = &diff;
   diff_common_end.extra = 0;
@@ -206,15 +206,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   */
 
   diff_set old_diff;
-  old_diff.operation = COMMON;
+  old_diff.operation = SESCOMMON;
   rbuf_old.open_diff.push_back(&old_diff);
 
   diff_set new_diff;
-  new_diff.operation = COMMON;
+  new_diff.operation = SESCOMMON;
   rbuf_new.open_diff.push_back(&new_diff);
 
   diff_set output_diff;
-  output_diff.operation = COMMON;
+  output_diff.operation = SESCOMMON;
   wstate.output_diff.push_back(&output_diff);
 
   /*
@@ -257,15 +257,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // output srcdiff unit
   if(!rbuf_old.nodes.empty() && !rbuf_new.nodes.empty()) {
 
-    update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
-    update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
-    update_diff_stack(wstate.output_diff, unit_old, COMMON);
+    update_diff_stack(rbuf_old.open_diff, unit_old, SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, unit_new, SESCOMMON);
+    update_diff_stack(wstate.output_diff, unit_old, SESCOMMON);
 
   } else if(rbuf_old.nodes.empty() && rbuf_new.nodes.empty()) {
 
-    update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
-    update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
-    update_diff_stack(wstate.output_diff, &diff_common_start, COMMON);
+    update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
+    update_diff_stack(wstate.output_diff, &diff_common_start, SESCOMMON);
 
     if(is_old <= -1 && is_new <= -1) {
 
@@ -277,15 +277,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   } else if(rbuf_old.nodes.empty()) {
 
-    update_diff_stack(rbuf_old.open_diff, &diff_common_start, COMMON);
-    update_diff_stack(rbuf_new.open_diff, unit_new, COMMON);
-    update_diff_stack(wstate.output_diff, unit_new, COMMON);
+    update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, unit_new, SESCOMMON);
+    update_diff_stack(wstate.output_diff, unit_new, SESCOMMON);
 
   } else {
 
-    update_diff_stack(rbuf_old.open_diff, unit_old, COMMON);
-    update_diff_stack(rbuf_new.open_diff, &diff_common_start, COMMON);
-    update_diff_stack(wstate.output_diff, unit_old, COMMON);
+    update_diff_stack(rbuf_old.open_diff, unit_old, SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
+    update_diff_stack(wstate.output_diff, unit_old, SESCOMMON);
 
   }
 
@@ -303,9 +303,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   // output srcdiff unit ending tag
   //if(is_old && is_new)
-  //output_node(rbuf_old, rbuf_new, unit_end, COMMON, wstate);
+  //output_node(rbuf_old, rbuf_new, unit_end, SESCOMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, &flush, COMMON, wstate);
+  output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
 
   free_node_sets(node_set_old);
   free_node_sets(node_set_new);
