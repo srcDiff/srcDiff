@@ -76,7 +76,8 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
   int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(i));    
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(i)->name);    
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.nodes.at(j)->name));    
 
     if(node_compare(rbuf_old.nodes.at(i), rbuf_new.nodes.at(j)) == 0)
 
