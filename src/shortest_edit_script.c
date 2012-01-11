@@ -107,8 +107,7 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
       int edit = num_edits % (sequence_one_size + 1);
 
       if(edit == 0)
-        if((edit_pointers[edit_array] = (struct edit *)malloc(sizeof(struct edit) * (sequence_one_size + 1))) == NULL) {
-          memset(edit_pointers[edit_array], 0, sizeof(struct edit) * (sequence_one_size + 1));
+        if((edit_pointers[edit_array] = (struct edit *)calloc(sequence_one_size + 1, sizeof(struct edit))) == NULL) {
           
           // clean allocates
           int i;
