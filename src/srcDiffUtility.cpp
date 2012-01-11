@@ -7,7 +7,7 @@
 
 bool is_change(edit * edit_script) {
 
-  return edit_script->operation == SESDELETE && edit_script->next != NULL && edit_script->next->operation == SESINSERT
+  return edit_script->operation == DELETE && edit_script->next != NULL && edit_script->next->operation == INSERT
     && (edit_script->offset_sequence_one + edit_script->length - 1) == edit_script->next->offset_sequence_one;
 
 }

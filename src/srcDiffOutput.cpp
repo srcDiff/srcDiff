@@ -38,39 +38,39 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
         return;
   */
 
-  // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
+  // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
-     && ((delay_operation == SESDELETE 
+     && ((delay_operation == DELETE 
           && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_old_end.name) == 0)
-         || (delay_operation == SESINSERT 
+         || (delay_operation == INSERT 
              && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_new_end.name) == 0)
-         || (delay_operation == SESCOMMON 
+         || (delay_operation == COMMON 
              && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_common_end.name) == 0))) {
 
-    if(delay_operation == SESDELETE) {
+    if(delay_operation == DELETE) {
 
       outputNode(diff_old_end, wstate.writer);
 
-      update_diff_stack(rbuf_old.open_diff, &diff_old_end, SESDELETE);
+      update_diff_stack(rbuf_old.open_diff, &diff_old_end, DELETE);
 
-      update_diff_stack(wstate.output_diff, &diff_old_end, SESDELETE);
+      update_diff_stack(wstate.output_diff, &diff_old_end, DELETE);
 
-    } else if(delay_operation == SESINSERT) {
+    } else if(delay_operation == INSERT) {
 
       outputNode(diff_new_end, wstate.writer);
 
-      update_diff_stack(rbuf_new.open_diff, &diff_new_end, SESINSERT);
+      update_diff_stack(rbuf_new.open_diff, &diff_new_end, INSERT);
 
-      update_diff_stack(wstate.output_diff, &diff_new_end, SESINSERT);
+      update_diff_stack(wstate.output_diff, &diff_new_end, INSERT);
 
     } else {
 
       outputNode(diff_common_end, wstate.writer);
 
-      update_diff_stack(rbuf_old.open_diff, &diff_common_end, SESCOMMON);
-      update_diff_stack(rbuf_new.open_diff, &diff_common_end, SESCOMMON);
+      update_diff_stack(rbuf_old.open_diff, &diff_common_end, COMMON);
+      update_diff_stack(rbuf_new.open_diff, &diff_common_end, COMMON);
 
-      update_diff_stack(wstate.output_diff, &diff_common_end, SESCOMMON);
+      update_diff_stack(wstate.output_diff, &diff_common_end, COMMON);
 
     }
 
@@ -84,7 +84,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
        && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
 
-    // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
+    // check if ending a DELETE/INSERT/COMMON tag. if so delay.
     if(ismethod(wstate.method, METHOD_GROUP) && (*node == diff_old_end || *node == diff_new_end || *node == diff_common_end)) {
 
       delay = true;
@@ -94,32 +94,32 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     } else
       outputNode(*node, wstate.writer);
 
-    if(wstate.output_diff.back()->operation == SESCOMMON) {
+    if(wstate.output_diff.back()->operation == COMMON) {
 
-      //fprintf(stderr, "HERE OUTPUT SESCOMMON\n");
+      //fprintf(stderr, "HERE OUTPUT COMMON\n");
 
-      update_diff_stack(rbuf_old.open_diff, node, SESCOMMON);
-      update_diff_stack(rbuf_new.open_diff, node, SESCOMMON);
+      update_diff_stack(rbuf_old.open_diff, node, COMMON);
+      update_diff_stack(rbuf_new.open_diff, node, COMMON);
 
-      update_diff_stack(wstate.output_diff, node, SESCOMMON);
+      update_diff_stack(wstate.output_diff, node, COMMON);
 
-    } else if(wstate.output_diff.back()->operation == SESDELETE) {
+    } else if(wstate.output_diff.back()->operation == DELETE) {
 
-      //fprintf(stderr, "HERE OUTPUT SESDELETE\n");
+      //fprintf(stderr, "HERE OUTPUT DELETE\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-      update_diff_stack(rbuf_old.open_diff, node, SESDELETE);
+      update_diff_stack(rbuf_old.open_diff, node, DELETE);
 
-      update_diff_stack(wstate.output_diff, node, SESDELETE);
+      update_diff_stack(wstate.output_diff, node, DELETE);
 
     } else {
 
-      //fprintf(stderr, "HERE OUTPUT SESINSERT\n");
+      //fprintf(stderr, "HERE OUTPUT INSERT\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-      update_diff_stack(rbuf_new.open_diff, node, SESINSERT);
+      update_diff_stack(rbuf_new.open_diff, node, INSERT);
 
-      update_diff_stack(wstate.output_diff, node, SESINSERT);
+      update_diff_stack(wstate.output_diff, node, INSERT);
     }
 
     return;
@@ -130,9 +130,9 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     int current_operation = wstate.output_diff.back()->operation;
     int size = wstate.output_diff.back()->open_tags.size();
 
-    if(size > 0 && ((*node == diff_old_start && current_operation == SESDELETE)
-                    || (*node == diff_new_start && current_operation == SESINSERT)
-                    || (*node == diff_common_start && current_operation == SESCOMMON))) {
+    if(size > 0 && ((*node == diff_old_start && current_operation == DELETE)
+                    || (*node == diff_new_start && current_operation == INSERT)
+                    || (*node == diff_common_start && current_operation == COMMON))) {
 
       return;
     }
@@ -142,9 +142,9 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
   // output non-text node and get next node
   outputNode(*node, wstate.writer);
 
-  if(operation == SESCOMMON) {
+  if(operation == COMMON) {
 
-    //fprintf(stderr, "HERE OUTPUT SESCOMMON\n");
+    //fprintf(stderr, "HERE OUTPUT COMMON\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_old.open_diff, node, operation);
@@ -153,9 +153,9 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     update_diff_stack(wstate.output_diff, node, operation);
 
   }
-  else if(operation == SESDELETE) {
+  else if(operation == DELETE) {
 
-    //fprintf(stderr, "HERE OUTPUT SESDELETE\n");
+    //fprintf(stderr, "HERE OUTPUT DELETE\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_old.open_diff, node, operation);
@@ -164,7 +164,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
   } else {
 
-    //fprintf(stderr, "HERE OUTPUT SESINSERT\n");
+    //fprintf(stderr, "HERE OUTPUT INSERT\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_new.open_diff, node, operation);

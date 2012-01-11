@@ -217,12 +217,12 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     // determine ending position to output
     diff_end_old = rbuf_old.last_output;
     diff_end_new = rbuf_new.last_output;
-    if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
+    if(edits->operation == DELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
 
-    } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == INSERT && last_diff_old <= edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
@@ -265,13 +265,13 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
           if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
                          , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)) {
 
-            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two), SESINSERT, wstate);
+            output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two), INSERT, wstate);
 
           } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
                                 , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes)) {
 
             output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two)
-                          , SESDELETE, wstate);
+                          , DELETE, wstate);
 
           } else {
 
@@ -298,15 +298,18 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
     } else {
 
+      fprintf(stderr, "HERE: %d\n", DELETE);
+
+
       // handle pure delete or insert
       switch (edits->operation) {
 
-      case SESINSERT:
+      case INSERT:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, 0
                                           , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1,
-                                          SESINSERT, wstate);
+                                          INSERT, wstate);
 
 
         // update for common
@@ -315,11 +318,11 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
         break;
 
-      case SESDELETE:
+      case DELETE:
 
         //fprintf(stderr, "HERE\n");
         output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                          , rbuf_new, 0, SESDELETE, wstate);
+                                          , rbuf_new, 0, DELETE, wstate);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
@@ -956,12 +959,12 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), rbuf_new.nodes)) {
 
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), SESINSERT, wstate);
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), INSERT, wstate);
 
       } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
                             , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_old.nodes)) {
 
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), SESDELETE, wstate);
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), DELETE, wstate);
 
       } else {
 
@@ -1001,9 +1004,9 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
+  output_node(rbuf_old, rbuf_new, &diff_common_start, COMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
+  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), COMMON, wstate);
 
   ++rbuf_old.last_output;
   ++rbuf_new.last_output;
@@ -1047,7 +1050,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
   output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_end, SESCOMMON, wstate);
+  output_node(rbuf_old, rbuf_new, &diff_common_end, COMMON, wstate);
 
   output_white_space_statement(rbuf_old, rbuf_new, wstate);
 

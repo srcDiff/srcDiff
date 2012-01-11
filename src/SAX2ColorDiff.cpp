@@ -56,9 +56,9 @@ void startDocument(void* ctx) {
 
   std::string span_class = "class=\"";
 
-  if(data->in_diff->back() == SESCOMMON)
+  if(data->in_diff->back() == COMMON)
     span_class += common_color;
-  else if(data->in_diff->back() == SESDELETE)
+  else if(data->in_diff->back() == DELETE)
     span_class += delete_color;
   else
     span_class += insert_color;
@@ -187,11 +187,11 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0)
-      data->in_diff->push_back(SESCOMMON);
+      data->in_diff->push_back(COMMON);
     else if(strcmp((const char *)localname, "delete") == 0)
-      data->in_diff->push_back(SESDELETE);
+      data->in_diff->push_back(DELETE);
     else if(strcmp((const char *)localname, "insert") == 0)
-      data->in_diff->push_back(SESINSERT);
+      data->in_diff->push_back(INSERT);
 
   }
 
@@ -220,9 +220,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   std::string span_class = "class=\"";
 
-  if(data->in_diff->back() == SESCOMMON)
+  if(data->in_diff->back() == COMMON)
     span_class += common_color;
-  else if(data->in_diff->back() == SESDELETE)
+  else if(data->in_diff->back() == DELETE)
     span_class += delete_color;
   else
     span_class += insert_color;
@@ -267,12 +267,12 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     if((char)ch[i] == '\n') {
 
-      if(data->in_diff->back() == SESCOMMON) {
+      if(data->in_diff->back() == COMMON) {
 
         ++data->line_old;
         ++data->line_new;
 
-      } else if(data->in_diff->back() == SESDELETE) {
+      } else if(data->in_diff->back() == DELETE) {
 
         ++data->line_old;
 
@@ -314,9 +314,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     span_class = "class=\"";
 
-    if(data->in_diff->back() == SESCOMMON)
+    if(data->in_diff->back() == COMMON)
       span_class += common_color;
-    else if(data->in_diff->back() == SESDELETE)
+    else if(data->in_diff->back() == DELETE)
       span_class += delete_color;
     else
       span_class += insert_color;
