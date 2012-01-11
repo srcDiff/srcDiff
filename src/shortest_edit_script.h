@@ -11,10 +11,10 @@
 #define INCLUDED_SHORTEST_EDIT_SCRIPT_H
 
 // edit constants
-const int COMMON = -1;
-const int INSERT = 0;
-const int DELETE = (int)1;
-const int CHANGE = 2;
+const short COMMON = -1;
+const short INSERT = 0;
+const short DELETE = 1;
+const short CHANGE = 2;
 
 // single edit script
 struct edit {

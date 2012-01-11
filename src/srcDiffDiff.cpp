@@ -303,7 +303,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
     } else {
 
-      fprintf(stderr, "HERE: %d", DELETE);
+      fprintf(stderr, "HERE: %d\n", DELETE);
 
 
       // handle pure delete or insert
