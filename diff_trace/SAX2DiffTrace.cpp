@@ -749,151 +749,175 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
       }
 
-      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
-      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+      if(tracer.diff_stack.back().operation == COMMON) {
 
-      bool is_empty = tracer.signature_path_old.back().empty();
+        tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+        tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
 
-      tracer.signature_path_pos_old.back() = poss;
-      tracer.signature_path_offsets_old.back() = offsets;
-      tracer.signature_path_old.back() = paths;
+        bool is_empty = tracer.signature_path_old.back().empty();
 
-      if(is_empty) {
+        tracer.signature_path_pos_old.back() = poss;
+        tracer.signature_path_offsets_old.back() = offsets;
+        tracer.signature_path_old.back() = paths;
+
+        if(is_empty) {
+
+          update_offsets(tracer, DELETE);
+
+        }
+
+        is_empty = tracer.signature_path_new.back().empty();
+
+        tracer.signature_path_pos_old.back() = poss;
+        tracer.signature_path_offsets_old.back() = offsets;
+        tracer.signature_path_old.back() = paths;
+
+        if(is_empty) {
+
+          update_offsets(tracer, INSERT);
+
+        }
+
+      } else if(tracer.diff_stack.back().operation == INSERT) {
+
+        tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+
+        tracer.signature_path_pos_old.back() = poss;
+        tracer.signature_path_offsets_old.back() = offsets;
+        tracer.signature_path_old.back() = paths;
 
         update_offsets(tracer, DELETE);
 
-      }
+      } else if(tracer.diff_stack.back().operation == INSERT) {
 
-      is_empty = tracer.signature_path_new.back().empty();
+        tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
 
-      tracer.signature_path_pos_old.back() = poss;
-      tracer.signature_path_offsets_old.back() = offsets;
-      tracer.signature_path_old.back() = paths;
-
-      if(is_empty) {
+        tracer.signature_path_pos_new.back() = poss;
+        tracer.signature_path_offsets_new.back() = offsets;
+        tracer.signature_path_new.back() = paths;
 
         update_offsets(tracer, INSERT);
 
       }
 
+    }
+
+    if(tracer.diff_stack.back().operation == COMMON) {
+
+
+      tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
+      tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+
+    } else if(tracer.diff_stack.back().operation == DELETE) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+
+    } else if(tracer.diff_stack.back().operation == INSERT) {
+
+      tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+
+      tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+
+    }
+
   }
+
+  std::string tag = "text()";
+
+  if(!tracer.collect_text)
+    add_child(tracer.elements.back().children, tag);
 
   if(tracer.diff_stack.back().operation == COMMON) {
 
+    if(!tracer.collect_text_delete)
+      add_child(tracer.elements.back().children_old, tag);
 
-    tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
-    tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+    if(!tracer.collect_text_insert)
+      add_child(tracer.elements.back().children_new, tag);
 
-    tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
-    tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
+    tracer.collect_text_delete = true;
+    tracer.collect_text_insert = true;
 
   } else if(tracer.diff_stack.back().operation == DELETE) {
 
-    tracer.elements.at(tracer.collect_node_pos).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
+    if(!tracer.collect_text_delete)
+      add_child(tracer.elements.back().children_old, tag);
 
-    tracer.elements.at(tracer.collect_node_pos).signature_path_old.back() = path;
+    tracer.collect_text_delete = true;
 
   } else if(tracer.diff_stack.back().operation == INSERT) {
 
-    tracer.elements.at(tracer.collect_node_pos).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+    if(!tracer.collect_text_insert)
+      add_child(tracer.elements.back().children_new, tag);
 
-    tracer.elements.at(tracer.collect_node_pos).signature_path_new.back() = path;
-
-  }
-
-}
-
-std::string tag = "text()";
-
-if(!tracer.collect_text)
-  add_child(tracer.elements.back().children, tag);
-
-if(tracer.diff_stack.back().operation == COMMON) {
-
-  if(!tracer.collect_text_delete)
-    add_child(tracer.elements.back().children_old, tag);
-
-  if(!tracer.collect_text_insert)
-    add_child(tracer.elements.back().children_new, tag);
-
-  tracer.collect_text_delete = true;
-  tracer.collect_text_insert = true;
-
- } else if(tracer.diff_stack.back().operation == DELETE) {
-
-  if(!tracer.collect_text_delete)
-    add_child(tracer.elements.back().children_old, tag);
-
-  tracer.collect_text_delete = true;
-
- } else if(tracer.diff_stack.back().operation == INSERT) {
-
-  if(!tracer.collect_text_insert)
-    add_child(tracer.elements.back().children_new, tag);
-
-  tracer.collect_text_insert = true;
-
- }
-
-int i;
-for(i = 0; i < len; ++i) {
-
-  if(!isspace((char)ch[i]))
-    break;
-
- }
-
-if(tracer.diff_stack.back().operation != COMMON
-   && len != 0 && ((tracer.options & OPTION_WHITESPACE) || (!tracer.collect_text))
-   && tracer.diff_stack.back().level == 0) {
-
-  tracer.diff_stack.back().text_num = tracer.elements.back().children[tag];
-  tracer.diff_stack.back().output_text = true;
-
- }
-
-if(tracer.diff_stack.back().operation != COMMON
-   && len != 0 && ((tracer.options & OPTION_WHITESPACE)
-                   || (tracer.diff_stack.back().output_text && tracer.elements.back().children[tag] == tracer.diff_stack.back().text_num && i != len))
-   && tracer.diff_stack.back().level == 0) {
-
-  tracer.diff_stack.back().output_text = false;
-
-  element curelement;
-  curelement.name = "text()";
-  curelement.prefix = "";
-  curelement.uri = "";
-
-  /*
-    if((tracer.options & OPTION_WHITESPACE) && i == len)
-    if(tracer.diff_stack.back().operation == DELETE)
-    for(int i = 0; i < len; ++i)
-    curelement.signature_old += (char)ch[i];
-  */
-
-  tracer.elements.push_back(curelement);
-
-  if(!tracer.wait)
-    output_diff(tracer);
-  else {
-
-    std::vector<element> temp_stack;
-
-    for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
-      temp_stack.push_back(tracer.elements.at(i));
-
-    tracer.missed_diff_types.push_back(tracer.diff_stack.back().operation);
-    tracer.missed_diffs.push_back(temp_stack);
-
-    tracer.output = true;
+    tracer.collect_text_insert = true;
 
   }
 
-  tracer.elements.pop_back();
+  int i;
+  for(i = 0; i < len; ++i) {
 
- }
+    if(!isspace((char)ch[i]))
+      break;
 
-tracer.collect_text = true;
+  }
+
+  if(tracer.diff_stack.back().operation != COMMON
+     && len != 0 && ((tracer.options & OPTION_WHITESPACE) || (!tracer.collect_text))
+     && tracer.diff_stack.back().level == 0) {
+
+    tracer.diff_stack.back().text_num = tracer.elements.back().children[tag];
+    tracer.diff_stack.back().output_text = true;
+
+  }
+
+  if(tracer.diff_stack.back().operation != COMMON
+     && len != 0 && ((tracer.options & OPTION_WHITESPACE)
+                     || (tracer.diff_stack.back().output_text && tracer.elements.back().children[tag] == tracer.diff_stack.back().text_num && i != len))
+     && tracer.diff_stack.back().level == 0) {
+
+    tracer.diff_stack.back().output_text = false;
+
+    element curelement;
+    curelement.name = "text()";
+    curelement.prefix = "";
+    curelement.uri = "";
+
+    /*
+      if((tracer.options & OPTION_WHITESPACE) && i == len)
+      if(tracer.diff_stack.back().operation == DELETE)
+      for(int i = 0; i < len; ++i)
+      curelement.signature_old += (char)ch[i];
+    */
+
+    tracer.elements.push_back(curelement);
+
+    if(!tracer.wait)
+      output_diff(tracer);
+    else {
+
+      std::vector<element> temp_stack;
+
+      for(unsigned int i = tracer.collect_node_pos + 1; i < tracer.elements.size(); ++i)
+        temp_stack.push_back(tracer.elements.at(i));
+
+      tracer.missed_diff_types.push_back(tracer.diff_stack.back().operation);
+      tracer.missed_diffs.push_back(temp_stack);
+
+      tracer.output = true;
+
+    }
+
+    tracer.elements.pop_back();
+
+  }
+
+  tracer.collect_text = true;
 
 }
 
