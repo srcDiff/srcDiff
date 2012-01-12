@@ -34,7 +34,7 @@
 
 #ifdef __MINGW32__
 #include "mingw32.hpp"
-#endif 
+#endif
 
 typedef std::map<std::string, xNode*> NodeMap;
 typedef std::vector<std::string> NameList;
@@ -48,16 +48,16 @@ NodeMap endtags_new;
 NameList namelist_new;
 
 /*
-std::string* setName(const char* name) {
+  std::string* setName(const char* name) {
 
   NameList::iterator lb = std::find(namelist.begin(), namelist.end(), name);
   if (lb != namelist.end()) {
-    return &(*lb);
+  return &(*lb);
   } else {
-    namelist.push_back(name);
-    return &namelist.back();
+  namelist.push_back(name);
+  return &namelist.back();
   }
-}
+  }
 */
 
 xNode * createInternalNode(xmlNode & node) {
@@ -77,10 +77,10 @@ xNode * createInternalNode(xmlNode & node) {
 
     xnode->ns = new xNs;
 
-  xnode->ns->href = 0;
+    xnode->ns->href = 0;
 
-  if(node.ns->href)
-    xnode->ns->href = strdup((const char *)node.ns->href);
+    if(node.ns->href)
+      xnode->ns->href = strdup((const char *)node.ns->href);
 
     xnode->ns->prefix = 0;
     if(node.ns->prefix)
@@ -91,29 +91,29 @@ xNode * createInternalNode(xmlNode & node) {
   xnode->properties = 0;
   if(attribute) {
 
-   xAttr * attr;
-   attr = new xAttr;
-   attr->name = strdup((const char *)attribute->name);
-   attr->value = strdup((const char *)attribute->children->content);
-   attr->next = 0;
+    xAttr * attr;
+    attr = new xAttr;
+    attr->name = strdup((const char *)attribute->name);
+    attr->value = strdup((const char *)attribute->children->content);
+    attr->next = 0;
 
-   xnode->properties = attr;;
-    
-   attribute = attribute->next;
-    
-  while (attribute) {
+    xnode->properties = attr;;
 
-    xAttr * nattr = new xAttr;
-    nattr->name = strdup((const char *)attribute->name);
-    nattr->value = strdup((const char *)attribute->children->content);
-    nattr->next = 0;
-
-    attr->next = nattr;
-    attr = nattr;
-    
     attribute = attribute->next;
 
-  }
+    while (attribute) {
+
+      xAttr * nattr = new xAttr;
+      nattr->name = strdup((const char *)attribute->name);
+      nattr->value = strdup((const char *)attribute->children->content);
+      nattr->next = 0;
+
+      attr->next = nattr;
+      attr = nattr;
+
+      attribute = attribute->next;
+
+    }
   }
 
   xnode->extra = node.extra;
@@ -154,7 +154,7 @@ void freeXNode(xNode * node) {
     free((void *)node->content);
 
   delete node;
-  
+
 }
 
 bool operator==(const xNode& n1, const xNode& n2) {
@@ -263,8 +263,8 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
 
   if(characters_start != characters_end) {
 
-     const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
-     text->content = content;
+    const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
+    text->content = content;
   }
   text->ns = 0;
   text->properties = 0;
@@ -336,6 +336,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
   default:
     break;
   }
+
 }
 
 // output current XML node in reader
@@ -384,7 +385,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer, const char* nam
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
       else if (*p == '>')
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-     else
+      else
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
     }
     break;
@@ -420,25 +421,25 @@ void outputNode(const xNode& node, xmlTextWriterPtr writer) {
 
     // copy all the namespaces
     /*
-    if(strcmp((const char *)node.name, "unit") == 0) {
+      if(strcmp((const char *)node.name, "unit") == 0) {
       xmlNsPtr ns = node.nsDef;
       while (ns) {
 
-        if(ns->type == XML_LOCAL_NAMESPACE) {
-          std::string name = "xmlns";
+      if(ns->type == XML_LOCAL_NAMESPACE) {
+      std::string name = "xmlns";
 
-          if(ns->prefix) {
+      if(ns->prefix) {
 
-            name += ":";
-            name += (char *)ns->prefix;
-          }
-
-          xmlTextWriterWriteAttribute(writer, (xmlChar *)name.c_str(), ns->href);
-        }
-
-        ns = ns->next;
+      name += ":";
+      name += (char *)ns->prefix;
       }
-    }
+
+      xmlTextWriterWriteAttribute(writer, (xmlChar *)name.c_str(), ns->href);
+      }
+
+      ns = ns->next;
+      }
+      }
     */
 
     // copy all the attributes
