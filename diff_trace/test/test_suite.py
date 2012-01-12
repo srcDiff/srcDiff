@@ -40,7 +40,7 @@ def create_difftrace_xpath_results(srcDiff, difftrace_xpath_list) :
         if xpath == "" :
             continue
 
-        command = [srcml2src, "--apply-root", "--xpath", xpath]
+        command = [srcml2src, "--xpath", xpath]
         
         difftrace_xpath_result = run(command, srcDiff)
 
