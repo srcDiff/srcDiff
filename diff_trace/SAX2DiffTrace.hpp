@@ -109,7 +109,7 @@ class SAX2DiffTrace {
 
   static void form_paths(SAX2DiffTrace & tracer);
 
-  static void output_missed(SAX2DiffTrace & tracer);
+  static void end_collect(SAX2DiffTrace & tracer);
 
   static void update_offsets(SAX2DiffTrace & tracer, int operation);
 

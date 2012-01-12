@@ -175,7 +175,7 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 
 
 // rename to end_collect
-void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
+void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
   // form paths
   for(int i = 0; i < tracer.signature_path_old.size(); ++i) {
@@ -463,7 +463,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
-      output_missed(tracer);
+      end_collect(tracer);
 
     }
 
@@ -554,8 +554,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   }
 
   if(tracer.wait && is_wait((const char *)localname, (const char *)prefix)) {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-    output_missed(tracer);
+
+    end_collect(tracer);
 
   }
 
