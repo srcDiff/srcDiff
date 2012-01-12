@@ -136,31 +136,6 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
     }
 
-    /*
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "function") == 0 && strcmp(name, "name") == 0)
-      return true;
-
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "function_decl") == 0 && strcmp(name, "name") == 0)
-      return true;
-
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "class") == 0 && strcmp(name, "name") == 0)
-      return true;
-
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "class_decl") == 0 && strcmp(name, "name") == 0)
-      return true;
-
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "struct") == 0 && strcmp(name, "name") == 0)
-      return true;
-
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "struct_decl") == 0 && strcmp(name, "name") == 0)
-      return true;
-
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "union") == 0 && strcmp(name, "name") == 0)
-      return true;
-
-      if(strcmp(tracer.elements.at(pos).name.c_str(), "union_decl") == 0 && strcmp(name, "name") == 0)
-      return true;
-    */
   } else {
 
     return false;
@@ -198,20 +173,6 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
   return false;
 }
 
-
-bool SAX2DiffTrace::is_end_collect_and_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
-
-  if(!tracer.wait || tracer.elements.size() - 1 != tracer.collect_node_pos)
-    return false;
-
-  //if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
-  //return true;
-
-  //if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
-  //return true;
-
-  return true;
-}
 
 // rename to end_collect
 void SAX2DiffTrace::output_missed(SAX2DiffTrace & tracer) {
@@ -625,12 +586,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))
     tracer.collect = false;
 
-  if(0 && tracer.wait && is_end_collect_and_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
-
-    output_missed(tracer);
-
-  }
-
   tracer.collect_text = false;
 
 }
@@ -740,16 +695,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
         poss.push_back(count);
         offsets.push_back(0);
         paths.push_back(tag);
-
-        element next_element = null_element;
-        if((pos + 1) < tracer.elements.size())
-          next_element = tracer.elements.at(pos + 1);
-
-
-        //if(pos != tracer.collect_node_pos + 1)
-        //path += "/";
-
-        //path += create_string_from_element(tracer.elements.at(pos), next_element, count, tracer.diff_stack.back().operation, tracer.options);
 
       }
 
@@ -1053,15 +998,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
       }
    */
-  /* else if(strcmp(nextelement.name.c_str(), "") == 0) {
-
-     element += " and ";
-     if(operation == DELETE)
-     element += "deleted()";
-     else
-     element += "inserted()";
-
-     }*/
 
   return element;
 
