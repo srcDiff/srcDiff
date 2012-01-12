@@ -48,6 +48,6 @@ void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
 void merge_filename(xNodePtr unit_old, xNodePtr unit_new);
 
 bool is_atomic_srcml(std::vector<xNodePtr> * nodes, unsigned start);
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, int context);
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE & options, int context);
 
 #endif

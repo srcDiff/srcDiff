@@ -97,7 +97,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   // read to unit
   xmlTextReaderRead(reader);
 
-  *unit_start = getRealCurrentNode(reader, context);
+  *unit_start = getRealCurrentNode(reader, options, context);
 
   // Read past unit tag open
   no_error = xmlTextReaderRead(reader);
@@ -105,8 +105,8 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   // collect if non empty files
   if(no_error) {
 
-    collect_nodes(&nodes, reader, context);
-    unit_end = getRealCurrentNode(reader, context);
+    collect_nodes(&nodes, reader, options, context);
+    unit_end = getRealCurrentNode(reader, options, context);
 
   }
 
@@ -212,7 +212,7 @@ void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
 }
 */
 // collect the differnces
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, int context) {
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE & options, int context) {
 
   int not_done = 1;
   while(not_done) {
@@ -276,7 +276,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, int co
     else {
 
       // text node does not need to be copied.
-      xNodePtr node = getRealCurrentNode(reader, context);
+      xNodePtr node = getRealCurrentNode(reader, options, context);
 
       if(strcmp((const char *)node->name, "unit") == 0)
         return;
