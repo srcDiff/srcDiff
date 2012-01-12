@@ -190,7 +190,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
   std::map<std::string, xNode*> * endtags = &endtags_old;
   std::vector<std::string> * namelist = &namelist_old;
 
-  if(context == SESINSERT) {
+  if(isoption(options, OPTION_THREAD) && context == SESINSERT) {
 
     starttags = &starttags_new;
     endtags = &endtags_new;
