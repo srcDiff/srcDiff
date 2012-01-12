@@ -20,6 +20,10 @@
 #include "difftraceapps.hpp"
 #include "../src/shortest_edit_script.h"
 
+const int COMMON = SESCOMMON;
+const int INSERT = SESINSERT;
+const int DELETE = SESDELETE;
+
 SAX2DiffTrace::SAX2DiffTrace(long & options)
   : options(options) {
 
