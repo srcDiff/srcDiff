@@ -76,9 +76,6 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
   int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(i)->name);    
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.nodes.at(j)->name));    
-
     if(node_compare(rbuf_old.nodes.at(i), rbuf_new.nodes.at(j)) == 0)
 
       output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESCOMMON, wstate);
@@ -252,11 +249,11 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
 
     } else {
 
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old.nodes.at(i)->name);
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new.nodes.at(i)->name);
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old.nodes.at(i)->name);
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new.nodes.at(i)->name);
 
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
-      fprintf(stderr, "ERROR");
+      fprintf(stderr, "ERROR\n");
       exit(1);
     }
 
