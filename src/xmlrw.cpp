@@ -216,7 +216,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, int context) {
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT
-             && strcmp((const char *)curnode->ns->href, "http://www.sdml.info/srcML/src") != 0) {
+             && strcmp((const char *)curnode->ns->href, "http://www.sdml.info/srcML/src") == 0) {
 
     NodeMap::iterator lb = endtags->lower_bound((const char*) curnode->name);
     if (lb != endtags->end() && !(endtags->key_comp()((const char*) curnode->name, lb->first))) {
