@@ -1,1 +1,1 @@
-"//diff:*[not(diff:common)]/node()"
+"//diff:*[not(self::diff:common)]/node()"
