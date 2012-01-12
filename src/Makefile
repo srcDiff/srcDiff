@@ -141,7 +141,7 @@ $(OBJ_DIR)mingw32.o : mingw32.cpp mingw32.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.hpp
-	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h
 	${CXX} $(CXXFLAGS) -c $< -o $@

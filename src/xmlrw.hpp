@@ -30,6 +30,8 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#include <Options.hpp>
+
 //typedef xmlNode xNode;
 //typedef xmlNodePtr xNodePtr;
 
