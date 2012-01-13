@@ -68,6 +68,6 @@ def sequence_xpath(sequence, xpath) :
     return sequence_list
 
 sequence = 1
-xpath = "/src:unit['a']/src:function['g']['f']"
+xpath = "/src:unit['a']/src:function['h']['g']['f']"
 
 print sequence_xpath(sequence, xpath)
