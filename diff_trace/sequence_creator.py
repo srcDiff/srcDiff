@@ -2,7 +2,7 @@
 
 import itertools
 
-def powerset(alist):
+def power_set(alist):
 
     return chain.from_iterable(itertools.combinations(alist, i) for i in range(len(alist) +1))
 
