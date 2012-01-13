@@ -16,17 +16,17 @@ def sequence_tag(sequence, tag) :
 
     sets = power_set(predicates)
 
-    sequence_list = str(sequence) + "\t" + name + "\n"
+    sequence_list = str(sequence) + "\t" + name
 
     for items in sets :
+
+        sequence_list += "\n"
 
         sequence_list += str(sequence) + "\t" + name
 
         for item in items :
 
             sequence_list += item
-
-        sequence_list += "\n"
 
     return sequence_list
 
@@ -61,10 +61,11 @@ def sequence_xpath(sequence, xpath) :
 
     for tag in split_xpath(xpath) :
         sequence_list +=  sequence_tag(sequence, tag)
+        sequence_list += "\n"
 
     return sequence_list
 
 sequence = 1
-xpath = "/src:unit['a']"
+xpath = "/src:unit['a']/src:function['g']['f']"
 
 print sequence_xpath(sequence, xpath)
