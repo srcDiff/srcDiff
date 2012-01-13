@@ -21,17 +21,30 @@ def split_xpath(sequence_number, operation, xpath, sequence_data) :
 
     for tag in tags :
         if tag != "" :
-            if tag.find("[") != -1 :
-                sequence_data.write(str(sequence_number) + "\t" + operation + "=" + tag[0 : tag.find("[")] + "\n");
-                sequence_data.write(str(sequence_number) + "\t" + operation + "=" + clean_tag(tag) + "\n");
-            else :
-                sequence_data.write(str(sequence_number) + "\t" + operation + "=" + tag + "\n");
+
+            name = get_name(tag)
+            predicate_list(create_clean_predicate_list(tag))
+            predicate_list_length = len(predicate_list_length)
+
+            for i in range(predicate_list_length) :
+
+                sequence_data.write(str(sequence_number) + "\t" + name + predicate_list[i] + "\n");
+
+                for j in range(1, predicate_list_length) :
+
+            sequence_data.write(str(sequence_number) + "\t" + tag + "\n");
 
 def clean_tag(tag) :
     return tag.replace("\'", "")
 
 def create_clean_predicate_list(tag):
-    return
+
+    predicate_list = []
+    while tag.find("[") != -1 :
+
+        predicate_list.append(clean_tag(tag[tag.find("[") : tag.find("]") + 1]))
+
+    return predicate_list
 
 def get_name(tag):
 
