@@ -4,7 +4,10 @@ import itertools
 
 def split_xpath(xpath) :
 
-    return xpath.split("/")
+    
+    tags = xpath.split("/") [ 1 :]
+
+    return tags
 
 def sequence_create(sequence, tag) :
 
@@ -13,17 +16,17 @@ def sequence_create(sequence, tag) :
 
     sets = power_set(predicates)
 
-    sequence_list = sequence + name + "\n"
+    sequence_list = str(sequence) + "\t" + name + "\n"
 
     for items in sets :
 
-        sequence += sequence + name
+        sequence_list += str(sequence) + "\t" + name
 
         for item in items :
 
-            sequence += item
+            sequence_list += item
 
-        sequence += "\n"
+        sequence_list += "\n"
 
     return sequence_list
 
@@ -35,7 +38,7 @@ def get_predicates(tag) :
 
         predicates.append(tag[ tag.find("[") : tag.find("]") + 1 ])
 
-        tag = tag[ : tag.find("]") + 1 ]
+        tag = tag[ tag.find("]") + 1 :]
 
     return predicates
 
@@ -52,6 +55,9 @@ def power_set(alist):
 
     return list(itertools.chain.from_iterable(itertools.combinations(alist, i) for i in range(1, len(alist) +1)))
 
-xpath = "/src:unit['a']/src:function[1]['g'][f']"
+xpath = "/src:unit['a']"
 
-print create_sequence(1, xpath)
+sequence = 1
+for tag in split_xpath(xpath) :
+    print sequence_create(sequence, tag)
+    sequence += 1
