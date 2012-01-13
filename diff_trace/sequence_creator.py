@@ -52,6 +52,6 @@ def power_set(alist):
 
     return list(itertools.chain.from_iterable(itertools.combinations(alist, i) for i in range(1, len(alist) +1)))
 
-xpath = ""
+xpath = "/src:unit['a']/src:function[1]['g'][f']"
 
 print create_sequence(1, xpath)
