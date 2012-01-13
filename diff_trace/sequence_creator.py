@@ -1,4 +1,4 @@
-#!/usr/bin/include
+#!/usr/bin/python
 
 import itertools
 
