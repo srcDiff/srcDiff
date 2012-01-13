@@ -1,4 +1,5 @@
-def powerset(iterable):
-    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
-    s = list(iterable)
+import itertools
+
+def power_set(iterable):
+
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
