@@ -31,11 +31,11 @@ def get_predicates(tag) :
 
     predicates = []
 
-    for not(tag.find("[") = -1) :
-        
-        predicate = [ tag.find("[") : tag.find("]") + 1 ]
+    while not(tag.find("[") == -1) :
 
-        tag = [ : tag.find("]") + 1 ]
+        predicates.append(tag[ tag.find("[") : tag.find("]") + 1 ])
+
+        tag = tag[ : tag.find("]") + 1 ]
 
     return predicates
 
@@ -43,7 +43,7 @@ def get_name(tag) :
 
     offset = tag.find("[")
     
-    if offset == -1 :
+    if offset is -1 :
         return tag
     else :
         return tag[: offset]
