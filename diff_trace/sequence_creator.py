@@ -31,7 +31,7 @@ def get_predicates(tag) :
 
     predicates = []
 
-    for tag.find("[") != -1 :
+    for not(tag.find("[") = -1) :
         
         predicate = [ tag.find("[") : tag.find("]") + 1 ]
 
