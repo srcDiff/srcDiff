@@ -41,7 +41,7 @@ def get_predicates(tag) :
 
 def get_name(tag) :
 
-    offset = tag.find("[") != -1
+    offset = tag.find("[")
     
     if offset == -1 :
         return tag
