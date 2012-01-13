@@ -17,18 +17,28 @@ def split_xpath_difference(sequence_number, xpath_difference, sequence_data) :
 # split apart an xpath expression
 def split_xpath(sequence_number, operation, xpath, sequence_data) :
 
-    tags = xpath.split("/src:")
+    tags = xpath.split("/")
 
     for tag in tags :
         if tag != "" :
             if tag.find("[") != -1 :
-                sequence_data.write(str(sequence_number) + "\t" + operation + "=src:" + tag[0 : tag.find("[")] + "\n");
-                sequence_data.write(str(sequence_number) + "\t" + operation + "=src:" + clean_tag(tag) + "\n");
+                sequence_data.write(str(sequence_number) + "\t" + operation + "=" + tag[0 : tag.find("[")] + "\n");
+                sequence_data.write(str(sequence_number) + "\t" + operation + "=" + clean_tag(tag) + "\n");
             else :
-                sequence_data.write(str(sequence_number) + "\t" + operation + "=src:" + tag + "\n");
+                sequence_data.write(str(sequence_number) + "\t" + operation + "=" + tag + "\n");
 
 def clean_tag(tag) :
     return tag.replace("\'", "")
+
+def create_clean_predicate_list(tag):
+    return
+
+def get_name(tag):
+
+    if tag.find("[") != -1 :
+        return tag[0 : tag.find("[")]
+
+    return tag
 
 # main
 diff_list = open(sys.argv[1], "r")
