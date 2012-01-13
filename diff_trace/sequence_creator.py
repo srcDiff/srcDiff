@@ -9,5 +9,6 @@ def power_set(alist) :
     for i in range(1, len(alist)) :
         sequence.append(itertools.combinations(alist, i))
 
+    return sequence
 
 print power_set([1,2,3])
