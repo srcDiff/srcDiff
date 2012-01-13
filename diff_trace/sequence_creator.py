@@ -52,4 +52,6 @@ def power_set(alist):
 
     return list(itertools.chain.from_iterable(itertools.combinations(alist, i) for i in range(1, len(alist) +1)))
 
-print create_sequence(xpath)
+xpath = ""
+
+print create_sequence(1, xpath)
