@@ -10,7 +10,10 @@ def power_set_helper(alist, start, num) :
 
     newlist = alist
 
-    newlist.append(alist, start + 1, num)
-    newlist.append(newlist, start +1, num - 1)
+    newlist.append(power_set_helper(alist, start + 1, num))
+    newlist.append(power_set_helper(newlist, start +1, num - 1))
 
     return newlist
+
+
+print power_set([1,2,3])
