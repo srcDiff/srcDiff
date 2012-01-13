@@ -925,6 +925,10 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     free(buffer);
 
+  } else {
+
+    element += "[1]";
+
   }
 
   if(curelement.name == "unit"
