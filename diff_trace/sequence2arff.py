@@ -21,12 +21,12 @@ def collect_structures(sequence_data) :
 
 def unique_structures(structures) :
 
-    u_structures = set()
+    u_structures = []
 
     for structure in structures :
 
         if structure not in u_structures :
-            u_structures = u_structures.add(structure)
+            u_structures.append(structure)
 
     return list(u_structures)
 
