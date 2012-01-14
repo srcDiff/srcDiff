@@ -25,9 +25,10 @@ def unique_structures(structures) :
 
     for structure in structures :
 
-        u_structures.union([ structure ] )
+        if structure not in u_structures :
+            u_structures = u_structures.union(structure)
 
-    return u_structures
+    return list(u_structures)
 
 def create_sequence_list(num_sequence) :
 
