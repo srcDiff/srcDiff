@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import itertools
+import sys
 
 def split_xpath(xpath) :
 
@@ -76,10 +77,10 @@ def sequence_xpaths(difftrace, sequence_data) :
 
     return
 
-difftrace_file = open(argv[1], "r")
+difftrace_file = open(sys.argv[1], "r")
 difftrace = difftrace_file.read().split("\n")
 diff_trace_file.close()
 
-sequence_data = open(argv[2], "w")
+sequence_data = open(sys.argv[2], "w")
 
 sequence_xpath(difftrace, sequence_data)
