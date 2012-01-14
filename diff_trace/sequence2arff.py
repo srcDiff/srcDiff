@@ -55,3 +55,7 @@ def write_structure (arff_file, structures) :
     arff_file.write(" }\n")
 
     return
+
+def write_data(arff_file, sequence_data) :
+
+    return
