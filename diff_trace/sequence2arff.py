@@ -5,7 +5,7 @@ import itertools
 
 def get_num_sequences(sequence_data) :
 
-    num_sequences = sequence_data[len(sequence_data) - 1].split[0]
+    num_sequences = sequence_data[len(sequence_data) - 1].split("\t")[0]
 
     return num_sequences
 
@@ -93,7 +93,11 @@ def create_arff(sequence_filename, arff_filename) :
     write_sequences(arff_file, sequence_list)
 
     structures = collect_structures(sequence_data)
+    structures = unique_structures(structures)
 
     write_structures(arff_file, structures)
 
     return
+
+
+create_arff(sys.argv[1], sys.argv[2])
