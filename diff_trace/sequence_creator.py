@@ -55,7 +55,7 @@ def sequence_tag(sequence, tag) :
 
 def clean_predicate(predicate) :
 
-    return predicate.remove("'")
+    return predicate.replace("'", "")
 
 def get_predicates(tag) :
 
