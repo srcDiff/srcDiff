@@ -15,7 +15,7 @@ def split_xpath(xpath) :
             xpath = xpath[ tag.find("[") : ]
         else :
             tag = xpath[ : tag.find("/") ]
-            xpath = xpath[ tag.find("[") : ]
+            xpath = xpath[ tag.find("/") : ]
 
         while not(xpath == "") or not(xpath == "/") :
             print xpath
