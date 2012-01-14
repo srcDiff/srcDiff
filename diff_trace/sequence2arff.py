@@ -21,7 +21,7 @@ def collect_structures(sequence_data) :
 
 def unique_structures(structures) :
 
-    u_structures = []
+    u_structures = set()
 
     for structure in structures :
 
