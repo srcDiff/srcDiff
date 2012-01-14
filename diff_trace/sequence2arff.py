@@ -26,7 +26,7 @@ def unique_structures(structures) :
     for structure in structures :
 
         if structure not in u_structures :
-            u_structures = set(list(u_structures).append(structure))
+            u_structures = u_structures.union(set(structure))
 
     return list(u_structures)
 
