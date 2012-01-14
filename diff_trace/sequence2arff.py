@@ -58,4 +58,14 @@ def write_structure (arff_file, structures) :
 
 def write_data(arff_file, sequence_data) :
 
+    arff_file.write("@data\n\n")
+
+    for line in sequence_data :
+
+        data = line.split("\t")
+        arff_file.write(data[0])
+        arff_file.write(", ")
+        arff_file.write(data[1])
+        arff_file.write("\n")
+
     return
