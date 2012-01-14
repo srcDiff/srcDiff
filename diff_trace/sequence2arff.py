@@ -38,3 +38,20 @@ def write_sequence(arff_file, sequence_list) :
     arff_file.write(" }\n")
 
     return
+
+def write_structure (arff_file, structures) :
+
+    arff_file.write("@attribute structure { ")
+
+    structure_length = len(structures)
+
+    if structure_length > 0 :
+        arff_file.write(str(structures[0]))
+    
+        for structure in structures[ 1 : ] :
+
+            arff_file.write(", " + str(structure))
+
+    arff_file.write(" }\n")
+
+    return
