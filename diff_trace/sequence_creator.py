@@ -5,16 +5,20 @@ import sys
 
 def split_xpath(xpath) :
 
-    
     tags = []
     while not(xpath == "") :
-        xpath = xpath[ 1 :]
+        xpath = xpath[ 1 : ]
 
-        tag = xpath
+        tag = ""
         if not(tag.find("[") == -1) :
             tag = xpath[ : tag.find("[") ]
+            xpath = xpath[ : tag.find("[") ]
+        else :
+            tag = xpath[ : tag.find("/") ]
+            xpath = [ : tag.find("[") ]
 
         while not(xpath == "") or not(xpath == "/") :
+            print xpath
             start = tag.find("[")
             end = find_end_bracket(xpath, start)
             tag += xpath[start : end + 1]
