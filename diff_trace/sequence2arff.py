@@ -14,6 +14,7 @@ def collect_structures(sequence_data) :
     structures = []
 
     for line in sequence_data :
+
         structures.append(line.split("\t")[1])
 
 
@@ -87,6 +88,8 @@ def create_arff(sequence_filename, arff_filename) :
     sequence_file = open(sequence_filename, "r")
     sequence_data = sequence_file.read().split("\n")
     sequence_file.close()
+
+    sequence_data = sequence_data[ : len(sequence_data) - 1]
 
     arff_file = open(arff_filename, "w")
 
