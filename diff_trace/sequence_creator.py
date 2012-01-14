@@ -11,11 +11,11 @@ def split_xpath(xpath) :
 
         tag = ""
         if not(tag.find("[") == -1) :
-            tag = xpath[ tag.find("[") : ]
-            xpath = xpath[ : tag.find("[") ]
+            tag = xpath[ : tag.find("[") ]
+            xpath = xpath[ tag.find("[") : ]
         else :
-            tag = xpath[ tag.find("/") : ]
-            xpath = xpath[ : tag.find("[") ]
+            tag = xpath[ : tag.find("/") ]
+            xpath = xpath[ tag.find("[") : ]
 
         while not(xpath == "") or not(xpath == "/") :
             print xpath
