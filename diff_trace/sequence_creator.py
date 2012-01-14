@@ -53,6 +53,10 @@ def sequence_tag(sequence, tag) :
 
     return sequence_list
 
+def clean_predicate(predicate) :
+
+    return predicate.remove("'")
+
 def get_predicates(tag) :
 
     predicates = []
@@ -63,7 +67,7 @@ def get_predicates(tag) :
 
         end = find_end_bracket(tag, start)
 
-        predicates.append(tag[ start : end + 1 ])
+        predicates.append(clean_predicate(tag[ start : end + 1 ]))
 
         tag = tag[ end + 1 :]
 
