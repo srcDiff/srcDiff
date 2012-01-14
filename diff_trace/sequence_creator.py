@@ -45,11 +45,20 @@ def get_predicates(tag) :
 
 def find_end_bracket(tag, start) :
 
-    for i in range(start, len(tag)) :
+    bracket_count = 1
+    for i in range(start + 1, len(tag)) :
 
-        tag[i]
+        if tag[i] == "[" :
+            bracket_count += 1
 
-    return
+        if tag[i] == "]" :
+            bracket_count -= 1
+
+        if bracket_count == 0 :
+            return i
+
+        return -1
+
 
 def get_name(tag) :
 
