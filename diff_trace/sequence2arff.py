@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import itertools
 
 def get_num_sequences(sequence_data) :
 
@@ -17,6 +18,15 @@ def collect_structures(sequence_data) :
 
 
     return structures
+
+def unique_structures(structures):
+
+    seen = set()
+    seen_add = seen.add
+
+    for element in itertools.ifilterfalse(seen.__contains__, iterable):
+        seen_add(element)
+        yield element
 
 def create_sequence_list(num_sequence) :
 
@@ -82,7 +92,7 @@ def create_arff(sequence_filename, arff_filename) :
     sequence_list = create_sequence_list(num_sequences)
     write_sequences(arff_file, sequence_list)
 
-    structures =collect_structures(sequence_data)
+    structures = collect_structures(sequence_data)
 
     write_structures(arff_file, structures)
 
