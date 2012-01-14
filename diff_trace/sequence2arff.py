@@ -2,11 +2,11 @@
 
 import sys
 
-def get_num_sequence(sequence_data) :
+def get_num_sequences(sequence_data) :
 
-    num_sequence = sequence_data[len(sequence_data) - 1].split[0]
+    num_sequences = sequence_data[len(sequence_data) - 1].split[0]
 
-    return num_sequence
+    return num_sequences
 
 def collect_structures(sequence_data) :
 
@@ -77,5 +77,8 @@ def create_arff(sequence_filename, arff_filename) :
     sequence_file.close()
 
     arff_file = open(arff_filename, "w")
+
+    get_num_sequences(sequence_data)
+
 
     return
