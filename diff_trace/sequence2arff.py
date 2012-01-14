@@ -65,7 +65,7 @@ def write_structures(arff_file, structures) :
 
             arff_file.write(", " + str(structure))
 
-    arff_file.write(" }\n")
+    arff_file.write(" }\n\n")
 
     return
 
