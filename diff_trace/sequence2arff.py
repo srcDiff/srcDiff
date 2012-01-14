@@ -22,7 +22,7 @@ def create_sequence_list(num_sequence) :
 
     return range(1, num_sequence + 1)
 
-def write_sequence(arff_file, sequence_list) :
+def write_sequences(arff_file, sequence_list) :
 
     arff_file.write("@attribute sequence { ")
 
@@ -39,7 +39,7 @@ def write_sequence(arff_file, sequence_list) :
 
     return
 
-def write_structure (arff_file, structures) :
+def write_structures(arff_file, structures) :
 
     arff_file.write("@attribute structure { ")
 
@@ -80,6 +80,6 @@ def create_arff(sequence_filename, arff_filename) :
 
     num_sequences = get_num_sequences(sequence_data)
     sequence_list = create_sequence_list(num_sequences)
-    write_sequence_list(arff_file, sequence_list)
+    write_sequences(arff_file, sequence_list)
 
     return
