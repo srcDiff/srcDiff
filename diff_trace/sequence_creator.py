@@ -37,9 +37,13 @@ def get_predicates(tag) :
 
     while not(tag.find("[") == -1) :
 
-        predicates.append(tag[ tag.find("[") : tag.find("]") + 1 ])
+        start = tag.find("[")
 
-        tag = tag[ tag.find("]") + 1 :]
+        end = find_end_brackt(tag, start) + 1
+
+        predicates.append(tag[ start : end + 1 ])
+
+        tag = tag[ end + 1 :]
 
     return predicates
 
