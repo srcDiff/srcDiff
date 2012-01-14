@@ -41,9 +41,9 @@ def get_predicates(tag) :
 
         end = find_end_bracket(tag, start) + 1
 
-        predicates.append(tag[ start : end + 1 ])
+        predicates.append(tag[ start : end ])
 
-        tag = tag[ end + 1 :]
+        tag = tag[ end :]
 
     return predicates
 
