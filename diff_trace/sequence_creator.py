@@ -67,7 +67,19 @@ def sequence_xpath(sequence, xpath) :
 
     return sequence_list
 
-sequence = 1
-xpath = "/src:unit['a']/src:function['h']['g']['f']"
+def sequence_xpaths(difftrace, sequence_data) :
 
-print sequence_xpath(sequence, xpath)
+    sequence = 1
+    for xpath in difftrace :
+        sequence_data.write(sequence_xpath(sequence, xpath))
+        sequence += 1
+
+    return
+
+difftrace_file = open(argv[1], "r")
+difftrace = difftrace_file.read().split("\n")
+diff_trace_file.close()
+
+sequence_data = open(argv[2], "w")
+
+sequence_xpath(difftrace, sequence_data)
