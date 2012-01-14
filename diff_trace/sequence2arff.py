@@ -21,3 +21,4 @@ def collect_structures(sequence_data) :
 def create_sequence_list(num_sequence) :
 
     return range(1, num_sequence + 1)
+
