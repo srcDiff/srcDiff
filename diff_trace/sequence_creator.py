@@ -83,4 +83,4 @@ difftrace_file.close()
 
 sequence_data = open(sys.argv[2], "w")
 
-sequence_xpath(difftrace, sequence_data)
+sequence_xpaths(difftrace, sequence_data)
