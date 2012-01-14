@@ -20,6 +20,8 @@ def split_xpath(xpath) :
             tag += xpath[start, end + 1]
             xpath = xpath[end + 1 : ]
 
+        tags.append(tag)
+
     return tags
 
 def sequence_tag(sequence, tag) :
