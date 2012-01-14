@@ -52,6 +52,8 @@ def find_end_bracket(tag, start) :
     bracket_count = 1
     for i in range(start + 1, len(tag)) :
 
+        print tag[i: i + 1]
+
         if tag[i] == "[" :
             bracket_count += 1
 
@@ -61,7 +63,7 @@ def find_end_bracket(tag, start) :
         if bracket_count == 0 :
             return i
 
-        return -1
+    return -1
 
 
 def get_name(tag) :
