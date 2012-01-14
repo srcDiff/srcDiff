@@ -93,7 +93,7 @@ def create_arff(sequence_filename, arff_filename) :
 
     arff_file = open(arff_filename, "w")
 
-    arff_file.write("@relation xpath_sequence_mining")
+    arff_file.write("@relation xpath_sequence_mining\n")
 
     num_sequences = get_num_sequences(sequence_data)
     sequence_list = create_sequence_list(num_sequences)
