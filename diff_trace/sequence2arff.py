@@ -4,7 +4,7 @@ import sys
 import itertools
 
 def get_num_sequences(sequence_data) :
-    print sequence_data
+
     num_sequences = sequence_data[len(sequence_data) - 2].split("\t")[0]
 
     return int(num_sequences)
@@ -28,7 +28,7 @@ def unique_structures(structures) :
         if structure not in structures :
             u_structure.append(structure)
     
-    return U_structures
+    return u_structures
 
 def create_sequence_list(num_sequence) :
 
