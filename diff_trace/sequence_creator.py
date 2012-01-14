@@ -43,6 +43,14 @@ def get_predicates(tag) :
 
     return predicates
 
+def find_end_bracket(tag, start) :
+
+    for i in range(start, len(tag)) :
+
+        tag[i]
+
+    return
+
 def get_name(tag) :
 
     offset = tag.find("[")
