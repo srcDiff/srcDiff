@@ -79,7 +79,7 @@ def sequence_xpaths(difftrace, sequence_data) :
 
 difftrace_file = open(sys.argv[1], "r")
 difftrace = difftrace_file.read().split("\n")
-diff_trace_file.close()
+difftrace_file.close()
 
 sequence_data = open(sys.argv[2], "w")
 
