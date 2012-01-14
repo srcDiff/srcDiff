@@ -17,7 +17,7 @@ def split_xpath(xpath) :
         while not(xpath == "") or not(xpath == "/") :
             start = tag.find("[")
             end = find_end_bracket(xpath, start)
-            tag += xpath[start, end + 1]
+            tag += xpath[start : end + 1]
             xpath = xpath[end + 1 : ]
 
         tags.append(tag)
