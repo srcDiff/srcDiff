@@ -62,7 +62,7 @@ def get_predicates(tag) :
         start = tag.find("[")
 
         end = find_end_bracket(tag, start)
-        print tag
+
         predicates.append(tag[ start : end + 1 ])
 
         tag = tag[ end + 1 :]
