@@ -17,7 +17,6 @@ def collect_structures(sequence_data) :
 
         structures.append(line.split("\t")[1])
 
-
     return structures
 
 def unique_structures(structures) :
@@ -27,7 +26,7 @@ def unique_structures(structures) :
     for structure in structures :
 
         if structure not in u_structures :
-            u_structures.append(structure)
+            u_structures.union([ structure] )
 
     return u_structures
 
