@@ -4,10 +4,10 @@ import sys
 import itertools
 
 def get_num_sequences(sequence_data) :
+    print sequence_data
+    num_sequences = sequence_data[len(sequence_data) - 2].split("\t")[0]
 
-    num_sequences = sequence_data[len(sequence_data) - 1].split("\t")[0]
-
-    return num_sequences
+    return int(num_sequences)
 
 def collect_structures(sequence_data) :
 
