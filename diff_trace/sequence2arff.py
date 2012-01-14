@@ -19,14 +19,16 @@ def collect_structures(sequence_data) :
 
     return structures
 
-def unique_structures(structures):
+def unique_structures(structures) :
 
-    seen = set()
-    seen_add = seen.add
+    u_structures = []
 
-    for element in itertools.ifilterfalse(seen.__contains__, iterable):
-        seen_add(element)
-        yield element
+    for structure in structures :
+
+        if structure not in structures :
+            u_structure.append(structure)
+    
+    return U_structures
 
 def create_sequence_list(num_sequence) :
 
