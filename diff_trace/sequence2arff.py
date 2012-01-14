@@ -102,6 +102,8 @@ def create_arff(sequence_filename, arff_filename) :
 
     write_structures(arff_file, structures)
 
+    write_data(arff_file, sequence_data)
+
     return
 
 
