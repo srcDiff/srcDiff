@@ -7,15 +7,19 @@ def split_xpath(xpath) :
 
     tags = []
     while not(xpath == "") :
+
         xpath = xpath[ 1 : ]
 
         tag = ""
-        if not(tag.find("[") == -1) :
-            tag = xpath[ : tag.find("[") ]
-            xpath = xpath[ tag.find("[") : ]
+        if not(xpathg.find("[") == -1) :
+
+            tag = xpath[ : xpath.find("[") ]
+            xpath = xpath[ xpath.find("[") : ]
+
         else :
-            tag = xpath[ : tag.find("/") ]
-            xpath = xpath[ tag.find("/") : ]
+
+            tag = xpath[ : xpath.find("/") ]
+            xpath = xpath[ xpath.find("/") : ]
 
         while not(xpath == "") and not(xpath[0] == "/") :
 
@@ -122,4 +126,7 @@ difftrace_file.close()
 
 sequence_data = open(sys.argv[2], "w")
 
-sequence_xpaths(difftrace, sequence_data)
+#sequence_xpaths(difftrace, sequence_data)
+
+
+print split_xpath("/src:unit[1]")
