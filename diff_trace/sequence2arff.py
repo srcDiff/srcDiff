@@ -64,9 +64,9 @@ def write_data(arff_file, sequence_data) :
 
         data = line.split("\t")
         arff_file.write(data[0])
-        arff_file.write(", ")
+        arff_file.write(", '")
         arff_file.write(data[1])
-        arff_file.write("\n")
+        arff_file.write("'\n")
 
     return
 
@@ -81,5 +81,9 @@ def create_arff(sequence_filename, arff_filename) :
     num_sequences = get_num_sequences(sequence_data)
     sequence_list = create_sequence_list(num_sequences)
     write_sequences(arff_file, sequence_list)
+
+    structures =collect_structures(sequence_data)
+
+    write_structures(arff_file, structures)
 
     return
