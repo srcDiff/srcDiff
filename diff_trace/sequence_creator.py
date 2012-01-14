@@ -126,7 +126,5 @@ difftrace_file.close()
 
 sequence_data = open(sys.argv[2], "w")
 
-#sequence_xpaths(difftrace, sequence_data)
+sequence_xpaths(difftrace, sequence_data)
 
-
-print split_xpath("/src:unit[1]")
