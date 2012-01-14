@@ -69,3 +69,13 @@ def write_data(arff_file, sequence_data) :
         arff_file.write("\n")
 
     return
+
+def create_arff(sequence_filename, arff_filename) :
+
+    sequence_file = open(sequence_filename, "r")
+    sequence_data = sequence_file.read().split("\n")
+    sequence_file.close()
+
+    arff_file = open(arff_filename, "w")
+
+    return
