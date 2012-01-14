@@ -11,7 +11,7 @@ def split_xpath(xpath) :
         xpath = xpath[ 1 : ]
 
         tag = ""
-        if not(xpathg.find("[") == -1) :
+        if not(xpath.find("[") == -1) :
 
             tag = xpath[ : xpath.find("[") ]
             xpath = xpath[ xpath.find("[") : ]
