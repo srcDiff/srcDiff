@@ -6,7 +6,19 @@ import sys
 def split_xpath(xpath) :
 
     
-    tags = xpath.split("/") [ 1 :]
+    tags = []
+    while not(xpath == "") :
+        xpath = xpath[ 1 :]
+
+        tag = xpath
+        if not(tag.find("[") == -1) :
+            tag = xpath[ : tag.find("[") ]
+
+        while not(xpath == "") or not(xpath == "/") :
+            start = tag.find("[")
+            end = find_end_bracket(xpath, start)
+            tag += xpath[start, end + 1]
+            xpath = xpath[end + 1 : ]
 
     return tags
 
@@ -39,18 +51,18 @@ def get_predicates(tag) :
 
         start = tag.find("[")
 
-        end = find_end_bracket(tag, start) + 1
+        end = find_end_bracket(tag, start)
+        print tag
+        predicates.append(tag[ start : end + 1 ])
 
-        predicates.append(tag[ start : end ])
-
-        tag = tag[ end :]
+        tag = tag[ end + 1 :]
 
     return predicates
 
 def find_end_bracket(tag, start) :
 
-    bracket_count = 1
-    for i in range(start + 1, len(tag)) :
+    bracket_count = 0
+    for i in range(start, len(tag)) :
 
         if tag[i] == "[" :
             bracket_count += 1
