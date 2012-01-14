@@ -26,9 +26,9 @@ def unique_structures(structures) :
 
     for structure in structures :
 
-        if structure not in structures :
+        if structure not in u_structures :
             u_structure.append(structure)
-    
+
     return u_structures
 
 def create_sequence_list(num_sequence) :
