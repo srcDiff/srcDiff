@@ -39,7 +39,7 @@ def sequence_tag(sequence, tag) :
 
     sets = power_set(predicates)
 
-    sequence_list = str(sequence) + "\t" + name + "\n"
+    #sequence_list = str(sequence) + "\t" + name + "\n"
 
     for items in sets :
 
@@ -101,7 +101,7 @@ def get_name(tag) :
 
 def power_set(alist):
 
-    return list(itertools.chain.from_iterable(itertools.combinations(alist, i) for i in range(1, len(alist) +1)))
+    return list(itertools.chain.from_iterable(itertools.combinations(alist, i) for i in range(len(alist) + 1)))
 
 def sequence_xpath(sequence, xpath) :
 
