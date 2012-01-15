@@ -39,7 +39,7 @@ def sequence_tag(sequence, tag) :
 
     sets = power_set(predicates)
 
-    #sequence_list = str(sequence) + "\t" + name + "\n"
+    sequence_list = ""
 
     for items in sets :
 
