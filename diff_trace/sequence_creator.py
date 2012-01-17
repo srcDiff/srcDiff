@@ -37,7 +37,7 @@ def sequence_tag(tag) :
     name = get_name(tag)
     predicates = get_predicates(tag)
 
-    sequence_list = str(len(predicates) + 1) + "]\t" + name
+    sequence_list = str(len(predicates) + 1) + "\t" + name
 
     for predicate in predicates :
 
@@ -123,9 +123,12 @@ def sequence_xpath(sequence, xpath) :
 
     sequence_list = ""
 
+    eventID = 1
+
     for tag in split_xpath(xpath) :
 
-        sequence_list += str(sequence) + "\t1\t" + sequence_tag(tag)
+        sequence_list += str(sequence) + "\t" + eventID + "\t" + sequence_tag(tag)
+        eventID += 1
 
     return sequence_list
 
