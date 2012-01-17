@@ -160,12 +160,12 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
         if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name" && tracer.elements.at(pos).name != "decl")
           break;
 
-      } else if(tracer.elements.at(tracer.collect_node_pos).name == "expr_stmt") {
+      } else /*if(tracer.elements.at(tracer.collect_node_pos).name == "expr_stmt") {
 
         if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name" && tracer.elements.at(pos).name != "expr")
           break;
 
-      } else if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name")
+          } else*/ if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name")
           break;
 
     }
@@ -193,7 +193,7 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "block") == 0)
     return true;
 
-  if(strcmp(contet, "decl_stmt") == 0 && strcmp(name, "init") == 0)
+  if(strcmp(context, "decl_stmt") == 0 && strcmp(name, "init") == 0)
     return true;
 
   //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
