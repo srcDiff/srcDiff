@@ -126,7 +126,7 @@ def sequence_xpath(sequence, xpath) :
 
     for tag in split_xpath(xpath) :
 
-        sequence_list +=  sequence_tag(sequence, tag)
+        sequence_list += str(sequence) + "0" + sequence_tag(tag)
 
     return sequence_list
 
