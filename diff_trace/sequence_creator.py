@@ -37,12 +37,11 @@ def sequence_tag(tag) :
     name = get_name(tag)
     predicates = get_predicates(tag)
 
-    
-    sequence_list = str(len(predicates) + 1) + " " + name
+    sequence_list = str(len(predicates) + 1) + "]\t" + name
 
     for predicate in predicates :
 
-        sequence_list += " " + name + predicate
+        sequence_list += "\t" + name + predicate
 
 
     sequence_list += "\n"
@@ -58,7 +57,7 @@ def sequence_tag_old(sequence, tag) :
 
     for items in sets :
 
-        sequence_list += str(sequence) + "\t" + name
+        sequence_list += str(sequence) + " " + name
 
         for item in items :
             
@@ -72,7 +71,7 @@ def clean_predicate(predicate) :
 
     predicate = predicate.replace("'", "")
 
-    return 
+    return predicate
 
 def get_predicates(tag) :
 
