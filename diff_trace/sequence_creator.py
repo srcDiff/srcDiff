@@ -151,14 +151,6 @@ def sequence_xpaths(difftrace, sequence_data) :
 
     return
 
-def sequence_xpaths_old(difftrace, sequence_data) :
-
-    sequence = 1
-    for xpath in difftrace :
-        sequence_data.write(sequence_xpath(sequence, xpath))
-        sequence += 1
-
-    return
 difftrace_file = open(sys.argv[1], "r")
 difftrace = difftrace_file.read().split("\n")
 difftrace_file.close()
