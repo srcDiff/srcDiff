@@ -32,22 +32,20 @@ def split_xpath(xpath) :
 
     return tags
 
-def sequence_tag(sequence, tag) :
+def sequence_tag(tag) :
 
     name = get_name(tag)
     predicates = get_predicates(tag)
 
-    if len(sequence) > 0 : 
-        sequence_list = "{ " predicates[0]
-    else :
-        sequence_list = "{ "
+    
+    sequence_list = str(len(predicates))
 
     for predicate in predicates :
 
-        sequence_list += ", " + name + predicate
+        sequence_list += " " + name + predicate
 
 
-    sequence_list += " }\n"
+    sequence_list += "\n"
 
     return sequence_list
 
