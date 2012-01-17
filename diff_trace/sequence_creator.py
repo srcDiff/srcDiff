@@ -38,7 +38,7 @@ def sequence_tag(tag) :
     predicates = get_predicates(tag)
 
     
-    sequence_list = str(len(predicates))
+    sequence_list = str(len(predicates) + 1) + " " + name
 
     for predicate in predicates :
 
