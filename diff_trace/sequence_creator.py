@@ -37,9 +37,26 @@ def sequence_tag(sequence, tag) :
     name = get_name(tag)
     predicates = get_predicates(tag)
 
-    sets = power_set(predicates)
+    if len(sequence) > 0 : 
+        sequence_list = "{ " predicates[0]
+    else :
+        sequence_list = "{ "
 
-    sequence_list = ""
+    for predicate in predicates :
+
+        sequence_list += ", " + name + predicate
+
+
+    sequence_list += " }\n"
+
+    return sequence_list
+
+def sequence_tag_old(sequence, tag) :
+
+    name = get_name(tag)
+    predicates = get_predicates(tag)
+
+    sets = power_set(predicates)
 
     for items in sets :
 
@@ -115,6 +132,18 @@ def sequence_xpath(sequence, xpath) :
 
     return sequence_list
 
+def sequence_xpath_old(sequence, xpath) :
+
+    sequence_list = ""
+
+    first = 0
+
+    for tag in split_xpath(xpath) :
+
+        sequence_list +=  sequence_tag(sequence, tag)
+
+    return sequence_list
+
 def sequence_xpaths(difftrace, sequence_data) :
 
     sequence = 1
@@ -124,6 +153,14 @@ def sequence_xpaths(difftrace, sequence_data) :
 
     return
 
+def sequence_xpaths_old(difftrace, sequence_data) :
+
+    sequence = 1
+    for xpath in difftrace :
+        sequence_data.write(sequence_xpath(sequence, xpath))
+        sequence += 1
+
+    return
 difftrace_file = open(sys.argv[1], "r")
 difftrace = difftrace_file.read().split("\n")
 difftrace_file.close()
