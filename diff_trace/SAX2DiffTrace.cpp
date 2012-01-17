@@ -96,6 +96,18 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
   if(strcmp(name, "function_decl") == 0)
     return true;
 
+  if(strcmp(name, "constructor") == 0)
+    return true;
+
+  if(strcmp(name, "constructor_decl") == 0)
+    return true;
+
+  if(strcmp(name, "destructor") == 0)
+    return true;
+
+  if(strcmp(name, "destructor_decl") == 0)
+    return true;
+
   if(strcmp(name, "class") == 0)
     return true;
 
@@ -150,6 +162,12 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
     return true;
 
+  if((strcmp(context, "constructor") == 0 || strcmp(context, "constructor_decl") == 0) && strcmp(name, "parameter_list") == 0)
+    return true;
+
+  if((strcmp(context, "destructor") == 0 || strcmp(context, "destructor_decl") == 0) && strcmp(name, "parameter_list") == 0)
+    return true;
+
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "block") == 0)
     return true;
 
@@ -162,6 +180,12 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
 bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
 
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
+    return true;
+
+  if((strcmp(context, "constructor") == 0 || strcmp(context, "constructor_decl") == 0) && strcmp(name, "name") == 0)
+    return true;
+
+  if((strcmp(context, "destructor") == 0 || strcmp(context, "destructor_decl") == 0) && strcmp(name, "name") == 0)
     return true;
 
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
