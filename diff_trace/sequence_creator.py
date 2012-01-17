@@ -70,7 +70,9 @@ def sequence_tag_old(sequence, tag) :
 
 def clean_predicate(predicate) :
 
-    return predicate.replace("'", "")
+    predicate = predicate.replace("'", "")
+
+    return 
 
 def get_predicates(tag) :
 
@@ -124,7 +126,7 @@ def sequence_xpath(sequence, xpath) :
 
     for tag in split_xpath(xpath) :
 
-        sequence_list += str(sequence) + " 1 " + sequence_tag(tag)
+        sequence_list += str(sequence) + "\t1\t" + sequence_tag(tag)
 
     return sequence_list
 
@@ -136,7 +138,7 @@ def sequence_xpath_old(sequence, xpath) :
 
     for tag in split_xpath(xpath) :
 
-        sequence_list +=  sequence_tag(sequence, tag)
+        sequence_list += sequence_tag(sequence, tag)
 
     return sequence_list
 
