@@ -137,7 +137,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 
   if(strcmp(name, "call") == 0)
     return true;
-
+  
   return false;
 }
 
@@ -186,15 +186,14 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   //if(strcmp(name, "decl_stmt") == 0 && strcmp(name, "init") == 0)
   //return true;
 
-  if(strcmp(name, "decl") == 0 && strcmp(name, "init") == 0)
+  if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
     return true;
 
   //if(strcmp(name, "expr_stmt") == 0 && strcmp(name, "expr") == 0)
   //return true;
 
-  if(strcmp(name, "call") == 0 && strcmp(name, "argument_list") == 0)
-  return true;
-
+  if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0)
+    return true;
 
   //if((strcmp(context, "class_decl") == 0 || strcmp(context, "struct_decl") == 0 || strcmp(context, "union_decl") == 0) && strcmp(name, "block") == 0)
   //return true;
