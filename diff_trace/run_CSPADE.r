@@ -6,3 +6,7 @@ sequence_data <- read_baskets("out.txt", info = c("sequenceID","eventID","SIZE")
 as(sequence_data, "data.frame")
 
 results <- cspade(sequence_data, parameter = list(support = 0.4), control = list(verbose = TRUE))
+
+summary(results)
+
+as(results, "data.frame")
