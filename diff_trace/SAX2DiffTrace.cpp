@@ -137,7 +137,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 
   if(strcmp(name, "call") == 0)
     return true;
-  
+
   return false;
 }
 
@@ -165,7 +165,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     return false;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   return pos == tracer.collect_node_pos;
 }
 
@@ -1022,12 +1022,18 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
   } else if(strcmp(curelement.name.c_str(), "function") == 0
             || strcmp(curelement.name.c_str(), "function_decl") == 0
+            || strcmp(curelement.name.c_str(), "constructor") == 0
+            || strcmp(curelement.name.c_str(), "constructor_decl") == 0
+            || strcmp(curelement.name.c_str(), "destructor") == 0
+            || strcmp(curelement.name.c_str(), "destructor_decl") == 0
             || strcmp(curelement.name.c_str(), "class") == 0
             || strcmp(curelement.name.c_str(), "struct") == 0
             || strcmp(curelement.name.c_str(), "union") == 0
             || strcmp(curelement.name.c_str(), "class_decl") == 0
             || strcmp(curelement.name.c_str(), "struct_decl") == 0
-            || strcmp(curelement.name.c_str(), "union_decl") == 0) {
+            || strcmp(curelement.name.c_str(), "union_decl") == 0
+            || strcmp(curelement.name.c_str(), "decl") == 0
+            || strcmp(curelement.name.c_str(), "call") == 0) {
 
     for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
 
