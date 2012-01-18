@@ -97,55 +97,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
   for(int i = 0; collect_name_structures[i][0]; ++i)
     if(collect_name_structures[i] == name)
       return true;
-  /*
-  if(strcmp(name, "function") == 0)
-    return true;
 
-  if(strcmp(name, "function_decl") == 0)
-    return true;
-
-  if(strcmp(name, "constructor") == 0)
-    return true;
-
-  if(strcmp(name, "constructor_decl") == 0)
-    return true;
-
-  if(strcmp(name, "destructor") == 0)
-    return true;
-
-  if(strcmp(name, "destructor_decl") == 0)
-    return true;
-
-  if(strcmp(name, "class") == 0)
-    return true;
-
-  if(strcmp(name, "class_decl") == 0)
-    return true;
-
-  if(strcmp(name, "struct") == 0)
-    return true;
-
-  if(strcmp(name, "struct_decl") == 0)
-    return true;
-
-  if(strcmp(name, "union") == 0)
-    return true;
-
-  if(strcmp(name, "union_decl") == 0)
-    return true;
-
-  //if(strcmp(name, "decl_stmt") == 0)
-  //return true;
-
-  if(strcmp(name, "decl") == 0)
-    return true;
-
-  //if(strcmp(name, "expr_stmt") == 0)
-  //return true;
-
-  if(strcmp(name, "call") == 0)
-    return true;
-  */
   return false;
 }
 
@@ -173,7 +125,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     return false;
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   return pos == tracer.collect_node_pos;
 }
 
@@ -214,31 +166,7 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
   for(int i = 0; collect_name_structures[i][0]; ++i)
     if(collect_name_structures[i] == context && strcmp(name, "name") == 0)
       return true;
-  /*
-  if((strcmp(context, "constructor") == 0 || strcmp(context, "constructor_decl") == 0) && strcmp(name, "name") == 0)
-    return true;
 
-  if((strcmp(context, "destructor") == 0 || strcmp(context, "destructor_decl") == 0) && strcmp(name, "name") == 0)
-    return true;
-
-  if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "name") == 0)
-    return true;
-
-  if((strcmp(context, "class_decl") == 0 || strcmp(context, "struct_decl") == 0 || strcmp(context, "union_decl") == 0) && strcmp(name, "name") == 0)
-    return true;
-
-  //if(strcmp(name, "decl_stmt") == 0 && strcmp(name, "name") == 0)
-  //return true;
-
-  if(strcmp(context, "decl") == 0 && strcmp(name, "name") == 0)
-    return true;
-
-  //if(strcmp(name, "expr_stmt") == 0 && strcmp(name, "name") == 0)
-  //return true;
-
-  if(strcmp(context, "call") == 0 && strcmp(name, "name") == 0)
-    return true;
-  */
   return false;
 }
 
