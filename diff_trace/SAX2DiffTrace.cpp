@@ -31,6 +31,10 @@ SAX2DiffTrace::SAX2DiffTrace(long & options)
 
 static element null_element;
 
+static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
+                                                 , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
+                                                 , "decl", "call", 0 };
+
 // helper method
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
 std::string & trim_string(std::string & source);
@@ -90,6 +94,10 @@ void SAX2DiffTrace::endDocument(void * ctx) {
 
 bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 
+  for(int i = 0; collect_name_structures[i]; ++i)
+    if(collect_name_structure[i] == name)
+      return true;
+  /*
   if(strcmp(name, "function") == 0)
     return true;
 
@@ -137,7 +145,7 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 
   if(strcmp(name, "call") == 0)
     return true;
-
+  */
   return false;
 }
 
@@ -203,9 +211,10 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
 
 bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
 
-  if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "name") == 0)
-    return true;
-
+  for(int i = 0; collect_name_structures[i]; ++i)
+    if(collect_name_structure[i] == context && strcmp(name, "name") == 0)
+      return true;
+  /*
   if((strcmp(context, "constructor") == 0 || strcmp(context, "constructor_decl") == 0) && strcmp(name, "name") == 0)
     return true;
 
@@ -229,7 +238,7 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 
   if(strcmp(context, "call") == 0 && strcmp(name, "name") == 0)
     return true;
-
+  */
   return false;
 }
 
@@ -1020,24 +1029,19 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     element += "']";
 
 
-  } else if(strcmp(curelement.name.c_str(), "function") == 0
-            || strcmp(curelement.name.c_str(), "function_decl") == 0
-            || strcmp(curelement.name.c_str(), "constructor") == 0
-            || strcmp(curelement.name.c_str(), "constructor_decl") == 0
-            || strcmp(curelement.name.c_str(), "destructor") == 0
-            || strcmp(curelement.name.c_str(), "destructor_decl") == 0
-            || strcmp(curelement.name.c_str(), "class") == 0
-            || strcmp(curelement.name.c_str(), "struct") == 0
-            || strcmp(curelement.name.c_str(), "union") == 0
-            || strcmp(curelement.name.c_str(), "class_decl") == 0
-            || strcmp(curelement.name.c_str(), "struct_decl") == 0
-            || strcmp(curelement.name.c_str(), "union_decl") == 0
-            || strcmp(curelement.name.c_str(), "decl") == 0
-            || strcmp(curelement.name.c_str(), "call") == 0) {
+  } else {
 
-    for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
+    bool collected = false;
 
-      if(curelement.signature_name_old.at(i) != "") {
+    for(int i = 0; !collected && collect_name_structures[i]; ++i)
+      if(curelement.name == collect_name_structures[i])
+        collected = true;
+
+    if(collected) {
+
+      for(int i = 0; i < curelement.signature_name_old.size(); ++i) {
+
+        if(curelement.signature_name_old.at(i) != "") {
 
         element += "[";
         element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
@@ -1054,6 +1058,8 @@ std::string create_string_from_element(element & curelement, element & nexteleme
       }
 
     }
+
+  }
 
   }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
       && (strcmp(curelement.signature_old.c_str(), "") != 0
