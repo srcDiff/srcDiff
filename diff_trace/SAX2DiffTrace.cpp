@@ -95,7 +95,7 @@ void SAX2DiffTrace::endDocument(void * ctx) {
 bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 
   for(int i = 0; collect_name_structures[i][0]; ++i)
-    if(collect_name_structure[i] == name)
+    if(collect_name_structures[i] == name)
       return true;
   /*
   if(strcmp(name, "function") == 0)
@@ -212,7 +212,7 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
 bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
 
   for(int i = 0; collect_name_structures[i][0]; ++i)
-    if(collect_name_structure[i] == context && strcmp(name, "name") == 0)
+    if(collect_name_structures[i] == context && strcmp(name, "name") == 0)
       return true;
   /*
   if((strcmp(context, "constructor") == 0 || strcmp(context, "constructor_decl") == 0) && strcmp(name, "name") == 0)
