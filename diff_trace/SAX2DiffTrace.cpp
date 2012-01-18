@@ -33,7 +33,7 @@ static element null_element;
 
 static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
-                                                 , "decl", "call", 0 };
+                                                 , "decl", "call", "\0" };
 
 // helper method
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
@@ -94,7 +94,7 @@ void SAX2DiffTrace::endDocument(void * ctx) {
 
 bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
 
-  for(int i = 0; collect_name_structures[i]; ++i)
+  for(int i = 0; collect_name_structures[i][0]; ++i)
     if(collect_name_structure[i] == name)
       return true;
   /*
@@ -211,7 +211,7 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
 
 bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
 
-  for(int i = 0; collect_name_structures[i]; ++i)
+  for(int i = 0; collect_name_structures[i][0]; ++i)
     if(collect_name_structure[i] == context && strcmp(name, "name") == 0)
       return true;
   /*
@@ -1033,7 +1033,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     bool collected = false;
 
-    for(int i = 0; !collected && collect_name_structures[i]; ++i)
+    for(int i = 0; !collected && collect_name_structures[i][0]; ++i)
       if(curelement.name == collect_name_structures[i])
         collected = true;
 
