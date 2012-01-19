@@ -75,7 +75,7 @@ def clean_predicate(predicate) :
 
 def normalize_predicate(predicate) :
 
-    start = predicate.rfind("src:name") != -1
+    start = predicate.rfind("src:name")
 
     if start == -1 :
         return predicate
