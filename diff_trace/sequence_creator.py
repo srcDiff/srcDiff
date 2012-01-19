@@ -82,7 +82,7 @@ def normalize_predicate(predicate) :
 
 
     normalized_predicate = "[" + predicate[ start : predicate.find("]", start) + 1]
-    normalized_prediate += predicate[ predicate.find("=", start) : ]
+    normalized_predicate += predicate[ predicate.find("=", start) : ]
 
     return normalized_predicate
 
