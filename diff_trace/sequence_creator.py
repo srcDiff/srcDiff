@@ -73,6 +73,10 @@ def clean_predicate(predicate) :
 
     return predicate
 
+def normalize_predicate(predicate) :
+
+    return predicate
+
 def get_predicates(tag) :
 
     predicates = []
