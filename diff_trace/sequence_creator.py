@@ -75,7 +75,16 @@ def clean_predicate(predicate) :
 
 def normalize_predicate(predicate) :
 
-    return predicate
+    start = predicate.rfind("src:name") != -1 :
+
+    if start == -1 :
+        return predicate
+
+
+    normalized_predicate = "[" + predicate[ start : predicate.find(start, "]") + 1]
+    normalized_prediate += predicate[ predicate.find(start, "=") : ]
+
+    return normalized_predicate
 
 def get_predicates(tag) :
 
