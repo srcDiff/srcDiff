@@ -70,8 +70,9 @@ def sequence_tag_old(sequence, tag) :
 def clean_predicate(predicate) :
 
     predicate = predicate.replace("'", "")
+    predicate = normalize_predicate(predicate)
 
-    return normalize_predicate(predicate)
+    return predicate
 
 def normalize_predicate(predicate) :
 
