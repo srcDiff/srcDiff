@@ -71,11 +71,11 @@ def clean_predicate(predicate) :
 
     predicate = predicate.replace("'", "")
 
-    return predicate
+    return normalize_predicate(predicate)
 
 def normalize_predicate(predicate) :
 
-    start = predicate.rfind("src:name") != -1 :
+    start = predicate.rfind("src:name") != -1
 
     if start == -1 :
         return predicate
