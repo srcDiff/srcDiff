@@ -651,18 +651,30 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 void SAX2DiffTrace::update_offsets_old(SAX2DiffTrace & tracer, int offset, int operation) {
 
   if(operation == COMMON || operation == DELETE) {
-    for(int j = tracer.signature_path_pos_old.size() - 2; j >= 0; --j) {
+    for(int j = tracer.signature_path_pos_old.size() - 1; j >= 0; --j) {
 
       if(tracer.signature_path_old.at(j).empty())
         continue;
 
-      for(int i = 0; i < tracer.signature_path_pos_old.back().size(); ++i) {
+      for(int i = 0; i < offset; ++i) {
 
         if(i >= tracer.signature_path_old.at(j).size())
           break;
 
-        if(tracer.signature_path_old.at(j).at(i) != tracer.signature_path_old.back().at(i))
+        element curelement = tracer.elements.at(tracer.collect_node_pos + i);
+        std::string path;
+        if(curelment.prefix == "")
+          path += "src:";
+        else
+          path += curelement.prefix + ":";
+
+        path += curelement.name;
+
+        if(tracer.signature_path_old.at(j).at(i) != path)
           break;
+
+        if(tracer.collect_node_pos < 1)
+          fprintf(stderr, "ERROR: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
         if(tracer.signature_path_pos_old.at(j).at(i) != tracer.signature_path_pos_old.back().at(i))
           break;
