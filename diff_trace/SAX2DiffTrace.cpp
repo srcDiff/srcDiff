@@ -602,7 +602,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       tracer.signature_path_pos_new.pop_back();
       tracer.signature_path_offsets_new.pop_back();
-      tracer.signature_path_new.push_back(paths);
+      tracer.signature_path_new.pop_back(paths);
 
       }
 
