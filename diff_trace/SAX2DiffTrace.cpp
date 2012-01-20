@@ -152,7 +152,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
   return pos == tracer.collect_node_pos;
 }
 
-bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const char * context) {
+bool SAX2DiffTrace::is_end_wait(SAX2DiffTracer & tracer, const char * name, const char * prefix, const char * context) {
 
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
     return true;
@@ -166,7 +166,8 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "block") == 0)
     return true;
 
-  if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0 /*|| strcmp(name, "argument_list") == 0*/))
+  if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0
+                                           || (strcmp(name, "argument_list") == 0 && tracer.collect_node_pos == (tracer.elements.size() - 1)))
     return true;
 
   //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
