@@ -117,7 +117,7 @@ bool SAX2DiffTrace::is_type(const char * name, const char * prefix) {
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
 
 
-  if(is_type(name, prefix)) {
+  if(is_type(tracer.elements.at(tracer.collect_node_pos).name.c_str(), prefix)) {
     
     if(strcmp(name, "type") == 0) {
 
