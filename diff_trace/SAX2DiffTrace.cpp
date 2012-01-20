@@ -70,7 +70,6 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.output = false;
   tracer.wait = false;
   tracer.collect = false;
-  tracer.type_pos = -1;
 
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
@@ -116,19 +115,6 @@ bool SAX2DiffTrace::is_type(const char * name, const char * prefix) {
 
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
 
-
-  if(is_type(tracer.elements.at(tracer.collect_node_pos).name.c_str(), prefix)) {
-    
-    if(strcmp(name, "type") == 0) {
-
-      tracer.type_pos = tracer.elements.size() - 1;
-
-      return true;
-
-    } else 
-      return false;
-
-  }
 
   if(strcmp(name, "name") != 0)
     return false;
@@ -189,18 +175,7 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   return false;
 }
 
-bool SAX2DiffTrace::is_end_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
-
-  if(tracer.type_pos != -1) {
-
-    if(strcmp(name, "type") == 0) {
-
-      tracer.type_pos = -1;
-
-      return true;
-    }
-
-  }
+bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
 
   for(int i = 0; collect_name_structures[i][0]; ++i)
     if(collect_name_structures[i] == context && strcmp(name, "name") == 0)
@@ -643,7 +618,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
 
-  if(tracer.collect && is_end_collect(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))
+  if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))
     tracer.collect = false;
 
   tracer.collect_text = false;
