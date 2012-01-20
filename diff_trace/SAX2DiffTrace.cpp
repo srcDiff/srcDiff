@@ -189,7 +189,7 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   return false;
 }
 
-bool SAX2DiffTrace::is_end_collect(SAX2DiffTracer & tracer, const char * name, const char * prefix, const char * context) {
+bool SAX2DiffTrace::is_end_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
 
   if(tracer.type_pos != -1) {
 
