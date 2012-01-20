@@ -166,7 +166,7 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "block") == 0)
     return true;
 
-  if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0 || strcmp(name, "argument_list") == 0))
+  if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0 /*|| strcmp(name, "argument_list") == 0*/))
     return true;
 
   //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
@@ -314,12 +314,11 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
 
-      static std::vector<element> save_elements;
-
+      std::vector<element> save_elements;
       if(is_decl_stmt) {
 
-        while(tracer.collect_node_pos > (tracer.elements.size() - 1)) {
-
+        while(tracer.collect_node_pos < (tracer.elements.size() - 1)) {
+          fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.back().name.c_str());
             save_elements.push_back(tracer.elements.back());
             tracer.elements.pop_back();
 
