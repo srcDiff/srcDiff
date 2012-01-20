@@ -59,6 +59,7 @@ class SAX2DiffTrace {
   bool output;
   bool wait;
   bool collect;
+  int type_pos;
   unsigned int collect_node_pos;
 
   std::vector<int> missed_diff_types;  
@@ -100,6 +101,8 @@ class SAX2DiffTrace {
   static void endDocument(void * ctx);
 
   static bool is_wait(const char * name, const char * prefix);
+
+  static bool is_type(const char * name, const char * prefix);
 
   static bool is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix);
 

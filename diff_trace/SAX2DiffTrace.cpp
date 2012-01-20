@@ -35,6 +35,8 @@ static std::string collect_name_structures[] = { "function", "function_decl", "c
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
                                                  , "decl_stmt", "call", "\0" };
 
+static std::string collect_type_structures[] = { "decl_stmt", "\0" };
+
 // helper method
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
 std::string & trim_string(std::string & source);
@@ -68,6 +70,7 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.output = false;
   tracer.wait = false;
   tracer.collect = false;
+  tracer.type_pos = -1;
 
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
@@ -100,7 +103,28 @@ bool SAX2DiffTrace::is_wait(const char * name, const char * prefix) {
   return false;
 }
 
+bool SAX2DiffTrace::is_type(const char * name, const char * prefix) {
+
+  for(int i = 0; collect_type_structures[i][0]; ++i)
+    if(collect_type_structures[i] == name)
+      return true;
+
+  return false;
+
+}
+
+
 bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix) {
+
+
+  if(is_type(name, prefix)) {
+    
+    if(strcmp(name, "type") == 0)
+      return true;
+    else 
+      return false;
+
+  }
 
   if(strcmp(name, "name") != 0)
     return false;
@@ -115,17 +139,8 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     for(; pos > tracer.collect_node_pos; --pos) {
 
 
-      if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name") {
-
-        bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
-
-        if(!is_decl_stmt)
+      if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name")
           break;
-
-        else if(is_decl_stmt && tracer.elements.at(pos).name != "type" && tracer.elements.at(pos).name != "decl")
-          break;
-
-      }
 
     }
 
