@@ -322,7 +322,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       if(is_decl_stmt) {
 
-        if(save_element != null_element) {
+        if(save_element.name != null_element.name) {
 
           tracer.elements.push_back(save_element);
 
