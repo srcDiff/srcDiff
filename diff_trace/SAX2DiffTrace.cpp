@@ -651,7 +651,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 }
 
 void SAX2DiffTrace::update_offsets_old(SAX2DiffTrace & tracer, int offset, int operation) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(operation == COMMON || operation == DELETE) {
 
     for(int j = tracer.signature_path_pos_old.size() - 1; j >= 0; --j) {
