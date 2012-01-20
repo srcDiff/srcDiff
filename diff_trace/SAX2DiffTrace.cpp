@@ -33,14 +33,13 @@ static element null_element;
 
 static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
-                                                 , "decl", "call", "\0" };
+                                                 , /*"decl",*/ "call", "\0" };
 
 // helper method
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
 std::string & trim_string(std::string & source);
 std::string create_string_from_element(element & curelement, element & nextelement, int count, int operation, long & options);
 std::string create_string_from_element_last_offset(element & curelement, element & nextelement, int offset, int operation, long & options);
-
 xmlSAXHandler SAX2DiffTrace::factory() {
 
   xmlSAXHandler sax = { 0 };
@@ -146,8 +145,8 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   //if(strcmp(name, "decl_stmt") == 0 && strcmp(name, "init") == 0)
   //return true;
 
-  if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
-    return true;
+  //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
+  //return true;
 
   //if(strcmp(name, "expr_stmt") == 0 && strcmp(name, "expr") == 0)
   //return true;
