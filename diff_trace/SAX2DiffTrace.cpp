@@ -516,12 +516,19 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
       ++tracer.diff_stack.back().level;
 
+    static int last_update = -1;
+
     if(!tracer.wait) {
+
+      last_update = -1;
 
       if((tracer.wait = is_wait((const char *)localname, (const char *)prefix)))
         tracer.collect_node_pos = tracer.elements.size() - 1;
 
     }
+
+    if(last_update == tracer.elements.size() - 1)
+      last_update = -1;
 
     if(tracer.wait && !tracer.collect) {
 
@@ -551,6 +558,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         std::vector<int> poss;
         std::vector<int> offsets;
         std::vector<std::string> paths;
+
+        if(last_update == -1) {
 
       for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
 
@@ -603,6 +612,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.signature_path_pos_new.pop_back();
       tracer.signature_path_offsets_new.pop_back();
       tracer.signature_path_new.pop_back();
+
+        }
 
       }
 
@@ -712,9 +723,6 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
           ++tracer.signature_path_offsets_old.at(j).at(i);
 
-          j = -1;
-          break
-
         }
 
       }
@@ -740,9 +748,6 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
         if(tracer.signature_path_pos_new.at(j).at(i) != tracer.signature_path_pos_new.back().at(i)) {
 
           ++tracer.signature_path_offsets_new.at(j).at(i);
-
-          j = -1;
-          break
 
         }
 
