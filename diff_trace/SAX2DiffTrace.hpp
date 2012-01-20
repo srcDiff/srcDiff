@@ -59,6 +59,7 @@ class SAX2DiffTrace {
   bool output;
   bool wait;
   bool collect;
+  unsigned int offset_pos;
   unsigned int collect_node_pos;
 
   std::vector<int> missed_diff_types;  
