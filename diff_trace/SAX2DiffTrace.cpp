@@ -129,8 +129,17 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
     for(; pos > tracer.collect_node_pos; --pos) {
 
 
-      if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name")
+      if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name") {
+
+        bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
+
+        if(!is_decl_stmt)
           break;
+
+        else if(is_decl_stmt && tracer.elements.at(pos).name != "type" && tracer.elements.at(pos).name != "decl")
+             break;
+
+      }
 
     }
 
@@ -314,7 +323,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
           tracer.elements.pop_back();
 
         }
-        
+
       }
 
       for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
@@ -332,7 +341,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
           tracer.elements.push_back(save_element);
 
         }
-        
+
       }
 
       tracer.diff_stack.pop_back();
@@ -1009,23 +1018,23 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
         if(curelement.signature_name_old.at(i) != "") {
 
-        element += "[";
-        element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
-        element += "]";
-      }
+          element += "[";
+          element += curelement.signature_path_old.at(i) + "='" + curelement.signature_name_old.at(i) + "'";
+          element += "]";
+        }
 
-      if(curelement.signature_name_new.at(i) != ""
-         && ((curelement.signature_name_old.at(i) + curelement.signature_path_old.at(i)) != (curelement.signature_name_new.at(i) + curelement.signature_path_new.at(i)))) {
+        if(curelement.signature_name_new.at(i) != ""
+           && ((curelement.signature_name_old.at(i) + curelement.signature_path_old.at(i)) != (curelement.signature_name_new.at(i) + curelement.signature_path_new.at(i)))) {
 
-        element += "[";
-        element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
-        element += "]";
+          element += "[";
+          element += curelement.signature_path_new.at(i) + "='" + curelement.signature_name_new.at(i) + "'";
+          element += "]";
+
+        }
 
       }
 
     }
-
-  }
 
   }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
       && (strcmp(curelement.signature_old.c_str(), "") != 0
