@@ -318,16 +318,12 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       if(is_decl_stmt) {
 
-        if(tracer.collect_node_pos != tracer.elements.size() - 1) {
-
-          while(tracer.collect_node_pos != tracer.elements.size() - 1) {
+        while(tracer.collect_node_pos > (tracer.elements.size() - 1)) {
 
             save_elements.push_back(tracer.elements.back());
             tracer.elements.pop_back();
 
           }
-
-        }
 
       }
 
@@ -341,8 +337,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       if(is_decl_stmt) {
 
-        if(!save_elements.empty()) {
-
           while(!save_elements.empty()) {
 
             element save_element = save_elements.back();
@@ -350,8 +344,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
             save_elements.pop_back();
 
           }
-
-        }
 
       }
 
