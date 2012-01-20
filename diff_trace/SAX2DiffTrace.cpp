@@ -314,13 +314,18 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
 
-      element save_element = null_element;
+      static std::vector<element> save_elements;
+
       if(is_decl_stmt) {
 
         if(tracer.collect_node_pos != tracer.elements.size() - 1) {
 
-          save_element = tracer.elements.back();
-          tracer.elements.pop_back();
+          while(tracer.collect_node_pos != tracer.elements.size() - 1) {
+
+            save_elements.push_back(tracer.elements.back());
+            tracer.elements.pop_back();
+
+          }
 
         }
 
@@ -336,9 +341,15 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       if(is_decl_stmt) {
 
-        if(save_element.name != null_element.name) {
+        if(!save_elements.empty()) {
 
-          tracer.elements.push_back(save_element);
+          while(!save_elements.empty()) {
+
+            element save_element = save_elements.back();
+            tracer.elements.push_back(save_element);
+            save_elements.pop_back();
+
+          }
 
         }
 
