@@ -527,7 +527,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(last_update == tracer.elements.size() - 1)
+    if(last_update == tracer.elements.size())
       last_update = -1;
 
     if(tracer.wait && !tracer.collect) {
@@ -560,6 +560,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         std::vector<std::string> paths;
 
         if(last_update == -1) {
+
+          last_update = tracer.elements.size();
 
       for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
 
@@ -612,7 +614,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.signature_path_pos_new.pop_back();
       tracer.signature_path_offsets_new.pop_back();
       tracer.signature_path_new.pop_back();
-
+   
         }
 
       }
