@@ -676,16 +676,14 @@ void SAX2DiffTrace::update_offsets_old(SAX2DiffTrace & tracer, int offset, int o
         if(tracer.signature_path_old.at(j).at(i) != path)
           break;
 
-        if(i == (offset - 1) && tracer.signature_path_pos_old.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i).children[path]) {
-          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-          ++tracer.signature_path_offsets_old.at(j).at(i);          
-        }
-
         if(curelement.prefix == "")
           path = curelement.name;
-        
 
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.at(tracer.collect_node_pos + i).children[path]);
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, offset - 1);
+        if(i == (offset - 1) && tracer.signature_path_pos_old.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i).children[path])
+          ++tracer.signature_path_offsets_old.at(j).at(i);          
+
         if(tracer.signature_path_pos_old.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i).children[path])
           break;
 
@@ -719,9 +717,11 @@ void SAX2DiffTrace::update_offsets_old(SAX2DiffTrace & tracer, int offset, int o
         if(tracer.signature_path_new.at(j).at(i) != path)
           break;
 
+        if(curelement.prefix == "")
+          path = curelement.name;
+
         if(i == (offset - 1) && tracer.signature_path_pos_new.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i).children[path])
           ++tracer.signature_path_offsets_new.at(j).at(i);          
-          
 
         if(tracer.signature_path_pos_new.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i).children[path])
           break;
