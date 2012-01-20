@@ -300,7 +300,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
 
-      element save_element;
+      element save_element = null_element;
       if(is_decl_stmt) {
 
         if(tracer.collect_node_pos != tracer.elements.size() - 1) {
@@ -322,7 +322,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       if(is_decl_stmt) {
 
-        if(tracer.collect_node_pos != tracer.elements.size() - 1) {
+        if(save_element != null_element) {
 
           tracer.elements.push_back(save_element);
 
