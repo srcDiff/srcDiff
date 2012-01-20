@@ -33,7 +33,7 @@ static element null_element;
 
 static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
-                                                 , /*"decl",*/ "call", "\0" };
+                                                 , "decl_stmt", "call", "\0" };
 
 // helper method
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute);
@@ -114,8 +114,18 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
     for(; pos > tracer.collect_node_pos; --pos) {
 
-      if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name")
-        break;
+
+      if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name") {
+
+        bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
+
+        if(!is_decl_stmt)
+          break;
+
+        else if(is_decl_stmt && tracer.elements.at(pos).name != "type" && tracer.elements.at(pos).name != "decl")
+          break;
+
+      }
 
     }
 
