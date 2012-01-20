@@ -319,7 +319,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
       if(is_decl_stmt) {
 
         while(tracer.collect_node_pos < (tracer.elements.size() - 1)) {
-          fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.back().name.c_str());
+
             save_elements.push_back(tracer.elements.back());
             tracer.elements.pop_back();
 
