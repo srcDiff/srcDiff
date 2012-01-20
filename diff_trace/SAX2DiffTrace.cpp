@@ -712,6 +712,9 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
           ++tracer.signature_path_offsets_old.at(j).at(i);
 
+          j = -1;
+          break
+
         }
 
       }
@@ -737,6 +740,9 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
         if(tracer.signature_path_pos_new.at(j).at(i) != tracer.signature_path_pos_new.back().at(i)) {
 
           ++tracer.signature_path_offsets_new.at(j).at(i);
+
+          j = -1;
+          break
 
         }
 
