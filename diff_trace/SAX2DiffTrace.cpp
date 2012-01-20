@@ -298,6 +298,10 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       tracer.diff_stack.push_back(temp_diff);
 
+      bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
+
+      if(is_decl_stmt);
+
       for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
         tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
 
