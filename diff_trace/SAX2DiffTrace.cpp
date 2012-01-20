@@ -556,11 +556,12 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       } else {
 
-        update_offsets_old(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
-
       }
 
     }
+
+    if(tracer.wait)
+        update_offsets_old(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
@@ -683,6 +684,46 @@ void SAX2DiffTrace::update_offsets_old(SAX2DiffTrace & tracer, int offset, int o
           
 
         if(tracer.signature_path_pos_old.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i - 1).children[path])
+          break;
+
+      }
+
+    }
+    
+  }
+
+  if(operation == COMMON || operation == INSERT) {
+
+    for(int j = tracer.signature_path_pos_new.size() - 1; j >= 0; --j) {
+
+      if(tracer.signature_path_new.at(j).empty())
+        continue;
+
+      for(int i = 0; i <= offset; ++i) {
+
+        if(i >= tracer.signature_path_new.at(j).size())
+          break;
+
+        element curelement = tracer.elements.at(tracer.collect_node_pos + i);
+        std::string path;
+        if(curelement.prefix == "")
+          path += "src:";
+        else
+          path += curelement.prefix + ":";
+
+        path += curelement.name;
+
+        if(tracer.signature_path_new.at(j).at(i) != path)
+          break;
+
+        if(tracer.collect_node_pos < 1)
+          fprintf(stderr, "ERROR: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
+        if(i == offset && tracer.signature_path_pos_new.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i - 1).children[path])
+          ++tracer.signature_path_offsets_new.at(j).at(i);          
+          
+
+        if(tracer.signature_path_pos_new.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos + i - 1).children[path])
           break;
 
       }
