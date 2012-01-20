@@ -108,7 +108,7 @@ class SAX2DiffTrace {
 
   static bool is_end_wait(const char * name, const char * prefix, const char * context);
   
-  static bool is_end_collect(const char * name, const char * prefix, const char * context);
+  static bool is_end_collect(SAX2DiffTracer & tracer, const char * name, const char * prefix, const char * context);
 
   static void form_paths(SAX2DiffTrace & tracer);
 

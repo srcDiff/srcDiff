@@ -119,9 +119,13 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
   if(is_type(name, prefix)) {
     
-    if(strcmp(name, "type") == 0)
+    if(strcmp(name, "type") == 0) {
+
+      tracer.type_pos = tracer.elements.size() - 1;
+
       return true;
-    else 
+
+    } else 
       return false;
 
   }
@@ -185,7 +189,18 @@ bool SAX2DiffTrace::is_end_wait(const char * name, const char * prefix, const ch
   return false;
 }
 
-bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const char * context) {
+bool SAX2DiffTrace::is_end_collect(SAX2DiffTracer & tracer, const char * name, const char * prefix, const char * context) {
+
+  if(tracer.type_pos != -1) {
+
+    if(strcmp(name, "type") == 0) {
+
+      tracer.type_pos = -1;
+
+      return true;
+    }
+
+  }
 
   for(int i = 0; collect_name_structures[i][0]; ++i)
     if(collect_name_structures[i] == context && strcmp(name, "name") == 0)
