@@ -546,6 +546,64 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         tracer.elements.at(tracer.collect_node_pos).signature_name_old.push_back(temp);
         tracer.elements.at(tracer.collect_node_pos).signature_name_new.push_back(temp);
 
+      } else {
+
+        std::vector<int> poss;
+        std::vector<int> offsets;
+        std::vector<std::string> paths;
+
+      for(int pos = tracer.collect_node_pos + 1; pos < tracer.elements.size(); ++pos) {
+
+        int count = 0;
+        std::string tag;
+        if(tracer.elements.at(pos).prefix != "") {
+
+          tag += tracer.elements.at(pos).prefix;
+          tag += ":";
+
+        }
+
+        tag += tracer.elements.at(pos).name;
+
+        if(!(tracer.options & OPTION_SRCML_RELATIVE))
+          count = tracer.elements.at(pos - 1).children[tag];
+        else if(tracer.diff_stack.back().operation == DELETE)
+          count = tracer.elements.at(pos - 1).children_old[tag];
+        else if(tracer.diff_stack.back().operation == INSERT)
+          count = tracer.elements.at(pos - 1).children_new[tag];
+
+        if(tracer.elements.at(pos).prefix == "" && tracer.elements.at(pos).uri == "http://www.sdml.info/srcML/src") {
+
+          tag = "src:" + tag;
+
+        }
+
+        int position = pos - tracer.collect_node_pos + 1;
+
+        poss.push_back(count);
+        offsets.push_back(0);
+        paths.push_back(tag);
+
+      }
+
+      tracer.signature_path_pos_old.push_back(poss);
+      tracer.signature_path_offsets_old.push_back(offsets);
+      tracer.signature_path_old.push_back(paths);
+
+      tracer.signature_path_pos_new.push_back(poss);
+      tracer.signature_path_offsets_new.push_back(offsets);
+      tracer.signature_path_new.push_back(paths);
+
+      update_offsets(tracer, tracer.diff_stack.back().operation);
+
+      tracer.signature_path_pos_old.pop_back();
+      tracer.signature_path_offsets_old.pop_back();
+      tracer.signature_path_old.pop_back();
+
+      tracer.signature_path_pos_new.pop_back();
+      tracer.signature_path_offsets_new.pop_back();
+      tracer.signature_path_new.push_back(paths);
+
       }
 
     }
