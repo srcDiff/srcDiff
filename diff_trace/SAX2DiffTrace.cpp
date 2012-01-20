@@ -556,6 +556,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       } else {
 
+        update_offsets_old(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
 
       }
 
