@@ -856,7 +856,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_old.back() = paths;
 
 
-          update_offsets(tracer, DELETE);
+          //update_offsets(tracer, DELETE);
 
         }
 
@@ -869,7 +869,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_new.back() = paths;
 
 
-          update_offsets(tracer, INSERT);
+          //update_offsets(tracer, INSERT);
 
         }
 
@@ -883,7 +883,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_offsets_old.back() = offsets;
           tracer.signature_path_old.back() = paths;
 
-          update_offsets(tracer, DELETE);
+          //update_offsets(tracer, DELETE);
 
         }
 
@@ -897,7 +897,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_offsets_new.back() = offsets;
           tracer.signature_path_new.back() = paths;
 
-          update_offsets(tracer, INSERT);
+          //update_offsets(tracer, INSERT);
 
         }
 
