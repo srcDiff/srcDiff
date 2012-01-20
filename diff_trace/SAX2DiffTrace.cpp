@@ -648,6 +648,59 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
 }
 
+void SAX2DiffTrace::update_offsets_old(SAX2DiffTrace & tracer, int offset, int operation) {
+
+  if(operation == COMMON || operation == DELETE) {
+    for(int j = tracer.signature_path_pos_old.size() - 2; j >= 0; --j) {
+
+      if(tracer.signature_path_old.at(j).empty())
+        continue;
+
+      for(int i = 0; i < tracer.signature_path_pos_old.back().size(); ++i) {
+
+        if(i >= tracer.signature_path_old.at(j).size())
+          break;
+
+        if(tracer.signature_path_old.at(j).at(i) != tracer.signature_path_old.back().at(i))
+          break;
+
+        if(tracer.signature_path_pos_old.at(j).at(i) != tracer.signature_path_pos_old.back().at(i))
+          break;
+
+      }
+
+    }
+
+  }
+
+  if(operation == COMMON || operation == INSERT) {
+    for(int j = tracer.signature_path_pos_new.size() - 2; j >= 0; --j) {
+
+      if(tracer.signature_path_new.at(j).empty())
+        continue;
+
+      for(int i = 0; i < tracer.signature_path_pos_new.back().size(); ++i) {
+
+        if(i >= tracer.signature_path_new.at(j).size())
+          break;
+
+        if(tracer.signature_path_new.at(j).at(i) != tracer.signature_path_new.back().at(i))
+          break;
+
+        if(tracer.signature_path_pos_new.at(j).at(i) != tracer.signature_path_pos_new.back().at(i)) {
+
+          ++tracer.signature_path_offsets_new.at(j).at(i);
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
 void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int operation) {
 
   if(operation == COMMON || operation == DELETE) {
