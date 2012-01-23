@@ -131,13 +131,16 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
 
       if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name") {
 
-        bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
+        bool is_decl = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
+        bool is_function = tracer.elements.at(tracer.collect_node_pos).name == "function" || tracer.elements.at(tracer.collect_node_pos).name == "function";
 
-        if(!is_decl_stmt)
+        if(!is_decl_stmt || is_function)
           break;
 
         else if(is_decl_stmt && tracer.elements.at(pos).name != "type" && tracer.elements.at(pos).name != "decl")
-             break;
+          break;
+        else if(is_function && tracer.elements.at(pos).name != "type")
+          break;
 
       }
 
