@@ -72,6 +72,7 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.collect = false;
 
   tracer.collect_name = false;
+  tracer.wait_name = false;
 
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
@@ -486,6 +487,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(strcmp((const char *)localname, "name") == 0) {
 
       tracer.collect_name = true;
+      tracer.wait_name = true;
 
     }
 
@@ -580,7 +582,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
-      if(!tracer.wait)
+      if(!tracer.wait && !tracer.wait_name)
         output_diff(tracer);
 
       else {
@@ -625,8 +627,17 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
-  if(strcmp((const char *)localname, "name") == 0)
+  if(strcmp((const char *)localname, "name") == 0) {
+
+    tracer.wait_name = false;
     tracer.collect_name = false;
+
+    tracer.output = true;
+
+    if(!tracer.wait)
+      end_collect(tracer);
+
+  }
 
   if(tracer.wait)
     --tracer.offset_pos;
@@ -1038,7 +1049,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     tracer.elements.push_back(curelement);
 
-    if(!tracer.wait)
+    if(!tracer.wait && !tracer.wait_name)
       output_diff(tracer);
     else {
 
