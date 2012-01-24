@@ -1174,17 +1174,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     }
 
-  } else if(strcmp(curelement.name.c_str(), "name") == 0
-            && (curelement.signature_name_old.back() != ""
-                || curelement.signature_name_new.back() != "")) {
-    
-    element += "[text()='";
-      if(operation == DELETE)
-        element += curelement.signature_name_old.back();
-      else
-        element += curelement.signature_name_new.back();
-      element += "')]";
-
   }
 
   return element;
