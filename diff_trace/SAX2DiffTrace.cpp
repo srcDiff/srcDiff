@@ -626,7 +626,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   }
 
   if(strcmp((const char *)localname, "name") == 0)
-    tracer.collect_name = true;
+    tracer.collect_name = false;
 
   if(tracer.wait)
     --tracer.offset_pos;
