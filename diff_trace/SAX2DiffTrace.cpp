@@ -132,16 +132,12 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
       if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name") {
 
         bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
-        bool is_function = tracer.elements.at(tracer.collect_node_pos).name == "function" || tracer.elements.at(tracer.collect_node_pos).name == "function";
 
-        if(!is_decl_stmt && !is_function)
+        if(!is_decl_stmt)
           break;
 
         else if(is_decl_stmt && tracer.elements.at(pos).name != "type" && tracer.elements.at(pos).name != "decl")
-          break;
-
-        else if(is_function && tracer.elements.at(pos).name != "type")
-          break;
+             break;
 
       }
 
@@ -156,7 +152,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
   return pos == tracer.collect_node_pos;
 }
 
-bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
+bool SAX2DiffTrace::is_end_wait(SAX2DiffTracer & tracer, const char * name, const char * prefix, const char * context) {
 
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
     return true;
@@ -323,7 +319,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
       if(is_decl_stmt) {
 
         while(tracer.collect_node_pos < (tracer.elements.size() - 1)) {
-
+          fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.back().name.c_str());
             save_elements.push_back(tracer.elements.back());
             tracer.elements.pop_back();
 
@@ -512,7 +508,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(tracer.wait && is_end_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+    if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       end_collect(tracer);
 
@@ -1141,7 +1137,19 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     }
 
-  }
+  }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
+      && (strcmp(curelement.signature_old.c_str(), "") != 0
+      || strcmp(curelement.signature_new.c_str(), "") != 0)) {
+
+      element += "[fn:contains(., '";
+      if(operation == DELETE)
+      element += curelement.signature_old;
+      else
+      element += curelement.signature_new;
+      element += "')]";
+
+      }
+   */
 
   return element;
 
