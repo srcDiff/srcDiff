@@ -800,28 +800,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
-  if(tracer.collect_name) {
-
-    std::string name = "";
-    name.append((const char *)ch, len);
-
-    if(tracer.diff_stack.back().operation == COMMON) {
-
-      tracer.elements.back().signature_name_old.push_back(name);
-      tracer.elements.back().signature_name_new.push_back(name);
-
-    } else if(tracer.diff_stack.back().operation == DELETE) {
-
-      tracer.elements.back().signature_name_old.push_back(name);
-
-    } else if(tracer.diff_stack.back().operation == INSERT) {
-
-      tracer.elements.back().signature_name_new.push_back(name);
-
-    }
-
-  }
-
   if(tracer.collect) {
 
     std::vector<int> poss;
