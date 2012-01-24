@@ -860,9 +860,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_offsets_old.back() = offsets;
           tracer.signature_path_old.back() = paths;
 
-
-          //update_offsets(tracer, DELETE);
-
         }
 
         is_empty = tracer.signature_path_new.back().empty();
@@ -872,9 +869,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_pos_new.back() = poss;
           tracer.signature_path_offsets_new.back() = offsets;
           tracer.signature_path_new.back() = paths;
-
-
-          //update_offsets(tracer, INSERT);
 
         }
 
@@ -888,8 +882,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_offsets_old.back() = offsets;
           tracer.signature_path_old.back() = paths;
 
-          //update_offsets(tracer, DELETE);
-
         }
 
       } else if(tracer.diff_stack.back().operation == INSERT) {
@@ -901,8 +893,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
           tracer.signature_path_pos_new.back() = poss;
           tracer.signature_path_offsets_new.back() = offsets;
           tracer.signature_path_new.back() = paths;
-
-          //update_offsets(tracer, INSERT);
 
         }
 
@@ -995,13 +985,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     curelement.name = "text()";
     curelement.prefix = "";
     curelement.uri = "";
-
-    /*
-      if((tracer.options & OPTION_WHITESPACE) && i == len)
-      if(tracer.diff_stack.back().operation == DELETE)
-      for(int i = 0; i < len; ++i)
-      curelement.signature_old += (char)ch[i];
-    */
 
     tracer.elements.push_back(curelement);
 
@@ -1147,61 +1130,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
 }
 
-std::string create_string_from_element_last_offset(element & curelement, element & nextelement, int offset, int operation, long & options) {
-
-  std::string element = "";
-
-  if(curelement.prefix != "") {
-
-    element += curelement.prefix.c_str();
-    element += ":";
-
-  } else if(curelement.uri == "http://www.sdml.info/srcML/src") {
-
-    element += "src:";
-
-  }
-
-  element += curelement.name.c_str();
-
-  element += "[last()";
-
-  if(offset != 0) {
-    element +=  " - ";
-
-    int temp_count = offset;
-    int length;
-    for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-      ;
-
-    ++length;
-
-    char * buffer = (char *)malloc(sizeof(char) * length);
-
-    snprintf(buffer, length, "%d", offset);
-
-    element += buffer;
-
-    free(buffer);
-
-  }
-
-  element += "]";
-
-  return element;
-
-}
-
 void output_diff(SAX2DiffTrace & tracer) {
-
-  if(tracer.options & OPTION_SRCML_RELATIVE) {
-
-    if(tracer.diff_stack.back().operation == DELETE)
-      fprintf(stdout, "delete(");
-    else
-      fprintf(stdout, "insert(");
-
-  }
 
   for(unsigned int i = 0; i < tracer.elements.size(); ++i) {
 
