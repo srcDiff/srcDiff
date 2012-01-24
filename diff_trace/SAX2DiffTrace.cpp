@@ -71,6 +71,8 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.wait = false;
   tracer.collect = false;
 
+  tracer.collect_name = false;
+
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
 
@@ -132,12 +134,16 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
       if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name") {
 
         bool is_decl_stmt = tracer.elements.at(tracer.collect_node_pos).name == "decl_stmt";
+        bool is_function = tracer.elements.at(tracer.collect_node_pos).name == "function" || tracer.elements.at(tracer.collect_node_pos).name == "function";
 
-        if(!is_decl_stmt)
+        if(!is_decl_stmt && !is_function)
           break;
 
         else if(is_decl_stmt && tracer.elements.at(pos).name != "type" && tracer.elements.at(pos).name != "decl")
-             break;
+          break;
+
+        else if(is_function && tracer.elements.at(pos).name != "type")
+          break;
 
       }
 
@@ -152,7 +158,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, const char * name, const 
   return pos == tracer.collect_node_pos;
 }
 
-bool SAX2DiffTrace::is_end_wait(SAX2DiffTracer & tracer, const char * name, const char * prefix, const char * context) {
+bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context) {
 
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
     return true;
@@ -319,7 +325,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
       if(is_decl_stmt) {
 
         while(tracer.collect_node_pos < (tracer.elements.size() - 1)) {
-          fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.back().name.c_str());
+
             save_elements.push_back(tracer.elements.back());
             tracer.elements.pop_back();
 
@@ -477,6 +483,12 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
+    if(strcmp((const char *)localname, "name") == 0) {
+
+      tracer.collect_name = true;
+
+    }
+
     if(tracer.elements.size() > 0) {
 
       std::string tag;
@@ -508,7 +520,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(tracer.wait && is_end_wait((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+    if(tracer.wait && is_end_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       end_collect(tracer);
 
@@ -612,6 +624,9 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     }
 
   }
+
+  if(strcmp((const char *)localname, "name") == 0)
+    tracer.collect_name = false;
 
   if(tracer.wait)
     --tracer.offset_pos;
@@ -795,6 +810,28 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
+
+  if(tracer.collect_name) {
+
+    std::string name = "";
+    name.append((const char *)ch, len);
+
+    if(tracer.diff_stack.back().operation == COMMON) {
+
+      tracer.elements.back().signature_name_old.push_back(name);
+      tracer.elements.back().signature_name_new.push_back(name);
+
+    } else if(tracer.diff_stack.back().operation == DELETE) {
+
+      tracer.elements.back().signature_name_old.push_back(name);
+
+    } else if(tracer.diff_stack.back().operation == INSERT) {
+
+      tracer.elements.back().signature_name_new.push_back(name);
+
+    }
+
+  }
 
   if(tracer.collect) {
 
@@ -1105,6 +1142,17 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     element += "']";
 
 
+  } else if(strcmp(curelement.name.c_str(), "name") == 0
+            && (!curelement.signature_name_old.empty()
+                || !curelement.signature_name_new.empty())) {
+    
+    element += "[text()='";
+      if(operation == DELETE)
+        element += curelement.signature_name_old.back();
+      else
+        element += curelement.signature_name_new.back();
+      element += "')]";
+
   } else {
 
     bool collected = false;
@@ -1137,19 +1185,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     }
 
-  }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
-      && (strcmp(curelement.signature_old.c_str(), "") != 0
-      || strcmp(curelement.signature_new.c_str(), "") != 0)) {
-
-      element += "[fn:contains(., '";
-      if(operation == DELETE)
-      element += curelement.signature_old;
-      else
-      element += curelement.signature_new;
-      element += "')]";
-
-      }
-   */
+  }
 
   return element;
 
