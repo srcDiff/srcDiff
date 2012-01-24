@@ -1174,19 +1174,16 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     }
 
-  }/* else if(strcmp(curelement.name.c_str(), "text()") == 0
-      && (strcmp(curelement.signature_old.c_str(), "") != 0
-      || strcmp(curelement.signature_new.c_str(), "") != 0)) {
+  } else if(strcmp(curelement.name.c_str(), "name") == 0) {
 
-      element += "[fn:contains(., '";
+      element += "[text()='";
       if(operation == DELETE)
-      element += curelement.signature_old;
+        element += curelement.signature_old_path.back();
       else
-      element += curelement.signature_new;
+        element += curelement.signature_new_path.back();
       element += "')]";
 
       }
-   */
 
   return element;
 
