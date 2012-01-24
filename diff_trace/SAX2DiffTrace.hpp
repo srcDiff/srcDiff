@@ -114,8 +114,7 @@ class SAX2DiffTrace {
 
   static void end_collect(SAX2DiffTrace & tracer);
 
-  static void update_offsets(SAX2DiffTrace & tracer, int operation);
-  static void update_offsets_old(SAX2DiffTrace & tracer, int offset, int operation);
+  static void update_offsets(SAX2DiffTrace & tracer, int offset, int operation);
 
   // characters
   static void characters(void* ctx, const xmlChar* ch, int len);
