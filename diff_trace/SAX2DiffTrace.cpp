@@ -71,9 +71,6 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.wait = false;
   tracer.collect = false;
 
-  tracer.collect_name = false;
-  tracer.wait_name = false;
-
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
 
@@ -484,13 +481,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(strcmp((const char *)localname, "name") == 0) {
-
-      tracer.collect_name = true;
-      tracer.wait_name = true;
-
-    }
-
     if(tracer.elements.size() > 0) {
 
       std::string tag;
@@ -582,7 +572,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
-      if(!tracer.wait && !tracer.wait_name)
+      if(!tracer.wait)
         output_diff(tracer);
 
       else {
@@ -624,18 +614,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       tracer.diff_stack.pop_back();
 
     }
-
-  }
-
-  if(strcmp((const char *)localname, "name") == 0) {
-
-    tracer.wait_name = false;
-    tracer.collect_name = false;
-
-    tracer.output = true;
-
-    if(!tracer.wait)
-      end_collect(tracer);
 
   }
 
@@ -821,28 +799,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
-
-  if(tracer.collect_name) {
-
-    std::string name = "";
-    name.append((const char *)ch, len);
-
-    if(tracer.diff_stack.back().operation == COMMON) {
-
-      tracer.elements.back().signature_name_old.push_back(name);
-      tracer.elements.back().signature_name_new.push_back(name);
-
-    } else if(tracer.diff_stack.back().operation == DELETE) {
-
-      tracer.elements.back().signature_name_old.push_back(name);
-
-    } else if(tracer.diff_stack.back().operation == INSERT) {
-
-      tracer.elements.back().signature_name_new.push_back(name);
-
-    }
-
-  }
 
   if(tracer.collect) {
 
@@ -1049,7 +1005,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     tracer.elements.push_back(curelement);
 
-    if(!tracer.wait && !tracer.wait_name)
+    if(!tracer.wait)
       output_diff(tracer);
     else {
 
@@ -1152,17 +1108,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     element += "']";
 
-
-  } else if(strcmp(curelement.name.c_str(), "name") == 0
-            && (!curelement.signature_name_old.empty()
-                || !curelement.signature_name_new.empty())) {
-    
-    element += "[text()='";
-      if(operation == DELETE)
-        element += curelement.signature_name_old.back();
-      else
-        element += curelement.signature_name_new.back();
-      element += "')]";
 
   } else {
 
