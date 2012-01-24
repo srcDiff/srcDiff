@@ -1174,7 +1174,9 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     }
 
-  } else if(strcmp(curelement.name.c_str(), "name") == 0) {
+  } else if(strcmp(curelement.name.c_str(), "name") == 0
+            && (curelement.signature_old_path.back() != ""
+                || curelement.signature_new_path.back() != "")) {
 
       element += "[text()='";
       if(operation == DELETE)
