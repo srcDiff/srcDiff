@@ -820,11 +820,11 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     } else if(tracer.diff_stack.back().operation == DELETE) {
 
-      tracer.elements.back().signature_old.append((const char *)ch, len);
+      tracer.elements.back().signature_name_old.append((const char *)ch, len);
 
     } else if(tracer.diff_stack.back().operation == DELETE) {
 
-      tracer.elements.back().signature_new.append((const char *)ch, len);
+      tracer.elements.back().signature_name_new.append((const char *)ch, len);
 
     }
 
