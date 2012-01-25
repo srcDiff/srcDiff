@@ -42,8 +42,25 @@ struct element {
   std::vector<std::string> signature_name_new;
 
   std::map<std::string, int> children;
-  std::map<std::string, int> children_old;
-  std::map<std::string, int> children_new;
+
+};
+
+struct missed_element {
+
+  missed_element(element & curelement) 
+    : name(curelement.name), prefix(curelement.prefix), uri(curelement.uri), signature_name_old(curelement.signature_name_old), signature_name_new(curelement.signature_name_new), children(curelement.children) {}
+
+  std::string & name;
+  std::string & prefix;
+  std::string & uri;
+
+  std::vector<std::string> signature_path_old;
+  std::vector<std::string> signature_path_new;
+
+  std::vector<std::string> & signature_name_old;
+  std::vector<std::string> & signature_name_new;
+
+  std::map<std::string, int> children;
 
 };
 

@@ -498,6 +498,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       add_child(tracer.elements.back().children, tag);
 
+      /*
       if(tracer.diff_stack.back().operation == COMMON) {
 
         add_child(tracer.elements.back().children_old, tag);
@@ -512,6 +513,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
         add_child(tracer.elements.back().children_new, tag);
 
       }
+      */
 
     }
 
@@ -780,6 +782,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     for(int i = 0; i < tracer.collect_name_pos.size(); ++i) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
+
       tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back() += name;
       tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back() += name;
 
@@ -823,13 +826,13 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         tag += tracer.elements.at(pos).name;
 
-        if(!(tracer.options & OPTION_SRCML_RELATIVE))
+        //if(!(tracer.options & OPTION_SRCML_RELATIVE))
           count = tracer.elements.at(pos - 1).children[tag];
-        else if(tracer.diff_stack.back().operation == DELETE)
+          /*        else if(tracer.diff_stack.back().operation == DELETE)
           count = tracer.elements.at(pos - 1).children_old[tag];
         else if(tracer.diff_stack.back().operation == INSERT)
           count = tracer.elements.at(pos - 1).children_new[tag];
-
+          */
         if(tracer.elements.at(pos).prefix == "" && tracer.elements.at(pos).uri == "http://www.sdml.info/srcML/src") {
 
           tag = "src:" + tag;
@@ -927,6 +930,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   if(!tracer.collect_text)
     add_child(tracer.elements.back().children, tag);
 
+  /*
   if(tracer.diff_stack.back().operation == COMMON) {
 
     if(!tracer.collect_text_delete)
@@ -953,7 +957,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     tracer.collect_text_insert = true;
 
   }
-
+  */
   int i;
   for(i = 0; i < len; ++i) {
 
@@ -1156,13 +1160,13 @@ void output_diff(SAX2DiffTrace & tracer) {
 
       tag += tracer.elements.at(i).name;
 
-      if(!(tracer.options & OPTION_SRCML_RELATIVE))
+      //if(!(tracer.options & OPTION_SRCML_RELATIVE))
         count = tracer.elements.at(i - 1).children[tag];
-      else if(tracer.diff_stack.back().operation == DELETE)
+        /*else if(tracer.diff_stack.back().operation == DELETE)
         count = tracer.elements.at(i - 1).children_old[tag];
       else
         count = tracer.elements.at(i - 1).children_new[tag];
-
+        */
     }
 
     element next_element = null_element;
