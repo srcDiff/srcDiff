@@ -610,12 +610,12 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       int pos = tracer.collect_name_pos.back() - (tracer.collect_node_pos + 1);
       element & name = tracer.elements.back();
 
-      for(int i = 0; i < missed_diffs.size(); ++i) {
+      for(int i = 0; i < tracer.missed_diffs.size(); ++i) {
 
-        if(missed_diffs.at(i).at(pos).id == name.id) {
+        if(tracer.missed_diffs.at(i).at(pos).id == name.id) {
 
-          missed_diffs.at(i).at(pos).signature_name_old = name.signature_name_old;
-          missed_diffs.at(i).at(pos).signature_name_new = name.signature_name_new;
+          tracer.missed_diffs.at(i).at(pos).signature_name_old = name.signature_name_old;
+          tracer.missed_diffs.at(i).at(pos).signature_name_new = name.signature_name_new;
 
         }
 
