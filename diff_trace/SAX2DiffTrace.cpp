@@ -786,6 +786,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.back().signature_name_new.at(tracer.collect_name_pos).append((const char *)ch, len);
 
     }
+
+  }
     
   if(tracer.collect) {
 
