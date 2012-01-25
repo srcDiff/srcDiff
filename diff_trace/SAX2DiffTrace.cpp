@@ -777,18 +777,16 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       tracer.elements.back().signature_name_old.at(tracer.collect_name_pos).append((const char *)ch, len);
       tracer.elements.back().signature_name_new.at(tracer.collect_name_pos).append((const char *)ch, len);
 
+    } else if(tracer.diff_stack.back().operation == DELETE) {
+
+      tracer.elements.back().signature_name_old.at(tracer.collect_name_pos).append((const char *)ch, len);
+
+    } else if(tracer.diff_stack.back().operation == INSERT) {
+
+      tracer.elements.back().signature_name_new.at(tracer.collect_name_pos).append((const char *)ch, len);
+
     }
-
-  } else if(tracer.diff_stack.back().operation == DELETE) {
-
-    tracer.elements.back().signature_name_old.at(tracer.collect_name_pos).append((const char *)ch, len);
-
-  } else if(tracer.diff_stack.back().operation == INSERT) {
-
-    tracer.elements.back().signature_name_new.at(tracer.collect_name_pos).append((const char *)ch, len);
-
-  }
-
+    
   if(tracer.collect) {
 
     std::vector<int> poss;
