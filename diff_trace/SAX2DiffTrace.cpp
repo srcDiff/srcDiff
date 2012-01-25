@@ -777,12 +777,9 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     std::string name = "";
     name.append((const char *)ch, len);
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, name.c_str());
-
     for(int i = 0; i < tracer.collect_name_pos.size(); ++i) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.at(tracer.collect_name_pos.at(i)).name.c_str());
       tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back() += name;
       tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back() += name;
 
@@ -799,7 +796,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     }
 
   }
-    
+
   if(tracer.collect) {
 
     std::vector<int> poss;
