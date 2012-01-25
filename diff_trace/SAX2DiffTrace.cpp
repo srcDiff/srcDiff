@@ -1081,6 +1081,12 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     element += "']";
 
 
+  } else if(curelement.name == "name") {
+
+    element += "[text()'";
+    element += curelement.signature_name_old.back() + "'";
+    element += "]";
+    
   } else {
 
     bool collected = false;
