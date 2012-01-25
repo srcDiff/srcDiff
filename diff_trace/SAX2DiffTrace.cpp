@@ -1090,7 +1090,7 @@ std::string create_string_from_element(element & curelement, element & nexteleme
             && (!curelement.signature_name_old.empty()
                 || !curelement.signature_name_old.empty())) {
 
-    element += "[text()'";
+    element += "[text()='";
     element += curelement.signature_name_old.back() + "'";
     element += "]";
     
