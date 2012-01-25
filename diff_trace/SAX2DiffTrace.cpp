@@ -515,13 +515,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(strcmp((const char *)localname, "name") == 0) {
-
-      tracer.collect_name = true;
-      tracer.wait_name = true;
-
-    }
-
     if(tracer.wait && is_end_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       end_collect(tracer);
@@ -529,6 +522,18 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     }
 
     tracer.elements.push_back(curelement);
+
+    if(strcmp((const char *)localname, "name") == 0) {
+
+      tracer.collect_name = true;
+      tracer.wait_name = true;
+
+      std::string temp;
+
+      tracer.elements.back().signature_name_old.push_back(temp);
+      tracer.elements.back().signature_name_new.push_back(temp);
+
+    }
 
     if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
       ++tracer.diff_stack.back().level;
@@ -760,6 +765,10 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
+
+  if(tracer.collect_name) {
+
+  }
 
   if(tracer.collect) {
 
