@@ -29,6 +29,8 @@ struct diff {
 
 };
 
+struct missed_element;
+
 struct element {
 
   std::string name;
@@ -49,6 +51,19 @@ struct missed_element {
 
   missed_element(element & curelement) 
     : name(curelement.name), prefix(curelement.prefix), uri(curelement.uri), signature_name_old(curelement.signature_name_old), signature_name_new(curelement.signature_name_new), children(curelement.children) {}
+
+  element get_element() {
+
+    element curelement;
+    curelement.name = name;
+    curelement.prefix = prefix;
+    curelement.uri = uri;
+    curelement.signature_path_old = signature_path_old;
+    curelement.signature_path_new = signature_path_new;
+    curelement.signature_name_old = signature_name_old;
+    curelement.signature_name_new = signature_name_new;
+    curelement.children = children;
+  }
 
   std::string & name;
   std::string & prefix;
