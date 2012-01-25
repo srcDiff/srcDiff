@@ -527,7 +527,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       tracer.collect_name = true;
       tracer.wait_name = true;
-      tracer.collect_name_pos = tracer.elements.size() - 1;
+      tracer.collect_name_pos.push_back(tracer.elements.size() - 1);
 
       std::string temp;
 
@@ -637,6 +637,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     tracer.collect_name = false;
     tracer.wait_name = false;
+    tracer.collect_name_pos.pop_back();
 
     if(!tracer.wait)
       end_collect(tracer);
@@ -772,18 +773,22 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect_name) {
 
+    for(int i = 0; i < tracer.collect_name_pos.size(); ++i) {
+
     if(tracer.diff_stack.back().operation == COMMON) {
 
-      tracer.elements.at(tracer.collect_name_pos).signature_name_old.back().append((const char *)ch, len);
-      tracer.elements.at(tracer.collect_name_pos).signature_name_new.back().append((const char *)ch, len);
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back().append((const char *)ch, len);
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back().append((const char *)ch, len);
 
     } else if(tracer.diff_stack.back().operation == DELETE) {
 
-      tracer.elements.at(tracer.collect_name_pos).signature_name_old.back().append((const char *)ch, len);
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back().append((const char *)ch, len);
 
     } else if(tracer.diff_stack.back().operation == INSERT) {
 
-      tracer.elements.at(tracer.collect_name_pos).signature_name_new.back().append((const char *)ch, len);
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back().append((const char *)ch, len);
+
+    }
 
     }
 
