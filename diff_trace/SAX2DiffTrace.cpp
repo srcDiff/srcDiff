@@ -523,7 +523,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     tracer.elements.push_back(curelement);
 
-    if(strcmp((const char *)localname, "name") == 0) {
+    if(curelement.name == "name") {
 
       tracer.collect_name = true;
       tracer.wait_name = true;
@@ -773,7 +773,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   if(tracer.collect_name) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       tracer.elements.back().signature_name_old.back().append((const char *)ch, len);
       tracer.elements.back().signature_name_new.back().append((const char *)ch, len);
 
