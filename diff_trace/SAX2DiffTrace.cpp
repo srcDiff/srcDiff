@@ -773,20 +773,23 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect_name) {
 
+    std::string name = "";
+    name.append((const char *)ch, len);
+
     for(int i = 0; i < tracer.collect_name_pos.size(); ++i) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
 
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back().append((const char *)ch, len);
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back().append((const char *)ch, len);
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back() += name;
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back() += name;
 
     } else if(tracer.diff_stack.back().operation == DELETE) {
 
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back().append((const char *)ch, len);
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back() += name;
 
     } else if(tracer.diff_stack.back().operation == INSERT) {
 
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back().append((const char *)ch, len);
+      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back() += name;
 
     }
 
