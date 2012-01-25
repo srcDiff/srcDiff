@@ -768,6 +768,21 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(tracer.collect_name) {
 
+    if(tracer.diff_stack.back().operation == COMMON) {
+
+      tracer.elements.back().signature_name_old.back().append((const char *)ch, len);
+      tracer.elements.back().signature_name_new.back().append((const char *)ch, len);
+
+    }
+
+  } else if(tracer.diff_stack.back().operation == DELETE) {
+
+    tracer.elements.back().signature_name_old.back()append((const char *)ch, len);
+
+  } else if(tracer.diff_stack.back().operation == INSERT) {
+
+    tracer.elements.back().signature_name_new.back()append((const char *)ch, len);
+
   }
 
   if(tracer.collect) {
