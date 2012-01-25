@@ -1081,7 +1081,9 @@ std::string create_string_from_element(element & curelement, element & nexteleme
     element += "']";
 
 
-  } else if(curelement.name == "name") {
+  } else if(curelement.name == "name"
+            && (!curelement.signature_name_old.empty()
+                || !curelement.signature_name_old.empty())) {
 
     element += "[text()'";
     element += curelement.signature_name_old.back() + "'";
