@@ -52,7 +52,7 @@ struct missed_element {
   missed_element(element & curelement) 
     : name(curelement.name), prefix(curelement.prefix), uri(curelement.uri), signature_name_old(curelement.signature_name_old), signature_name_new(curelement.signature_name_new), children(curelement.children) {}
 
-  element get_element() {
+  element to_element() {
 
     element curelement;
     curelement.name = name;
@@ -99,7 +99,7 @@ class SAX2DiffTrace {
   std::vector<unsigned int> collect_name_pos;
 
   std::vector<int> missed_diff_types;  
-  std::vector<std::vector<element> > missed_diffs;  
+  std::vector<std::vector<missed_element> > missed_diffs;  
 
   std::vector<std::vector<int> > signature_path_pos_old;  
   std::vector<std::vector<int> > signature_path_offsets_old;  
