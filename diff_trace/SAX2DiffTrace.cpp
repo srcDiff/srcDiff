@@ -635,9 +635,10 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   if(strcmp((const char *)localname, "name") == 0) {
 
-    tracer.collect_name = false;
-    tracer.wait_name = false;
     tracer.collect_name_pos.pop_back();
+
+    tracer.collect_name = !tracer.collect_name_pos.empty();
+    tracer.wait_name = !tracer.collect_name_pos.empty();
 
     if(!tracer.wait)
       end_collect(tracer);
@@ -776,10 +777,12 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
     std::string name = "";
     name.append((const char *)ch, len);
 
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, name.c_str());
+
     for(int i = 0; i < tracer.collect_name_pos.size(); ++i) {
 
     if(tracer.diff_stack.back().operation == COMMON) {
-
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.at(tracer.collect_name_pos.at(i)).name.c_str());
       tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back() += name;
       tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back() += name;
 
