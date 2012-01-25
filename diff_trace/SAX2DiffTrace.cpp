@@ -1097,7 +1097,11 @@ std::string create_string_from_element(element & curelement, element & nexteleme
                 || !curelement.signature_name_old.empty())) {
 
     element += "[text()='";
-    element += curelement.signature_name_old.back() + "'";
+
+    if(operation == DELETE)
+      element += curelement.signature_name_old.back() + "'";
+    else
+      element += curelement.signature_name_new.back() + "'";
     element += "]";
     
   } else {
