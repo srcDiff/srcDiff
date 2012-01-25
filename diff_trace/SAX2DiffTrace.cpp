@@ -83,8 +83,6 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.is_insert = false;
 
   tracer.collect_text = false;
-  tracer.collect_text_delete = false;
-  tracer.collect_text_insert = false;
 
 }
 
@@ -418,21 +416,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
-    if(tracer.diff_stack.back().operation == COMMON) {
-
-      tracer.collect_text_delete = false;
-      tracer.collect_text_insert = false;
-
-    } else if(tracer.diff_stack.back().operation == DELETE) {
-
-      tracer.collect_text_delete = false;
-
-    } else {
-
-      tracer.collect_text_insert = false;
-
-    }
-
     element curelement;
     curelement.name = (const char *)localname;
     if(prefix)
@@ -497,23 +480,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tag += (const char *)localname;
 
       add_child(tracer.elements.back().children, tag);
-
-      /*
-      if(tracer.diff_stack.back().operation == COMMON) {
-
-        add_child(tracer.elements.back().children_old, tag);
-        add_child(tracer.elements.back().children_new, tag);
-
-      } else if(tracer.diff_stack.back().operation == DELETE) {
-
-        add_child(tracer.elements.back().children_old, tag);
-
-      } else {
-
-        add_child(tracer.elements.back().children_new, tag);
-
-      }
-      */
 
     }
 
@@ -657,21 +623,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   }
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
-
-    if(tracer.diff_stack.back().operation == COMMON) {
-
-      tracer.collect_text_delete = false;
-      tracer.collect_text_insert = false;
-
-    } else if(tracer.diff_stack.back().operation == DELETE) {
-
-      tracer.collect_text_delete = false;
-
-    } else {
-
-      tracer.collect_text_insert = false;
-
-    }
 
     tracer.elements.pop_back();
 
@@ -826,13 +777,8 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         tag += tracer.elements.at(pos).name;
 
-        //if(!(tracer.options & OPTION_SRCML_RELATIVE))
           count = tracer.elements.at(pos - 1).children[tag];
-          /*        else if(tracer.diff_stack.back().operation == DELETE)
-          count = tracer.elements.at(pos - 1).children_old[tag];
-        else if(tracer.diff_stack.back().operation == INSERT)
-          count = tracer.elements.at(pos - 1).children_new[tag];
-          */
+
         if(tracer.elements.at(pos).prefix == "" && tracer.elements.at(pos).uri == "http://www.sdml.info/srcML/src") {
 
           tag = "src:" + tag;
@@ -930,34 +876,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   if(!tracer.collect_text)
     add_child(tracer.elements.back().children, tag);
 
-  /*
-  if(tracer.diff_stack.back().operation == COMMON) {
-
-    if(!tracer.collect_text_delete)
-      add_child(tracer.elements.back().children_old, tag);
-
-    if(!tracer.collect_text_insert)
-      add_child(tracer.elements.back().children_new, tag);
-
-    tracer.collect_text_delete = true;
-    tracer.collect_text_insert = true;
-
-  } else if(tracer.diff_stack.back().operation == DELETE) {
-
-    if(!tracer.collect_text_delete)
-      add_child(tracer.elements.back().children_old, tag);
-
-    tracer.collect_text_delete = true;
-
-  } else if(tracer.diff_stack.back().operation == INSERT) {
-
-    if(!tracer.collect_text_insert)
-      add_child(tracer.elements.back().children_new, tag);
-
-    tracer.collect_text_insert = true;
-
-  }
-  */
   int i;
   for(i = 0; i < len; ++i) {
 
@@ -1160,13 +1078,8 @@ void output_diff(SAX2DiffTrace & tracer) {
 
       tag += tracer.elements.at(i).name;
 
-      //if(!(tracer.options & OPTION_SRCML_RELATIVE))
-        count = tracer.elements.at(i - 1).children[tag];
-        /*else if(tracer.diff_stack.back().operation == DELETE)
-        count = tracer.elements.at(i - 1).children_old[tag];
-      else
-        count = tracer.elements.at(i - 1).children_new[tag];
-        */
+      count = tracer.elements.at(i - 1).children[tag];
+
     }
 
     element next_element = null_element;

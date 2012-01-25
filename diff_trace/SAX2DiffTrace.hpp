@@ -101,8 +101,6 @@ class SAX2DiffTrace {
   bool is_insert;
 
   bool collect_text;
-  bool collect_text_delete;
-  bool collect_text_insert;
 
   std::vector<element> elements;
   std::vector<diff> diff_stack;
