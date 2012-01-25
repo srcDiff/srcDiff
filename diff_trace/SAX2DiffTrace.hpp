@@ -64,6 +64,7 @@ class SAX2DiffTrace {
 
   bool collect_name;
   bool wait_name;
+  unsigned int collect_name_pos;
 
   std::vector<int> missed_diff_types;  
   std::vector<std::vector<element> > missed_diffs;  
