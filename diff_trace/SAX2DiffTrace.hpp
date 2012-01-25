@@ -31,6 +31,8 @@ struct diff {
 
 struct element {
 
+  unsigned long long id;
+
   std::string name;
   std::string prefix;
   std::string uri;

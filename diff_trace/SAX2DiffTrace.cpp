@@ -30,6 +30,7 @@ SAX2DiffTrace::SAX2DiffTrace(long & options)
 }
 
 static element null_element;
+static unsigned long long id = 0;
 
 static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
@@ -417,6 +418,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0 || !(tracer.options & OPTION_SRCML_RELATIVE)) {
 
     element curelement;
+    curelement.id = id++;
     curelement.name = (const char *)localname;
     if(prefix)
       curelement.prefix = (const char *)prefix;
@@ -602,6 +604,25 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   }
 
   if(strcmp((const char *)localname, "name") == 0) {
+
+    if(tracer.wait && tracer.output) {
+
+      int pos = tracer.collect_name_pos.back() - (tracer.collect_node_pos + 1);
+      element & name = tracer.elements.back();
+
+      for(int i = 0; i < missed_diffs.size(); ++i) {
+
+        if(missed_diffs.at(i).at(pos).id == name.id) {
+
+          missed_diffs.at(i).at(pos).signature_name_old = name.signature_name_old;
+          missed_diffs.at(i).at(pos).signature_name_new = name.signature_name_new;
+
+        }
+
+
+      }
+
+    }
 
     tracer.collect_name_pos.pop_back();
 
