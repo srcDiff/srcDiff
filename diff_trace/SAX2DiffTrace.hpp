@@ -116,6 +116,8 @@ class SAX2DiffTrace {
 
   static void end_collect(SAX2DiffTrace & tracer);
 
+  static void end_collect_name(SAX2DiffTrace & tracer);
+
   static void update_offsets(SAX2DiffTrace & tracer, int offset, int operation);
 
   // characters

@@ -365,6 +365,39 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
 }
 
+void SAX2DiffTrace::end_collect_name(SAX2DiffTrace & tracer) {
+
+  if(tracer.output) {
+
+    int num_missed = tracer.missed_diff_types.size();
+
+    for(unsigned int i = 0; i < num_missed; ++i) {
+
+      diff temp_diff = { 0 };
+      temp_diff.operation = tracer.missed_diff_types.at(i);
+
+      tracer.diff_stack.push_back(temp_diff);
+
+      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+        tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
+
+      output_diff(tracer);
+
+      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
+        tracer.elements.pop_back();
+
+      tracer.diff_stack.pop_back();
+
+    }
+
+    tracer.missed_diff_types.clear();
+    tracer.missed_diffs.clear();
+
+    tracer.output = false;
+  }
+
+}
+
 void add_child(std::map<std::string, int> & children, std::string & child) {
 
   std::map<std::string, int>::iterator pos = children.find(child);
@@ -633,7 +666,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     tracer.wait_name = !tracer.collect_name_pos.empty();
 
     if(!tracer.wait)
-      end_collect(tracer);
+      end_collect_name(tracer);
 
 
   }
