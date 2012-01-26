@@ -532,6 +532,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.wait_name = true;
       tracer.collect_name_pos.push_back(tracer.elements.size() - 1);
 
+      if(!tracer.wait)
+        tracer.collect_node_pos = tracer.collect_name_pos;
+
       std::string temp;
 
       tracer.elements.back().signature_name_old.push_back(temp);
