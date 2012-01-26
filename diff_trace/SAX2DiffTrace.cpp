@@ -501,6 +501,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       std::string temp;
 
+      tracer.elements.back().signature_path_old.push_back(temp);
+      tracer.elements.back().signature_path_new.push_back(temp);
+
       tracer.elements.back().signature_name_old.push_back(temp);
       tracer.elements.back().signature_name_new.push_back(temp);
 
@@ -634,6 +637,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     if(!tracer.wait)
       end_collect(tracer);
+
 
   }
 
