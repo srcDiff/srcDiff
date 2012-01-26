@@ -72,9 +72,6 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   tracer.wait = false;
   tracer.collect = false;
 
-  tracer.collect_name = false;
-  tracer.wait_name = false;
-
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
 
@@ -545,7 +542,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
-      if(!tracer.wait && !tracer.wait_name)
+      if(!tracer.wait)
         output_diff(tracer);
 
       else {
@@ -858,7 +855,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     tracer.elements.push_back(curelement);
 
-    if(!tracer.wait && !tracer.wait_name)
+    if(!tracer.wait)
       output_diff(tracer);
     else {
 
