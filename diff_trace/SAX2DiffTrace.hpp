@@ -62,10 +62,6 @@ class SAX2DiffTrace {
   unsigned int offset_pos;
   unsigned int collect_node_pos;
 
-  bool collect_name;
-  bool wait_name;
-  std::vector<unsigned int> collect_name_pos;
-
   std::vector<int> missed_diff_types;  
   std::vector<std::vector<element> > missed_diffs;  
 
@@ -118,8 +114,6 @@ class SAX2DiffTrace {
   static void form_paths(SAX2DiffTrace & tracer);
 
   static void end_collect(SAX2DiffTrace & tracer);
-
-  static void end_collect_name(SAX2DiffTrace & tracer);
 
   static void update_offsets(SAX2DiffTrace & tracer, int offset, int operation);
 

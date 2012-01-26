@@ -365,39 +365,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
 }
 
-void SAX2DiffTrace::end_collect_name(SAX2DiffTrace & tracer) {
-
-  if(tracer.output) {
-
-    int num_missed = tracer.missed_diff_types.size();
-
-    for(unsigned int i = 0; i < num_missed; ++i) {
-
-      diff temp_diff = { 0 };
-      temp_diff.operation = tracer.missed_diff_types.at(i);
-
-      tracer.diff_stack.push_back(temp_diff);
-
-      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-        tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
-
-      output_diff(tracer);
-
-      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-        tracer.elements.pop_back();
-
-      tracer.diff_stack.pop_back();
-
-    }
-
-    tracer.missed_diff_types.clear();
-    tracer.missed_diffs.clear();
-
-    tracer.output = false;
-  }
-
-}
-
 void add_child(std::map<std::string, int> & children, std::string & child) {
 
   std::map<std::string, int>::iterator pos = children.find(child);
@@ -526,22 +493,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     tracer.elements.push_back(curelement);
 
-    if(curelement.name == "name") {
-
-      tracer.collect_name = true;
-      tracer.wait_name = true;
-      tracer.collect_name_pos.push_back(tracer.elements.size() - 1);
-
-      if(!tracer.wait)
-        tracer.collect_node_pos = tracer.collect_name_pos;
-
-      std::string temp;
-
-      tracer.elements.back().signature_name_old.push_back(temp);
-      tracer.elements.back().signature_name_new.push_back(temp);
-
-    }
-
     if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
       ++tracer.diff_stack.back().level;
 
@@ -636,41 +587,6 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
       tracer.diff_stack.pop_back();
 
     }
-
-  }
-
-  if(strcmp((const char *)localname, "name") == 0) {
-
-    if(tracer.wait && tracer.output) {
-
-      int pos = tracer.collect_name_pos.back() - (tracer.collect_node_pos + 1);
-      element & name = tracer.elements.back();
-
-      for(int i = 0; i < tracer.missed_diffs.size(); ++i) {
-
-        if(pos >= tracer.missed_diffs.at(i).size())
-          continue;
-
-        if(tracer.missed_diffs.at(i).at(pos).id == name.id) {
-
-          tracer.missed_diffs.at(i).at(pos).signature_name_old = name.signature_name_old;
-          tracer.missed_diffs.at(i).at(pos).signature_name_new = name.signature_name_new;
-
-        }
-
-
-      }
-
-    }
-
-    tracer.collect_name_pos.pop_back();
-
-    tracer.collect_name = !tracer.collect_name_pos.empty();
-    tracer.wait_name = !tracer.collect_name_pos.empty();
-
-    if(!tracer.wait)
-      end_collect_name(tracer);
-
 
   }
 
@@ -785,32 +701,6 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
-
-  if(tracer.collect_name) {
-
-    std::string name = "";
-    name.append((const char *)ch, len);
-
-    for(int i = 0; i < tracer.collect_name_pos.size(); ++i) {
-
-    if(1 || tracer.diff_stack.back().operation == COMMON) {
-
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back() += name;
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back() += name;
-
-    } else if(tracer.diff_stack.back().operation == DELETE) {
-
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_old.back() += name;
-
-    } else if(tracer.diff_stack.back().operation == INSERT) {
-
-      tracer.elements.at(tracer.collect_name_pos.at(i)).signature_name_new.back() += name;
-
-    }
-
-    }
-
-  }
 
   if(tracer.collect) {
 
@@ -1071,19 +961,6 @@ std::string create_string_from_element(element & curelement, element & nexteleme
 
     element += "']";
 
-
-  } else if(curelement.name == "name"
-            && (!curelement.signature_name_old.empty()
-                || !curelement.signature_name_old.empty())) {
-
-    element += "[text()='";
-
-    if(operation == DELETE)
-      element += curelement.signature_name_old.back() + "'";
-    else
-      element += curelement.signature_name_new.back() + "'";
-    element += "]";
-    
   } else {
 
     bool collected = false;
