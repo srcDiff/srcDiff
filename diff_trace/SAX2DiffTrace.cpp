@@ -307,7 +307,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
   if(!tracer.elements.at(tracer.collect_node_pos).signature_name_new.empty())
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_new.back());
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(tracer.output) {
 
@@ -501,20 +500,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.collect_name_pos.push_back(tracer.elements.size() - 1);
 
       std::string temp;
-
-      std::vector<int> offsets;
-      std::vector<std::string> elements;
-
-      tracer.signature_path_pos_old.push_back(offsets);
-      tracer.signature_path_offsets_old.push_back(offsets);
-      tracer.signature_path_old.push_back(elements);
-
-      tracer.signature_path_pos_new.push_back(offsets);
-      tracer.signature_path_offsets_new.push_back(offsets);
-      tracer.signature_path_new.push_back(elements);
-
-      tracer.elements.back().signature_path_old.push_back(temp);
-      tracer.elements.back().signature_path_new.push_back(temp);
 
       tracer.elements.back().signature_name_old.push_back(temp);
       tracer.elements.back().signature_name_new.push_back(temp);
