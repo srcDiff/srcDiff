@@ -1,0 +1,1 @@
+ls -1 | grep -v "tar" | grep -v "xml" | gxargs -L 2 echo  | gxargs -I% bash -c "srcdiff --thread --quiet \$(echo '%' | cut -d \" \" -f1)/datareps \$(echo '%' | cut -d \" \" -f2)/datareps -o \$(echo '%' | cut -d \" \" -f1).xml"
