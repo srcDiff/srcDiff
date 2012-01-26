@@ -545,7 +545,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(tracer.wait)
       ++tracer.offset_pos;
 
-    if(!tracer.wait && !tracer.wait_name) {
+    if(!tracer.wait) {
 
       if((tracer.wait = is_wait((const char *)localname, (const char *)prefix))) {
 
@@ -965,7 +965,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     tracer.elements.push_back(curelement);
 
-    if(!tracer.wait)
+    if(!tracer.wait && !tracer.wait_name)
       output_diff(tracer);
     else {
 
