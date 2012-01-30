@@ -57,8 +57,8 @@ class SAX2DiffTrace {
   xmlSAXHandler * sax;
 
   bool output;
-  bool wait;
-  bool collect;
+  std::vector<bool> waits;
+  std::vector<bool> collects;
   unsigned int offset_pos;
   unsigned int collect_node_pos;
 

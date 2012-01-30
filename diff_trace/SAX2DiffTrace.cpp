@@ -69,8 +69,8 @@ void SAX2DiffTrace::startDocument(void * ctx) {
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   tracer.output = false;
-  tracer.wait = false;
-  tracer.collect = false;
+  //tracer.wait = false;
+  //tracer.collect = false;
 
   diff startdiff = { 0 };
   startdiff.operation = COMMON;
@@ -296,8 +296,11 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
   tracer.signature_path_new.clear();
   tracer.signature_path_offsets_new.clear();
 
-  tracer.wait = false;
-  tracer.collect = false;
+  //tracer.wait = false;
+  //tracer.collect = false;
+
+  tracer.waits.pop_back();
+  tracer.collects.pop_back();
 
   if(!tracer.elements.at(tracer.collect_node_pos).signature_name_old.empty())
     trim_string(tracer.elements.at(tracer.collect_node_pos).signature_name_old.back());
@@ -482,7 +485,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(tracer.wait && is_end_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
+    if(!tracer.waits.empty() && is_end_wait(tracer, (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str())) {
 
       end_collect(tracer);
 
@@ -493,12 +496,15 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
       ++tracer.diff_stack.back().level;
 
-    if(tracer.wait)
+    if(!tracer.waits.empty())
       ++tracer.offset_pos;
 
-    if(!tracer.wait) {
+    if(tracer.waits.empty()) {
 
-      if((tracer.wait = is_wait((const char *)localname, (const char *)prefix))) {
+      if(is_wait((const char *)localname, (const char *)prefix)) {
+
+        tracer.waits.push_back(true);
+        tracer.collects.push_back(false);
 
         tracer.collect_node_pos = tracer.elements.size() - 1;
         tracer.offset_pos = 0;
@@ -508,9 +514,12 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     }
 
 
-    if(tracer.wait && !tracer.collect) {
+    if(!tracer.waits.empty() && tracer.collects.empty()) {
 
-      if((tracer.collect = is_collect(tracer, (const char *)localname, (const char *)prefix))) {
+      if(is_collect(tracer, (const char *)localname, (const char *)prefix)) {
+
+        tracer.collects.back() = true;
+
 
         std::string temp;
 
@@ -537,12 +546,12 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(tracer.wait)
+    if(!tracer.waits.empty())
         update_offsets(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
-      if(!tracer.wait)
+      if(tracer.waits.empty())
         output_diff(tracer);
 
       else {
@@ -587,10 +596,10 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   }
 
-  if(tracer.wait)
+  if(!tracer.waits.empty())
     --tracer.offset_pos;
 
-  if(tracer.wait && is_wait((const char *)localname, (const char *)prefix)) {
+  if(!tracer.waits.empty() && is_wait((const char *)localname, (const char *)prefix)) {
 
     end_collect(tracer);
 
@@ -605,8 +614,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0)
     --tracer.diff_stack.back().level;
 
-  if(tracer.collect && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))
-    tracer.collect = false;
+  if(tracer.collects.back() && is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos).name.c_str()))
+    tracer.collects.back() = false;
 
   tracer.collect_text = false;
 
@@ -699,7 +708,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   SAX2DiffTrace & tracer = *(SAX2DiffTrace *)ctxt->_private;
 
-  if(tracer.collect) {
+  if(tracer.collects.back()) {
 
     std::vector<int> poss;
     std::vector<int> offsets;
@@ -855,7 +864,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
     tracer.elements.push_back(curelement);
 
-    if(!tracer.wait)
+    if(tracer.waits.empty())
       output_diff(tracer);
     else {
 
