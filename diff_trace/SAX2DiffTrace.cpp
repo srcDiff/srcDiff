@@ -514,7 +514,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
     }
 
 
-    if(!tracer.waits.empty() && tracer.collects.empty()) {
+    if(!tracer.waits.empty() && !tracer.collects.back()) {
 
       if(is_collect(tracer, (const char *)localname, (const char *)prefix)) {
 
