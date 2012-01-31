@@ -34,7 +34,7 @@ static unsigned long long id = 0;
 
 static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
-                                                 , "decl_stmt", "call", "\0" };
+                                                 , "decl_stmt", "call", "name", "\0" };
 
 static std::string collect_type_structures[] = { "decl_stmt", "\0" };
 
@@ -498,7 +498,17 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(!tracer.waits.empty() && is_end_wait(tracer, tracer.collect_node_pos.at(0), (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(0)).name.c_str())) {
+    for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
+
+      if(is_end_wait(tracer, tracer.collect_node_pos.at(i), (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(0)).name.c_str())) {
+
+        tracer.waits.at(i) = false;
+
+      }
+
+    }
+
+    if(!tracer.collect_node_pos.empty() && !tracer.waits.at(0)) {
 
       end_collect(tracer);
 
