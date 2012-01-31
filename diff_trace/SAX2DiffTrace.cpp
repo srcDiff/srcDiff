@@ -519,7 +519,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(!tracer.waits.empty() && !tracer.collects.back()) {
 
-      for(int i = 0; i < tracer.collects.size(); ++i) {
+      for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
         if(tracer.collects.at(i))
           continue;
@@ -626,7 +626,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   if(!tracer.collects.empty()) {
 
-    for(int i = 0; i < tracer.collects.size(); ++i) {
+    for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
         if(!tracer.collects.at(i))
           continue;
@@ -731,7 +731,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(!tracer.collects.empty()) {
 
-    for(int i = 0; i < tracer.collects.size(); ++i) {
+    for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
       if(!tracer.collects.at(i))
         continue;
