@@ -60,7 +60,7 @@ class SAX2DiffTrace {
   std::vector<bool> waits;
   std::vector<bool> collects;
   unsigned int offset_pos;
-  unsigned int collect_node_pos;
+  std::vector<unsigned int> collect_node_pos;
 
   std::vector<int> missed_diff_types;  
   std::vector<std::vector<element> > missed_diffs;  
@@ -107,7 +107,7 @@ class SAX2DiffTrace {
 
   static bool is_collect(SAX2DiffTrace & tracer, unsigned int collect_node_pos, const char * name, const char * prefix);
 
-  static bool is_end_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context);
+  static bool is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_node_pos, const char * name, const char * prefix, const char * context);
  
   static bool is_end_collect(const char * name, const char * prefix, const char * context);
 
