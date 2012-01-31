@@ -305,6 +305,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
   tracer.waits.pop_back();
   tracer.collects.pop_back();
+  tracer.collect_node_pos.pop_back();
 
   if(!tracer.elements.at(collect_node_pos).signature_name_old.empty())
     trim_string(tracer.elements.at(collect_node_pos).signature_name_old.back());
