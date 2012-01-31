@@ -767,9 +767,9 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       std::vector<std::string> paths;
 
       // build the path
-      if((tracer.diff_stack.back().operation == COMMON && (tracer.signature_path_old.back().empty() || tracer.signature_path_new.back().empty())
-          || (tracer.diff_stack.back().operation == DELETE && tracer.signature_path_old.back().empty())
-          || tracer.diff_stack.back().operation == INSERT && tracer.signature_path_new.back().empty())) {
+      if((tracer.diff_stack.back().operation == COMMON && (tracer.signature_path_old.at(i).empty() || tracer.signature_path_new.at(i).empty())
+          || (tracer.diff_stack.back().operation == DELETE && tracer.signature_path_old.at(i).empty())
+          || tracer.diff_stack.back().operation == INSERT && tracer.signature_path_new.at(i).empty())) {
 
         for(int pos = tracer.collect_node_pos.at(0) + 1; pos < tracer.elements.size(); ++pos) {
 
