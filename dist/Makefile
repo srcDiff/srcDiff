@@ -33,7 +33,6 @@ BIN_DIR=${SRC_DIR_BASE}/bin
 DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../bin
-SRCML_SRC=../../../src
 
 # srcml library
 LIBSRCML_DLL=${DLL_DIR}/libsrcml.dll
@@ -51,14 +50,10 @@ WIN_SRCDIFF_PATH=${BIN_DIR}/${SRCDIFF_EXE}
 DIST_FILES=${SRCDIFF_PATH} 
 WIN_DIST_FILES=${WIN_SRCDIFF_PATH} ${DLL_DIR}/*.dll
 
-# generate files
-all : src bin
-
 REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
 
-# srcml
-SRCML_SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk/
-SRCML_REVISION=$(strip $(shell svn info ${SRCML_SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
+# generate files
+all : src bin
 
 # export the directories
 exp :
@@ -73,10 +68,10 @@ exp :
 
 clean :
 	make cleansrc
-	rm -fR  ${SRC_TAR_GZ} ${UNIX_TAR_GZ} ${SRC_ZIP} ${WIN_ZIP} srcml-src
+	rm -fR  ${SRC_TAR_GZ} ${UNIX_TAR_GZ} ${SRC_ZIP} ${WIN_ZIP}
 
 cleansrc :
-	rm -fR ${SRC_DIR_BASE} ${BASE} ${WIN_BASE} srcml-src
+	rm -fR ${SRC_DIR_BASE} ${BASE} ${WIN_BASE}
 
 ##
 # src
@@ -95,7 +90,6 @@ ${SRC_ZIP} : exp
 # bin
 bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
-	svn export -r${SRCML_REVISION} ${SRCML_SVN_URL}/src/ srcml-src --native-eol LF
 	cd ${SRC_DIR} && make clean && make DIST=1
 	strip ${SRCDIFF_PATH}
 	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
@@ -104,7 +98,6 @@ bin : ${SRC_TAR_GZ}
 
 windows : ${SRC_ZIP}
 	unzip -aq ${SRC_ZIP}
-	svn export -r${SRCML_REVISION} ${SRCML_SVN_URL}/src/ srcml-src --native-eol LF
 	cd ${SRC_DIR} && make clean && make mingw32 DIST=1
 	i686-pc-mingw32-strip ${WIN_SRCDIFF_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
