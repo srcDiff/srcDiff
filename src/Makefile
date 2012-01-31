@@ -95,7 +95,7 @@ EXE = $(EXE_DIR)srcdiffdirect $(EXE_DIR)srcdiff $(EXE_DIR)colordiff
 endif
 
 
-all : #${EXE}
+all : ${EXE}
 
 mingw32 : 
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
