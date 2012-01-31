@@ -851,30 +851,31 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
         }
 
-        if(tracer.diff_stack.back().operation == COMMON) {
+      }
+
+      if(tracer.diff_stack.back().operation == COMMON) {
 
 
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
 
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_old.back() = "";
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_new.back() = "";
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_old.back() = "";
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_new.back() = "";
 
-        } else if(tracer.diff_stack.back().operation == DELETE) {
+      } else if(tracer.diff_stack.back().operation == DELETE) {
 
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_old.back().append((const char *)ch, (const char *)ch + len);
 
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_old.back() = "";
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_old.back() = "";
 
-        } else if(tracer.diff_stack.back().operation == INSERT) {
+      } else if(tracer.diff_stack.back().operation == INSERT) {
 
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
 
-          tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_new.back() = "";
-
-        }
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_new.back() = "";
 
       }
+
 
     }
 
