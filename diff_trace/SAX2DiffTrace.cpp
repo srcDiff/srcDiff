@@ -303,10 +303,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
     //tracer.wait = false;
     //tracer.collect = false;
 
-    tracer.waits.pop_back();
-    tracer.collects.pop_back();
-    tracer.collect_node_pos.pop_back();
-
     if(!tracer.elements.at(collect_node_pos).signature_name_old.empty())
       trim_string(tracer.elements.at(collect_node_pos).signature_name_old.back());
 
@@ -314,6 +310,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
       trim_string(tracer.elements.at(collect_node_pos).signature_name_new.back());
 
   }
+
 
   if(tracer.output) {
 
@@ -368,6 +365,15 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
     tracer.missed_diffs.clear();
 
     tracer.output = false;
+  }
+
+  for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
+
+    tracer.waits.pop_back();
+    tracer.collects.pop_back();
+
+    tracer.collect_node_pos.pop_back();
+
   }
 
 }
