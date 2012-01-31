@@ -9,7 +9,7 @@ CUT=/usr/bin/cut
 
 
 
-ifeq (DIST,1)
+ifdef DIST
 VERSION="\"$(shell cat VERSION)\""
 else
 VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
