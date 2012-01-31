@@ -201,117 +201,117 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 // rename to end_collect
 void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
-  for(int k = 0; k < tracer.collect_node_pos.size(); ++k) { 
+  for(int k = 0; k < tracer.collect_node_pos.size(); ++k) {
 
     unsigned int collect_node_pos = tracer.collect_node_pos.at(k);
 
-  // form paths
-  for(int i = 0; i < tracer.signature_path_old.size(); ++i) {
+    // form paths
+    for(int i = 0; i < tracer.signature_path_old.size(); ++i) {
 
-    if(tracer.signature_path_old.at(i).empty())
-      continue;
+      if(tracer.signature_path_old.at(i).empty())
+        continue;
 
-    std::string path = "";
+      std::string path = "";
 
-    for(int j = 0; j < tracer.signature_path_old.at(i).size(); ++j) {
+      for(int j = 0; j < tracer.signature_path_old.at(i).size(); ++j) {
 
-      if(j != 0)
-        path += "/";
+        if(j != 0)
+          path += "/";
 
-      path += tracer.signature_path_old.at(i).at(j) + "[last()";
+        path += tracer.signature_path_old.at(i).at(j) + "[last()";
 
-      if(tracer.signature_path_offsets_old.at(i).at(j) != 0) {
+        if(tracer.signature_path_offsets_old.at(i).at(j) != 0) {
 
-        path +=  " - ";
+          path +=  " - ";
 
-        int temp_count = tracer.signature_path_offsets_old.at(i).at(j);
-        int length;
-        for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-          ;
+          int temp_count = tracer.signature_path_offsets_old.at(i).at(j);
+          int length;
+          for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+            ;
 
-        ++length;
+          ++length;
 
-        char * buffer = (char *)malloc(sizeof(char) * length);
+          char * buffer = (char *)malloc(sizeof(char) * length);
 
-        snprintf(buffer, length, "%d", tracer.signature_path_offsets_old.at(i).at(j));
+          snprintf(buffer, length, "%d", tracer.signature_path_offsets_old.at(i).at(j));
 
-        path += buffer;
+          path += buffer;
 
-        free(buffer);
+          free(buffer);
 
-      }
+        }
 
-      path += "]";
-
-    }
-
-    tracer.elements.at(collect_node_pos).signature_path_old.at(i) = path;
-
-  }
-
-  tracer.signature_path_pos_old.clear();
-  tracer.signature_path_old.clear();
-  tracer.signature_path_offsets_old.clear();
-
-  for(int i = 0; i < tracer.signature_path_new.size(); ++i) {
-
-    if(tracer.signature_path_new.at(i).empty())
-      continue;
-
-    std::string path = "";
-
-    for(int j = 0; j < tracer.signature_path_new.at(i).size(); ++j) {
-
-      if(j != 0)
-        path += "/";
-
-      path += tracer.signature_path_new.at(i).at(j) + "[last()";
-
-      if(tracer.signature_path_offsets_new.at(i).at(j) != 0) {
-
-        path +=  " - ";
-
-        int temp_count = tracer.signature_path_offsets_new.at(i).at(j);
-        int length;
-        for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-          ;
-
-        ++length;
-
-        char * buffer = (char *)malloc(sizeof(char) * length);
-
-        snprintf(buffer, length, "%d", tracer.signature_path_offsets_new.at(i).at(j));
-
-        path += buffer;
-
-        free(buffer);
+        path += "]";
 
       }
 
-      path += "]";
+      tracer.elements.at(collect_node_pos).signature_path_old.at(i) = path;
 
     }
 
-    tracer.elements.at(collect_node_pos).signature_path_new.at(i) = path;
+    tracer.signature_path_pos_old.clear();
+    tracer.signature_path_old.clear();
+    tracer.signature_path_offsets_old.clear();
 
-  }
+    for(int i = 0; i < tracer.signature_path_new.size(); ++i) {
 
-  tracer.signature_path_pos_new.clear();
-  tracer.signature_path_new.clear();
-  tracer.signature_path_offsets_new.clear();
+      if(tracer.signature_path_new.at(i).empty())
+        continue;
 
-  //tracer.wait = false;
-  //tracer.collect = false;
+      std::string path = "";
 
-  tracer.waits.pop_back();
-  tracer.collects.pop_back();
-  tracer.collect_node_pos.pop_back();
+      for(int j = 0; j < tracer.signature_path_new.at(i).size(); ++j) {
 
-  if(!tracer.elements.at(collect_node_pos).signature_name_old.empty())
-    trim_string(tracer.elements.at(collect_node_pos).signature_name_old.back());
+        if(j != 0)
+          path += "/";
 
-  if(!tracer.elements.at(collect_node_pos).signature_name_new.empty())
-    trim_string(tracer.elements.at(collect_node_pos).signature_name_new.back());
+        path += tracer.signature_path_new.at(i).at(j) + "[last()";
+
+        if(tracer.signature_path_offsets_new.at(i).at(j) != 0) {
+
+          path +=  " - ";
+
+          int temp_count = tracer.signature_path_offsets_new.at(i).at(j);
+          int length;
+          for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+            ;
+
+          ++length;
+
+          char * buffer = (char *)malloc(sizeof(char) * length);
+
+          snprintf(buffer, length, "%d", tracer.signature_path_offsets_new.at(i).at(j));
+
+          path += buffer;
+
+          free(buffer);
+
+        }
+
+        path += "]";
+
+      }
+
+      tracer.elements.at(collect_node_pos).signature_path_new.at(i) = path;
+
+    }
+
+    tracer.signature_path_pos_new.clear();
+    tracer.signature_path_new.clear();
+    tracer.signature_path_offsets_new.clear();
+
+    //tracer.wait = false;
+    //tracer.collect = false;
+
+    tracer.waits.pop_back();
+    tracer.collects.pop_back();
+    tracer.collect_node_pos.pop_back();
+
+    if(!tracer.elements.at(collect_node_pos).signature_name_old.empty())
+      trim_string(tracer.elements.at(collect_node_pos).signature_name_old.back());
+
+    if(!tracer.elements.at(collect_node_pos).signature_name_new.empty())
+      trim_string(tracer.elements.at(collect_node_pos).signature_name_new.back());
 
   }
 
@@ -628,8 +628,8 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
     for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
-        if(!tracer.collects.at(i))
-          continue;
+      if(!tracer.collects.at(i))
+        continue;
 
       if(is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(i)).name.c_str()))
         tracer.collects.at(i) = false;
