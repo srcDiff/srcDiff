@@ -105,7 +105,7 @@ class SAX2DiffTrace {
 
   static bool is_type(const char * name, const char * prefix);
 
-  static bool is_collect(SAX2DiffTrace & tracer, const char * name, const char * prefix);
+  static bool is_collect(SAX2DiffTrace & tracer, unsigned int collect_node_pos, const char * name, const char * prefix);
 
   static bool is_end_wait(SAX2DiffTrace & tracer, const char * name, const char * prefix, const char * context);
  
