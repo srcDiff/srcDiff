@@ -6,8 +6,22 @@ SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
+SVNVERSION=${wildcard /usr/bin/svnversion}
 
-VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+#VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+
+ifeq ($(SVNVERSION),)
+VERSION="\"$(shell cat VERSION)\""
+else
+
+ifeq ($(shell ${SVNVERSION} -n),exported)
+VERSION="\"$(shell cat VERSION)\""
+else
+VERSION="\"Trunk $(shell ${SVNVERSION} -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+$(shell echo ${VERSION} | ${CUT} -d \" -f2 > VERSION)
+endif
+
+endif
 
 # compiler optimizations
 CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops #-g -fno-rtti
