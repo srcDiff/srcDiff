@@ -7,13 +7,14 @@ GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
 
-
-
 ifdef DIST
+
 VERSION="\"$(shell cat VERSION)\""
+
 else
+
 VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
-$(shell echo ${VERSION} | ${CUT} -d \" -f2 > VERSION)
+
 endif
 
 # compiler optimizations
@@ -94,7 +95,7 @@ EXE = $(EXE_DIR)srcdiffdirect $(EXE_DIR)srcdiff $(EXE_DIR)colordiff
 endif
 
 
-all : ${EXE}
+all : #${EXE}
 
 mingw32 : 
 	make CXX=/usr/bin/i686-pc-mingw32-g++ MINGW32=1
