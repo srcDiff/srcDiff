@@ -317,8 +317,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
   tracer.signature_path_new.clear();
   tracer.signature_path_offsets_new.clear();
 
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
   if(tracer.output) {
 
     int num_missed = tracer.missed_diff_types.size();
@@ -344,8 +342,30 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       }
 
-      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j)
-        tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
+      for(unsigned int j = 0; j < tracer.missed_diffs.at(i).size(); ++j) {
+
+        element curelement = tracer.missed_diffs.at(i).at(j);
+
+          bool pushed = false;
+          for(unsigned int k = 0; k < tracer.collected.size(); ++k) {
+
+
+          if(tracer.collected.at(k).id == curelement.id) {
+
+            tracer.elements.push_back(tracer.collected.at(k));
+            pushed = true;
+            break;
+
+          }
+
+        }
+
+          if(!pushed) {
+            tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
+
+          }
+
+      }
 
       output_diff(tracer);
 
