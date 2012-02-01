@@ -642,8 +642,13 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
-    if(tracer.collect_node_pos.at(i) == (tracer.elements.size() - 1)) {
+    if(tracer.waits.at(i))
+      continue;
 
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
+    if(tracer.collect_node_pos.at(i) == (tracer.elements.size() - 1)) {
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       tracer.waits.at(i) = false;
       tracer.collects.at(i) = false;
 
@@ -673,9 +678,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(!tracer.collects.at(i))
         continue;
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.at(tracer.collect_node_pos.at(i)).name.c_str());
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       if(is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(i)).name.c_str()))
         tracer.collects.at(i) = false;
 
