@@ -642,13 +642,11 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
   for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
-    if(tracer.waits.at(i))
+    if(!tracer.waits.at(i))
       continue;
 
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
     if(tracer.collect_node_pos.at(i) == (tracer.elements.size() - 1)) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       tracer.waits.at(i) = false;
       tracer.collects.at(i) = false;
 
