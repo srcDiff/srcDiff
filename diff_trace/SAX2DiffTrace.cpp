@@ -670,16 +670,18 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
 void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int operation) {
 
+  for(int k = tracer.signature_path_pos_old.size() - 1; k >=0; --k) {
+
   if(operation == COMMON || operation == DELETE) {
 
-    for(int j = tracer.signature_path_pos_old.size() - 1; j >= 0; --j) {
+    for(int j = tracer.signature_path_pos_old.at(k).size() - 1; j >= 0; --j) {
 
-      if(tracer.signature_path_old.at(j).empty())
+      if(tracer.signature_path_old.at(k).at(j).empty())
         continue;
 
       for(int i = 0; i < offset; ++i) {
 
-        if(i >= tracer.signature_path_old.at(j).size())
+        if(i >= tracer.signature_path_old.at(k).at(j).size())
           break;
 
         element curelement = tracer.elements.at(tracer.collect_node_pos.at(0) + 1 + i);
@@ -691,16 +693,16 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
 
         path += curelement.name;
 
-        if(tracer.signature_path_old.at(j).at(i) != path)
+        if(tracer.signature_path_old..at(k).at(j).at(i) != path)
           break;
 
         if(curelement.prefix == "")
           path = curelement.name;
 
-        if(i == (offset - 1) && tracer.signature_path_pos_old.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
-          ++tracer.signature_path_offsets_old.at(j).at(i);
+        if(i == (offset - 1) && tracer.signature_path_pos_old.at(k).at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
+          ++tracer.signature_path_offsets_old.at(k).at(j).at(i);
 
-        if(tracer.signature_path_pos_old.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
+        if(tracer.signature_path_pos_old.at(k).at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
           break;
 
       }
@@ -713,12 +715,12 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
 
     for(int j = tracer.signature_path_pos_new.size() - 1; j >= 0; --j) {
 
-      if(tracer.signature_path_new.at(j).empty())
+      if(tracer.signature_path_new.at(k).at(j).empty())
         continue;
 
       for(int i = 0; i < offset; ++i) {
 
-        if(i >= tracer.signature_path_new.at(j).size())
+        if(i >= tracer.signature_path_new.at(k).at(j).size())
           break;
 
         element curelement = tracer.elements.at(tracer.collect_node_pos.at(0) + 1 + i);
@@ -730,16 +732,16 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
 
         path += curelement.name;
 
-        if(tracer.signature_path_new.at(j).at(i) != path)
+        if(tracer.signature_path_new.at(k).at(j).at(i) != path)
           break;
 
         if(curelement.prefix == "")
           path = curelement.name;
 
-        if(i == (offset - 1) && tracer.signature_path_pos_new.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
-          ++tracer.signature_path_offsets_new.at(j).at(i);
+        if(i == (offset - 1) && tracer.signature_path_pos_new.at(k).at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
+          ++tracer.signature_path_offsets_new.at(k).at(j).at(i);
 
-        if(tracer.signature_path_pos_new.at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
+        if(tracer.signature_path_pos_new.at(k).at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
           break;
 
       }
@@ -747,7 +749,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
     }
 
   }
-
+  }
 }
 
 void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
