@@ -203,6 +203,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
   for(int k = 0; k < tracer.collect_node_pos.size(); ++k) {
 
     unsigned int collect_node_pos = tracer.collect_node_pos.at(k);
+    int start = collect_node_pos - tracer.collect_node_pos.at(0);
 
     // form paths
     for(int i = 0; i < tracer.signature_path_old.at(k).size(); ++i) {
@@ -212,9 +213,9 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       std::string path = "";
 
-      for(int j = 0; j < tracer.signature_path_old.at(k).at(i).size(); ++j) {
+      for(int j = start; j < tracer.signature_path_old.at(k).at(i).size(); ++j) {
 
-        if(j != 0)
+        if(j != start)
           path += "/";
 
         path += tracer.signature_path_old.at(k).at(i).at(j) + "[last()";
@@ -260,9 +261,9 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       std::string path = "";
 
-      for(int j = 0; j < tracer.signature_path_new.at(k).at(i).size(); ++j) {
+      for(int j = start; j < tracer.signature_path_new.at(k).at(i).size(); ++j) {
 
-        if(j != 0)
+        if(j != start)
           path += "/";
 
         path += tracer.signature_path_new.at(k).at(i).at(j) + "[last()";
