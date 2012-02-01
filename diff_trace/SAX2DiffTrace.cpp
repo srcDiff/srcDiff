@@ -131,7 +131,7 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, unsigned int collect_node
       if(tracer.elements.at(pos).prefix != "diff" && tracer.elements.at(pos).name != "name") {
 
         bool is_decl_stmt = tracer.elements.at(collect_node_pos).name == "decl_stmt";
-        bool is_function = tracer.elements.at(collect_node_pos).name == "function" || tracer.elements.at(collect_node_pos).name == "function";
+        bool is_function = tracer.elements.at(collect_node_pos).name == "function" || tracer.elements.at(collect_node_pos).name == "function_decl";
 
         if(!is_decl_stmt && !is_function)
           break;
