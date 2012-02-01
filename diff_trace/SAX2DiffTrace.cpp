@@ -34,7 +34,7 @@ static unsigned long long id = 0;
 
 static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
-                                                 , "decl_stmt", "call", "\0" };
+                                                 , "decl_stmt", "call", "name", "\0" };
 
 static std::string collect_type_structures[] = { "decl_stmt", "\0" };
 
@@ -507,6 +507,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       if(is_end_wait(tracer, tracer.collect_node_pos.at(i), (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(0)).name.c_str())) {
 
         tracer.waits.at(i) = false;
+        tracer.collects.at(i) = false;
 
       }
 
@@ -644,6 +645,7 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
     if(tracer.collect_node_pos.at(i) == (tracer.elements.size() - 1)) {
 
       tracer.waits.at(i) = false;
+      tracer.collects.at(i) = false;
 
     }
 
@@ -671,7 +673,9 @@ void SAX2DiffTrace::endElementNs(void *ctx, const xmlChar *localname, const xmlC
 
       if(!tracer.collects.at(i))
         continue;
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, tracer.elements.at(tracer.collect_node_pos.at(i)).name.c_str());
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       if(is_end_collect((const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(i)).name.c_str()))
         tracer.collects.at(i) = false;
 
