@@ -524,11 +524,23 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(is_wait((const char *)localname, (const char *)prefix)) {
 
+      if(tracer.waits.empty())
+         tracer.offset_pos = 0;
+
       tracer.waits.push_back(true);
       tracer.collects.push_back(false);
       tracer.collect_node_pos.push_back(tracer.elements.size() - 1);
 
-      tracer.offset_pos = 0;
+      std::vector<std::vector<int> > offsets;
+      std::vector<std::vector<std::string> > elements;
+
+      tracer.signature_path_pos_old.push_back(offsets);
+      tracer.signature_path_offsets_old.push_back(offsets);
+      tracer.signature_path_old.push_back(elements);
+
+      tracer.signature_path_pos_new.push_back(offsets);
+      tracer.signature_path_offsets_new.push_back(offsets);
+      tracer.signature_path_new.push_back(elements);
 
     }
 
