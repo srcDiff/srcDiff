@@ -367,14 +367,18 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
     tracer.output = false;
   }
 
-  for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
+  tracer.waits.clear();
+  tracer.collects.clear();
 
-    tracer.waits.pop_back();
-    tracer.collects.pop_back();
+  tracer.collect_node_pos.clear();
+  
+  tracer.signature_path_pos_old.clear();
+  tracer.signature_path_offsets_old.clear();
+  tracer.signature_path_old.clear();
 
-    tracer.collect_node_pos.pop_back();
-
-  }
+  tracer.signature_path_pos_new.clear();
+  tracer.signature_path_offsets_new.clear();
+  tracer.signature_path_new.clear();
 
 }
 
