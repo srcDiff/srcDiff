@@ -373,6 +373,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
   tracer.collects.clear();
 
   tracer.collect_node_pos.clear();
+  tracer.collected.clear();
   
   tracer.signature_path_pos_old.clear();
   tracer.signature_path_offsets_old.clear();
