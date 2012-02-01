@@ -34,7 +34,7 @@ static unsigned long long id = 0;
 
 static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
                                                  , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
-                                                 , "decl_stmt", "call", "name", "\0" };
+                                                 , "decl_stmt", "call", "\0" };
 
 static std::string collect_type_structures[] = { "decl_stmt", "\0" };
 
@@ -197,7 +197,6 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
   return false;
 }
 
-
 // rename to end_collect
 void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
@@ -249,6 +248,8 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
     }
 
+
+
   for(int i = 0; i < tracer.signature_path_new.at(k).size(); ++i) {
 
       if(tracer.signature_path_new.at(k).at(i).empty())
@@ -295,21 +296,23 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
     //tracer.wait = false;
     //tracer.collect = false;
 
-    if(!tracer.elements.at(collect_node_pos).signature_name_old.empty())
-      trim_string(tracer.elements.at(collect_node_pos).signature_name_old.back());
+  //if(!tracer.elements.at(collect_node_pos).signature_name_old.empty())
+  //trim_string(tracer.elements.at(collect_node_pos).signature_name_old.back());
 
-    if(!tracer.elements.at(collect_node_pos).signature_name_new.empty())
-      trim_string(tracer.elements.at(collect_node_pos).signature_name_new.back());
+  //if(!tracer.elements.at(collect_node_pos).signature_name_new.empty())
+  //trim_string(tracer.elements.at(collect_node_pos).signature_name_new.back());
 
   }
 
-    tracer.signature_path_pos_old.clear();
-    tracer.signature_path_old.clear();
-    tracer.signature_path_offsets_old.clear();
+  tracer.signature_path_pos_old.clear();
+  tracer.signature_path_old.clear();
+  tracer.signature_path_offsets_old.clear();
 
-    tracer.signature_path_pos_new.clear();
-    tracer.signature_path_new.clear();
-    tracer.signature_path_offsets_new.clear();
+  tracer.signature_path_pos_new.clear();
+  tracer.signature_path_new.clear();
+  tracer.signature_path_offsets_new.clear();
+
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   if(tracer.output) {
 
