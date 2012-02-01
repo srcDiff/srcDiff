@@ -541,6 +541,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.collects.push_back(false);
       tracer.collect_node_pos.push_back(tracer.elements.size() - 1);
 
+      tracer.collected.push_back(curelement);
+
       std::vector<std::vector<int> > offsets;
       std::vector<std::vector<std::string> > elements;
 
