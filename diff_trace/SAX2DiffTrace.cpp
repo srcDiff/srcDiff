@@ -553,7 +553,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
       for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
-        if(tracer.collects.at(i))
+        if(tracer.waits.at(i).tracer.collects.at(i))
           continue;
 
         if(is_collect(tracer, tracer.collect_node_pos.at(i), (const char *)localname, (const char *)prefix)) {
