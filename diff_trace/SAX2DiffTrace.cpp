@@ -864,7 +864,7 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
         tracer.elements.at(tracer.collect_node_pos.at(i)).signature_name_new.back().append((const char *)ch, (const char *)ch + len);
 
         tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_old.back() = "";
-        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_new.back(0 = "";
+        tracer.elements.at(tracer.collect_node_pos.at(i)).signature_path_new.back() = "";
 
       } else if(tracer.diff_stack.back().operation == DELETE) {
 
