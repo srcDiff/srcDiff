@@ -202,7 +202,7 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
   for(int k = 0; k < tracer.collect_node_pos.size(); ++k) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     unsigned int collect_node_pos = tracer.collect_node_pos.at(k);
 
     // form paths
@@ -252,7 +252,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
     tracer.signature_path_pos_old.clear();
     tracer.signature_path_old.clear();
     tracer.signature_path_offsets_old.clear();
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   for(int i = 0; i < tracer.signature_path_new.at(k).size(); ++i) {
 
       if(tracer.signature_path_new.at(k).at(i).empty())
@@ -548,7 +548,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-
     if(!tracer.waits.empty() && !tracer.collects.back()) {
 
       for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
@@ -787,9 +786,9 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
       std::vector<std::string> paths;
 
       // build the path
-      if((tracer.diff_stack.back().operation == COMMON && (tracer.signature_path_old.at(i).empty() || tracer.signature_path_new.at(i).empty())
-          || (tracer.diff_stack.back().operation == DELETE && tracer.signature_path_old.at(i).empty())
-          || tracer.diff_stack.back().operation == INSERT && tracer.signature_path_new.at(i).empty())) {
+      if((tracer.diff_stack.back().operation == COMMON && (tracer.signature_path_old.at(i).back().empty() || tracer.signature_path_new.at(i).back().empty())
+          || (tracer.diff_stack.back().operation == DELETE && tracer.signature_path_old.at(i).back().empty())
+          || tracer.diff_stack.back().operation == INSERT && tracer.signature_path_new.at(i).back().empty())) {
 
         for(int pos = tracer.collect_node_pos.at(0) + 1; pos < tracer.elements.size(); ++pos) {
 
