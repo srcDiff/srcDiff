@@ -249,10 +249,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
     }
 
-    tracer.signature_path_pos_old.clear();
-    tracer.signature_path_old.clear();
-    tracer.signature_path_offsets_old.clear();
-
   for(int i = 0; i < tracer.signature_path_new.at(k).size(); ++i) {
 
       if(tracer.signature_path_new.at(k).at(i).empty())
@@ -296,10 +292,6 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
     }
 
-    tracer.signature_path_pos_new.clear();
-    tracer.signature_path_new.clear();
-    tracer.signature_path_offsets_new.clear();
-
     //tracer.wait = false;
     //tracer.collect = false;
 
@@ -311,6 +303,13 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
   }
 
+    tracer.signature_path_pos_old.clear();
+    tracer.signature_path_old.clear();
+    tracer.signature_path_offsets_old.clear();
+
+    tracer.signature_path_pos_new.clear();
+    tracer.signature_path_new.clear();
+    tracer.signature_path_offsets_new.clear();
 
   if(tracer.output) {
 
@@ -501,7 +500,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       add_child(tracer.elements.back().children, tag);
 
     }
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
       if(!tracer.waits.at(i))
@@ -515,7 +514,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
 
     }
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     if(!tracer.collect_node_pos.empty() && !tracer.waits.at(0)) {
 
       end_collect(tracer);
