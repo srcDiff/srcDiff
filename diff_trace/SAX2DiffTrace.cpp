@@ -347,22 +347,22 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
         element curelement = tracer.missed_diffs.at(i).at(j);
 
-        bool pushed = false;
         for(unsigned int k = 0; k < tracer.collected.size(); ++k) {
-
 
           if(tracer.collected.at(k).id == curelement.id) {
 
-            tracer.elements.push_back(tracer.collected.at(k));
-            pushed = true;
+            element temp_element = curelement
+
+            curelement = tracer.collected.at(k);
+            curelement.children = temp_element.children
+
             break;
 
           }
 
         }
 
-        if(!pushed) {
-          tracer.elements.push_back(tracer.missed_diffs.at(i).at(j));
+        tracer.elements.push_back(curelement);
 
         }
 

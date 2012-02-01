@@ -35,6 +35,8 @@ WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../bin
 SRCML_SRC=../../../src
 
+SRC_DIR=$(SRC_DIR_BASE)/src
+
 # srcml library
 LIBSRCML_DLL=${DLL_DIR}/libsrcml.dll
 
