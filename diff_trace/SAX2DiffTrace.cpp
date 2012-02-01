@@ -179,8 +179,8 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
   //if(strcmp(context, "expr_stmt") == 0 && strcmp(name, "expr") == 0)
   //return true;
 
-  if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0)
-    return true;
+  //if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0)
+  //return true;
 
   //if((strcmp(context, "class_decl") == 0 || strcmp(context, "struct_decl") == 0 || strcmp(context, "union_decl") == 0) && strcmp(name, "block") == 0)
   //return true;
