@@ -202,13 +202,13 @@ bool SAX2DiffTrace::is_end_collect(const char * name, const char * prefix, const
 void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
   for(int k = 0; k < tracer.collect_node_pos.size(); ++k) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     unsigned int collect_node_pos = tracer.collect_node_pos.at(k);
 
     // form paths
     for(int i = 0; i < tracer.signature_path_old.at(k).size(); ++i) {
 
-      if(tracer.signature_path_old.at(i).empty())
+      if(tracer.signature_path_old.at(k).at(i).empty())
         continue;
 
       std::string path = "";
@@ -252,8 +252,8 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
     tracer.signature_path_pos_old.clear();
     tracer.signature_path_old.clear();
     tracer.signature_path_offsets_old.clear();
-
-    for(int i = 0; i < tracer.signature_path_new.size(); ++i) {
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  for(int i = 0; i < tracer.signature_path_new.at(k).size(); ++i) {
 
       if(tracer.signature_path_new.at(k).at(i).empty())
         continue;
@@ -525,7 +525,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(!tracer.waits.empty())
       ++tracer.offset_pos;
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     if(is_wait((const char *)localname, (const char *)prefix)) {
 
       if(tracer.waits.empty())
@@ -547,7 +547,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.signature_path_new.push_back(elements);
 
     }
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 
     if(!tracer.waits.empty() && !tracer.collects.back()) {
 
