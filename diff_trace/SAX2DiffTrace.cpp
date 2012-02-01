@@ -360,9 +360,9 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
           }
 
-          tracer.elements.push_back(curelement);
-
         }
+
+        tracer.elements.push_back(curelement);
 
       }
 
