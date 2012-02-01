@@ -354,7 +354,7 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
             element temp_element = curelement;
               
             curelement = tracer.collected.at(k);
-            curelement.children = temp_element.children
+            curelement.children = temp_element.children;
 
             break;
 
