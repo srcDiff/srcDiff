@@ -166,7 +166,7 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
   if((strcmp(context, "destructor") == 0 || strcmp(context, "destructor_decl") == 0) && strcmp(name, "parameter_list") == 0)
     return true;
 
-  if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && strcmp(name, "block") == 0)
+  if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && (strcmp(name, "block") == 0 || strcmp(name, "super") == 0))
     return true;
 
   if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0
