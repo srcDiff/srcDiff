@@ -504,6 +504,9 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
+      if(!tracer.wait.at(i))
+        continue;
+
       if(is_end_wait(tracer, tracer.collect_node_pos.at(i), (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(0)).name.c_str())) {
 
         tracer.waits.at(i) = false;
