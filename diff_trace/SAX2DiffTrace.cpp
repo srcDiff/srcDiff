@@ -525,7 +525,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(!tracer.waits.empty())
       ++tracer.offset_pos;
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(is_wait((const char *)localname, (const char *)prefix)) {
 
       if(tracer.waits.empty())
@@ -547,7 +547,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       tracer.signature_path_new.push_back(elements);
 
     }
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
     if(!tracer.waits.empty() && !tracer.collects.back()) {
 
@@ -729,7 +729,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
 
   if(operation == COMMON || operation == INSERT) {
 
-    for(int j = tracer.signature_path_pos_new.size() - 1; j >= 0; --j) {
+    for(int j = tracer.signature_path_pos_new.at(k).size() - 1; j >= 0; --j) {
 
       if(tracer.signature_path_new.at(k).at(j).empty())
         continue;
