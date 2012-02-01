@@ -739,7 +739,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
           path = curelement.name;
 
         if(i == (offset - 1) && tracer.signature_path_pos_new.at(k).at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
-          ++tracer.signature_path_offsets_new.at(j).at(i);
+          ++tracer.signature_path_offsets_new.at(k).at(j).at(i);
 
         if(tracer.signature_path_pos_new.at(k).at(j).at(i) != tracer.elements.at(tracer.collect_node_pos.at(0) + i).children[path])
           break;
