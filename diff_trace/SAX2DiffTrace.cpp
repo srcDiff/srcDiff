@@ -501,10 +501,10 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       add_child(tracer.elements.back().children, tag);
 
     }
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
-      if(!tracer.wait.at(i))
+      if(!tracer.waits.at(i))
         continue;
 
       if(is_end_wait(tracer, tracer.collect_node_pos.at(i), (const char *)localname, (const char *)prefix, tracer.elements.at(tracer.collect_node_pos.at(0)).name.c_str())) {
@@ -515,7 +515,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
       }
 
     }
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(!tracer.collect_node_pos.empty() && !tracer.waits.at(0)) {
 
       end_collect(tracer);
