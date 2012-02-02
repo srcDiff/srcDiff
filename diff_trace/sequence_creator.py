@@ -3,6 +3,9 @@
 import itertools
 import sys
 
+max_size = 0
+max_length = 0
+
 def split_xpath(xpath) :
 
     tags = []
@@ -37,6 +40,11 @@ def sequence_tag(tag) :
     name = get_name(tag)
     predicates = get_predicates(tag)
 
+    size = len(predicates) + 1
+
+    if size > globals()['max_size'] :
+        globals()['max_size'] = size
+    
     sequence_list = str(len(predicates) + 1) + "\t" + name
 
     for predicate in predicates :
@@ -139,7 +147,14 @@ def sequence_xpath(sequence, xpath) :
 
     eventID = 1
 
-    for tag in split_xpath(xpath) :
+    tags = split_xpath(xpath)
+
+    length = len(tags)
+
+    if length > globals()['max_length'] :
+        globals()['max_length'] = length
+
+    for tag in tags :
 
         sequence_list += str(sequence) + "\t" + str(eventID) + "\t" + sequence_tag(tag)
         eventID += 1
@@ -174,4 +189,6 @@ difftrace_file.close()
 sequence_data = open(sys.argv[2], "w")
 
 sequence_xpaths(difftrace, sequence_data)
+
+print "Max Size: " + str(globals()['max_size']) + "\t Max Length: " + str(globals()['max_length']) 
 

@@ -447,7 +447,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(strcmp((const char *)localname, "common") == 0) {
 
-f      curdiff.operation = COMMON;
+      curdiff.operation = COMMON;
 
     } else if(strcmp((const char *)localname, "delete") == 0) {
 
