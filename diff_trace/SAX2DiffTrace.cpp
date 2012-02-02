@@ -157,6 +157,13 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, unsigned int collect_node
 
 bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_node_pos, const char * name, const char * prefix, const char * context) {
 
+  if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0
+                                           || (strcmp(name, "argument_list") == 0) && collect_node_pos == (tracer.elements.size() - 2)))
+  return true;
+
+  if(collect_node_pos == (tracer.elements.size() - 1))
+    return false;
+
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
     return true;
 
@@ -169,17 +176,14 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && (strcmp(name, "block") == 0 || strcmp(name, "super") == 0))
     return true;
 
-  //if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0
-  //                                         || (strcmp(name, "argument_list") == 0) && collect_node_pos == (tracer.elements.size() - 1)))
-  //return true;
+  if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0)
+    return true;
+
 
   //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
   //return true;
 
   //if(strcmp(context, "expr_stmt") == 0 && strcmp(name, "expr") == 0)
-  //return true;
-
-  //if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0 && collect_node_pos == (tracer.elements.size() - 1))))strcmp(name, "argument_list") == 0)
   //return true;
 
   //if((strcmp(context, "class_decl") == 0 || strcmp(context, "struct_decl") == 0 || strcmp(context, "union_decl") == 0) && strcmp(name, "block") == 0)
