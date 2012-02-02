@@ -626,8 +626,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    //if(!tracer.waits.empty())
-    //update_offsets(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
+    if(!tracer.waits.empty())
+      update_offsets(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
