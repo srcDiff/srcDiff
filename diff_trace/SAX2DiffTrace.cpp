@@ -447,7 +447,7 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(strcmp((const char *)localname, "common") == 0) {
 
-      curdiff.operation = COMMON;
+f      curdiff.operation = COMMON;
 
     } else if(strcmp((const char *)localname, "delete") == 0) {
 
@@ -565,8 +565,6 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(is_wait((const char *)localname, (const char *)prefix)) {
 
-      if(tracer.collects.size() > 10)
-        exit(0);
       if(tracer.waits.empty())
         tracer.offset_pos = 0;
 
