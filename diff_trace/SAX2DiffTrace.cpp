@@ -32,9 +32,9 @@ SAX2DiffTrace::SAX2DiffTrace(long & options)
 static element null_element;
 static unsigned long long id = 0;
 
-static std::string collect_name_structures[] = { "function", "function_decl", "constructor", "constructor_decl", "destructor", "destructor_decl"
-                                                 , "struct", "struct_decl", "class", "class_decl", "union", "union_decl"
-                                                 , "decl_stmt", "call", "name", "\0" };
+static std::string collect_name_structures[] = { "name", "function", "function_decl", "constructor", "constructor_decl"
+                                                 , "destructor", "destructor_decl", "struct", "struct_decl", "class", "class_decl"
+                                                 , "union", "union_decl", "decl_stmt", "call", "\0" };
 
 static std::string collect_type_structures[] = { "decl_stmt", "\0" };
 
