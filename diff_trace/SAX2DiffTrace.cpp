@@ -169,9 +169,9 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
   if((strcmp(context, "class") == 0 || strcmp(context, "struct") == 0 || strcmp(context, "union") == 0) && (strcmp(name, "block") == 0 || strcmp(name, "super") == 0))
     return true;
 
-  if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0
-                                           || (strcmp(name, "argument_list") == 0 && collect_node_pos == (tracer.elements.size() - 1))))
-    return true;
+  //if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0
+  //                                         || (strcmp(name, "argument_list") == 0 && collect_node_pos == (tracer.elements.size() - 1))))
+  //return true;
 
   //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
   //return true;
