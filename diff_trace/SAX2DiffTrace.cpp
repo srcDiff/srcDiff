@@ -170,7 +170,7 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
     return true;
 
   //if(strcmp(context, "decl_stmt") == 0 && (strcmp(name, "init") == 0 || strcmp(name, "block") == 0
-  //                                         || (strcmp(name, "argument_list") == 0 && collect_node_pos == (tracer.elements.size() - 1))))
+  //                                         || (strcmp(name, "argument_list") == 0) && collect_node_pos == (tracer.elements.size() - 1)))
   //return true;
 
   //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
@@ -179,7 +179,7 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
   //if(strcmp(context, "expr_stmt") == 0 && strcmp(name, "expr") == 0)
   //return true;
 
-  //if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0)
+  //if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0 && collect_node_pos == (tracer.elements.size() - 1))))strcmp(name, "argument_list") == 0)
   //return true;
 
   //if((strcmp(context, "class_decl") == 0 || strcmp(context, "struct_decl") == 0 || strcmp(context, "union_decl") == 0) && strcmp(name, "block") == 0)
