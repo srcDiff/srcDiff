@@ -161,7 +161,7 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
                                            || (strcmp(name, "argument_list") == 0) && collect_node_pos == (tracer.elements.size() - 2)))
     return true;
 
-  if(collect_node_pos != (tracer.elements.size() - 1))
+  if(collect_node_pos != (tracer.elements.size()) - 1)
     return false;
 
   if((strcmp(context, "function") == 0 || strcmp(context, "function_decl") == 0) && strcmp(name, "parameter_list") == 0)
@@ -177,7 +177,7 @@ bool SAX2DiffTrace::is_end_wait(SAX2DiffTrace & tracer, unsigned int collect_nod
     return true;
 
   if(strcmp(context, "call") == 0 && strcmp(name, "argument_list") == 0)
-  //return true;
+    return true;
 
 
   //if(strcmp(context, "decl") == 0 && strcmp(name, "init") == 0)
@@ -565,6 +565,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     if(is_wait((const char *)localname, (const char *)prefix)) {
 
+      if(tracer.collects.size() > 10)
+        exit(0);
       if(tracer.waits.empty())
         tracer.offset_pos = 0;
 
@@ -624,8 +626,8 @@ void SAX2DiffTrace::startElementNs(void* ctx, const xmlChar* localname, const xm
 
     }
 
-    if(!tracer.waits.empty())
-      update_offsets(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
+    //if(!tracer.waits.empty())
+    //update_offsets(tracer, tracer.offset_pos, tracer.diff_stack.back().operation);
 
     if(tracer.diff_stack.back().operation != COMMON && tracer.diff_stack.back().level == 1) {
 
@@ -744,7 +746,7 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
             break;
 
           element curelement = tracer.elements.at(tracer.collect_node_pos.at(0) + 1 + i);
-          std::string path;
+            std::string path;
           if(curelement.prefix == "")
             path += "src:";
           else
@@ -769,6 +771,10 @@ void SAX2DiffTrace::update_offsets(SAX2DiffTrace & tracer, int offset, int opera
       }
 
     }
+
+  }
+
+  for(int k = tracer.signature_path_pos_old.size() - 1; k >= 0; --k) {
 
     if(operation == COMMON || operation == INSERT) {
 
@@ -820,10 +826,11 @@ void SAX2DiffTrace::characters(void* ctx, const xmlChar* ch, int len) {
 
   if(!tracer.collects.empty()) {
 
+    int i = 0;
     for(int i = 0; i < tracer.collect_node_pos.size(); ++i) {
 
-      if(!tracer.collects.at(i))
-        continue;
+    if(!tracer.collects.at(i))
+      continue;
 
       std::vector<int> poss;
       std::vector<int> offsets;
