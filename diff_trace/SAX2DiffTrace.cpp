@@ -120,8 +120,8 @@ bool SAX2DiffTrace::is_collect(SAX2DiffTrace & tracer, unsigned int collect_node
 
   unsigned int pos = tracer.elements.size() - 1;
 
-  if(pos == collect_node_pos)
-    return false;
+  //if(pos == collect_node_pos)
+  //return false;
 
   if(pos > 0) {
 
