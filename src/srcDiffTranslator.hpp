@@ -34,6 +34,7 @@
 
 #include "srcDiffTypes.hpp"
 #include "Methods.hpp"
+#include "ColorDiff.hpp"
 
 class srcDiffTranslator {
  public:
