@@ -135,8 +135,13 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
 
+ if(isoption(global_options, OPTION_VIZUALIZATION)) {
+
+   writer = xmlNewWriterMemory(output_srcdiff_file, 0);
+
+ }
   // root unit for compound srcML documents
-  if (first && ((global_options & OPTION_NESTED) > 0)) {
+ else if (first && ((global_options & OPTION_NESTED) > 0)) {
 
     startUnit(0, global_options, root_directory, root_filename, root_version);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -355,6 +360,18 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   rbuf_old.clear();
   rbuf_new.clear();
   wstate.clear();
+
+ if(isoption(global_options, OPTION_VIZUALIZATION)) {
+
+   xmlTextWriterEndElement(wstate.writer);
+
+  // cleanup writer
+   xmlTextWriterEndDocument(wstate.writer);
+   xmlFreeTextWriter(wstate.writer);
+
+   xmlBufferEmpty(output_srcdiff_file);
+
+ }
 
 }
 
