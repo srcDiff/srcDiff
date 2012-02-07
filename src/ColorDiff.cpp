@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <libxml/parserInternals.h>
@@ -24,7 +25,10 @@ static void parseDocument(xmlParserCtxtPtr ctxt);
 ColorDiff::ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file) 
   : srcdiff(srcdiff) {
 
-  outfile = new std::ofstream(colordiff_file);
+  if(strcmp(colordiff_file, "-") != 0)
+    outfile = new std::ofstream(colordiff_file);
+  else
+    outfile = &std::cout;
 
 }
 
