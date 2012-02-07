@@ -67,7 +67,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
                          )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL, srcdiff_filename)
 {
 
   diff.prefix = uri[7];
@@ -119,7 +119,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
  } else {
  
-   colordiff = ColorDiff(xmlBufferCreate(), srcdiff_filename);
+   colordiff.srcdiff = xmlBufferCreate();
 
   }
 
