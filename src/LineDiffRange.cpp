@@ -58,10 +58,11 @@ std::vector<std::string> read_file(const char * file) {
 
 void get_line_diff_range(const char * file_one, const char * file_two) {
 
-  std::vector<std::string> lines1;
-  std::vector<std::string> lines2;
+  std::vector<std::string> lines1 = read_file(file_one);
+  std::vector<std::string> lines2 = read_file(file_two);
 
   edit * edit_script;
+  
 
   int distance = shortest_edit_script(lines1.size(), &lines1, lines2.size(), &lines2, line_compare, line_accessor, &edit_script, NULL);
 
