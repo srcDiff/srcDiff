@@ -32,12 +32,21 @@ ColorDiff::ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file)
 
 ColorDiff::~ColorDiff() {
 
+  output_end_document(outfile);
+
   outfile->close();
   delete outfile;
 
 }
 
 int ColorDiff::colorize(const char * file_one, const char * file_two) {
+
+  if(first) {
+
+    output_start_document(outfile);
+    first = false;
+
+  }
 
   std::vector<bool> lines_old;
   std::vector<bool> lines_new;
