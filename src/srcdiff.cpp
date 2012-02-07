@@ -918,7 +918,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case VIZUALIZE_FLAG_CODE:
 
-      options |= VIZUALIZE_THREAD;
+      options |= OPTION_VIZUALIZE;
 
       break;
 
