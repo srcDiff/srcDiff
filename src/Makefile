@@ -165,7 +165,7 @@ $(OBJ_DIR)SAXColorDiff.o :  SAX2ColorDiff.cpp SAX2ColorDiff.hpp
  
 
 $(EXE_DIR)LineDiffRange :  $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)shortest_edit_script.o
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $< -o $@
 
 $(OBJ_DIR)LineDiffRange.o :  LineDiffRange.cpp LineDiffRange.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
