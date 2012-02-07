@@ -10,6 +10,8 @@
 
 #include <libxml/parser.h>
 
+#include <fstream>
+
 struct source_diff {
 
   unsigned int line_old;
@@ -18,6 +20,8 @@ struct source_diff {
 
   std::vector<bool> & lines_old;
   std::vector<bool> & lines_new;
+
+  std::ofstream & colordiff_file;
 };
 
 xmlSAXHandler factory();
