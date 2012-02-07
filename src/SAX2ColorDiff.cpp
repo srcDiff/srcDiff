@@ -125,11 +125,11 @@ void output_start_document(std::ofstream & colordiff_file) {
 
 }
 
-void output_start_document(std::ofstream & colordiff_file) {
+void output_end_document(std::ofstream & colordiff_file) {
 
-  data->colordiff_file << "</pre>\n";
-  data->colordiff_file << "</body>\n";
-  data->colordiff_file << "</html>\n";
+  colordiff_file << "</pre>\n";
+  colordiff_file << "</body>\n";
+  colordiff_file << "</html>\n";
 
 }
 
