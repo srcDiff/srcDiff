@@ -109,7 +109,14 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
   // writer state
  if(!isoption(global_options, OPTION_VIZUALIZE)) {
+
   wstate.writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
+
+  if (wstate.writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML\n", srcdiff_filename);
+
+    exit(1);
+  }
 
  } else {
  
@@ -118,13 +125,6 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   }
 
   wstate.method = method;
-
-  if (wstate.writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML\n", srcdiff_filename);
-
-    exit(1);
-  }
-
 
   output_srcml_file_old = xmlBufferCreate();
   output_srcml_file_new = xmlBufferCreate();
@@ -139,6 +139,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
  if(isoption(global_options, OPTION_VIZUALIZE)) {
 
    wstate.writer = xmlNewTextWriterMemory(output_srcdiff_file, 0);
+
+  if (wstate.writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML\n", srcdiff_filename);
+
+    exit(1);
+  }
 
  }
   // root unit for compound srcML documents
