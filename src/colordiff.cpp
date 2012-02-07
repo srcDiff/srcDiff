@@ -17,17 +17,7 @@
 static xmlParserCtxtPtr createURLParserCtxt(const char * infile);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
-int main(int argc, char * argv[]) {
-
-  char * srcdiff_file;
-  if(argc < 2) {
-
-    srcdiff_file = (char *)"-";
-  }
-  else {
-
-    srcdiff_file = argv[1];
-  }
+int colordiff(const char * file_one, const char * file_two, const char * outfile) {
 
   std::vector<bool> lines_old;
   std::vector<bool> lines_new;
@@ -36,7 +26,9 @@ int main(int argc, char * argv[]) {
   lines_old.push_back(false);
   lines_new.push_back(false);
 
-  std::fstream in(argv[2]);
+  std::string stream = get_line_diff_range(file_one, file_two);
+
+  std::stringstream in(stream);
 
   char operation;
   while(in >> operation) {
@@ -69,9 +61,6 @@ int main(int argc, char * argv[]) {
     }
 
   }
-
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, lines_old.size());
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, lines_new.size());
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff_file);
