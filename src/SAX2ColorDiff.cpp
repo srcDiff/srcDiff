@@ -89,81 +89,81 @@ void startDocument(void* ctx) {
   span_out += "\"";
 
 
-  colordiff_file << "<html>\n";
-  colordiff_file << "<head>\n";
-  colordiff_file << "<style type=\"text/css\">\n";
-  colordiff_file << ".normal\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "color:black;\n";
-  colordiff_file << "background-color:white;\n";
-  colordiff_file << "font-weight:normal;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "\n";
-  colordiff_file << ".common\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "color:black;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "\n";
-  colordiff_file << ".delete\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "color:red;\n";
-  colordiff_file << "font-weight:bold;\n";
-  //colordiff_file << "text-decoration:line-through;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "\n";
-  colordiff_file << ".insert\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "color:blue;\n";
-  colordiff_file << "font-weight:bold;\n";
-  //colordiff_file << "text-decoration:underline;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "\n";
-  colordiff_file << ".diff_common\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "background-color:white;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "\n";
-  colordiff_file << ".diff_change\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "background-color:yellow;\n";
-  colordiff_file << "font-weight:bold;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "\n";
-  colordiff_file << ".diff_delete\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "background-color:#FA8258;\n";
-  colordiff_file << "font-weight:bold;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "\n";
-  colordiff_file << ".diff_insert\n";
-  colordiff_file << "{\n";
-  colordiff_file << "\n";
-  colordiff_file << "background-color:#CED8F6;\n";
-  colordiff_file << "font-weight:bold;\n";
-  colordiff_file << "\n";
-  colordiff_file << "}\n";
-  colordiff_file << "</style>\n";
+  data->colordiff_file << "<html>\n";
+  data->colordiff_file << "<head>\n";
+  data->colordiff_file << "<style type=\"text/css\">\n";
+  data->colordiff_file << ".normal\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "color:black;\n";
+  data->colordiff_file << "background-color:white;\n";
+  data->colordiff_file << "font-weight:normal;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << ".common\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "color:black;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << ".delete\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "color:red;\n";
+  data->colordiff_file << "font-weight:bold;\n";
+  //data->colordiff_file << "text-decoration:line-through;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << ".insert\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "color:blue;\n";
+  data->colordiff_file << "font-weight:bold;\n";
+  //data->colordiff_file << "text-decoration:underline;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << ".diff_common\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "background-color:white;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << ".diff_change\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "background-color:yellow;\n";
+  data->colordiff_file << "font-weight:bold;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << ".diff_delete\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "background-color:#FA8258;\n";
+  data->colordiff_file << "font-weight:bold;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << ".diff_insert\n";
+  data->colordiff_file << "{\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "background-color:#CED8F6;\n";
+  data->colordiff_file << "font-weight:bold;\n";
+  data->colordiff_file << "\n";
+  data->colordiff_file << "}\n";
+  data->colordiff_file << "</style>\n";
 
-  //colordiff_file << "<link href=\"http://www.sdml.info/projects/srcml/ex/colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>";
-  colordiff_file << "</head>\n";
-  colordiff_file << "<body>\n";
-  colordiff_file << "<pre>\n";
-  colordiff_file << data->line_old << "-" << data->line_new;
-  colordiff_file << "<span " << span.out.c_str() << ">\t";
+  //data->colordiff_file << "<link href=\"http://www.sdml.info/projects/srcml/ex/colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>";
+  data->colordiff_file << "</head>\n";
+  data->colordiff_file << "<body>\n";
+  data->colordiff_file << "<pre>\n";
+  data->colordiff_file << data->line_old << "-" << data->line_new;
+  data->colordiff_file << "<span " << span.out.c_str() << ">\t";
 
 }
 
@@ -171,10 +171,10 @@ void endDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  colordiff_file << "</span><span class=\"%s\"/>", normal_color;
-  colordiff_file << "</pre>\n";
-  colordiff_file << "</body>\n";
-  colordiff_file << "</html>\n";
+  data->colordiff_file << "</span><span class=\"%s\"/>", normal_color;
+  data->colordiff_file << "</pre>\n";
+  data->colordiff_file << "</body>\n";
+  data->colordiff_file << "</html>\n";
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -252,18 +252,18 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   span_out += "\"";
 
-  colordiff_file << "</span><span " << span_out.c_str()) << ">";
+  data->colordiff_file << "</span><span " << span_out.c_str()) << ">";
 
   for (int i = 0; i < len; ++i) {
 
     if ((char)ch[i] == '&')
-      colordiff_file << "&amp;";
+      data->colordiff_file << "&amp;";
     else if ((char)ch[i] == '<')
-      colordiff_file << "&lt;";
+      data->colordiff_file << "&lt;";
     else if ((char)ch[i] == '>')
-      colordiff_file << "&gt;";
+      data->colordiff_file << "&gt;";
     else if((char)ch[i] != '\n')
-      colordiff_file << (char)ch[i]);
+      data->colordiff_file << (char)ch[i]);
 
     if((char)ch[i] == '\n') {
 
@@ -306,9 +306,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
-      colordiff_file << "</span><span class=\"" normal_color << "\">";
-      colordiff_file << << (char)'\n' << data->line_old << "-" <<  data->line_new;
-      colordiff_file << "</span><span " <<span_out.c_str()) << ">\t";
+      data->colordiff_file << "</span><span class=\"" normal_color << "\">";
+      data->colordiff_file << << (char)'\n' << data->line_old << "-" <<  data->line_new;
+      data->colordiff_file << "</span><span " <<span_out.c_str()) << ">\t";
 
     }
 
