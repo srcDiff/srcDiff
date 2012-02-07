@@ -257,13 +257,13 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   for (int i = 0; i < len; ++i) {
 
     if ((char)ch[i] == '&')
-      fprintf(stdout,"&amp;");
+      colordiff_file << "&amp;";
     else if ((char)ch[i] == '<')
-      fprintf(stdout, "&lt;");
+      colordiff_file << "&lt;";
     else if ((char)ch[i] == '>')
-      fprintf(stdout, "&gt;");
+      colordiff_file << "&gt;";
     else if((char)ch[i] != '\n')
-      fprintf(stdout, "%c", (char)ch[i]);
+      colordiff_file << (char)ch[i]);
 
     if((char)ch[i] == '\n') {
 
