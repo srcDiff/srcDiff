@@ -7,6 +7,8 @@
   mjd52@zips.uakron.edu
 */
 
+#include "LineDiffRange.hpp"
+
 #include "shortest_edit_script.h"
 
 #include <string>
@@ -44,7 +46,7 @@ std::vector<std::string> read_file(const char * file) {
 
   }
 
-  if(lines != "") {
+  if(line != "") {
 
     lines.push_back(line);
 
