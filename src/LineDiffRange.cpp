@@ -68,7 +68,7 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
   std::string diff;
 
-  for(edit edits = edit_script; edits, edits = edits->next) {
+  for(edit * edits = edit_script; edits, edits = edits->next) {
     
     if(edits->operation == DELETE) {
 
