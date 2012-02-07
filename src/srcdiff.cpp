@@ -916,6 +916,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
+    case VIZUALIZE_FLAG_CODE:
+
+      options |= VIZUALIZE_THREAD;
+
+      break;
+
     case QUIET_FLAG_SHORT:
       options |= OPTION_QUIET;
       break;
