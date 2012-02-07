@@ -41,4 +41,7 @@ void characters(void* ctx, const xmlChar* ch, int len);
 
 void comments(void* ctx, const xmlChar* ch);
 
+void output_start_document(std::ofstream & colordiff_file);
+void output_end_document(std::ofstream & colordiff_file);
+
 #endif

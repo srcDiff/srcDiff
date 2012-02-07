@@ -125,6 +125,14 @@ void output_start_document(std::ofstream & colordiff_file) {
 
 }
 
+void output_start_document(std::ofstream & colordiff_file) {
+
+  data->colordiff_file << "</pre>\n";
+  data->colordiff_file << "</body>\n";
+  data->colordiff_file << "</html>\n";
+
+}
+
 void startDocument(void* ctx) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
@@ -181,9 +189,6 @@ void endDocument(void* ctx) {
   //fprintf(stderr, "%s\n\n", __FUNCTION__);
 
   data->colordiff_file << "</span><span class=\"" << normal_color << "\"/>";
-  data->colordiff_file << "</pre>\n";
-  data->colordiff_file << "</body>\n";
-  data->colordiff_file << "</html>\n";
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
