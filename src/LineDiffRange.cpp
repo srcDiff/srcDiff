@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <stdio>
+#include <iostream>
 
 int line_compare(const void * line_one, const void * line_two, const void * context) {
 
