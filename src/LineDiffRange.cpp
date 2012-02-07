@@ -58,7 +58,7 @@ std::vector<std::string> read_file(const char * file) {
 
 }
 
-void get_line_diff_range(const char * file_one, const char * file_two) {
+std::string get_line_diff_range(const char * file_one, const char * file_two) {
 
   std::vector<std::string> lines1 = read_file(file_one);
   std::vector<std::string> lines2 = read_file(file_two);
@@ -69,9 +69,9 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
   std::string diff;
 
-  std::stringstream stream(diff);
-
   for(edit * edits = edit_script; edits; edits = edits->next) {
+
+    std::stringstream stream;
     
     if(edits->operation == SESDELETE) {
 
@@ -79,7 +79,6 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
       stream << (edits->offset_sequence_one + 1);
       stream << "-";
       stream << (edits->offset_sequence_one + edits->length);
-      stream << "\n";
 
     } else if(edits->operation == SESINSERT) {
 
@@ -87,19 +86,23 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
       stream << (edits->offset_sequence_two + 1);
       stream << "-"; 
       stream << (edits->offset_sequence_two + edits->length);
-      stream << "\n";
 
     }
+
+    std::string temp;
+    stream >> temp;
+
+    diff += temp + "\n";
     
   }
 
-  std::cout << diff;
+  return diff;
 
 }
 
 int main(int argc, char * argv[]) {
 
-  get_line_diff_range(argv[1], argv[2]);
+  std::cout << get_line_diff_range(argv[1], argv[2]);
 
   return 0;
 

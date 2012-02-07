@@ -22,6 +22,6 @@ const void * line_accessor(int position, const void * lines, const void * contex
 
 std::vector<std::string> read_file(const char file);
 
-void get_line_diff_range(const char * file_one, const char * file_two);
+std::string get_line_diff_range(const char * file_one, const char * file_two);
 
 #endif
