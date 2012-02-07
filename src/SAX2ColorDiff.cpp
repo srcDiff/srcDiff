@@ -255,7 +255,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   span_out += "\"";
 
-  data->colordiff_file << "</span><span " << span_out.c_str()) << ">";
+  data->colordiff_file << "</span><span " << span_out.c_str() << ">";
 
   for (int i = 0; i < len; ++i) {
 
@@ -311,7 +311,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       // clear color before output line
       data->colordiff_file << "</span><span class=\"" normal_color << "\">";
       data->colordiff_file << << (char)'\n' << data->line_old << "-" <<  data->line_new;
-      data->colordiff_file << "</span><span " <<span_out.c_str()) << ">\t";
+      data->colordiff_file << "</span><span " <<span_out.c_str() << ">\t";
 
     }
 
