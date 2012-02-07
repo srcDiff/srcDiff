@@ -96,6 +96,8 @@ void outputNamespaces(const OPTION_TYPE& options);
   xmlBuffer * output_srcml_file_old;
   xmlBuffer * output_srcml_file_new;
 
+  xmlBuffer * output_srcdiff_file;
+
   //xmlTextWriterPtr writer;
 
 };

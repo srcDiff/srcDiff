@@ -120,6 +120,12 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   output_srcml_file_old = xmlBufferCreate();
   output_srcml_file_new = xmlBufferCreate();
 
+  if(isoption(global_options, OPTION_VIZUALIZATION)) {
+
+    output_srcdiff_file = xmlBufferCreate();
+
+  }
+
 }
 
 // Translate from input stream to output stream
@@ -362,6 +368,13 @@ srcDiffTranslator::~srcDiffTranslator() {
   // free the buffer
   xmlBufferFree(output_srcml_file_old);
   xmlBufferFree(output_srcml_file_new);
+
+  if(isoption(global_options, OPTION_VIZUALIZATION)) {
+
+    xmlBufferFree(output_srcdiff_file);
+
+  }
+
 
 }
 
