@@ -93,7 +93,7 @@ int colordiff(const char * file_one, const char * file_two, xmlBuffer * srcdiff,
 // create the ctxt
 static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff) {
 
-  xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
+  xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt((const char *)xmlBufferContent(srcdiff), srcdiff->use);
   xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
 
   if (ctxt == NULL) {

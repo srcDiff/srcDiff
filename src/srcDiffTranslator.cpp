@@ -107,7 +107,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
   // writer state
- if(!isoption(global_options, OPTION_VIZUALIZATION)) {
+ if(!isoption(global_options, OPTION_VIZUALIZE)) {
   wstate.writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
 
  } else {
@@ -135,7 +135,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
 
- if(isoption(global_options, OPTION_VIZUALIZATION)) {
+ if(isoption(global_options, OPTION_VIZUALIZE)) {
 
    writer = xmlNewWriterMemory(output_srcdiff_file, 0);
 
@@ -325,7 +325,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   // }
 
-  if(!isoption(global_options, OPTION_VIZUALIZATION) && isoption(global_options, OPTION_NESTED)) {
+  if(!isoption(global_options, OPTION_VIZUALIZE) && isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(wstate.writer);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -361,7 +361,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   rbuf_new.clear();
   wstate.clear();
 
- if(isoption(global_options, OPTION_VIZUALIZATION)) {
+ if(isoption(global_options, OPTION_VIZUALIZE)) {
 
    xmlTextWriterEndElement(wstate.writer);
 
@@ -388,7 +388,7 @@ srcDiffTranslator::~srcDiffTranslator() {
   xmlBufferFree(output_srcml_file_old);
   xmlBufferFree(output_srcml_file_new);
 
-  if(isoption(global_options, OPTION_VIZUALIZATION)) {
+  if(isoption(global_options, OPTION_VIZUALIZE)) {
 
     xmlBufferFree(output_srcdiff_file);
 
