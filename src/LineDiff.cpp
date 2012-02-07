@@ -1,13 +1,15 @@
 /*
-  Shortest_edit_script_t.c
+  LineDiffRange.cpp
 
-  Unit tests for shortest_edit_script.
+  Compute range of line diffs
 
   Michael J. Decker
   mjd52@zips.uakron.edu
 */
 
 #include "shortest_edit_script.hpp"
+
+#include <string>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,15 +26,25 @@ int line_compare(const void * line_one, const void * line_two, const void * cont
 
 const void * line_accessor(int position, const void * lines, const void * context) {
 
-  std::string & line = ((std::vector *)lines)->at(position);
+  std::string & line = ((std::vector<std::string> *)lines)->at(position);
 
   return line;
 }
 
-void get_line_diffs(const char * file_one, const char * file_two) {
+std::vector<std::string> read_file(const char file) {
 
-  std::string lines1;
-  std::string lines2;
+  std::vector<std::string> lines;
+
+
+
+  return lines;
+
+}
+
+void get_line_diff_range(const char * file_one, const char * file_two) {
+
+  std::vector<std::string> lines1;
+  std::vector<std::string> lines2;
 
   int distance = shortest_edit_script();
 
