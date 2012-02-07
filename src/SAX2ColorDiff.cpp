@@ -47,47 +47,7 @@ xmlSAXHandler factory() {
   return sax;
 }
 
-void startDocument(void* ctx) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
-
-  // fprintf(stderr, "%s\n\n", __FUNCTION__);
-
-  std::string span_class = "class=\"";
-
-  if(data->in_diff->back() == SESCOMMON)
-    span_class += common_color;
-  else if(data->in_diff->back() == SESDELETE)
-    span_class += delete_color;
-  else
-    span_class += insert_color;
-
-  span_class += " ";
-
-  std::string span_out = span_class;
-
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
-
-    span_out = span_class + diff_color_change;
-
-  } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
-
-    span_out = span_class + diff_color_delete;
-
-  } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
-
-    span_out = span_class + diff_color_insert;
-
-  } else {
-
-    span_out = span_class + diff_color_common;
-
-  }
-
-  span_out += "\"";
-
+void output_start_document() {
 
   data->colordiff_file << "<html>\n";
   data->colordiff_file << "<head>\n";
@@ -162,6 +122,50 @@ void startDocument(void* ctx) {
   data->colordiff_file << "</head>\n";
   data->colordiff_file << "<body>\n";
   data->colordiff_file << "<pre>\n";
+
+}
+
+void startDocument(void* ctx) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  struct source_diff * data = (source_diff *)ctxt->_private;
+
+  // fprintf(stderr, "%s\n\n", __FUNCTION__);
+
+  std::string span_class = "class=\"";
+
+  if(data->in_diff->back() == SESCOMMON)
+    span_class += common_color;
+  else if(data->in_diff->back() == SESDELETE)
+    span_class += delete_color;
+  else
+    span_class += insert_color;
+
+  span_class += " ";
+
+  std::string span_out = span_class;
+
+  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
+     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+
+    span_out = span_class + diff_color_change;
+
+  } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+
+    span_out = span_class + diff_color_delete;
+
+  } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+
+    span_out = span_class + diff_color_insert;
+
+  } else {
+
+    span_out = span_class + diff_color_common;
+
+  }
+
+  span_out += "\"";
+
   data->colordiff_file << data->line_old << "-" << data->line_new;
   data->colordiff_file << "<span " << span_out.c_str() << ">\t";
 
