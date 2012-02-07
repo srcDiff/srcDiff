@@ -82,7 +82,7 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
       diff += "i";
       diff += (edits->offset_sequence_two + 1);
-      diff += "-";
+      diff += "-"; 
       diff += (edits->offset_sequence_two + edits->length);
       diff += "\n";
 
@@ -91,7 +91,6 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
   }
 
 }
-
 
 int main(int argc, char * argv[]) {
 
