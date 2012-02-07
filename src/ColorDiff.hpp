@@ -9,7 +9,7 @@ public :
 
   xmlBuffer * srcdiff;
   
-  std::ofstream * outfile;
+  std::ofstream outfile;
 
   ColorDiff() { }
 
