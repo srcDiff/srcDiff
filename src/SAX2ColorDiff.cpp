@@ -306,9 +306,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
-      fprintf(stdout, "</span><span class=\"%s\">", normal_color);
-      fprintf(stdout, "%c%d-%d", (char)'\n', data->line_old, data->line_new);
-      fprintf(stdout, "</span><span %s>\t", span_out.c_str());
+      colordiff_file << "</span><span class=\"" normal_color << "\">";
+      colordiff_file << << (char)'\n' << data->line_old << "-" <<  data->line_new;
+      colordiff_file << "</span><span " <<span_out.c_str()) << ">\t";
 
     }
 
