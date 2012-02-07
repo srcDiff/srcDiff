@@ -15,18 +15,17 @@
 #include <string.h>
 #include <assert.h>
 
-int compare(const void * element_one, const void * element_two) {
+int line_compare(const void * line_one, const void * line_two, const void * context) {
 
-  const char * e1 = (const char *)element_one;
-  const char * e2 = (const char *)element_two;
+  const char * line1 = (const char *)line_one;
+  const char * line2 = (const char *)line_two;
 
-  int match = strcmp(e1, e2);
-  return match;
+  return strcmp(line1, line2);
 }
 
-const void * accessor(int position, const void * sequence) {
+const void * line_accessor(int position, const void * lines, const void * context) {
 
-  return (((const char **)sequence)[position]);
+  return (((const char **)lines)[position]);
 }
 
 int main(int argc, char * argv[]) {
