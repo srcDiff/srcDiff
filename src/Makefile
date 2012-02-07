@@ -163,6 +163,9 @@ $(OBJ_DIR)colordiff.o : colordiff.cpp SAX2ColorDiff.hpp
 $(OBJ_DIR)SAXColorDiff.o :  SAX2ColorDiff.cpp SAX2ColorDiff.hpp
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
+$(OBJ_DIR)LineDiffRange.o :  LineDiffRange.cpp LineDiffRange.hpp
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*
 
