@@ -18,10 +18,7 @@
 
 int line_compare(const void * line_one, const void * line_two, const void * context);
 
-
 const void * line_accessor(int position, const void * lines, const void * context);
-
-  
 
 std::vector<std::string> read_file(const char file);
 

@@ -154,7 +154,7 @@ $(OBJ_DIR)xmlrw.o : xmlrw.cpp xmlrw.hpp
 $(OBJ_DIR)shortest_edit_script.o : shortest_edit_script.c shortest_edit_script.h
 	${CXX} $(CXXFLAGS) -c $< -o $@
 
-$(EXE_DIR)colordiff : $(OBJ_DIR)colordiff.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)LineDiffRange.o
+$(EXE_DIR)colordiff : $(OBJ_DIR)colordiff.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)shortest_edit_scrip.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(XML_LIB_SRCDIFF) $^ -o $@
 
 $(OBJ_DIR)colordiff.o : colordiff.cpp SAX2ColorDiff.hpp
@@ -163,7 +163,7 @@ $(OBJ_DIR)colordiff.o : colordiff.cpp SAX2ColorDiff.hpp
 $(OBJ_DIR)SAXColorDiff.o :  SAX2ColorDiff.cpp SAX2ColorDiff.hpp
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)LineDiffRange.o :  LineDiffRange.cpp LineDiffRange.hpp
+$(OBJ_DIR)LineDiffRange.o :  LineDiffRange.cpp LineDiffRange.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 clean :

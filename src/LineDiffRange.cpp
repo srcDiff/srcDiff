@@ -65,5 +65,4 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
   int distance = shortest_edit_script(lines1.size(), &lines1, lines2.size(), &lines2, line_compare, line_accessor, &edit_script, NULL);
 
-
 }
