@@ -36,11 +36,11 @@ std::vector<std::string> read_file(const char file) {
 
   std::string line;
 
-  getline(stream, line);
+  std::getline(stream, line);
   while(!stream.eof()) {
     lines.push_back(line);
 
-    getline(stream, line);
+    std::getline(stream, line);
 
   }
 
