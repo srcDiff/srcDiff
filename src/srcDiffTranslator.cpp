@@ -36,6 +36,7 @@
 #include "srcDiffDiff.hpp"
 #include "srcMLUtility.hpp"
 #include "pthread.h"
+#include "colordiff.hpp"
 
 #include "xmlrw.hpp"
 
