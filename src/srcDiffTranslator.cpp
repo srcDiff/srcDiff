@@ -325,7 +325,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   // }
 
-  if(isoption(global_options, OPTION_NESTED)) {
+  if(!isoption(global_options, OPTION_VIZUALIZATION) && isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(wstate.writer);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
