@@ -15,6 +15,8 @@
 #include "shortest_edit_script.h"
 #include "SAX2ColorDiff.hpp"
 
+#include "ColorDiff.hpp"
+
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
