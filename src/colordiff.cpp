@@ -65,7 +65,7 @@ int colordiff(const char * file_one, const char * file_two, xmlBuffer * srcdiff,
   }
 
   // create the ctxt
-  xmlParserCtxtPtr ctxt = createURLParserCtxt("");
+  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
 
   // setup sax handler
   xmlSAXHandler sax = factory();
