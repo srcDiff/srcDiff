@@ -32,7 +32,12 @@ std::vector<std::string> read_file(const char file) {
 
   std::vector<std::string> lines;
 
+  std::ifstream stream(file);
 
+  while(!stream.eof()) {
+
+
+  }
 
   return lines;
 
