@@ -93,7 +93,9 @@ int colordiff(const char * file_one, const char * file_two, xmlBuffer * srcdiff,
 // create the ctxt
 static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff) {
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
+  xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
+
   if (ctxt == NULL) {
 
     // report error
