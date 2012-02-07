@@ -19,7 +19,9 @@
 static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
-int colordiff(const char * file_one, const char * file_two, xmlBuffer * srcdiff, const char * outfile) {
+  ColorDiff(xmlBuffer * srcdiff, const char * outfile);
+
+int colorize(const char * file_one, const char * file_two) {
 
   std::vector<bool> lines_old;
   std::vector<bool> lines_new;
