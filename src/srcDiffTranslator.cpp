@@ -137,7 +137,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
  if(isoption(global_options, OPTION_VIZUALIZE)) {
 
-   wstate.writer = xmlNewTextWriterMemory(output_srcdiff_file, 0);
+   wstate.writer = xmlNewTextWriterMemory(colordiff.srcdiff, 0);
 
   if (wstate.writer == NULL) {
     fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
@@ -375,9 +375,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
    xmlTextWriterEndDocument(wstate.writer);
    xmlFreeTextWriter(wstate.writer);
 
-   colordiff(path_one, path_two, output_srcdiff_file, srcdiff_file);
+   colordiff(path_one, path_two, colordiff.srcdiff, srcdiff_file);
 
-   xmlBufferEmpty(output_srcdiff_file);
+   xmlBufferEmpty(colordiff.srcdiff);
 
  }
 
@@ -396,7 +396,7 @@ srcDiffTranslator::~srcDiffTranslator() {
 
   } else {
 
-    xmlBufferFree(output_srcdiff_file);
+    xmlBufferFree(colordiff.srcdiff);
 
   }
 
