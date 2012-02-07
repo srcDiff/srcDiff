@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 int line_compare(const void * line_one, const void * line_two, const void * context) {
@@ -68,27 +69,25 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
   std::string diff;
 
+  std::stringstream stream;
+
   for(edit * edits = edit_script; edits; edits = edits->next) {
     
     if(edits->operation == SESDELETE) {
 
-      diff += "d";
-      diff += (edits->offset_sequence_one + 1);
-      diff += "-";
-      diff += (edits->offset_sequence_one + edits->length);
-      diff += "\n";
+      stream <<  "d";
+      stream << (edits->offset_sequence_one + 1);
+      stream << "-";
+      stream << (edits->offset_sequence_one + edits->length);
+      stream << "\n";
 
-      std::cout << diff;
-      
     } else if(edits->operation == SESINSERT) {
 
-      diff += "i";
-      diff += (edits->offset_sequence_two + 1);
-      diff += "-"; 
-      diff += (edits->offset_sequence_two + edits->length);
-      diff += "\n";
-
-      std::cout << diff;
+      stream += "i";
+      stream += (edits->offset_sequence_two + 1);
+      stream += "-"; 
+      stream += (edits->offset_sequence_two + edits->length);
+      stream += "\n";
 
     }
     
