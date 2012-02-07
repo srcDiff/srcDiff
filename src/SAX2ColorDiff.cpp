@@ -172,7 +172,7 @@ void endDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  // fprintf(stderr, "%s\n\n", __FUNCTION__);
+   fprintf(stderr, "%s\n\n", __FUNCTION__);
 
   data->colordiff_file << "</span><span class=\"" << normal_color << "\"/>";
   data->colordiff_file << "</pre>\n";
