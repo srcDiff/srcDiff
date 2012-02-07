@@ -27,8 +27,6 @@ ColorDiff::ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file)
 
   if(strcmp(colordiff_file, "-") != 0)
     outfile = new std::ofstream(colordiff_file);
-  else
-    outfile = &std::cout;
 
 }
 
