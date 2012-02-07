@@ -171,7 +171,7 @@ void endDocument(void* ctx) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  data->colordiff_file << "</span><span class=\"%s\"/>", normal_color;
+  data->colordiff_file << "</span><span class=\"" << normal_color << "\"/>";
   data->colordiff_file << "</pre>\n";
   data->colordiff_file << "</body>\n";
   data->colordiff_file << "</html>\n";
