@@ -10,11 +10,8 @@
 #include "shortest_edit_script.hpp"
 
 #include <string>
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
+#include <vector>
+#include <fstream>
 
 int line_compare(const void * line_one, const void * line_two, const void * context) {
 
