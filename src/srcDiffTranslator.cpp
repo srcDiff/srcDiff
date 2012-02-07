@@ -387,22 +387,23 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
+  if(!isoption(global_options, OPTION_VIZUALIZE)) {
+
   xmlTextWriterEndElement(wstate.writer);
 
   // cleanup writer
   xmlTextWriterEndDocument(wstate.writer);
   xmlFreeTextWriter(wstate.writer);
 
-  // free the buffer
-  xmlBufferFree(output_srcml_file_old);
-  xmlBufferFree(output_srcml_file_new);
-
-  if(isoption(global_options, OPTION_VIZUALIZE)) {
+  } else {
 
     xmlBufferFree(output_srcdiff_file);
 
   }
 
+  // free the buffer
+  xmlBufferFree(output_srcml_file_old);
+  xmlBufferFree(output_srcml_file_new);
 
 }
 
