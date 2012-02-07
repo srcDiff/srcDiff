@@ -41,8 +41,8 @@ std::vector<std::string> read_file(const char * file) {
 
   std::getline(stream, line);
   while(!stream.eof()) {
+
     lines.push_back(line);
-    std::cout << line << "\n";
     std::getline(stream, line);
 
   }
@@ -50,7 +50,7 @@ std::vector<std::string> read_file(const char * file) {
   if(line != "") {
 
     lines.push_back(line);
-    std::cout << line << "\n";
+
   }
 
   return lines;
@@ -65,12 +65,5 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
   edit * edit_script;
 
   int distance = shortest_edit_script(lines1.size(), &lines1, lines2.size(), &lines2, line_compare, line_accessor, &edit_script, NULL);
-
-}
-
-
-int main(int argc, char * argv[]) {
-
-  return 0;
 
 }
