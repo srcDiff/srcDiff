@@ -16,10 +16,10 @@
 #include "SAX2ColorDiff.hpp"
 
 // forward declarations
-static xmlParserCtxtPtr createURLParserCtxt(const char * infile);
+static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
-int colordiff(const char * file_one, const char * file_two, const char * outfile) {
+int colordiff(const char * file_one, const char * file_two, xmlBuffer * srcdiff, const char * outfile) {
 
   std::vector<bool> lines_old;
   std::vector<bool> lines_new;
@@ -91,7 +91,7 @@ int colordiff(const char * file_one, const char * file_two, const char * outfile
 }
 
 // create the ctxt
-static xmlParserCtxtPtr createURLParserCtxt(const char * infile) {
+static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff) {
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) {
