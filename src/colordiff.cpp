@@ -9,6 +9,7 @@
 #include <string.h>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <libxml/parserInternals.h>
 #include "LineDiffRange.hpp"
 #include "shortest_edit_script.h"
@@ -64,7 +65,7 @@ int colordiff(const char * file_one, const char * file_two, const char * outfile
   }
 
   // create the ctxt
-  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff_file);
+  xmlParserCtxtPtr ctxt = createURLParserCtxt("");
 
   // setup sax handler
   xmlSAXHandler sax = factory();
