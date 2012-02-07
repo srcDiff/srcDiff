@@ -1,13 +1,15 @@
 #ifndef INCLUDED_COLORDIFF_HPP
 #define INCLUDED_COLORDIFF_HPP
 
+#include <fstream>
+
 class ColorDiff {
 
 public :
 
   xmlBuffer * srcdiff;
   
-  const char * outfile;
+  std::ofstream * outfile;
 
   ColorDiff() { }
 

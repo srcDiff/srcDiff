@@ -22,7 +22,7 @@ static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
 ColorDiff::ColorDiff(xmlBuffer * srcdiff, const char * outfile) 
-  : srcdiff(srcdiff), outfile(outfile) {}
+  : srcdiff(srcdiff), outfile(std::ofstream(outfile)) {}
 
 int ColorDiff::colorize(const char * file_one, const char * file_two) {
 
