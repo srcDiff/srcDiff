@@ -32,7 +32,7 @@ ColorDiff::ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file)
 
 ColorDiff::~ColorDiff() {
 
-  output_end_document(*outfile);
+  output_end_document(outfile);
 
   outfile->close();
   delete outfile;
