@@ -69,7 +69,7 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
   std::string diff;
 
-  std::stringstream stream;
+  std::stringstream stream(diff);
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
     
@@ -83,15 +83,17 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
     } else if(edits->operation == SESINSERT) {
 
-      stream += "i";
-      stream += (edits->offset_sequence_two + 1);
-      stream += "-"; 
-      stream += (edits->offset_sequence_two + edits->length);
-      stream += "\n";
+      stream << "i";
+      stream << (edits->offset_sequence_two + 1);
+      stream << "-"; 
+      stream << (edits->offset_sequence_two + edits->length);
+      stream << "\n";
 
     }
     
   }
+
+  std::cout << diff;
 
 }
 
