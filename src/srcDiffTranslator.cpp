@@ -137,7 +137,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
  if(isoption(global_options, OPTION_VIZUALIZE)) {
 
-   writer = xmlNewWriterMemory(output_srcdiff_file, 0);
+   wstate.writer = xmlNewWriterMemory(output_srcdiff_file, 0);
 
  }
   // root unit for compound srcML documents
