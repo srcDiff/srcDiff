@@ -141,7 +141,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
    wstate.writer = xmlNewTextWriterMemory(output_srcdiff_file, 0);
 
   if (wstate.writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML\n", srcdiff_filename);
+    fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
 
     exit(1);
   }
