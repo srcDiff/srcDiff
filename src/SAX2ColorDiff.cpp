@@ -266,7 +266,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
     else if ((char)ch[i] == '>')
       data->colordiff_file << "&gt;";
     else if((char)ch[i] != '\n')
-      data->colordiff_file << (char)ch[i]);
+      data->colordiff_file << (char)ch[i];
 
     if((char)ch[i] == '\n') {
 
