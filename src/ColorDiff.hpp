@@ -9,9 +9,10 @@ public :
 
   xmlBuffer * srcdiff;
   
-  std::ofstream outfile;
+  std::ofstream * outfile;
 
   ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file);
+  ~ColorDiff();
 
   int colorize(const char * file_one, const char * file_two);
 
