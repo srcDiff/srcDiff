@@ -10,8 +10,9 @@
 #include <vector>
 #include <fstream>
 #include <libxml/parserInternals.h>
-#include "SAX2ColorDiff.hpp"
+#include "LineDiffRange.hpp"
 #include "shortest_edit_script.h"
+#include "SAX2ColorDiff.hpp"
 
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * infile);
@@ -119,5 +120,13 @@ static void parseDocument(xmlParserCtxtPtr ctxt) {
     fprintf(stderr, "%s: %s in '%s'\n", "ExtractsrcML", partmsg, ep->file);
     exit(1);
   }
+
+}
+
+int main(int argc, char * argv[]) {
+
+  colordiff(argv[1], argv[2], "");
+
+  return 0;
 
 }

@@ -99,11 +99,3 @@ std::string get_line_diff_range(const char * file_one, const char * file_two) {
   return diff;
 
 }
-
-int main(int argc, char * argv[]) {
-
-  std::cout << get_line_diff_range(argv[1], argv[2]);
-
-  return 0;
-
-}
