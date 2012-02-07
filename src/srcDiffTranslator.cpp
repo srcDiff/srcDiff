@@ -107,7 +107,14 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
   // writer state
+ if(!isoption(global_options, OPTION_VIZUALIZATION)) {
   wstate.writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
+
+ } else {
+ 
+    output_srcdiff_file = xmlBufferCreate();
+
+  }
 
   wstate.method = method;
 
@@ -117,14 +124,9 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
     exit(1);
   }
 
+
   output_srcml_file_old = xmlBufferCreate();
   output_srcml_file_new = xmlBufferCreate();
-
-  if(isoption(global_options, OPTION_VIZUALIZATION)) {
-
-    output_srcdiff_file = xmlBufferCreate();
-
-  }
 
 }
 
