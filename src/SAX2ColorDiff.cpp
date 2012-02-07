@@ -252,7 +252,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   span_out += "\"";
 
-  fprintf(stdout, "</span><span %s>", span_out.c_str());
+  colordiff_file << "</span><span " << span_out.c_str()) << ">";
 
   for (int i = 0; i < len; ++i) {
 
