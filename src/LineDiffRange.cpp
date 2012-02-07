@@ -88,6 +88,8 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
 int main(int argc, char * argv[]) {
 
+  get_line_diff_range(argv[1], argv[2]);
+
   return 0;
 
 }
