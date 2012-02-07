@@ -94,7 +94,7 @@ int colordiff(const char * file_one, const char * file_two, xmlBuffer * srcdiff,
 static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff) {
 
   xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt((const char *)xmlBufferContent(srcdiff), srcdiff->use);
-  xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
+  //xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
 
   if (ctxt == NULL) {
 
@@ -123,13 +123,5 @@ static void parseDocument(xmlParserCtxtPtr ctxt) {
     fprintf(stderr, "%s: %s in '%s'\n", "ExtractsrcML", partmsg, ep->file);
     exit(1);
   }
-
-}
-
-int main(int argc, char * argv[]) {
-
-  colordiff(argv[1], argv[2], "");
-
-  return 0;
 
 }
