@@ -7,6 +7,7 @@ class ColorDiff {
 
 public :
 
+  bool first;
   xmlBuffer * srcdiff;
   
   std::ofstream * outfile;
