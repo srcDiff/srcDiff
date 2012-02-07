@@ -125,6 +125,9 @@ const int METHOD_FLAG_CODE = 256 + 10;
 const char* const THREAD_FLAG = "thread";
 const int THREAD_FLAG_CODE = 256 + 11;
 
+const char* const VIZUALIZE_FLAG = "vizualize";
+const int VIZUALIZE_FLAG_CODE = 256 + 12;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -694,6 +697,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
     { THREAD_FLAG, no_argument, NULL, THREAD_FLAG_CODE },
+    { VIZUALIZE_FLAG, no_argument, NULL, VIZUALIZE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
