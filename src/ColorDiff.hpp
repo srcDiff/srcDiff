@@ -2,7 +2,6 @@
 #define INCLUDED_COLORDIFF_HPP
 
 #include <fstream>
-#include <string>
 
 class ColorDiff {
 
@@ -12,7 +11,7 @@ public :
   
   std::ofstream outfile;
 
-  ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file);
+  ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file);
 
   int colorize(const char * file_one, const char * file_two);
 
