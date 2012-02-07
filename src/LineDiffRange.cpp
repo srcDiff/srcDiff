@@ -66,4 +66,16 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
   int distance = shortest_edit_script(lines1.size(), &lines1, lines2.size(), &lines2, line_compare, line_accessor, &edit_script, NULL);
 
+  std::string diff;
+
+  for(edit = edit_script; edit, edit = edit->next) {
+
+    if(edit->operation == DELETE)
+      diff += "d";
+
+   else if(edit->operation == INSERT)
+      diff += "i";
+
+  }
+
 }
