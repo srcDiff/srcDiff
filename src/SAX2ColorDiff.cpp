@@ -166,6 +166,8 @@ void startDocument(void* ctx) {
 
   span_out += "\"";
 
+  output_start_document(data->colordiff_file);
+
   data->colordiff_file << data->line_old << "-" << data->line_new;
   data->colordiff_file << "<span " << span_out.c_str() << ">\t";
 
