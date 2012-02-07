@@ -72,13 +72,14 @@ void get_line_diff_range(const char * file_one, const char * file_two) {
 
     if(edits->operation == DELETE) {
 
-      diff += "d" + (edits->offset_sequence_one + 1) + "-" + (edits->offset_sequence_one + edits->length);
+      diff += "d" + (edits->offset_sequence_one + 1) + "-" + (edits->offset_sequence_one + edits->length) + "\n";
 
 
     }
 
     else if(edits->operation == INSERT) {
-      diff += "i";
+
+      diff += "i" + (edits->offest_sequence_two + 1) + "-" + (edits->offset_sequence_two + edits->length + "\n";
 
     }
 
