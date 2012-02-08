@@ -35,10 +35,12 @@ ColorDiff::~ColorDiff() {
 
   output_end_document(*outfile);
 
-  if(outfile != &std::cout)
-    ((std::ofstream *)outfile)->close();
-  delete outfile;
+  if(outfile != &std::cout) {
 
+    ((std::ofstream *)outfile)->close();
+    delete outfile;
+
+  }
 }
 
 xmlBuffer * ColorDiff::getsrcDiffBuffer() {
