@@ -213,7 +213,7 @@ void startDocument(void* ctx) {
       for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
         file_name += path_one.at(i) + "/";
 
-      file_name = path_one.at(i);
+      file_name += path_one.at(i);
 
       file_name += ",";
 
