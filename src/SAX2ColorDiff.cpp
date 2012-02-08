@@ -149,7 +149,7 @@ void startDocument(void* ctx) {
 
   }
 
-  data->colordiff_file << "<div class=\"srcdiff\" version1=\"" << data->file_one << "\" version2=\"" << data->file_two << "\">\n";
+  data->colordiff_file << "<div class=\"srcdiff\" version1=\"" << data->file_one << "\" version2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
 
   std::string span_class = "class=\"";
@@ -198,8 +198,8 @@ void endDocument(void* ctx) {
 
   //fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  data->colordiff_file << "</span><span class=\"" << normal_color << "\"/></span>\n";
-  data->colordiff_file << "</div>\n\n";
+  data->colordiff_file << "</span><span class=\"" << normal_color << "\"/></span>";
+  data->colordiff_file << "</div>\n";
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
