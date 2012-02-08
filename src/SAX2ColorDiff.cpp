@@ -212,6 +212,11 @@ void startDocument(void* ctx) {
       for(int i = edits->offset_sequence_one; i < edits->length; ++i)
         file_name += path_one.at(i) + "/";
 
+      file_name += ",";
+
+      for(int i = edits->next->offset_sequence_two; i < edits->next->length; ++i)
+        file_name += path_two.at(i) + "/";
+
       last_line = edits->offset_sequence_one + edits->length;
       edits = edits->next;
       continue;
