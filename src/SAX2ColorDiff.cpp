@@ -140,7 +140,7 @@ void startDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  // fprintf(stderr, "%s\n\n", __FUNCTION__);
+
 
   std::string span_class = "class=\"";
 
@@ -185,7 +185,7 @@ void endDocument(void* ctx) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   //fprintf(stderr, "%s\n\n", __FUNCTION__);
 
   data->colordiff_file << "</span><span class=\"" << normal_color << "\"/></span";
@@ -197,9 +197,9 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(strcmp((const char *)localname, "common") == 0)
       data->in_diff->push_back(SESCOMMON);
     else if(strcmp((const char *)localname, "delete") == 0)
@@ -215,7 +215,7 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
@@ -231,7 +231,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   std::string span_class = "class=\"";
 
   if(data->in_diff->back() == SESCOMMON)
