@@ -174,6 +174,14 @@ void startDocument(void* ctx) {
 
     path_one.push_back(data->file_one.substr(start));
 
+    std::vector<std::string> path_two;
+    start = 0;
+    end = 0;
+    for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
+      path_two.push_back(data->file_two.substr(start, end));
+
+    path_two.push_back(data->file_two.substr(start));
+
     file_name += data->file_two;
 
   }
