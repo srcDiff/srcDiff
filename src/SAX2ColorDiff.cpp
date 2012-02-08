@@ -327,13 +327,25 @@ void startDocument(void* ctx) {
 
     file_name += "{";
 
+    file_name +=  "<span class=\""; 
+    file_name += delete_color; 
+    file_name += "\">";
+
     if(data->file_one != "")
       file_name += data->file_one;
 
+    file_name += "</span>";
+
     file_name += ",";
+
+    file_name += "<span class=\""; 
+    file_name += insert_color; 
+    file_name += "\">";
 
     if(data->file_two != "")
       file_name += data->file_two;
+
+    file_name += "</span>";
 
     file_name += "}";
 
