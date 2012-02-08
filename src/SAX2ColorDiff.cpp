@@ -186,7 +186,7 @@ void startDocument(void* ctx) {
 
   span_out += "\"";
 
-  data->colordiff_file << data->line_old << "-" << data->line_new;
+  data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
   data->colordiff_file << "<span " << span_out.c_str() << ">\t";
 
 }
@@ -332,7 +332,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       // clear color before output line
       data->colordiff_file << "</span><span class=\"" << normal_color << "\">";
-      data->colordiff_file << (char)'\n' << data->line_old << "-" <<  data->line_new;
+      data->colordiff_file << (char)'\n' << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
       data->colordiff_file << "</span><span " << span_out.c_str() << ">\t";
 
     }
