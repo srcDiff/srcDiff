@@ -153,7 +153,9 @@ void startDocument(void* ctx) {
 
   if(data->file_one !=  data->file_two) {
 
-    file_name += "|";
+    if(data->file_one != "" && data->file_two != "")
+      file_name += "|";
+
     file_name += data->file_two;
 
   }
