@@ -53,6 +53,8 @@ void output_start_document(std::ostream & colordiff_file) {
 
   colordiff_file << "<html>\n";
   colordiff_file << "<head>\n";
+
+  /*
   colordiff_file << "<style type=\"text/css\">\n";
   colordiff_file << ".normal\n";
   colordiff_file << "{\n";
@@ -119,8 +121,9 @@ void output_start_document(std::ostream & colordiff_file) {
   colordiff_file << "\n";
   colordiff_file << "}\n";
   colordiff_file << "</style>\n";
+  */
 
-  //colordiff_file << "<link href=\"http://www.sdml.info/projects/srcml/ex/colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>";
+  colordiff_file << "<link href=\"http://www.sdml.info/projects/srcml/ex/colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>";
   colordiff_file << "</head>\n";
   colordiff_file << "<body>\n";
   colordiff_file << "<pre>\n";
