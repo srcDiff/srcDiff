@@ -160,32 +160,27 @@ void startDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  std::string file_name = data->file_one;
+  std::string file_name;
 
-  if(data->file_one != data->file_two) {
+  std::vector<std::string> path_one;
+  int start = 0, end = 0;
+  for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end + 1)
+    path_one.push_back(data->file_one.substr(start, end));
 
-    if(data->file_one != "" && data->file_two != "")
-      file_name += "|";
+  path_one.push_back(data->file_one.substr(start));
 
-    std::vector<std::string> path_one;
-    int start = 0, end = 0;
-    for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end + 1)
-      path_one.push_back(data->file_one.substr(start, end));
+  std::vector<std::string> path_two;
+  start = 0;
+  end = 0;
+  for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
+    path_two.push_back(data->file_two.substr(start, end));
 
-    path_one.push_back(data->file_one.substr(start));
+  path_two.push_back(data->file_two.substr(start));
 
-    std::vector<std::string> path_two;
-    start = 0;
-    end = 0;
-    for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
-      path_two.push_back(data->file_two.substr(start, end));
-
-    path_two.push_back(data->file_two.substr(start));
-
-    file_name += data->file_two;
-
-  }
-
+  int left = 0;
+  for(left = 0; left < path_one.size() && left < path_two.size() && path_one.at(left) == path_two.at(left); ++left)
+    ;
+    
   data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
 
