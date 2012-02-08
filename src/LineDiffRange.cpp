@@ -37,7 +37,7 @@ std::vector<std::string> read_file(const char * file) {
   std::vector<std::string> lines;
 
   std::ifstream stream(file);
-  if(!stream.is_open() || stream.eof())
+  if(!stream || stream.eof())
     return lines;
 
   std::string line;
