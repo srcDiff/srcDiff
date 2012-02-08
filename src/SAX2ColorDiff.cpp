@@ -162,10 +162,14 @@ void startDocument(void* ctx) {
 
   std::string file_name = data->file_one;
 
-  if(data->file_one !=  data->file_two) {
+  if(data->file_one != data->file_two) {
 
     if(data->file_one != "" && data->file_two != "")
       file_name += "|";
+
+    unsigned int left = 0;
+
+    for(; left < data->file_one.size() && data->file_two.size() data->file_one[i] == data->file_two[2]; ++i);
 
     file_name += data->file_two;
 
