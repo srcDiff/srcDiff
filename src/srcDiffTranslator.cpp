@@ -467,7 +467,7 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
   char const * const ns[] = {
 
     // main srcML namespace declaration always used
-    first ? SRCML_SRC_NS_URI : 0,
+    (isoption(options, OPTION_VIZUALIZE) || first) ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
     isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) || isoption(options, OPTION_VIZUALIZE) ? SRCML_CPP_NS_URI : 0,
