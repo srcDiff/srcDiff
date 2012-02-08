@@ -188,7 +188,7 @@ void endDocument(void* ctx) {
 
   //fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  data->colordiff_file << "</span><span class=\"" << normal_color << "\"/></span>\n";
+  data->colordiff_file << "</span><span class=\"" << normal_color << "\"/></span>\n\n";
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
