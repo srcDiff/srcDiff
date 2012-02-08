@@ -20,8 +20,8 @@ int line_compare(const void * line_one, const void * line_two, const void * cont
 
 const void * line_accessor(int position, const void * lines, const void * context);
 
-std::vector<std::string> read_file(const char file);
+std::vector<std::string> read_file(const char * file);
 
-std::string get_line_diff_range(const char * file_one, const char * file_two);
+std::string get_line_diff_range(std::string file_one, std::string file_two);
 
 #endif

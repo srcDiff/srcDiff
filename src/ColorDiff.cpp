@@ -55,21 +55,12 @@ void ColorDiff::setsrcDiffBuffer(xmlBuffer * srcdiff_buffer) {
 
 }
 
-int ColorDiff::colorize(const char * file_one, const char * file_two) {
+int ColorDiff::colorize(std::string file_one, std::string file_two) {
 
   if(first) {
 
     output_start_document(*outfile);
     first = false;
-
-  }
-
-  std::string file_name = file_one;
-
-  if(strcmp(file_one, file_two) != 0) {
-
-    file_name += "|";
-    file_name += file_two;
 
   }
 
@@ -126,7 +117,7 @@ int ColorDiff::colorize(const char * file_one, const char * file_two) {
   std::vector<int> stack = std::vector<int>();
   stack.push_back(SESCOMMON);
 
-  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, file_name, *outfile };
+  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, file_one, file_two, *outfile };
 
   ctxt->_private = &data;
 

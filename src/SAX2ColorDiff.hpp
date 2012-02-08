@@ -22,7 +22,8 @@ struct source_diff {
   std::vector<bool> & lines_old;
   std::vector<bool> & lines_new;
 
-  std::string & file_name;
+  std::string & file_one;
+  std::string & file_two;
   std::ostream & colordiff_file;
 };
 
