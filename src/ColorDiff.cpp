@@ -104,8 +104,8 @@ int ColorDiff::colorize(const char * file_one, const char * file_two) {
   struct source_diff data = { 1, 1, &stack, lines_old, lines_new, *outfile };
 
   ctxt->_private = &data;
+  *outfile << "HERE\n";
 
-  // process the document
   parseDocument(ctxt);
 
   // local variable, do not want xmlFreeParserCtxt to free
