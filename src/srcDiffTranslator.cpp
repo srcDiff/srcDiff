@@ -128,9 +128,9 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
    if(version != NULL)
      ver = version;
 
-   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, version, css);
+   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css);
 
-  }
+ }
 
   wstate.method = method;
 
