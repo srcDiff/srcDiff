@@ -199,6 +199,17 @@ void startDocument(void* ctx) {
 
     if(is_change(edits));
 
+    switch(edits->operation) {
+
+    case SESINSERT :
+      break;
+
+    case SESDELETE :
+      break;
+
+
+    }
+
   }
 
   free_shortest_edit_script(edit_script);
