@@ -201,10 +201,10 @@ void startDocument(void* ctx) {
 
     if(edits->operation == SESDELETE)
       for(int i = last_line; i < edits->offset_sequence_one + edits->length; ++i)
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, path_one.at(i).c_str());
+        file_name += path_one.at(i) + "/";
     else if(edits->operation == SESINSERT)
       for(int i = last_line; i < edits->offset_sequence_two + edits->length + 1; ++i)
-        fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, path_one.at(i).c_str());        ;
+        file_name += path_one.at(i) + "/";
 
     if(is_change(edits)) {
 
@@ -232,7 +232,7 @@ void startDocument(void* ctx) {
   }
 
   for(int i = last_line; i < (signed)path_one.size(); ++i)
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, path_one.at(i).c_str());
+    file_name += path_one.at(i) + "/";
 
   data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
