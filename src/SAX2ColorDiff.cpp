@@ -210,6 +210,7 @@ void startDocument(void* ctx) {
 
 
       last_line = edits->offset_sequence_one + edits->length;
+      edits = edits->next;
       continue;
 
     }
