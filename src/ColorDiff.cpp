@@ -25,9 +25,10 @@ static void parseDocument(xmlParserCtxtPtr ctxt);
 ColorDiff::ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file) 
   : first(true), srcdiff(srcdiff) {
 
-  //if(strcmp(colordiff_file, "-") != 0)
+  if(strcmp(colordiff_file, "-") != 0)
     outfile = new std::ofstream(colordiff_file);
-
+  else
+    outfile = NULL;
 }
 
 ColorDiff::~ColorDiff() {
