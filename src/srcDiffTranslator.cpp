@@ -119,7 +119,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
  } else {
  
-   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename);
+   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, "");
 
   }
 

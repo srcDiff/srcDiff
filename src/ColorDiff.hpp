@@ -10,11 +10,14 @@ private :
   bool first;
 
   xmlBuffer * srcdiff;
+  std::string css_url;
+
   std::ostream * outfile;
+
 
 public:
 
-  ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file);
+  ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::string css);
   ~ColorDiff();
 
   xmlBuffer * getsrcDiffBuffer();
