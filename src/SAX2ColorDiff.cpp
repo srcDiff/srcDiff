@@ -173,7 +173,7 @@ void startDocument(void* ctx) {
 
     unsigned int right = 0;
 
-    for(; right < data->file_one.size() && data->file_two.size() && data->file_one[right] == data->file_two[right]; ++right);
+    for(; right < data->file_one.size() && data->file_two.size() && data->file_one[(data->file_one.size() - 1) - right] == data->file_two[(data->file_two.size() - 1) - right]; ++right);
 
     file_name += data->file_two;
 
