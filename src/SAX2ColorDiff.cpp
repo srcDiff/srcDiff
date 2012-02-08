@@ -140,7 +140,7 @@ void startDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  data->colordiff_file << "<div>\n";
+  data->colordiff_file << "<div class=\"" << data->file_name << "\">\n";
 
   std::string span_class = "class=\"";
 
