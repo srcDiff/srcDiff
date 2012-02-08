@@ -39,6 +39,12 @@ ColorDiff::~ColorDiff() {
 
 }
 
+ColorDiff::xmlBuffer * getsrcDiffBuffer() {
+
+  return srcdiff;
+
+}
+
 int ColorDiff::colorize(const char * file_one, const char * file_two) {
 
   if(first) {

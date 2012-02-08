@@ -5,7 +5,7 @@
 
 class ColorDiff {
 
-public :
+private :
 
   bool first;
 
@@ -16,6 +16,8 @@ public:
 
   ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file);
   ~ColorDiff();
+
+  xmlBuffer * getsrcDiffBuffer();
 
   int colorize(const char * file_one, const char * file_two);
 
