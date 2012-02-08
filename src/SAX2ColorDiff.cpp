@@ -58,76 +58,76 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
 
   if(css_url == "") {
 
-  colordiff_file << "<style type=\"text/css\">\n";
-  colordiff_file << "h1\n";
-  colordiff_file << "{\n";
-  colordiff_file << "font-size:12pt;\n";
-  colordiff_file << "margin-bottom:0px;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".normal\n";
-  colordiff_file << "{\n";
-  colordiff_file << "color:black;\n";
-  colordiff_file << "background-color:white;\n";
-  colordiff_file << "font-weight:normal;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".common\n";
-  colordiff_file << "{\n";
-  colordiff_file << "color:black;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".delete\n";
-  colordiff_file << "{\n";
-  colordiff_file << "color:red;\n";
-  colordiff_file << "font-weight:bold;\n";
-  //colordiff_file << "text-decoration:line-through;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".insert\n";
-  colordiff_file << "{\n";
-  colordiff_file << "color:blue;\n";
-  colordiff_file << "font-weight:bold;\n";
-  //colordiff_file << "text-decoration:underline;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".diff_common\n";
-  colordiff_file << "{\n";
-  colordiff_file << "background-color:white;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".diff_change\n";
-  colordiff_file << "{\n";
-  colordiff_file << "background-color:yellow;\n";
-  colordiff_file << "font-weight:bold;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".diff_delete\n";
-  colordiff_file << "{\n";
-  colordiff_file << "background-color:#FA8258;\n";
-  colordiff_file << "font-weight:bold;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".diff_insert\n";
-  colordiff_file << "{\n";
-  colordiff_file << "background-color:#CED8F6;\n";
-  colordiff_file << "font-weight:bold;\n";
-  colordiff_file << "}\n";
-  colordiff_file << ".line\n";
-  colordiff_file << "{\n";
-  colordiff_file << "display:inline-block;\n";
-  colordiff_file << "width:5em;\n";
-  colordiff_file << "text-align:right;\n";
-  colordiff_file << "margin-right:1em;\n";
-  colordiff_file << "}\n";
-  colordiff_file << "div.key\n";
-  colordiff_file << "{\n";
-  colordiff_file << "position:fixed;\n";
-  colordiff_file << "right:10px;\n";
-  colordiff_file << "left:auto;\n";
-  colordiff_file << "text-align:center;\n";
-  colordiff_file << "}\n";
-  colordiff_file << "div.key span\n";
-  colordiff_file << "{\n";
-  colordiff_file << "display:block;\n";
-  colordiff_file << "margin-bottom:5px;\n";
-  colordiff_file << "}\n";
-  colordiff_file << "</style>\n";
+    colordiff_file << "<style type=\"text/css\">\n";
+    colordiff_file << "h1\n";
+    colordiff_file << "{\n";
+    colordiff_file << "font-size:12pt;\n";
+    colordiff_file << "margin-bottom:0px;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".normal\n";
+    colordiff_file << "{\n";
+    colordiff_file << "color:black;\n";
+    colordiff_file << "background-color:white;\n";
+    colordiff_file << "font-weight:normal;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".common\n";
+    colordiff_file << "{\n";
+    colordiff_file << "color:black;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".delete\n";
+    colordiff_file << "{\n";
+    colordiff_file << "color:red;\n";
+    colordiff_file << "font-weight:bold;\n";
+    //colordiff_file << "text-decoration:line-through;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".insert\n";
+    colordiff_file << "{\n";
+    colordiff_file << "color:blue;\n";
+    colordiff_file << "font-weight:bold;\n";
+    //colordiff_file << "text-decoration:underline;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".diff_common\n";
+    colordiff_file << "{\n";
+    colordiff_file << "background-color:white;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".diff_change\n";
+    colordiff_file << "{\n";
+    colordiff_file << "background-color:yellow;\n";
+    colordiff_file << "font-weight:bold;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".diff_delete\n";
+    colordiff_file << "{\n";
+    colordiff_file << "background-color:#FA8258;\n";
+    colordiff_file << "font-weight:bold;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".diff_insert\n";
+    colordiff_file << "{\n";
+    colordiff_file << "background-color:#CED8F6;\n";
+    colordiff_file << "font-weight:bold;\n";
+    colordiff_file << "}\n";
+    colordiff_file << ".line\n";
+    colordiff_file << "{\n";
+    colordiff_file << "display:inline-block;\n";
+    colordiff_file << "width:5em;\n";
+    colordiff_file << "text-align:right;\n";
+    colordiff_file << "margin-right:1em;\n";
+    colordiff_file << "}\n";
+    colordiff_file << "div.key\n";
+    colordiff_file << "{\n";
+    colordiff_file << "position:fixed;\n";
+    colordiff_file << "right:10px;\n";
+    colordiff_file << "left:auto;\n";
+    colordiff_file << "text-align:center;\n";
+    colordiff_file << "}\n";
+    colordiff_file << "div.key span\n";
+    colordiff_file << "{\n";
+    colordiff_file << "display:block;\n";
+    colordiff_file << "margin-bottom:5px;\n";
+    colordiff_file << "}\n";
+    colordiff_file << "</style>\n";
 
   } else {
- 
+
     colordiff_file << "<link href=\"" << css_url << "\" rel=\"stylesheet\" type=\"text/css\"></link>";
 
   }
@@ -136,13 +136,13 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<body>\n";
 
   colordiff_file << "<div class=\"key\">\n";
-  colordiff_file << "<span class=\"" << diff_color_insert << "\"><cite>diff</cite> Insert</span>"; 
-  colordiff_file << "<span class=\"" << insert_color << "\"><cite>srcDiff</cite> Insert</span>"; 
-  colordiff_file << "<span class=\"" << insert_color << " " << diff_color_insert << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Insert</span>"; 
-  colordiff_file << "<span class=\"" << diff_color_delete << "\"><cite>diff</cite> Delete</span>"; 
-  colordiff_file << "<span class=\"" << delete_color << "\"><cite>srcDiff</cite> Delete</span>"; 
-  colordiff_file << "<span class=\"" << delete_color << " " << diff_color_delete << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Delete</span>"; 
-  colordiff_file << "<span class=\"" << diff_color_change << "\"><cite>diff</cite> Change</span>"; 
+  colordiff_file << "<span class=\"" << diff_color_insert << "\"><cite>diff</cite> Insert</span>";
+  colordiff_file << "<span class=\"" << insert_color << "\"><cite>srcDiff</cite> Insert</span>";
+  colordiff_file << "<span class=\"" << insert_color << " " << diff_color_insert << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Insert</span>";
+  colordiff_file << "<span class=\"" << diff_color_delete << "\"><cite>diff</cite> Delete</span>";
+  colordiff_file << "<span class=\"" << delete_color << "\"><cite>srcDiff</cite> Delete</span>";
+  colordiff_file << "<span class=\"" << delete_color << " " << diff_color_delete << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Delete</span>";
+  colordiff_file << "<span class=\"" << diff_color_change << "\"><cite>diff</cite> Change</span>";
   colordiff_file << "</div>\n";
 
   colordiff_file << "<pre>";
@@ -164,136 +164,146 @@ void startDocument(void* ctx) {
 
   std::string file_name;
 
-  std::vector<std::string> path_one;
-  int start = 0, end = 0;
-  for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end + 1)
-    path_one.push_back(data->file_one.substr(start, end - start));
+  if(data->file_one != "" && data->file_two != "") {
 
-  std::string file_name_one = data->file_one.substr(start);
+    std::vector<std::string> path_one;
+    int start = 0, end = 0;
+    for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end + 1)
+      path_one.push_back(data->file_one.substr(start, end - start));
 
-  std::vector<std::string> path_two;
-  start = 0;
-  end = 0;
-  for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
-    path_two.push_back(data->file_two.substr(start, end - start));
+    std::string file_name_one = data->file_one.substr(start);
 
-  std::string file_name_two = data->file_two.substr(start);
+    std::vector<std::string> path_two;
+    start = 0;
+    end = 0;
+    for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
+      path_two.push_back(data->file_two.substr(start, end - start));
 
-  edit * edit_script;
+    std::string file_name_two = data->file_two.substr(start);
 
-  int distance = shortest_edit_script(path_one.size(), &path_one, path_two.size(), &path_two, line_compare, line_accessor, &edit_script, NULL);
+    edit * edit_script;
 
-  if(distance < 0) {
+    int distance = shortest_edit_script(path_one.size(), &path_one, path_two.size(), &path_two, line_compare, line_accessor, &edit_script, NULL);
 
-    fprintf(stderr, "Error with files %s:%s", data->file_one.c_str(), data->file_two.c_str());
+    if(distance < 0) {
 
-    exit(1);
+      fprintf(stderr, "Error with files %s:%s", data->file_one.c_str(), data->file_two.c_str());
 
-  }
-
-  std::string diff;
-
-  edit * edits = edit_script;
-
-  int last_line = 0;
-
-  for(; edits; edits = edits->next) {
-
-    if(edits->operation == SESDELETE)
-      for(int i = last_line; i < edits->offset_sequence_one; ++i)
-        file_name += path_one.at(i) + "/";
-    else if(edits->operation == SESINSERT)
-      for(int i = last_line; i < edits->offset_sequence_two + 1; ++i)
-        file_name += path_one.at(i) + "/";
-
-    if(is_change(edits)) {
-
-      file_name += "{";
-      int i;
-
-      for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
-        file_name += path_one.at(i) + "/";
-
-      file_name += path_one.at(i);
-
-      file_name += ",";
-
-      for(i = edits->next->offset_sequence_two; i < edits->next->length - 1; ++i)
-        file_name += path_two.at(i) + "/";
-
-      file_name += path_two.at(i);
-
-      file_name += "}/";
-
-      last_line = edits->offset_sequence_one + edits->length;
-      edits = edits->next;
-      continue;
+      exit(1);
 
     }
 
-    switch(edits->operation) {
+    std::string diff;
 
-    case SESINSERT :
+    edit * edits = edit_script;
 
-      {
+    int last_line = 0;
 
-      file_name += "{";
+    for(; edits; edits = edits->next) {
 
-      file_name += ",";
+      if(edits->operation == SESDELETE)
+        for(int i = last_line; i < edits->offset_sequence_one; ++i)
+          file_name += path_one.at(i) + "/";
+      else if(edits->operation == SESINSERT)
+        for(int i = last_line; i < edits->offset_sequence_two + 1; ++i)
+          file_name += path_one.at(i) + "/";
 
-      int i;
-      for(i = edits->offset_sequence_two; i < edits->length - 1; ++i)
-        file_name += path_two.at(i) + "/";
+      if(is_change(edits)) {
 
-      file_name += path_two.at(i);
+        file_name += "{";
+        int i;
 
-      file_name += "}/";
+        for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
+          file_name += path_one.at(i) + "/";
 
-      last_line = edits->offset_sequence_two + edits->length + 1;
+        file_name += path_one.at(i);
 
-      }
+        file_name += ",";
 
-      break;
+        for(i = edits->next->offset_sequence_two; i < edits->next->length - 1; ++i)
+          file_name += path_two.at(i) + "/";
 
-    case SESDELETE :
+        file_name += path_two.at(i);
 
-      {
+        file_name += "}/";
 
-      file_name += "{";
-
-      int i;
-      for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
-        file_name += path_one.at(i) + "/";
-
-      file_name += path_one.at(i);
-
-      file_name += ",";
-
-      file_name += "}/";
-
-      last_line = edits->offset_sequence_one + edits->length;
+        last_line = edits->offset_sequence_one + edits->length;
+        edits = edits->next;
+        continue;
 
       }
 
-      break;
+      switch(edits->operation) {
 
+      case SESINSERT :
+
+        {
+
+          file_name += "{";
+
+          file_name += ",";
+
+          int i;
+          for(i = edits->offset_sequence_two; i < edits->length - 1; ++i)
+            file_name += path_two.at(i) + "/";
+
+          file_name += path_two.at(i);
+
+          file_name += "}/";
+
+          last_line = edits->offset_sequence_two + edits->length + 1;
+
+        }
+
+        break;
+
+      case SESDELETE :
+
+        {
+
+          file_name += "{";
+
+          int i;
+          for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
+            file_name += path_one.at(i) + "/";
+
+          file_name += path_one.at(i);
+
+          file_name += ",";
+
+          file_name += "}/";
+
+          last_line = edits->offset_sequence_one + edits->length;
+
+        }
+
+        break;
+
+
+      }
 
     }
 
-  }
+    for(int i = last_line; i < (signed)path_one.size(); ++i)
+      file_name += path_one.at(i) + "/";
 
-  for(int i = last_line; i < (signed)path_one.size(); ++i)
-    file_name += path_one.at(i) + "/";
+    if(file_name_one == file_name_two)
+      file_name += file_name_one;
+    else {
 
-  if(file_name_one == file_name_two)
-    file_name += file_name_one;
-  else {
+      file_name += "{";
+      file_name += file_name_one;
+      file_name += ",";
+      file_name += file_name_two;
+      file_name += "}";
 
-    file_name += "{";
-    file_name += file_name_one;
-    file_name += ",";
-    file_name += file_name_two;
-    file_name += "}";
+    }
+
+  } else {
+
+    file_name = data->file_one;
+    if(data->file_one == "")
+      file_name = data->file_two;
 
   }
 
@@ -483,7 +493,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       data->colordiff_file << "</span><span class=\"" << normal_color << "\">";
       data->colordiff_file << (char)'\n';
       if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size())
-         data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+        data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
       data->colordiff_file << "</span><span " << span_out.c_str() << ">";
 
     }
