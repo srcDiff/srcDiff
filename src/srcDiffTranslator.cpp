@@ -136,7 +136,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
                             int language) {
 
  if(isoption(global_options, OPTION_VIZUALIZE)) {
-   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
    wstate.writer = xmlNewTextWriterMemory(colordiff.srcdiff, 0);
 
   if (wstate.writer == NULL) {
