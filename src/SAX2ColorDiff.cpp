@@ -200,10 +200,10 @@ void startDocument(void* ctx) {
   for(; edits; edits = edits->next) {
 
     if(edits->operation == SESDELETE)
-      for(int i = last_line; i < edits->offset_sequence_one + edits->length; ++i)
+      for(int i = last_line; i < edits->offset_sequence_one; ++i)
         file_name += path_one.at(i) + "/";
     else if(edits->operation == SESINSERT)
-      for(int i = last_line; i < edits->offset_sequence_two + edits->length + 1; ++i)
+      for(int i = last_line; i < edits->offset_sequence_two + 1; ++i)
         file_name += path_one.at(i) + "/";
 
     if(is_change(edits)) {
