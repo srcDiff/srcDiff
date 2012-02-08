@@ -123,7 +123,12 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "</style>\n";
   */
 
-  colordiff_file << "<link href=\"http://www.sdml.info/projects/srcml/ex/colordiff.css\" rel=\"stylesheet\" type=\"text/css\"></link>";
+  std::string css = "http://www.sdml.info/projects/srcml/ex/colordiff.css";
+  if(css_url != "")
+    css = css_url;
+
+ 
+  colordiff_file << "<link href=\"" << css << "\" rel=\"stylesheet\" type=\"text/css\"></link>";
   colordiff_file << "</head>\n";
   colordiff_file << "<body>\n";
   colordiff_file << "<pre>\n";
