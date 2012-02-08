@@ -67,6 +67,14 @@ std::string get_line_diff_range(std::string file_one, std::string file_two) {
 
   int distance = shortest_edit_script(lines1.size(), &lines1, lines2.size(), &lines2, line_compare, line_accessor, &edit_script, NULL);
 
+  if(distance < 0) {
+
+    fprintf(stderr, "Error with files %s:%s", file_one.c_str(), file_two.c_str());
+
+    exit(1);
+
+  }
+
   std::string diff;
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
