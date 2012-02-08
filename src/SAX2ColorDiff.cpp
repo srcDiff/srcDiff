@@ -179,7 +179,6 @@ void startDocument(void* ctx) {
 
   std::string file_name_two = data->file_two.substr(start);
 
-
   edit * edit_script;
 
   int distance = shortest_edit_script(path_one.size(), &path_one, path_two.size(), &path_two, line_compare, line_accessor, &edit_script, NULL);
@@ -253,6 +252,15 @@ void startDocument(void* ctx) {
 
   if(file_name_one == file_name_two)
     file_name += file_name_one;
+  else {
+
+    file_name += "{";
+    file_name += file_name_one;
+    file_name += ",";
+    file_name += file_name_two;
+    file_name += "}";
+
+  }
 
   data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
