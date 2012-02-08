@@ -67,7 +67,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
                          )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL, srcdiff_filename)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
 {
 
   diff.prefix = uri[7];
@@ -119,7 +119,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
  } else {
  
-   colordiff.setsrcDiffBuffer(xmlBufferCreate());
+   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename);
 
   }
 
@@ -137,7 +137,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
  if(isoption(global_options, OPTION_VIZUALIZE)) {
 
-   wstate.writer = xmlNewTextWriterMemory(colordiff.getsrcDiffBuffer(), 0);
+   wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
 
   if (wstate.writer == NULL) {
     fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
@@ -376,9 +376,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
    xmlFreeTextWriter(wstate.writer);
    wstate.writer = NULL;
 
-   colordiff.colorize(path_one, path_two);
+   colordiff->colorize(path_one, path_two);
 
-   xmlBufferEmpty(colordiff.getsrcDiffBuffer());
+   xmlBufferEmpty(colordiff->getsrcDiffBuffer());
 
  }
 
@@ -397,7 +397,8 @@ srcDiffTranslator::~srcDiffTranslator() {
 
   } else {
 
-    xmlBufferFree(colordiff.getsrcDiffBuffer());
+    xmlBufferFree(colordiff->getsrcDiffBuffer());
+    delete colordiff;
 
   }
 

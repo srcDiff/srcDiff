@@ -97,7 +97,7 @@ void outputNamespaces(const OPTION_TYPE& options);
   xmlBuffer * output_srcml_file_old;
   xmlBuffer * output_srcml_file_new;
 
-  ColorDiff colordiff;
+  ColorDiff * colordiff;
 
   //xmlTextWriterPtr writer;
 
