@@ -141,7 +141,7 @@ void startDocument(void* ctx) {
 
   }
 
-  data->colordiff_file << "<div class=\"srcdiff\" version1=\"" << data->file_one << "\" version2=\"" << data->file_two << "\">";
+  data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
 
   std::string span_class = "class=\"";
