@@ -140,7 +140,7 @@ void startDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-
+  data->colordiff_file << "<div>";
 
   std::string span_class = "class=\"";
 
@@ -188,7 +188,8 @@ void endDocument(void* ctx) {
 
   //fprintf(stderr, "%s\n\n", __FUNCTION__);
 
-  data->colordiff_file << "</span><span class=\"" << normal_color << "\"/></span>\n\n";
+  data->colordiff_file << "</span><span class=\"" << normal_color << "\"/></span>\n";
+  data->colordiff_file << "</div>\n\n";
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
