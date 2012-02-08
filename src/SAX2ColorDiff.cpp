@@ -127,6 +127,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "\n";
   colordiff_file << "align:right;\n";
   colordiff_file << "text-align:right;\n";
+  colordiff_file << "margin-right:1cm;\n";
   colordiff_file << "\n";
   colordiff_file << "}\n";
   colordiff_file << "\n";
@@ -204,7 +205,7 @@ void startDocument(void* ctx) {
   span_out += "\"";
 
   data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
-  data->colordiff_file << "<span " << span_out.c_str() << ">\t";
+  data->colordiff_file << "<span " << span_out.c_str();
 
 }
 
@@ -350,7 +351,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       // clear color before output line
       data->colordiff_file << "</span><span class=\"" << normal_color << "\">";
       data->colordiff_file << (char)'\n' << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
-      data->colordiff_file << "</span><span " << span_out.c_str() << ">\t";
+      data->colordiff_file << "</span><span " << span_out.c_str();
 
     }
 
