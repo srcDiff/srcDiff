@@ -107,7 +107,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
   // writer state
- if(!isoption(global_options, OPTION_VIZUALIZE)) {
+ if(!isoption(global_options, OPTION_VISUALIZE)) {
 
   wstate.writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
 
@@ -135,7 +135,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
 
- if(isoption(global_options, OPTION_VIZUALIZE)) {
+ if(isoption(global_options, OPTION_VISUALIZE)) {
 
    wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
 
@@ -331,7 +331,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   // }
 
-  if(!isoption(global_options, OPTION_VIZUALIZE) && isoption(global_options, OPTION_NESTED)) {
+  if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_NESTED)) {
 
     xmlTextWriterEndElement(wstate.writer);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -367,7 +367,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   rbuf_new.clear();
   wstate.clear();
 
- if(isoption(global_options, OPTION_VIZUALIZE)) {
+ if(isoption(global_options, OPTION_VISUALIZE)) {
 
    xmlTextWriterEndElement(wstate.writer);
 
@@ -387,7 +387,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
-  if(!isoption(global_options, OPTION_VIZUALIZE)) {
+  if(!isoption(global_options, OPTION_VISUALIZE)) {
 
   xmlTextWriterEndElement(wstate.writer);
 
@@ -415,7 +415,7 @@ void srcDiffTranslator::startUnit(const char * language,
                             const char* version         // root unit version
                             ) {
 
-  if((isoption(options, OPTION_VIZUALIZE) || first) && !isoption(global_options, OPTION_XMLDECL))
+  if((isoption(options, OPTION_VISUALIZE) || first) && !isoption(global_options, OPTION_XMLDECL))
     xmlTextWriterStartDocument(wstate.writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   // start of main tag
@@ -439,13 +439,13 @@ void srcDiffTranslator::startUnit(const char * language,
     { UNIT_ATTRIBUTE_LANGUAGE, language },
 
     // directory attribute
-    { UNIT_ATTRIBUTE_DIRECTORY, (isoption(options, OPTION_VIZUALIZE) || first) && isoption(global_options, OPTION_DIRECTORY) ? root_directory : directory },
+    { UNIT_ATTRIBUTE_DIRECTORY, (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_DIRECTORY) ? root_directory : directory },
 
     // filename attribute
-    { UNIT_ATTRIBUTE_FILENAME, (isoption(options, OPTION_VIZUALIZE) || first) && isoption(global_options, OPTION_FILENAME) ? root_filename : filename },
+    { UNIT_ATTRIBUTE_FILENAME, (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_FILENAME) ? root_filename : filename },
 
     // version attribute
-    { UNIT_ATTRIBUTE_VERSION,  (isoption(options, OPTION_VIZUALIZE) || first) && isoption(global_options, OPTION_VERSION) ? root_version : version },
+    { UNIT_ATTRIBUTE_VERSION,  (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_VERSION) ? root_version : version },
 
     // position tab setting
     //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
@@ -468,28 +468,28 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
   char const * const ns[] = {
 
     // main srcML namespace declaration always used
-    (isoption(options, OPTION_VIZUALIZE) || first) ? SRCML_SRC_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
-    isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) || isoption(options, OPTION_VIZUALIZE) ? SRCML_CPP_NS_URI : 0,
+    isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) || isoption(options, OPTION_VISUALIZE) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
-    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
 
     // optional literal xml namespace
-    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
     // optional operator xml namespace
-    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
     // optional modifier xml namespace
-    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
     // optional position xml namespace
-    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
     // optional diff xml namespace
-    (isoption(options, OPTION_VIZUALIZE) || first) ? SRCML_DIFF_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_DIFF_NS_URI : 0,
   };
 
   // output the namespaces
