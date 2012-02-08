@@ -211,19 +211,31 @@ void startDocument(void* ctx) {
       if(is_change(edits)) {
 
         file_name += "{";
-        int i;
 
+        file_name += "<span class=\"";
+        file_name += delete_color;
+        file_name += "\">";
+
+        int i;
         for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
           file_name += path_one.at(i) + "/";
 
         file_name += path_one.at(i);
 
+        file_name += "</span>";
+
         file_name += ",";
+
+        file_name += "<span class=\"";
+        file_name += insert_color;
+        file_name += "\">";
 
         for(i = edits->next->offset_sequence_two; i < edits->next->length - 1; ++i)
           file_name += path_two.at(i) + "/";
 
         file_name += path_two.at(i);
+
+        file_name += "</span>";
 
         file_name += "}/";
 
@@ -243,12 +255,18 @@ void startDocument(void* ctx) {
 
           file_name += ",";
 
+          file_name += "<span class=\""; 
+          file_name += insert_color; 
+          file_name += "\">";
+
           int i;
           for(i = edits->offset_sequence_two; i < edits->length - 1; ++i)
             file_name += path_two.at(i) + "/";
 
           file_name += path_two.at(i);
 
+          file_name += "</span>";
+        
           file_name += "}/";
 
           last_line = edits->offset_sequence_two + edits->length + 1;
@@ -263,11 +281,17 @@ void startDocument(void* ctx) {
 
           file_name += "{";
 
+          file_name +=  "<span class=\""; 
+          file_name += delete_color; 
+          file_name += "\">";
+
           int i;
           for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
             file_name += path_one.at(i) + "/";
 
           file_name += path_one.at(i);
+
+          file_name += "</span>";
 
           file_name += ",";
 
