@@ -251,6 +251,9 @@ void startDocument(void* ctx) {
   for(int i = last_line; i < (signed)path_one.size(); ++i)
     file_name += path_one.at(i) + "/";
 
+  if(file_name_one == file_name_two)
+    file_name += file_name_one;
+
   data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
 
