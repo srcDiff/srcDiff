@@ -8,9 +8,11 @@ class ColorDiff {
 public :
 
   bool first;
+
   xmlBuffer * srcdiff;
-  
   std::ofstream * outfile;
+
+public:
 
   ColorDiff(xmlBuffer * srcdiff, const char * colordiff_file);
   ~ColorDiff();
