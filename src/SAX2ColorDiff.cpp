@@ -209,15 +209,20 @@ void startDocument(void* ctx) {
     if(is_change(edits)) {
 
       file_name += "{";
-      for(int i = edits->offset_sequence_one; i < edits->length; ++i)
+      int i;
+      for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
         file_name += path_one.at(i) + "/";
+
+      file_name = path_one.at(i);
 
       file_name += ",";
 
-      for(int i = edits->next->offset_sequence_two; i < edits->next->length; ++i)
+      for(i = edits->next->offset_sequence_two; i < edits->next->length - 1; ++i)
         file_name += path_two.at(i) + "/";
 
-      file_name += "}";
+      file_name += path_two.at(i);
+
+      file_name += "}/";
 
       last_line = edits->offset_sequence_one + edits->length;
       edits = edits->next;
