@@ -107,6 +107,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "}\n";
   colordiff_file << "div.key\n";
   colordiff_file << "{\n";
+  colordiff_file << "position:fixed;\n";
   colordiff_file << "right:10px;\n";
   colordiff_file << "left:auto;\n";
   colordiff_file << "}\n";
