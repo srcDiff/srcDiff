@@ -59,7 +59,7 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
 
   if(first) {
 
-    output_start_document(*outfile);
+    output_start_document(*outfile, css_url);
     first = false;
 
   }
@@ -117,7 +117,7 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
   std::vector<int> stack = std::vector<int>();
   stack.push_back(SESCOMMON);
 
-  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, file_one, file_two, css_url, *outfile };
+  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, file_one, file_two, *outfile };
 
   ctxt->_private = &data;
 

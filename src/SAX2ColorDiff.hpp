@@ -24,7 +24,6 @@ struct source_diff {
 
   std::string & file_one;
   std::string & file_two;
-  std::string & css_url;
   std::ostream & colordiff_file;
 };
 
@@ -45,7 +44,7 @@ void characters(void* ctx, const xmlChar* ch, int len);
 
 void comments(void* ctx, const xmlChar* ch);
 
-void output_start_document(std::ostream & colordiff_file);
+void output_start_document(std::ostream & colordiff_file, std::string & css_url);
 void output_end_document(std::ostream & colordiff_file);
 
 #endif
