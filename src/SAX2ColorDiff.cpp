@@ -197,7 +197,12 @@ void startDocument(void* ctx) {
 
   for(; edits; edits = edits->next) {
 
-    if(is_change(edits));
+    if(is_change(edits)) {
+
+
+      continue;
+
+    }
 
     switch(edits->operation) {
 
