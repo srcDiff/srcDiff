@@ -920,7 +920,9 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case VISUALIZE_FLAG_CODE:
 
-      poptions.css_url = optarg;
+      poptions.css_url = "";
+      if(optarg != NULL)
+        poptions.css_url = optarg;
 
       options |= OPTION_VISUALIZE;
 
