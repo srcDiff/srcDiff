@@ -114,7 +114,8 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "div.key span\n";
   colordiff_file << "{\n";
   colordiff_file << "display:block;\n";
-  colordiff_file << "margin_bottom:5px;\n";
+  // colordiff_file << "margin_bottom:5px;\n";
+  colordiff_file << "padding:5px;\n";
   colordiff_file << "}\n";
   colordiff_file << "</style>\n";
 
