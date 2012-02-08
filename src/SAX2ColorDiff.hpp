@@ -24,6 +24,7 @@ struct source_diff {
 
   std::string & file_one;
   std::string & file_two;
+  std::string & css_url;
   std::ostream & colordiff_file;
 };
 
