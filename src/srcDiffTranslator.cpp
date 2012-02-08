@@ -119,8 +119,17 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   }
 
  } else {
+
+
+   std::string dir = "";
+   if(directory != NULL)
+     dir = directory;
+
+   std::string ver = "";
+   if(version != NULL)
+     ver = version;
  
-   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, css);
+       colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, version, css);
 
   }
 
