@@ -98,10 +98,10 @@ int ColorDiff::colorize(const char * file_one, const char * file_two) {
   xmlSAXHandler sax = factory();
   ctxt->sax = &sax;
 
-  std::vector<int> * stack = new std::vector<int>();
-  stack->push_back(SESCOMMON);
+  std::vector<int> stack = std::vector<int>();
+  stack.push_back(SESCOMMON);
 
-  struct source_diff data = { 1, 1, stack, lines_old, lines_new, *outfile };
+  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, *outfile };
 
   ctxt->_private = &data;
 

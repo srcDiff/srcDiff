@@ -374,11 +374,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // cleanup writer
    xmlTextWriterEndDocument(wstate.writer);
    xmlFreeTextWriter(wstate.writer);
-
+   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
    colordiff.colorize(path_one, path_two);
-
+   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
    xmlBufferEmpty(colordiff.srcdiff);
-
+   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
  }
 
 }
