@@ -397,7 +397,7 @@ srcDiffTranslator::~srcDiffTranslator() {
 
   } else {
 
-    xmlBufferFree(colordiff.srcdiff);
+    xmlBufferFree(colordiff.getsrcDiffBuffer());
 
   }
 
