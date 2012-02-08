@@ -57,6 +57,10 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   if(css_url == "") {
 
   colordiff_file << "<style type=\"text/css\">\n";
+  colordiff_file << "h1\n";
+  colordiff_file << "{\n";
+  colordiff_file << "font-size:12pt;\n";
+  colordiff_file << "}\n";
   colordiff_file << ".normal\n";
   colordiff_file << "{\n";
   colordiff_file << "color:black;\n";
