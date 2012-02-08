@@ -208,6 +208,9 @@ void startDocument(void* ctx) {
 
     if(is_change(edits)) {
 
+      file_name += "{";
+      for(int i = edits->offset_sequence_one; i < edits->length; ++i)
+        file_name += path_one.at(i) + "/";
 
       last_line = edits->offset_sequence_one + edits->length;
       edits = edits->next;
