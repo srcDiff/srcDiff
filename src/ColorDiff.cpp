@@ -39,9 +39,15 @@ ColorDiff::~ColorDiff() {
 
 }
 
-ColorDiff::xmlBuffer * getsrcDiffBuffer() {
+xmlBuffer * ColorDiff::getsrcDiffBuffer() {
 
   return srcdiff;
+
+}
+
+void ColorDiff::setsrcDiffBuffer(xmlBuffer * srcdiff_buffer) {
+
+  srcdiff = srcdiff_buffer;
 
 }
 

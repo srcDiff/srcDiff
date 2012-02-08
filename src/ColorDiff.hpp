@@ -18,6 +18,7 @@ public:
   ~ColorDiff();
 
   xmlBuffer * getsrcDiffBuffer();
+  void setsrcDiffBuffer(xmlBuffer * srcdiff_buffer);
 
   int colorize(const char * file_one, const char * file_two);
 
