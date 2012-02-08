@@ -167,6 +167,13 @@ void startDocument(void* ctx) {
     if(data->file_one != "" && data->file_two != "")
       file_name += "|";
 
+    std::vector<std::string> path_one;
+    int start = 0, end = 0;
+    for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end)
+      path_one.push_back(data->file_one.substr(start, end));
+
+    path_one.push_back(data->file_one.substr(start));
+
     file_name += data->file_two;
 
   }
