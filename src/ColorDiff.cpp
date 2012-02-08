@@ -64,6 +64,15 @@ int ColorDiff::colorize(const char * file_one, const char * file_two) {
 
   }
 
+  std::string file_name = file_one;
+
+  if(strcmp(file_one, file_two) != 0) {
+
+    file_name += "|";
+    file_name += file_two;
+
+  }
+
   std::vector<bool> lines_old;
   std::vector<bool> lines_new;
 
@@ -117,7 +126,7 @@ int ColorDiff::colorize(const char * file_one, const char * file_two) {
   std::vector<int> stack = std::vector<int>();
   stack.push_back(SESCOMMON);
 
-  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, *outfile };
+  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, filename, *outfile };
 
   ctxt->_private = &data;
 

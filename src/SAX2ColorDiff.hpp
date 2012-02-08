@@ -11,6 +11,7 @@
 #include <libxml/parser.h>
 
 #include <fstream>
+#include <string>
 
 struct source_diff {
 
@@ -21,6 +22,7 @@ struct source_diff {
   std::vector<bool> & lines_old;
   std::vector<bool> & lines_new;
 
+  std::string & filename_file;
   std::ostream & colordiff_file;
 };
 
