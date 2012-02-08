@@ -12,6 +12,8 @@
 #include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
 
+#include "SAX2ColorDiff.hpp"
+
 const char * const normal_color = "normal";
 
 const char * const common_color = "common";
