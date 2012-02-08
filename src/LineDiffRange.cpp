@@ -109,6 +109,8 @@ std::string get_line_diff_range(std::string file_one, std::string file_two, unsi
     
   }
 
+  free_shortest_edit_script(edit_script);
+
   return diff;
 
 }

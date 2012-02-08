@@ -11,6 +11,8 @@
 #include <vector>
 #include "SAX2ColorDiff.hpp"
 #include "shortest_edit_script.h"
+#include "LineDiffRange.hpp"
+#include "srcDiffUtility.hpp"
 
 #include "SAX2ColorDiff.hpp"
 
@@ -183,7 +185,7 @@ void startDocument(void* ctx) {
 
   if(distance < 0) {
 
-    fprintf(stderr, "Error with files %s:%s", file_one.c_str(), file_two.c_str());
+    fprintf(stderr, "Error with files %s:%s", data->file_one.c_str(), data->file_two.c_str());
 
     exit(1);
 
@@ -191,9 +193,15 @@ void startDocument(void* ctx) {
 
   std::string diff;
 
-  for(edit * edits = edit_script; edits; edits = edits->next) {
+  edit * edits = edit_script;
+
+  for(; edits; edits = edits->next) {
+
+    if(is_change(edits));
 
   }
+
+  free_shortest_edit_script(edit_script);
 
   data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";

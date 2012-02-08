@@ -3,6 +3,7 @@
 
 #include "shortest_edit_script.h"
 
+#include <Options.hpp>
 #include "xmlrw.hpp"
 
 #include <libxml/xmlreader.h>
