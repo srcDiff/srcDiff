@@ -364,6 +364,7 @@ struct process_options
   int tabsize;
   bool prefixchange[num_prefixes];
   METHOD_TYPE method;
+  std::string css_url;
 };
 
 process_options* gpoptions = 0;
@@ -697,7 +698,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
     { THREAD_FLAG, no_argument, NULL, THREAD_FLAG_CODE },
-    { VISUALIZE_FLAG, no_argument, NULL, VISUALIZE_FLAG_CODE },
+    { VISUALIZE_FLAG, optional_argument, NULL, VISUALIZE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -917,6 +918,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case VISUALIZE_FLAG_CODE:
+
+      poptions.css_url = optarg;
 
       options |= OPTION_VISUALIZE;
 
