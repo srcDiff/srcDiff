@@ -60,10 +60,13 @@ std::vector<std::string> read_file(const char * file) {
 
 }
 
-std::string get_line_diff_range(std::string file_one, std::string file_two) {
+std::string get_line_diff_range(std::string file_one, std::string file_two, int & lines_old, int & lines_new) {
 
   std::vector<std::string> lines1 = read_file(file_one.c_str());
   std::vector<std::string> lines2 = read_file(file_two.c_str());
+
+  lines_old = lines1.size();
+  lines_new = lines2.size();
 
   edit * edit_script;
 

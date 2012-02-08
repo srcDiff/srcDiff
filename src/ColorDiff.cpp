@@ -64,14 +64,14 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
 
   }
 
+
+  int size_old = 0;
+  int size_new = 0;
+
+  std::string stream = get_line_diff_range(file_one, file_two, size_old, size_new);
+
   std::vector<bool> lines_old;
   std::vector<bool> lines_new;
-
-  // make 1 offset
-  lines_old.push_back(false);
-  lines_new.push_back(false);
-
-  std::string stream = get_line_diff_range(file_one, file_two);
 
   std::stringstream in(stream);
 
@@ -106,6 +106,12 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
     }
 
   }
+
+  while(lines_old.size() <= size_old)
+        lines_old.push_back(false);
+
+  while(lines_new.size() <= size_new)
+        lines_new.push_back(false);
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
