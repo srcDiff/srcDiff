@@ -200,16 +200,16 @@ void startDocument(void* ctx) {
   for(; edits; edits = edits->next) {
 
     if(edits->operation == SESDELETE)
-      for(int i = last_line; i < edits->offset_sequnce_one + edits->length; ++i)
+      for(int i = last_line; i < edits->offset_sequence_one + edits->length; ++i)
         ;
     else if(edits->operation == SESINSERT)
-      for(int i = last_line; i < edits->offset_sequnce_two + edits->length + 1; ++i)
+      for(int i = last_line; i < edits->offset_sequence_two + edits->length + 1; ++i)
         ;
 
     if(is_change(edits)) {
 
 
-      last_line = edits->offset_sequnce_one + edits->length;
+      last_line = edits->offset_sequence_one + edits->length;
       continue;
 
     }
@@ -218,12 +218,12 @@ void startDocument(void* ctx) {
 
     case SESINSERT :
 
-      last_line = edits->offset_sequnce_two + edits->length + 1;
+      last_line = edits->offset_sequence_two + edits->length + 1;
       break;
 
     case SESDELETE :
 
-      last_line = edits->offset_sequnce_one + edits->length;
+      last_line = edits->offset_sequence_one + edits->length;
       break;
 
 
