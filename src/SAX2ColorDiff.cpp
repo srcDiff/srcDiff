@@ -162,7 +162,7 @@ void startDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
 
-  std::string file_name;
+  std::string file_name = "";
 
   if(data->file_one != "" && data->file_two != "") {
 
@@ -301,9 +301,17 @@ void startDocument(void* ctx) {
 
   } else {
 
-    file_name = data->file_one;
-    if(data->file_one == "")
-      file_name = data->file_two;
+    file_name += "{";
+
+    if(data->file_one != "")
+      file_name += data->file_one;
+
+    file_name += ",";
+
+    if(data->file_two != "")
+      file_name += data->file_two;
+
+    file_name += "}";
 
   }
 
