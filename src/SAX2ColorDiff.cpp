@@ -177,10 +177,24 @@ void startDocument(void* ctx) {
 
   path_two.push_back(data->file_two.substr(start));
 
-  int left = 0;
-  for(left = 0; left < path_one.size() && left < path_two.size() && path_one.at(left) == path_two.at(left); ++left)
-    ;
-    
+  edit * edit_script;
+
+  int distance = shortest_edit_script(path_one.size(), &path_one, path_two.size(), &path_two, line_compare, line_accessor, &edit_script, NULL);
+
+  if(distance < 0) {
+
+    fprintf(stderr, "Error with files %s:%s", file_one.c_str(), file_two.c_str());
+
+    exit(1);
+
+  }
+
+  std::string diff;
+
+  for(edit * edits = edit_script; edits; edits = edits->next) {
+
+  }
+
   data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
 
