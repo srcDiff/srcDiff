@@ -473,22 +473,22 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
     isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) || isoption(options, OPTION_VIZUALIZE) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
-    first && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
+    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
 
     // optional literal xml namespace
-    first && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
     // optional operator xml namespace
-    first && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
     // optional modifier xml namespace
-    first && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
     // optional position xml namespace
-    first && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
+    (isoption(options, OPTION_VIZUALIZE) || first) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
     // optional diff xml namespace
-    first ? SRCML_DIFF_NS_URI : 0,
+    (isoption(options, OPTION_VIZUALIZE) || first) ? SRCML_DIFF_NS_URI : 0,
   };
 
   // output the namespaces
