@@ -414,7 +414,7 @@ void srcDiffTranslator::startUnit(const char * language,
                             const char* version         // root unit version
                             ) {
 
-  if(isoption(options, OPTION_VIZUALIZE) || first) && !isoption(global_options, OPTION_XMLDECL))
+  if((isoption(options, OPTION_VIZUALIZE) || first) && !isoption(global_options, OPTION_XMLDECL))
     xmlTextWriterStartDocument(wstate.writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   // start of main tag
