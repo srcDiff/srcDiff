@@ -167,7 +167,7 @@ void startDocument(void* ctx) {
   std::vector<std::string> path_one;
   int start = 0, end = 0;
   for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end + 1)
-    path_one.push_back(data->file_one.substr(start, end));
+    path_one.push_back(data->file_one.substr(start, end - start));
 
   path_one.push_back(data->file_one.substr(start));
 
@@ -175,7 +175,7 @@ void startDocument(void* ctx) {
   start = 0;
   end = 0;
   for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
-    path_two.push_back(data->file_two.substr(start, end));
+    path_two.push_back(data->file_two.substr(start, end - start));
 
   path_two.push_back(data->file_two.substr(start));
 
