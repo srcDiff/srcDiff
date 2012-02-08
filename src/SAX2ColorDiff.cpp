@@ -141,6 +141,7 @@ void startDocument(void* ctx) {
   struct source_diff * data = (source_diff *)ctxt->_private;
 
   data->colordiff_file << "<div class=\"" << data->file_name << "\">\n";
+  data->colordiff_file << "<h1>" << data->file_name << "</h1>\n";
 
   std::string span_class = "class=\"";
 
