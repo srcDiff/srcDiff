@@ -231,7 +231,7 @@ void startDocument(void* ctx) {
 
   }
 
-  for(int i = last_line; i < path_one.size(); ++i)
+  for(int i = last_line; i < (signed)path_one.size(); ++i)
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, path_one.at(i).c_str());
 
   data->colordiff_file << "<div class=\"srcdiff\" filename1=\"" << data->file_one << "\" filename2=\"" << data->file_two << "\">";
