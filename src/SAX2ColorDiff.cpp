@@ -210,6 +210,7 @@ void startDocument(void* ctx) {
 
       file_name += "{";
       int i;
+
       for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
         file_name += path_one.at(i) + "/";
 
@@ -234,10 +235,34 @@ void startDocument(void* ctx) {
 
     case SESINSERT :
 
+      file_name += "{";
+
+      int i;
+      for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
+        file_name += path_one.at(i) + "/";
+
+      file_name += path_one.at(i);
+
+      file_name += ",";
+
+      file_name += "}/";
+
       last_line = edits->offset_sequence_two + edits->length + 1;
       break;
 
     case SESDELETE :
+
+      file_name += "{";
+
+      int i;
+      for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
+        file_name += path_one.at(i) + "/";
+
+      file_name += path_one.at(i);
+
+      file_name += ",";
+
+      file_name += "}/";
 
       last_line = edits->offset_sequence_one + edits->length;
       break;
