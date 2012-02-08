@@ -119,7 +119,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
  } else {
  
-   colordiff.srcdiff = xmlBufferCreate();
+   colordiff.setsrcDiffBuffer(xmlBufferCreate());
 
   }
 
@@ -137,7 +137,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
  if(isoption(global_options, OPTION_VIZUALIZE)) {
 
-   wstate.writer = xmlNewTextWriterMemory(colordiff.srcdiff, 0);
+   wstate.writer = xmlNewTextWriterMemory(colordiff.getsrcDiffBuffer(), 0);
 
   if (wstate.writer == NULL) {
     fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
@@ -378,7 +378,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
    colordiff.colorize(path_one, path_two);
 
-   xmlBufferEmpty(colordiff.srcdiff);
+   xmlBufferEmpty(colordiff.getsrcDiffBuffer());
 
  }
 
