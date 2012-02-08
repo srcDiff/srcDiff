@@ -35,7 +35,8 @@ ColorDiff::~ColorDiff() {
 
   output_end_document(*outfile);
 
-  outfile->close();
+  if(outfile != &std::cout)
+    ((std::ofstream *)outfile)->close();
   delete outfile;
 
 }

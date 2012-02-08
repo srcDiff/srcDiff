@@ -49,7 +49,7 @@ xmlSAXHandler factory() {
   return sax;
 }
 
-void output_start_document(std::ofstream & colordiff_file) {
+void output_start_document(std::ostream & colordiff_file) {
 
   colordiff_file << "<html>\n";
   colordiff_file << "<head>\n";
@@ -127,7 +127,7 @@ void output_start_document(std::ofstream & colordiff_file) {
 
 }
 
-void output_end_document(std::ofstream & colordiff_file) {
+void output_end_document(std::ostream & colordiff_file) {
 
   colordiff_file << "</pre>\n";
   colordiff_file << "</body>\n";

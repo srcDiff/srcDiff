@@ -10,7 +10,7 @@ private :
   bool first;
 
   xmlBuffer * srcdiff;
-  std::ofstream * outfile;
+  std::ostream * outfile;
 
 public:
 
