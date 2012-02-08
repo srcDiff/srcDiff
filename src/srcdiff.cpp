@@ -125,7 +125,7 @@ const int METHOD_FLAG_CODE = 256 + 10;
 const char* const THREAD_FLAG = "thread";
 const int THREAD_FLAG_CODE = 256 + 11;
 
-const char* const VIZUALIZE_FLAG = "vizualize";
+const char* const VIZUALIZE_FLAG = "visualize";
 const int VIZUALIZE_FLAG_CODE = 256 + 12;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
