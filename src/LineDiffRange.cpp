@@ -60,7 +60,7 @@ std::vector<std::string> read_file(const char * file) {
 
 }
 
-std::string get_line_diff_range(std::string file_one, std::string file_two, int & lines_old, int & lines_new) {
+std::string get_line_diff_range(std::string file_one, std::string file_two, unsigned int & lines_old, unsigned int & lines_new) {
 
   std::vector<std::string> lines1 = read_file(file_one.c_str());
   std::vector<std::string> lines2 = read_file(file_two.c_str());

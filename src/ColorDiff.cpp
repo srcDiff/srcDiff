@@ -65,8 +65,8 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
   }
 
 
-  int size_old = 0;
-  int size_new = 0;
+  unsigned int size_old = 0;
+  unsigned int size_new = 0;
 
   std::string stream = get_line_diff_range(file_one, file_two, size_old, size_new);
 
