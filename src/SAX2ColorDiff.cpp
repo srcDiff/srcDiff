@@ -115,6 +115,12 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
 
   colordiff_file << "</head>\n";
   colordiff_file << "<body>\n";
+
+  colordiff_file << "<table><tr>";
+  colordiff_file << "<td>delete</td>";
+  colordiff_file << "<td>insert</td>";
+  colordiff_file << "<td>change</td>";
+  colordiff_file << "</tr></table>\n";
   colordiff_file << "<pre>\n";
 
 }
