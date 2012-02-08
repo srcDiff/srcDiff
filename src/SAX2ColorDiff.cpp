@@ -54,7 +54,8 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<html>\n";
   colordiff_file << "<head>\n";
 
-  /*
+  if(css_url == "") {
+
   colordiff_file << "<style type=\"text/css\">\n";
   colordiff_file << ".normal\n";
   colordiff_file << "{\n";
@@ -121,14 +122,13 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "\n";
   colordiff_file << "}\n";
   colordiff_file << "</style>\n";
-  */
 
-  std::string css = "http://www.sdml.info/projects/srcml/ex/colordiff.css";
-  if(css_url != "")
-    css = css_url;
-
+  } else {
  
-  colordiff_file << "<link href=\"" << css << "\" rel=\"stylesheet\" type=\"text/css\"></link>";
+    colordiff_file << "<link href=\"" << css_url << "\" rel=\"stylesheet\" type=\"text/css\"></link>";
+
+  }
+
   colordiff_file << "</head>\n";
   colordiff_file << "<body>\n";
   colordiff_file << "<pre>\n";
