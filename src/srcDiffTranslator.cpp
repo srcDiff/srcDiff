@@ -469,7 +469,7 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
     first ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
-    isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) ? SRCML_CPP_NS_URI : 0,
+    isoption(OPTION_CPP, options) && !isoption(OPTION_NESTED, options) || isoption(options, OPTION_VIZUALIZE) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
     first && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
