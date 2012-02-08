@@ -120,7 +120,6 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
  } else {
 
-
    std::string dir = "";
    if(directory != NULL)
      dir = directory;
@@ -128,8 +127,8 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
    std::string ver = "";
    if(version != NULL)
      ver = version;
- 
-       colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, version, css);
+
+   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, version, css);
 
   }
 
