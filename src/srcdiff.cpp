@@ -562,16 +562,17 @@ int main(int argc, char* argv[]) {
 
     // translator from input to output using determined language
     srcDiffTranslator translator(poptions.language,
-                           poptions.src_encoding,
-                           poptions.xml_encoding,
-                           poptions.srcdiff_filename,
-                           options,
-                           poptions.method,
-                           poptions.given_directory,
-                           poptions.given_filename,
-                           poptions.given_version,
-                           urisprefix,
-                           poptions.tabsize);
+                                 poptions.src_encoding,
+                                 poptions.xml_encoding,
+                                 poptions.srcdiff_filename,
+                                 options,
+                                 poptions.method,
+                                 poptions.given_directory,
+                                 poptions.given_filename,
+                                 poptions.given_version,
+                                 urisprefix,
+                                 poptions.tabsize,
+                                 poptions.css_url);
 
 
     bool showinput = false;

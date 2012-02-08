@@ -54,17 +54,18 @@ xAttr diff_type = { 0 };
 
 // constructor
 srcDiffTranslator::srcDiffTranslator(int language,                // programming language of source code
-                         const char* src_encoding,    // text encoding of source code
-                         const char* xml_encoding,    // xml encoding of result srcML file
-                         const char* srcdiff_filename,  // filename of result srcDiff file
-                         OPTION_TYPE global_options,             // many and varied options
-                         METHOD_TYPE method,
-                         const char* directory,       // root unit directory
-                         const char* filename,        // root unit filename
-                         const char* version,         // root unit version
-                         const char* uri[],           // uri prefixes
-                         int tabsize                  // size of tabs
-                         )
+                                     const char* src_encoding,    // text encoding of source code
+                                     const char* xml_encoding,    // xml encoding of result srcML file
+                                     const char* srcdiff_filename,  // filename of result srcDiff file
+                                     OPTION_TYPE global_options,             // many and varied options
+                                     METHOD_TYPE method,
+                                     const char* directory,       // root unit directory
+                                     const char* filename,        // root unit filename
+                                     const char* version,         // root unit version
+                                     const char* uri[],           // uri prefixes
+                                     int tabsize,                  // size of tabs
+                                     std::string css
+                                     )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
     src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
@@ -119,7 +120,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
  } else {
  
-   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, "");
+   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, css);
 
   }
 

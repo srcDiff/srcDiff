@@ -41,16 +41,17 @@ class srcDiffTranslator {
 
   // constructor
   srcDiffTranslator(int language,
-		  const char* src_encoding,
-		  const char* xml_encoding,
-		  const char* srcml_filename,
-		  OPTION_TYPE global_options,
-		  METHOD_TYPE method,
-		  const char* directory,
-		  const char* filename,
-		  const char* version,
-		  const char* uri[],
-		  int tabsize
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    const char* srcml_filename,
+                    OPTION_TYPE global_options,
+                    METHOD_TYPE method,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    const char* uri[],
+                    int tabsize, 
+                    std::string css
 		  );
 
   void close();
