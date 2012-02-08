@@ -314,11 +314,23 @@ void startDocument(void* ctx) {
     if(file_name_one == file_name_two)
       file_name += file_name_one;
     else {
-
+      
       file_name += "{";
+
+      file_name +=  "<span class=\""; 
+      file_name += delete_color; 
+      file_name += "\">";
       file_name += file_name_one;
+      file_name += "</span>";
+      
       file_name += ",";
+
+      file_name += "<span class=\""; 
+      file_name += insert_color; 
+      file_name += "\">";
       file_name += file_name_two;
+      file_name += "</span>";
+
       file_name += "}";
 
     }
