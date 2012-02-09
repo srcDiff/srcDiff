@@ -385,9 +385,10 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   edit * edits = edit_script;
   unsigned int similarity = 0;
+  int last_offset;
   for(; edits; edits = edits->next) {
 
-    if(is_change(edits)) {
+    if(0 && is_change(edits)) {
 
       similarity += edits->length > edits->next->length ? edits->length : edits->next->length;
 
@@ -398,8 +399,18 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
       similarity += edits->length;
 
     }
+
+
   }
 
+  similarity = ((node_set_old_text.size() + node_set_new_text.size()) - similarity);
+
+  if(similarity <= 0)
+    similarity = 10000;
+  else
+    similarity = 10000 / similarity;
+
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, similarity);
   free_shortest_edit_script(edit_script);
 
   return similarity;
@@ -507,7 +518,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
     for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old->at(edits->offset_sequence_one + old_pos)->at(0))->name);
 
     }
 
@@ -515,12 +526,12 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
     for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new->at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
 
     }
 
     fprintf(stderr, "HERE\n");
-  */
+*/
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
