@@ -164,7 +164,6 @@ void startDocument(void* ctx) {
 
   std::string file_name = "";
 
-  if(data->file_one != "" && data->file_two != "") {
 
     std::vector<std::string> path_one;
     int start = 0, end = 0;
@@ -180,6 +179,8 @@ void startDocument(void* ctx) {
       path_two.push_back(data->file_two.substr(start, end - start));
 
     std::string file_name_two = data->file_two.substr(start);
+
+    if(data->file_one != "" && data->file_two != "") {
 
     edit * edit_script;
 
@@ -337,16 +338,24 @@ void startDocument(void* ctx) {
 
   } else {
 
-    file_name += "{";
 
     //file_name +=  "<span class=\""; 
     //file_name += delete_color; 
     //file_name += "\">";
 
-    if(data->file_one != "")
-      file_name += data->file_one;
+      for(int i = 0; i < path_one.size(); ++i)
+            file_name += path_one.at(i);
 
     //file_name += "</span>";
+
+      for(int i = 0; i < path_two.size(); ++i)
+            file_name += path_two.at(i);
+
+     file_name += "{";
+
+          if(data->file_one != "")
+            file_name += file_name_one;
+
 
     file_name += ",";
 
@@ -354,8 +363,8 @@ void startDocument(void* ctx) {
     //file_name += insert_color; 
     //file_name += "\">";
 
-    if(data->file_two != "")
-      file_name += data->file_two;
+          if(data->file_two != "")
+            file_name += file_name_two;
 
     //file_name += "</span>";
 
