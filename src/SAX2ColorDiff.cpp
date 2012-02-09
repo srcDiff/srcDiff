@@ -63,6 +63,10 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   if(css_url == "") {
 
     colordiff_file << "<style type=\"text/css\">\n";
+    colordiff_file << "srcdiff\n";
+    colordiff_file << "{\n";
+    colordiff_file << "white-space:pre;\n";
+    colordiff_file << "}\n";
     colordiff_file << "h1\n";
     colordiff_file << "{\n";
     colordiff_file << "font-size:12pt;\n";
@@ -149,13 +153,10 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_change << "\"><cite>diff</cite> Change</span>\n";
   colordiff_file << "</div>\n";
 
-  colordiff_file << "<pre>";
-
 }
 
 void output_end_document(std::ostream & colordiff_file) {
 
-  colordiff_file << "</pre>\n";
   colordiff_file << "</body>\n";
   colordiff_file << "</html>\n";
 
