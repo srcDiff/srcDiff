@@ -60,7 +60,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<!ATTLIST div filename1 CDATA #IMPLIED";
   colordiff_file << "}\n";
 
-  colordiff << ">\n";
+  colordiff_file << ">\n";
 
   colordiff_file << "<head>\n";
 
