@@ -176,22 +176,22 @@ void startDocument(void* ctx) {
   std::string file_name = "";
 
 
-    std::vector<std::string> path_one;
-    int start = 0, end = 0;
-    for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end + 1)
-      path_one.push_back(data->file_one.substr(start, end - start));
+  std::vector<std::string> path_one;
+  int start = 0, end = 0;
+  for(; (end = data->file_one.find("/", start)) != std::string::npos; start = end + 1)
+    path_one.push_back(data->file_one.substr(start, end - start));
 
-    std::string file_name_one = data->file_one.substr(start);
+  std::string file_name_one = data->file_one.substr(start);
 
-    std::vector<std::string> path_two;
-    start = 0;
-    end = 0;
-    for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
-      path_two.push_back(data->file_two.substr(start, end - start));
+  std::vector<std::string> path_two;
+  start = 0;
+  end = 0;
+  for(; (end = data->file_two.find("/", start)) != std::string::npos; start = end + 1)
+    path_two.push_back(data->file_two.substr(start, end - start));
 
-    std::string file_name_two = data->file_two.substr(start);
+  std::string file_name_two = data->file_two.substr(start);
 
-    if(data->file_one != "" && data->file_two != "") {
+  if(data->file_one != "" && data->file_two != "") {
 
     edit * edit_script;
 
@@ -267,8 +267,8 @@ void startDocument(void* ctx) {
 
           file_name += ",";
 
-          //file_name += "<span class=\""; 
-          //file_name += insert_color; 
+          //file_name += "<span class=\"";
+          //file_name += insert_color;
           //file_name += "\">";
 
           int i;
@@ -278,7 +278,7 @@ void startDocument(void* ctx) {
           file_name += path_two.at(i);
 
           //file_name += "</span>";
-        
+
           file_name += "}/";
 
           last_line = edits->offset_sequence_two + edits->length + 1;
@@ -293,8 +293,8 @@ void startDocument(void* ctx) {
 
           file_name += "{";
 
-          //file_name +=  "<span class=\""; 
-          //file_name += delete_color; 
+          //file_name +=  "<span class=\"";
+          //file_name += delete_color;
           //file_name += "\">";
 
           int i;
@@ -326,19 +326,19 @@ void startDocument(void* ctx) {
     if(file_name_one == file_name_two)
       file_name += file_name_one;
     else {
-      
+
       file_name += "{";
 
-      //file_name +=  "<span class=\""; 
-      //file_name += delete_color; 
+      //file_name +=  "<span class=\"";
+      //file_name += delete_color;
       //file_name += "\">";
       file_name += file_name_one;
       //file_name += "</span>";
-      
+
       file_name += ",";
 
-      //file_name += "<span class=\""; 
-      //file_name += insert_color; 
+      //file_name += "<span class=\"";
+      //file_name += insert_color;
       //file_name += "\">";
       file_name += file_name_two;
       //file_name += "</span>";
@@ -350,40 +350,40 @@ void startDocument(void* ctx) {
   } else {
 
 
-    //file_name +=  "<span class=\""; 
-    //file_name += delete_color; 
+    //file_name +=  "<span class=\"";
+    //file_name += delete_color;
     //file_name += "\">";
 
-      for(int i = 0; i < path_one.size(); ++i) {
+    for(unsigned int i = 0; i < path_one.size(); ++i) {
 
-            file_name += path_one.at(i);
-            file_name += "/";
+      file_name += path_one.at(i);
+      file_name += "/";
 
-        }
+    }
 
     //file_name += "</span>";
 
-            for(int i = 0; i < path_two.size(); ++i) {
+    for(unsigned int i = 0; i < path_two.size(); ++i) {
 
-                file_name += path_two.at(i);
-                file_name += "/";
+      file_name += path_two.at(i);
+      file_name += "/";
 
-              }
+    }
 
-     file_name += "{";
+    file_name += "{";
 
-          if(data->file_one != "")
-            file_name += file_name_one;
+    if(data->file_one != "")
+      file_name += file_name_one;
 
 
     file_name += ",";
 
-    //file_name += "<span class=\""; 
-    //file_name += insert_color; 
+    //file_name += "<span class=\"";
+    //file_name += insert_color;
     //file_name += "\">";
 
-          if(data->file_two != "")
-            file_name += file_name_two;
+    if(data->file_two != "")
+      file_name += file_name_two;
 
     //file_name += "</span>";
 
