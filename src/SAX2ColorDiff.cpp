@@ -227,7 +227,9 @@ void startDocument(void* ctx) {
 
       if(is_change(edits)) {
 
+        file_name += "<span class=\"or\">";
         file_name += "{";
+        file_name += "</span>";
 
         //file_name += "<span class=\"";
         //file_name += delete_color;
@@ -241,7 +243,9 @@ void startDocument(void* ctx) {
 
         //file_name += "</span>";
 
+        file_name += "<span class=\"or\">";
         file_name += ",";
+        file_name += "</span>";
 
         //file_name += "<span class=\"";
         //file_name += insert_color;
@@ -254,7 +258,10 @@ void startDocument(void* ctx) {
 
         //file_name += "</span>";
 
-        file_name += "}/";
+        file_name += "<span class=\"or\">";
+        file_name += "}";
+        file_name += "</span>";
+        file_name += "/";
 
         last_line = edits->offset_sequence_one + edits->length;
         edits = edits->next;
@@ -268,9 +275,13 @@ void startDocument(void* ctx) {
 
         {
 
+          file_name += "<span class=\"or\">";
           file_name += "{";
+          file_name += "</span>";
 
+          file_name += "<span class=\"or\">";
           file_name += ",";
+          file_name += "</span>";
 
           //file_name += "<span class=\"";
           //file_name += insert_color;
@@ -284,7 +295,10 @@ void startDocument(void* ctx) {
 
           //file_name += "</span>";
 
-          file_name += "}/";
+          file_name += "<span class=\"or\">";
+          file_name += "}";
+          file_name += "</span>";
+          file_name += "/";
 
           last_line = edits->offset_sequence_two + edits->length + 1;
 
@@ -296,7 +310,9 @@ void startDocument(void* ctx) {
 
         {
 
+          file_name += "<span class=\"or\">";
           file_name += "{";
+          file_name += "</span>";
 
           //file_name +=  "<span class=\"";
           //file_name += delete_color;
@@ -310,9 +326,14 @@ void startDocument(void* ctx) {
 
           //file_name += "</span>";
 
+          file_name += "<span class=\"or\">";
           file_name += ",";
+          file_name += "</span>";
 
-          file_name += "}/";
+          file_name += "<span class=\"or\">";
+          file_name += "}";
+          file_name += "</span>";
+          file_name += "/";
 
           last_line = edits->offset_sequence_one + edits->length;
 
