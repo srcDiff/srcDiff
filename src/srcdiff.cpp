@@ -938,12 +938,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case SAME_FLAG_CODE:
 
-      options |= OPTION_VISUALIZE;
+      options |= OPTION_OUTPUTSAME;
 
       break
+
     case PURE_FLAG_CODE:
 
-      options |= OPTION_PURE;
+      options |= OPTION_OUTPUTPURE;
 
       break;
 
