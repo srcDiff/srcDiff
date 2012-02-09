@@ -996,18 +996,9 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
     finish_new = node_sets_new->at(end_new)->back() + 1;
   }
 
-  if(node_sets_old->size() == 1) {
+  if(0 && node_sets_old->size() == 1 && complete_nestable(*node_sets_new, rbuf_new.nodes, node_sets_old->at(0), rbuf_old.nodes)) {
 
-    if(complete_nestable(*node_sets_new, rbuf_new.nodes, node_sets_old->at(0), rbuf_old.nodes)) {
-
-    }
-
-  } else if(node_sets_new->size() == 1) {
-
-    if(complete_nestable(*node_sets_old, rbuf_old.nodes, node_sets_new->at(0), rbuf_new.nodes)) {
-
-    }
-
+  } else if(0 && node_sets_new->size() == 1 && complete_nestable(*node_sets_old, rbuf_old.nodes, node_sets_new->at(0), rbuf_new.nodes)) {
 
   } else
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
