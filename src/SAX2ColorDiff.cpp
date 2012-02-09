@@ -329,9 +329,9 @@ void startDocument(void* ctx) {
 
       file_name += "{";
 
-      file_name +=  "<span class=\"or\">";
+      file_name += "<span class=\"or\">";
 
-      //file_name +=  "<span class=\"";
+      //file_name += "<span class=\"";
       //file_name += delete_color;
       //file_name += "\">";
       file_name += file_name_one;
@@ -376,6 +376,8 @@ void startDocument(void* ctx) {
 
     file_name += "{";
 
+    file_name += "<span class=\"or\">";
+
     if(data->file_one != "")
       file_name += file_name_one;
 
@@ -390,6 +392,8 @@ void startDocument(void* ctx) {
       file_name += file_name_two;
 
     //file_name += "</span>";
+
+    file_name += "</span>";
 
     file_name += "}";
 
