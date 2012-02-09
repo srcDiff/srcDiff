@@ -128,6 +128,12 @@ const int THREAD_FLAG_CODE = 256 + 11;
 const char* const VISUALIZE_FLAG = "visualize";
 const int VISUALIZE_FLAG_CODE = 256 + 12;
 
+const char* const SAME_FLAG = "same";
+const int SAME_FLAG_CODE = 256 + 12;
+
+const char* const PURE_FLAG = "pure";
+const int PURE_FLAG_CODE = 256 + 12;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
