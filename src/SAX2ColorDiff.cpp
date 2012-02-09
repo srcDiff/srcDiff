@@ -63,7 +63,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   if(css_url == "") {
 
     colordiff_file << "<style type=\"text/css\">\n";
-    colordiff_file << "srcdiff\n";
+    colordiff_file << ".srcdiff\n";
     colordiff_file << "{\n";
     colordiff_file << "white-space:pre;\n";
     colordiff_file << "}\n";
