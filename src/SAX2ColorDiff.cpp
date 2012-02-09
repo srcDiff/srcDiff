@@ -76,7 +76,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
     colordiff_file << "}\n";
     colordiff_file << ".delete\n";
     colordiff_file << "{\n";
-    colordiff_file << "color:#8B0000;\n";
+    colordiff_file << "color:red;\n";
     colordiff_file << "font-weight:bold;\n";
     //colordiff_file << "text-decoration:line-through;\n";
     colordiff_file << "}\n";
