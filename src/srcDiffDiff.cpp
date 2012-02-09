@@ -406,9 +406,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
   similarity = ((node_set_old_text.size() + node_set_new_text.size()) - similarity);
 
   if(similarity <= 0)
-    similarity = 10000;
-  else
-    similarity = 10000 / similarity;
+    similarity = 0;
 
   free_shortest_edit_script(edit_script);
 
@@ -568,6 +566,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
     Errata: Now minimizing unmatched then minimizing similarity
 
+    Errata: Now maximizing similarity
+
   */
 
   edit * edits = edit_script;
@@ -613,7 +613,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
                                           , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + i));
 
       //unsigned long long max_similarity = (unsigned long long)-1;
-      int max_similarity = MAX_INT;
+      int max_similarity = -1;
       int unmatched = 0;
 
       // check if unmatched
@@ -646,7 +646,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
 
         //if(temp_similarity < max_similarity) {
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < max_similarity)) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity > max_similarity)) {
 
           matched = true;
 
@@ -681,7 +681,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         //unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
 
         //if(temp_similarity_match < temp_similarity) {
-        if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity < temp_similarity)) {
+        if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity > temp_similarity)) {
 
           temp_matched = true;
 
@@ -691,7 +691,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         }
 
         //if(temp_similarity < max_similarity) {
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity <= max_similarity)) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity >= max_similarity)) {
 
           matched = temp_matched;
 
@@ -714,7 +714,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
           ++temp_num_unmatched;
 
         //if(temp_similarity < max_similarity) {
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < max_similarity)) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity > max_similarity)) {
 
           matched = !unmatched;
 
