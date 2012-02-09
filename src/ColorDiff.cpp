@@ -113,6 +113,9 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
   if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_OUTPUTSAME) && lines_old.size() == 0 && lines_new.size() == 0)
     return 0;
 
+  if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_OUTPUTPURE) && (lines_old.size() == 0 || lines_new.size() == 0))
+    return 0;
+
   while(lines_old.size() <= size_old)
         lines_old.push_back(false);
 
