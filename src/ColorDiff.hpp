@@ -2,6 +2,7 @@
 #define INCLUDED_COLORDIFF_HPP
 
 #include <fstream>
+#include <Options.hpp>
 
 class ColorDiff {
 
@@ -13,13 +14,15 @@ private :
   std::string directory;
   std::string version;
   std::string css_url;
+  OPTION_TYPE & options;
 
   std::ostream * outfile;
 
 
 public:
 
-  ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::string directory, std::string version, std::string css);
+  ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::string directory, std::string version, std::string css,
+            OPTION_TYPE & options);
   ~ColorDiff();
 
   xmlBuffer * getsrcDiffBuffer();
