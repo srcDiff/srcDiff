@@ -129,10 +129,10 @@ const char* const VISUALIZE_FLAG = "visualize";
 const int VISUALIZE_FLAG_CODE = 256 + 12;
 
 const char* const SAME_FLAG = "view-same";
-const int SAME_FLAG_CODE = 256 + 12;
+const int SAME_FLAG_CODE = 256 + 13;
 
 const char* const PURE_FLAG = "view-pure";
-const int PURE_FLAG_CODE = 256 + 12;
+const int PURE_FLAG_CODE = 256 + 14;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
