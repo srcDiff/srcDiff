@@ -58,7 +58,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<!ATTLIST div filename1 CDATA #IMPLIED>\n";
   colordiff_file << "<!ATTLIST div filename2 CDATA #IMPLIED>\n";
   colordiff_file << "]>\n";
-  colordiff_file << "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\"\n>";
+  colordiff_file << "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n";
 
 
   colordiff_file << "<head>\n";
