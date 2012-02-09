@@ -33,8 +33,12 @@ ColorDiff::ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::strin
 
 ColorDiff::~ColorDiff() {
 
-  if(first)
+  if(first) {
+
     output_start_document(*outfile, css_url);
+    first = false;
+  
+  }
 
   output_end_document(*outfile);
 
