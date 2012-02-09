@@ -128,10 +128,10 @@ const int THREAD_FLAG_CODE = 256 + 11;
 const char* const VISUALIZE_FLAG = "visualize";
 const int VISUALIZE_FLAG_CODE = 256 + 12;
 
-const char* const SAME_FLAG = "same";
+const char* const SAME_FLAG = "view-same";
 const int SAME_FLAG_CODE = 256 + 12;
 
-const char* const PURE_FLAG = "pure";
+const char* const PURE_FLAG = "view-pure";
 const int PURE_FLAG_CODE = 256 + 12;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
@@ -706,6 +706,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
     { THREAD_FLAG, no_argument, NULL, THREAD_FLAG_CODE },
     { VISUALIZE_FLAG, optional_argument, NULL, VISUALIZE_FLAG_CODE },
+    { SAME_FLAG, no_argument, NULL, SAME_FLAG_CODE },
+    { PURE_FLAG, no_argument, NULL, PURE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -931,6 +933,17 @@ int process_args(int argc, char* argv[], process_options & poptions) {
         poptions.css_url = optarg;
 
       options |= OPTION_VISUALIZE;
+
+      break;
+
+    case SAME_FLAG_CODE:
+
+      options |= OPTION_VISUALIZE;
+
+      break
+    case PURE_FLAG_CODE:
+
+      options |= OPTION_PURE;
 
       break;
 
