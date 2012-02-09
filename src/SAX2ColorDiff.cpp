@@ -343,13 +343,21 @@ void startDocument(void* ctx) {
     //file_name += delete_color; 
     //file_name += "\">";
 
-      for(int i = 0; i < path_one.size(); ++i)
+      for(int i = 0; i < path_one.size(); ++i) {
+
             file_name += path_one.at(i);
+            file_name += "/";
+
+        }
 
     //file_name += "</span>";
 
-      for(int i = 0; i < path_two.size(); ++i)
-            file_name += path_two.at(i);
+            for(int i = 0; i < path_two.size(); ++i) {
+
+                file_name += path_two.at(i);
+                file_name += "/";
+
+              }
 
      file_name += "{";
 
