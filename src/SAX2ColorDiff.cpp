@@ -136,9 +136,9 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<body>\n";
 
   colordiff_file << "<div class=\"key\">\n";
-  colordiff_file << "<span class=\"" << diff_color_delete << "\"><cite>diff</cite> Delete</span>";
-  colordiff_file << "<span class=\"" << delete_color << "\"><cite>srcDiff</cite> Delete</span>";
-  colordiff_file << "<span class=\"" << delete_color << " " << diff_color_delete << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Delete</span>";
+  colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_delete << "\"><cite>diff</cite> Delete</span>";
+  colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << delete_color << "\"><cite>srcDiff</cite> Delete</span>";
+  colordiff_file << "<span title=\"Line delete background color with srcDiff delete font color\" class=\"" << delete_color << " " << diff_color_delete << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Delete</span>";
   colordiff_file << "<span class=\"" << diff_color_insert << "\"><cite>diff</cite> Insert</span>";
   colordiff_file << "<span class=\"" << insert_color << "\"><cite>srcDiff</cite> Insert</span>";
   colordiff_file << "<span class=\"" << insert_color << " " << diff_color_insert << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Insert</span>";
