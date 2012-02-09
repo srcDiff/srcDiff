@@ -1014,6 +1014,20 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
   } else if(0 && node_sets_new->size() == 1 && complete_nestable(*node_sets_old, rbuf_old.nodes, node_sets_new->at(0), rbuf_new.nodes)) {
 
+    std::vector<int> node_set;
+
+    for(unsigned int i = 0; i < node_sets_old->size(); ++i) {
+
+      for(unsigned int j = 0; j < node_sets_old->at(i)->size(); ++j) {
+
+        node_set.push_back(node_sets_old->at(i)->at(j));
+
+      }
+
+    }
+
+    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(0), SESDELETE, wstate); 
+
   } else
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
 
