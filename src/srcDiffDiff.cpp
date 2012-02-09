@@ -996,37 +996,53 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
     finish_new = node_sets_new->at(end_new)->back() + 1;
   }
 
-  if((end_old - start_old) == 1 && complete_nestable(*node_sets_new, rbuf_new.nodes, node_sets_old->at(0), rbuf_old.nodes)) {
+  std::vector<std::vector<int> *> slice_old;
+
+  for(int i = start_old; i <= end_old; ++i) {
+
+    slice_old.push_back(node_sets_old->at(i));
+
+  }
+
+  std::vector<std::vector<int> *> slice_new;
+
+  for(int i = start_new; i <= end_new; ++i) {
+
+    slice_new.push_back(node_sets_new->at(i));
+
+  }
+      
+  if(((end_old + 1) - start_old) == 1 && complete_nestable(slice_new, rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
 
     std::vector<int> node_set;
 
-    for(unsigned int i = 0; i < node_sets_new->size(); ++i) {
+    for(unsigned int i = 0; i < slice_new.size(); ++i) {
 
-      for(unsigned int j = 0; j < node_sets_new->at(i)->size(); ++j) {
+      for(unsigned int j = 0; j < slice_new.at(i)->size(); ++j) {
 
-        node_set.push_back(node_sets_new->at(i)->at(j));
+        node_set.push_back(slice_new.at(i)->at(j));
 
       }
 
     }
 
-    output_nested(rbuf_old, node_sets_old->at(0), rbuf_new, &node_set, SESINSERT, wstate); 
+    output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, &node_set, SESINSERT, wstate); 
 
-  } else if((end_old - start_old) == 1 && complete_nestable(*node_sets_old, rbuf_old.nodes, node_sets_new->at(0), rbuf_new.nodes)) {
+  } else if(((end_old + 1) - start_old) == 1 && complete_nestable(slice_old, rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
 
     std::vector<int> node_set;
 
-    for(unsigned int i = 0; i < node_sets_old->size(); ++i) {
+    for(unsigned int i = 0; i < slice_old.size(); ++i) {
 
-      for(unsigned int j = 0; j < node_sets_old->at(i)->size(); ++j) {
+      for(unsigned int j = 0; j < slice_old.at(i)->size(); ++j) {
 
-        node_set.push_back(node_sets_old->at(i)->at(j));
+        node_set.push_back(slice_old.at(i)->at(j));
 
       }
 
     }
 
-    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(0), SESDELETE, wstate); 
+    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(start_new), SESDELETE, wstate); 
 
   } else
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
