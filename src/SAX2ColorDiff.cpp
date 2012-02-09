@@ -53,7 +53,8 @@ xmlSAXHandler factory() {
 
 void output_start_document(std::ostream & colordiff_file, std::string & css_url) {
 
-  colordiff_file << "<html>\n";
+  colordiff_file << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
+  colordiff_file << "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n";
   colordiff_file << "<head>\n";
 
   if(css_url == "") {
