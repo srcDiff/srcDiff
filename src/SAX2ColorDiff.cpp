@@ -57,6 +57,8 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n";
   colordiff_file << "<head>\n";
 
+  colordiff_file << "<meta http-equiv=\"Content-type\" content=\"text/html; charset=UTF-8\" />";
+
   if(css_url == "") {
 
     colordiff_file << "<style type=\"text/css\">\n";
