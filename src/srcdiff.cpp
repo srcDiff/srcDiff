@@ -940,7 +940,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       options |= OPTION_OUTPUTSAME;
 
-      break
+      break;
 
     case PURE_FLAG_CODE:
 
