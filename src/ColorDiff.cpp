@@ -109,13 +109,13 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
     }
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_OUTPUTSAME) && lines_old.size() == 0 && lines_new.size() == 0)
     return 0;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_OUTPUTPURE) && (lines_old.size() == 0 || lines_new.size() == 0))
     return 0;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   while(lines_old.size() <= size_old)
         lines_old.push_back(false);
 

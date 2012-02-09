@@ -70,7 +70,6 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
     root_directory(directory), root_filename(filename), root_version(version),
     src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
 {
-
   diff.prefix = uri[7];
 
   // diff tags
@@ -128,7 +127,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
    if(version != NULL)
      ver = version;
 
-   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, global_options);
+   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, this->global_options);
 
  }
 
