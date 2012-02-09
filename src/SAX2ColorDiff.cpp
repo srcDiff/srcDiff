@@ -139,13 +139,13 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<body>\n";
 
   colordiff_file << "<div class=\"key\">\n";
-  colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_delete << "\"><cite>diff</cite> Delete</span>";
-  colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << delete_color << "\"><cite>srcDiff</cite> Delete</span>";
-  //colordiff_file << "<span title=\"Line delete background color with srcDiff delete font color\" class=\"" << delete_color << " " << diff_color_delete << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Delete</span>";
-  colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_insert << "\"><cite>diff</cite> Insert</span>";
-  colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << insert_color << "\"><cite>srcDiff</cite> Insert</span>";
-  //colordiff_file << "<span title=\"Line insert background color with srcDiff insert font color\" class=\"" << insert_color << " " << diff_color_insert << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Insert</span>";
-  colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_change << "\"><cite>diff</cite> Change</span>";
+  colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_delete << "\"><cite>diff</cite> Delete</span>\n";
+  colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << delete_color << "\"><cite>srcDiff</cite> Delete</span>\n";
+  //colordiff_file << "<span title=\"Line delete background color with srcDiff delete font color\" class=\"" << delete_color << " " << diff_color_delete << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Delete</span>\n";
+  colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_insert << "\"><cite>diff</cite> Insert</span>\n";
+  colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << insert_color << "\"><cite>srcDiff</cite> Insert</span>\n";
+  //colordiff_file << "<span title=\"Line insert background color with srcDiff insert font color\" class=\"" << insert_color << " " << diff_color_insert << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Insert</span>\n";
+  colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_change << "\"><cite>diff</cite> Change</span>\n";
   colordiff_file << "</div>\n";
 
   colordiff_file << "<pre>";
