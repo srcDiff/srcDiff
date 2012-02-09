@@ -153,7 +153,7 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
      && strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
     return true;
 
-  unsigned int similarity = compute_similarity(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
+  unsigned int similarity = compute_difference(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
 
   unsigned int olength = node_sets_old->at(start_old)->size();
   unsigned int nlength = node_sets_new->at(start_new)->size();
@@ -409,6 +409,67 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
     similarity = 10000;
   else
     similarity = 10000 / similarity;
+
+  free_shortest_edit_script(edit_script);
+
+  return similarity;
+
+}
+
+int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       std::vector<int> * node_set_new) {
+
+  unsigned int olength = node_set_old->size();
+  unsigned int nlength = node_set_new->size();
+
+  diff_nodes dnodes = { nodes_old, nodes_new };
+
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+
+  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
+
+    return MAX_INT;
+
+  }
+
+  std::vector<int> node_set_old_text;
+
+  for(unsigned int i = 0; i < olength; ++i)
+    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
+      node_set_old_text.push_back(node_set_old->at(i));
+
+  std::vector<int> node_set_new_text;
+
+  for(unsigned int i = 0; i < nlength; ++i)
+    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
+      node_set_new_text.push_back(node_set_new->at(i));
+
+  edit * edit_script;
+  shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
+                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, &dnodes);
+
+  edit * edits = edit_script;
+  unsigned int similarity = 0;
+  int last_offset;
+  for(; edits; edits = edits->next) {
+
+    if(0 && is_change(edits)) {
+
+      similarity += edits->length > edits->next->length ? edits->length : edits->next->length;
+
+      edits = edits->next;
+
+    } else {
+
+      similarity += edits->length;
+
+    }
+
+
+  }
 
   free_shortest_edit_script(edit_script);
 
@@ -744,8 +805,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
       match->next = last_match;
 
       last_match = match;
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
+
       olist[j] = true;
       nlist[i] = true;
 

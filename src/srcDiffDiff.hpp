@@ -54,6 +54,9 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
                        std::vector<int> * node_set_new);
 
+int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       std::vector<int> * node_set_new);
+
 int compute_similarity_old(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
                        std::vector<int> * node_set_new);
 
