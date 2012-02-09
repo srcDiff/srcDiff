@@ -207,7 +207,7 @@ int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & 
     if((similarity =
         (operation == SESDELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
         : compute_similarity(nodes_match, match, nodes, node_set.at(i)))
-       > match_similarity) {
+       < match_similarity) {
 
       match_pos = i;
       match_similarity = similarity;
