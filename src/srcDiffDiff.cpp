@@ -410,7 +410,6 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
   else
     similarity = 10000 / similarity;
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, similarity);
   free_shortest_edit_script(edit_script);
 
   return similarity;
@@ -567,12 +566,16 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
       int num_unmatched = MAX_INT;
       int direction = 0;
 
+      bool matched = false;
+
       // check along x axis to find min difference  (Two possible either unmatch or unmatch all and add similarity
       if(j > 0) {
 
         //min_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
         min_similarity = differences[i * olength + (j - 1)].similarity;
         num_unmatched = differences[i * olength + (j - 1)].num_unmatched + 1;
+
+        matched = false;
 
         // may be wrong
         int temp_num_unmatched = i + j + unmatched;
@@ -583,6 +586,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
         //if(temp_similarity < min_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
+
+          matched = true;
 
           //min_similarity = temp_similarity;
           min_similarity = similarity;
@@ -610,10 +615,14 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         if(unmatched)
           ++temp_num_unmatched_match;
 
+        int temp_matched = false;
+
         //unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
 
         //if(temp_similarity_match < temp_similarity) {
         if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity < temp_similarity)) {
+
+          temp_matched = true;
 
           temp_similarity = similarity;
           temp_num_unmatched = temp_num_unmatched_match;
@@ -622,6 +631,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
         //if(temp_similarity < min_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity <= min_similarity)) {
+
+          matched = temp_matched;
 
           min_similarity = temp_similarity;
           num_unmatched = temp_num_unmatched;
@@ -643,6 +654,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
         //if(temp_similarity < min_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < min_similarity)) {
+
+          matched = !unmatched;
 
           min_similarity = temp_similarity;
           num_unmatched = temp_num_unmatched;
@@ -675,10 +688,12 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         num_unmatched = unmatched;
         if(unmatched)
           ++num_unmatched;
+
+        matched = !unmatched;
       }
 
       // set if marked
-      if(unmatched != 1) {
+      if(matched) {
 
         differences[i * olength + j].marked = true;
 
@@ -688,10 +703,13 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
       }
 
-      //fprintf(stderr, "HERE\n");
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
-      //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
-      //fprintf(stderr, "HERE\n");
+      /*
+      fprintf(stderr, "HERE\n");
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, matched);
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
+      fprintf(stderr, "HERE\n");
+      */
 
       // update structure
       differences[i * olength + j].similarity = min_similarity;
@@ -726,7 +744,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
       match->next = last_match;
 
       last_match = match;
-
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);
       olist[j] = true;
       nlist[i] = true;
 
