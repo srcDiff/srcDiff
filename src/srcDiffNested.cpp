@@ -142,7 +142,7 @@ bool complete_nestable(std::vector<std::vector<int> * > & structure_one, std::ve
 
   }
 
-    return num_nest == structure_one.size();
+  return num_nest == structure_one.size();
 
 }
 
