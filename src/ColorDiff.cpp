@@ -33,6 +33,9 @@ ColorDiff::ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::strin
 
 ColorDiff::~ColorDiff() {
 
+  if(first)
+    output_start_document(*outfile, css_url);
+
   output_end_document(*outfile);
 
   if(outfile != &std::cout) {
@@ -56,13 +59,6 @@ void ColorDiff::setsrcDiffBuffer(xmlBuffer * srcdiff_buffer) {
 }
 
 int ColorDiff::colorize(std::string file_one, std::string file_two) {
-
-  if(first) {
-
-    output_start_document(*outfile, css_url);
-    first = false;
-
-  }
 
 
   unsigned int size_old = 0;
@@ -107,11 +103,21 @@ int ColorDiff::colorize(std::string file_one, std::string file_two) {
 
   }
 
+  if(lines_old.size() == 0 && lines_new.size() == 0)
+    return 0;
+
   while(lines_old.size() <= size_old)
         lines_old.push_back(false);
 
   while(lines_new.size() <= size_new)
         lines_new.push_back(false);
+
+  if(first) {
+
+    output_start_document(*outfile, css_url);
+    first = false;
+
+  }
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
