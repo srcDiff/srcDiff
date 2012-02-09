@@ -612,8 +612,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
       int similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + j)
                                           , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + i));
 
-      //unsigned long long min_similarity = (unsigned long long)-1;
-      int min_similarity = MAX_INT;
+      //unsigned long long max_similarity = (unsigned long long)-1;
+      int max_similarity = MAX_INT;
       int unmatched = 0;
 
       // check if unmatched
@@ -629,11 +629,11 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
       bool matched = false;
 
-      // check along x axis to find min difference  (Two possible either unmatch or unmatch all and add similarity
+      // check along x axis to find max difference  (Two possible either unmatch or unmatch all and add similarity
       if(j > 0) {
 
-        //min_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
-        min_similarity = differences[i * olength + (j - 1)].similarity;
+        //max_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
+        max_similarity = differences[i * olength + (j - 1)].similarity;
         num_unmatched = differences[i * olength + (j - 1)].num_unmatched + 1;
 
         matched = false;
@@ -645,13 +645,13 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
         //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
 
-        //if(temp_similarity < min_similarity) {
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < min_similarity)) {
+        //if(temp_similarity < max_similarity) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity < max_similarity)) {
 
           matched = true;
 
-          //min_similarity = temp_similarity;
-          min_similarity = similarity;
+          //max_similarity = temp_similarity;
+          max_similarity = similarity;
           num_unmatched = temp_num_unmatched;
 
         }
@@ -660,7 +660,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
       }
 
-      // check along y axis to find min difference  (Two possible either unmatch or unmatch all and add similarity
+      // check along y axis to find max difference  (Two possible either unmatch or unmatch all and add similarity
       if(i > 0) {
 
         // may not have been initialized in j > 0
@@ -690,12 +690,12 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
         }
 
-        //if(temp_similarity < min_similarity) {
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity <= min_similarity)) {
+        //if(temp_similarity < max_similarity) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity <= max_similarity)) {
 
           matched = temp_matched;
 
-          min_similarity = temp_similarity;
+          max_similarity = temp_similarity;
           num_unmatched = temp_num_unmatched;
 
           direction = 2;
@@ -713,12 +713,12 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
         if(unmatched)
           ++temp_num_unmatched;
 
-        //if(temp_similarity < min_similarity) {
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < min_similarity)) {
+        //if(temp_similarity < max_similarity) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity < max_similarity)) {
 
           matched = !unmatched;
 
-          min_similarity = temp_similarity;
+          max_similarity = temp_similarity;
           num_unmatched = temp_num_unmatched;
           direction = 3;
 
@@ -745,7 +745,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
       // special case starting node
       if(i == 0 && j == 0) {
 
-        min_similarity = similarity;
+        max_similarity = similarity;
         num_unmatched = unmatched;
         if(unmatched)
           ++num_unmatched;
@@ -768,12 +768,12 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
       fprintf(stderr, "HERE\n");
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, matched);
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, min_similarity);
+      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, max_similarity);
       fprintf(stderr, "HERE\n");
       */
 
       // update structure
-      differences[i * olength + j].similarity = min_similarity;
+      differences[i * olength + j].similarity = max_similarity;
       differences[i * olength + j].num_unmatched = num_unmatched;
       differences[i * olength + j].opos = j;
       differences[i * olength + j].npos = i;
