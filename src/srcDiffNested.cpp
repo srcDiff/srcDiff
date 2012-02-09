@@ -130,6 +130,22 @@ bool has_internal_structure(std::vector<int> * structure, std::vector<xNodePtr> 
   return false;
 }
 
+bool complete_nestable(std::vector<std::vector<int> * > & structure_one, std::vector<xNodePtr> & nodes_one
+                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
+
+  unsigned int num_nest = 0;
+
+  for(unsigned int i = 0; i < structure_one.size(); ++i) {
+
+    if(is_nestable(structure_one.at(i), nodes_one, structure_two, nodes_two))
+       ++num_nest;
+
+  }
+
+    return num_nest == structure_one.size();
+
+}
+
 bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
 
