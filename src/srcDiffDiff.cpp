@@ -1012,6 +1012,9 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
   }
 
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, slice_old.size());
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, slice_new.size());
+
   if(((end_old + 1) - start_old) == 1 && ((end_new + 1) - start_new) == 1 > 0 && complete_nestable(slice_new, rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
 
     std::vector<int> node_set;
