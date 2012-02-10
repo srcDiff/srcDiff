@@ -244,12 +244,16 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
   unsigned int end_pos;
 
+  // idea best match first of multi then pass all on to algorithm or set ending pos to recurse down
   if(operation == SESDELETE) {
 
     std::vector<std::vector<int> *> node_set = create_node_set(rbuf_old.nodes, structure_old->at(1), structure_old->back()
                                                                , rbuf_new.nodes.at(structure_new->at(0)));
 
-    unsigned int match = best_match(rbuf_old.nodes, node_set, rbuf_new.nodes, structure_new, SESDELETE);
+    std::vector<std::vector<int> *> nest_set = create_node_set(rbuf_new.nodes, structure_new->at(0), structure_new->back()
+                                                               , rbuf_new.nodes.at(structure_new->at(0)));
+
+    unsigned int match = best_match(rbuf_old.nodes, node_set, rbuf_new.nodes, nest_set.at(0), SESDELETE);
 
     if(match < node_set.size()) {
 
@@ -266,7 +270,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
 
       // collect subset of nodes
       std::vector<std::vector<int> *> next_node_set_old
-        = create_node_set(rbuf_old.nodes, end_pos, node_set.at(match)->back() + 1);
+        = create_node_set(rbuf_old.nodes, end_pos, node_set.back()->back() + 1);
 
       std::vector<std::vector<int> *> next_node_set_new
         = create_node_set(rbuf_new.nodes,  structure_new->at(0)
@@ -290,7 +294,10 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
     std::vector<std::vector<int> *> node_set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
                                                                , rbuf_old.nodes.at(structure_old->at(0)));
 
-    unsigned int match = best_match(rbuf_new.nodes, node_set, rbuf_old.nodes, structure_old, SESINSERT);
+    std::vector<std::vector<int> *> nest_set = create_node_set(rbuf_old.nodes, structure_old->at(0), structure_old->back()
+                                                               , rbuf_old.nodes.at(structure_old->at(0)));
+
+    unsigned int match = best_match(rbuf_new.nodes, node_set, rbuf_old.nodes, nest_set.at(0), SESINSERT);
 
     if(match < node_set.size()) {
 
@@ -311,7 +318,7 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
                           , structure_old->back() + 1);
 
       std::vector<std::vector<int> *> next_node_set_new
-        = create_node_set(rbuf_new.nodes, end_pos, node_set.at(match)->back() + 1);
+        = create_node_set(rbuf_new.nodes, end_pos, node_set.back()->back() + 1);
 
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
