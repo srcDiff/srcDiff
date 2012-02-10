@@ -76,6 +76,12 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
     delay = false;
     delay_operation = -2;
+
+  } else if(delay && (delay_operation != operation)) {
+
+    delay = false;
+    delay_operation = -2;
+
   }
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
