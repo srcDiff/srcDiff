@@ -1015,8 +1015,9 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
   fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, slice_old.size());
   fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, slice_new.size());
 
-  if(((end_old + 1) - start_old) == 1 && ((end_new + 1) - start_new) == 1 > 0 && complete_nestable(slice_new, rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
-
+  if(slice_old.size() == 1 && slice_new.size() > 0
+     && complete_nestable(slice_new, rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     std::vector<int> node_set;
 
     for(unsigned int i = 0; i < slice_new.size(); ++i) {
@@ -1031,9 +1032,10 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, &node_set, SESDELETE, wstate); 
 
-  } else if(((end_new + 1) - start_new) == 1 && ((end_old + 1) - start_old) > 0 && complete_nestable(slice_old, rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
+  } else if(slice_new.size() == 1 && slice_old.size() > 0
+            && complete_nestable(slice_old, rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
     std::vector<int> node_set;
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     for(unsigned int i = 0; i < slice_old.size(); ++i) {
 
       for(unsigned int j = 0; j < slice_old.at(i)->size(); ++j) {
