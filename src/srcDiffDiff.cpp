@@ -1011,8 +1011,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
     slice_new.push_back(node_sets_new->at(i));
 
   }
-      
-  if(((end_old + 1) - start_old) == 1 && complete_nestable(slice_new, rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
+  if(0 && ((end_old + 1) - start_old) == 1 && complete_nestable(slice_new, rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
 
     std::vector<int> node_set;
 
@@ -1026,10 +1025,9 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     }
 
-    output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, &node_set, SESINSERT, wstate); 
+    output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, &node_set, SESDELETE, wstate); 
 
-  } else if(((end_old + 1) - start_old) == 1 && complete_nestable(slice_old, rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
-
+  } else if(0 && ((end_new + 1) - start_new) == 1 && complete_nestable(slice_old, rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
     std::vector<int> node_set;
 
     for(unsigned int i = 0; i < slice_old.size(); ++i) {
@@ -1042,7 +1040,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     }
 
-    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(start_new), SESDELETE, wstate); 
+    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(start_new), SESINSERT, wstate); 
 
   } else
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
