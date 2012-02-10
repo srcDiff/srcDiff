@@ -318,7 +318,8 @@ void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
       //                  , structure_old->back() + 1);
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, nest_set.size());
       std::vector<std::vector<int> *> next_node_set_new
-        = create_node_set(rbuf_new.nodes, end_pos, node_set.back()->back());
+        = create_node_set(rbuf_new.nodes, end_pos, node_set.back()->back() + 1);
+
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, next_node_set_new.size());
       output_diffs(rbuf_old, &nest_set, rbuf_new, &next_node_set_new, wstate);
 
