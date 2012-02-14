@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <Options.hpp>
+#include "LineDiffRange.hpp"
 
 class ColorDiff {
 
@@ -21,7 +22,7 @@ private :
 
 public:
 
-  ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::string directory, std::string version, std::string css,
+  ColorDiff(LineDiffRange & line_diff_range, xmlBuffer * srcdiff, std::string colordiff_file, std::string directory, std::string version, std::string css,
             OPTION_TYPE & options);
   ~ColorDiff();
 
