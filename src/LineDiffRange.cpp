@@ -152,6 +152,18 @@ void LineDiffRange::create_line_diff() {
 
 }
 
+static std::string remove_white_space(std::string & source) {
+
+  std::string dest;
+
+  for(unsigned int i = 0; i < source.size(); ++i)
+    if(!is_space(source[i])
+       dest += source[i];
+
+  return dest;
+
+}
+
 bool LineDiffRange::is_no_whitespace_diff() {
 
 
@@ -164,6 +176,7 @@ bool LineDiffRange::is_no_whitespace_diff() {
     switch(edit->operation) {
 
     case SESINSERT:
+
 
       break;
 
