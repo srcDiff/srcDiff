@@ -151,3 +151,9 @@ void LineDiffRange::create_line_diff() {
   }
 
 }
+
+bool LineDiffRange::is_no_whitespace_diff() {
+
+
+  return true;
+}
