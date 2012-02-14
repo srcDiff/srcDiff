@@ -173,10 +173,13 @@ bool LineDiffRange::is_no_whitespace_diff() {
 
     }
 
-    switch(edit->operation) {
+    switch(edits->operation) {
 
     case SESINSERT:
 
+      for(int i = 0; i < edits->length; ++i)
+        if(remove_white_space(lines_two.at(edits->offset_sequence_two + i)) != "")
+          return true;
 
       break;
 
@@ -192,4 +195,5 @@ bool LineDiffRange::is_no_whitespace_diff() {
 
 
   return true;
+
 }
