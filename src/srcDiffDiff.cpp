@@ -1203,7 +1203,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
   }
   else {
 
-    if(group_sub_elements(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new));
+    if(group_sub_elements(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate));
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
