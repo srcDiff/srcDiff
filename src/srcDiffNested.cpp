@@ -151,6 +151,8 @@ bool is_same_nestable(std::vector<std::vector<int> * > & structure_one, std::vec
   if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
     return false;
 
+  int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
+
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_one, structure_old->at(1), structure_old->back()
                                                                , nodes_new.at(structure_new->at(0)));
 
