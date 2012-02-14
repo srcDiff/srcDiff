@@ -213,6 +213,7 @@ bool LineDiffRange::is_no_white_space_diff() {
          return true;
 
       edits = edits->next;
+      continue;
 
     }
 
