@@ -219,7 +219,7 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
   if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
     return false;
 
-  unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
+  //unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
 
   std::vector<std::vector<int> *> node_set = create_node_set(nodes_two, structure_two->at(1), structure_two->back()
                                                              , nodes_one.at(structure_one->at(0)));
@@ -231,7 +231,7 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
 
   unsigned int match_similarity = compute_similarity(nodes_one, structure_one, nodes_two, node_set.at(match));
 
-  return match_similarity * structure_two->size() > similarity * structure_one->size();
+  return match_similarity * 2 > structure_two->size();
 
 }
 
