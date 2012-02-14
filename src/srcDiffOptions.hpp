@@ -1,6 +1,8 @@
 #ifndef INCLUDED_SRCDIFFOPTIONS_HPP
 #define INCLUDED_SRCDIFFOPTIONS_HPP
 
+#include <Options.hpp>
+
 // @srcdiff
 const OPTION_TYPE OPTION_THREAD  = ull(1) << 40;
 
