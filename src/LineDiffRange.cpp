@@ -155,5 +155,28 @@ void LineDiffRange::create_line_diff() {
 bool LineDiffRange::is_no_whitespace_diff() {
 
 
+  for(edit edits = edit_script; edits; edit = edit->next) {
+
+    if(is_change(edits)) {
+
+    }
+
+    switch(edit->operation) {
+
+    case SESINSERT:
+
+      break;
+
+    case SESDELETE:
+
+
+      break;
+
+    }
+
+
+  }
+
+
   return true;
 }
