@@ -27,6 +27,25 @@ LineDiffRange::~LineDiffRange() {
 
 }
 
+unsigned int LinesDiffRange::get_length_file_one() {
+
+  return lines_one.size();
+
+}
+
+unsigned int LinesDiffRange::get_length_file_two() {
+
+  return lines_one.size();
+
+}
+
+edit * LinesDiffRange::get_line_diff() {
+
+  return edit_script
+
+}
+
+
 int line_compare(const void * line_one, const void * line_two, const void * context) {
 
   std::string & line1 = *(std::string *)line_one;

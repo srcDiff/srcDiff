@@ -37,7 +37,7 @@ public:
   unsigned int get_length_file_one();
   unsigned int get_length_file_two();
 
-  edit * get_line_diff;
+  edit * get_line_diff();
 
   std::string get_line_diff_range();
 
