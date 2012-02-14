@@ -131,8 +131,6 @@ std::string LineDiffRange::get_line_diff_range() {
     
   }
 
-  free_shortest_edit_script(edit_script);
-
   return diff;
 
 }
