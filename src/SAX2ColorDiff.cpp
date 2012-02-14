@@ -111,7 +111,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
     colordiff_file << "}\n";
     colordiff_file << ".diff_change\n";
     colordiff_file << "{\n";
-    colordiff_file << "background-color:#FFFFCC;\n";
+    colordiff_file << "background-color:#FFFFAA;\n";
     colordiff_file << "font-weight:bold;\n";
     colordiff_file << "}\n";
     colordiff_file << ".diff_delete\n";
