@@ -182,7 +182,7 @@ bool LineDiffRange::is_no_whitespace_diff() {
 
         }
 
-        if(remove_white_space(lines_two.at(edits->next->Offset_sequence_two = j)) == "") {
+        if(remove_white_space(lines_two.at(edits->next->Offset_sequence_two + j)) == "") {
 
           ++j;
           continue;
