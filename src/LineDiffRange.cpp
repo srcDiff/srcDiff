@@ -27,13 +27,13 @@ LineDiffRange::~LineDiffRange() {
 
 }
 
-std::string LineDiffRange::get_file_one() {
+std::string & LineDiffRange::get_file_one() {
 
   return file_one;
 
 }
 
-std::string LineDiffRange::get_file_two() {
+std::string & LineDiffRange::get_file_two() {
 
   return file_two;
 

@@ -34,8 +34,8 @@ public:
 
   ~LineDiffRange();
 
-  std::string get_file_one();
-  std::string get_file_two();
+  std::string & get_file_one();
+  std::string & get_file_two();
   unsigned int get_length_file_one();
   unsigned int get_length_file_two();
 
