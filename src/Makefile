@@ -110,7 +110,7 @@ $(OBJ_DIR)srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcDiffUtility.o : srcDiffUtility.cpp srcDiffUtility.hpp srcDiffTypes.hpp shortest_edit_script.h
-	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)srcDiffTranslator.o : srcDiffTranslator.cpp srcDiffTranslator.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
@@ -161,7 +161,7 @@ $(OBJ_DIR)SAXColorDiff.o :  SAX2ColorDiff.cpp SAX2ColorDiff.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
 $(OBJ_DIR)LineDiffRange.o :  LineDiffRange.cpp LineDiffRange.hpp shortest_edit_script.h
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*

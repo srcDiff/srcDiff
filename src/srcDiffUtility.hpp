@@ -3,7 +3,6 @@
 
 #include "shortest_edit_script.h"
 
-#include <Options.hpp>
 #include "srcDiffOptions.hpp"
 #include "xmlrw.hpp"
 
