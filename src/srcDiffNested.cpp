@@ -146,6 +146,38 @@ bool complete_nestable(std::vector<std::vector<int> * > & structure_one, std::ve
 
 }
 
+// create the node sets for shortest edit script
+std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNode * type) {
+
+  std::vector<std::vector<int> *> node_sets;
+
+  // runs on a subset of base array
+  for(int i = start; i < end; ++i) {
+
+    if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT && node_compare(nodes.at(i), type) == 0) {
+
+      // save position to collect internal of same type on all levels
+      int save_start = i;
+
+      std::vector <int> * node_set = new std::vector <int>;
+
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
+
+      collect_entire_tag(nodes, *node_set, i);
+
+      node_sets.push_back(node_set);
+
+      // collect type on all levels
+      i = save_start;
+
+    }
+
+  }
+
+  return node_sets;
+
+}
+
 int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & node_set
                , std::vector<xNodePtr> & nodes_match, std::vector<int> * match, int operation) {
 
@@ -181,10 +213,10 @@ int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & 
 
 }
 
-bool is_same_nestable(std::vector<std::vector<int> * > & structure_one, std::vector<xNodePtr> & nodes_one
-                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> & nodes_one
+                      , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  if(!is_nestable(&structure_one, nodes_one, &structure_two, nodes_two))
+  if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
     return false;
 
   int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
@@ -219,38 +251,6 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
   }
 
   return false;
-}
-
-// create the node sets for shortest edit script
-std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNode * type) {
-
-  std::vector<std::vector<int> *> node_sets;
-
-  // runs on a subset of base array
-  for(int i = start; i < end; ++i) {
-
-    if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT && node_compare(nodes.at(i), type) == 0) {
-
-      // save position to collect internal of same type on all levels
-      int save_start = i;
-
-      std::vector <int> * node_set = new std::vector <int>;
-
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
-
-      collect_entire_tag(nodes, *node_set, i);
-
-      node_sets.push_back(node_set);
-
-      // collect type on all levels
-      i = save_start;
-
-    }
-
-  }
-
-  return node_sets;
-
 }
 
 void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
