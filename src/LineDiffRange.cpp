@@ -27,6 +27,17 @@ LineDiffRange::~LineDiffRange() {
 
 }
 
+std::string LineDiffRange::get_file_one() {
+
+  return file_one;
+
+}
+
+std::string LineDiffRange::get_file_two() {
+
+  return file_two;
+
+}
 unsigned int LineDiffRange::get_length_file_one() {
 
   return lines_one.size();
