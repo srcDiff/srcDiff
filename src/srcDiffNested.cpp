@@ -145,6 +145,13 @@ bool complete_nestable(std::vector<std::vector<int> * > & structure_one, std::ve
   return num_nest == structure_one.size();
 
 }
+bool is_same_nestable(std::vector<std::vector<int> * > & structure_one, std::vector<xNodePtr> & nodes_one
+                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
+
+  if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
+    return false;
+
+}
 
 bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes_one
                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
