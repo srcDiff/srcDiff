@@ -200,7 +200,7 @@ bool LineDiffRange::is_no_whitespace_diff() {
 
       }
 
-      if(!(i < edits->length && j < edits->next->length)
+      if(i != edits->length || j != edits->next->length)
          return true;
 
       edits = edits->next;
