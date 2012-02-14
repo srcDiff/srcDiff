@@ -29,7 +29,7 @@ public:
   xmlBuffer * getsrcDiffBuffer();
   void setsrcDiffBuffer(xmlBuffer * srcdiff_buffer);
 
-  int colorize(LineDiffRange line_diff_range);
+  int colorize(LineDiffRange & line_diff_range);
 
 };
 
