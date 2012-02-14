@@ -185,7 +185,7 @@ bool group_sub_elements(reader_state & rbuf_old, std::vector<std::vector<int> *>
                      , writer_state & wstate) {
 
 
-  if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "type") != 0
+  if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "type") != 0)
      return false;
 
   unsigned int similarity = compute_similarity(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
