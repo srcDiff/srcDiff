@@ -172,6 +172,13 @@ bool LineDiffRange::is_no_whitespace_diff() {
 
     if(is_change(edits)) {
 
+
+      for(int i = 0, j = 0; i < edits->length; j < edits->next->length; ++i ++j) {
+
+      }
+
+      edits = edits->next;
+
     }
 
     switch(edits->operation) {
