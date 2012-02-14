@@ -10,6 +10,7 @@
 #include "LineDiffRange.hpp"
 
 #include "shortest_edit_script.h"
+#include "srcDiffUtility.hpp"
 
 #include <string>
 #include <vector>
@@ -157,7 +158,7 @@ static std::string remove_white_space(std::string & source) {
   std::string dest;
 
   for(unsigned int i = 0; i < source.size(); ++i)
-    if(!is_space(source[i]))
+    if(!isspace(source[i]))
        dest += source[i];
 
   return dest;
