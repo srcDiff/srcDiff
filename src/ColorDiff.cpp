@@ -71,7 +71,7 @@ int ColorDiff::colorize(LineDiffRange line_diff_range) {
   unsigned int size_old = line_diff_range.get_length_file_one();
   unsigned int size_new = line_diff_range.get_length_file_two();
 
-  std::string stream;
+  std::string stream = line_diff_range.get_line_diff_range();
 
   std::vector<bool> lines_old;
   std::vector<bool> lines_new;
