@@ -175,6 +175,15 @@ bool LineDiffRange::is_no_white_space_diff() {
       int i, j;
       for(i = 0, j = 0; i < edits->length && j < edits->next->length;) {
 
+        if(remove_white_space(lines_one.at(edits->offset_sequence_one + i)) == "" 
+           && remove_white_space(lines_two.at(edits->next->offset_sequence_two + j)) == "") {
+
+          ++i;
+          ++j;
+          continue;
+
+        }
+
         if(remove_white_space(lines_one.at(edits->offset_sequence_one + i)) == "") {
 
           ++i;
