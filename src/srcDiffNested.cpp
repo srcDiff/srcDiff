@@ -156,9 +156,9 @@ bool is_same_nestable(std::vector<std::vector<int> * > & structure_one, std::vec
     std::vector<std::vector<int> *> node_set = create_node_set(nodes_one, structure_old->at(1), structure_old->back()
                                                                , nodes_new.at(structure_new->at(0)));
 
-    std::vector<std::vector<int> *> nest_set = create_node_set(nodes_two, structure_new->at(0), structure_new->back() + 1);
+    unsigned int match = best_match(nodes_old, node_set, nodes_two, structure_two, SESDELETE);
 
-    unsigned int match = best_match(nodes_old, node_set, nodes_two, nest_set.at(0), SESDELETE);
+    return match > similarity;
 
 }
 
