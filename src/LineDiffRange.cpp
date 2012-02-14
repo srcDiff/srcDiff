@@ -157,7 +157,7 @@ static std::string remove_white_space(std::string & source) {
   std::string dest;
 
   for(unsigned int i = 0; i < source.size(); ++i)
-    if(!is_space(source[i])
+    if(!is_space(source[i]))
        dest += source[i];
 
   return dest;
@@ -167,7 +167,7 @@ static std::string remove_white_space(std::string & source) {
 bool LineDiffRange::is_no_whitespace_diff() {
 
 
-  for(edit edits = edit_script; edits; edit = edit->next) {
+  for(edit * edits = edit_script; edits; edits = edits->next) {
 
     if(is_change(edits)) {
 
@@ -185,6 +185,9 @@ bool LineDiffRange::is_no_whitespace_diff() {
 
     case SESDELETE:
 
+      for(int i = 0; i < edits->length; ++i)
+        if(remove_white_space(lines_one.at(edits->offset_sequence_one + i)) != "")
+          return true;
 
       break;
 
