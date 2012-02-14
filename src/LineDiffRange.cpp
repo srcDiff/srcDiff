@@ -172,8 +172,8 @@ bool LineDiffRange::is_no_whitespace_diff() {
 
     if(is_change(edits)) {
 
-
-      for(int i = 0, j = 0; i < edits->length && j < edits->next->length;) {
+      int i, j;
+      for(i = 0, j = 0; i < edits->length && j < edits->next->length;) {
 
         if(remove_white_space(lines_one.at(edits->offset_sequence_one + i)) == "") {
 
