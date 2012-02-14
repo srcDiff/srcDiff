@@ -153,8 +153,8 @@ bool is_same_nestable(std::vector<std::vector<int> * > & structure_one, std::vec
 
   int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
 
-    std::vector<std::vector<int> *> node_set = create_node_set(nodes_one, structure_old->at(1), structure_old->back()
-                                                               , nodes_new.at(structure_new->at(0)));
+    std::vector<std::vector<int> *> node_set = create_node_set(nodes_one, structure_one->at(1), structure_one->back()
+                                                               , nodes_two.at(structure_two->at(0)));
 
     unsigned int match = best_match(nodes_old, node_set, nodes_two, structure_two, SESDELETE);
 
