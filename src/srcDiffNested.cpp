@@ -215,16 +215,19 @@ int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & 
 
 bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> & nodes_one
                       , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
     return false;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
 
-  std::vector<std::vector<int> *> node_set = create_node_set(nodes_one, structure_one->at(1), structure_one->back()
-                                                             , nodes_two.at(structure_two->at(0)));
+  std::vector<std::vector<int> *> node_set = create_node_set(nodes_one, structure_two->at(1), structure_two->back()
+                                                             , nodes_two.at(structure_one->at(0)));
 
-  unsigned int match = best_match(nodes_one, node_set, nodes_two, structure_two, SESDELETE);
+  unsigned int match = best_match(nodes_one, structure_one, nodes_two, node_set, SESDELETE);
+
+  unsigned int match_similarity = compute_similarity(nodes_one, nodes_one, node_set, node_set.at(match));
+
 
   return match > similarity;
 
