@@ -27,19 +27,19 @@ LineDiffRange::~LineDiffRange() {
 
 }
 
-unsigned int LinesDiffRange::get_length_file_one() {
+unsigned int LineDiffRange::get_length_file_one() {
 
   return lines_one.size();
 
 }
 
-unsigned int LinesDiffRange::get_length_file_two() {
+unsigned int LineDiffRange::get_length_file_two() {
 
-  return lines_one.size();
+  return lines_two.size();
 
 }
 
-edit * LinesDiffRange::get_line_diff() {
+edit * LineDiffRange::get_line_diff() {
 
   return edit_script
 
