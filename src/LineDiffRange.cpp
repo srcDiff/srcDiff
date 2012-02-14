@@ -192,6 +192,9 @@ bool LineDiffRange::is_no_whitespace_diff() {
         std::string old_line = remove_white_space(lines_one.at(edits->offset_sequnce_two + i));
         std::string new_line = remove_white_space(lines_two.at(edits->next->offset_sequence_two + j));
 
+        if(old_line != new_line)
+          return true;
+
       }
 
       edits = edits->next;
