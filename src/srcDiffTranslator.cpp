@@ -148,6 +148,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
  if(isoption(global_options, OPTION_VISUALIZE)) {
 
+  line_diff_range.create_line_diff();
+
+  if(!line_diff_range.is_no_white_space_diff())
+    return;
+
    wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
 
   if (wstate.writer == NULL) {
@@ -155,8 +160,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     exit(1);
   }
-
-  line_diff_range.create_line_diff();
 
  }
   // root unit for compound srcML documents
