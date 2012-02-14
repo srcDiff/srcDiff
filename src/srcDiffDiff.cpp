@@ -1207,7 +1207,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
       output_change_white_space(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), wstate);
 
-    }
+    } else {
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
@@ -1222,6 +1222,8 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     free_node_sets(next_node_set_old);
     free_node_sets(next_node_set_new);
+
+    }
 
   }
 
