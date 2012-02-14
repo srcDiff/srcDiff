@@ -145,6 +145,42 @@ bool complete_nestable(std::vector<std::vector<int> * > & structure_one, std::ve
   return num_nest == structure_one.size();
 
 }
+
+int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & node_set
+               , std::vector<xNodePtr> & nodes_match, std::vector<int> * match, int operation) {
+
+  int match_pos = 0;
+  int match_similarity = 0;
+  if(node_set.size() > 0) {
+
+    match_pos = 0;
+    if(operation == SESDELETE)
+      match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
+    else
+      match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
+
+  } else
+    return 1;
+
+  for(unsigned int i = 1; i < node_set.size(); ++i) {
+
+    int similarity;
+    if((similarity =
+        (operation == SESDELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
+        : compute_similarity(nodes_match, match, nodes, node_set.at(i)))
+       > match_similarity) {
+
+      match_pos = i;
+      match_similarity = similarity;
+
+    }
+
+  }
+
+  return match_pos;
+
+}
+
 bool is_same_nestable(std::vector<std::vector<int> * > & structure_one, std::vector<xNodePtr> & nodes_one
                   , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
 
@@ -214,41 +250,6 @@ std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, i
   }
 
   return node_sets;
-
-}
-
-int best_match(std::vector<xNodePtr> & nodes, std::vector<std::vector<int> *> & node_set
-               , std::vector<xNodePtr> & nodes_match, std::vector<int> * match, int operation) {
-
-  int match_pos = 0;
-  int match_similarity = 0;
-  if(node_set.size() > 0) {
-
-    match_pos = 0;
-    if(operation == SESDELETE)
-      match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
-    else
-      match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
-
-  } else
-    return 1;
-
-  for(unsigned int i = 1; i < node_set.size(); ++i) {
-
-    int similarity;
-    if((similarity =
-        (operation == SESDELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
-        : compute_similarity(nodes_match, match, nodes, node_set.at(i)))
-       > match_similarity) {
-
-      match_pos = i;
-      match_similarity = similarity;
-
-    }
-
-  }
-
-  return match_pos;
 
 }
 
