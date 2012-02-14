@@ -420,23 +420,43 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   edit * edits = edit_script;
   unsigned int similarity = 0;
-  int last_offset;
+  int last_offset = 0;
   for(; edits; edits = edits->next) {
 
-    if(0 && is_change(edits)) {
+    if(edits->operation == SESDELETE)
+      for(int i = last_offset; last_offset < edits->offset_sequence_one; ++similarity, ++i)
+        ;
+    else if(edits->operation == SESINSERT)
+      for(int i = last_offset; last_offset < edits->offset_sequence_one; ++similarity, ++i)
+        ;
 
-      similarity += edits->length > edits->next->length ? edits->length : edits->next->length;
+    if(is_change(edits)) {
 
+      last_offset = edits->sequence_one + edits->length;
       edits = edits->next;
-
-    } else {
-
-      similarity += edits->length;
 
     }
 
+    switch(edits->operation) {
+
+    case SESINSERT :
+
+      last_offset = edits->sequence_two + edits->length + 1;
+
+      break;
+
+    case SESDELETE :
+
+      last_offset = edits->sequence_one + edits->length;
+
+      break;
+
+      }
 
   }
+
+  for(int i = last_offset; i < node_set_old_text.size(); ++i)
+    ++similarity;
 
   similarity = ((node_set_old_text.size() + node_set_new_text.size()) - similarity);
 

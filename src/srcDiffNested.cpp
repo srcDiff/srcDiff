@@ -236,8 +236,8 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
   for(unsigned int i = 0; i < structure_one->size(); ++i)
     if(is_text(nodes_one.at(structure_one->at(i))) && !is_white_space(nodes_one.at(structure_one->at(i))))
       ++size_one;
-
-
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, match_similarity);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, size_one);
   return match_similarity * 10 > size_one * 9;
 
 }
