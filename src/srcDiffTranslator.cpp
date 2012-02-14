@@ -36,6 +36,7 @@
 #include "srcDiffDiff.hpp"
 #include "srcMLUtility.hpp"
 #include "pthread.h"
+#include "LineDiffRange.hpp"
 
 #include "xmlrw.hpp"
 
@@ -143,6 +144,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
                             const char* unit_directory, const char* unit_filename, const char* unit_version,
                             int language) {
 
+  LineDiffRange line_diff_range(path_one, path_two);
+
  if(isoption(global_options, OPTION_VISUALIZE)) {
 
    wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
@@ -152,6 +155,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     exit(1);
   }
+
+  line_diff_range.create_line_diff();
 
  }
   // root unit for compound srcML documents

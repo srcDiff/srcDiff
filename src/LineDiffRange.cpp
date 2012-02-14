@@ -107,7 +107,7 @@ std::string LineDiffRange::get_line_diff_range() {
 
 }
 
-void LineDiffRange::get_line_diff() {
+void LineDiffRange::create_line_diff() {
 
   lines_one = read_file(file_one.c_str());
   lines_two = read_file(file_two.c_str());

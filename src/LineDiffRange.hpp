@@ -36,8 +36,7 @@ public:
 
   std::string get_line_diff_range();
 
-  void get_line_diff();
-
+  void create_line_diff();
 
   static std::vector<std::string> read_file(const char * file);
 
