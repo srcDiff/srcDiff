@@ -1177,7 +1177,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, node_sets_new->at(start_new), SESINSERT, wstate);
 
-  } else if(is_nestable(node_sets_new->at(start_new)
+  } else if(is_same_nestable(node_sets_new->at(start_new)
                                 , rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
 
     output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, node_sets_new->at(start_new)

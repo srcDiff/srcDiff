@@ -237,6 +237,7 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
     if(is_text(nodes_one.at(structure_one->at(i))) && !is_white_space(nodes_one.at(structure_one->at(i))))
       ++size_one;
 
+
   return match_similarity * 10 > size_one * 9;
 
 }
