@@ -195,6 +195,9 @@ bool LineDiffRange::is_no_whitespace_diff() {
         if(old_line != new_line)
           return true;
 
+        ++i;
+        ++j;
+
       }
 
       edits = edits->next;
