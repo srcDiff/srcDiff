@@ -389,7 +389,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
    xmlFreeTextWriter(wstate.writer);
    wstate.writer = NULL;
 
-   colordiff->colorize(path_one, path_two);
+   colordiff->colorize(line_diff_range);
 
    xmlBufferEmpty(colordiff->getsrcDiffBuffer());
 
