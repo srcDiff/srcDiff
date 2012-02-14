@@ -178,6 +178,41 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 
 }
 
+bool group_sub_elements(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                     , unsigned int start_old
+                     , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                     , unsigned int start_new
+                     , writer_state & wstate) {
+
+
+  if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "type") != 0
+     return false;
+
+  unsigned int similarity = compute_similarity(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
+
+  unsigned int olength = node_sets_old->at(start_old)->size();
+  unsigned int nlength = node_sets_new->at(start_new)->size();
+
+  unsigned int size_old = 0;
+
+  for(unsigned int i = 0; i < olength; ++i)
+    if(is_text(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))))
+      ++size_old;
+
+  unsigned int size_new = 0;
+
+  for(unsigned int i = 0; i < nlength; ++i)
+    if(is_text(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))))
+      ++size_new;
+
+  unsigned int min_length = size_old;
+  if(size_new < min_length)
+    min_length = size_new;
+
+  return 4 * similarity < 3 * min_length;
+
+}
+
 /*
 
   Outputs diff on each level.  First, Common areas as well as inserts and deletes
@@ -1149,7 +1184,6 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
   ++rbuf_new.last_output;
 
   // compare subset of nodes
-
   if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
@@ -1168,6 +1202,8 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
   }
   else {
+
+    if(group_sub_elements(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new));
 
     // collect subset of nodes
     std::vector<std::vector<int> *> next_node_set_old
