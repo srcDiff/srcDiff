@@ -17,6 +17,16 @@
 #include <sstream>
 #include <iostream>
 
+LineDiffRange::LineDiffRange(std::string file_one, std::string file_two)
+  : file_one(file_one), file_two(file_two), edit_script(NULL) {}
+
+LineDiffRange::~LineDiffRange() {
+
+  if(edit_script != NULL)
+    free_shortest_edit_script(edit_script);
+
+}
+
 int line_compare(const void * line_one, const void * line_two, const void * context) {
 
   std::string & line1 = *(std::string *)line_one;
@@ -32,7 +42,7 @@ const void * line_accessor(int position, const void * lines, const void * contex
   return &line;
 }
 
-std::vector<std::string> read_file(const char * file) {
+std::vector<std::string> LineDiffRange::read_file(const char * file) {
 
   std::vector<std::string> lines;
 
@@ -60,25 +70,7 @@ std::vector<std::string> read_file(const char * file) {
 
 }
 
-std::string get_line_diff_range(std::string file_one, std::string file_two, unsigned int & lines_old, unsigned int & lines_new) {
-
-  std::vector<std::string> lines1 = read_file(file_one.c_str());
-  std::vector<std::string> lines2 = read_file(file_two.c_str());
-
-  lines_old = lines1.size();
-  lines_new = lines2.size();
-
-  edit * edit_script;
-
-  int distance = shortest_edit_script(lines1.size(), &lines1, lines2.size(), &lines2, line_compare, line_accessor, &edit_script, NULL);
-
-  if(distance < 0) {
-
-    fprintf(stderr, "Error with files %s:%s", file_one.c_str(), file_two.c_str());
-
-    exit(1);
-
-  }
+std::string LineDiffRange::get_line_diff_range() {
 
   std::string diff;
 
@@ -112,5 +104,22 @@ std::string get_line_diff_range(std::string file_one, std::string file_two, unsi
   free_shortest_edit_script(edit_script);
 
   return diff;
+
+}
+
+void LineDiffRange::get_line_diff() {
+
+  lines_one = read_file(file_one.c_str());
+  lines_two = read_file(file_two.c_str());
+
+  int distance = shortest_edit_script(lines_one.size(), &lines_one, lines_two.size(), &lines_two, line_compare, line_accessor, &edit_script, NULL);
+
+  if(distance < 0) {
+
+    fprintf(stderr, "Error with files %s:%s", file_one.c_str(), file_two.c_str());
+
+    exit(1);
+
+  }
 
 }
