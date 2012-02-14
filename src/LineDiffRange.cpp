@@ -41,7 +41,7 @@ unsigned int LineDiffRange::get_length_file_two() {
 
 edit * LineDiffRange::get_line_diff() {
 
-  return edit_script
+  return edit_script;
 
 }
 
