@@ -41,7 +41,7 @@ public:
 
   edit * get_line_diff();
 
-  bool is_no_whitespace_diff();
+  bool is_no_white_space_diff();
 
   std::string get_line_diff_range();
 

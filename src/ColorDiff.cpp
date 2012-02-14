@@ -67,7 +67,6 @@ void ColorDiff::setsrcDiffBuffer(xmlBuffer * srcdiff_buffer) {
 
 int ColorDiff::colorize(LineDiffRange & line_diff_range) {
 
-
   unsigned int size_old = line_diff_range.get_length_file_one();
   unsigned int size_new = line_diff_range.get_length_file_two();
 

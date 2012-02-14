@@ -165,7 +165,7 @@ static std::string remove_white_space(std::string & source) {
 
 }
 
-bool LineDiffRange::is_no_whitespace_diff() {
+bool LineDiffRange::is_no_white_space_diff() {
 
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
