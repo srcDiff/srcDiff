@@ -711,6 +711,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { VISUALIZE_FLAG, optional_argument, NULL, VISUALIZE_FLAG_CODE },
     { SAME_FLAG, no_argument, NULL, SAME_FLAG_CODE },
     { PURE_FLAG, no_argument, NULL, PURE_FLAG_CODE },
+    { CHANGE_FLAG, no_argument, NULL, CHANGE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -948,6 +949,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case PURE_FLAG_CODE:
 
       options |= OPTION_OUTPUTPURE;
+
+      break;
+
+    case CHANGE_FLAG_CODE:
+
+      options |= OPTION_CHANGE;
 
       break;
 
