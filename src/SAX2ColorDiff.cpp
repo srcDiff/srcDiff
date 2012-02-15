@@ -466,9 +466,20 @@ void startDocument(void* ctx) {
 
   span_out += "\"";
 
+  static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
+    + std::string(diff_color_common) + std::string("\"");
+
+  if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
+
   if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size())
     data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
   data->colordiff_file << "<span " << span_out.c_str() << ">";
+
+  } else {
+
+  data->colordiff_file << "<span " << ">";
+
+  }
 
 }
 
