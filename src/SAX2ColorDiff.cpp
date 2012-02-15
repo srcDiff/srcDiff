@@ -13,9 +13,7 @@
 #include "shortest_edit_script.h"
 #include "LineDiffRange.hpp"
 #include "srcDiffUtility.hpp"
-#include "srcDiffOptions.hpp"
-
-#include "SAX2ColorDiff.hpp"
+//#include "srcDiffOptions.hpp"
 
 const char * const normal_color = "normal";
 
@@ -568,7 +566,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   for (int i = 0; i < len; ++i) {
 
-    if(!isoption(data->options, 1/*OUTPUT_CHANGE*/) || blank_class != span_out) {
+    if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
 
     if ((char)ch[i] == '&')
       data->colordiff_file << "&amp;";
@@ -622,7 +620,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
-      if(!isoption(data->options, 1 /*OPTION_CHANGE*/) || blank_class != span_out) {
+      if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
       data->colordiff_file << "</span><span class=\"" << normal_color << "\">";
       data->colordiff_file << (char)'\n';
       if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
