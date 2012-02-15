@@ -237,7 +237,17 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
     if(is_text(nodes_one.at(structure_one->at(i))) && !is_white_space(nodes_one.at(structure_one->at(i))))
       ++size_one;
 
-  return match_similarity * 10 > size_one * 9;
+  unsigned int size_match = 0;
+
+  for(unsigned int i = 0; i < node_set.at(match)->size(); ++i)
+    if(is_text(nodes_two.at(node_set.at(match)->at(i))) && !is_white_space(nodes_two.at(node_set.at(match)->at(i))))
+      ++size_match;
+
+  unsigned int max_size = size_one;
+  if(size_match > max_size)
+    max_size = size_match;
+
+  return match_similarity * 10 > max_size * 9;
 
 }
 
