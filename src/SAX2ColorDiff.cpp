@@ -520,10 +520,14 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
 
 }
 
+
 void characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct source_diff * data = (source_diff *)ctxt->_private;
+
+  static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
+    + std::string(diff_color_common) + std::string("\"");
 
   std::string span_class = "class=\"";
 
