@@ -443,7 +443,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
     case SESINSERT :
 
-      last_offset = edits->offset_sequence_two + 1;
+      last_offset = edits->offset_sequence_one + 1;
 
       break;
 
