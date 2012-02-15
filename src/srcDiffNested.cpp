@@ -256,9 +256,6 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
   if(size_one == size_match && size_one == match_similarity)
     return false;
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, max_size);
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, match_similarity);
-
   return match_similarity * 10 > max_size * 9;
 
 }
