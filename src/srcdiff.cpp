@@ -134,6 +134,9 @@ const int SAME_FLAG_CODE = 256 + 13;
 const char* const PURE_FLAG = "view-pure";
 const int PURE_FLAG_CODE = 256 + 14;
 
+const char* const CHANGE_FLAG = "view-change";
+const int CHANGE_FLAG_CODE = 256 + 15;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
