@@ -237,6 +237,12 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
     if(is_text(nodes_one.at(structure_one->at(i))) && !is_white_space(nodes_one.at(structure_one->at(i))))
       ++size_one;
 
+  unsigned int size_two = 0;
+
+  for(unsigned int i = 0; i < structure_two->size(); ++i)
+    if(is_text(nodes_two.at(structure_two->at(i))) && !is_white_space(nodes_two.at(structure_two->at(i))))
+      ++size_two;
+
   unsigned int size_match = 0;
 
   for(unsigned int i = 0; i < node_set.at(match)->size(); ++i)
@@ -249,6 +255,9 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
 
   if(size_one == size_match && size_one == match_similarity)
     return false;
+
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, max_size);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, match_similarity);
 
   return match_similarity * 10 > max_size * 9;
 
