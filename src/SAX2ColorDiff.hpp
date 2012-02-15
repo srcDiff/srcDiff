@@ -12,6 +12,8 @@
 
 #include <fstream>
 #include <string>
+#include <Options.hpp>
+#include "srcDiffOptions.hpp"
 
 struct source_diff {
 
@@ -25,6 +27,7 @@ struct source_diff {
   std::string & file_one;
   std::string & file_two;
   std::ostream & colordiff_file;
+  OPTION_TYPE & options;
 };
 
 xmlSAXHandler factory();
