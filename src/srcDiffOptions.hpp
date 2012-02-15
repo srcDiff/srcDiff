@@ -15,5 +15,8 @@ const OPTION_TYPE OPTION_OUTPUTSAME  = ull(1) << 42;
 // @srcdiff
 const OPTION_TYPE OPTION_OUTPUTPURE  = ull(1) << 43;
 
+// @srcdiff
+const OPTION_TYPE OPTION_CHANGE  = ull(1) << 44;
+
 #endif
 
