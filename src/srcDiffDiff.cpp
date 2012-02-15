@@ -427,7 +427,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
       for(int i = last_offset; i < edits->offset_sequence_one; ++similarity, ++i)
         ;
     else if(edits->operation == SESINSERT)
-      for(int i = last_offset; i < edits->offset_sequence_two + 1; ++similarity, ++i)
+      for(int i = last_offset; i < edits->offset_sequence_one + 1; ++similarity, ++i)
         ;
 
     if(is_change(edits)) {
