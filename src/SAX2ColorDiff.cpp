@@ -567,6 +567,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   for (int i = 0; i < len; ++i) {
 
+    if(1 || blank_class != span_out) {
+
     if ((char)ch[i] == '&')
       data->colordiff_file << "&amp;";
     else if ((char)ch[i] == '<')
@@ -575,6 +577,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       data->colordiff_file << "&gt;";
     else if((char)ch[i] != '\n')
       data->colordiff_file << (char)ch[i];
+
+    }
 
     if((char)ch[i] == '\n') {
 
@@ -617,6 +621,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
+      if(1 || blank_class != span_out) {
       data->colordiff_file << "</span><span class=\"" << normal_color << "\">";
       data->colordiff_file << (char)'\n';
       if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
@@ -627,6 +632,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       } else {
 
         data->colordiff_file << "</span><span " << span_out.c_str() << ">";
+
+      }
 
       }
 
