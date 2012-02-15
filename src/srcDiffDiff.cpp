@@ -422,7 +422,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
   unsigned int similarity = 0;
   int last_offset = 0;
   for(; edits; edits = edits->next) {
-
+    /*
     if(edits->operation == SESDELETE)
       for(int i = last_offset; i < edits->offset_sequence_one; ++i)
         ++similarity;
@@ -438,27 +438,30 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
       edits = edits->next;
       continue;
     }
-
+    */
     switch(edits->operation) {
 
+      /*
     case SESINSERT :
 
       last_offset = edits->offset_sequence_one + 1;
 
       break;
-
+      */
     case SESDELETE :
 
-      last_offset = edits->offset_sequence_one + edits->length;
-
+      //last_offset = edits->offset_sequence_one + edits->length;
+      similarity += edits->length;
       break;
 
       }
 
   }
 
-  for(int i = last_offset; i < node_set_old_text.size(); ++i)
-    ++similarity;
+  //for(int i = last_offset; i < node_set_old_text.size(); ++i)
+  //++similarity;
+
+  similarity = node_set_old_text.size() - similarity;
 
   if(similarity <= 0)
     similarity = 0;
