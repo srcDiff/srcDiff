@@ -984,12 +984,9 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
       // check along x axis to find max difference  (Two possible either unmatch or unmatch all and add similarity
       if(j > 0) {
         
-
         max_similarity = differences[i * olength + (j - 1)].similarity;
 
           matched = true;
-
-          max_similarity = similarity;
 
           direction = 1;
 
@@ -1366,13 +1363,12 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     if(strcmp(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->name, "function") != 0)
        continue;
 
-    for(unsigned int k = 0; k < node_sets_new->size(); ++k) {
+  }
 
-      if(strcmp(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->name, "function") != 0)
-        continue;
+  for(unsigned int i = 0; i < node_sets_new->size(); ++i) {
 
-
-    }
+    if(strcmp(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->name, "function") != 0)
+      continue;
 
   }
 
