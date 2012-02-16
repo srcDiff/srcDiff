@@ -1112,9 +1112,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
 
-  for(unsigned int i = 0; i < node_sets_old.size(); ++i) {
+  for(unsigned int i = 0; i < node_sets_old->size(); ++i) {
 
-    for(unsigned int k = 0; k < node_sets_new.size(); ++k) {
+    for(unsigned int k = 0; k < node_sets_new->size(); ++k) {
 
     }
 
