@@ -1006,7 +1006,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
         int temp_similarity = differences[(i - 1) * olength + j].similarity;
 
         //if(temp_similarity < max_similarity) {
-        if(similarity >= max_similarity)) {
+        if(similarity >= max_similarity) {
         
         matched = true;;
         
@@ -1025,7 +1025,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
         int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
 
         //if(temp_similarity < max_similarity) {
-        if(temp_similarity > max_similarity)) {
+        if(temp_similarity > max_similarity) {
 
           matched = true;
 
@@ -1056,11 +1056,8 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
       if(i == 0 && j == 0) {
 
         max_similarity = similarity;
-        num_unmatched = unmatched;
-        if(unmatched)
-          ++num_unmatched;
 
-        matched = !unmatched;
+        matched = true;
       }
 
       // set if marked
@@ -1084,7 +1081,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
       // update structure
       differences[i * olength + j].similarity = max_similarity;
-      differences[i * olength + j].num_unmatched = num_unmatched;
+      //differences[i * olength + j].num_unmatched = num_unmatched;
       differences[i * olength + j].opos = j;
       differences[i * olength + j].npos = i;
       differences[i * olength + j].direction = direction;
