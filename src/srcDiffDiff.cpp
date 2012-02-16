@@ -1014,56 +1014,22 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
   bool * nlist = (bool *)malloc(nlength * sizeof(bool));
   memset(nlist, 0, nlength * sizeof(bool));
 
-  for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
+  for(int i = 0; i < nlength; ++i) {
 
     // only output marked and if has not already been output
-    if(differences[i * olength + j].marked && !(olist[j] || nlist[i])) {
+    if(!(olist[j] || nlist[i])) {
 
       offset_pair * match = new offset_pair;
 
-      match->old_offset = differences[i * olength + j].opos;
-      match->new_offset = differences[i * olength + j].npos;
-      match->similarity = differences[i * olength + j].similarity;
+      match->old_offset = pos.at(i);
+      match->new_offset = i;
+      //match->similarity = differences[i * olength + j].similarity;
       match->next = last_match;
 
       last_match = match;
 
       olist[j] = true;
       nlist[i] = true;
-
-    }
-
-    switch(differences[i * olength + j].direction) {
-
-    case 0:
-
-      --i;
-      --j;
-
-      break;
-
-    case 1:
-
-      --j;
-
-      break;
-
-    case 2:
-
-      --i;
-
-      break;
-
-    case 3:
-
-      --i;
-      --j;
-
-      break;
-
-    default:
-
-      break;
 
     }
 
