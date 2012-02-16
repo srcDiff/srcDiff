@@ -1387,7 +1387,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   offset_pair * matches_save = matches;
 
-  static int count;
+  static int count = 0;
 
   int start_count = count;
 
@@ -1400,13 +1400,14 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     if(compute_similarity(rbuf_old.nodes, function_old.at(matches->old_offset)
                           , rbuf_new.nodes, function_new.at(matches->new_offset)) * 10 > min_size * 9) {
 
-      //output_change_white_space(rbuf_old, function_old.at(matches->old_offset)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+      output_change_white_space(rbuf_old, function_old.at(matches->old_offset)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+      ++count;
 
     }
 
   }
 
-  matches = match_save;
+  //matches = match_save;
 
   for(; matches; matches = matches->next) {
 
@@ -1417,8 +1418,8 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     if(compute_similarity(rbuf_old.nodes, function_old.at(matches->old_offset)
                           , rbuf_new.nodes, function_new.at(matches->new_offset)) * 10 > min_size * 9) {
 
-      //output_change_white_space(rbuf_old, function_old.at(matches->old_offset)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
-
+      output_change_white_space(rbuf_old, rbuf_old.last_output, rbuf_new, function_new.at(matches->new_offset)->back() + 1, wstate);
+      ++start_count;
     }
 
   }
