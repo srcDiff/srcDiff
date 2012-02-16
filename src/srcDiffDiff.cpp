@@ -1359,31 +1359,31 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
                        , edit * edit_script, writer_state & wstate) {
 
 
-  std::vector<std::vector<int> *> * function_old;
+  std::vector<std::vector<int> *> function_old;
 
   for(unsigned int i = 0; i < node_sets_old->size(); ++i) {
 
     if(strcmp(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->name, "function") != 0)
        continue;
 
-    function_old.push_back(node_set_old->at(i));
+    function_old.push_back(node_sets_old->at(i));
 
   }
 
-  std::vector<std::vector<int> *> * function_new;
+  std::vector<std::vector<int> *> function_new;
 
   for(unsigned int i = 0; i < node_sets_new->size(); ++i) {
 
     if(strcmp(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->name, "function") != 0)
       continue;
 
-    function_new.push_back(node_set_new->at(i));
+    function_new.push_back(node_sets_new->at(i));
 
   }
 
-  offset_pair_matches = NULL;
+  offset_pair * matches = NULL;
 
-  match_differences_dynamic(rbuf_old.nodes, function_old, rbuf_new.nodes, function_new, edit_script &matches);
+  match_differences_dynamic_unordered(rbuf_old.nodes, function_old, rbuf_new.nodes, function_new, edit_script &matches);
 
 }
 
