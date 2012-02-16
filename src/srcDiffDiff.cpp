@@ -984,32 +984,32 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
   int length = nlength;
   if(olength > nlength)
-    length;
+    length = olength;
 
   int * pos = new int[length * 2];
 
-  for(int
+  for(int k = 0; k < nlength; ++k) {
 
-  for(int i = 0; i < nlength; ++i) {
+    for(int i = 0; i < nlength; ++i) {
 
-    int max_similarity = -1;
+      int max_similarity = -1;
 
-    int max_pos = -1;
+      int max_pos = -1;
 
-    for(int j = 0; j < olength; ++j) {
+      for(int j = 0; j < olength; ++j) {
+      
+        if(differences[i * olength + j].similarity > max_similarity) {
+        
+          max_similarity = differences[i * olength + j].similarity;
+          max_pos = j;
 
-      if(differences[i * olength + j].similarity > max_similarity) {
-
-        max_similarity = differences[i * olength + j].similarity;
-        max_pos = j;
-
+        }
+      
       }
 
     }
 
-    pos.push_back(max_pos);
-
- }
+  }
 
   // create match linked list
   offset_pair * last_match = NULL;
