@@ -1392,9 +1392,11 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
   }
 
   for(; matches_save;) {
+
     offset_pair * old_match = matches_save;
     matches_save = matches_save->next;
     delete old_match;
+
   }
 
 }
@@ -1475,9 +1477,11 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                    , edit_next->offset_sequence_two + edit_next->length - 1, wstate);
 
   for(; matches_save;) {
+
     offset_pair * old_match = matches_save;
     matches_save = matches_save->next;
     delete old_match;
+
   }
 
 }
