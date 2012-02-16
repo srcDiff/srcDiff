@@ -990,7 +990,10 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
     for(int j = 0; j < olength; ++j) {
 
-      if(differences[i + olength + j].similarity > max_similarity) {
+      if(differences[i * olength + j].similarity < max_similarity) {
+
+        max_similarity = differences[i * olength + j].similarity;
+        max_pos = j;
 
       }
 
