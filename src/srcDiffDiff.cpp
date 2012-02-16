@@ -1385,6 +1385,14 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   match_differences_dynamic_unordered(rbuf_old.nodes, &function_old, rbuf_new.nodes, &function_new, edit_script, &matches);
 
+  offset_pair * matches_save = matches;
+
+  for(; matches_save;) {
+    offset_pair * old_match = matches_save;
+    matches_save = matches_save->next;
+    delete old_match;
+  }
+
 }
 
 void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
