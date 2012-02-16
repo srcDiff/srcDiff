@@ -982,6 +982,14 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
   }
 
+  for(int i = 0; i < nlength; ++i) {
+
+    for(int j = 0; j < olength; ++j) {
+
+    }
+
+ }
+
   // create match linked list
   offset_pair * last_match = NULL;
 
