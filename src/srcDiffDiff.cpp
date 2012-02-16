@@ -1013,7 +1013,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
   // create match linked list
   offset_pair * last_match = NULL;
-
+  /*
   bool * olist = (bool *)malloc(olength * sizeof(bool));
   memset(olist, 0, olength * sizeof(bool));
 
@@ -1040,7 +1040,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
     }
 
   }
-
+  */
   *matches = last_match;
 
   free(olist);
