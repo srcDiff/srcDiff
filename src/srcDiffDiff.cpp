@@ -1241,7 +1241,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-  //    return;
+      return;
 
   std::vector<std::vector<int> *> function_old;
 
@@ -1274,7 +1274,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
   static int count = 0;
 
   int start_count = count;
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, matches);
+
   for(; matches; matches = matches->next) {
 
     unsigned int min_size = function_old.at(matches->old_offset)->size();
@@ -1283,7 +1283,6 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
     //if(compute_similarity(rbuf_old.nodes, function_old.at(matches->old_offset)
     //                    , rbuf_new.nodes, function_new.at(matches->new_offset)) * 10 > min_size * 5) {
-
 
       output_change_white_space(rbuf_old, function_old.at(matches->old_offset)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
       ++count;
@@ -1322,9 +1321,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   check_move(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
-  return;
+
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
