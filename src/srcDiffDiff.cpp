@@ -992,7 +992,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
     for(int j = 0; j < olength; ++j) {
 
-      if(differences[i * olength + j].similarity < max_similarity) {
+      if(differences[i * olength + j].similarity > max_similarity) {
 
         max_similarity = differences[i * olength + j].similarity;
         max_pos = j;
@@ -1241,7 +1241,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-    return;
+  //    return;
 
   std::vector<std::vector<int> *> function_old;
 
@@ -1274,7 +1274,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
   static int count = 0;
 
   int start_count = count;
-
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, matches);
   for(; matches; matches = matches->next) {
 
     unsigned int min_size = function_old.at(matches->old_offset)->size();
