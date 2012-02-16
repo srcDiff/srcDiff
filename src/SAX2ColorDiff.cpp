@@ -641,7 +641,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       } else {
 
+        if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size())
           data->colordiff_file << "</span><span class=\"line\"" << ">";
+
           data->colordiff_file << "</span><span " << span_out.c_str() << ">";
 
       }
