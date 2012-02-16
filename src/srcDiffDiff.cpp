@@ -1017,7 +1017,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
   for(int i = 0; i < nlength; ++i) {
 
     // only output marked and if has not already been output
-    if(!(olist[j] || nlist[i])) {
+    if(!(olist[pos.at(i)] || nlist[i])) {
 
       offset_pair * match = new offset_pair;
 
@@ -1028,7 +1028,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
       last_match = match;
 
-      olist[j] = true;
+      olist[pos.at(i)] = true;
       nlist[i] = true;
 
     }
