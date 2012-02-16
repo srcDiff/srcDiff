@@ -1387,6 +1387,10 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   offset_pair * matches_save = matches;
 
+  for(; matches; matches = matches->next) {
+
+  }
+
   for(; matches_save;) {
     offset_pair * old_match = matches_save;
     matches_save = matches_save->next;
