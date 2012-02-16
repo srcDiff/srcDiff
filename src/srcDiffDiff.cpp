@@ -982,38 +982,32 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
   }
 
-  int length = nlength;
-  if(olength > nlength)
-    length = olength;
+  std::vector<int> pos;
 
-  int * pos = new int[length * 2];
+  for(int i = 0; i < nlength; ++i) {
 
-  for(int k = 0; k < nlength; ++k) {
+    int max_similarity = -1;
 
-    for(int i = 0; i < nlength; ++i) {
+    int max_pos = -1;
 
-      int max_similarity = -1;
+    for(int j = 0; j < olength; ++j) {
 
-      int max_pos = -1;
+      if(differences[i * olength + j].similarity > max_similarity) {
 
-      for(int j = 0; j < olength; ++j) {
-      
-        if(differences[i * olength + j].similarity > max_similarity) {
-        
-          max_similarity = differences[i * olength + j].similarity;
-          max_pos = j;
+        max_similarity = differences[i * olength + j].similarity;
+        max_pos = j;
 
-        }
-      
       }
 
     }
 
-  }
+    pos.push_back(max_pos);
+
+ }
 
   // create match linked list
   offset_pair * last_match = NULL;
-  /*
+
   bool * olist = (bool *)malloc(olength * sizeof(bool));
   memset(olist, 0, olength * sizeof(bool));
 
@@ -1040,7 +1034,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
     }
 
   }
-  */
+
   *matches = last_match;
 
   free(olist);
@@ -1247,7 +1241,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-  //    return;
+      return;
 
   std::vector<std::vector<int> *> function_old;
 
@@ -1327,9 +1321,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   check_move(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
-  return;
+
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
