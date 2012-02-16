@@ -1114,7 +1114,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   for(unsigned int i = 0; i < node_sets_old.size(); ++i) {
 
-    for(unsigned int k = 0; i < node_sets_new.size(); ++j) {
+    for(unsigned int k = 0; k < node_sets_new.size(); ++k) {
 
     }
 
