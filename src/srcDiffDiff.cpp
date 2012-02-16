@@ -973,115 +973,10 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
       int similarity = compute_similarity(nodes_old, node_sets_old->at(edits->offset_sequence_one + j)
                                           , nodes_new, node_sets_new->at(edit_next->offset_sequence_two + i));
-
-      //unsigned long long max_similarity = (unsigned long long)-1;
-      int max_similarity = -1;
-
-      int direction = 0;
-
-      bool matched = false;
-
-      // check along x axis to find max difference  (Two possible either unmatch or unmatch all and add similarity
-      if(j > 0) {
-        
-        max_similarity = differences[i * olength + (j - 1)].similarity;
-
-          matched = true;
-
-          direction = 1;
-
-      }
-
-      // check along y axis to find max difference  (Two possible either unmatch or unmatch all and add similarity
-      if(i > 0) {
-
-        // may not have been initialized in j > 0
-        if(direction == 0)
-          direction = 2;
-
-        //unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity + MAX_INT;
-        int temp_similarity = differences[(i - 1) * olength + j].similarity;
-
-        //if(temp_similarity < max_similarity) {
-        if(similarity >= max_similarity) {
-        
-        matched = true;;
-        
-        max_similarity = temp_similarity;
-
-          direction = 2;
-
-        }
-
-      }
-
-      // go along diagonal just add similarity and unmatched
-      if(i > 0 && j > 0) {
-
-        //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-        int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-
-        //if(temp_similarity < max_similarity) {
-        if(temp_similarity > max_similarity) {
-
-          matched = true;
-
-          max_similarity = temp_similarity;
-          direction = 3;
-
-        }
-
-      }
-
-      if(direction == 1) {
-        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-        //differences[i * olength + (j - 1)].marked = marked_left;
-        //differences[i * olength + (j - 1)].last_similarity = last_similarity_left;
-
-      } else if(direction == 2) {
-        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-        //differences[(i - 1) * olength + j].marked = marked_top;
-        //differences[(i - 1) * olength + j].last_similarity = last_similarity_top;
-
-      } else {
-
-        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
-      }
-
-      // special case starting node
-      if(i == 0 && j == 0) {
-
-        max_similarity = similarity;
-
-        matched = true;
-      }
-
-      // set if marked
-      if(matched) {
-
-        differences[i * olength + j].marked = true;
-
-      } else {
-
-        differences[i * olength + j].marked = false;
-
-      }
-
-      /*
-      fprintf(stderr, "HERE\n");
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, matched);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, max_similarity);
-      fprintf(stderr, "HERE\n");
-      */
-
       // update structure
-      differences[i * olength + j].similarity = max_similarity;
-      //differences[i * olength + j].num_unmatched = num_unmatched;
+      differences[i * olength + j].similarity = similarity;
       differences[i * olength + j].opos = j;
       differences[i * olength + j].npos = i;
-      differences[i * olength + j].direction = direction;
 
     }
 
@@ -1357,7 +1252,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-  return;
+    return;
 
   std::vector<std::vector<int> *> function_old;
 
@@ -1397,13 +1292,14 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     if(function_new.at(matches->new_offset)->size() < min_size)
       min_size = function_new.at(matches->new_offset)->size();
 
-    if(compute_similarity(rbuf_old.nodes, function_old.at(matches->old_offset)
-                          , rbuf_new.nodes, function_new.at(matches->new_offset)) * 10 > min_size * 9) {
+    //if(compute_similarity(rbuf_old.nodes, function_old.at(matches->old_offset)
+    //                    , rbuf_new.nodes, function_new.at(matches->new_offset)) * 10 > min_size * 5) {
 
+      fprintf(stderr, "HERE: %s %s %d %d %d->%d\n", __FILE__, __FUNCTION__, __LINE__, count, matches->old_offset, matches->new_offset);
       output_change_white_space(rbuf_old, function_old.at(matches->old_offset)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
       ++count;
 
-    }
+      //    }
 
   }
 
@@ -1437,9 +1333,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   check_move(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
-
+  return;
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
