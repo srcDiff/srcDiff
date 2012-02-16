@@ -1400,7 +1400,6 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     if(compute_similarity(rbuf_old.nodes, function_old.at(matches->old_offset)
                           , rbuf_new.nodes, function_new.at(matches->new_offset)) * 10 > min_size * 9) {
 
-      fprintf(stderr, "HERE: %s %s %d %d %d->%d\n", __FILE__, __FUNCTION__, __LINE__, count, matches->old_offset, matches->new_offset);
       output_change_white_space(rbuf_old, function_old.at(matches->old_offset)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
       ++count;
 
