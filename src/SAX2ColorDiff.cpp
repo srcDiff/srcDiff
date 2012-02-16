@@ -477,7 +477,7 @@ void startDocument(void* ctx) {
 
   } else {
 
-  data->colordiff_file << "<span " << ">";
+  data->colordiff_file << "<span class=\"line\"" << ">";
 
   }
 
@@ -641,7 +641,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       } else {
 
-        data->colordiff_file << "</span><span " << span_out.c_str() << ">";
+          data->colordiff_file << "</span><span class=\"line\"" << ">";
+          data->colordiff_file << "</span><span " << span_out.c_str() << ">";
 
       }
 
