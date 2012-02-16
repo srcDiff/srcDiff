@@ -1108,9 +1108,17 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
 }
 
+void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                       , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                       , edit * edit_script, writer_state & wstate) {
+
+}
+
 void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
+
+  check_move(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
