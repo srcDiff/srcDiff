@@ -1407,7 +1407,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   }
 
-  //matches = match_save;
+  matches = matches_save;
 
   for(; matches; matches = matches->next) {
 
