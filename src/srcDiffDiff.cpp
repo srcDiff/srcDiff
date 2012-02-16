@@ -982,6 +982,8 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
   }
 
+  std::vector<int> pos;
+
   for(int i = 0; i < nlength; ++i) {
 
     int max_similarity = -1;
@@ -998,6 +1000,8 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
       }
 
     }
+
+    pos.push_back(max_pos);
 
  }
 
