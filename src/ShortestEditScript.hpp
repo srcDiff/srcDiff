@@ -7,7 +7,7 @@ class ShortestEditScript {
 private:
 
   edit * edit_script;
-  void * context;
+  const void * context;
   int (*compare)(const void * item_one, const void * item_two, const void * context);
   void * (*accessor)(int index, const void * structure, const void * context);
 
