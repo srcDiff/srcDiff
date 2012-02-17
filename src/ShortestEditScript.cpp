@@ -7,5 +7,7 @@ ShortestEditScript::ShortestEditScript(int (*compare)(void * item_one, void * it
 
 ShortestEditScript::~ShortestEditScript() {
 
+  if(edit_script)
+    free_shortest_edit_script(edit_script);
 
 }
