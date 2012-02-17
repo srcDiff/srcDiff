@@ -22,6 +22,8 @@ public:
 
   int compute(int size_one, void * structure_one, int size_two, void * structure_two);
 
+  //void reset();
+
 };
 
 #endif
