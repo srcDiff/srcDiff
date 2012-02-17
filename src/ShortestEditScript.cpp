@@ -2,7 +2,7 @@
 
 
 ShortestEditScript::ShortestEditScript(int (*compare)(const void * item_one, const void * item_two, const void * context)
-                                       , void * (*accessor)(int index, const void * structure, const void * context)
+                                       , const void * (*accessor)(int index, const void * structure, const void * context)
                                        , const void * context) : edit_script(0), compare(compare), accessor(accessor), context(context) { }
 
 ShortestEditScript::~ShortestEditScript() {

@@ -9,13 +9,13 @@ private:
   edit * edit_script;
   const void * context;
   int (*compare)(const void * item_one, const void * item_two, const void * context);
-  void * (*accessor)(int index, const void * structure, const void * context);
+  const void * (*accessor)(int index, const void * structure, const void * context);
 
 
 public:
 
   ShortestEditScript(int (*compare)(const void * item_one, const void * item_two, const void * context),
-                     void * (*accessor)(int index, const void * structure, const void * context),
+                     const void * (*accessor)(int index, const void * structure, const void * context),
                                         const void * context);
 
   ~ShortestEditScript();
