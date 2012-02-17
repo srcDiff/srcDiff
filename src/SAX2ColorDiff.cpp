@@ -652,7 +652,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
         if(data->last_output != span_out) {
 
           data->colordiff_file << "<span " << span_out.c_str() << ">";
-
           data->last_output = span_out;
 
         }
