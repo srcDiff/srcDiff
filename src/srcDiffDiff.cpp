@@ -7,6 +7,7 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "srcDiffNested.hpp"
 #include "srcDiffMeasure.hpp"
+#include "srcDiffMatch.hpp"
 #include <pthread.h>
 
 #include <string.h>
