@@ -6,6 +6,7 @@
 #include "srcDiffCommentDiff.hpp"
 #include "srcDiffWhiteSpace.hpp"
 #include "srcDiffNested.hpp"
+#include "srcDiffMeasure.hpp"
 #include <pthread.h>
 
 #include <string.h>
@@ -438,7 +439,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
       edits = edits->next;
       continue;
     }
-    */
+
     switch(edits->operation) {
 
       /*
@@ -447,7 +448,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
       last_offset = edits->offset_sequence_one + 1;
 
       break;
-      */
+
     case SESDELETE :
 
       //last_offset = edits->offset_sequence_one + edits->length;

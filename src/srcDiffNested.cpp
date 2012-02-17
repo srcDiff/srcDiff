@@ -5,6 +5,7 @@
 #include "srcDiffOutput.hpp"
 #include "srcDiffDiff.hpp"
 #include "srcDiffUtility.hpp"
+#include "srcDiffMeasure.hpp"
 
 #include <string.h>
 
