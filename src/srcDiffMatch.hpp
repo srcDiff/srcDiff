@@ -6,6 +6,28 @@
 #include "srcDiffDiff.hpp"
 #include "shortest_edit_script.h"
 
+struct offset_pair {
+
+  int old_offset;
+  int old_length;
+  int new_offset;
+  int new_length;
+  int similarity;
+  offset_pair * next;
+};
+
+struct difference {
+
+  //unsigned long long similarity;
+  int similarity;
+  int num_unmatched;
+  bool marked;
+  int direction;
+  unsigned int opos;
+  unsigned int npos;
+
+};
+
 void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<std::vector<int> *> * node_sets_old
                                , std::vector<xNodePtr> & nodes_new, std::vector<std::vector<int> *> * node_sets_new
                                , edit * edit_script, offset_pair ** matches);

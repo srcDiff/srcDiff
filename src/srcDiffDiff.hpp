@@ -6,28 +6,6 @@
 
 #include <vector>
 
-struct offset_pair {
-
-  int old_offset;
-  int old_length;
-  int new_offset;
-  int new_length;
-  int similarity;
-  offset_pair * next;
-};
-
-struct difference {
-
-  //unsigned long long similarity;
-  int similarity;
-  int num_unmatched;
-  bool marked;
-  int direction;
-  unsigned int opos;
-  unsigned int npos;
-
-};
-
 // create sets of nodes
 std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
 
