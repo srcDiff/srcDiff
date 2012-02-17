@@ -11,3 +11,7 @@ ShortestEditScript::~ShortestEditScript() {
     free_shortest_edit_script(edit_script);
 
 }
+
+ShortestEditScript::compute(int size_one, void * structure_one, int size_two, void * structure_two) {
+
+}
