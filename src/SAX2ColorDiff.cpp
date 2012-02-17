@@ -575,7 +575,13 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   span_out += "\"";
 
-  data->colordiff_file << "</span><span " << span_out.c_str() << ">";
+  if(span_out != data->last_context) {
+
+    data->colordiff_file << "</span><span " << span_out.c_str() << ">";
+
+    data->last_context = span_out;
+
+  }
 
   for (int i = 0; i < len; ++i) {
 
