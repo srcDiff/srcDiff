@@ -382,7 +382,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
   free_shortest_edit_script(edit_script);
 
 }
-
+/*
 int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
                        std::vector<int> * node_set_new) {
 
@@ -610,7 +610,7 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, std::vector<int> *
   return similarity;
 
 }
-
+*/
 void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<std::vector<int> *> * node_sets_old
                                , std::vector<xNodePtr> & nodes_new, std::vector<std::vector<int> *> * node_sets_new
                                , edit * edit_script, offset_pair ** matches) {
