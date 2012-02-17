@@ -649,10 +649,10 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         data->colordiff_file << "</span><span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
 
-        if(data->last_output != span_out) {
+        if(data->last_context != span_out) {
 
           data->colordiff_file << "<span " << span_out.c_str() << ">";
-          data->last_output = span_out;
+          data->last_context = span_out;
 
         }
 
