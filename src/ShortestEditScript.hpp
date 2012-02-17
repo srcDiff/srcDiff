@@ -8,19 +8,19 @@ private:
 
   edit * edit_script;
   void * context;
-  int (*compare)(void * item_one, void * item_two, void * context);
-  void * (*accessor)(int index, void * structure, void * context);
+  int (*compare)(const void * item_one, const void * item_two, const void * context);
+  void * (*accessor)(int index, const void * structure, const void * context);
 
 
 public:
 
-  ShortestEditScript(int (*compare)(void * item_one, void * item_two, void * context),
-                     void * (*accessor)(int index, void * structure, void * context),
-                                        void * context);
+  ShortestEditScript(int (*compare)(const void * item_one, const void * item_two, const void * context),
+                     void * (*accessor)(int index, const void * structure, const void * context),
+                                        const void * context);
 
   ~ShortestEditScript();
 
-  int compute(int size_one, void * structure_one, int size_two, void * structure_two);
+  int compute(int size_one, const void * structure_one, int size_two, const void * structure_two);
 
   //void reset();
 
