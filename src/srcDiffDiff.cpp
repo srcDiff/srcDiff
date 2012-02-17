@@ -384,7 +384,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
   free_shortest_edit_script(edit_script);
 
 }
-
+/*
 void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<std::vector<int> *> * node_sets_old
                                , std::vector<xNodePtr> & nodes_new, std::vector<std::vector<int> *> * node_sets_new
                                , edit * edit_script, offset_pair ** matches) {
@@ -400,7 +400,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
 
     Errata: Now maximizing similarity
 
-  */
+
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
@@ -423,7 +423,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
     }
 
     fprintf(stderr, "HERE\n");
-*/
+
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
@@ -602,7 +602,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, std::vector<st
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
       fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, max_similarity);
       fprintf(stderr, "HERE\n");
-      */
+
 
       // update structure
       differences[i * olength + j].similarity = max_similarity;
@@ -704,7 +704,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
 
     Errata: Now maximizing similarity
 
-  */
+
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
@@ -727,7 +727,7 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, std:
     }
 
     fprintf(stderr, "HERE\n");
-*/
+
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
@@ -938,7 +938,7 @@ void match_differences(std::vector<xNodePtr> & nodes_old, std::vector<std::vecto
   }
 
 }
-
+*/
 void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                       , int start_old, int end_old
                       , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
