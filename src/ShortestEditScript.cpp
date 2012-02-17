@@ -12,7 +12,7 @@ ShortestEditScript::~ShortestEditScript() {
 
 }
 
-ShortestEditScript::compute(int size_one, void * structure_one, int size_two, void * structure_two) {
+int ShortestEditScript::compute(int size_one, void * structure_one, int size_two, void * structure_two) {
 
   shortest_edit_script(size_one, structure_one, size_two, structure_two, compare, accessor, &edit_script, context);
 
