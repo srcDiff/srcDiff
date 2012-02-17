@@ -169,6 +169,9 @@ $(OBJ_DIR)srcDiffMeasure.o :  srcDiffMeasure.cpp srcDiffMeasure.hpp shortest_edi
 $(OBJ_DIR)srcDiffMatch.o :  srcDiffMatch.cpp srcDiffMatch.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
+$(OBJ_DIR)ShortestEditScript.o :  ShortestEditScript.cpp ShortestEditScript.hpp shortest_edit_script.h
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
+
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*
 
