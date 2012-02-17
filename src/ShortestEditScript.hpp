@@ -15,12 +15,12 @@ private:
 public:
 
   ShortestEditScript(int (*compare)(void * item_one, void * item_two, void * context),
-                     void * (*accessor)(int index, void * structure, void * context,
+                     void * (*accessor)(int index, void * structure, void * context),
                                         void * context);
 
   ~ShortestEditScript();
 
-
+  int compute(int size_one, void * structure_one, int size_two, void * structure_two);
 
 };
 
