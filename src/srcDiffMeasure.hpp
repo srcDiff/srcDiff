@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFFMEASURE_HPP
 
 #include <vector>
+#include "xmlrw.hpp"
 
 int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
                        std::vector<int> * node_set_new);
