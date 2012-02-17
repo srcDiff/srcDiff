@@ -641,7 +641,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       // clear color before output line
       if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
 
-        //if(span_out != blank_class)
         data->colordiff_file << "</span><span class=\"" << normal_color << "\">";
         data->colordiff_file << (char)'\n';
 
