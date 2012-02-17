@@ -1,5 +1,7 @@
 #include "srcDiffMeasure.hpp"
 
+#include "srcDiffTypes.hpp"
+#include "srcDiffUtility.hpp"
 #include "shortest_edit_script.h"
 
 int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
