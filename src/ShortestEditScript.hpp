@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SHORTESTEDITSCRIPT_HPP
 #define INCLUDED_SHORTESTEDITSCRIPT_HPP
 
-#include "shortest_edit_script.hpp"
+#include "shortest_edit_script.h"
 
 class ShortestEditScript {
 private:
