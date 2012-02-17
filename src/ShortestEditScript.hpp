@@ -8,6 +8,8 @@ private:
 
   edit * edit_script;
   void * context;
+  void (*accessor)(int index, void * structure, void * context);
+  int (*compare)(void * item_one, void * item_two, void * context);
 
 public:
 
