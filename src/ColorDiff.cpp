@@ -138,7 +138,8 @@ int ColorDiff::colorize(LineDiffRange & line_diff_range) {
   std::vector<int> stack = std::vector<int>();
   stack.push_back(SESCOMMON);
 
-  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, line_diff_range.get_file_one(), line_diff_range.get_file_two(), *outfile, options };
+  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, line_diff_range.get_file_one(), line_diff_range.get_file_two()
+                              , *outfile, options, "" };
 
   ctxt->_private = &data;
 
