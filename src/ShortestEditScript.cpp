@@ -1,9 +1,9 @@
 #include "ShortestEditScript.hpp"
 
 
-ShortestEditScript::ShortestEditScript(int (*compare)(void * item_one, void * item_two, void * context)
-                                       , void * (*accessor)(int index, void * structure, void * context)
-                                       , void * context) : edit_script(0), compare(compare), accessor(accessor), context(context) { }
+ShortestEditScript::ShortestEditScript(int (*compare)(const void * item_one, const void * item_two, const void * context)
+                                       , void * (*accessor)(int index, const void * structure, const void * context)
+                                       , const void * context) : edit_script(0), compare(compare), accessor(accessor), context(context) { }
 
 ShortestEditScript::~ShortestEditScript() {
 
@@ -12,7 +12,7 @@ ShortestEditScript::~ShortestEditScript() {
 
 }
 
-int ShortestEditScript::compute(int size_one, void * structure_one, int size_two, void * structure_two) {
+int ShortestEditScript::compute(int size_one, const void * structure_one, int size_two, const void * structure_two) {
 
   return shortest_edit_script(size_one, structure_one, size_two, structure_two, compare, accessor, &edit_script, context);
 
