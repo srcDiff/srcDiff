@@ -163,6 +163,9 @@ $(OBJ_DIR)SAXColorDiff.o :  SAX2ColorDiff.cpp SAX2ColorDiff.hpp
 $(OBJ_DIR)LineDiffRange.o :  LineDiffRange.cpp LineDiffRange.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
+$(OBJ_DIR)srcDiffMeasure.o :  srcDiffMeasure.cpp srcDiffMeasure.hpp shortest_edit_script.h
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
+
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*
 
