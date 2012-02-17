@@ -70,4 +70,6 @@ public:
 
 };
 
+const int MAX_INT = (unsigned)-1 >> 1;
+
 #endif

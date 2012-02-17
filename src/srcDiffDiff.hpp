@@ -28,8 +28,6 @@ struct difference {
 
 };
 
-const int MAX_INT = (unsigned)-1 >> 1;
-
 // create sets of nodes
 std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
 
