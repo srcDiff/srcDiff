@@ -594,6 +594,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
     }
 
     data->colordiff_file << "<span " << span_out.c_str() << ">";
+    data->spanning = true;
 
     data->last_context = span_out;
 
@@ -674,11 +675,23 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         if(data->last_context != span_out) {
 
-          data->colordiff_file << "</span><span class=\"line\">" << data->line_old << "-" << data->line_new;
-          data->colordiff_file << "</span><span " << span_out.c_str() << ">";
+          if(data->spanning) {
+
+            data->colordiff_file << "</span>";
+
+            data->spanning  = false;
+
+
+          }
+
+          data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+          data->colordiff_file << "<span " << span_out.c_str() << ">";
           data->last_context = span_out;
+          data->spanning = true;
 
         } else {
+
+          if
 
           data->colordiff_file << "</span><span class=\"line\">" << data->line_old << "-" << data->line_new;
 
