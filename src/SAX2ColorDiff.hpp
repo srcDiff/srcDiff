@@ -29,6 +29,7 @@ struct source_diff {
   std::ostream & colordiff_file;
   OPTION_TYPE & options;
   std::string last_context;
+  bool spanning;
 };
 
 xmlSAXHandler factory();
