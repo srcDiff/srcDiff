@@ -698,7 +698,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
             data->spanning = false;
           }
 
-          data->colordiff_file << "</span><span class=\"line\">" << data->line_old << "-" << data->line_new;
+          data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
 
 
         }
