@@ -476,10 +476,11 @@ void startDocument(void* ctx) {
   data->colordiff_file << "<span " << span_out.c_str() << ">";
 
   data->last_context = span_out;
+  data->spanning = true;
 
   } else {
 
-  data->colordiff_file << "<span class=\"line\"" << ">";
+  data->colordiff_file << "<span class=\"line\"" << "/>";
 
   }
 
@@ -491,6 +492,14 @@ void endDocument(void* ctx) {
   struct source_diff * data = (source_diff *)ctxt->_private;
 
   //fprintf(stderr, "%s\n\n", __FUNCTION__);
+
+  if(data->spanning) {
+
+    data->colordiff_file << "</span>";
+
+    data->spanning = false;
+  }
+    
 
   data->colordiff_file << "</span><span class=\"" << normal_color << "\"></span>";
   data->colordiff_file << "</div>\n";
