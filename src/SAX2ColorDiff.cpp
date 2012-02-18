@@ -501,7 +501,7 @@ void endDocument(void* ctx) {
   }
     
 
-  data->colordiff_file << "</span><span class=\"" << normal_color << "\"></span>";
+  data->colordiff_file << "<span class=\"" << normal_color << "\"></span>";
   data->colordiff_file << "</div>\n";
 }
 
