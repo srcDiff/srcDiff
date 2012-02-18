@@ -586,7 +586,14 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   if(span_out != data->last_context) {
 
-    data->colordiff_file << "</span><span " << span_out.c_str() << ">";
+    if(data->spanning) {
+
+      data->colordiff_file << "</span>";
+      data->spanning = false;
+
+    }
+
+    data->colordiff_file << "<span " << span_out.c_str() << ">";
 
     data->last_context = span_out;
 
@@ -650,8 +657,18 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       // clear color before output line
       if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
 
-        data->colordiff_file << "</span><span class=\"" << normal_color << "\">";
+        if(data->spanning) {
+
+          data->colordiff_file << "</span>";
+
+          data->spanning = false;
+
+
+        }
+
+        data->colordiff_file << "<span class=\"" << normal_color << "\">";
         data->colordiff_file << (char)'\n';
+        data->colordiff_file << "</span>";
 
       if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
 
