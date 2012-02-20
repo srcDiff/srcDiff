@@ -63,6 +63,8 @@ struct xNode {
   unsigned short extra;
   bool is_empty;
   bool free;
+
+  int move;
   
 };
 

@@ -120,6 +120,7 @@ xNode * createInternalNode(xmlNode & node) {
   xnode->is_empty = node.extra;
 
   xnode->free = false;
+  xnode->move = 0;
 
   return xnode;
 }
@@ -270,6 +271,7 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
   text->properties = 0;
   text->is_empty = true;
   text->free = true;
+  text->move = 0;
 
   return text;
 }
