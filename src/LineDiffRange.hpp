@@ -8,7 +8,7 @@
 */
 
 #include "shortest_edit_script.h"
-#include "ShortestEditScrip.hpp"
+#include "ShortestEditScript.hpp"
 
 #include <string>
 #include <vector>
