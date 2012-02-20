@@ -36,11 +36,10 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
     if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
       node_set_new_text.push_back(node_set_new->at(i));
 
-  edit * edit_script;
-  shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, &dnodes);
+  ShortestEditScript ses(node_index_compare, node_index, &dnodes);
+  ses.compute(node_set_old_text.size(), (const void *)&node_set_old_text, node_set_new.size(), (const void *)&node_set_text);
 
-  edit * edits = edit_script;
+  edit * edits = ses.get_script();
   unsigned int similarity = 0;
   int last_offset = 0;
   for(; edits; edits = edits->next) {
@@ -87,8 +86,6 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   if(similarity <= 0)
     similarity = 0;
-
-  free_shortest_edit_script(edit_script);
 
   return similarity;
 
