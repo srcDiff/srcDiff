@@ -1,10 +1,14 @@
 #include "srcDiffMove.hpp"
 #include <vector>
+#include <map>
 
 static int move_id;
 
-void add_construct(std::map<std::string, std::vector<std::pair<int, int> > >, int offset, int operation) {
+void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & construct
+                   , std::vector<std::vector<int> *> & node_sets, std::vector<xnodeptr>
+                   , int offset, int operation) {
 
+  if(construct.count(nodes.at(
 
 }
 
