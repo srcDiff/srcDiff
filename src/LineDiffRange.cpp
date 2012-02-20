@@ -23,9 +23,6 @@ LineDiffRange::LineDiffRange(std::string file_one, std::string file_two)
 
 LineDiffRange::~LineDiffRange() {
 
-  if(edit_script != NULL)
-    free_shortest_edit_script(edit_script);
-
 }
 
 std::string & LineDiffRange::get_file_one() {
