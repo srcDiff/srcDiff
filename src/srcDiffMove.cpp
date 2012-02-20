@@ -1,4 +1,5 @@
 #include "srcDiffMove.hpp"
+#include <vector>
 
 static int move_id;
 
@@ -6,21 +7,34 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
 
+  std::map<std::string, std::vector<std::pair<int, int> > > constructs;
+
   for(edit * edits = edit_script; edits; edits = edits->next) {
 
+    /*
     if(is_change(edits)) {
 
 
-      }
-
+    }
+    */
 
     switch(edits->operation) {
 
     case SESINSERT :
 
+      for(int i = 0; i < edits->length; ++i) {
+
+
+      }
+
       break;
 
     case SESDELETE :
+
+      for(int i = 0; i < edits->length; ++i) {
+
+
+      }
 
       break;
 
