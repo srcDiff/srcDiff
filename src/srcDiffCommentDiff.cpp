@@ -351,6 +351,7 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
   edit * edit_script;
 
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
+  ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
   int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
                                       (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
