@@ -677,9 +677,9 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
           if(data->spanning) {
 
-            data->colordiff_file << "</span>";
+            //data->colordiff_file << "</span>";
 
-            data->spanning  = false;
+            //data->spanning  = false;
 
 
           }
