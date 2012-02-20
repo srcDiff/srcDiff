@@ -1,7 +1,10 @@
+#include "srcDiffMove.hpp"
+
+static int move_id;
+
 void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-      return;
 
   std::vector<std::vector<int> *> function_old;
 
