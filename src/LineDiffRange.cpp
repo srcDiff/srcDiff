@@ -102,7 +102,7 @@ std::string LineDiffRange::get_line_diff_range() {
 
   std::string diff;
 
-  for(edit * edits = edit_script; edits; edits = edits->next) {
+  for(edit * edits = ses.get_script(); edits; edits = edits->next) {
 
     std::stringstream stream;
     
@@ -165,7 +165,7 @@ static std::string remove_white_space(std::string & source) {
 bool LineDiffRange::is_no_white_space_diff() {
 
 
-  for(edit * edits = edit_script; edits; edits = edits->next) {
+  for(edit * edits = ses.get_script(); edits; edits = edits->next) {
 
     if(is_change(edits)) {
 

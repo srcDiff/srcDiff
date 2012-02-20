@@ -25,8 +25,6 @@ private:
   std::string file_two;
   ShortestEditScript ses;
 
-  edit * edit_script;
-
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;
 
