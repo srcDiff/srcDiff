@@ -142,7 +142,6 @@ void LineDiffRange::create_line_diff() {
   lines_two = read_file(file_two.c_str());
 
   int distance = ses.compute(lines_one.size(), &lines_one, lines_two.size(), &lines_two);
-  //int distance = shortest_edit_script(lines_one.size(), &lines_one, lines_two.size(), &lines_two, line_compare, line_accessor, &edit_script, NULL);
 
   if(distance < 0) {
 
