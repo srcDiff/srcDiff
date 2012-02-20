@@ -1,6 +1,8 @@
 #include "srcDiffMove.hpp"
 #include <vector>
 #include <map>
+#include "xmlrw.hpp"
+#include "srcDiffTypes.hpp"
 
 static int move_id;
 
