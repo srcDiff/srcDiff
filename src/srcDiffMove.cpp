@@ -62,5 +62,11 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   std::vector<std::pair<int, int> > functions = constructs["function"];
 
+
+  for(int i = 0; i < functions.size(); ++i) {
+
+
+  }
+
 }
 
