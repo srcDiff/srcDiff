@@ -11,7 +11,7 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
                    , std::vector<std::vector<int> *> & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
-  std::string tag = nodes.at(node_sets.at(offset)->at(0)).name;
+  std::string tag = nodes.at(node_sets.at(offset)->at(0))->name;
 
   if(constructs.count(tag) == 0) {
 
