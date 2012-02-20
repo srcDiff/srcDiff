@@ -8,11 +8,15 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
                    , std::vector<std::vector<int> *> & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
-  if(construct.count(nodes.at(node_sets.at(offset)->at(0))) == 0) {
+  std::string tag = nodes.at(node_sets.at(offset)->at(0));
 
+  if(construct.count(tag) == 0) {
+
+    construct[tag] = std::vector<std::pair<int, int> >();
 
   } else {
 
+    
 
   }
 
