@@ -213,7 +213,7 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
 
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
-  int distance = ses.compute(node_sets_old->size(), (const void *)node_sets_old, node_sets_new->size(), (const void *)node_sets_new)
+  int distance = ses.compute(node_sets_old->size(), (const void *)node_sets_old, node_sets_new->size(), (const void *)node_sets_new);
 
   edit * edit_script = ses.get_script();
 
@@ -351,7 +351,6 @@ void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *
   int distance = ses.compute(node_sets_old->size(), (const void *)node_sets_node, node_sets_new->size(), (const void *)node_sets_new);
 
   edit * edit_script = ses.get_script();
-
 
   if(distance < 0) {
 
