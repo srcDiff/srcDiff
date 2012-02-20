@@ -4,19 +4,19 @@
 
 static int move_id;
 
-void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & construct
+void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & constructs
                    , std::vector<std::vector<int> *> & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
   std::string tag = nodes.at(node_sets.at(offset)->at(0));
 
-  if(construct.count(tag) == 0) {
+  if(constructs.count(tag) == 0) {
 
-    construct[tag] = std::vector<std::pair<int, int> >();
+    constructs[tag] = std::vector<std::pair<int, int> >();
 
   }
 
-  construct[tag].push_back(std::pair<int, int >(offset, operation))
+  constructs[tag].push_back(std::pair<int, int>(offset, operation));
 
 }
 
