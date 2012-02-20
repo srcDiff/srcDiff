@@ -124,11 +124,9 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
 
-  edit * edit_script;
-  shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, &dnodes);
+  ses.compute(node_set_old_text.size(), (const void *)&node_set_old_text, node_set_text.size(), (const void *)&node_set_new_text);
 
-  edit * edits = edit_script;
+  edit * edits = ses.get_script();
   unsigned int similarity = 0;
   int last_offset;
   for(; edits; edits = edits->next) {
@@ -147,8 +145,6 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
 
   }
-
-  free_shortest_edit_script(edit_script);
 
   return similarity;
 
