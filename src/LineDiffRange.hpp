@@ -8,6 +8,7 @@
 */
 
 #include "shortest_edit_script.h"
+#include "ShortestEditScrip.hpp"
 
 #include <string>
 #include <vector>
@@ -22,6 +23,7 @@ private:
 
   std::string file_one;
   std::string file_two;
+  ShortestEditScript ses;
 
   edit * edit_script;
 

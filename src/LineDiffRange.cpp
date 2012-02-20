@@ -19,7 +19,7 @@
 #include <iostream>
 
 LineDiffRange::LineDiffRange(std::string file_one, std::string file_two)
-  : file_one(file_one), file_two(file_two), edit_script(NULL) {}
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL) {}
 
 LineDiffRange::~LineDiffRange() {
 
@@ -53,7 +53,7 @@ unsigned int LineDiffRange::get_length_file_two() {
 
 edit * LineDiffRange::get_line_diff() {
 
-  return edit_script;
+  return ses.get_script();
 
 }
 
@@ -141,7 +141,8 @@ void LineDiffRange::create_line_diff() {
   lines_one = read_file(file_one.c_str());
   lines_two = read_file(file_two.c_str());
 
-  int distance = shortest_edit_script(lines_one.size(), &lines_one, lines_two.size(), &lines_two, line_compare, line_accessor, &edit_script, NULL);
+  int distance = ses.compute(lines_one.size(), &lines_one, lines_two.size(), &lines_two);
+  //int distance = shortest_edit_script(lines_one.size(), &lines_one, lines_two.size(), &lines_two, line_compare, line_accessor, &edit_script, NULL);
 
   if(distance < 0) {
 
