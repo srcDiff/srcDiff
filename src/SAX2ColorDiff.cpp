@@ -125,6 +125,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
     colordiff_file << "}\n";
     colordiff_file << ".line\n";
     colordiff_file << "{\n";
+    colordiff_file << "color:black;\n";
     colordiff_file << "font-weight:normal;\n";
     colordiff_file << "background-color:white;\n";
     colordiff_file << "display:inline-block;\n";
