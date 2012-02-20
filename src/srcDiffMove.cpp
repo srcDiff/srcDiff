@@ -27,6 +27,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
 
+  if(move_id == 0)
+    ++move_id;
+
   std::map<std::string, std::vector<std::pair<int, int> > > constructs;
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
