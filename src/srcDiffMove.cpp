@@ -13,7 +13,7 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
 
   std::string tag = nodes.at(node_sets.at(offset)->at(0))->name;
 
-  if(constructs.find(tag) == construct.end()) {
+  if(constructs.find(tag) == constructs.end()) {
 
     constructs[tag] = std::vector<std::pair<int, int> >();
 
