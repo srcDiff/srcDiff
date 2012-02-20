@@ -41,46 +41,18 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   edit * edits = ses.get_script();
   unsigned int similarity = 0;
-  int last_offset = 0;
   for(; edits; edits = edits->next) {
-    /*
-    if(edits->operation == SESDELETE)
-      for(int i = last_offset; i < edits->offset_sequence_one; ++i)
-        ++similarity;
-    else if(edits->operation == SESINSERT)
-      for(int i = last_offset; i < edits->offset_sequence_one + 1; ++i)
-        ++similarity;
 
-    if(is_change(edits)) {
-
-
-      last_offset = edits->offset_sequence_one + edits->length;
-
-      edits = edits->next;
-      continue;
-    }
-    */
     switch(edits->operation) {
 
-      /*
-    case SESINSERT :
-
-      last_offset = edits->offset_sequence_one + 1;
-
-      break;
-      */
     case SESDELETE :
 
-      //last_offset = edits->offset_sequence_one + edits->length;
       similarity += edits->length;
       break;
 
       }
 
   }
-
-  //for(int i = last_offset; i < node_set_old_text.size(); ++i)
-  //++similarity;
 
   similarity = node_set_old_text.size() - similarity;
 
@@ -128,7 +100,6 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   edit * edits = ses.get_script();
   unsigned int similarity = 0;
-  int last_offset;
   for(; edits; edits = edits->next) {
 
       similarity += edits->length;
