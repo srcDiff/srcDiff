@@ -5,10 +5,16 @@
 static int move_id;
 
 void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & construct
-                   , std::vector<std::vector<int> *> & node_sets, std::vector<xnodeptr>
+                   , std::vector<std::vector<int> *> & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
-  if(construct.count(nodes.at(
+  if(construct.count(nodes.at(node_sets.at(offset)->at(0))) == 0) {
+
+
+  } else {
+
+
+  }
 
 }
 
