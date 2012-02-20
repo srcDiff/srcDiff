@@ -172,7 +172,7 @@ $(OBJ_DIR)srcDiffMatch.o :  srcDiffMatch.cpp srcDiffMatch.hpp shortest_edit_scri
 $(OBJ_DIR)ShortestEditScript.o :  ShortestEditScript.cpp ShortestEditScript.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
-$(OBJ_DIR)srcDiffMove.o :  srcDiffMove.cpp srcDiffMove.hpp shortest_edit_script.h
+$(OBJ_DIR)srcDiffMove.o :  srcDiffMove.cpp srcDiffMove.hpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
 clean :
