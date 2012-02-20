@@ -13,7 +13,7 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
 
   std::string tag = nodes.at(node_sets.at(offset)->at(0))->name;
 
-  if(constructs.count(tag) == 0) {
+  if(constructs.find(tag) == std::map::end) {
 
     constructs[tag] = std::vector<std::pair<int, int> >();
 
@@ -59,6 +59,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     }
 
   }
+
 
 }
 
