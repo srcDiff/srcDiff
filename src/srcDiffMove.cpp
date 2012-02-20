@@ -3,6 +3,7 @@
 #include <map>
 #include "xmlrw.hpp"
 #include "srcDiffTypes.hpp"
+#include "shortest_edit_script.h"
 
 static int move_id;
 
