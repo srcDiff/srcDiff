@@ -122,6 +122,8 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
     if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
       node_set_new_text.push_back(node_set_new->at(i));
 
+  ShortestEditScript ses(node_index_compare, node_index, &dnodes);
+
   edit * edit_script;
   shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
                        (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, &dnodes);
