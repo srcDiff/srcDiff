@@ -46,7 +46,6 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
         add_construct(constructs, node_sets_new, rbuf_new.nodes, edits->offset_sequence_two, SESINSERT);
 
-
       }
 
       break;
@@ -55,8 +54,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_old, rbuf_old.nodes, edits->offset_sequenc_one, SESDELETE);
-
+        add_construct(constructs, node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, SESDELETE);
 
       }
 
