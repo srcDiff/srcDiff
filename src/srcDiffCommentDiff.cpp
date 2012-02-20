@@ -209,18 +209,23 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
 */
 void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
-  edit * edit_script;
-
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
-  int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
+  ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
+
+  int compute = ses.compute(node_sets_old->size(), (const void *)node_sets_old, node_sets_new->size(), (const void *)node_sets_new)
+
+  //int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
+  //                                    (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
 
   if(distance < 0) {
 
     fprintf(stderr, "Error with shortest edit script");
     exit(distance);
   }
+
+  edit * edit_script = ses.get_script();
+
 
   int last_diff_old = 0;
   int last_diff_new = 0;
