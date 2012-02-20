@@ -1,6 +1,6 @@
 #include "srcDiffCommentDiff.hpp"
 #include "shortest_edit_script.h"
-#include "ShortestEditScript"
+#include "ShortestEditScript.hpp"
 #include "srcDiffUtility.hpp"
 #include "srcDiffCommon.hpp"
 #include "srcDiffChange.hpp"
@@ -80,14 +80,16 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xNodePtr> & 
 */
 void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
 
-  edit * edit_script;
-
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
-  ShortestEditScript(node_set_syntax_compare, node_set_index, &dnodes);
+  ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
-  int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
-                                      (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
+  int distance = ses.compute(node_sets_old->size(), (const void *)node_sets_old, node_sets_new->size(), (const void *)node_sets_new);
+
+  //int distance = shortest_edit_script(node_sets_old->size(), (void *)node_sets_old, node_sets_new->size(),
+  //                                  (void *)node_sets_new, node_set_syntax_compare, node_set_index, &edit_script, &dnodes);
+
+  edit * edit_script = ses.get_script();
 
   if(distance < 0) {
 
@@ -200,7 +202,7 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
   // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
-  free_shortest_edit_script(edit_script);
+  //free_shortest_edit_script(edit_script);
 
 }
 
