@@ -17,3 +17,9 @@ int ShortestEditScript::compute(int size_one, const void * structure_one, int si
   return shortest_edit_script(size_one, structure_one, size_two, structure_two, compare, accessor, &edit_script, context);
 
 }
+
+edit * ShortestEditScript::get_script() {
+
+  return edit_script;
+
+}
