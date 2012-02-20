@@ -34,13 +34,6 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
 
-    /*
-      if(is_change(edits)) {
-
-
-      }
-    */
-
     switch(edits->operation) {
 
     case SESINSERT :
