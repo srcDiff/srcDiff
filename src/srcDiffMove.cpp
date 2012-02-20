@@ -14,11 +14,9 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
 
     construct[tag] = std::vector<std::pair<int, int> >();
 
-  } else {
-
-    
-
   }
+
+  construct[tag].push_back(std::pair<int, int >(offset, operation))
 
 }
 
