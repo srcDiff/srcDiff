@@ -131,18 +131,7 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
   int last_offset;
   for(; edits; edits = edits->next) {
 
-    if(0 && is_change(edits)) {
-
-      similarity += edits->length > edits->next->length ? edits->length : edits->next->length;
-
-      edits = edits->next;
-
-    } else {
-
       similarity += edits->length;
-
-    }
-
 
   }
 
