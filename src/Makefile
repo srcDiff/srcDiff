@@ -65,12 +65,18 @@ LIBSRCML_LIB = -L ../../../bin/ -lsrcml
 endif
 
 ifdef DIST
+
 ifdef MINGW32
+
 LIBSRCML_LIB = ../../../../../bin/libsrcml.dll
 DLL_DIR=../../../../../bin/
+
 else
+
 LIBSRCML_LIB = -L ../../../../../bin/ -lsrcml
+
 endif
+
 endif
 
 LDFLAGS+=$(LIBSRCML_LIB)
