@@ -109,6 +109,8 @@ void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation,
 
 
   reader_state rbuf = rbuf_old;
+  if(operation == SESINSERT)
+    rbuf = rbuf_new;
 
   unsigned int start = rbuf.last_output
 
@@ -117,8 +119,8 @@ void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation,
     if(!id)
       return;
 
-    output_node(
+    for(int i = start; rbuf.nodes.at(i).move != id) ++i)
+    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(i), operation, wstate);
 
-    for(int i = start; rbuf.nodes.at(i).move != id) ++i);
 
 }
