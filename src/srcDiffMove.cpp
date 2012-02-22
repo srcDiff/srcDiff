@@ -1,6 +1,8 @@
 #include "srcDiffMove.hpp"
+
 #include <vector>
 #include <map>
+
 #include "xmlrw.hpp"
 #include "srcDiffTypes.hpp"
 #include "shortest_edit_script.h"
