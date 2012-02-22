@@ -191,6 +191,9 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     else if(node_compare(node, &diff_new_start) == 0)
       move_operation == SESINSERT;
 
+    if(move_operation == SESDELETE)
+      update_diff_stack(rbuf_old.open_diff, node, operation);
+
   }
 
 }
