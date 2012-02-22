@@ -4,7 +4,7 @@
 #include "xmlrw.hpp"
 #include "srcDiffTypes.hpp"
 #include "shortest_edit_script.h"
-#include "srcDiffMove.hpp"
+#include "srcDiffMeasure.hpp"
 
 static int move_id;
 
