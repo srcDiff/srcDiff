@@ -61,10 +61,10 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   for(int i = 0; i < functions.size(); ++i) {
 
-    reader_buffer & rbuf_one;
-    reader_buffer & rbuf_two;
+    reader_state & rbuf_one;
+    reader_state & rbuf_two;
 
-    if(function.at(i).second == SESDELETE) {
+    if(functions.at(i).second == SESDELETE) {
 
       rbuf_one = rbuf_old;
       rbuf_two = rbuf_new;
