@@ -502,9 +502,6 @@ void endDocument(void* ctx) {
 
     data->spanning = false;
   }
-    
-
-  data->colordiff_file << "<span class=\"" << normal_color << "\"></span>";
   data->colordiff_file << "</div>\n";
 }
 
@@ -706,19 +703,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
           data->spanning = true;
 
         }
-
-      } else {
-
-  
-        //data->colordiff_file << "<span " << data->last_context.c_str() << ">";
-        //data->spanning = true;
-
-        //if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size())
-        //data->colordiff_file << "</span><span class=\"line\"" << ">";
-
-        //data->colordiff_file << "</span><span " << span_out.c_str() << ">";
-
-      }
 
       }
 
