@@ -107,6 +107,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
 void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation, writer_state & wstate) {
 
+  // store current diff if is any
 
   reader_state rbuf = rbuf_old;
   if(operation == SESINSERT)
@@ -119,8 +120,14 @@ void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation,
     if(!id)
       return;
 
-    for(int i = start; rbuf.nodes.at(i).move != id) ++i)
-    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(i), operation, wstate);
+    output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
 
+    for(int i = start; rbuf.nodes.at(i).move != id; ++i)
+    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(i), SESMOVE, wstate);
+
+    output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
+
+
+    // output saved diff if is any
 
 }
