@@ -79,6 +79,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
       if(functions.at(i).second == functions.at(j).second) 
        continue;
 
+      if(compute_difference(rbuf_one, node_sets_one.at(functions.at(i)), rbuf_two, node_sets_two.at(functions.at(j))) != 0)
+        continue;
+
     }
 
   }
