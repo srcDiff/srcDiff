@@ -181,13 +181,6 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
 }
 
-void output_diff_tag(reader_state & rbuf_old, reader_state & rbuf_new, const xNode * node, int operation, std::string attribute
-                     , writer_state & wstate) {
-
-
-
-}
-
 void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNode * node, int operation) {
 
   // Skip empty node
