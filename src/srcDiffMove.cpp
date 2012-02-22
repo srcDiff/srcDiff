@@ -64,6 +64,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     reader_state & rbuf_one = rbuf_old;
     reader_state & rbuf_two = rbuf_new;
 
+    std::vector<std::vector<int> *> & node_sets_one = *node_sets_old;
+    std::vector<std::vector<int> *> & node_sets_two = *node_sets_new;
+
     if(functions.at(i).second == SESINSERT) {
 
       rbuf_one = rbuf_new;
