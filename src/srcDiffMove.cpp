@@ -109,7 +109,11 @@ void output_match(reader_state & rbuf, writer_state & wstate) {
 
   unsigned int start = rbuf.last_output
 
-    if(!rbuf.nodes.at(start)->move)
+  int id = rbuf.nodes.at(start)->move;
+
+    if(!id)
       return;
+
+    for(int i = start; rbuf.nodes.at(i).move != id) ++i);
 
 }
