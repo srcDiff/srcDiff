@@ -90,8 +90,8 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
       ++move_id;
 
-      node_sets_one.at(functions.at(i)).at(0).move = move_id;
-      node_sets_two.at(functions.at(j)).at(0).move = move_id;
+      rbuf_one.nodes.at(node_sets_one.at(functions.at(i)).at(0)).move = move_id;
+      rbuf_two.nodes.at(node_sets_two.at(functions.at(j)).at(0)).move = move_id;
 
     }
 
