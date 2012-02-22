@@ -71,7 +71,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
     }
 
-    if(rbuf_one.nodes.at(functions.at(i).first) 
+    if(rbuf_one.nodes.at(functions.at(i).first))
        continue;
 
     for(int j = i + 1; j < functions.size(); ++j) {
