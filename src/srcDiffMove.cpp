@@ -72,6 +72,9 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
       rbuf_one = rbuf_new;
       rbuf_two = rbuf_old;
 
+      node_sets_one = *node_sets_new;
+      node_sets_two = *node_sets_old;
+
     }
 
     if(rbuf_one.nodes.at(functions.at(i).first))
