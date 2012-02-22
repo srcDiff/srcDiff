@@ -119,7 +119,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
       update_diff_stack(wstate.output_diff, node, SESDELETE);
 
-    } else {
+    } else if(wstate.output_diff.back() == SESINSERT) {
 
       //fprintf(stderr, "HERE OUTPUT SESINSERT\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
