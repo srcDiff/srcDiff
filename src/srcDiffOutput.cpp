@@ -91,7 +91,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
-    if(ismethod(wstate.method, METHOD_GROUP) && (*node == diff_old_end || *node == diff_new_end || (0 && *node == diff_common_end))) {
+    if(ismethod(wstate.method, METHOD_GROUP) && operation != SESMOVE && (*node == diff_old_end || *node == diff_new_end || (0 && *node == diff_common_end))) {
 
 
       delay = true;
