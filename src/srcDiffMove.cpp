@@ -88,6 +88,11 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
       if(compute_difference(rbuf_one, node_sets_one.at(functions.at(i)), rbuf_two, node_sets_two.at(functions.at(j))) != 0)
         continue;
 
+      ++move_id;
+
+      node_sets_one.at(functions.at(i)).at(0).move = move_id;
+      node_sets_two.at(functions.at(j)).at(0).move = move_id;
+
     }
 
   }
