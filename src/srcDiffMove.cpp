@@ -110,15 +110,9 @@ void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation,
   // store current diff if is any
 
   reader_state rbuf = rbuf_old;
-  int move_operation = SESMOVEDELETE;
 
-  if(operation == SESINSERT) {
-
+  if(operation == SESINSERT)
     rbuf = rbuf_new;
-
-    move_operation = SESMOVEINSERT;
-
-  }
 
   unsigned int start = rbuf.last_output
 
@@ -127,12 +121,12 @@ void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation,
     if(!id)
       return;
 
-    output_node(rbuf_old, rbuf_new, NULL, move_operation, wstate);
+    output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
 
     for(int i = start; rbuf.nodes.at(i).move != id; ++i)
-    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(i), move_operation, wstate);
+    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(i), SESMOVE, wstate);
 
-    output_node(rbuf_old, rbuf_new, NULL, move_operation, wstate);
+    output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
 
 
     // output saved diff if is any
