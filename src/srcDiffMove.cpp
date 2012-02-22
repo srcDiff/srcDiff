@@ -107,7 +107,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
 void output_match(reader_state & rbuf, writer_state & wstate) {
 
-  int start = rbuf.last_output
+  unsigned int start = rbuf.last_output
 
     if(!rbuf.nodes.at(start)->move)
       return;
