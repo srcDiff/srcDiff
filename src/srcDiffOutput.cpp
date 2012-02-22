@@ -186,6 +186,8 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     update_diff_stack(wstate.output_diff, node, operation);
   } else if(operation == SESMOVE) {
 
+    if(node_compare(node, &diff_old_start) == 0)
+      move_operation == SESDELETE;
 
   }
 
