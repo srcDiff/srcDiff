@@ -81,7 +81,8 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
     for(int j = i + 1; j < functions.size(); ++j) {
 
-      
+      if(functions.at(i).second == functions.at(j).second) 
+       continue;
 
     }
 
