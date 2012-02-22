@@ -14,6 +14,8 @@ extern xNode diff_old_end;
 extern xNode diff_new_start;
 extern xNode diff_new_end;
 
+int move_operation = SESCOMMON;
+
 void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode * node, int operation, writer_state & wstate) {
 
   /*
@@ -182,6 +184,9 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     update_diff_stack(rbuf_new.open_diff, node, operation);
 
     update_diff_stack(wstate.output_diff, node, operation);
+  } else if(operation == SESMOVE) {
+
+
   }
 
 }
