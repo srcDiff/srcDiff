@@ -105,7 +105,10 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
 }
 
-void output_match(reader_state & rbuf, writer_state & wstate) {
+void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation, writer_state & wstate) {
+
+
+  reader_state rbuf = rbuf_old;
 
   unsigned int start = rbuf.last_output
 
@@ -113,6 +116,8 @@ void output_match(reader_state & rbuf, writer_state & wstate) {
 
     if(!id)
       return;
+
+    output_node(
 
     for(int i = start; rbuf.nodes.at(i).move != id) ++i);
 
