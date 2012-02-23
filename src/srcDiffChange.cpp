@@ -133,7 +133,8 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
       output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESDELETE, wstate);
 
-      
+      // output diff tag begin
+      output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
 
     }
 

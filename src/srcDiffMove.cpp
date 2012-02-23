@@ -140,6 +140,8 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
     for(; rbuf.nodes.at(position)->move != id; ++position)
     output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
 
+    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
+
     output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
 
     start_node->properties = 0;
