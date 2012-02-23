@@ -44,7 +44,6 @@ const char * const function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "wh
 const char * const class_nest_types[] = { "decl_stmt", "function_decl", 0 };
 const char * const struct_nest_types[] = { "decl_stmt", "function_decl", 0 };
 const char * const union_nest_types[] = { "decl_stmt",  "function_decl", 0 };
-const char * const return_nest_types[] = { /*"expr",*/ 0 };
 
 const char * const basic_possible_nest_types[] = { 0 };
 const char * const block_possible_nest_types[] = { "block", 0 };
@@ -69,7 +68,6 @@ const nest_info nesting[] = {
   { "class", class_nest_types, class_possible_nest_types },
   { "struct", struct_nest_types, struct_possible_nest_types },
   { "union", union_nest_types, union_possible_nest_types },
-  { "return", return_nest_types, basic_possible_nest_types },
 
   { 0, 0, 0 }
 
