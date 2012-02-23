@@ -9,6 +9,11 @@
 
 static int move_id;
 
+extern xNode diff_old_start;
+extern xNode diff_old_end;
+extern xNode diff_new_start;
+extern xNode diff_new_end;
+
 void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & constructs
                    , std::vector<std::vector<int> *> & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
@@ -109,21 +114,27 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
   // store current diff if is any
 
   reader_state rbuf = rbuf_old;
+  xNodePtr start_node = &diff_old_start;
+  xNodePtr end_node = &diff_old_end;
 
-  if(operation == SESINSERT)
+  if(operation == SESINSERT) {
+
     rbuf = rbuf_new;
+    start_node = &diff_new_start;
+    end_node = &diff_new_end;
+  }
 
   int id = rbuf.nodes.at(position)->move;
 
     if(!id)
       return;
 
-    output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
+    output_node(rbuf_old, rbuf_new, start_node, SESMOVE, wstate);
 
     for(; rbuf.nodes.at(position)->move != id; ++position)
     output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
 
-    output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
+    output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
 
 
     // output saved diff if is any
