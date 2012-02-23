@@ -249,10 +249,10 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       }
 
-      tracer.collected.at(k).signature_path_old.at(i) = path;
+      //tracer.collected.at(k).signature_path_old.at(i) = path;
 
-      //if(collect_node_pos < tracer.elements.size())
-      //tracer.elements.at(collect_node_pos).signature_path_old.at(i) = path;
+      if(k == 0 && collect_node_pos < tracer.elements.size())
+        tracer.elements.at(collect_node_pos).signature_path_old.at(i) = path;
 
     }
 
@@ -297,9 +297,10 @@ void SAX2DiffTrace::end_collect(SAX2DiffTrace & tracer) {
 
       }
 
-      tracer.collected.at(k).signature_path_new.at(i) = path;
-      //if(collect_node_pos < tracer.elements.size())
-      //tracer.elements.at(collect_node_pos).signature_path_new.at(i) = path;
+      //tracer.collected.at(k).signature_path_new.at(i) = path;
+
+      if(k == 0 && collect_node_pos < tracer.elements.size())
+        tracer.elements.at(collect_node_pos).signature_path_new.at(i) = path;
 
     }
 
