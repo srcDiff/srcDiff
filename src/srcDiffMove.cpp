@@ -14,6 +14,8 @@ extern xNode diff_old_end;
 extern xNode diff_new_start;
 extern xNode diff_new_end;
 
+xAttr move_attribute = { 0, "move", 0 };
+
 void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & constructs
                    , std::vector<std::vector<int> *> & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
@@ -122,6 +124,7 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
     rbuf = rbuf_new;
     start_node = &diff_new_start;
     end_node = &diff_new_end;
+
   }
 
   int id = rbuf.nodes.at(position)->move;
@@ -129,12 +132,17 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
     if(!id)
       return;
 
+    move_attribute.value = "";//id;
+    start_node->properties = &move_attribute;
+
     output_node(rbuf_old, rbuf_new, start_node, SESMOVE, wstate);
 
     for(; rbuf.nodes.at(position)->move != id; ++position)
     output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
 
     output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
+
+    start_node->properties = 0;
 
 
     // output saved diff if is any
