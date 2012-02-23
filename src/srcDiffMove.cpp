@@ -26,7 +26,7 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
 
 }
 
-void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void mark_moves(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
                 , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
                 , edit * edit_script, writer_state & wstate) {
 
