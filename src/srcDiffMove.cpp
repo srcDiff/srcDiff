@@ -4,9 +4,9 @@
 #include <map>
 
 #include "xmlrw.hpp"
-#include "srcDiffTypes.hpp"
 #include "shortest_edit_script.h"
 #include "srcDiffMeasure.hpp"
+#include "srcDiffOutput.hpp"
 
 static int move_id;
 
@@ -105,7 +105,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
 }
 
-void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation, writer_state & wstate) {
+void output_match(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int & position, int operation, writer_state & wstate) {
 
   // store current diff if is any
 
@@ -114,17 +114,15 @@ void output_match(reader_state & rbuf_old, reader_state rbuf_new, int operation,
   if(operation == SESINSERT)
     rbuf = rbuf_new;
 
-  unsigned int start = rbuf.last_output
-
-  int id = rbuf.nodes.at(start)->move;
+  int id = rbuf.nodes.at(position)->move;
 
     if(!id)
       return;
 
     output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
 
-    for(int i = start; rbuf.nodes.at(i).move != id; ++i)
-    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(i), SESMOVE, wstate);
+    for(; rbuf.nodes.at(position)->move != id; ++position)
+    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
 
     output_node(rbuf_old, rbuf_new, NULL, SESMOVE, wstate);
 

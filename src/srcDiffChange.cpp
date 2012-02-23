@@ -5,6 +5,7 @@
 #include "srcDiffWhiteSpace.hpp"
 #include "shortest_edit_script.h"
 #include "xmlrw.hpp"
+#include "srcDiffMove.hpp"
 
 #ifdef __MINGW32__
 #include "mingw32.hpp"
@@ -116,11 +117,25 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
   if(end_old > begin_old) {
 
-    // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
 
-    for(unsigned int i = begin_old; i < end_old; ++i)
+    for(unsigned int i = begin_old; i < end_old; ++i) {
+
+      if(rbuf_old.nodes.at(i)->move) {
+
+        output_move(rbuf_old, rbuf_new, i, SESDELETE, wstate);
+
+        continue;
+
+      }
+
+      // output diff tag begin
+      output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+
       output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESDELETE, wstate);
+
+      
+
+    }
 
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
