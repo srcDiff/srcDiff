@@ -137,6 +137,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
       else if(move_operation == SESINSERT)
         update_diff_stack(rbuf_new.open_diff, node, SESINSERT);
 
+      update_diff_stack(wstate.output_diff, node, move_operation);
 
     }
 
