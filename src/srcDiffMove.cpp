@@ -105,7 +105,7 @@ void check_move(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
 }
 
-void output_match(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int & position, int operation, writer_state & wstate) {
+void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int & position, int operation, writer_state & wstate) {
 
   // store current diff if is any
 
