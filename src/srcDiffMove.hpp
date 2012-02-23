@@ -2,6 +2,11 @@
 #define INCLUDED_SRCDIFFMOVE_HPP
 
 #include "srcDiffTypes.hpp"
+#include "shortest_edit_script.h"
+
+void mark_moves(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+                , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                , edit * edit_script, writer_state & wstate);
 
 void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int & position, int operation, writer_state & wstate);
 

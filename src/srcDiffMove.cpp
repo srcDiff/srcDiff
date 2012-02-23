@@ -4,7 +4,6 @@
 #include <map>
 
 #include "xmlrw.hpp"
-#include "shortest_edit_script.h"
 #include "srcDiffMeasure.hpp"
 #include "srcDiffOutput.hpp"
 
