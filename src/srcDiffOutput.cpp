@@ -132,6 +132,8 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
     } else if(wstate.output_diff.back()->operation == SESMOVE) {
 
+      if(move_operation == SESDELETE);
+      else if(move_operation == SESINSERT);
 
 
     }
