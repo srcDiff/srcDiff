@@ -144,6 +144,8 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
     snprintf(buffer, length, "%d", id);
 
     move_attribute.value = buffer;
+
+    xAttr * save_attr = start_node->properties;
     start_node->properties = &move_attribute;
 
     output_node(rbuf_old, rbuf_new, start_node, SESMOVE, wstate);
@@ -158,7 +160,7 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
 
     output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
 
-    start_node->properties = 0;
+    start_node->properties = save_attr;
     free(buffer);
 
     // output saved diff if is any
