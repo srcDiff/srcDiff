@@ -145,7 +145,7 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
 
     move_attribute.value = buffer;
 
-    xAttr save_attribute = start_node->properties;
+    xAttr save_attributes = start_node->properties;
     start_node->properties = &move_attribute;
 
     output_node(rbuf_old, rbuf_new, start_node, SESMOVE, wstate);
