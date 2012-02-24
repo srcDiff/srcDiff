@@ -115,19 +115,19 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
 
   // store current diff if is any
 
-  reader_state rbuf = rbuf_old;
+  reader_state * rbuf = &rbuf_old;
   xNodePtr start_node = &diff_old_start;
   xNodePtr end_node = &diff_old_end;
 
   if(operation == SESINSERT) {
 
-    rbuf = rbuf_new;
+    rbuf = &rbuf_new;
     start_node = &diff_new_start;
     end_node = &diff_new_end;
 
   }
 
-  int id = rbuf.nodes.at(position)->move;
+  int id = rbuf->nodes.at(position)->move;
 
     if(!id)
       return;
@@ -137,13 +137,13 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
 
     output_node(rbuf_old, rbuf_new, start_node, SESMOVE, wstate);
 
-    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
+    output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
     ++position;
 
-    for(; rbuf.nodes.at(position)->move != id; ++position)
-      output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
+    for(; rbuf->nodes.at(position)->move != id; ++position)
+      output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
 
-    output_node(rbuf_old, rbuf_new, rbuf.nodes.at(position), SESMOVE, wstate);
+    output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
 
     output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
 
