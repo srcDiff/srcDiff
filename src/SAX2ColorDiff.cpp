@@ -526,6 +526,10 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     else if(strcmp((const char *)localname, "insert") == 0)
       data->in_diff->push_back(SESINSERT);
 
+    if(nb_attributes && strcmp((const char *)attributes[0], "move") == 0) {
+
+
+    }
   }
 
 }
