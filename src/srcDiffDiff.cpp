@@ -473,9 +473,9 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   std::vector<bool> old_moved;
 
-  for(int i = 0; i < node_sets_old->size(); ++i) {
+  for(unsigned int i = 0; i < node_sets_old->size(); ++i) {
 
-    if(rbuf_nodes.at(node_sets_old->at(i)->at(0))->move)
+    if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move)
       old_moved.push_back(true);
     else
       old_moved.push_back(false);
@@ -484,9 +484,9 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   std::vector<bool> new_moved;
 
-  for(int i = 0; i < node_sets_new->size(); ++i) {
+  for(unsigned int i = 0; i < node_sets_new->size(); ++i) {
 
-    if(rbuf_new.at(node_sets_new->at(i)->at(0))->move)
+    if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move)
       new_moved.push_back(true);
     else
       new_moved.push_back(false);
