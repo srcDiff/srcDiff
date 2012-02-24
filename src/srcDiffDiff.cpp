@@ -247,7 +247,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     exit(distance);
   }
 
-  mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
+  //mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
 
   int last_diff_old = 0;
   int last_diff_new = 0;
