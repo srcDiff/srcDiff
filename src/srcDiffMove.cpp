@@ -70,23 +70,23 @@ void mark_moves(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
 
   for(unsigned int i = 0; i < functions.size(); ++i) {
 
-    reader_state & rbuf_one = rbuf_old;
-    reader_state & rbuf_two = rbuf_new;
+    reader_state * rbuf_one = &rbuf_old;
+    reader_state * rbuf_two = &rbuf_new;
 
-    std::vector<std::vector<int> *> & node_sets_one = *node_sets_old;
-    std::vector<std::vector<int> *> & node_sets_two = *node_sets_new;
+    std::vector<std::vector<int> *> * node_sets_one = node_sets_old;
+    std::vector<std::vector<int> *> * node_sets_two = node_sets_new;
 
     if(functions.at(i).second == SESINSERT) {
 
-      rbuf_one = rbuf_new;
-      rbuf_two = rbuf_old;
+      rbuf_one = &rbuf_new;
+      rbuf_two = &rbuf_old;
 
-      node_sets_one = *node_sets_new;
-      node_sets_two = *node_sets_old;
+      node_sets_one = node_sets_new;
+      node_sets_two = node_sets_old;
 
     }
 
-    if(rbuf_one.nodes.at(node_sets_one.at(functions.at(i).first)->at(0))->move)
+    if(rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->at(0))->move)
        continue;
 
     for(unsigned int j = i + 1; j < functions.size(); ++j) {
@@ -94,16 +94,16 @@ void mark_moves(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
       if(functions.at(i).second == functions.at(j).second) 
        continue;
 
-      if(compute_difference(rbuf_one.nodes, node_sets_one.at(functions.at(i).first), rbuf_two.nodes, node_sets_two.at(functions.at(j).first)) != 0)
+      if(compute_difference(rbuf_one->nodes, node_sets_one->at(functions.at(i).first), rbuf_two->nodes, node_sets_two->at(functions.at(j).first)) != 0)
         continue;
 
       ++move_id;
 
-      rbuf_one.nodes.at(node_sets_one.at(functions.at(i).first)->at(0))->move = move_id;
-      rbuf_two.nodes.at(node_sets_two.at(functions.at(j).first)->at(0))->move = move_id;
+      rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->at(0))->move = move_id;
+      rbuf_two->nodes.at(node_sets_two->at(functions.at(j).first)->at(0))->move = move_id;
 
-      rbuf_one.nodes.at(node_sets_one.at(functions.at(i).first)->back())->move = move_id;
-      rbuf_two.nodes.at(node_sets_two.at(functions.at(j).first)->back())->move = move_id;
+      rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->back())->move = move_id;
+      rbuf_two->nodes.at(node_sets_two->at(functions.at(j).first)->back())->move = move_id;
 
     }
 
