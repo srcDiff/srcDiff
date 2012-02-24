@@ -671,6 +671,12 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       }
 
+      if(data->in_move) {
+
+        span_out += " move";
+
+      }
+
       span_out += "\"";
 
       // clear color before output line
