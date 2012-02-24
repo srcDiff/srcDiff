@@ -30,6 +30,7 @@ struct source_diff {
   OPTION_TYPE & options;
   std::string last_context;
   bool spanning;
+  bool in_move;
 };
 
 xmlSAXHandler factory();
