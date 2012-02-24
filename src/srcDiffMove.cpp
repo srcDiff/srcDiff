@@ -132,7 +132,18 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
     if(!id)
       return;
 
-    move_attribute.value = "";//id;
+    int temp_count = id;
+    int length;
+    for(length = 0; temp_count > 0; temp_count /= 10, ++length)
+      ;
+
+    ++length;
+
+    char * buffer = (char *)malloc(sizeof(char) * length);
+
+    snprintf(buffer, length, "%d", id);
+
+    move_attribute.value = buffer;
     start_node->properties = &move_attribute;
 
     output_node(rbuf_old, rbuf_new, start_node, SESMOVE, wstate);
@@ -148,7 +159,7 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
     output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
 
     start_node->properties = 0;
-
+    free(buffer);
 
     // output saved diff if is any
 

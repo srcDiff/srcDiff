@@ -147,11 +147,24 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
   if(end_new > begin_new) {
 
-    // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+    for(unsigned int i = begin_new; i < end_new; ++i) {
 
-    for(unsigned int i = begin_new; i < end_new; ++i)
+      if(rbuf_new.nodes.at(i)->move) {
+
+        output_move(rbuf_old, rbuf_new, i, SESINSERT, wstate);
+
+      }
+
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+
       output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(i), SESINSERT, wstate);
+
+    // output diff tag begin
+    output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+
+
+    }
 
     // output diff tag begin
     output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
