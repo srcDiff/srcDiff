@@ -528,6 +528,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
     if(nb_attributes && strcmp((const char *)attributes[0], "move") == 0) {
 
+      data->in_move = true;
 
     }
   }
@@ -545,6 +546,8 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
        || strcmp((const char *)localname, "delete") == 0
        || strcmp((const char *)localname, "insert") == 0)
       data->in_diff->pop_back();
+
+    data->in_move = false;
 
   }
 
