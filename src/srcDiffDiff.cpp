@@ -511,7 +511,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
 
   }
 
-  match_differences_dynamic(rbuf_old.nodes, node_sets_old, rbuf_new.nodes, node_sets_new, edit_script, &matches);
+  match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, edit_script, &matches);
 
   int last_old = 0;
   int last_new = 0;
@@ -520,11 +520,11 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
 
   for(; matches; matches = matches->next) {
 
-    old_moved.at(matches->old_offset).first = SESCOMMON;
-    old_moved.at(matches->old_offset).second = matches->new_offset;
+    old_moved.at(pos_old.at(matches->old_offset)).first = SESCOMMON;
+    old_moved.at(pos_old.at(matches->old_offset)).second = pos_new.at(matches->new_offset);
 
-    new_moved.at(matches->new_offset).first = SESCOMMON;
-    new_moved.at(matches->new_offset).second = matches->old_offset;
+    new_moved.at(pos_new.at(matches->new_offset)).first = SESCOMMON;
+    new_moved.at(pos_new.at(matches->new_offset)).second = pos_old.at(matches->old_offset);
 
   }
 
