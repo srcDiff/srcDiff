@@ -213,8 +213,8 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
 
 
   xNode * node = 0;
-  if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
-    //      && strcmp((const char *)curnode->ns->href, "http://www.sdml.info/srcML/src") == 0) {
+  if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0
+      && strcmp((const char *)full_name.c_str(), "function") != 0) {
 
     NodeMap::iterator lb = starttags->lower_bound(full_name);
     if (lb != starttags->end() && !(starttags->key_comp()(full_name, lb->first))) {
