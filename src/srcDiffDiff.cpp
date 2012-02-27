@@ -510,9 +510,9 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     }
 
   }
-
+  fprintf(stderr, "HERE\n");
   match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, edit_script, &matches);
-
+  fprintf(stderr, "HERE\n");
   int last_old = 0;
   int last_new = 0;
 
