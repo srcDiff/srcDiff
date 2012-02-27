@@ -510,73 +510,76 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     new_moved.at(matches->new_offset).first = SESCOMMON;
     new_moved.at(matches->new_offset).second = matches->old_offset;
 
+  }
 
-    for(unsigned int i = 0, j = 0; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
+  for(unsigned int i = 0, j = 0; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
 
-      unsigned int start_old = i;
+    unsigned int start_old = i;
 
-      unsigned int start_new = j;
+    unsigned int start_new = j;
 
-      unsigned int end_old = start_old;
+    unsigned int end_old = start_old;
 
-      unsigned int end_new = start_old;
+    unsigned int end_new = start_old;
 
-      for(; end_old < old_moved.size() && (old_move.at(end_old).first == SESDELETE || old_move.at(end_old).first == SESMOVE)); ++end_old)
+    for(; end_old < old_moved.size() && (old_move.at(end_old).first == SESDELETE || old_move.at(end_old).first == SESMOVE); ++end_old)
       ;
 
-    for(; end_new < new_moved.size() && (new_move.at(end_new).first == SESINSERT || new_move.at(end_new).first == SESMOVE)); ++end_new)
-    ;
+    for(; end_new < new_moved.size() && (new_move.at(end_new).first == SESINSERT || new_move.at(end_new).first == SESMOVE); ++end_new)
+      ;
 
-  // output diffs until match
-  output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
-                   edits->offset_sequence_one + end_old - 1
-                   , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
-                   , edit_next->offset_sequence_two + end_new
-                   , wstate);
+    // output diffs until match
+    output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
+                     edits->offset_sequence_one + end_old - 1
+                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
+                     , edit_next->offset_sequence_two + end_new
+                     , wstate);
 
-  i = end_old;
-  j = end_new;
+    i = end_old;
+    j = end_new;
 
-  if(i >= old_moved.size() || j >= new_moved.size())
-    break;
+    if(i >= old_moved.size() || j >= new_moved.size())
+      break;
 
 
-  if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))
-                  , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + j)->at(0))) == 0
-     && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT) {
+    if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))
+                    , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + j)->at(0))) == 0
+       && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-    if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                                                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate)) {
+      if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
+                                                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate)) {
 
-      output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                       , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate);
+        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i
+                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate);
 
-    } else {
+      } else {
 
-      // syntax mismatch
-      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
-                                , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
-    }
-
-  } else {
-
-    if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
-                   , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
-
-      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-                    , SESINSERT, wstate);
-
-    } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
-                          , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
-
-      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-                    , SESDELETE, wstate);
+        // syntax mismatch
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
+      }
 
     } else {
 
-      // syntax mismatch
-      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
-                                , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
+      if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
+                     , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
+
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
+                      , SESINSERT, wstate);
+
+      } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
+                            , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
+
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
+                      , SESDELETE, wstate);
+
+      } else {
+
+        // syntax mismatch
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
+      }
+
     }
 
   }
