@@ -487,9 +487,9 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   for(unsigned int i = 0; i < node_sets_new->size(); ++i) {
 
     if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move)
-      new_moved.push_back(std::pair<int, int>(SESMOVE));
+      new_moved.push_back(std::pair<int, int>(SESMOVE, 0));
     else
-      new_moved.push_back(std::pair<int, int>(SESINSERT));
+      new_moved.push_back(std::pair<int, int>(SESINSERT, 0));
 
   } 
 
