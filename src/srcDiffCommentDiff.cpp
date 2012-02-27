@@ -50,7 +50,7 @@ NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int e
 
   for(int i = start; i < end; ++i) {
 
-    std::vector<int> * node_set = new std::vector <int>;
+    NodeSet * node_set = new std::vector <int>;
 
     for(; i < end; ++i) {
 

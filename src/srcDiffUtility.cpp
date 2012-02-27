@@ -19,7 +19,7 @@ const void * node_set_index(int idx, const void *s, const void * context) {
 }
 
 const void * node_index(int idx, const void *s, const void * context) {
-  std::vector<int> & node_set = *(std::vector<int> *)s;
+  NodeSet & node_set = *(NodeSet *)s;
   return &node_set[idx];
 }
 
@@ -105,8 +105,8 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
 
   diff_nodes & dnodes = *(diff_nodes *)context;
 
-  std::vector<int> * node_set1 = (std::vector<int> *)e1;
-  std::vector<int> * node_set2 = (std::vector<int> *)e2;
+  NodeSet * node_set1 = (NodeSet *)e1;
+  NodeSet * node_set2 = (NodeSet *)e2;
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size();) {
 

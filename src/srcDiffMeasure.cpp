@@ -5,8 +5,8 @@
 #include "shortest_edit_script.h"
 #include "ShortestEditScript.hpp"
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       std::vector<int> * node_set_new) {
+int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
@@ -24,13 +24,13 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   }
 
-  std::vector<int> node_set_old_text;
+  NodeSet node_set_old_text;
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
       node_set_old_text.push_back(node_set_old->at(i));
 
-  std::vector<int> node_set_new_text;
+  NodeSet node_set_new_text;
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
@@ -63,8 +63,8 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
 }
 
-int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       std::vector<int> * node_set_new) {
+int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
@@ -82,13 +82,13 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
   }
 
-  std::vector<int> node_set_old_text;
+  NodeSet node_set_old_text;
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
       node_set_old_text.push_back(node_set_old->at(i));
 
-  std::vector<int> node_set_new_text;
+  NodeSet node_set_new_text;
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
@@ -110,8 +110,8 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, std::vector<int> * nod
 
 }
 
-int compute_similarity_old(std::vector<xNodePtr> & nodes_old, std::vector<int> * node_set_old, std::vector<xNodePtr> & nodes_new,
-                           std::vector<int> * node_set_new) {
+int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                           NodeSet * node_set_new) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
@@ -150,13 +150,13 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, std::vector<int> *
 
   }
 
-  std::vector<int> node_set_old_text;
+  NodeSet node_set_old_text;
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
       node_set_old_text.push_back(node_set_old->at(i));
 
-  std::vector<int> node_set_new_text;
+  NodeSet node_set_new_text;
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))

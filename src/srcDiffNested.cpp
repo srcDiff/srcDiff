@@ -73,7 +73,7 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
+int is_block_type(NodeSet * structure, std::vector<xNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
@@ -88,7 +88,7 @@ int is_block_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes) {
   return -1;
 }
 
-bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, int type_index) {
+bool is_nest_type(NodeSet * structure, std::vector<xNodePtr> & nodes, int type_index) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
@@ -103,8 +103,8 @@ bool is_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes, i
   return false;
 }
 
-bool is_possible_nest_type(std::vector<int> * structure, std::vector<xNodePtr> & nodes
-                           , std::vector<int> * structure_other, std::vector<xNodePtr> & nodes_other, int type_index) {
+bool is_possible_nest_type(NodeSet * structure, std::vector<xNodePtr> & nodes
+                           , NodeSet * structure_other, std::vector<xNodePtr> & nodes_other, int type_index) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
@@ -122,7 +122,7 @@ bool is_possible_nest_type(std::vector<int> * structure, std::vector<xNodePtr> &
 
 
 
-bool has_internal_structure(std::vector<int> * structure, std::vector<xNodePtr> & nodes, const char * type) {
+bool has_internal_structure(NodeSet * structure, std::vector<xNodePtr> & nodes, const char * type) {
 
   for(unsigned int i = 1; i < structure->size(); ++i)
     if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
@@ -133,7 +133,7 @@ bool has_internal_structure(std::vector<int> * structure, std::vector<xNodePtr> 
 }
 
 bool complete_nestable(NodeSets & structure_one, std::vector<xNodePtr> & nodes_one
-                  , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
+                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   unsigned int num_nest = 0;
 
@@ -181,7 +181,7 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNod
 }
 
 int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
-               , std::vector<xNodePtr> & nodes_match, std::vector<int> * match, int operation) {
+               , std::vector<xNodePtr> & nodes_match, NodeSet * match, int operation) {
 
   int match_pos = 0;
   int match_similarity = 0;
@@ -215,8 +215,8 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 
 }
 
-bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> & nodes_one
-                      , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_one
+                      , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
     return false;
@@ -268,8 +268,8 @@ bool is_same_nestable(std::vector<int> *  structure_one, std::vector<xNodePtr> &
 
 }
 
-bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes_one
-                 , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
+                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   int block = is_block_type(structure_two, nodes_two);
 
@@ -291,8 +291,8 @@ bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes
   return false;
 }
 
-void output_nested(reader_state & rbuf_old, std::vector<int> * structure_old
-                   , reader_state & rbuf_new ,std::vector<int> * structure_new
+void output_nested(reader_state & rbuf_old, NodeSet * structure_old
+                   , reader_state & rbuf_new ,NodeSet * structure_new
                    , int operation, writer_state & wstate) {
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
