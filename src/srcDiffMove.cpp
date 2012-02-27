@@ -101,11 +101,23 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
 
       ++move_id;
 
-      rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->at(0))->move = move_id;
-      rbuf_two->nodes.at(node_sets_two->at(functions.at(j).first)->at(0))->move = move_id;
+      xNode * start_node_one = copyXNode(rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->at(0)));
+      start_node_one->move = move_id;
 
-      rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->back())->move = move_id;
-      rbuf_two->nodes.at(node_sets_two->at(functions.at(j).first)->back())->move = move_id;
+      xNode * start_node_two = copyXNode(rbuf_two->nodes.at(node_sets_two->at(functions.at(i).first)->at(0)));
+      start_node_two->move = move_id;
+
+      xNode * end_node_one = copyXNode(rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->back()));
+      end_node_one->move = move_id;
+
+      xNode * end_node_two = copyXNode(rbuf_two->nodes.at(node_sets_two->at(functions.at(i).first)->back()));
+      end_node_two->move = move_id;
+
+      rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->at(0)) = start_node_one;
+      rbuf_two->nodes.at(node_sets_two->at(functions.at(j).first)->at(0)) = start_node_two;
+
+      rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->back()) = end_node_one;
+      rbuf_two->nodes.at(node_sets_two->at(functions.at(j).first)->back()) = end_node_two;
 
       break;
 
