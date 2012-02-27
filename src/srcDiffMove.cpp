@@ -106,6 +106,8 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
       rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->back())->move = move_id;
       rbuf_two->nodes.at(node_sets_two->at(functions.at(j).first)->back())->move = move_id;
 
+      break;
+
     }
 
   }
