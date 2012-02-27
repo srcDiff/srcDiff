@@ -94,7 +94,8 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
       if(functions.at(i).second == functions.at(j).second) 
        continue;
 
-      if(compute_difference(rbuf_one->nodes, node_sets_one->at(functions.at(i).first), rbuf_two->nodes, node_sets_two->at(functions.at(j).first)) != 0)
+      if(compute_difference(rbuf_one->nodes, node_sets_one->at(functions.at(i).first)
+                            , rbuf_two->nodes, node_sets_two->at(functions.at(j).first)) != 0)
         continue;
 
       ++move_id;
