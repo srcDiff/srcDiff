@@ -510,16 +510,16 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     }
 
   }
-  fprintf(stderr, "HERE\n");
+
   match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, &matches);
-  fprintf(stderr, "HERE\n");
+
   int last_old = 0;
   int last_new = 0;
 
   offset_pair * matches_save = matches;
 
   for(; matches; matches = matches->next) {
-    fprintf(stderr, "HERE\n");
+
     old_moved.at(pos_old.at(matches->old_offset)).first = SESCOMMON;
     old_moved.at(pos_old.at(matches->old_offset)).second = pos_new.at(matches->new_offset);
 
