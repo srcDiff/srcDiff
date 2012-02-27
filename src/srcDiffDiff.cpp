@@ -511,7 +511,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   }
 
   unsigned int i = 0;
-  unsigned in j = 0;
+  unsigned int j = 0;
 
   for(; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
 
@@ -523,10 +523,10 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
     unsigned int end_new = start_old;
 
-    for(; end_old < old_moved.size() && (old_move.at(end_old).first == SESDELETE || old_move.at(end_old).first == SESMOVE); ++end_old)
+    for(; end_old < old_moved.size() && (old_moved.at(end_old).first == SESDELETE || old_moved.at(end_old).first == SESMOVE); ++end_old)
       ;
 
-    for(; end_new < new_moved.size() && (new_move.at(end_new).first == SESINSERT || new_move.at(end_new).first == SESMOVE); ++end_new)
+    for(; end_new < new_moved.size() && (new_moved.at(end_new).first == SESINSERT || new_moved.at(end_new).first == SESMOVE); ++end_new)
       ;
 
     // output diffs until match
