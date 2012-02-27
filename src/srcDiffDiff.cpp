@@ -499,9 +499,13 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   int last_new = 0;
 
   offset_pair * matches_save = matches;
+
   /*
+
   for(; matches; matches = matches->next) {
 
+  old_moved.at(matches->old_offset) = SESCOMMON;
+  new_moved.at(matches->new_offset) = SESCOMMON;
 
   */
 
