@@ -499,6 +499,11 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   int last_new = 0;
 
   offset_pair * matches_save = matches;
+  /*
+  for(; matches; matches = matches->next) {
+
+
+  */
 
   for(; matches; matches = matches->next) {
 
