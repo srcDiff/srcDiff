@@ -530,7 +530,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
 
   unsigned int i = 0;
   unsigned int j = 0;
-
+  fprintf(stderr, "HERE\n");
   for(; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
 
     unsigned int start_old = i;
