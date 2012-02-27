@@ -585,6 +585,12 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   }
 
+    output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + i,
+                     edits->offset_sequence_one + old_moved.size()
+                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j
+                     , edit_next->offset_sequence_two + new_moved.size()
+                     , wstate);
+
   /*
 
   matches = matches_save;
