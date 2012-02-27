@@ -472,24 +472,42 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   offset_pair * matches = NULL;
 
   std::vector<std::pair<int, int> > old_moved;
+  std::vector<int> pos_old;
+  NodeSets old_sets;
 
   for(unsigned int i = 0; i < node_sets_old->size(); ++i) {
 
-    if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move)
+    if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move) {
+
       old_moved.push_back(std::pair<int, int>(SESMOVE, 0));
-    else
+
+    } else {
+
       old_moved.push_back(std::pair<int, int>(SESDELETE, 0));
+      pos_old.push_back(i);
+      old_sets.push_back(node_sets_old->at(i));
+
+    }
 
   }
 
   std::vector<std::pair<int, int> > new_moved;
+  std::vector<int> pos_new;
+  NodeSets new_sets;
 
   for(unsigned int i = 0; i < node_sets_new->size(); ++i) {
 
-    if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move)
+    if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move) {
+
       new_moved.push_back(std::pair<int, int>(SESMOVE, 0));
-    else
+
+    } else {
+
       new_moved.push_back(std::pair<int, int>(SESINSERT, 0));
+      pos_new.push_back(i);
+      new_sets.push_back(node_sets_new->at(i));
+
+    }
 
   }
 
