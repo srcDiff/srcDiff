@@ -247,7 +247,7 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
     exit(distance);
   }
 
-  mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
+  //mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
 
   int last_diff_old = 0;
   int last_diff_new = 0;
@@ -500,8 +500,6 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches_save = matches;
 
-  /*
-
   for(; matches; matches = matches->next) {
 
     old_moved.at(matches->old_offset).first = SESCOMMON;
@@ -512,7 +510,10 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   }
 
-  for(unsigned int i = 0, j = 0; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
+  unsigned int i = 0;
+  unsigned in j = 0;
+
+  for(; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
 
     unsigned int start_old = i;
 
@@ -584,7 +585,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   }
 
-  */
+  /*
 
   matches = matches_save;
 
@@ -644,6 +645,8 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
                    edits->offset_sequence_one + edits->length - 1,
                    rbuf_new, node_sets_new, edit_next->offset_sequence_two + last_new
                    , edit_next->offset_sequence_two + edit_next->length - 1, wstate);
+
+  */
 
   for(; matches_save;) {
 
