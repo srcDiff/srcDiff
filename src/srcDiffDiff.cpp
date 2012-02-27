@@ -500,6 +500,8 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches_save = matches;
 
+  /*
+
   for(; matches; matches = matches->next) {
 
     old_moved.at(matches->old_offset).first = SESCOMMON;
@@ -509,6 +511,27 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     new_moved.at(matches->new_offset).second = matches->old_offset;
 
   }
+
+  for(unsigned int i = 0, j = 0; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
+
+  unsigned int start_old = i;
+
+  unsigned int start_new = j;
+
+  unsigned int end_old = start_old;
+
+  unsigned int end_new = start_old;
+
+  for(; end_old < old_moved.size() && (old_move.at(end_old).first == SESDELETE || old_move.at(end_old).first == SESMOVE)); ++end_old)
+  ;
+
+  for(; end_new < new_moved.size() && (new_move.at(end_new).first == SESINSERT || new_move.at(end_new).first == SESMOVE)); ++end_new)
+  ;
+
+
+  }
+
+  */
 
   matches = matches_save;
 
