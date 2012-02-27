@@ -528,8 +528,57 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
   for(; end_new < new_moved.size() && (new_move.at(end_new).first == SESINSERT || new_move.at(end_new).first == SESMOVE)); ++end_new)
   ;
 
+  // output diffs until match
+  output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
+  edits->offset_sequence_one + end_old - 1
+  , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
+  , edit_next->offset_sequence_two + end_new
+  , wstate);
 
   }
+
+  if(i >= old_moved.size() || j >= new_moved.size())
+  break;
+
+    if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))
+                    , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->at(0))) == 0
+       && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->at(0))->type != XML_READER_TYPE_TEXT) {
+
+      if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
+                                                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate)) {
+
+        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + matches->old_offset
+                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + matches->new_offset, wstate);
+
+      } else {
+
+        // syntax mismatch
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1, wstate);
+      }
+
+    } else {
+
+      if(is_nestable(node_sets_old->at(edits->offset_sequence_one + matches->old_offset)
+                     , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), rbuf_new.nodes)) {
+
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), SESINSERT, wstate);
+
+      } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)
+                            , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_old.nodes)) {
+
+        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset), SESDELETE, wstate);
+
+      } else {
+
+        // syntax mismatch
+        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + matches->old_offset)->back() + 1
+                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + matches->new_offset)->back() + 1, wstate);
+      }
+
+    }
+
+
 
   */
 
