@@ -228,7 +228,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT
-             && strcmp((const char *)full_name.c_str(), "function") == 0) {
+             && strcmp((const char *)full_name.c_str(), "function") != 0) {
 
     NodeMap::iterator lb = endtags->lower_bound(full_name);
     if (lb != endtags->end() && !(endtags->key_comp()(full_name, lb->first))) {
