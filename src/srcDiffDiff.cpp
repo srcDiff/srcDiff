@@ -551,7 +551,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
                      edits->offset_sequence_one + end_old - 1
                      , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
-                     , edit_next->offset_sequence_two + end_new
+                     , edit_next->offset_sequence_two + end_new - 1
                      , wstate);
 
     i = end_old;
@@ -604,9 +604,9 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   }
 
   output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + i,
-                   edits->offset_sequence_one + old_moved.size()
+                   edits->offset_sequence_one + old_moved.size() - 1
                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j
-                   , edit_next->offset_sequence_two + new_moved.size()
+                   , edit_next->offset_sequence_two + new_moved.size() - 1
                    , wstate);
 
   /*
