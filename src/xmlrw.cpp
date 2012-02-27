@@ -176,13 +176,70 @@ xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int co
   return pnode;
 }
 
-xNode * getCurrentXNode(xmlTextReaderPtr reader) {
+xNode * copyXNode(xNodePtr node) {
 
-  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
-  curnode->extra = xmlTextReaderIsEmptyElement(reader);
+  xNode * xnode = new xNode;
 
-  return createInternalNode(*curnode);
+  xnode->type = node->type;
+
+  xnode->name = strdup((const char *)node->name);
+
+  xnode->content = 0;
+  if(node->content)
+    xnode->content = strdup((const char *)node->content);
+  xnode->ns = 0;
+
+  if(node->ns) {
+
+    xnode->ns = new xNs;
+
+    xnode->ns->href = 0;
+
+    if(node->ns->href)
+      xnode->ns->href = strdup((const char *)node->ns->href);
+
+    xnode->ns->prefix = 0;
+    if(node->ns->prefix)
+      xnode->ns->prefix = strdup((const char *)node->ns->prefix);
+  }
+
+  xAttr * attribute = node->properties;
+  xnode->properties = 0;
+  if(attribute) {
+
+    xAttr * attr;
+    attr = new xAttr;
+    attr->name = strdup((const char *)attribute->name);
+    attr->value = strdup((const char *)attribute->value);
+    attr->next = 0;
+
+    xnode->properties = attr;;
+
+    attribute = attribute->next;
+
+    while (attribute) {
+
+      xAttr * nattr = new xAttr;
+      nattr->name = strdup((const char *)attribute->name);
+      nattr->value = strdup((const char *)attribute->value);
+      nattr->next = 0;
+
+      attr->next = nattr;
+      attr = nattr;
+
+      attribute = attribute->next;
+
+    }
+  }
+
+  xnode->extra = node->extra;
+  xnode->is_empty = node->extra;
+
+  xnode->free = true;
+  xnode->move = 0;
+
+  return xnode;
 }
 
 xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context) {
