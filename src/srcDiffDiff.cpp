@@ -471,25 +471,25 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   offset_pair * matches = NULL;
 
-  std::vector<bool> old_moved;
+  std::vector<int> old_moved;
 
   for(unsigned int i = 0; i < node_sets_old->size(); ++i) {
 
     if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move)
-      old_moved.push_back(true);
+      old_moved.push_back(SESMOVE);
     else
-      old_moved.push_back(false);
+      old_moved.push_back(SESDELETE);
 
   }
 
-  std::vector<bool> new_moved;
+  std::vector<int> new_moved;
 
   for(unsigned int i = 0; i < node_sets_new->size(); ++i) {
 
     if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move)
-      new_moved.push_back(true);
+      new_moved.push_back(SESMOVE);
     else
-      new_moved.push_back(false);
+      new_moved.push_back(SESINSERT);
 
   } 
 
