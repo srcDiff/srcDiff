@@ -30,6 +30,10 @@ struct difference {
 
 void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
                                , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
+                               , offset_pair ** matches);
+
+void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
+                               , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
                                , edit * edit_script, offset_pair ** matches);
 
 void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
