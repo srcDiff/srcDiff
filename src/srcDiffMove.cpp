@@ -7,7 +7,7 @@
 #include "srcDiffMeasure.hpp"
 #include "srcDiffOutput.hpp"
 
-static int move_id = 0;
+int move_id = 0;
 
 extern xNode diff_old_start;
 extern xNode diff_old_end;
@@ -87,7 +87,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
     }
 
     if(rbuf_one->nodes.at(node_sets_one->at(functions.at(i).first)->at(0))->move)
-       continue;
+    continue;
 
     for(unsigned int j = i + 1; j < functions.size(); ++j) {
 
@@ -97,6 +97,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
       if(compute_difference(rbuf_one->nodes, node_sets_one->at(functions.at(i).first)
                             , rbuf_two->nodes, node_sets_two->at(functions.at(j).first)) != 0)
         continue;
+
 
       ++move_id;
 
