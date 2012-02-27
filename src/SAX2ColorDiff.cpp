@@ -21,6 +21,8 @@ const char * const common_color = "common";
 const char * const delete_color = "delete";
 const char * const insert_color = "insert";
 
+const char * const move = "move";
+
 const char * const diff_color_common = "diff_common";
 const char * const diff_color_change = "diff_change";
 const char * const diff_color_delete = "diff_delete";
@@ -168,6 +170,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
   colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << insert_color << "\"><cite>srcDiff</cite> Insert</span>\n";
   //colordiff_file << "<span title=\"Line insert background color with srcDiff insert font color\" class=\"" << insert_color << " " << diff_color_insert << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Insert</span>\n";
   colordiff_file << "<span title=\"Line change background color\" class=\"" << diff_color_change << "\"><cite>diff</cite> Change</span>\n";
+  colordiff_file << "<span title=\"Move Font\" class=\"" << move << "\"><cite>diff</cite> srcDiff Move</span>\n";
   colordiff_file << "</div>\n\n";
 
 }
@@ -596,7 +599,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   if(data->in_move) {
 
-    span_out += " move";
+    span_out += " ";
+    span_out += move;
 
   }
 
@@ -673,7 +677,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       if(data->in_move) {
 
-        span_out += " move";
+        span_out += " ";
+        span_out += move;
 
       }
 
