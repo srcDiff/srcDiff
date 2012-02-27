@@ -270,8 +270,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
 
 
   xNode * node = 0;
-  if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0
-      && strcmp((const char *)full_name.c_str(), "function") != 0) {
+  if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
 
     NodeMap::iterator lb = starttags->lower_bound(full_name);
     if (lb != starttags->end() && !(starttags->key_comp()(full_name, lb->first))) {
@@ -284,8 +283,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
       starttags->insert(lb, NodeMap::value_type(full_name, node));
     }
 
-  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT
-             && strcmp((const char *)full_name.c_str(), "function") != 0) {
+  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
 
     NodeMap::iterator lb = endtags->lower_bound(full_name);
     if (lb != endtags->end() && !(endtags->key_comp()(full_name, lb->first))) {
