@@ -504,8 +504,11 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
   for(; matches; matches = matches->next) {
 
-  old_moved.at(matches->old_offset) = SESCOMMON;
-  new_moved.at(matches->new_offset) = SESCOMMON;
+  old_moved.at(matches->old_offset).first = SESCOMMON;
+  old_moved.at(matches->old_offset.second = matches->new_offset;
+
+  new_moved.at(matches->new_offset).first = SESCOMMON;
+  new_moves.at(matches->new_offset).second = matches->old_offset;
 
   */
 
