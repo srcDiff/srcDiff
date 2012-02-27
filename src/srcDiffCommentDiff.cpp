@@ -9,10 +9,10 @@
 /*
   Collect paragraphs
 */
-std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
+NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
-  std::vector<std::vector<int> *> node_sets;
+  NodeSets node_sets;
   for(int i = start; i < end; ++i) {
 
     // move past any starting newlines
@@ -44,9 +44,9 @@ std::vector<std::vector<int> *> create_comment_paragraph_set(std::vector<xNodePt
 }
 
 // collect lines
-std::vector<std::vector<int> *> create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
+NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> node_sets;
+  NodeSets node_sets;
 
   for(int i = start; i < end; ++i) {
 
@@ -78,7 +78,7 @@ std::vector<std::vector<int> *> create_comment_line_set(std::vector<xNodePtr> & 
   , and then by word using shortest edit script. Whitespace is included after/before changes
 
 */
-void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
+void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
 
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
@@ -127,11 +127,11 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        std::vector<std::vector<int> *> next_node_set_old
+        NodeSets next_node_set_old
           = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        std::vector<std::vector<int> *> next_node_set_new
+        NodeSets next_node_set_new
           = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
@@ -207,7 +207,7 @@ void output_comment_paragraph(reader_state & rbuf_old, std::vector<std::vector<i
   Whitespace is included after/before changes
 
 */
-void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
+void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
 
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
@@ -259,11 +259,11 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        std::vector<std::vector<int> *> next_node_set_old
+        NodeSets next_node_set_old
           = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        std::vector<std::vector<int> *> next_node_set_new
+        NodeSets next_node_set_new
           = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
@@ -341,7 +341,7 @@ void output_comment_line(reader_state & rbuf_old, std::vector<std::vector<int> *
   where in common.
 
 */
-void output_comment_word(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
+void output_comment_word(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 

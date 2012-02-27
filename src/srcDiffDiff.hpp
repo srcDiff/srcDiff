@@ -7,7 +7,7 @@
 #include <vector>
 
 // create sets of nodes
-std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
+NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
 
 void * create_node_set_thread(void * arguments);
 
@@ -16,33 +16,33 @@ struct create_node_set_args {
   std::vector<xNodePtr> & nodes;
   int start;
   int end;
-  std::vector<std::vector<int> *> & node_sets;
+  NodeSets & node_sets;
 
 };
 
-void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, std::vector<std::vector<int> *> & node_set_old
-                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, std::vector<std::vector<int> *> & node_set_new);
+void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, NodeSets & node_set_old
+                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, NodeSets & node_set_new);
 
 void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_set, int & start);
 
-void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate);
+void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate);
 
-void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
                       , int start_old, int end_old
-                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , reader_state & rbuf_new, NodeSets * node_sets_new
                       , int start_new, int end_new
                       , writer_state & wstate);
 
-void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                       , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
+                       , reader_state & rbuf_new, NodeSets * node_sets_new
                        , edit * edit_script, writer_state & wstate);
 
-void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_old
-                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , reader_state & rbuf_new, NodeSets * node_sets_new
                       , unsigned int start_new
                       , writer_state & wstate);
 
-void free_node_sets(std::vector<std::vector<int> *> & node_sets);
+void free_node_sets(NodeSets & node_sets);
 
 #endif

@@ -73,6 +73,6 @@ public:
 const int MAX_INT = (unsigned)-1 >> 1;
 
 typedef std::vector<int> NodeSet;
-typedef std::vector<std::vector<int> *> NodeSets;
+typedef std::vector<NodeSet *> NodeSets;
 
 #endif

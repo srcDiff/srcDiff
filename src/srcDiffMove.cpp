@@ -17,7 +17,7 @@ extern xNode diff_new_end;
 xAttr move_attribute = { 0, "move", 0 };
 
 void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & constructs
-                   , std::vector<std::vector<int> *> & node_sets, std::vector<xNodePtr> & nodes
+                   , NodeSets & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
   std::string tag = nodes.at(node_sets.at(offset)->at(0))->name;
@@ -32,8 +32,8 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
 
 }
 
-void mark_moves(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
+                , reader_state & rbuf_new, NodeSets * node_sets_new
                 , edit * edit_script, writer_state & wstate) {
 
   std::map<std::string, std::vector<std::pair<int, int> > > constructs;
@@ -73,8 +73,8 @@ void mark_moves(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_
     reader_state * rbuf_one = &rbuf_old;
     reader_state * rbuf_two = &rbuf_new;
 
-    std::vector<std::vector<int> *> * node_sets_one = node_sets_old;
-    std::vector<std::vector<int> *> * node_sets_two = node_sets_new;
+    NodeSets * node_sets_one = node_sets_old;
+    NodeSets * node_sets_two = node_sets_new;
 
     if(functions.at(i).second == SESINSERT) {
 

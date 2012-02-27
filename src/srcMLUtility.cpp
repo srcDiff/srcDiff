@@ -74,7 +74,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   
   xmlTextReaderPtr reader = NULL;
   xNodePtr unit_end = NULL;
-  //std::vector<std::vector<int> *> node_set;
+  //NodeSets node_set;
 
   // translate file one
   try {

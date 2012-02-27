@@ -60,9 +60,9 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, std::vector<int> & node_s
 }
 
 // create the node sets for shortest edit script
-std::vector<std::vector<int> *> create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
+NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  std::vector<std::vector<int> *> node_sets;
+  NodeSets node_sets;
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -110,8 +110,8 @@ void * create_node_set_thread(void * arguments) {
 
 }
 
-void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, std::vector<std::vector<int> *> & node_set_old
-                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, std::vector<std::vector<int> *> & node_set_new) {
+void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, NodeSets & node_set_old
+                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, NodeSets & node_set_new) {
 
   create_node_set_args args_old = { nodes_delete, start_old, end_old, node_set_old };
 
@@ -145,9 +145,9 @@ void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int e
 
 }
 
-bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+bool go_down_a_level(reader_state & rbuf_old, NodeSets * node_sets_old
                      , unsigned int start_old
-                     , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                     , reader_state & rbuf_new, NodeSets * node_sets_new
                      , unsigned int start_new
                      , writer_state & wstate) {
 
@@ -182,9 +182,9 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 
 }
 
-bool group_sub_elements(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+bool group_sub_elements(reader_state & rbuf_old, NodeSets * node_sets_old
                         , unsigned int start_old
-                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                        , reader_state & rbuf_new, NodeSets * node_sets_new
                         , unsigned int start_new
                         , writer_state & wstate) {
 
@@ -228,7 +228,7 @@ bool group_sub_elements(reader_state & rbuf_old, std::vector<std::vector<int> *>
   output before and after changes/common sections.
 
 */
-void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old, reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new, writer_state & wstate) {
+void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
@@ -389,9 +389,9 @@ void output_diffs(reader_state & rbuf_old, std::vector<std::vector<int> *> * nod
 
 }
 
-void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
                       , int start_old, int end_old
-                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , reader_state & rbuf_new, NodeSets * node_sets_new
                       , int start_new, int end_new
                       , writer_state & wstate) {
 
@@ -408,7 +408,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
     finish_new = node_sets_new->at(end_new)->back() + 1;
   }
 
-  std::vector<std::vector<int> *> slice_old;
+  NodeSets slice_old;
 
   for(int i = start_old; i <= end_old; ++i) {
 
@@ -416,7 +416,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
   }
 
-  std::vector<std::vector<int> *> slice_new;
+  NodeSets slice_new;
 
   for(int i = start_new; i <= end_new; ++i) {
 
@@ -462,8 +462,8 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
 }
 
-void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                       , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
+                       , reader_state & rbuf_new, NodeSets * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
 
   edit * edits = edit_script;
@@ -664,9 +664,9 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
 
 }
 
-void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
+void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_old
-                      , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                      , reader_state & rbuf_new, NodeSets * node_sets_new
                       , unsigned int start_new
                       , writer_state & wstate) {
 
@@ -698,11 +698,11 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
     if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
       // collect subset of nodes
-      std::vector<std::vector<int> *> next_node_set_old
+      NodeSets next_node_set_old
         = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                           , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
-      std::vector<std::vector<int> *> next_node_set_new
+      NodeSets next_node_set_new
         = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                           , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
@@ -721,11 +721,11 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
       } else {
 
         // collect subset of nodes
-        std::vector<std::vector<int> *> next_node_set_old
+        NodeSets next_node_set_old
           = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                             , node_sets_old->at(start_old)->back());
 
-        std::vector<std::vector<int> *> next_node_set_new
+        NodeSets next_node_set_new
           = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                             , node_sets_new->at(start_new)->back());
 
@@ -749,7 +749,7 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 }
 
 
-void free_node_sets(std::vector<std::vector<int> *> & node_sets) {
+void free_node_sets(NodeSets & node_sets) {
 
   for(unsigned int i = 0; i < node_sets.size(); ++i) {
 

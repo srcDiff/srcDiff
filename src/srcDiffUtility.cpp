@@ -14,7 +14,7 @@ bool is_change(edit * edit_script) {
 
 // diff node accessor function
 const void * node_set_index(int idx, const void *s, const void * context) {
-  std::vector<std::vector<int> *> & node_sets = *(std::vector<std::vector<int> *> *)s;
+  NodeSets & node_sets = *(NodeSets *)s;
   return node_sets[idx];
 }
 

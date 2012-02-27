@@ -175,7 +175,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   // create the reader for the old file
   xNodePtr unit_old = 0;
-  std::vector<std::vector<int> *> node_set_old;
+  NodeSets node_set_old;
 
   int is_old = 0;
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
@@ -201,7 +201,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   */
 
   xNodePtr unit_new = 0;
-  std::vector<std::vector<int> *> node_set_new;
+  NodeSets node_set_new;
 
   int is_new = 0;
   create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options

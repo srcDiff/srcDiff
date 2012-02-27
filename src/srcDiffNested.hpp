@@ -4,7 +4,7 @@
 #include "srcDiffTypes.hpp"
 #include <vector>
 
-bool complete_nestable(std::vector<std::vector<int> * > & structure_one, std::vector<xNodePtr> & nodes_one
+bool complete_nestable(NodeSets & structure_one, std::vector<xNodePtr> & nodes_one
                        , std::vector<int> * structure_two, std::vector<xNodePtr> & nodes_two);
 
 bool is_nestable(std::vector<int> * structure_one, std::vector<xNodePtr> & nodes_one
