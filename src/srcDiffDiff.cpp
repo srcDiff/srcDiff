@@ -183,14 +183,14 @@ bool go_down_a_level(reader_state & rbuf_old, std::vector<std::vector<int> *> * 
 }
 
 bool group_sub_elements(reader_state & rbuf_old, std::vector<std::vector<int> *> * node_sets_old
-                     , unsigned int start_old
-                     , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
-                     , unsigned int start_new
-                     , writer_state & wstate) {
+                        , unsigned int start_old
+                        , reader_state & rbuf_new, std::vector<std::vector<int> *> * node_sets_new
+                        , unsigned int start_new
+                        , writer_state & wstate) {
 
 
   if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "type") != 0)
-     return false;
+    return false;
 
   unsigned int similarity = compute_similarity(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
 
@@ -439,7 +439,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     }
 
-    output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, &node_set, SESDELETE, wstate); 
+    output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, &node_set, SESDELETE, wstate);
 
   } else if(slice_new.size() == 1 && slice_old.size() > 0
             && complete_nestable(slice_old, rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
@@ -455,7 +455,7 @@ void output_unmatched(reader_state & rbuf_old, std::vector<std::vector<int> *> *
 
     }
 
-    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(start_new), SESINSERT, wstate); 
+    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(start_new), SESINSERT, wstate);
 
   } else
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
@@ -491,7 +491,7 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     else
       new_moved.push_back(std::pair<int, int>(SESINSERT, 0));
 
-  } 
+  }
 
   match_differences_dynamic(rbuf_old.nodes, node_sets_old, rbuf_new.nodes, node_sets_new, edit_script, &matches);
 
@@ -510,81 +510,76 @@ void compare_many2many(reader_state & rbuf_old, std::vector<std::vector<int> *> 
     new_moved.at(matches->new_offset).first = SESCOMMON;
     new_moved.at(matches->new_offset).second = matches->old_offset;
 
-  }
 
-  for(unsigned int i = 0, j = 0; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
+    for(unsigned int i = 0, j = 0; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
 
-  unsigned int start_old = i;
+      unsigned int start_old = i;
 
-  unsigned int start_new = j;
+      unsigned int start_new = j;
 
-  unsigned int end_old = start_old;
+      unsigned int end_old = start_old;
 
-  unsigned int end_new = start_old;
+      unsigned int end_new = start_old;
 
-  for(; end_old < old_moved.size() && (old_move.at(end_old).first == SESDELETE || old_move.at(end_old).first == SESMOVE)); ++end_old)
-  ;
+      for(; end_old < old_moved.size() && (old_move.at(end_old).first == SESDELETE || old_move.at(end_old).first == SESMOVE)); ++end_old)
+      ;
 
-  for(; end_new < new_moved.size() && (new_move.at(end_new).first == SESINSERT || new_move.at(end_new).first == SESMOVE)); ++end_new)
-  ;
+    for(; end_new < new_moved.size() && (new_move.at(end_new).first == SESINSERT || new_move.at(end_new).first == SESMOVE)); ++end_new)
+    ;
 
   // output diffs until match
   output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
-  edits->offset_sequence_one + end_old - 1
-  , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
-  , edit_next->offset_sequence_two + end_new
-  , wstate);
-
-  }
+                   edits->offset_sequence_one + end_old - 1
+                   , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
+                   , edit_next->offset_sequence_two + end_new
+                   , wstate);
 
   i = end_old;
   j = end_new;
 
   if(i >= old_moved.size() || j >= new_moved.size())
-  break;
+    break;
 
 
-    if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))
-                    , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + j)->at(0))) == 0
-       && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT) {
+  if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))
+                  , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + j)->at(0))) == 0
+     && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT) {
 
-      if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                                                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate)) {
+    if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
+                                                              , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate)) {
 
-        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate);
-
-      } else {
-
-        // syntax mismatch
-        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
-                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
-      }
+      output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i
+                       , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate);
 
     } else {
 
-      if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
-                     , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
-
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-        , SESINSERT, wstate);
-
-      } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
-                            , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
-
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-        , SESDELETE, wstate);
-
-      } else {
-
-        // syntax mismatch
-        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
-                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
-      }
-
+      // syntax mismatch
+      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
+                                , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
     }
 
+  } else {
 
+    if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
+                   , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
+
+      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
+                    , SESINSERT, wstate);
+
+    } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
+                          , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
+
+      output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
+                    , SESDELETE, wstate);
+
+    } else {
+
+      // syntax mismatch
+      output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
+                                , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
+    }
+
+  }
 
   */
 
@@ -669,75 +664,75 @@ void output_recursive(reader_state & rbuf_old, std::vector<std::vector<int> *> *
     output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, node_sets_new->at(start_new), SESINSERT, wstate);
 
   } else if(is_same_nestable(node_sets_new->at(start_new)
-                                , rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
+                             , rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
 
     output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, node_sets_new->at(start_new)
-                          , SESDELETE, wstate);
+                  , SESDELETE, wstate);
 
   } else {
 
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
-  //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
+    output_white_space_all(rbuf_old, rbuf_new, wstate);
+    //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
+    output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
+    output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
 
-  ++rbuf_old.last_output;
-  ++rbuf_new.last_output;
+    ++rbuf_old.last_output;
+    ++rbuf_new.last_output;
 
-  // compare subset of nodes
-  if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+    // compare subset of nodes
+    if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
-    // collect subset of nodes
-    std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
-                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
+      // collect subset of nodes
+      std::vector<std::vector<int> *> next_node_set_old
+        = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
+                          , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
-    std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
-                        , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
+      std::vector<std::vector<int> *> next_node_set_new
+        = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
+                          , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
-    output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+      output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    free_node_sets(next_node_set_old);
-    free_node_sets(next_node_set_new);
+      free_node_sets(next_node_set_old);
+      free_node_sets(next_node_set_new);
 
-  }
-  else {
+    }
+    else {
 
-    if(group_sub_elements(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate)) {
+      if(group_sub_elements(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate)) {
 
-      output_change_white_space(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), wstate);
+        output_change_white_space(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), wstate);
 
-    } else {
+      } else {
 
-    // collect subset of nodes
-    std::vector<std::vector<int> *> next_node_set_old
-      = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
-                        , node_sets_old->at(start_old)->back());
+        // collect subset of nodes
+        std::vector<std::vector<int> *> next_node_set_old
+          = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
+                            , node_sets_old->at(start_old)->back());
 
-    std::vector<std::vector<int> *> next_node_set_new
-      = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
-                        , node_sets_new->at(start_new)->back());
+        std::vector<std::vector<int> *> next_node_set_new
+          = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
+                            , node_sets_new->at(start_new)->back());
 
-    output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+        output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
 
-    free_node_sets(next_node_set_old);
-    free_node_sets(next_node_set_new);
+        free_node_sets(next_node_set_old);
+        free_node_sets(next_node_set_new);
+
+      }
 
     }
 
+    output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+
+    output_node(rbuf_old, rbuf_new, &diff_common_end, SESCOMMON, wstate);
+
+    output_white_space_statement(rbuf_old, rbuf_new, wstate);
+
   }
-
-  output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
-
-  output_node(rbuf_old, rbuf_new, &diff_common_end, SESCOMMON, wstate);
-
-  output_white_space_statement(rbuf_old, rbuf_new, wstate);
-
-          }
 
 }
 
