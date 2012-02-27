@@ -688,6 +688,13 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_new
                       , writer_state & wstate) {
 
+  if(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->move || rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->move) {
+
+    output_change_white_space(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+
+    return;
+  }
+
   if(is_same_nestable(node_sets_old->at(start_old)
                       , rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
 
