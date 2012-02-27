@@ -484,7 +484,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     } else {
 
       old_moved.push_back(std::pair<int, int>(SESDELETE, 0));
-      pos_old.push_back(i);
+      pos_old.push_back(i - edits->offset_sequence_one);
       old_sets.push_back(node_sets_old->at(i));
 
     }
@@ -504,7 +504,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     } else {
 
       new_moved.push_back(std::pair<int, int>(SESINSERT, 0));
-      pos_new.push_back(i);
+      pos_new.push_back(i - edit_next->offset_sequence_two);
       new_sets.push_back(node_sets_new->at(i));
 
     }
@@ -519,10 +519,10 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   offset_pair * matches_save = matches;
 
   for(; matches; matches = matches->next) {
-
+    fprintf(stderr, "%d\n", old_moved.at);
     old_moved.at(pos_old.at(matches->old_offset)).first = SESCOMMON;
     old_moved.at(pos_old.at(matches->old_offset)).second = pos_new.at(matches->new_offset);
-
+    fprintf(stderr, "%d\n", matches->new_offset);
     new_moved.at(pos_new.at(matches->new_offset)).first = SESCOMMON;
     new_moved.at(pos_new.at(matches->new_offset)).second = pos_old.at(matches->old_offset);
 
