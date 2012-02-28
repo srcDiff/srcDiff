@@ -668,11 +668,12 @@ int main(int argc, char* argv[]) {
     exit(STATUS_UNKNOWN_ENCODING);
   }
 #else
-} catch (...) {
+} catch (const std::exception & e) {
 
-  fprintf(stderr, "%s: Error Executing command\n", PROGRAM_NAME);
+  fprintf(stderr, "%s: Error Executing command. %s\n", PROGRAM_NAME, e.what());
 
 }
+
 #endif
 
 return exit_status;
