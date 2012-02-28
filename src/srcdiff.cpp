@@ -668,7 +668,11 @@ int main(int argc, char* argv[]) {
     exit(STATUS_UNKNOWN_ENCODING);
   }
 #else
-} catch (...) {}
+} catch (...) {
+
+  fprintf(stderr, "%s: Error Executing command\n", PROGRAM_NAME);
+
+}
 #endif
 
 return exit_status;
