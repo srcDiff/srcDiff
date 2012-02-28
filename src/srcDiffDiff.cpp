@@ -465,7 +465,7 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
                        , reader_state & rbuf_new, NodeSets * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
@@ -599,7 +599,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     }
 
   }
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, edit_next->offset_sequence_two + j);
+
   output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + i,
                    edits->offset_sequence_one + old_moved.size() - 1
                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j
@@ -613,7 +613,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     delete old_match;
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
