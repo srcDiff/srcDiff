@@ -397,7 +397,13 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 
   unsigned int finish_old = rbuf_old.last_output;
   unsigned int finish_new = rbuf_new.last_output;
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_old);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_old);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, start_new);
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, end_new);
 
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, node_sets_old->size());
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, node_sets_new->size());
   if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size()) {
 
     finish_old = node_sets_old->at(end_old)->back() + 1;
@@ -475,7 +481,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   std::vector<int> pos_old;
   NodeSets old_sets;
 
-  for(unsigned int i = edits->offset_sequence_one; (signed)i < edits->offset_sequence_one + edits->length; ++i) {
+  for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
     if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move) {
 
@@ -484,8 +490,8 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     } else {
 
       old_moved.push_back(IntPair(SESDELETE, 0));
-      pos_old.push_back(i - edits->offset_sequence_one);
-      old_sets.push_back(node_sets_old->at(i));
+      pos_old.push_back(i);
+      old_sets.push_back(node_sets_old->at(i + edits->offset_sequence_one));
 
     }
 
@@ -495,7 +501,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   std::vector<int> pos_new;
   NodeSets new_sets;
 
-  for(unsigned int i = edit_next->offset_sequence_two; (signed)i < edit_next->offset_sequence_two + edit_next->length; ++i) {
+  for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
     if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move) {
 
@@ -504,8 +510,8 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     } else {
 
       new_moved.push_back(IntPair(SESINSERT, 0));
-      pos_new.push_back(i - edit_next->offset_sequence_two);
-      new_sets.push_back(node_sets_new->at(i));
+      pos_new.push_back(i);
+      new_sets.push_back(node_sets_new->at(i + edit_next->offset_sequence_two));
 
     }
 
