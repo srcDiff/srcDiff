@@ -475,7 +475,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   std::vector<int> pos_old;
   NodeSets old_sets;
 
-  for(unsigned int i = edits->offset_sequence_one; i < edits->offset_sequence_one + edits->length; ++i) {
+  for(unsigned int i = edits->offset_sequence_one; (signed)i < edits->offset_sequence_one + edits->length; ++i) {
 
     if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move) {
 
@@ -495,7 +495,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   std::vector<int> pos_new;
   NodeSets new_sets;
 
-  for(unsigned int i = edit_next->offset_sequence_two; i < edit_next->offset_sequence_two + edit_next->length; ++i) {
+  for(unsigned int i = edit_next->offset_sequence_two; (signed)i < edit_next->offset_sequence_two + edit_next->length; ++i) {
 
     if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move) {
 
@@ -512,9 +512,6 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
   }
 
   match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, &matches);
-
-  int last_old = 0;
-  int last_new = 0;
 
   offset_pair * matches_save = matches;
 
