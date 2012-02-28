@@ -250,7 +250,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
     } else {
 
       fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old.nodes.at(i)->name);
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new.nodes.at(i)->name);
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new.nodes.at(j)->name);
 
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
       fprintf(stderr, "ERROR\n");
