@@ -16,7 +16,7 @@ extern xNode diff_new_end;
 
 xAttr move_attribute = { 0, "move", 0 };
 
-void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & constructs
+void add_construct(std::map<std::string, IntPairs > & constructs
                    , NodeSets & node_sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
@@ -24,7 +24,7 @@ void add_construct(std::map<std::string, std::vector<std::pair<int, int> > > & c
 
   if(constructs.find(tag) == constructs.end()) {
 
-    constructs[tag] = std::vector<std::pair<int, int> >();
+    constructs[tag] = IntPairs();
 
   }
 
@@ -36,7 +36,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
                 , reader_state & rbuf_new, NodeSets * node_sets_new
                 , edit * edit_script, writer_state & wstate) {
 
-  std::map<std::string, std::vector<std::pair<int, int> > > constructs;
+  std::map<std::string, IntPairs > constructs;
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
 
@@ -66,7 +66,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
 
   }
 
-  std::vector<std::pair<int, int> > functions = constructs["function"];
+  IntPairs functions = constructs["function"];
 
   for(unsigned int i = 0; i < functions.size(); ++i) {
 

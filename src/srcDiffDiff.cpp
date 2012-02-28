@@ -471,7 +471,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
 
   offset_pair * matches = NULL;
 
-  std::vector<std::pair<int, int> > old_moved;
+  IntPairs old_moved;
   std::vector<int> pos_old;
   NodeSets old_sets;
 
@@ -491,7 +491,7 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
 
   }
 
-  std::vector<std::pair<int, int> > new_moved;
+  IntPairs new_moved;
   std::vector<int> pos_new;
   NodeSets new_sets;
 
