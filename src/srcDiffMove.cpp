@@ -28,7 +28,7 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
   }
 
-  constructs[tag].push_back(std::pair<int, int>(offset, operation));
+  constructs[tag].push_back(IntPair(offset, operation));
 
 }
 

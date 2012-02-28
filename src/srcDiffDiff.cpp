@@ -479,11 +479,11 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
 
     if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move) {
 
-      old_moved.push_back(std::pair<int, int>(SESMOVE, 0));
+      old_moved.push_back(IntPair(SESMOVE, 0));
 
     } else {
 
-      old_moved.push_back(std::pair<int, int>(SESDELETE, 0));
+      old_moved.push_back(IntPair(SESDELETE, 0));
       pos_old.push_back(i - edits->offset_sequence_one);
       old_sets.push_back(node_sets_old->at(i));
 
@@ -499,11 +499,11 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
 
     if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move) {
 
-      new_moved.push_back(std::pair<int, int>(SESMOVE, 0));
+      new_moved.push_back(IntPair(SESMOVE, 0));
 
     } else {
 
-      new_moved.push_back(std::pair<int, int>(SESINSERT, 0));
+      new_moved.push_back(IntPair(SESINSERT, 0));
       pos_new.push_back(i - edit_next->offset_sequence_two);
       new_sets.push_back(node_sets_new->at(i));
 
