@@ -109,6 +109,7 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
     colordiff_file << ".move\n";
     colordiff_file << "{\n";
     colordiff_file << "font-style:italic;\n";
+    colordiff_file << "text-decoration:underline;\n";
     colordiff_file << "}\n";
     colordiff_file << ".diff_common\n";
     colordiff_file << "{\n";
