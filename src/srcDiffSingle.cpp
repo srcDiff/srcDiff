@@ -1,3 +1,11 @@
+#include "srcDiffSingle.hpp"
+
+#include "shortest_edit_script.h"
+#include "srcDiffChange.hpp"
+#include "srcDiffDiff.hpp"
+#include "srcDiffNested.hpp"
+
+
 void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_old
                       , reader_state & rbuf_new, NodeSets * node_sets_new
