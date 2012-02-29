@@ -1,4 +1,6 @@
 #include "srcDiffMany.hpp"
+#include "srcDiffMeasure.hpp"
+#include "srcDiffNested.hpp"
 
 void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
                       , int start_old, int end_old
