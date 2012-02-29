@@ -248,12 +248,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
     exit(distance);
   }
 
-  static int depth = 0;
-
-  if(!depth)
-    mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
-
-  ++depth;
+  mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
 
   int last_diff_old = 0;
   int last_diff_new = 0;
