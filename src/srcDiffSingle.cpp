@@ -2,10 +2,12 @@
 
 #include "shortest_edit_script.h"
 #include "srcDiffComment.hpp"
+#include "srcDiffCommon.hpp"
 #include "srcDiffChange.hpp"
 #include "srcDiffDiff.hpp"
 #include "srcDiffNested.hpp"
 #include "srcDiffOutput.hpp"
+#include "srcDiffWhitespace.hpp"
 
 extern xNode diff_common_start;
 extern xNode diff_common_end;
