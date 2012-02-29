@@ -80,7 +80,9 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 
 }
 
-void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
+typedef std::vector<IntPairs> Moves;
+
+Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
                        , reader_state & rbuf_new, NodeSets * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
 
@@ -142,6 +144,33 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
     new_moved.at(pos_new.at(matches->new_offset)).second = pos_old.at(matches->old_offset);
 
   }
+
+  for(; matches_save;) {
+
+    offset_pair * old_match = matches_save;
+    matches_save = matches_save->next;
+    delete old_match;
+
+  }
+
+  Moves moves;
+  moves.push_back(old_moved);
+  moves.push_back(new_moved);
+
+  return moves;
+
+}
+
+void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
+                       , reader_state & rbuf_new, NodeSets * node_sets_new
+                       , edit * edit_script, writer_state & wstate) {
+
+  edit * edits = edit_script;
+  edit * edit_next = edit_script->next;
+
+  Moves moves = determine_operations(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
+  IntPairs old_moved = moves.at(0);
+  IntPairs new_moved = moves.at(1);
 
   unsigned int i = 0;
   unsigned int j = 0;
@@ -223,13 +252,5 @@ void compare_many2many(reader_state & rbuf_old, NodeSets * node_sets_old
                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j
                    , edit_next->offset_sequence_two + new_moved.size() - 1
                    , wstate);
-
-  for(; matches_save;) {
-
-    offset_pair * old_match = matches_save;
-    matches_save = matches_save->next;
-    delete old_match;
-
-  }
 
 }
