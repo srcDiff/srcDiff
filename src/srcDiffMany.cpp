@@ -1,4 +1,6 @@
 #include "srcDiffMany.hpp"
+
+#include "srcDiffChange.hpp"
 #include "srcDiffMatch.hpp"
 #include "srcDiffMeasure.hpp"
 #include "srcDiffNested.hpp"
