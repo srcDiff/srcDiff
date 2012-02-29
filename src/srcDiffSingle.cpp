@@ -5,6 +5,8 @@
 #include "srcDiffDiff.hpp"
 #include "srcDiffNested.hpp"
 
+extern xNode diff_common_start;
+extern xNode diff_common_end;
 
 void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_old
