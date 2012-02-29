@@ -80,8 +80,6 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 
 }
 
-typedef std::vector<IntPairs> Moves;
-
 Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
                        , reader_state & rbuf_new, NodeSets * node_sets_new
                        , edit * edit_script, writer_state & wstate) {
