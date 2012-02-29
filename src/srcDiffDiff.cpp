@@ -9,6 +9,7 @@
 #include "srcDiffMeasure.hpp"
 #include "srcDiffMatch.hpp"
 #include "srcDiffMove.hpp"
+#include "srcDiffMany.hpp"
 #include <pthread.h>
 #include "ShortestEditScript.hpp"
 
