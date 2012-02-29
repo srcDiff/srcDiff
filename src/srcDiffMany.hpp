@@ -1,6 +1,11 @@
 #ifndef INCLUDED_SRCDIFFMANY_HPP
 #define INCLUDED_SRCDIFFMANY_HPP
 
+#include "srcDiffTypes.hpp"
+#include "shortest_edit_script.h"
+#include "xmlrw.hpp"
+#include <vector>
+
 void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
                       , int start_old, int end_old
                       , reader_state & rbuf_new, NodeSets * node_sets_new
