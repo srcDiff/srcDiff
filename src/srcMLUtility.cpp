@@ -249,12 +249,20 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
         }
 
         // separate non whitespace
-        else {
+        else if(*characters == '(' || *characters ==')') {
+
+          ++characters;
+
+          // Copy the remainder after (
+          text = split_text(characters_start, characters);
+
+        } else {
 
 	  // collect all 
-          while((*characters) != 0 && !isspace(*characters))
+          while((*characters) != 0 && !isspace(*characters) && !(*characters == '(' || *characters ==')'))
             ++characters;
 
+          /*
 	  // break up ( and )
           if((characters_start + 1) && (*characters_start) == '(' && (*(characters_start + 1)) == ')') {
 
@@ -263,6 +271,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
             ++characters_start;
 
           }
+          */
 
           // Copy the remainder after (
           text = split_text(characters_start, characters);
