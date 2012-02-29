@@ -181,6 +181,9 @@ $(OBJ_DIR)ShortestEditScript.o :  ShortestEditScript.cpp ShortestEditScript.hpp 
 $(OBJ_DIR)srcDiffMove.o :  srcDiffMove.cpp srcDiffMove.hpp shortest_edit_script.h
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
 
+$(OBJ_DIR)srcDiffMany.o :  srcDiffMany.cpp srcDiffMany.hpp shortest_edit_script.h
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -c $< -o $@
+
 clean :
 	rm -f ${EXE} $(OBJ_DIR)*
 
