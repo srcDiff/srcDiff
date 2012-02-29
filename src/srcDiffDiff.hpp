@@ -25,6 +25,13 @@ void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int e
 
 void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & node_set, int & start);
 
+bool go_down_a_level(reader_state & rbuf_old, NodeSets * node_sets_old
+                     , unsigned int start_old
+                     , reader_state & rbuf_new, NodeSets * node_sets_new
+                     , unsigned int start_new
+                     , writer_state & wstate);
+
+
 void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate);
 
 void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
