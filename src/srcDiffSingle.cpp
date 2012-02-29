@@ -5,6 +5,7 @@
 #include "srcDiffChange.hpp"
 #include "srcDiffDiff.hpp"
 #include "srcDiffNested.hpp"
+#include "srcDiffOutput.hpp"
 
 extern xNode diff_common_start;
 extern xNode diff_common_end;
