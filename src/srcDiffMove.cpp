@@ -6,6 +6,7 @@
 #include "xmlrw.hpp"
 #include "srcDiffMeasure.hpp"
 #include "srcDiffOutput.hpp"
+#include "srcDiffUtility.hpp"
 
 int move_id = 0;
 
@@ -92,12 +93,18 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
     for(unsigned int j = i + 1; j < functions.size(); ++j) {
 
       if(functions.at(i).second == functions.at(j).second) 
-       continue;
+        continue;
 
+      diff_nodes diff_set = { rbuf_one->nodes, rbuf_two->nodes };
+
+      if(node_set_syntax_compare(node_sets_one->at(functions.at(i).first)
+                                     , node_sets_two->at(functions.at(j).first), &diff_set) != 0)
+        continue;
+      /*
       if(compute_difference(rbuf_one->nodes, node_sets_one->at(functions.at(i).first)
                             , rbuf_two->nodes, node_sets_two->at(functions.at(j).first)) != 0)
         continue;
-
+      */
 
       ++move_id;
 
