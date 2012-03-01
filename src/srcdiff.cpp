@@ -662,21 +662,15 @@ int main(int argc, char* argv[]) {
               "Total: %d\n", count, skipped, error, count + skipped + error);
 
     }
-#ifdef FIX
-  } catch (srcEncodingException) {
-    fprintf(stderr, "%s: Translation encoding problem\n", PROGRAM_NAME);
-    exit(STATUS_UNKNOWN_ENCODING);
-  }
-#else
+
 } catch (const std::exception & e) {
 
   fprintf(stderr, "%s: Error Executing command. %s\n", PROGRAM_NAME, e.what());
 
 }
 
-#endif
-
 return exit_status;
+
 }
 
 // setup options and collect info from arguments
