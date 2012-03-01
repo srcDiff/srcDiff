@@ -7,7 +7,9 @@
 #include "srcDiffDiff.hpp"
 #include "srcDiffNested.hpp"
 #include "srcDiffOutput.hpp"
-#include "srcDiffWhitespace.hpp"
+#include "srcDiffWhiteSpace.hpp"
+
+#include <string.h>
 
 extern xNode diff_common_start;
 extern xNode diff_common_end;
