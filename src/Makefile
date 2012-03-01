@@ -18,7 +18,7 @@ VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed 
 endif
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops #-g -fno-rtti
+CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -Werror -march=nocona -minline-all-stringops #--g -fno-rtti
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
