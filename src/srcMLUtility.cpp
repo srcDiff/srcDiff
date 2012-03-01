@@ -211,6 +211,15 @@ void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
 
 }
 */
+
+bool is_separate_token(const char character) {
+
+
+  return character == '(' || character ==')' || character == '[' || character == ']' || character == ',';
+
+}
+
+
 // collect the differnces
 void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE & options, int context) {
 
@@ -249,7 +258,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
         }
 
         // separate non whitespace
-        else if(*characters == '(' || *characters ==')' || *characters == ',') {
+        else if(is_separate_token(*characters)) {
 
           ++characters;
 
@@ -259,7 +268,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
         } else {
 
 	  // collect all 
-          while((*characters) != 0 && !isspace(*characters) && !(*characters == '(' || *characters ==')' || *characters == ','))
+          while((*characters) != 0 && !isspace(*characters) && !is_separate_token(*characters))
             ++characters;
 
           /*
