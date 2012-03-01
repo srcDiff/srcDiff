@@ -249,7 +249,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
         }
 
         // separate non whitespace
-        else if(*characters == '(' || *characters ==')') {
+        else if(*characters == '(' || *characters ==')' || *characters == ',') {
 
           ++characters;
 
@@ -259,7 +259,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
         } else {
 
 	  // collect all 
-          while((*characters) != 0 && !isspace(*characters) && !(*characters == '(' || *characters ==')'))
+          while((*characters) != 0 && !isspace(*characters) && !(*characters == '(' || *characters ==')' || *characters == ','))
             ++characters;
 
           /*
