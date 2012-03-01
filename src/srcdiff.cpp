@@ -853,13 +853,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.src_encoding = optarg;
 
       // validate source encoding
-#ifdef FIX
-      if (!srcMLOutput::checkEncoding(poptions.src_encoding)) {
-        fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", PROGRAM_NAME, poptions.src_encoding);
-        fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
-        exit(STATUS_UNKNOWN_ENCODING);
-      }
-#endif
+
       break;
 
     case XMLNS_FLAG_CODE:
