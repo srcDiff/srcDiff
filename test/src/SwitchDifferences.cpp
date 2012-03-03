@@ -14,11 +14,15 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#include <Options.hpp>
+
 #include "../../src/xmlrw.hpp"
 
 const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
 const char * XML_DECLARATION_STANDALONE = "yes";
+
+OPTION_TYPE options;
 
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
@@ -60,7 +64,7 @@ int main(int argc, char * argv[]) {
     std::vector<xNode *> buffer;
     while(xmlTextReaderRead(reader) == 1) {
 
-      xNodePtr node = getRealCurrentNode(reader, 1);
+      xNodePtr node = getRealCurrentNode(reader, options, 0);
 
       if(!exited_out_diff && strcmp((const char *)node->name, "old") == 0) {
 
