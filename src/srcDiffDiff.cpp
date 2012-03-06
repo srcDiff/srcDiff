@@ -330,9 +330,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
       } else {
 
         // many to many handling
-        compare_many2many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
-        //output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-        //                          , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1, wstate);
+        output_many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
 
       }
 
