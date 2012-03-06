@@ -100,6 +100,10 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 
       old_moved.push_back(IntPair(SESMOVE, 0));
 
+    } else if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->nest) {
+
+      old_moved.push_back(IntPair(SESNEST, 0));
+
     } else {
 
       old_moved.push_back(IntPair(SESDELETE, 0));
@@ -119,6 +123,11 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
     if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move) {
 
       new_moved.push_back(IntPair(SESMOVE, 0));
+
+    } else if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->nest) {
+
+      new_moved.push_back(IntPair(SESNEST
+, 0));
 
     } else {
 

@@ -16,6 +16,7 @@
 #define SESDELETE 1
 #define SESCHANGE 2
 #define SESMOVE 3
+#define SESNEST 4
 
 // single edit script
 struct edit {
