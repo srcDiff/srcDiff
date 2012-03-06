@@ -82,8 +82,8 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 }
 
 Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
-                       , reader_state & rbuf_new, NodeSets * node_sets_new
-                       , edit * edit_script, writer_state & wstate) {
+                           , reader_state & rbuf_new, NodeSets * node_sets_new
+                           , edit * edit_script, writer_state & wstate) {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
@@ -127,7 +127,7 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
     } else if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->nest) {
 
       new_moved.push_back(IntPair(SESNEST
-, 0));
+                                  , 0));
 
     } else {
 
@@ -136,7 +136,7 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
       new_sets.push_back(node_sets_new->at(i + edit_next->offset_sequence_two));
 
     }
-    
+
   }
 
   match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, &matches);
@@ -170,8 +170,8 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 }
 
 void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
-                       , reader_state & rbuf_new, NodeSets * node_sets_new
-                       , edit * edit_script, writer_state & wstate) {
+                 , reader_state & rbuf_new, NodeSets * node_sets_new
+                 , edit * edit_script, writer_state & wstate) {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
@@ -200,7 +200,7 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
       ;
 
     // output diffs until match
-  output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
+    output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
                      edits->offset_sequence_one + end_old - 1
                      , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
                      , edit_next->offset_sequence_two + end_new - 1
@@ -212,13 +212,11 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
     if(i >= old_moved.size() || j >= new_moved.size())
       break;
 
+    if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
 
-    if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))
-                    , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two + j)->at(0))) == 0
-       && (xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT) {
-
-      if(ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                                                                , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate)) {
+      if((xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT
+         && (ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
+                                                                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate))) {
 
         output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i
                          , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate);
@@ -230,7 +228,8 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
                                   , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
       }
 
-    } else {
+    } else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
+
 
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
@@ -246,10 +245,15 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
 
       } else {
 
-        // syntax mismatch
-        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
-                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
+        fprintf(stderr, "Nesting Error\n");
+        exit(1);
+
       }
+
+    } else {
+
+      fprintf(stderr, "Mismatched index\n");
+      exit(1);
 
     }
 
