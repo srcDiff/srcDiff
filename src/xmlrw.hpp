@@ -65,6 +65,7 @@ struct xNode {
   bool free;
 
   int move;
+  int nest;
   
 };
 

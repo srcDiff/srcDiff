@@ -121,6 +121,7 @@ xNode * createInternalNode(xmlNode & node) {
 
   xnode->free = false;
   xnode->move = 0;
+  xnode->nest = 0;
 
   return xnode;
 }
@@ -238,6 +239,7 @@ xNode * copyXNode(xNodePtr node) {
 
   xnode->free = true;
   xnode->move = 0;
+  xnode->nest = 0;
 
   return xnode;
 }
@@ -327,6 +329,7 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
   text->is_empty = true;
   text->free = true;
   text->move = 0;
+  text->nest = 0;
 
   return text;
 }

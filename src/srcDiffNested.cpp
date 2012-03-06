@@ -22,6 +22,8 @@ extern xAttr diff_type;
 extern const char * change;
 extern const char * whitespace;
 
+int nest_id = 0;
+
 struct nest_info {
 
   const char * type;
@@ -289,6 +291,16 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
   }
 
   return false;
+}
+
+void set_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
+                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+
+  nodes_one.at(structure_one->at(0))->nest = ++nest_id;
+  nodes_one.at(structure_one->back())->nest = nest_id;
+  nodes_two.at(structure_two->at(0))->nest = nest_id;
+  nodes_two.at(structure_two->back())->nest = nest_id;
+
 }
 
 void output_nested(reader_state & rbuf_old, NodeSet * structure_old
