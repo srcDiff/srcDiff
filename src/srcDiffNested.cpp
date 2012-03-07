@@ -330,7 +330,6 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
                                                                , rbuf_new.nodes.at(structure_new->at(0)));
 
     NodeSets nest_set = create_node_set(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
-                                                               //                                                               , rbuf_new.nodes.at(structure_new->at(0)));
 
     unsigned int match = best_match(rbuf_old.nodes, node_set, rbuf_new.nodes, nest_set.at(0), SESDELETE);
 
@@ -369,7 +368,6 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
                                                                , rbuf_old.nodes.at(structure_old->at(0)));
 
     NodeSets nest_set = create_node_set(rbuf_old.nodes, structure_old->at(0), structure_old->back() + 1);
-                                                               //                                                               , rbuf_old.nodes.at(structure_old->at(0)));
 
     unsigned int match = best_match(rbuf_new.nodes, node_set, rbuf_old.nodes, nest_set.at(0), SESINSERT);
 

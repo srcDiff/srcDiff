@@ -287,7 +287,24 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
              || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
 
-          if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
+        if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
+                        , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0) {
+
+           if(is_same_nestable(node_sets_old->at(edits->offset_sequence_one)
+                         , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)) {
+
+            set_nestable(node_sets_old->at(edits->offset_sequence_one)
+                        , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes);
+
+          } else if(is_same_nestable(node_sets_new->at(edit_next->offset_sequence_two)
+                                , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes)) {
+
+            set_nestable(node_sets_new->at(edit_next->offset_sequence_two)
+                        , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes);
+
+          }
+
+        } else if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
                          , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)) {
 
             set_nestable(node_sets_old->at(edits->offset_sequence_one)
