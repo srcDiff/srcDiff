@@ -263,9 +263,6 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
   if(size_match < min_size)
     min_size = size_match;
 
-  if(size_one == size_match && size_one == match_similarity)
-    return false;
-
   return match_similarity * 10 > max_size * 9 && match_difference * 10 <= min_size && match_difference < difference;
 
 }
