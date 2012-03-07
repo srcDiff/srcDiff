@@ -303,9 +303,21 @@ void set_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
+void clear_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
+                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+
+  nodes_one.at(structure_one->at(0))->nest = 0;
+  nodes_one.at(structure_one->back())->nest = 0;
+  nodes_two.at(structure_two->at(0))->nest = 0;
+  nodes_two.at(structure_two->back())->nest = 0;
+
+}
+
 void output_nested(reader_state & rbuf_old, NodeSet * structure_old
                    , reader_state & rbuf_new ,NodeSet * structure_new
                    , int operation, writer_state & wstate) {
+
+  clear_nestable(structure_old, rbuf_old.nodes, structure_new, rbuf_new.nodes);
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
@@ -338,11 +350,6 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       // collect subset of nodes
       NodeSets next_node_set_old
         = create_node_set(rbuf_old.nodes, end_pos, node_set.back()->back() + 1);
-
-      //NodeSets next_node_set_new
-      //= create_node_set(rbuf_new.nodes,  structure_new->at(0)
-      //                  , structure_new->back() + 1);
-
 
       output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &nest_set, wstate);
 
@@ -380,10 +387,6 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
       // collect subset of nodes
-      //NodeSets next_node_set_old
-      // = create_node_set(rbuf_old.nodes,  structure_old->at(0)
-      //                  , structure_old->back() + 1);
-
       NodeSets next_node_set_new
         = create_node_set(rbuf_new.nodes, end_pos, node_set.back()->back() + 1);
 
