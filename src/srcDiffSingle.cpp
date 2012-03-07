@@ -50,12 +50,6 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
   }
   else {
 
-    if(group_sub_elements(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate)) {
-
-      output_change_white_space(rbuf_old, node_sets_old->at(start_old)->back(), rbuf_new, node_sets_new->at(start_new)->back(), wstate);
-
-    } else {
-
       // collect subset of nodes
       NodeSets next_node_set_old
         = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
@@ -70,7 +64,7 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
       free_node_sets(next_node_set_old);
       free_node_sets(next_node_set_new);
 
-    }
+  }
 
     output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
 
@@ -78,6 +72,5 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
 
     output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
-  }
 
 }
