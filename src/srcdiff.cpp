@@ -122,8 +122,8 @@ const int RECURSIVE_FLAG_CODE = 256 + 9;
 const char* const METHOD_FLAG = "method";
 const int METHOD_FLAG_CODE = 256 + 10;
 
-const char* const THREAD_FLAG = "thread";
-const int THREAD_FLAG_CODE = 256 + 11;
+const char* const NO_THREAD_FLAG = "no-thread";
+const int NO_THREAD_FLAG_CODE = 256 + 11;
 
 const char* const VISUALIZE_FLAG = "visualize";
 const int VISUALIZE_FLAG_CODE = 256 + 12;
@@ -348,7 +348,7 @@ void output_settings(const char * name)
 void output_features(const char * name)
 {}
 
-OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
+OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_THREAD;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -706,7 +706,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
-    { THREAD_FLAG, no_argument, NULL, THREAD_FLAG_CODE },
+    { NO_THREAD_FLAG, no_argument, NULL, NO_THREAD_FLAG_CODE },
     { VISUALIZE_FLAG, optional_argument, NULL, VISUALIZE_FLAG_CODE },
     { SAME_FLAG, no_argument, NULL, SAME_FLAG_CODE },
     { PURE_FLAG, no_argument, NULL, PURE_FLAG_CODE },
@@ -917,9 +917,9 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
-    case THREAD_FLAG_CODE:
+    case NO_THREAD_FLAG_CODE:
 
-      options |= OPTION_THREAD;
+      options &= ~OPTION_THREAD;
 
       break;
 
