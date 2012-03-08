@@ -37,11 +37,11 @@ struct nest_info {
 // may need to change collection algorithm to gather full and nested of same type and match based on that
 // possible is mostly for block and may need to have to test for internal block structure
 
-const char * const block_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", 0 };
-const char * const else_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * const while_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
-const char * const for_nest_types[] = { "expr_stmt", "decl_stmt", 0 };
+const char * const block_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
+const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", "return", 0 };
+const char * const else_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
+const char * const while_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
+const char * const for_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
 const char * const class_nest_types[] = { "decl_stmt", "function_decl", 0 };
 const char * const struct_nest_types[] = { "decl_stmt", "function_decl", 0 };
