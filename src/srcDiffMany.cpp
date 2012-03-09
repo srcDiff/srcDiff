@@ -95,12 +95,14 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
   NodeSets old_sets;
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
+      
+      unsigned int index = edits->offset_sequence_one + i;
 
-    if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->move) {
+    if(rbuf_old.nodes.at(node_sets_old->at(index)->at(0))->move) {
 
       old_moved.push_back(IntPair(SESMOVE, 0));
 
-    } else if(rbuf_old.nodes.at(node_sets_old->at(i)->at(0))->nest) {
+    } else if(rbuf_old.nodes.at(node_sets_old->at(index)->at(0))->nest) {
 
       old_moved.push_back(IntPair(SESNEST, 0));
 
@@ -108,7 +110,7 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 
       old_moved.push_back(IntPair(SESDELETE, 0));
       pos_old.push_back(i);
-      old_sets.push_back(node_sets_old->at(i + edits->offset_sequence_one));
+      old_sets.push_back(node_sets_old->at(index));
 
     }
 
@@ -120,20 +122,21 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
-    if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->move) {
+    unsigned int index = edit_next->offset_sequence_two + i;
+      
+    if(rbuf_new.nodes.at(node_sets_new->at(index)->at(0))->move) {
 
       new_moved.push_back(IntPair(SESMOVE, 0));
 
-    } else if(rbuf_new.nodes.at(node_sets_new->at(i)->at(0))->nest) {
+    } else if(rbuf_new.nodes.at(node_sets_new->at(index)->at(0))->nest) {
 
-      new_moved.push_back(IntPair(SESNEST
-                                  , 0));
+      new_moved.push_back(IntPair(SESNEST, 0));
 
     } else {
 
       new_moved.push_back(IntPair(SESINSERT, 0));
       pos_new.push_back(i);
-      new_sets.push_back(node_sets_new->at(i + edit_next->offset_sequence_two));
+      new_sets.push_back(node_sets_new->at(index));
 
     }
 

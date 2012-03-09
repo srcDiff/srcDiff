@@ -19,7 +19,7 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , reader_state & rbuf_new, NodeSets * node_sets_new
                       , unsigned int start_new
                       , writer_state & wstate) {
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
 
