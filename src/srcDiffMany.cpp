@@ -95,8 +95,8 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
   NodeSets old_sets;
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
-      
-      unsigned int index = edits->offset_sequence_one + i;
+
+    unsigned int index = edits->offset_sequence_one + i;
 
     if(rbuf_old.nodes.at(node_sets_old->at(index)->at(0))->move) {
 
@@ -123,7 +123,7 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
     unsigned int index = edit_next->offset_sequence_two + i;
-      
+
     if(rbuf_new.nodes.at(node_sets_new->at(index)->at(0))->move) {
 
       new_moved.push_back(IntPair(SESMOVE, 0));
@@ -142,7 +142,8 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 
   }
 
-  match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, &matches);
+  if(pos_old.size() != 0 && pos_new.size())
+    match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, &matches);
 
   offset_pair * matches_save = matches;
 
@@ -235,7 +236,7 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
 
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
-        
+
         output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
                       , SESINSERT, wstate);
 
