@@ -451,6 +451,9 @@ void srcDiffTranslator::startUnit(const char * language,
   // list of attributes
   const char* const attrs[][2] = {
 
+    // revision attribute
+    { UNIT_ATTRIBUTE_REVISION,  REVISION },
+
     // language attribute
     { UNIT_ATTRIBUTE_LANGUAGE, language },
 
@@ -462,10 +465,6 @@ void srcDiffTranslator::startUnit(const char * language,
 
     // version attribute
     { UNIT_ATTRIBUTE_VERSION,  (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_VERSION) ? root_version : version },
-
-
-    // revision attribute
-    { UNIT_ATTRIBUTE_REVISION,  REVISION },
 
     // position tab setting
     //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
