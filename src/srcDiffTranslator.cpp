@@ -465,7 +465,7 @@ void srcDiffTranslator::startUnit(const char * language,
 
 
     // revision attribute
-    //    { UNIT_ATTRIBUTE_REVESION,  (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_REVESION) ? root_revision : revision },
+    { UNIT_ATTRIBUTE_REVISION,  REVISION },
 
     // position tab setting
     //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },

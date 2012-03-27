@@ -10,15 +10,17 @@ CUT=/usr/bin/cut
 ifdef DIST
 
 VERSION="\"$(shell cat VERSION)\""
-
+VERSION="\"$(shell cat VERSION)\""
+REVISION="\"$(shell cat REVISION)\""
 else
 
 VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+REVISION="\"$(shell svnversion -n)\""
 
 endif
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -Werror -march=nocona -minline-all-stringops #--g -fno-rtti
+CXXFLAGS = -DVERSION=$(VERSION) -DREVISION=$(REVISION) -O3 -Wall -Werror -march=nocona -minline-all-stringops #--g -fno-rtti
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
