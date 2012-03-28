@@ -500,8 +500,12 @@ void startDocument(void* ctx) {
     data->last_context = span_out;
     data->spanning = true;
 
-    if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size())
+    if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
+
       data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+      data->is_line_output = true;
+
+    }
 
   } else {
 
@@ -666,6 +670,12 @@ void characters(void* ctx, const xmlChar* ch, int len) {
                                                          || blank_class != span_out))
        || srcdiffonly) {
 
+      if(!data->is_line_output) {
+
+        data->is_line_output = true;
+
+      }
+
       if ((char)ch[i] == '&')
         data->colordiff_file << "&amp;";
       else if ((char)ch[i] == '<')
@@ -678,6 +688,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
     }
 
     if((char)ch[i] == '\n') {
+
+      data->is_line_output = false;
 
       if(data->in_diff->back() == SESCOMMON) {
 
@@ -762,6 +774,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
             data->last_context = span_out;
             data->spanning = true;
             data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+            data->is_line_output = true;
 
           } else {
 
@@ -773,6 +786,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
             }
 
             data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+            data->is_line_output = true;
             //data->colordiff_file << "<span " << span_out.c_str() << ">";
             //data->spanning = true;
 

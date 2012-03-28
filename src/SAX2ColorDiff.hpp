@@ -31,7 +31,7 @@ struct source_diff {
   std::string last_context;
   bool spanning;
   bool in_move;
-  bool output_line;
+  bool is_line_output;
 
 };
 
