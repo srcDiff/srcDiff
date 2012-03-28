@@ -509,8 +509,6 @@ void startDocument(void* ctx) {
 
   } else {
 
-    data->colordiff_file << "<span class=\"line\"" << "/>";
-
   }
 
 }
