@@ -490,7 +490,8 @@ void startDocument(void* ctx) {
   static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
     + std::string(diff_color_common) + std::string("\"");
 
-  if(!isoption(data->options, OPTION_CHANGE) || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
+  if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
+     || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
 
     data->colordiff_file << "<span " << span_out.c_str() << ">";
 
@@ -707,7 +708,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
-      if(!isoption(data->options, OPTION_CHANGE) || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
+      if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
+         || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
 
         if(data->spanning) {
 
@@ -731,7 +733,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
               data->colordiff_file << "</span>";
 
               data->spanning  = false;
-
 
             }
 
