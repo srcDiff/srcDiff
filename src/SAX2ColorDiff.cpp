@@ -445,30 +445,39 @@ void startDocument(void* ctx) {
   data->colordiff_file << "<h1>" << file_name << "</h1>\n";
 
   std::string span_class = "class=\"";
-
+  bool is_srcdiff = false;
   if(data->in_diff->back() == SESCOMMON)
     span_class += common_color;
-  else if(data->in_diff->back() == SESDELETE)
+  else {
+
+    if(data->in_diff->back() == SESDELETE)
     span_class += delete_color;
   else
     span_class += insert_color;
 
+    is_srcdiff = true;
+
+  }
+
   span_class += " ";
 
   std::string span_out = span_class;
-
+  bool is_diff = false;
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
     span_out = span_class + diff_color_change;
+    is_diff = true;
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
     span_out = span_class + diff_color_delete;
+    is_diff = true;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
     span_out = span_class + diff_color_insert;
+    is_diff = true;
 
   } else {
 
@@ -481,7 +490,7 @@ void startDocument(void* ctx) {
   static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
     + std::string(diff_color_common) + std::string("\"");
 
-  if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
+  if(!isoption(data->options, OPTION_CHANGE) ||  blank_class != span_out) {
 
     data->colordiff_file << "<span " << span_out.c_str() << ">";
 
