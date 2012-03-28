@@ -491,9 +491,9 @@ void startDocument(void* ctx) {
     + std::string(diff_color_common) + std::string("\"");
 
   bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
-  if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
-     || srcdiffonly
-     || (blank_class != span_out && !isoption(data->options, OPTION_SRCDIFFONLY))) {
+  if((!isoption(data->options, OPTION_SRCDIFFONLY) && (!isoption(data->options, OPTION_CHANGE)
+                                                       || blank_class != span_out))
+     || srcdiffonly) {
 
     data->colordiff_file << "<span " << span_out.c_str() << ">";
 
@@ -661,9 +661,10 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     }
 
-    if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
-       || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff)
-       || (blank_class != span_out && !isoption(data->options, OPTION_SRCDIFFONLY))) {
+    bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+    if((!isoption(data->options, OPTION_SRCDIFFONLY) && (!isoption(data->options, OPTION_CHANGE)
+                                                         || blank_class != span_out))
+       || srcdiffonly) {
 
       if ((char)ch[i] == '&')
         data->colordiff_file << "&amp;";
@@ -727,9 +728,10 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
-      if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
-         || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff)
-         || (blank_class != span_out && !isoption(data->options, OPTION_SRCDIFFONLY))) {
+      bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+      if((!isoption(data->options, OPTION_SRCDIFFONLY) && (!isoption(data->options, OPTION_CHANGE)
+                                                           || blank_class != span_out))
+         || srcdiffonly) {
 
         if(data->spanning) {
 
