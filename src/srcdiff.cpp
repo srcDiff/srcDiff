@@ -140,6 +140,9 @@ const int CHANGE_FLAG_CODE = 256 + 15;
 const char* const SRCDIFFONLY_FLAG = "srcdiff-only";
 const int SRCDIFFONLY_FLAG_CODE = 256 + 16;
 
+const char* const DIFFONLY_FLAG = "diff-only";
+const int DIFFONLY_FLAG_CODE = 256 + 17;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -715,6 +718,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { PURE_FLAG, no_argument, NULL, PURE_FLAG_CODE },
     { CHANGE_FLAG, no_argument, NULL, CHANGE_FLAG_CODE },
     { SRCDIFFONLY_FLAG, no_argument, NULL, SRCDIFFONLY_FLAG_CODE },
+    { DIFFONLY_FLAG, no_argument, NULL, DIFFONLY_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -958,6 +962,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case SRCDIFFONLY_FLAG_CODE:
 
       options |= OPTION_SRCDIFFONLY;
+
+      break;
+
+    case DIFFONLY_FLAG_CODE:
+
+      options |= OPTION_DIFFONLY;
 
       break;
 

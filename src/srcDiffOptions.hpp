@@ -21,5 +21,8 @@ const OPTION_TYPE OPTION_CHANGE  = ull(1) << 44;
 // @srcdiff
 const OPTION_TYPE OPTION_SRCDIFFONLY  = ull(1) << 45;
 
+// @srcdiff
+const OPTION_TYPE OPTION_DIFFONLY  = ull(1) << 46;
+
 #endif
 
