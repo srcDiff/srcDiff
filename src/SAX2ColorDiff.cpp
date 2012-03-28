@@ -451,9 +451,9 @@ void startDocument(void* ctx) {
   else {
 
     if(data->in_diff->back() == SESDELETE)
-    span_class += delete_color;
-  else
-    span_class += insert_color;
+      span_class += delete_color;
+    else
+      span_class += insert_color;
 
     is_srcdiff = true;
 
@@ -578,12 +578,19 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   std::string span_class = "class=\"";
 
+  bool is_srcdiff = false;
   if(data->in_diff->back() == SESCOMMON)
     span_class += common_color;
-  else if(data->in_diff->back() == SESDELETE)
-    span_class += delete_color;
-  else
-    span_class += insert_color;
+  else {
+
+    if(data->in_diff->back() == SESDELETE)
+      span_class += delete_color;
+    else
+      span_class += insert_color;
+
+    is_srcdiff = true;
+
+  }
 
   span_class += " ";
 
@@ -667,18 +674,22 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       std::string span_out = span_class;
 
+      bool is_diff = false;
       if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
          && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
         span_out = span_class + diff_color_change;
+        is_diff = true;
 
       } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
         span_out = span_class + diff_color_delete;
+        is_diff = true;
 
       } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
         span_out = span_class + diff_color_insert;
+        is_diff = true;
 
       } else {
 
@@ -696,7 +707,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
-      if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
+      if(!isoption(data->options, OPTION_CHANGE) || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
 
         if(data->spanning) {
 
@@ -719,7 +730,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
               data->colordiff_file << "</span>";
 
-             data->spanning  = false;
+              data->spanning  = false;
 
 
             }
@@ -754,12 +765,16 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     if(data->in_diff->back() == SESCOMMON)
       span_class += common_color;
-    else if(data->in_diff->back() == SESDELETE)
-      span_class += delete_color;
-    else
-      span_class += insert_color;
+    else {
 
-    span_class += " ";
+      if(data->in_diff->back() == SESDELETE)
+        span_class += delete_color;
+      else
+        span_class += insert_color;
+
+      is_srcdiff = true;
+
+    }
 
   }
 
