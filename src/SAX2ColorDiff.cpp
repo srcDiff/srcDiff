@@ -672,6 +672,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       if(!data->is_line_output) {
 
+        data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
         data->is_line_output = true;
 
       }
