@@ -682,8 +682,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     if((char)ch[i] == '\n') {
 
-      data->is_line_output = false;
-
       if(data->in_diff->back() == SESCOMMON) {
 
         ++data->line_old;
@@ -751,6 +749,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
         data->colordiff_file << "<span class=\"" << normal_color << "\">";
         data->colordiff_file << (char)'\n';
+        data->is_line_output = false;
+
         data->colordiff_file << "</span>";
 
         if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
