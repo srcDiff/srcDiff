@@ -606,6 +606,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
     span_out = span_class + diff_color_change;
+    is_diff = true;
 
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
@@ -620,7 +621,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   } else {
 
     span_out = span_class + diff_color_common;
-    is_diff = true;
 
   }
 
@@ -691,7 +691,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
         ++data->line_new;
 
       }
-
 
       std::string span_out = span_class;
 
