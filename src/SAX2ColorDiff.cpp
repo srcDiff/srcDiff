@@ -808,6 +808,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
     }
 
+    span_class += " ";
+
   }
 
 }
