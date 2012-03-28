@@ -491,6 +491,7 @@ void startDocument(void* ctx) {
     + std::string(diff_color_common) + std::string("\"");
 
   bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+  bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
   if((!isoption(data->options, OPTION_SRCDIFFONLY) && (!isoption(data->options, OPTION_CHANGE)
                                                        || blank_class != span_out))
      || srcdiffonly) {
@@ -652,6 +653,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   for (int i = 0; i < len; ++i) {
 
     bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+    bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
     if((!isoption(data->options, OPTION_SRCDIFFONLY) && (!isoption(data->options, OPTION_CHANGE)
                                                          || blank_class != span_out))
        || srcdiffonly) {
@@ -727,6 +729,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       // clear color before output line
       bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+      bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
       if((!isoption(data->options, OPTION_SRCDIFFONLY) && (!isoption(data->options, OPTION_CHANGE)
                                                            || blank_class != span_out))
          || srcdiffonly) {
