@@ -492,101 +492,309 @@ void startDocument(void* ctx) {
 
   bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
   bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
-  if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY)
-       && (!isoption(data->options, OPTION_CHANGE)
-           || blank_class != span_out))
-      || srcdiffonly
-      || diffonly) {
+  if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY))
+      && (!isoption(data->options, OPTION_CHANGE)
+          || blank_class != span_out))
+     || srcdiffonly
+     || diffonly) {
 
-       data->colordiff_file << "<span " << span_out.c_str() << ">";
+    data->colordiff_file << "<span " << span_out.c_str() << ">";
 
-       data->last_context = span_out;
-       data->spanning = true;
+    data->last_context = span_out;
+    data->spanning = true;
 
-       if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
+    if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
 
-         data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
-         data->is_line_output = true;
+      data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+      data->is_line_output = true;
 
-       }
+    }
 
-     } else {
+  } else {
 
-     }
+  }
 
-     }
+}
 
-  void endDocument(void* ctx) {
+void endDocument(void* ctx) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-    struct source_diff * data = (source_diff *)ctxt->_private;
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  struct source_diff * data = (source_diff *)ctxt->_private;
 
-    //fprintf(stderr, "%s\n\n", __FUNCTION__);
+  //fprintf(stderr, "%s\n\n", __FUNCTION__);
+
+  if(data->spanning) {
+
+    data->colordiff_file << "</span>";
+
+    data->spanning = false;
+  }
+  data->colordiff_file << "</div>\n";
+}
+
+void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar** attributes) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  struct source_diff * data = (source_diff *)ctxt->_private;
+
+  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+
+    if(strcmp((const char *)localname, "common") == 0)
+      data->in_diff->push_back(SESCOMMON);
+    else if(strcmp((const char *)localname, "delete") == 0)
+      data->in_diff->push_back(SESDELETE);
+    else if(strcmp((const char *)localname, "insert") == 0)
+      data->in_diff->push_back(SESINSERT);
+
+    if(nb_attributes && strcmp((const char *)attributes[0], "move") == 0) {
+
+      data->in_move = true;
+
+    }
+  }
+
+}
+
+void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  struct source_diff * data = (source_diff *)ctxt->_private;
+
+  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+
+    if(strcmp((const char *)localname, "common") == 0
+       || strcmp((const char *)localname, "delete") == 0
+       || strcmp((const char *)localname, "insert") == 0)
+      data->in_diff->pop_back();
+
+    data->in_move = false;
+
+  }
+
+}
+
+
+void characters(void* ctx, const xmlChar* ch, int len) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
+  struct source_diff * data = (source_diff *)ctxt->_private;
+
+  static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
+    + std::string(diff_color_common) + std::string("\"");
+
+  std::string span_class = "class=\"";
+
+  bool is_srcdiff = false;
+  if(data->in_diff->back() == SESCOMMON)
+    span_class += common_color;
+  else {
+
+    if(data->in_diff->back() == SESDELETE)
+      span_class += delete_color;
+    else
+      span_class += insert_color;
+
+    is_srcdiff = true;
+
+  }
+
+  span_class += " ";
+
+  std::string span_out = span_class;
+
+  bool is_diff = false;
+  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
+     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+
+    span_out = span_class + diff_color_change;
+    is_diff = true;
+
+  } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+
+    span_out = span_class + diff_color_delete;
+    is_diff = true;
+
+  } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+
+    span_out = span_class + diff_color_insert;
+    is_diff = true;
+
+  } else {
+
+    span_out = span_class + diff_color_common;
+
+  }
+
+  if(data->in_move) {
+
+    span_out += " ";
+    span_out += move;
+
+  }
+
+  span_out += "\"";
+
+  if(span_out != data->last_context) {
 
     if(data->spanning) {
 
       data->colordiff_file << "</span>";
-
       data->spanning = false;
+
     }
-    data->colordiff_file << "</div>\n";
+
+    data->colordiff_file << "<span " << span_out.c_str() << ">";
+    data->spanning = true;
+
+    data->last_context = span_out;
+
   }
 
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                      int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                      const xmlChar** attributes) {
+  for (int i = 0; i < len; ++i) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-    struct source_diff * data = (source_diff *)ctxt->_private;
+    bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+    bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
+    if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY))
+        && (!isoption(data->options, OPTION_CHANGE)
+            || blank_class != span_out))
+       || srcdiffonly
+       || diffonly) {
 
-    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+      if(!data->is_line_output) {
 
-      if(strcmp((const char *)localname, "common") == 0)
-        data->in_diff->push_back(SESCOMMON);
-      else if(strcmp((const char *)localname, "delete") == 0)
-        data->in_diff->push_back(SESDELETE);
-      else if(strcmp((const char *)localname, "insert") == 0)
-        data->in_diff->push_back(SESINSERT);
-
-      if(nb_attributes && strcmp((const char *)attributes[0], "move") == 0) {
-
-        data->in_move = true;
+        data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+        data->is_line_output = true;
 
       }
-    }
 
-  }
-
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-    struct source_diff * data = (source_diff *)ctxt->_private;
-
-    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
-
-      if(strcmp((const char *)localname, "common") == 0
-         || strcmp((const char *)localname, "delete") == 0
-         || strcmp((const char *)localname, "insert") == 0)
-        data->in_diff->pop_back();
-
-      data->in_move = false;
+      if ((char)ch[i] == '&')
+        data->colordiff_file << "&amp;";
+      else if ((char)ch[i] == '<')
+        data->colordiff_file << "&lt;";
+      else if ((char)ch[i] == '>')
+        data->colordiff_file << "&gt;";
+      else if((char)ch[i] != '\n')
+        data->colordiff_file << (char)ch[i];
 
     }
 
-  }
+    if((char)ch[i] == '\n') {
+
+      data->is_line_output = false;
+
+      if(data->in_diff->back() == SESCOMMON) {
+
+        ++data->line_old;
+        ++data->line_new;
+
+      } else if(data->in_diff->back() == SESDELETE) {
+
+        ++data->line_old;
+
+      } else {
+        ++data->line_new;
+
+      }
+
+      std::string span_out = span_class;
+
+      if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
+         && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+
+        span_out = span_class + diff_color_change;
+        is_diff = true;
+
+      } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+
+        span_out = span_class + diff_color_delete;
+        is_diff = true;
+
+      } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+
+        span_out = span_class + diff_color_insert;
+        is_diff = true;
+
+      } else {
+
+        span_out = span_class + diff_color_common;
+
+      }
+
+      if(data->in_move) {
+
+        span_out += " ";
+        span_out += move;
+
+      }
+
+      span_out += "\"";
+
+      // clear color before output line
+      bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+      bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
+      if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY))
+          && (!isoption(data->options, OPTION_CHANGE)
+              || blank_class != span_out))
+         || srcdiffonly
+         || diffonly) {
+
+        if(data->spanning) {
+
+          //data->colordiff_file << "</span>";
+
+          //data->spanning = false;
 
 
-  void characters(void* ctx, const xmlChar* ch, int len) {
+        }
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-    struct source_diff * data = (source_diff *)ctxt->_private;
+        data->colordiff_file << "<span class=\"" << normal_color << "\">";
+        data->colordiff_file << (char)'\n';
+        data->colordiff_file << "</span>";
 
-    static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
-      + std::string(diff_color_common) + std::string("\"");
+        if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
 
-    std::string span_class = "class=\"";
+          if(data->last_context != span_out) {
 
-    bool is_srcdiff = false;
+            if(data->spanning) {
+
+              data->colordiff_file << "</span>";
+
+              data->spanning  = false;
+
+            }
+
+            data->colordiff_file << "<span " << span_out.c_str() << ">";
+            data->last_context = span_out;
+            data->spanning = true;
+            data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+            data->is_line_output = true;
+
+          } else {
+
+            if(data->spanning) {
+
+              //data->colordiff_file << "</span>";
+
+              //data->spanning = false;
+            }
+
+            data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+            data->is_line_output = true;
+            //data->colordiff_file << "<span " << span_out.c_str() << ">";
+            //data->spanning = true;
+
+          }
+
+        }
+
+      }
+
+    }
+
+    span_class = "class=\"";
+
     if(data->in_diff->back() == SESCOMMON)
       span_class += common_color;
     else {
@@ -600,220 +808,12 @@ void startDocument(void* ctx) {
 
     }
 
-    span_class += " ";
+  }
 
-    std::string span_out = span_class;
+}
 
-    bool is_diff = false;
-    if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-       && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+void comments(void* ctx, const xmlChar* ch) {
 
-      span_out = span_class + diff_color_change;
-      is_diff = true;
-
-    } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
-
-      span_out = span_class + diff_color_delete;
-      is_diff = true;
-
-    } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
-
-      span_out = span_class + diff_color_insert;
-      is_diff = true;
-
-    } else {
-
-      span_out = span_class + diff_color_common;
-
-    }
-
-    if(data->in_move) {
-
-      span_out += " ";
-      span_out += move;
-
-    }
-
-    span_out += "\"";
-
-    if(span_out != data->last_context) {
-
-      if(data->spanning) {
-
-        data->colordiff_file << "</span>";
-        data->spanning = false;
-
-      }
-
-      data->colordiff_file << "<span " << span_out.c_str() << ">";
-      data->spanning = true;
-
-      data->last_context = span_out;
-
-    }
-
-    for (int i = 0; i < len; ++i) {
-
-      bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
-      bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
-      if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY)
-           && (!isoption(data->options, OPTION_CHANGE)
-               || blank_class != span_out))
-          || srcdiffonly
-          || diffonly) {
-
-           if(!data->is_line_output) {
-
-             data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
-             data->is_line_output = true;
-
-           }
-
-           if ((char)ch[i] == '&')
-             data->colordiff_file << "&amp;";
-           else if ((char)ch[i] == '<')
-             data->colordiff_file << "&lt;";
-           else if ((char)ch[i] == '>')
-             data->colordiff_file << "&gt;";
-           else if((char)ch[i] != '\n')
-             data->colordiff_file << (char)ch[i];
-
-         }
-
-         if((char)ch[i] == '\n') {
-
-           data->is_line_output = false;
-
-           if(data->in_diff->back() == SESCOMMON) {
-
-             ++data->line_old;
-             ++data->line_new;
-
-           } else if(data->in_diff->back() == SESDELETE) {
-
-             ++data->line_old;
-
-           } else {
-             ++data->line_new;
-
-           }
-
-           std::string span_out = span_class;
-
-           if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-              && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
-
-             span_out = span_class + diff_color_change;
-             is_diff = true;
-
-           } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
-
-             span_out = span_class + diff_color_delete;
-             is_diff = true;
-
-           } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
-
-             span_out = span_class + diff_color_insert;
-             is_diff = true;
-
-           } else {
-
-             span_out = span_class + diff_color_common;
-
-           }
-
-           if(data->in_move) {
-
-             span_out += " ";
-             span_out += move;
-
-           }
-
-           span_out += "\"";
-
-           // clear color before output line
-           bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
-           bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
-           if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY)
-                && (!isoption(data->options, OPTION_CHANGE)
-                    || blank_class != span_out))
-               || srcdiffonly
-               || diffonly) {
-
-                if(data->spanning) {
-
-                  //data->colordiff_file << "</span>";
-
-                  //data->spanning = false;
-
-
-                }
-
-                data->colordiff_file << "<span class=\"" << normal_color << "\">";
-                data->colordiff_file << (char)'\n';
-                data->colordiff_file << "</span>";
-
-                if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
-
-                  if(data->last_context != span_out) {
-
-                    if(data->spanning) {
-
-                      data->colordiff_file << "</span>";
-
-                      data->spanning  = false;
-
-                    }
-
-                    data->colordiff_file << "<span " << span_out.c_str() << ">";
-                    data->last_context = span_out;
-                    data->spanning = true;
-                    data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
-                    data->is_line_output = true;
-
-                  } else {
-
-                    if(data->spanning) {
-
-                      //data->colordiff_file << "</span>";
-
-                      //data->spanning = false;
-                    }
-
-                    data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
-                    data->is_line_output = true;
-                    //data->colordiff_file << "<span " << span_out.c_str() << ">";
-                    //data->spanning = true;
-
-                  }
-
-                }
-
-              }
-
-              }
-
-           span_class = "class=\"";
-
-           if(data->in_diff->back() == SESCOMMON)
-             span_class += common_color;
-           else {
-
-             if(data->in_diff->back() == SESDELETE)
-               span_class += delete_color;
-             else
-               span_class += insert_color;
-
-             is_srcdiff = true;
-
-           }
-
-         }
-
-         }
-
-      void comments(void* ctx, const xmlChar* ch) {
-
-        // fprintf(stderr, "%s\n\n", __FUNCTION__);
-      }
+  // fprintf(stderr, "%s\n\n", __FUNCTION__);
+}
 
