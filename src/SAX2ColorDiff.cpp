@@ -490,8 +490,10 @@ void startDocument(void* ctx) {
   static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
     + std::string(diff_color_common) + std::string("\"");
 
+  bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
   if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
-     || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
+     || srcdiffonly
+     || (blank_class != span_out && !isoption(data->options, OPTION_SRCDIFFONLY))) {
 
     data->colordiff_file << "<span " << span_out.c_str() << ">";
 
@@ -643,7 +645,25 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   for (int i = 0; i < len; ++i) {
 
-    if(!isoption(data->options, OPTION_CHANGE) || blank_class != span_out) {
+    bool is_diff = false;
+    if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
+       && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+
+      is_diff = true;
+
+    } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+
+      is_diff = true;
+
+    } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+
+      is_diff = true;
+
+    }
+
+    if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
+       || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff)
+       || (blank_class != span_out && !isoption(data->options, OPTION_SRCDIFFONLY))) {
 
       if ((char)ch[i] == '&')
         data->colordiff_file << "&amp;";
@@ -675,7 +695,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       std::string span_out = span_class;
 
-      bool is_diff = false;
       if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
          && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
@@ -709,7 +728,8 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
       // clear color before output line
       if((!isoption(data->options, OPTION_CHANGE) && !isoption(data->options, OPTION_SRCDIFFONLY))
-         || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
+         || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff)
+         || (blank_class != span_out && !isoption(data->options, OPTION_SRCDIFFONLY))) {
 
         if(data->spanning) {
 
