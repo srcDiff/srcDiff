@@ -490,7 +490,7 @@ void startDocument(void* ctx) {
   static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
     + std::string(diff_color_common) + std::string("\"");
 
-  if(!isoption(data->options, OPTION_CHANGE) ||  blank_class != span_out) {
+  if(!isoption(data->options, OPTION_CHANGE) || (isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff &&  !is_diff) || blank_class != span_out) {
 
     data->colordiff_file << "<span " << span_out.c_str() << ">";
 
