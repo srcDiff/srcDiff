@@ -601,6 +601,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
   std::string span_out = span_class;
 
+  bool is_diff = false;
   if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
      && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
 
@@ -609,14 +610,17 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
 
     span_out = span_class + diff_color_delete;
+    is_diff = true;
 
   } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
 
     span_out = span_class + diff_color_insert;
+    is_diff = true;
 
   } else {
 
     span_out = span_class + diff_color_common;
+    is_diff = true;
 
   }
 
@@ -646,22 +650,6 @@ void characters(void* ctx, const xmlChar* ch, int len) {
   }
 
   for (int i = 0; i < len; ++i) {
-
-    bool is_diff = false;
-    if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-       && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
-
-      is_diff = true;
-
-    } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
-
-      is_diff = true;
-
-    } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
-
-      is_diff = true;
-
-    }
 
     bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
     if((!isoption(data->options, OPTION_SRCDIFFONLY) && (!isoption(data->options, OPTION_CHANGE)
