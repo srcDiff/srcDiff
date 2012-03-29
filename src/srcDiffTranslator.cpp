@@ -452,7 +452,7 @@ void srcDiffTranslator::startUnit(const char * language,
   const char* const attrs[][2] = {
 
     // revision attribute
-    { UNIT_ATTRIBUTE_REVISION,  isoption(options, OPTION_REVISION) ? srcml_version(), 0 },
+    { UNIT_ATTRIBUTE_REVISION,  isoption(options, OPTION_REVISION) ? srcml_version() : 0 },
 
     // language attribute
     { UNIT_ATTRIBUTE_LANGUAGE, language },
