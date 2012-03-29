@@ -119,29 +119,32 @@ const int OLD_FILENAME_FLAG_CODE = 256 + 8;
 const char* const RECURSIVE_FLAG = "recursive";
 const int RECURSIVE_FLAG_CODE = 256 + 9;
 
+const char* const REVISION_FLAG = "revision";
+const int REVISION_FLAG_CODE = 256 + 10;
+
 const char* const METHOD_FLAG = "method";
-const int METHOD_FLAG_CODE = 256 + 10;
+const int METHOD_FLAG_CODE = 256 + 11;
 
 const char* const NO_THREAD_FLAG = "no-thread";
-const int NO_THREAD_FLAG_CODE = 256 + 11;
+const int NO_THREAD_FLAG_CODE = 256 + 12;
 
 const char* const VISUALIZE_FLAG = "visualize";
-const int VISUALIZE_FLAG_CODE = 256 + 12;
+const int VISUALIZE_FLAG_CODE = 256 + 13;
 
 const char* const SAME_FLAG = "view-same";
-const int SAME_FLAG_CODE = 256 + 13;
+const int SAME_FLAG_CODE = 256 + 14;
 
 const char* const PURE_FLAG = "view-pure";
-const int PURE_FLAG_CODE = 256 + 14;
+const int PURE_FLAG_CODE = 256 + 15;
 
 const char* const CHANGE_FLAG = "view-change";
-const int CHANGE_FLAG_CODE = 256 + 15;
+const int CHANGE_FLAG_CODE = 256 + 16;
 
 const char* const SRCDIFFONLY_FLAG = "srcdiff-only";
-const int SRCDIFFONLY_FLAG_CODE = 256 + 16;
+const int SRCDIFFONLY_FLAG_CODE = 256 + 17;
 
 const char* const DIFFONLY_FLAG = "diff-only";
-const int DIFFONLY_FLAG_CODE = 256 + 17;
+const int DIFFONLY_FLAG_CODE = 256 + 18;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
