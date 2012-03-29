@@ -709,6 +709,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
+    { REVISION_FLAG, no_argument, NULL, REVISION_FLAG_CODE },
     { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
     { NO_THREAD_FLAG, no_argument, NULL, NO_THREAD_FLAG_CODE },
     { VISUALIZE_FLAG, optional_argument, NULL, VISUALIZE_FLAG_CODE },
@@ -912,6 +913,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case RECURSIVE_FLAG_CODE:
       options |= OPTION_RECURSIVE;
+      break;
+
+    case REVISION_FLAG_CODE:
+      options |= OPTION_REVISION;
       break;
 
     case METHOD_FLAG_CODE:
