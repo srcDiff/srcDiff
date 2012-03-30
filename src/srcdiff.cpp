@@ -131,13 +131,13 @@ const int NO_THREAD_FLAG_CODE = 256 + 12;
 const char* const VISUALIZE_FLAG = "visualize";
 const int VISUALIZE_FLAG_CODE = 256 + 13;
 
-const char* const SAME_FLAG = "view-same";
+const char* const SAME_FLAG = "same";
 const int SAME_FLAG_CODE = 256 + 14;
 
-const char* const PURE_FLAG = "view-pure";
+const char* const PURE_FLAG = "pure";
 const int PURE_FLAG_CODE = 256 + 15;
 
-const char* const CHANGE_FLAG = "view-change";
+const char* const CHANGE_FLAG = "change";
 const int CHANGE_FLAG_CODE = 256 + 16;
 
 const char* const SRCDIFFONLY_FLAG = "srcdiff-only";
