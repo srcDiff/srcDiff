@@ -341,28 +341,25 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   }
 
-  Language l(language);
-  startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version);
-
-  first = false;
 
   // run on file level
   if(is_old || is_new) {
+
+    Language l(language);
+    startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version);
+
+    first = false;
+
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
     // output remaining whitespace
     output_white_space_all(rbuf_old, rbuf_new, wstate);
-
-  }
 
   // output srcdiff unit ending tag
   //if(is_old && is_new)
   //output_node(rbuf_old, rbuf_new, unit_end, SESCOMMON, wstate);
 
   output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
-
-  free_node_sets(node_set_old);
-  free_node_sets(node_set_new);
 
   // }
 
@@ -372,6 +369,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
 
   }
+
+  }
+
+  free_node_sets(node_set_old);
+  free_node_sets(node_set_new);
 
   if(unit_old && unit_old->free)
     freeXNode(unit_old);
@@ -424,11 +426,15 @@ srcDiffTranslator::~srcDiffTranslator() {
 
   if(!isoption(global_options, OPTION_VISUALIZE)) {
 
-  xmlTextWriterEndElement(wstate.writer);
+    if(!first) {
 
-  // cleanup writer
-  xmlTextWriterEndDocument(wstate.writer);
-  xmlFreeTextWriter(wstate.writer);
+      xmlTextWriterEndElement(wstate.writer);
+
+      // cleanup writer
+      xmlTextWriterEndDocument(wstate.writer);
+      xmlFreeTextWriter(wstate.writer);
+
+    }
 
   } else {
 
