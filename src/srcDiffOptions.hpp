@@ -24,5 +24,8 @@ const OPTION_TYPE OPTION_SRCDIFFONLY  = ull(1) << 46;
 // @srcdiff
 const OPTION_TYPE OPTION_DIFFONLY  = ull(1) << 47;
 
+// @srcdiff
+const OPTION_TYPE OPTION_FILE_CHANGE  = ull(1) << 48;
+
 #endif
 
