@@ -347,11 +347,13 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   first = false;
 
   // run on file level
-  if(is_old || is_new)
+  if(is_old || is_new) {
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
-  // output remaining whitespace
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
+    // output remaining whitespace
+    output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+  }
 
   // output srcdiff unit ending tag
   //if(is_old && is_new)
