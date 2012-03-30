@@ -315,11 +315,25 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   } else if(rbuf_old.nodes.empty()) {
 
+    if(isoption(global_options, OPTION_OUTPUTPURE)) {
+
+      is_old = 0;
+      is_new = 0;
+
+    }
+
     update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
     update_diff_stack(rbuf_new.open_diff, unit_new, SESCOMMON);
     update_diff_stack(wstate.output_diff, unit_new, SESCOMMON);
 
   } else {
+
+   if(isoption(global_options, OPTION_OUTPUTPURE)) {
+
+      is_old = 0;
+      is_new = 0;
+
+    }
 
     update_diff_stack(rbuf_old.open_diff, unit_old, SESCOMMON);
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
