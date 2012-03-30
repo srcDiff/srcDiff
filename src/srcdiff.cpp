@@ -959,6 +959,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case CHANGE_FLAG_CODE:
 
       options |= OPTION_CHANGE;
+      options &= ~OPTION_OUTPUTSAME;
+      options &= ~OPTION_OUTPUTPURE;
 
       break;
 
