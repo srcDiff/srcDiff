@@ -315,7 +315,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   } else if(rbuf_old.nodes.empty()) {
 
-    if(isoption(global_options, OPTION_OUTPUTPURE)) {
+    if(!isoption(global_options, OPTION_OUTPUTPURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -328,7 +328,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   } else {
 
-   if(isoption(global_options, OPTION_OUTPUTPURE)) {
+   if(!isoption(global_options, OPTION_OUTPUTPURE)) {
 
       is_old = 0;
       is_new = 0;
