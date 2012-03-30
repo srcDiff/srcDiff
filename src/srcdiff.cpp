@@ -357,7 +357,7 @@ void output_settings(const char * name)
 void output_features(const char * name)
 {}
 
-OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_THREAD;
+OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_THREAD | OPTION_OUTPUTSAME;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);

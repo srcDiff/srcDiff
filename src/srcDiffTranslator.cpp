@@ -146,9 +146,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   LineDiffRange line_diff_range(path_one, path_two);
 
- if(isoption(global_options, OPTION_VISUALIZE)) {
-
   line_diff_range.create_line_diff();
+
+  if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
+     return;
+
+ if(isoption(global_options, OPTION_VISUALIZE)) {
 
   if(!line_diff_range.is_no_white_space_diff())
     return;
