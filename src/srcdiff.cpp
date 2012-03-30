@@ -725,6 +725,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { CHANGE_FLAG, no_argument, NULL, CHANGE_FLAG_CODE },
     { SRCDIFFONLY_FLAG, no_argument, NULL, SRCDIFFONLY_FLAG_CODE },
     { DIFFONLY_FLAG, no_argument, NULL, DIFFONLY_FLAG_CODE },
+    { NO_SAME_FLAG, no_argument, NULL, NO_SAME_FLAG_CODE },
+    { NO_PURE_FLAG, no_argument, NULL, NO_PURE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -953,13 +955,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case SAME_FLAG_CODE:
 
-      options &= ~OPTION_OUTPUTSAME;
+      options |= OPTION_OUTPUTSAME;
 
       break;
 
     case PURE_FLAG_CODE:
 
-      options &= ~OPTION_OUTPUTPURE;
+      options |= OPTION_OUTPUTPURE;
 
       break;
 
@@ -980,6 +982,18 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case DIFFONLY_FLAG_CODE:
 
       options |= OPTION_DIFFONLY;
+
+      break;
+
+    case NO_SAME_FLAG_CODE:
+
+      options &= ~OPTION_OUTPUTSAME;
+
+      break;
+
+    case NO_PURE_FLAG_CODE:
+
+      options &= ~OPTION_OUTPUTPURE;
 
       break;
 
