@@ -131,10 +131,10 @@ const int NO_THREAD_FLAG_CODE = 256 + 12;
 const char* const VISUALIZE_FLAG = "visualize";
 const int VISUALIZE_FLAG_CODE = 256 + 13;
 
-const char* const SAME_FLAG = "no-same";
+const char* const SAME_FLAG = "same";
 const int SAME_FLAG_CODE = 256 + 14;
 
-const char* const PURE_FLAG = "no-pure";
+const char* const PURE_FLAG = "pure";
 const int PURE_FLAG_CODE = 256 + 15;
 
 const char* const CHANGE_FLAG = "change";
@@ -145,6 +145,13 @@ const int SRCDIFFONLY_FLAG_CODE = 256 + 17;
 
 const char* const DIFFONLY_FLAG = "diff-only";
 const int DIFFONLY_FLAG_CODE = 256 + 18;
+
+const char* const NO_SAME_FLAG = "no-same";
+const int NO_SAME_FLAG_CODE = 256 + 19;
+
+const char* const NO_PURE_FLAG = "no-pure";
+const int NO_PURE_FLAG_CODE = 256 + 20;
+
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
