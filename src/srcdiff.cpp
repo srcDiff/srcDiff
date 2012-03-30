@@ -131,10 +131,10 @@ const int NO_THREAD_FLAG_CODE = 256 + 12;
 const char* const VISUALIZE_FLAG = "visualize";
 const int VISUALIZE_FLAG_CODE = 256 + 13;
 
-const char* const SAME_FLAG = "same";
+const char* const SAME_FLAG = "no-same";
 const int SAME_FLAG_CODE = 256 + 14;
 
-const char* const PURE_FLAG = "pure";
+const char* const PURE_FLAG = "no-pure";
 const int PURE_FLAG_CODE = 256 + 15;
 
 const char* const CHANGE_FLAG = "change";
@@ -946,13 +946,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case SAME_FLAG_CODE:
 
-      options |= OPTION_OUTPUTSAME;
+      options &= ~OPTION_OUTPUTSAME;
 
       break;
 
     case PURE_FLAG_CODE:
 
-      options |= OPTION_OUTPUTPURE;
+      options &= ~OPTION_OUTPUTPURE;
 
       break;
 
