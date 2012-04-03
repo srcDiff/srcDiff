@@ -146,7 +146,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
 }
 
 void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int & position, int operation, writer_state & wstate) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   // store current diff if is any
 
   reader_state * rbuf = &rbuf_old;
@@ -206,5 +206,5 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
   free(buffer);
 
   // output saved diff if is any
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
