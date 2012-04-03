@@ -119,17 +119,21 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
         xNode * start_node_two = copyXNode(rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->at(0)));
         start_node_two->move = move_id;
 
-        xNode * end_node_one = copyXNode(rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->back()));
-        end_node_one->move = move_id;
-
-        xNode * end_node_two = copyXNode(rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->back()));
-        end_node_two->move = move_id;
-
         rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->at(0)) = start_node_one;
         rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->at(0)) = start_node_two;
 
-        rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->back()) = end_node_one;
-        rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->back()) = end_node_two;
+        if(!start_node_one->is_empty) {
+
+          xNode * end_node_one = copyXNode(rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->back()));
+          end_node_one->move = move_id;
+
+          xNode * end_node_two = copyXNode(rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->back()));
+          end_node_two->move = move_id;
+
+          rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->back()) = end_node_one;
+          rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->back()) = end_node_two;
+
+        }
 
         break;
 
@@ -183,12 +187,17 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
   output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
   ++position;
 
-  for(; rbuf->nodes.at(position)->move != id; ++position) {
+  if(!rbuf->nodes.at(position)->is_empty) {
+
+    for(; rbuf->nodes.at(position)->move != id; ++position) {
+
+      output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
+
+    }
 
     output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
 
   }
-  output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
 
   output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
 
