@@ -255,7 +255,7 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
 
     } else {
 
-      fprintf(stderr, "Mismatched index\n");
+      fprintf(stderr, "Mismatched index: %d-%d\n", old_moved.at(i).first, new_moved.at(j).first);
       exit(1);
 
     }
