@@ -198,10 +198,10 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
     unsigned int end_new = start_new;
 
     for(; end_old < old_moved.size() && (old_moved.at(end_old).first == SESDELETE || old_moved.at(end_old).first == SESMOVE); ++end_old)
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
+      ;
 
     for(; end_new < new_moved.size() && (new_moved.at(end_new).first == SESINSERT || new_moved.at(end_new).first == SESMOVE); ++end_new)
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, j);;
+      ;
 
     // output diffs until match
     output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
@@ -217,7 +217,7 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
       break;
 
     if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+ 
       if((xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT
          && (ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
                                                                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate))) {
@@ -233,7 +233,7 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
       }
 
     } else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+ 
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
 
