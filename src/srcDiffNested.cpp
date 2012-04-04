@@ -270,12 +270,6 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
 bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  if(nodes_one.at(structure_one->at(0))->move)
-    return false;
-
-  if(nodes_two.at(structure_two->at(0))->move)
-    return false;
-
   int block = is_block_type(structure_two, nodes_two);
 
   if(block == -1)
