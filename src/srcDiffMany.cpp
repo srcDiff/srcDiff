@@ -26,7 +26,7 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 
     finish_new = node_sets_new->at(end_new)->back() + 1;
   }
-
+  /*
   NodeSets slice_old;
 
   for(int i = start_old; i <= end_old; ++i) {
@@ -77,6 +77,7 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
     output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(start_new), SESINSERT, wstate);
 
   } else
+  */
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
 
 }
