@@ -284,7 +284,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
       // 1-1
       if(!is_move(node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes)
-         && is_move(node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)
+         && !is_move(node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)
          && edits->length == edit_next->length && edits->length == 1
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
              || node_sets_old->at(edits->offset_sequence_one)->size() > 1)) {
