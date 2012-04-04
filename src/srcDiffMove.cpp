@@ -33,6 +33,12 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
+bool is_move(NodeSet * node_set, std::vector<xNodePtr> nodes) {
+
+  return nodes.at(node_set->at(0))->move;
+
+}
+
 void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
                 , reader_state & rbuf_new, NodeSets * node_sets_new
                 , edit * edit_script, writer_state & wstate) {

@@ -139,7 +139,7 @@ void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int e
 
   }
 
-  if( pthread_join(thread_new, NULL)) {
+  if(pthread_join(thread_new, NULL)) {
 
     exit(1);
 
