@@ -117,8 +117,11 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
           continue;
         */
 
-        ++move_id;
+	if(is_move(node_sets_one->at(elements.at(i).first), rbuf_one->nodes) || is_move(node_sets_two->at(elements.at(j).first), rbuf_two->nodes))
+		   continue;
 
+        ++move_id;
+	fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         xNode * start_node_one = copyXNode(rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->at(0)));
         start_node_one->move = move_id;
 
@@ -154,7 +157,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
 void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int & position, int operation, writer_state & wstate) {
 
   // store current diff if is any
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   reader_state * rbuf = &rbuf_old;
   xNodePtr start_node = &diff_old_start;
   xNodePtr end_node = &diff_old_end;
