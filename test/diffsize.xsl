@@ -16,9 +16,9 @@ Michael L. Collard collard@cs.kent.edu
 
 <xsl:template match="node()"><xsl:apply-templates/></xsl:template>
 
-<xsl:template match="diff:*[not(diff:common)]">
+<xsl:template match="diff:insert | diff:delete">
 
-  <xsl:value-of select="count(.//node()[not(diff:*) and ancestor-or-self::diff:*[1][not(diff:common)]])"/>
+  <xsl:value-of select="count(.//node()[not(self::diff:*) and ancestor::diff:*[1][not(diff:common)]])"/>
 <xsl:text>
 </xsl:text>
 
