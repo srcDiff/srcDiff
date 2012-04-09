@@ -15,9 +15,9 @@ Michael L. Collard collard@cs.kent.edu
 
 <xsl:template match="node()"><xsl:apply-templates/></xsl:template>
 
-<xsl:template match="diff:*">
+<xsl:template match="diff:*[not(diff:common)]">
 
-  <xsl:value-of select="count(.//node())"/>
+  <xsl:value-of select="count(.//node()[not(diff:*) and ancestor-or-self::diff:*[1][not(diff:common)]])"/>
 <xsl:text>
 </xsl:text>
 
