@@ -18,7 +18,7 @@ Michael L. Collard collard@cs.kent.edu
 
 <xsl:template match="diff:insert | diff:delete">
 
-  <xsl:value-of select="count(.//node()[not(self::diff:*) and ancestor::diff:*[1][not(diff:common)]])"/>
+  <xsl:value-of select="count(.//node()[not(self::diff:*) and not(self::text()) and ancestor::diff:*[1][not(diff:common)]])"/>
 <xsl:text>
 </xsl:text>
 
