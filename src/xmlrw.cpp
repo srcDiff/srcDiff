@@ -470,11 +470,10 @@ void outputNode(const xNode& node, xmlTextWriterPtr writer) {
       std::string s = ((char*) node.ns->prefix);
       s += ":";
       s += (char*) node.name;
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, s.c_str());
+
       xmlTextWriterStartElement(writer, BAD_CAST s.c_str());
 
     } else
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, node.name);
       xmlTextWriterStartElement(writer, (xmlChar *)node.name);
 
     // copy all the namespaces
