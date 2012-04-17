@@ -268,8 +268,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
 
   }
 
-  full_name = (const char*)curnode->name;
-
+  full_name += (const char*)curnode->name;
 
   xNode * node = 0;
   if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
@@ -468,15 +467,14 @@ void outputNode(const xNode& node, xmlTextWriterPtr writer) {
 
     // start the element
     if (node.ns && node.ns->prefix) {
-
       std::string s = ((char*) node.ns->prefix);
       s += ":";
       s += (char*) node.name;
-
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, s.c_str());
       xmlTextWriterStartElement(writer, BAD_CAST s.c_str());
 
     } else
-
+      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, node.name);
       xmlTextWriterStartElement(writer, (xmlChar *)node.name);
 
     // copy all the namespaces
