@@ -215,7 +215,7 @@ void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
 bool is_separate_token(const char character) {
 
 
-  return character == '(' || character ==')' || character == '[' || character == ']' || character == ',' || character == '_';
+  return character == '(' || character ==')' || character == '[' || character == ']' || character == ',';
 
 }
 
