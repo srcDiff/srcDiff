@@ -321,7 +321,7 @@
     <row><entry>&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_LITERAL_NS_URI;</entry></row>
     <row><entry>&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_OPERATOR_NS_URI;</entry></row>
     <row><entry>&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_MODIFIER_NS_URI;</entry></row>
-    <row><entry>&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_MODIFIER_NS_URI;</entry></row>
+    <row><entry>&SRCML_DIFF_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_DIFF_NS_URI;</entry></row>
       </tbody>
     </tgroup>
   </informaltable>
