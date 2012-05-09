@@ -31,6 +31,8 @@ scp ubuntu11build:/srcML/trunk/srcdiff/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/
 cd srcML; svn update
 cd
 
+cd srcML/trunk/src; make clean; make;
+cd
 cd srcML/trunk/srcdiff/trunk/dist; make clean; make;
 cp *.tar.gz ~/Dropbox/srcML/Unix/OSX
 cd
