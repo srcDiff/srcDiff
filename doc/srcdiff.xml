@@ -408,7 +408,7 @@
       <term><option>&METHOD_FLAG;</option></term>
       <listitem>
 	<para>
-	  Place markup in #else and #elif regions.  Default.
+	  Select the
 	</para>
       </listitem>
     </varlistentry>
@@ -421,10 +421,10 @@
   </para>
   <variablelist>
     <varlistentry>
-      <term><option>&CPP_MARKUP_ELSE_FLAG;</option></term>
+      <term><option>&VISUALIZATION_FLAG;</option></term>
       <listitem>
 	<para>
-	  Place markup in #else and #elif regions.  Default.
+	  Sets output as visualization output.
 	</para>
       </listitem>
     </varlistentry>
