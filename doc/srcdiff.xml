@@ -302,39 +302,6 @@
 
 </refsect1>
 <refsect1>
-  <title>LINE/COLUMN POSITION</title>
-  <para>
-    Optional line and column attributes are used to indicate
-    the position of an element in the original source code document.
-    Both the line and column start at 1.  The column position is based
-    on the tab settings with a default tab size of 8.  Other tab sizes
-    can be set using the &TABS_FLAG;.
-
-  </para>
-  <variablelist>
-    <varlistentry>
-      <term><option>&POSITION_FLAG;</option></term>
-      <listitem>
-	<para>
-	  Insert line and column attributes into each start element.
-	  These attributes have a default prefix of
-	  "&SRCML_EXT_POSITION_NS_PREFIX_DEFAULT;" in the namespace
-	  "&SRCML_EXT_POSITION_NS_URI;".
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>&TABS_FLAG;</option></term>
-      <listitem>
-	<para>
-	  Set the tab size.  Default is 8.  Use of this option
-	  automatically turns on the position attributes.
-	</para>
-      </listitem>
-    </varlistentry>
-  </variablelist>
-</refsect1>
-<refsect1>
   <title>URI AND PREFIX</title>
   <para>
     There is a set of standard URIs for the elements in srcML, each
@@ -354,7 +321,7 @@
     <row><entry>&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_LITERAL_NS_URI;</entry></row>
     <row><entry>&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_OPERATOR_NS_URI;</entry></row>
     <row><entry>&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_MODIFIER_NS_URI;</entry></row>
-    <row><entry>&SRCML_EXT_POSITION_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_POSITION_NS_URI;</entry></row>
+    <row><entry>&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_MODIFIER_NS_URI;</entry></row>
       </tbody>
     </tgroup>
   </informaltable>
