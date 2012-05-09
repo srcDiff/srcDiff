@@ -23,7 +23,7 @@
 <arg><option>&SRCVERSION_FLAG_SHORT;   <replaceable class="parameter">version</replaceable></option></arg>
 <arg><option>&ENCODING_FLAG_SHORT;     <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>&SRC_ENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg rep="repeat"><replaceable class="parameter">old_src_infile</replaceable></arg><arg rep="repeat"><replaceable class="parameter">new_src_infile</replaceable></arg>
+<arg rep="repeat"><replaceable class="parameter">&lt;old_src_infile new_src_infilae&lt;</replaceable></arg>
 <arg><option>&OUTPUT_FLAG_SHORT;       <replaceable class="parameter">srcDiff-outfile</replaceable></option></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
