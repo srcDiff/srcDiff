@@ -442,7 +442,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&VISUALIZE_FLAG;</option></term>
+      <term><option>&SAME_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
@@ -450,7 +450,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&VISUALIZE_FLAG;</option></term>
+      <term><option>&NO_SAME_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
@@ -458,7 +458,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&VISUALIZE_FLAG;</option></term>
+      <term><option>&PURE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
@@ -466,7 +466,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&VISUALIZE_FLAG;</option></term>
+      <term><option>&NO_PURE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
@@ -474,7 +474,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&VISUALIZE_FLAG;</option></term>
+      <term><option>&CHANGE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
@@ -482,7 +482,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&VISUALIZE_FLAG;</option></term>
+      <term><option>&SRCDIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
@@ -490,7 +490,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&VISUALIZE_FLAG;</option></term>
+      <term><option>&DIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
