@@ -326,8 +326,9 @@ void output_help(const char* name) {
 
   printf("  --%-21s Output visualization of the differences\n", VISUALIZE_FLAG);
   printf("  --%-21s Output same files \n", SAME_FLAG);
-  printf("  --%-21s Do not output same files \n", NO_SAME_FLAG);
-  printf("  --%-21s Output pure added/deleted files \n",  PURE_FLAG);
+  printf("  --%-21s Do not output same files with no change\n", NO_SAME_FLAG);
+  printf("  --%-21s Output files that were completely added or deleted \n",  PURE_FLAG);
+  printf("  --%-21s Do not output files that were completely added or deleted \n", NO_PURE_FLAG);
   printf("  --%-21s Output files containing modifications \n", CHANGE_FLAG);
   printf("  --%-21s Output differences that are only in srcdiff \n", SRCDIFFONLY_FLAG);
   printf("  --%-21s Output differences that are only in diff \n", DIFFONLY_FLAG);
