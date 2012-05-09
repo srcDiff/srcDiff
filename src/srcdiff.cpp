@@ -323,6 +323,12 @@ void output_help(const char* name) {
 
   printf("\n");
 
+  printf("srcDiff Visualization:\n");
+
+  printf("  --%-21s select srcDiff granularity and markup methods\n", METHOD_FLAG);
+
+  printf("\n");
+
   printf("Examples:  \n"
          //"  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
          "  " PROGRAM_NAME " m.cpp n.cpp                 (compute difference of m.cpp and n.cpp, write to standard output)\n"
