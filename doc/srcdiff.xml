@@ -433,17 +433,19 @@
 <refsect1>
   <title>USAGE</title>
   <para>
-    To translate the C++ source-code file main.cpp main2.cpp into the srcDiff
+    To translate the C++ source-code files main.cpp main2.cpp into the srcDiff
     file main.cpp.xml:
   </para>
   <para>
-    <command>srcdiff</command> main.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
+    <command>srcdiff</command> main.cpp main2.cpp 
+    &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
   <para>
-    To translate a C source-code file main.c into the srcML file main.c.xml:
+    To translate the C source-code files main.c and main2.c into the srcML file main.c.xml:
   </para>
   <para>
-    <command>srcdiff</command> &LANGUAGE_FLAG;=C main.c &OUTPUT_FLAG_SHORT; main.c.xml
+    <command>srcdiff</command> &LANGUAGE_FLAG;=C main.c main2.c
+    &OUTPUT_FLAG_SHORT; main.c.xml
   </para>
   <para>
     To translate a Java source-code file main.java into the srcML file main.java.xml:
