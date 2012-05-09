@@ -476,29 +476,6 @@ void outputNode(const xNode& node, xmlTextWriterPtr writer) {
     } else
       xmlTextWriterStartElement(writer, (xmlChar *)node.name);
 
-    // copy all the namespaces
-    /*
-      if(strcmp((const char *)node.name, "unit") == 0) {
-      xmlNsPtr ns = node.nsDef;
-      while (ns) {
-
-      if(ns->type == XML_LOCAL_NAMESPACE) {
-      std::string name = "xmlns";
-
-      if(ns->prefix) {
-
-      name += ":";
-      name += (char *)ns->prefix;
-      }
-
-      xmlTextWriterWriteAttribute(writer, (xmlChar *)name.c_str(), ns->href);
-      }
-
-      ns = ns->next;
-      }
-      }
-    */
-
     // copy all the attributes
     {
       xAttr * attribute = node.properties;

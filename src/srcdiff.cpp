@@ -1453,7 +1453,7 @@ void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYP
   // process the individual file (once), or an archive as many times as it takes
   void* context = 0;
   bool isarchive = false;
-  bool firstopen = true;
+  //bool firstopen = true;
   do {
 
     // start with the original options
@@ -1612,7 +1612,7 @@ void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYP
       return;
     //     return STATUS_TERMINATED;
 
-    firstopen = false;
+    //firstopen = false;
 
   } while (isarchive && isAnythingOpen(context));
 }
