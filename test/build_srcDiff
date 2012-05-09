@@ -11,8 +11,8 @@ scp fedora15build:/srcML/trunk/srcdiff/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/
 scp fedora16build:/srcML/trunk/srcdiff/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora16
 
 
-./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/src; make clean; make windowsdyn"'
-./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/srcdiff/trunk/dist; make clean; make windowsdyn"'
+./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/src; make clean; make mingw32"'
+./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/srcdiff/trunk/dist; make clean; make windows"'
 #rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
 ./prlctlall --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
 scp fedora15build:/srcML/trunk/srcdiff/trunk/dist/srcML*.zip ~/Dropbox/srcML/Windows
