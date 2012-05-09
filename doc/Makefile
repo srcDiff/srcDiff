@@ -1,6 +1,6 @@
-MAN_PAGES= src2srcml.1 srcml2src.1
-HTML_PAGES = src2srcml.html srcml2src.html
-MAN_GZIP= src2srcml.1.gz srcml2src.1.gz
+MAN_PAGES= src2diff.1
+HTML_PAGES = srcdiff.html
+MAN_GZIP= srcdiff.1.gz
 SRC2SRCML=../bin/src2srcml
 SRCML2SRC=../bin/srcml2src
 
@@ -12,23 +12,16 @@ ECHO=/bin/echo
 
 all : man gzip
 
-man : ${MAN_PAGES} src2srcml.html srcml2src.html
+man : ${MAN_PAGES}
 
-src2srcml.1 : src2srcml.xml option.dtd option.dtd
-	${DOCBOOK2XMAN} src2srcml.xml
-
-srcml2src.1 : srcml2src.xml option.dtd option.dtd
-	${DOCBOOK2XMAN} --string-param quotes-on-literals=1 srcml2src.xml
+src2srcml.1 : srcdiff.xml option.dtd option.dtd
+	${DOCBOOK2XMAN} srcdiff.xml
 
 view : man
-	man ./src2srcml.1
-	man ./srcml2src.1
+	man ./srcdiff.1
 
-src2srcml.1.gz : src2srcml.1
-	gzip -f src2srcml.1
-
-srcml2src.1.gz : srcml2src.1
-	gzip -f srcml2src.1
+src2srcml.1.gz : srcdiff.xml
+	gzip -f srcdiff.1
 
 src2srcml.html : src2srcml.1
 	${MAN2HTML} < $<| tail -n +3 > $@
