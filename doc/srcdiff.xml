@@ -445,7 +445,7 @@
       <term><option>&SAME_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Output files with no change.
 	</para>
       </listitem>
     </varlistentry>
@@ -453,7 +453,7 @@
       <term><option>&NO_SAME_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Do not output files with no change.
 	</para>
       </listitem>
     </varlistentry>
