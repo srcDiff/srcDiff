@@ -477,7 +477,8 @@
       <term><option>&CHANGE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output lines of files that contain either a srcDiff or diff change.
+	  Output lines of files that contain either a srcDiff and/or diff
+          change.
 	</para>
       </listitem>
     </varlistentry>
