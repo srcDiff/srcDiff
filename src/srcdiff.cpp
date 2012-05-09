@@ -328,7 +328,9 @@ void output_help(const char* name) {
   printf("                            %s - Output same files \n", SAME_FLAG);
   printf("                            %s - Do not output same files \n", NO_SAME_FLAG);
   printf("                            %s - Output pure added/deleted files \n",  PURE_FLAG);
-  printf("                            %s - Do not output pure added/deleted  files \n", NO_PURE_FLAG);
+  printf("                            %s - Output files containing modifications \n", CHANGE_FLAG);
+  printf("                            %s - Output differences that are only in srcdiff \n", SRCDIFFONLY_FLAG);
+  printf("                            %s - Output differences that are only in diff \n", DIFFONLY_FLAG);
 
   printf("\n");
 
