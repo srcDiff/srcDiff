@@ -485,7 +485,7 @@
       <term><option>&SRCDIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Output lines that contain only a srcDiff change.
 	</para>
       </listitem>
     </varlistentry>
@@ -493,7 +493,7 @@
       <term><option>&DIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Output lines that contain only a diff change.
 	</para>
       </listitem>
     </varlistentry>
