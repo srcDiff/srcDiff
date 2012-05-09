@@ -421,7 +421,8 @@
       <tbody>
         <row><entry>collect</entry><entry>collect statements/substatements
             with coarser granulatrity</entry></row>
-        <row><entry></entry><entry></entry></row>
+        <row><entry>raw</entry><entry>Markup with fine granularity
+        </entry></row>
       </tbody>
     </tgroup>
   </informaltable>
