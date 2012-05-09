@@ -398,6 +398,38 @@
     </varlistentry>
   </variablelist>
 </refsect1>
+  <title>CPP MARKUP OPTIONS</title>
+  <para>
+    This set of options allows control over how preprocessing regions are handled,
+    i.e., whether parsing and markup occur.  In all cases the text is preserved.
+  </para>
+  <variablelist>
+    <varlistentry>
+      <term><option>&CPP_MARKUP_ELSE_FLAG;</option></term>
+      <listitem>
+	<para>
+	  Place markup in #else and #elif regions.  Default.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+  <title>CPP MARKUP OPTIONS</title>
+  <para>
+    This set of options allows control over how preprocessing regions are handled,
+    i.e., whether parsing and markup occur.  In all cases the text is preserved.
+  </para>
+  <variablelist>
+    <varlistentry>
+      <term><option>&CPP_MARKUP_ELSE_FLAG;</option></term>
+      <listitem>
+	<para>
+	  Place markup in #else and #elif regions.  Default.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
 <refsect1>
   <title>SIGNAL PROCESSING</title>
 
