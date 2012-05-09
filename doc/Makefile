@@ -14,20 +14,17 @@ all : man gzip
 
 man : ${MAN_PAGES}
 
-src2srcml.1 : srcdiff.xml option.dtd option.dtd
+srcdiff.1 : srcdiff.xml option.dtd option.dtd
 	${DOCBOOK2XMAN} srcdiff.xml
 
 view : man
 	man ./srcdiff.1
 
-src2srcml.1.gz : srcdiff.xml
+srcdiff.1.gz : srcdiff.xml
 	gzip -f srcdiff.1
 
-src2srcml.html : src2srcml.1
+srcdiff.html : srcdiff.1
 	${MAN2HTML} < $<| tail -n +3 > $@
-
-srcml2src.html : srcml2src.1
-	${MAN2HTML} < $< | tail -n +3 > $@
 
 OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.hpp ../src/srcmlns.hpp
 option.dtd : ${OPTION_SRC}
