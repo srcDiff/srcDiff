@@ -398,7 +398,7 @@
     </varlistentry>
   </variablelist>
 </refsect1>
-  <title>CPP MARKUP OPTIONS</title>
+  <title>SRCDIFF METHODS</title>
   <para>
     This set of options allows control over how preprocessing regions are handled,
     i.e., whether parsing and markup occur.  In all cases the text is preserved.
@@ -414,7 +414,7 @@
     </varlistentry>
   </variablelist>
 </refsect1>
-  <title>CPP MARKUP OPTIONS</title>
+  <title>SRCDIFF VISUALIZATION</title>
   <para>
     This set of options allows control over how preprocessing regions are handled,
     i.e., whether parsing and markup occur.  In all cases the text is preserved.
