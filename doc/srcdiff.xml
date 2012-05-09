@@ -420,8 +420,8 @@
       <colspec colwidth="4.0in" />
       <tbody>
         <row><entry>collect</entry><entry>collect statements/substatements
-            with coarser granulatrity</entry></row>
-        <row><entry>raw</entry><entry>Markup with fine granularity
+            with coarser granulatrity.</entry></row>
+        <row><entry>raw</entry><entry>Markup with fine granularity.
         </entry></row>
       </tbody>
     </tgroup>
