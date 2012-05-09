@@ -417,8 +417,7 @@
 <refsect1>
   <title>SRCDIFF VISUALIZATION</title>
   <para>
-    This set of options allows control over how preprocessing regions are handled,
-    i.e., whether parsing and markup occur.  In all cases the text is preserved.
+    This set of options enables and controls visualization.
   </para>
   <variablelist>
     <varlistentry>
