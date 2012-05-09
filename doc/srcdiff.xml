@@ -29,29 +29,26 @@
 </refsynopsisdiv>
 <refsect1>
   <refsect1info>
-    <date>2006-01-04</date>
+    <date>2012-05-09</date>
   </refsect1info>
   <title>DESCRIPTION</title>
   <para>
     The program <command>srcdiff</command> translates source-code
-    files into the XML source-code representation srcML.  The srcML
-    format allows the use of XML for addressing, querying, and
-    transformation of source code.  All text from the original
-    source-code file is preserved including white-space, comments, and
-    preprocessor statements.  No preprocessing of the source code is
-    done.  In addition, the tool can be applied to individual source-code
-    files, or code fragments.
-  </para>
-  <para>
-    The translation is fast and uses a stream-parsing approach with
-    top-down parsing and elements issued as soon as they are detected.
+    files into the XML source-code representation srcML and then computes
+    a difference of the the two srcML documents, producing an XML-based 
+    srcDiff file The srcDiff format is an extension to the srcML format
+    and allows the use of XML for addressing, querying, and transformation
+    of source code.  All text from the original source-code file is preserved
+    including white-space, comments, and preprocessor statements.
+    No preprocessing of the source code is done.  In addition, the tool 
+    can be applied to individual pairs of source-code files, or code fragments.
   </para>
   <para>
     The program <command>srcdiff</command> is typically used with
-    <command>srcml2src</command> which converts from the srcML format
-    back to source code.  Conversion of a source-code file through
-    <command>srcdiff</command> and then through
-    <command>srcml2src</command> produces the original source-code
+    <command>srcml2src</command> which converts from the srcDiff format
+    back to source code or the individual srcML files.  Conversion of 
+    a pair ofsource-code files through <command>srcdiff</command> and then
+    through <command>srcml2src</command> produces the original source-code
     file.  The program <command>srcml2src</command> also provides a
     set of utilities for working with srcML files, including
     efficient querying and transformation of source code.
