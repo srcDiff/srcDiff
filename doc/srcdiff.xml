@@ -180,7 +180,7 @@
 <refsect1>
   <title>Metadata Options</title>
   <para>
-    This set of options allows control over various metadata stored in the srcML document.
+    This set of options allows control over various metadata stored in the srcDiff document.
   </para>
     <varlistentry>
       <term><option>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></option></term>
