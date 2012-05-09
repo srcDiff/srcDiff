@@ -461,7 +461,7 @@
       <term><option>&PURE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Output files than were completely added or deleted.
 	</para>
       </listitem>
     </varlistentry>
@@ -469,7 +469,7 @@
       <term><option>&NO_PURE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Do not output files that were completely added or deleted.
 	</para>
       </listitem>
     </varlistentry>
