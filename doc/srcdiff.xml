@@ -408,7 +408,8 @@
       <term><option>&METHOD_FLAG;</option></term>
       <listitem>
 	<para>
-	  Select the
+	  Set the granularity and markup.  Provide a list of comma 
+          separated settings.
 	</para>
       </listitem>
     </varlistentry>
