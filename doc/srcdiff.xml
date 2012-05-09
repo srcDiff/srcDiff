@@ -42,6 +42,9 @@
     including white-space, comments, and preprocessor statements.
     No preprocessing of the source code is done.  In addition, the tool 
     can be applied to individual pairs of source-code files, or code fragments.
+
+    <command>srcdiff</command> also provides some support for visualization,
+    highlighting source code differences.
   </para>
   <para>
     The program <command>srcdiff</command> is typically used with
@@ -53,11 +56,6 @@
     provides a set of utilities for working with srcDiff and srcML files,
     including efficient querying and transformation of each and/or both of 
     the versions of source code.
-  </para>
-  <para>
-    Using the character - in the place of an input source-code file
-    filename uses standard input, and in place of an output srcML file
-    uses standard output.
   </para>
 </refsect1>
 <refsect1>
