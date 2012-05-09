@@ -2,7 +2,7 @@
 
 ./prlctlall --build exec 'bash -c "cd srcML; svn update"'
 
-./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
+./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/src; make clean; make"'
 ./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
 rm -rf ~/Dropbox/srcML/Unix/Fedora15/srcML*
 rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
@@ -11,7 +11,7 @@ scp fedora15build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora15
 scp fedora16build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora16
 
 
-./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make windowsdyn"'
+./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/src; make clean; make windowsdyn"'
 ./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make windowsdyn"'
 #rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
 ./prlctlall --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
@@ -19,7 +19,7 @@ scp fedora15build:/srcML/trunk/dist/srcML*.zip ~/Dropbox/srcML/Windows
 cd ~/Dropbox/srcML/Windows; unzip srcML-Win.zip
 cd
 
-./prlctlall --ubuntu --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
+./prlctlall --ubuntu --build exec 'bash -c "cd srcML/trunk/src; make clean; make"'
 ./prlctlall --ubuntu --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
 
 #rm -rf ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML*
