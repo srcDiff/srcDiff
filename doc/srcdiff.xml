@@ -398,13 +398,14 @@
     </varlistentry>
   </variablelist>
 </refsect1>
+<refsect1>
   <title>SRCDIFF METHODS</title>
   <para>
     This set of options selects the granularity and markup methods of srcDiff.
   </para>
   <variablelist>
     <varlistentry>
-      <term><option>&CPP_MARKUP_ELSE_FLAG;</option></term>
+      <term><option>&METHOD_FLAG;</option></term>
       <listitem>
 	<para>
 	  Place markup in #else and #elif regions.  Default.
@@ -413,6 +414,7 @@
     </varlistentry>
   </variablelist>
 </refsect1>
+<refsect1>
   <title>SRCDIFF VISUALIZATION</title>
   <para>
     This set of options allows control over how preprocessing regions are handled,
