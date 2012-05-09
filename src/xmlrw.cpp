@@ -37,15 +37,15 @@
 #endif
 
 typedef std::map<std::string, xNode*> NodeMap;
-typedef std::vector<std::string> NameList;
+//typedef std::vector<std::string> NameList;
 
 NodeMap starttags_old;
 NodeMap endtags_old;
-NameList namelist_old;
+//NameList namelist_old;
 
 NodeMap starttags_new;
 NodeMap endtags_new;
-NameList namelist_new;
+//NameList namelist_new;
 
 /*
   std::string* setName(const char* name) {
