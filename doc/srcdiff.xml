@@ -416,6 +416,8 @@
   </variablelist>
   <informaltable frame="none" align="center" width="5in">
     <tgroup cols="2">
+      <colspec colwidth="0.5in" />
+      <colspec colwidth="4.0in" />
     </tgroup>
   </informaltable>
 </refsect1>
