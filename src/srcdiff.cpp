@@ -327,6 +327,8 @@ void output_help(const char* name) {
   printf("  --%-21s Output visualization of the differences\n", VISUALIZE_FLAG);
   printf("                            %s - Output same files \n", SAME_FLAG);
   printf("                            %s - Do not output same files \n", NO_SAME_FLAG);
+  printf("                            %s - Output pure added/deleted files \n",  PURE_FLAG);
+  printf("                            %s - Do not output pure added/deleted  files \n", NO_PURE_FLAG);
 
   printf("\n");
 
