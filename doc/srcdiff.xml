@@ -419,7 +419,8 @@
       <colspec colwidth="0.5in" />
       <colspec colwidth="4.0in" />
       <tbody>
-        <row><entry></entry><entry></entry></row>
+        <row><entry>collect</entry><entry>collect statements/substatements
+            with coarser granulatrity</entry></row>
       </tbody>
     </tgroup>
   </informaltable>
