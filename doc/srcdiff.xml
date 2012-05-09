@@ -477,7 +477,7 @@
       <term><option>&CHANGE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Output lines of files that contain either a srcDiff or diff change.
 	</para>
       </listitem>
     </varlistentry>
