@@ -418,6 +418,8 @@
     <tgroup cols="2">
       <colspec colwidth="0.5in" />
       <colspec colwidth="4.0in" />
+      <tbody>
+      </tbody>
     </tgroup>
   </informaltable>
 </refsect1>
