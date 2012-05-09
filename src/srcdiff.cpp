@@ -1503,7 +1503,7 @@ void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYP
         fprintf(stderr, "\n");
       }
 
-      bool foundfilename = true;
+      //bool foundfilename = true;
       unit_filename = path;
       if (archiveReadFilename(context))
         unit_filename = archiveReadFilename(context);
@@ -1511,8 +1511,8 @@ void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYP
         unit_filename = root_filename;
       else if (strcmp(path, STDIN))
         unit_filename = path;
-      else
-        foundfilename = false;
+      //else
+      //foundfilename = false;
 
       // special case:  skip directories (in archives)
       if (archiveIsDir(context)) {
