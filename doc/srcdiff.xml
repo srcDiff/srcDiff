@@ -48,10 +48,11 @@
     <command>srcml2src</command> which converts from the srcDiff format
     back to source code or the individual srcML files.  Conversion of 
     a pair ofsource-code files through <command>srcdiff</command> and then
-    through <command>srcml2src</command> produces the original source-code
-    file.  The program <command>srcml2src</command> also provides a
-    set of utilities for working with srcML files, including
-    efficient querying and transformation of source code.
+    through <command>srcml2src</command> can produce both the original
+    source-code files.  The program <command>srcml2src</command> also
+    provides a set of utilities for working with srcDiff and srcML files,
+    including efficient querying and transformation of each or both versions
+    ofthe source code.
   </para>
   <para>
     Using the character - in the place of an input source-code file
