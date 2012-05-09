@@ -8,7 +8,7 @@
   <refentrytitle><application>srcdiff</application></refentrytitle><manvolnum>1</manvolnum><refmiscinfo>srcdiff 1.0</refmiscinfo>
 </refmeta>
 <refnamediv>
-  <refname><application>srcdiff</application></refname><refpurpose>translates source code into the XML source-code representation srcML</refpurpose>
+  <refname><application>srcdiff</application></refname><refpurpose>computes the XML source-code difference representation srcDiff</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
   <refsynopsisdivinfo>
