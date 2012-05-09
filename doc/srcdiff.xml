@@ -457,10 +457,10 @@
     &OUTPUT_FLAG_SHORT; main.java.xml
   </para>
   <para>
-    To specify the directory, filename, and version for an input file from standard input:
+    To specify the directory, filename, and version.:
   </para>
   <para>
-    <command>srcdiff</command> &DIRECTORY_FLAG;=src &FILENAME_FLAG;=main.cpp &VERSION_FLAG;=1 - &OUTPUT_FLAG_SHORT; main.cpp.xml
+    <command>srcdiff</command> &DIRECTORY_FLAG;=src &FILENAME_FLAG;=main.cpp &VERSION_FLAG;=1 a.cpp b.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
   <para>
     To translate a source-code file in ISO-8859-1 encoding into a srcML file with UTF-8 encoding:
