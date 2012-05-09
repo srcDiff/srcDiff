@@ -115,7 +115,7 @@
 	  Sets the input encoding of the source-code file to
 	  <replaceable>encoding</replaceable>.  The default is
 	  &DEFAULT_TEXT_ENCODING;.  Used for any necessary source-code
-	  text translation to the encoding used in the srcML file.
+	  text translation to the encoding used in the srcDiff file.
 	  Possible encodings can be obtained by using the command
 	  <command>iconv -l</command>.
 	</para>
@@ -125,7 +125,7 @@
       <term><option>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
       <listitem>
 	<para>
-	  Sets the xml encoding of the output srcML file to
+	  Sets the xml encoding of the output srcDiff file to
 	  <replaceable class="parameter">encoding</replaceable>.  The
 	  default is UTF-8.  Possible encodings can be obtained by
 	  using the command <command>iconv -l</command>.
@@ -147,27 +147,6 @@
 	<para>
 	  No output of namespace declarations.  Useful when the output
 	  is to be placed inside another XML document.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</option></term>
-      <listitem>
-	<para>
-	  Output is in compressed gzip format.  This format can be directly,
-	  and automatically, read by <command>srcml2src</command>.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>&INTERACTIVE_FLAG_SHORT;, &INTERACTIVE_FLAG;</option></term>
-      <listitem>
-	<para>
-	  Default is to use buffered output for speed.  For
-	  interactive applications output is issued as soon as parsed.
-	</para>
-	<para>
-	  For input from terminal, interactive is default.
 	</para>
       </listitem>
     </varlistentry>
