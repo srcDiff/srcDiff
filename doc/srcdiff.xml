@@ -515,7 +515,7 @@
 <refsect1>
   <title>SEE ALSO</title>
   <para>
-    <command>srcml2src</command>(1)
+    <command>src2srcml</command>(1), <command>srcml2src</command>(1)
   </para>
 </refsect1>
 <refsect1>
