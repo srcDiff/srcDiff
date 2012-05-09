@@ -421,7 +421,7 @@
   </para>
   <variablelist>
     <varlistentry>
-      <term><option>&VISUALIZATION_FLAG;</option></term>
+      <term><option>&VISUALIZE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Sets output as visualization output.
