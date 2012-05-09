@@ -73,7 +73,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
   
   xmlTextReaderPtr reader = NULL;
-  xNodePtr unit_end = NULL;
+  //xNodePtr unit_end = NULL;
   //NodeSets node_set;
 
   // translate file one
@@ -106,7 +106,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   if(no_error) {
 
     collect_nodes(&nodes, reader, options, context);
-    unit_end = getRealCurrentNode(reader, options, context);
+    /*unit_end = */getRealCurrentNode(reader, options, context);
 
   }
 
