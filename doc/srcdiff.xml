@@ -463,10 +463,11 @@
     <command>srcdiff</command> &DIRECTORY_FLAG;=src &FILENAME_FLAG;=main.cpp &VERSION_FLAG;=1 a.cpp b.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
   <para>
-    To translate a source-code file in ISO-8859-1 encoding into a srcML file with UTF-8 encoding:
+    To translate a pair of source-code files in ISO-8859-1 encoding
+    into a srcDiff file with UTF-8 encoding:
   </para>
   <para>
-    <command>srcdiff</command> &SRC_ENCODING_FLAG;=ISO-8859-1 &ENCODING_FLAG;=UTF-8 main.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
+    <command>srcdiff</command> &SRC_ENCODING_FLAG;=ISO-8859-1 &ENCODING_FLAG;=UTF-8 main.cpp main2.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
 </refsect1>
 <refsect1>
