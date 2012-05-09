@@ -89,8 +89,8 @@
       <term><option>&COMPOUND_FLAG_SHORT;, &COMPOUND_FLAG;</option></term>
       <listitem>
 	<para>
-	  Stores all input source files into one compound srcML
-	  document.  Default with more then one input file, a directory, or the <option>&FILELIST_FLAG;</option> option.
+	  Stores all input source files into one compound srcDiff
+	  document.  Default with more then one input file pairs, a directory, or the <option>&FILELIST_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
@@ -98,7 +98,8 @@
       <term><option>&FILELIST_FLAG;</option></term>
       <listitem>
 	<para>
-	  Treats the input file as a list of source files.  Each file
+	  Treats the input file as a list of source file pairs separated 
+          with a <strong>|</strong>.  Each file
 	  is separately translated and collectively stored into a
 	  single compound srcML document.  The list has a single
 	  filename on each line starting at the beginning of the line.
