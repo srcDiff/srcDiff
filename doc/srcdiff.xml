@@ -12,19 +12,19 @@
 </refnamediv>
 <refsynopsisdiv>
   <refsynopsisdivinfo>
-    <date>2001-01-01</date>
+    <date>2012-05-09</date>
   </refsynopsisdivinfo>
   <cmdsynopsis>
     <command>srcdiff</command>
-<arg><option>-hVnizcgv</option></arg>
+<arg><option>-hVnzgv</option></arg>
 <arg><option>&LANGUAGE_FLAG_SHORT;     <replaceable class="parameter">language</replaceable></option></arg>
 <arg><option>&DIRECTORY_FLAG_SHORT;    <replaceable class="parameter">directory</replaceable></option></arg>
 <arg><option>&FILENAME_FLAG_SHORT;     <replaceable class="parameter">filename</replaceable></option></arg>
 <arg><option>&SRCVERSION_FLAG_SHORT;   <replaceable class="parameter">version</replaceable></option></arg>
 <arg><option>&ENCODING_FLAG_SHORT;     <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>&SRC_ENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
-<arg><option>&OUTPUT_FLAG_SHORT;       <replaceable class="parameter">output-srcML-file</replaceable></option></arg>
+<arg rep="repeat"><replaceable class="parameter">old_src_infile</replaceable></arg><arg rep="repeat"><replaceable class="parameter">new_src_infile</replaceable></arg>
+<arg><option>&OUTPUT_FLAG_SHORT;       <replaceable class="parameter">srcDiff-outfile</replaceable></option></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
 <refsect1>
