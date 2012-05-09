@@ -441,17 +441,20 @@
     &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
   <para>
-    To translate the C source-code files main.c and main2.c into the srcML file main.c.xml:
+    To translate the C source-code files main.c and main2.c into the srcDiff
+    file main.c.xml:
   </para>
   <para>
     <command>srcdiff</command> &LANGUAGE_FLAG;=C main.c main2.c
     &OUTPUT_FLAG_SHORT; main.c.xml
   </para>
   <para>
-    To translate a Java source-code file main.java into the srcML file main.java.xml:
+    To translate the Java source-code files main.java main2.java into the
+    srcDiff file main.java.xml:
   </para>
   <para>
-    <command>srcdiff</command> &LANGUAGE_FLAG;=Java main.java &OUTPUT_FLAG_SHORT; main.java.xml
+    <command>srcdiff</command> &LANGUAGE_FLAG;=Java main.java main2.cpp 
+    &OUTPUT_FLAG_SHORT; main.java.xml
   </para>
   <para>
     To specify the directory, filename, and version for an input file from standard input:
