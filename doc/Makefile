@@ -1,4 +1,4 @@
-MAN_PAGES= src2diff.1
+MAN_PAGES= srcdiff.1
 HTML_PAGES = srcdiff.html
 MAN_GZIP= srcdiff.1.gz
 SRC2SRCML=../../../bin/src2srcml
