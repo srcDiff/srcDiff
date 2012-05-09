@@ -5,7 +5,7 @@
     <date>&DATE;</date>
 </refentryinfo>
 <refmeta>
-  <refentrytitle><application>src2srcml</application></refentrytitle><manvolnum>1</manvolnum><refmiscinfo>src2srcml 1.0</refmiscinfo>
+  <refentrytitle><application>srcdiff</application></refentrytitle><manvolnum>1</manvolnum><refmiscinfo>srcdiff 1.0</refmiscinfo>
 </refmeta>
 <refnamediv>
   <refname><application>src2srcml</application></refname><refpurpose>translates source code into the XML source-code representation srcML</refpurpose>
