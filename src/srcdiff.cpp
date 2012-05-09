@@ -325,7 +325,7 @@ void output_help(const char* name) {
 
   printf("srcDiff Visualization:\n");
 
-  printf("  --%-21s select srcDiff granularity and markup methods\n", METHOD_FLAG);
+  printf("  --%-21s Output visualization of the differences\n", VISUALIZE_FLAG);
 
   printf("\n");
 
