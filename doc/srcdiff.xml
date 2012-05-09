@@ -400,8 +400,7 @@
 </refsect1>
   <title>SRCDIFF METHODS</title>
   <para>
-    This set of options allows control over how preprocessing regions are handled,
-    i.e., whether parsing and markup occur.  In all cases the text is preserved.
+    This set of options selects the granularity and markup methods of srcDiff.
   </para>
   <variablelist>
     <varlistentry>
