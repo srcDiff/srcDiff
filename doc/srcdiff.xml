@@ -423,7 +423,7 @@
 	  closed, and then the program stops.  More than one SIGINT causes default behavior.
 	</para>
 	<para>
-	  This special SIGINT handling only occurs with multiple input files in compound srcML documents.
+	  This special SIGINT handling only occurs with multiple input files in compound srcDiff documents.
 	</para>
       </listitem>
     </varlistentry>
