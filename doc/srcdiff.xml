@@ -477,8 +477,7 @@
       <term><option>&CHANGE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output lines of files that contain either a srcDiff and/or diff
-          change.
+	  Output and diff changes only.
 	</para>
       </listitem>
     </varlistentry>
@@ -486,7 +485,7 @@
       <term><option>&SRCDIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output lines that contain only a srcDiff change.
+	  Output srcDiff changes only.
 	</para>
       </listitem>
     </varlistentry>
@@ -494,7 +493,7 @@
       <term><option>&DIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output lines that contain only a diff change.
+	  Output diff changes only.
 	</para>
       </listitem>
     </varlistentry>
