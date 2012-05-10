@@ -329,7 +329,7 @@ void output_help(const char* name) {
   printf("  --%-21s Do not output files with no change \n", NO_SAME_FLAG);
   printf("  --%-21s Output files that were completely added or deleted \n",  PURE_FLAG);
   printf("  --%-21s Do not output files that were completely added or deleted \n", NO_PURE_FLAG);
-  printf("  --%-21s Output lines only containing diff or srcdiff change \n", CHANGE_FLAG);
+  printf("  --%-21s Output  diff or srcdiff changes only \n", CHANGE_FLAG);
   printf("  --%-21s Output differences that are only in srcdiff \n", SRCDIFFONLY_FLAG);
   printf("  --%-21s Output differences that are only in diff \n", DIFFONLY_FLAG);
 
