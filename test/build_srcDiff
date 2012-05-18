@@ -4,8 +4,6 @@
 
 ./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/src; make clean; make"'
 ./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/srcdiff/trunk/dist; make clean; make"'
-rm -rf ~/Dropbox/srcML/Unix/Fedora15/srcML*
-rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
 ./prlctlall --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
 scp fedora15build:/srcML/trunk/srcdiff/trunk/dist/srcDiff*.tar.gz ~/Dropbox/srcML/Unix/Fedora15
 scp fedora16build:/srcML/trunk/srcdiff/trunk/dist/srcDiff*.tar.gz ~/Dropbox/srcML/Unix/Fedora16
