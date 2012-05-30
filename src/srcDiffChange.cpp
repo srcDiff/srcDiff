@@ -153,6 +153,8 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
         output_move(rbuf_old, rbuf_new, i, SESINSERT, wstate);
 
+        continue;
+
       }
 
       // output diff tag
@@ -175,7 +177,6 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
 
   diff_old_start.properties = 0;
   diff_new_start.properties = 0;
-
 
 }
 
