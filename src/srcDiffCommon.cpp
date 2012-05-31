@@ -194,10 +194,12 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
       --i;
       --j;
 
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
 
-      for(int opos = 0, npos = 0; opos < (signed)text_old.size() && npos < (signed)text_new.size();) {
+      int opos = 0;
+      int npos = 0;
+      for(; opos < (signed)text_old.size() && npos < (signed)text_new.size();) {
 
         if(text_old[opos] == text_new[npos]) {
 
@@ -246,6 +248,37 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
         }
 
       }
+
+      if(opos < (signed)text_old.size()) {
+
+        output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+
+        for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
+
+          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
+          output_char(rbuf_old, rbuf_new, (xmlChar)text_old[opos], SESDELETE, wstate);
+        }
+
+        // output diff tag
+        output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+
+      }
+
+      if(npos < (signed)text_new.size()) {
+        
+        output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+
+        for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
+
+          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
+          output_char(rbuf_old, rbuf_new, (xmlChar)text_new[npos], SESINSERT, wstate);
+        }
+
+        // output diff tag
+        output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+
+      }
+
 
     } else {
 
