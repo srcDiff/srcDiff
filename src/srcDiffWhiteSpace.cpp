@@ -224,15 +224,13 @@ void output_white_space_suffix(reader_state & rbuf_old
         && node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) == 0; --opivot, --npivot)
     ;
 
-  /*
+
   if(opivot < ostart || npivot < nstart) {
 
     opivot = oend;
     npivot = nend;
 
-  } else 
-  */
-  if(node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) != 0) {
+  } else if(node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) != 0) {
     ++opivot;
     ++npivot;
   }
