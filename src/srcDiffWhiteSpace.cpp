@@ -220,16 +220,19 @@ void output_white_space_suffix(reader_state & rbuf_old
   int opivot = oend - 1;
   int npivot = nend - 1;
 
-  for(; opivot > ostart && npivot > nstart
+  for(; ostart < opivot && nstart < npivot
         && node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) == 0; --opivot, --npivot)
     ;
 
+  /*
   if(opivot < ostart || npivot < nstart) {
 
     opivot = oend;
     npivot = nend;
 
-  } else if(node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) != 0) {
+  } else 
+  */
+  if(node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) != 0) {
     ++opivot;
     ++npivot;
   }
