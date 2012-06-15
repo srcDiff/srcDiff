@@ -99,12 +99,16 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
       for(; opivot > i && npivot > j && node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) == 0; --opivot, --npivot)
         ;
 
+      /*
       if(opivot < i || npivot < j) {
 
         opivot = olength;
         npivot = nlength;
 
-      } else if(node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) != 0) {
+      } else
+      */
+      
+      if(node_compare(rbuf_old.nodes.at(opivot), rbuf_new.nodes.at(npivot)) != 0) {
 
         ++opivot;
         ++npivot;
