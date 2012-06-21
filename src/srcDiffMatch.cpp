@@ -92,7 +92,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
         //if(temp_similarity < max_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity > max_similarity)) {
 
-          matched = true;
+          matched = !unmatched;
 
           //max_similarity = temp_similarity;
           max_similarity = similarity;
@@ -126,7 +126,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
         //if(temp_similarity_match < temp_similarity) {
         if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity > temp_similarity)) {
 
-          temp_matched = true;
+          temp_matched = !unmatched;
 
           temp_similarity = similarity;
           temp_num_unmatched = temp_num_unmatched_match;
