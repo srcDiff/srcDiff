@@ -85,7 +85,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
         matched = false;
 
         // may be wrong
-        int temp_num_unmatched = (i + 1) + (j + 1) + unmatched;
+        int temp_num_unmatched = i + j + (unmatched ? 2 : 0);
 
         //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
 
@@ -116,7 +116,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
         int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
 
         // may be wrong
-        int temp_num_unmatched_match = (i + 1) + (j + 1) + unmatched;
+        int temp_num_unmatched_match = i + j + (unmatched ? 2 : 0);
 
 
         int temp_matched = false;
@@ -152,9 +152,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
 
         //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
         int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-        int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
-        if(unmatched)
-          ++temp_num_unmatched;
+        int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + (unmatched ? 2 : 0);
 
         //if(temp_similarity < max_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity > max_similarity)) {
