@@ -5,11 +5,36 @@
 #include "shortest_edit_script.h"
 #include "ShortestEditScript.hpp"
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new) {
+void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                NodeSet * node_set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
 
   unsigned int olength = node_set_old->size();
   unsigned int nlength = node_set_new->size();
+
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+
+  NodeSet node_set_old_text;
+
+  for(unsigned int i = 0; i < olength; ++i)
+    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
+      node_set_old_text.push_back(node_set_old->at(i));
+
+  NodeSet node_set_new_text;
+
+  for(unsigned int i = 0; i < nlength; ++i)
+    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
+      node_set_new_text.push_back(node_set_new->at(i));
+
+  text_old_length = node_set_old_text.size();
+  text_new_length = node_set_new_text.size();
+
+  ses.compute(node_set_old_text.size(), (const void *)&node_set_old_text, node_set_new_text.size(), (const void *)&node_set_new_text);
+
+}
+
+int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -24,20 +49,10 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 
   }
 
-  NodeSet node_set_old_text;
-
-  for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
-      node_set_old_text.push_back(node_set_old->at(i));
-
-  NodeSet node_set_new_text;
-
-  for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
-      node_set_new_text.push_back(node_set_new->at(i));
-
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
-  ses.compute(node_set_old_text.size(), (const void *)&node_set_old_text, node_set_new_text.size(), (const void *)&node_set_new_text);
+  int text_old_length;
+  int text_new_length;
+  compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
   unsigned int similarity = 0;
@@ -54,7 +69,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 
   }
 
-  similarity = node_set_old_text.size() - similarity;
+  similarity = text_old_length - similarity;
 
   if(similarity <= 0)
     similarity = 0;
@@ -66,8 +81,6 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
                        NodeSet * node_set_new) {
 
-  unsigned int olength = node_set_old->size();
-  unsigned int nlength = node_set_new->size();
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -82,21 +95,10 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 
   }
 
-  NodeSet node_set_old_text;
-
-  for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
-      node_set_old_text.push_back(node_set_old->at(i));
-
-  NodeSet node_set_new_text;
-
-  for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
-      node_set_new_text.push_back(node_set_new->at(i));
-
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
-
-  ses.compute(node_set_old_text.size(), (const void *)&node_set_old_text, node_set_new_text.size(), (const void *)&node_set_new_text);
+  int text_old_length;
+  int text_new_length;
+  compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
   unsigned int similarity = 0;
