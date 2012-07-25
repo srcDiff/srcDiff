@@ -92,7 +92,7 @@ ${SRC_TAR_GZ} : exp
 
 ${SRC_ZIP} : exp
 	zip -orql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR}
-	unzip -qt $@
+	unzip -uqt $@
 
 ##
 # bin
@@ -106,7 +106,7 @@ bin : ${SRC_TAR_GZ}
 	rm -rf srcml-src
 
 windows : ${SRC_ZIP}
-	unzip -aq ${SRC_ZIP}
+	unzip -uaq ${SRC_ZIP}
 	svn export -r${SRCML_REVISION} ${SRCML_SVN_URL}/src/ srcml-src --native-eol LF
 	cd ${SRC_DIR} && make clean && make mingw32 DIST=1
 	i686-pc-mingw32-strip ${WIN_SRCDIFF_PATH} ${LIBSRCML_DLL}
