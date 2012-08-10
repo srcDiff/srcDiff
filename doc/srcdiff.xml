@@ -477,7 +477,7 @@
       <term><option>&CHANGE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Include only what has changed.
+	  Include only changes. Either a section of srcdiff indicates, a line change in diff, or both.
 	</para>
       </listitem>
     </varlistentry>
@@ -485,7 +485,7 @@
       <term><option>&SRCDIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Include changes that are only srcDiff changes.
+	  Include changes that are only srcDiff changes and the line is not a diff change.
 	</para>
       </listitem>
     </varlistentry>
@@ -493,7 +493,7 @@
       <term><option>&DIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Include changes that are diff changes.
+	  Include changes that are only diff changes and have no srcdiff change on the line.
 	</para>
       </listitem>
     </varlistentry>
