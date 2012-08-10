@@ -430,7 +430,7 @@
 <refsect1>
   <title>SRCDIFF VISUALIZATION</title>
   <para>
-    This set of options enables and controls visualization.
+    This set of options enables and controls visualization.  The visualization is xhtml that overlays line based differencing on the srcdiff document.
   </para>
   <variablelist>
     <varlistentry>
