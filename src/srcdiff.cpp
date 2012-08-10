@@ -329,9 +329,9 @@ void output_help(const char* name) {
   printf("  --%-21s Do not include files with no change \n", NO_SAME_FLAG);
   printf("  --%-21s Include files that were completely added or deleted \n",  PURE_FLAG);
   printf("  --%-21s Do not include files that were completely added or deleted \n", NO_PURE_FLAG);
-  printf("  --%-21s Include changes only i.e. do not include source code with no changes \n", CHANGE_FLAG);
-  printf("  --%-21s Include changes that are in srcdiff, but the line is not in diff \n", SRCDIFFONLY_FLAG);
-  printf("  --%-21s Include changes that are in diff, but no srcdiff has no change \n", DIFFONLY_FLAG);
+  printf("  --%-21s Include changes only i.e. lines where diff occurs and sections of srcdiff \n", CHANGE_FLAG);
+  printf("  --%-21s Include only the changes that are in srcdiff, but the line is not in diff \n", SRCDIFFONLY_FLAG);
+  printf("  --%-21s Include changes that are in diff, but no srcdiff is on that line \n", DIFFONLY_FLAG);
 
   printf("\n");
 
