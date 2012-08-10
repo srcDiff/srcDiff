@@ -324,14 +324,14 @@ void output_help(const char* name) {
 
   printf("srcDiff Visualization:\n");
 
-  printf("  --%-21s Output visualization of the differences\n", VISUALIZE_FLAG);
-  printf("  --%-21s Output files with no changes \n", SAME_FLAG);
-  printf("  --%-21s Do not output files with no change \n", NO_SAME_FLAG);
-  printf("  --%-21s Output files that were completely added or deleted \n",  PURE_FLAG);
-  printf("  --%-21s Do not output files that were completely added or deleted \n", NO_PURE_FLAG);
-  printf("  --%-21s Output  diff or srcdiff changes only \n", CHANGE_FLAG);
-  printf("  --%-21s Output differences that are only in srcdiff \n", SRCDIFFONLY_FLAG);
-  printf("  --%-21s Output differences that are only in diff \n", DIFFONLY_FLAG);
+  printf("  --%-21s Output html visualization of the differences\n", VISUALIZE_FLAG);
+  printf("  --%-21s Include files with no changes \n", SAME_FLAG);
+  printf("  --%-21s Do not include files with no change \n", NO_SAME_FLAG);
+  printf("  --%-21s Include files that were completely added or deleted \n",  PURE_FLAG);
+  printf("  --%-21s Do not include files that were completely added or deleted \n", NO_PURE_FLAG);
+  printf("  --%-21s Include changes only i.e. do not include source code with no changes \n", CHANGE_FLAG);
+  printf("  --%-21s Include changes that are in srcdiff, but the line is not in diff \n", SRCDIFFONLY_FLAG);
+  printf("  --%-21s Include changes that are in diff, but no srcdiff has no change \n", DIFFONLY_FLAG);
 
   printf("\n");
 
