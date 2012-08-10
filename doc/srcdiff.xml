@@ -437,7 +437,7 @@
       <term><option>&VISUALIZE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Sets output as visualization output.
+	  Sets output as the html visualization.
 	</para>
       </listitem>
     </varlistentry>
@@ -445,7 +445,7 @@
       <term><option>&SAME_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output files with no change.
+	  Include files that have no change.
 	</para>
       </listitem>
     </varlistentry>
@@ -453,7 +453,7 @@
       <term><option>&NO_SAME_FLAG;</option></term>
       <listitem>
 	<para>
-	  Do not output files with no change.
+	  Do not include files that have no change.
 	</para>
       </listitem>
     </varlistentry>
@@ -461,7 +461,7 @@
       <term><option>&PURE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output files than were completely added or deleted.
+	  Include files that were completely added or deleted.
 	</para>
       </listitem>
     </varlistentry>
@@ -469,7 +469,7 @@
       <term><option>&NO_PURE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Do not output files that were completely added or deleted.
+	  Do not include files that were completely added or deleted.
 	</para>
       </listitem>
     </varlistentry>
@@ -477,7 +477,7 @@
       <term><option>&CHANGE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output and diff changes only.
+	  Include only what has changed.
 	</para>
       </listitem>
     </varlistentry>
@@ -485,7 +485,7 @@
       <term><option>&SRCDIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output srcDiff changes only.
+	  Include changes that are only srcDiff changes.
 	</para>
       </listitem>
     </varlistentry>
@@ -493,7 +493,7 @@
       <term><option>&DIFFONLY_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output diff changes only.
+	  Include changes that are diff changes.
 	</para>
       </listitem>
     </varlistentry>
