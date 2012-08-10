@@ -526,10 +526,11 @@
     <h2>srcDiff Visualization</h2>
 
     <p>
-       srcDiff provides output of visualization of the changes as a xhtml document.  The visualization overlays line based differencing over the srcDiff changes.  The option <cite>--visualize</cite> enables the output of the srcDiff visualization.
+       srcDiff provides output of visualization of the changes as a xhtml document.  The visualization overlays line based differencing over the srcDiff changes.  The option <cite>--visualize</cite> enables the output of the srcDiff visualization.  The associated line numbers are shown as well as a legend indicating information on the changes.  Note: a line number in previous/next version may appear more than once and if a diff change was on that line the the visualization will continue to indicate a change.
 
     </p>
 
+    <pre>
        --visualize
               Sets output as the html visualization.
 
@@ -551,7 +552,7 @@
 
        --diff-only
               Include changes that are only diff changes and have no srcdiff change on the line.
-    </p>
+    </pre>
 
     <ul>
       <li>
