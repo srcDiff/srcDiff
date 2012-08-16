@@ -20,11 +20,10 @@ scp ubuntu12build:/srcML/trunk/srcdiff/trunk/dist/srcDiff*.tar.gz ~/Dropbox/srcM
 
 scp ubuntu10build64:/srcML/trunk/srcdiff/trunk/dist/srcDiff*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04-64
 scp ubuntu11build64:/srcML/trunk/srcdiff/trunk/dist/srcDiff*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu11.04-64
-scp ubuntu12build:64/srcML/trunk/srcdiff/trunk/dist/srcDiff*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
+scp ubuntu12build64:/srcML/trunk/srcdiff/trunk/dist/srcDiff*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
 
-./prlctlall.py --fedora --build -15 exec 'bash -c "cd srcML/trunk/src; make clean; make mingw32"'
-./prlctlall.py --fedora --build -15 exec 'bash -c "cd srcML/trunk/srcdiff/trunk/dist; make clean; make windows"'
-
+./prlctlall.py --fedora --build --15 exec 'bash -c "cd srcML/trunk/src; make clean; make mingw32"'
+./prlctlall.py --fedora --build --15 exec 'bash -c "cd srcML/trunk/srcdiff/trunk/dist; make clean; make windows"'
 ./prlctlall.py --fedora --build --15 exec 'bash -c "chown -R srcml:srcml srcML"'
 
 scp fedora15build:/srcML/trunk/srcdiff/trunk/dist/srcDiff*.zip ~/Dropbox/srcML/Windows
@@ -38,5 +37,6 @@ cd
 cd srcML/trunk/src; make clean; make;
 cd
 cd srcML/trunk/srcdiff/trunk/dist; make clean; make;
+
 cp *.tar.gz ~/Dropbox/srcML/Unix/OSX
 cd
