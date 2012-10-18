@@ -61,7 +61,8 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
   int num_edits = -1;
 
   // internal script of edits
-  struct edit ** script = (struct edit **)calloc(max_distance + 1, sizeof(struct edit *));
+  struct edit * script[max_distance + 1];
+  //struct edit ** script = (struct edit **)calloc(max_distance + 1, sizeof(struct edit *));
 
   // initialization, slide 0 along 0 diagonal and find 1st edit
   int row = 0;
@@ -116,7 +117,7 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
 
           // no script on error
           (*edit_script) = NULL;
-          free(script);
+          //free(script);
 
           return -1;
         }
@@ -169,7 +170,7 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
         for(i = 0; i <= edit_array; ++i)
           free(edit_pointers[i]);
 
-        free(script);
+        //free(script);
 
         return edit_distance;
       }
