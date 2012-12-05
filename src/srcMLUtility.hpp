@@ -7,6 +7,8 @@
 
 #include "xmlrw.hpp"
 
+#include "pthread.h"
+
 struct create_nodes_args {
 
   // args
@@ -20,6 +22,9 @@ struct create_nodes_args {
   const char* version;
   const char** uri;
   int tabsize;
+
+  // pthreads
+  pthread_mutex_t * mutex;
 
   // returns
   std::vector<xNode *> & nodes;
@@ -38,7 +43,8 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 void * create_nodes_from_srcML_thread(void * arguments);
 
 void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
-                            const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+                             const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+                             pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context);
 
 // create srcdiff unit

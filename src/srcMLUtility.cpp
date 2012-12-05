@@ -61,6 +61,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
     create_nodes_from_srcML(args.language, args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
     args.directory, args.filename, args.version, args.uri, args.tabsize,
+                            args.mutex,
                             args.nodes, args.unit_start, args.no_error, args.context);
 
     return NULL;
@@ -70,6 +71,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
 void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+                             pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
   
   xmlTextReaderPtr reader = NULL;
