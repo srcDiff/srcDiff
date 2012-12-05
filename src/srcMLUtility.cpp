@@ -107,7 +107,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   // collect if non empty files
   if(no_error) {
 
-    collect_nodes(&nodes, reader, options, context);
+    collect_nodes(&nodes, reader, options, context, mutex);
     /*unit_end = */getRealCurrentNode(reader, options, context);
 
   }
@@ -223,7 +223,7 @@ bool is_separate_token(const char character) {
 
 
 // collect the differnces
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE & options, int context) {
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE & options, int context, pthread_mutex_t * mutex) {
 
   int not_done = 1;
   while(not_done) {
@@ -296,7 +296,9 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
     else {
 
       // text node does not need to be copied.
+      pthread_mutex_lock(mutex);
       xNodePtr node = getRealCurrentNode(reader, options, context);
+      pthread_mutex_unlock(mutex);
 
       if(strcmp((const char *)node->name, "unit") == 0)
         return;
