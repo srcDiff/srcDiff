@@ -35,7 +35,6 @@
 #include "srcDiffOutput.hpp"
 #include "srcDiffDiff.hpp"
 #include "srcMLUtility.hpp"
-#include "pthread.h"
 #include "LineDiffRange.hpp"
 
 #include "xmlrw.hpp"
@@ -107,6 +106,11 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   diff_type.name = DIFF_TYPE;
   //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
+  pthread_mutex_init(&mutex, 0);
+
+  rbuf_old.mutex = &mutex;
+  rbuf_new.mutex = &mutex;
+    
   // writer state
  if(!isoption(global_options, OPTION_VISUALIZE)) {
 

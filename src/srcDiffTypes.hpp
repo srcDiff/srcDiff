@@ -10,6 +10,8 @@
 
 #include "xmlrw.hpp"
 
+#include "pthread.h"
+
 struct diff_set {
 
   int operation;
@@ -43,6 +45,8 @@ public:
 
   int stream_source;
   unsigned int last_output;
+
+  pthread_mutex_t * mutex;
 
   std::vector<xNode *> nodes;
 

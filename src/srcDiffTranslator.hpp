@@ -36,6 +36,8 @@
 #include "Methods.hpp"
 #include "ColorDiff.hpp"
 
+#include "pthread.h"
+
 class srcDiffTranslator {
  public:
 
@@ -90,6 +92,7 @@ void outputNamespaces(const OPTION_TYPE& options);
   const char** uri;
   int tabsize;
 
+  pthread_mutex_t mutex;
   reader_state rbuf_old;
   reader_state rbuf_new;
 
@@ -99,7 +102,6 @@ void outputNamespaces(const OPTION_TYPE& options);
   xmlBuffer * output_srcml_file_new;
 
   ColorDiff * colordiff;
-
   //xmlTextWriterPtr writer;
 
 };
