@@ -39,13 +39,9 @@
 typedef std::map<std::string, xNode*> NodeMap;
 //typedef std::vector<std::string> NameList;
 
-NodeMap starttags_old;
-NodeMap endtags_old;
+NodeMap starttags;
+NodeMap endtags;
 //NameList namelist_old;
-
-NodeMap starttags_new;
-NodeMap endtags_new;
-//NameList namelist_new;
 
 /*
   std::string* setName(const char* name) {
@@ -246,18 +242,6 @@ xNode * copyXNode(xNodePtr node) {
 
 xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context) {
 
-  std::map<std::string, xNode*> * starttags = &starttags_old;
-  std::map<std::string, xNode*> * endtags = &endtags_old;
-  //std::vector<std::string> * namelist = &namelist_old;
-
-  if(isoption(options, OPTION_THREAD) && context == SESINSERT) {
-
-    starttags = &starttags_new;
-    endtags = &endtags_new;
-    //namelist = &namelist_new;
-
-  }
-
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
   std::string full_name;
@@ -273,28 +257,28 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
   xNode * node = 0;
   if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
 
-    NodeMap::iterator lb = starttags->lower_bound(full_name);
-    if (lb != starttags->end() && !(starttags->key_comp()(full_name, lb->first))) {
+    NodeMap::iterator lb = starttags.lower_bound(full_name);
+    if (lb != starttags.end() && !(starttags.key_comp()(full_name, lb->first))) {
 
       node = lb->second;
     } else {
 
       node = createInternalNode(*curnode);
       node->extra = 0;
-      starttags->insert(lb, NodeMap::value_type(full_name, node));
+      starttags.insert(lb, NodeMap::value_type(full_name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
 
-    NodeMap::iterator lb = endtags->lower_bound(full_name);
-    if (lb != endtags->end() && !(endtags->key_comp()(full_name, lb->first))) {
+    NodeMap::iterator lb = endtags.lower_bound(full_name);
+    if (lb != endtags.end() && !(endtags.key_comp()(full_name, lb->first))) {
 
       node = lb->second;
     } else {
 
       node = createInternalNode(*curnode);
       node->extra = 0;
-      endtags->insert(lb, NodeMap::value_type(full_name, node));
+      endtags.insert(lb, NodeMap::value_type(full_name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
