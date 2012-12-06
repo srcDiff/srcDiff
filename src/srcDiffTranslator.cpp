@@ -453,6 +453,8 @@ srcDiffTranslator::~srcDiffTranslator() {
   xmlBufferFree(output_srcml_file_old);
   xmlBufferFree(output_srcml_file_new);
 
+  pthread_mutex_destroy(&mutex);
+
 }
 
 void srcDiffTranslator::startUnit(const char * language,
