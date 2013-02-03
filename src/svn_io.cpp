@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "svn_io.hpp"
 #include "Language.hpp"
@@ -41,18 +42,25 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
   const void * key;
   void * value;
 
+  std::vector<std::string> dir_entries;
+  svn_dirent_t * dirent = (svn_dirent_t *)value;
   for (item = apr_hash_first(pool, dirents); item; item = apr_hash_next(item)) {
 
     apr_hash_this(item, &key, NULL, &value);
 
-    svn_dirent_t * dirent = (svn_dirent_t *)value;
-    //svn_ra_stat(session, path, revision, &dirent, pool);
+    dirent = (svn_dirent_t *)value;
+    dir_entries.push_back((const char *)key);
+  }
+
+  sort(dir_entries.begin(), dir_entries.end());
+
+  //svn_ra_stat(session, path, revision, &dirent, pool);
+  for(unsigned int i = 0; i < dir_entries.size(); ++i) {
 
     std::string new_path = path;
-    const char * name = (const char *)key;
     if(path && path[0] != 0)
       new_path += "/";
-    new_path += name;
+    new_path += dir_entries.at(i);
 
     apr_allocator_t * allocator;
     apr_allocator_create(&allocator);
