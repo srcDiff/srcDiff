@@ -288,5 +288,7 @@ int svnReadClose(void * context) {
 
   apr_pool_destroy(ctx->pool);
 
+  delete ctx;
+
   return 1;
 }
