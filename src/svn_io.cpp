@@ -30,13 +30,14 @@ int abortfunc(int retcode) {
 
   return retcode;
 }
-void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
+
+void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision, apr_pool_t * pool, srcDiffTranslator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_hash_t * dirents;
   svn_revnum_t fetched_rev;
   apr_hash_t *props;
 
-  svn_ra_get_dir2(session, &dirents, &fetched_rev, &props, path, revision, SVN_DIRENT_ALL, pool);
+  svn_ra_get_dir2(session, &dirents, &fetched_rev, &props, directory_old, revision, SVN_DIRENT_ALL, pool);
 
   apr_hash_index_t * item;
   const void * key;
@@ -57,8 +58,8 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
   //svn_ra_stat(session, path, revision, &dirent, pool);
   for(unsigned int i = 0; i < dir_entries.size(); ++i) {
 
-    std::string new_path = path;
-    if(path && path[0] != 0)
+    std::string new_path = directory_old;
+    if(directory_old && directory_old[0] != 0)
       new_path += "/";
     new_path += dir_entries.at(i);
 
@@ -69,9 +70,9 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     if(dirent->kind == svn_node_file)
-      svn_process_file(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
+      svn_process_file(session, revision, new_pool, translator, new_path.c_str(), new_path.c_str(), 0,0, options, language, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
+      svn_process_dir(session, revision, new_pool, translator, new_path.c_str(), 0, new_path.c_str(), 0, options, language, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
@@ -83,93 +84,52 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
 
 }
 
-void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision, apr_pool_t * pool, srcDiffTranslator& translator, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
-  OPTION_TYPE save_options = options;
-  try {
+  // Do not nest individual files
+  OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
-    bool foundfilename = true;
+  std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
+  if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
 
-    std::string unit_filename = path;
-    if (filename)
-      unit_filename = filename;
-    else
-      unit_filename = path;
+    filename += "|";
+    filename += path_two[0] ? path_two + directory_length_new : path_two;
 
-    // language based on extension, if not specified
-
-    // 1) language may have been explicitly specified
-    int reallanguage = language;
-
-    // 2) try from the filename (basically the extension)
-    if (!reallanguage)
-      reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
-
-    // error if can't find a language
-    if (!reallanguage) {
-
-      if (!isoption(options, OPTION_QUIET)) {
-        if (unit_filename == "-")
-          fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
-        else
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
-                  "    - %s\tSkipped: Unregistered extension\n",
-                  unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-      }
-
-      ++skipped;
-
-      return;
-    }
-
-    // turnon cpp namespace for non Java-based languages
-    if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
-      options |= OPTION_CPP;
-
-    // open up the file
-    //void * context =
-    translator.setInput(path);
-
-    // another file
-    ++count;
-
-
-    const char* c_filename = clean_filename(unit_filename.c_str());
-
-    // output the currently processed filename
-    if (!isoption(options, OPTION_QUIET) && shownumber)
-      fprintf(stderr, "%5d %s\n", count, c_filename);
-
-    // translate the file
-    translator.translate(path, dir,
-                         foundfilename ? c_filename : 0,
-                         version, reallanguage);
-
-  } catch (FileError) {
-
-    // output tracing information about the input file
-    if (showinput && !isoption(options, OPTION_QUIET)) {
-
-      // output the currently processed filename
-      fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
-      fprintf(stderr, "\tError: Unable to open file.\n");
-
-    } else {
-
-      if (dir)
-        fprintf(stderr, "%s: Unable to open file %s/%s\n", "src2srcml", dir, path);
-      else
-        fprintf(stderr, "%s: Unable to open file %s\n", "src2srcml", path);
-    }
-
-    ++error;
   }
 
-  options = save_options;
+  // Remove eventually
+  int real_language = language ? language : Language::getLanguageFromFilename(path_one);
+
+  real_language = real_language ? real_language : Language::getLanguageFromFilename(path_two);
+
+  if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
+    local_options |= OPTION_CPP;
+
+  if (!real_language && !isoption(options, OPTION_QUIET)) {
+    fprintf(stderr, !shownumber ? "Skipped '%s|%s':  Unregistered extension\n" :
+            "    - '%s|%s'\tSkipped: Unregistered extension\n",
+            path_one, path_two);
+
+    ++skipped;
+
+    return;
+  }
+
+  ++count;
+
+  if(showinput && !isoption(local_options, OPTION_QUIET))
+    fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
+
+  translator.translate(path_one, path_two, local_options,
+                       NULL,
+                       filename.c_str(),
+                       0,
+                       real_language);
+
 
 }
 
-void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, const char * url, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_session(svn_revnum_t revision, srcDiffTranslator& translator, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_initialize();
 
@@ -221,15 +181,15 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   svn_ra_stat(session, path, revision, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version,
-                     language ? language : Language::getLanguageFromFilename(url), tabsize, count, skipped, error, showinput, shownumber);
+    svn_process_file(session, revision, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_dir)
-    svn_process_dir(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize,
-                    count, skipped, error, showinput, shownumber);
+    svn_process_dir(session, revision, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
     fprintf(stderr, "%s\n", "Path does not exist");
   else if(dirent->kind == svn_node_unknown)
     fprintf(stderr, "%s\n", "Unknown");
+
+  apr_pool_destroy(path_pool);
 
   apr_terminate();
 
