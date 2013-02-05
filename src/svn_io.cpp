@@ -34,41 +34,56 @@ int abortfunc(int retcode) {
 
 void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
-  apr_hash_t * dirents;
-  svn_revnum_t fetched_rev;
-  apr_hash_t *props;
+  apr_hash_t * dirents_one;
+  svn_revnum_t fetched_rev_one;
 
-  svn_ra_get_dir2(session, &dirents, &fetched_rev, &props, directory_old, revision_one, SVN_DIRENT_ALL, pool);
+  svn_ra_get_dir2(session, &dirents_one, &fetched_rev_one, NULL, directory_old, revision_one, SVN_DIRENT_ALL, pool);
+
+  apr_hash_t * dirents_two;
+  svn_revnum_t fetched_rev_two;
+
+  svn_ra_get_dir2(session, &dirents_two, &fetched_rev_two, NULL, directory_new, revision_two, SVN_DIRENT_ALL, pool);
 
   apr_hash_index_t * item;
   const void * key;
   void * value;
 
-  std::vector<std::string> dir_entries;
-  svn_dirent_t * dirent = (svn_dirent_t *)value;
-  for (item = apr_hash_first(pool, dirents); item; item = apr_hash_next(item)) {
+  std::vector<std::string> dir_entries_one;
+  for (item = apr_hash_first(pool, dirents_one); item; item = apr_hash_next(item)) {
 
     apr_hash_this(item, &key, NULL, &value);
 
-    dirent = (svn_dirent_t *)value;
-    dir_entries.push_back((const char *)key);
+    dir_entries_one.push_back((const char *)key);
   }
 
-  sort(dir_entries.begin(), dir_entries.end());
+  sort(dir_entries_one.begin(), dir_entries_one.end());
 
-  //svn_ra_stat(session, path, revision, &dirent, pool);
-  for(unsigned int i = 0; i < dir_entries.size(); ++i) {
+  std::vector<std::string> dir_entries_two;
+  for (item = apr_hash_first(pool, dirents_two); item; item = apr_hash_next(item)) {
+
+    apr_hash_this(item, &key, NULL, &value);
+
+    dir_entries_two.push_back((const char *)key);
+  }
+
+  sort(dir_entries_two.begin(), dir_entries_two.end());
+
+  //
+  for(unsigned int i = 0; i < dir_entries_one.size(); ++i) {
 
     std::string new_path = directory_old;
     if(directory_old && directory_old[0] != 0)
       new_path += "/";
-    new_path += dir_entries.at(i);
+    new_path += dir_entries_one.at(i);
 
     apr_allocator_t * allocator;
     apr_allocator_create(&allocator);
 
     apr_pool_t * new_pool;
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
+    svn_dirent_t * dirent;
+    svn_ra_stat(session, new_path.c_str(), revision_one, &dirent, pool);
 
     if(dirent->kind == svn_node_file)
       svn_process_file(session, revision_one, revision_two, new_pool, translator, new_path.c_str(), new_path.c_str(), 0,0, options, language, count, skipped, error, showinput, shownumber);
