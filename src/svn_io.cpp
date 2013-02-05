@@ -102,6 +102,9 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   path_one += '@';
   path_one += revision_one;
 
+  path_two += '@';
+  path_one += revision_two;
+
   // Remove eventually
   int real_language = language ? language : Language::getLanguageFromFilename(path_one);
 
@@ -224,7 +227,15 @@ void * svnReadOpen(const char * URI) {
   svn_revnum_t fetched_rev;
   apr_hash_t * props;
 
-  svn_ra_get_file(global_session, URI, SVN_INVALID_REVNUM, context->stream, &fetched_rev, &props, context->pool);
+  // parse uri
+  const char * end = index(URI, '@');
+
+  const char * path = 0;
+  path = strndup(URI, end - path);
+
+  svn_revnum_t revision = atoi(end + 1);
+
+  svn_ra_get_file(global_session, path, revision, context->stream, &fetched_rev, &props, context->pool);
 
   return context;
 
