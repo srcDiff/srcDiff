@@ -103,7 +103,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
       continue;
     }
 
-    if(dirent_new->kind != svn_node_file)
+    if(dirent_new->kind != svn_node_file) {
       ++j;
       continue;
     }
@@ -115,7 +115,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // is this a common, inserted, or deleted file?
-    int comparison = strcoll(dir_entries_one[i], dir_entries_two[j]);
+    int comparison = strcoll(dir_entries_one[i].c_str(), dir_entries_two[j].c_str());
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     svn_process_file(session, revision_one, revision_two, new_pool, translator,
@@ -132,7 +132,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   }
 
   // process all non-directory files that are remaining in the old version
-  for ( ; i < n; ++i) {
+  for (; i < n; ++i) {
 
     // form the full path
     filename_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
@@ -170,13 +170,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   for ( ; j < m; ++j) {
 
     // form the full path
-    filename_new.replace(basesize_new, std::string::npos, dir_entreis_two[j]);
+    filename_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
 
     svn_dirent_t * dirent_new;
     svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
 
     // skip directories
-    if(dirent_new->kind != svn_node_file)
+    if(dirent_new->kind != svn_node_file) {
       ++j;
       continue;
     }
@@ -226,7 +226,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
       continue;
     }
 
-    if(dirent_new->kind != svn_node_dir)
+    if(dirent_new->kind != svn_node_dir) {
       ++j;
       continue;
     }
@@ -238,16 +238,16 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // is this a common, inserted, or deleted directory?
-int comparison = strcoll(dir_entries_one[i], dir_entires_two[j]);
+    int comparison = strcoll(dir_entries_one[i].c_str(), dir_entries_two[j].c_str());
 
     // process these directories
-svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                comparison <= 0 ? (++i, filename_old.c_str()) : "",
-                directory_length_old,
-                comparison >= 0 ? (++j, filename_new.c_str()) : "",
-                directory_length_new,
-                poptions,
-                count, skipped, error, showinput, shownumber, outstat);
+    svn_process_dir(session, revision_one, revision_two, new_pool, translator,
+		    comparison <= 0 ? (++i, filename_old.c_str()) : "",
+		    directory_length_old,
+		    comparison >= 0 ? (++j, filename_new.c_str()) : "",
+		    directory_length_new,
+		    options,
+		    language, count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -274,14 +274,14 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // process this directory
-svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                filename_old.c_str(),
-                directory_length_old,
+    svn_process_dir(session, revision_one, revision_two, new_pool, translator,
+		    filename_old.c_str(),
+		    directory_length_old,
                  "",
-                directory_length_new,
-                poptions,
-                count, skipped, error, showinput, shownumber, outstat);
-
+		    directory_length_new,
+		    options,
+		    language, count, skipped, error, showinput, shownumber);
+    
     apr_pool_destroy(new_pool);
 
   }
@@ -289,7 +289,7 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
   // process all directories that remain in the new version
   for ( ; j < m; ++j) {
 
-    filename_new.replace(basesize_old, std::string::npos, dir_entries_two[i]);
+    filename_new.replace(basesize_old, std::string::npos, dir_entries_two[j]);
 
     svn_dirent_t * dirent_new;
     svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
@@ -311,8 +311,8 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 directory_length_old,
                 filename_new.c_str(),
                 directory_length_new,
-                poptions,
-                count, skipped, error, showinput, shownumber, outstat);
+                options,
+                language, count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
