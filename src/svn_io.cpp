@@ -68,6 +68,205 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
   sort(dir_entries_two.begin(), dir_entries_two.end());
 
+  // process directory
+  std::string filename_old = directory_old;
+  if (filename_old != "" && !filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
+    filename_old += PATH_SEPARATOR;
+  int basesize_old = filename_old.length();
+
+  std::string filename_new = directory_new;
+  if (filename_new != "" && !filename_new.empty() && filename_new[filename_new.size() - 1] != PATH_SEPARATOR)
+    filename_new += PATH_SEPARATOR;
+  int basesize_new = filename_new.length();
+
+  // process all non-directory files
+  int i = 0;
+  int j = 0;
+  int n = dir_entries_one.size();
+  int m = dir_entries_two.size();
+  while (i < n && j < m) {
+
+    // form the full path
+    filename_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
+    filename_new.replace(basesize_new, std::string::npos, dir_entreis_two[j]);
+
+    svn_dirent_t * dirent_old;
+    svn_ra_stat(session, filename_old.c_str(), revision_one, &dirent_old, pool);
+
+    svn_dirent_t * dirent_new;
+    svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
+    
+
+    // skip directories
+    if(dirent_old->kind == svn_node_dir) {
+      ++i;
+      continue;
+    }
+    if(dirent_new->kind == svn_node_dir)
+      ++j;
+      continue;
+    }
+
+    // is this a common, inserted, or deleted file?
+    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+
+    // translate the file listed in the input file using the directory and filename extracted from the path
+    srcdiff_text(translator,
+                 comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                 directory_length_old,
+                 directory_length_new,
+                 options,
+                 poptions.language,
+                 count, skipped, error, showinput, shownumber);
+  }
+
+  // process all non-directory files that are remaining in the old version
+  for ( ; i < n; ++i) {
+
+    // form the full path
+    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+
+    // skip directories
+    if(is_dir(namelist_old[i], filename_old.c_str()) != 0)
+      continue;
+
+    // skip over output file
+    if (is_output_file(filename_old.c_str(), outstat) != 0) {
+      noteSkipped(shownumber, poptions);
+      ++skipped;
+      continue;
+    }
+
+    // translate the file listed in the input file using the directory and filename extracted from the path
+    srcdiff_text(translator,
+                 filename_old.c_str(),
+                 "",
+                 directory_length_old,
+                 directory_length_new,
+                 options,
+                 poptions.language,
+                 count, skipped, error, showinput, shownumber);
+  }
+
+  // process all non-directory files that are remaining in the new version
+  for ( ; j < m; ++j) {
+
+    // form the full path
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+
+    // skip directories
+    if(is_dir(namelist_new[j], filename_new.c_str()) != 0)
+      continue;
+
+    // skip over output file
+    if (is_output_file(filename_new.c_str(), outstat) != 0) {
+      noteSkipped(shownumber, poptions);
+      ++skipped;
+      continue;
+    }
+
+    // translate the file listed in the input file using the directory and filename extracted from the path
+    srcdiff_text(translator,
+                 "",
+                 filename_new.c_str(),
+                 directory_length_old,
+                 directory_length_new,
+                 options,
+                 poptions.language,
+                 count, skipped, error, showinput, shownumber);
+  }
+
+  // no need to handle subdirectories, unless recursive
+  //  if (!isoption(options, OPTION_RECURSIVE))
+  //    return;
+
+  // process all directories
+  i = 0;
+  j = 0;
+  while (i < n && j < m) {
+
+    // form the full path
+    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+
+    // skip non-directories
+    if(is_dir(namelist_old[i], filename_old.c_str()) != 1) {
+      ++i;
+      continue;
+    }
+    if(is_dir(namelist_new[j], filename_new.c_str()) != 1) {
+      ++j;
+      continue;
+    }
+
+    // is this a common, inserted, or deleted directory?
+    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+
+    // process these directories
+    srcdiff_dir(translator,
+                comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                directory_length_old,
+                comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                directory_length_new,
+                poptions,
+                count, skipped, error, showinput, shownumber, outstat);
+  }
+
+  // process all directories that remain in the old version
+  for ( ; i < n; ++i) {
+
+    // form the full path
+    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+
+    // skip non-directories
+    if(is_dir(namelist_old[i], filename_old.c_str()) != 1)
+      continue;
+
+    // skip over output file
+    if (is_output_file(filename_old.c_str(), outstat) == 1) {
+      noteSkipped(shownumber, poptions);
+      ++skipped;
+      continue;
+    }
+
+    // process this directory
+    srcdiff_dir(translator,
+                filename_old.c_str(),
+                directory_length_old,
+                 "",
+                directory_length_new,
+                poptions,
+                count, skipped, error, showinput, shownumber, outstat);
+  }
+
+  // process all directories that remain in the new version
+  for ( ; j < m; ++j) {
+
+    // form the full path
+    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+
+    // skip non-directories
+    if(is_dir(namelist_new[j], filename_new.c_str()) != 1)
+      continue;
+
+    // skip over output file
+    if (is_output_file(filename_new.c_str(), outstat) == 1) {
+      noteSkipped(shownumber, poptions);
+      ++skipped;
+      continue;
+    }
+
+    // process this directory
+    srcdiff_dir(translator,
+                "",
+                directory_length_old,
+                filename_new.c_str(),
+                directory_length_new,
+                poptions,
+                count, skipped, error, showinput, shownumber, outstat);
+  }
+
   //
   for(unsigned int i = 0; i < dir_entries_one.size(); ++i) {
 
