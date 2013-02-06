@@ -98,17 +98,18 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     
 
     // skip directories
-    if(dirent_old->kind == svn_node_dir) {
+    if(dirent_old->kind != svn_node_file) {
       ++i;
       continue;
     }
-    if(dirent_new->kind == svn_node_dir)
+
+    if(dirent_new->kind != svn_node_file)
       ++j;
       continue;
     }
 
     // is this a common, inserted, or deleted file?
-    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+    int comparison = strcoll(dir_entries_one[i], dir_entries_two[j]);
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     srcdiff_text(translator,
@@ -125,16 +126,14 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   for ( ; i < n; ++i) {
 
     // form the full path
-    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+    filename_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
+
+    svn_dirent_t * dirent_old;
+    svn_ra_stat(session, filename_old.c_str(), revision_one, &dirent_old, pool);
 
     // skip directories
-    if(is_dir(namelist_old[i], filename_old.c_str()) != 0)
-      continue;
-
-    // skip over output file
-    if (is_output_file(filename_old.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, poptions);
-      ++skipped;
+    if(dirent_old->kind != svn_node_file) {
+      ++i;
       continue;
     }
 
@@ -153,16 +152,14 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   for ( ; j < m; ++j) {
 
     // form the full path
-    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+    filename_new.replace(basesize_new, std::string::npos, dir_entreis_two[j]);
+
+    svn_dirent_t * dirent_new;
+    svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
 
     // skip directories
-    if(is_dir(namelist_new[j], filename_new.c_str()) != 0)
-      continue;
-
-    // skip over output file
-    if (is_output_file(filename_new.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, poptions);
-      ++skipped;
+    if(dirent_new->kind != svn_node_file)
+      ++j;
       continue;
     }
 
@@ -186,22 +183,29 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   j = 0;
   while (i < n && j < m) {
 
-    // form the full path
-    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
-    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+    filename_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
+    filename_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
 
-    // skip non-directories
-    if(is_dir(namelist_old[i], filename_old.c_str()) != 1) {
+    svn_dirent_t * dirent_old;
+    svn_ra_stat(session, filename_old.c_str(), revision_one, &dirent_old, pool);
+
+    svn_dirent_t * dirent_new;
+    svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
+    
+
+    // skip directories
+    if(dirent_old->kind != svn_node_dir) {
       ++i;
       continue;
     }
-    if(is_dir(namelist_new[j], filename_new.c_str()) != 1) {
+
+    if(dirent_new->kind != svn_node_dir)
       ++j;
       continue;
     }
 
     // is this a common, inserted, or deleted directory?
-    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+int comparison = strcoll(dir_entries_one[i], dir_entires_two[j]);
 
     // process these directories
     srcdiff_dir(translator,
@@ -216,17 +220,14 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   // process all directories that remain in the old version
   for ( ; i < n; ++i) {
 
-    // form the full path
-    filename_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+    filename_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
 
-    // skip non-directories
-    if(is_dir(namelist_old[i], filename_old.c_str()) != 1)
-      continue;
+    svn_dirent_t * dirent_old;
+    svn_ra_stat(session, filename_old.c_str(), revision_one, &dirent_old, pool);
 
-    // skip over output file
-    if (is_output_file(filename_old.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, poptions);
-      ++skipped;
+    // skip directories
+    if(dirent_old->kind != svn_node_dir) {
+      ++i;
       continue;
     }
 
@@ -243,21 +244,17 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   // process all directories that remain in the new version
   for ( ; j < m; ++j) {
 
-    // form the full path
-    filename_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+    filename_new.replace(basesize_old, std::string::npos, dir_entries_two[i]);
 
-    // skip non-directories
-    if(is_dir(namelist_new[j], filename_new.c_str()) != 1)
-      continue;
+    svn_dirent_t * dirent_new;
+    svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
 
-    // skip over output file
-    if (is_output_file(filename_new.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, poptions);
-      ++skipped;
+    // skip directories
+    if(dirent_new->kind != svn_node_dir) {
+      ++i;
       continue;
     }
 
-    // process this directory
     srcdiff_dir(translator,
                 "",
                 directory_length_old,
