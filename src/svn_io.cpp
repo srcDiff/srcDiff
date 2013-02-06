@@ -88,7 +88,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
     // form the full path
     filename_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
-    filename_new.replace(basesize_new, std::string::npos, dir_entreis_two[j]);
+    filename_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
 
     svn_dirent_t * dirent_old;
     svn_ra_stat(session, filename_old.c_str(), revision_one, &dirent_old, pool);
@@ -112,13 +112,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     int comparison = strcoll(dir_entries_one[i], dir_entries_two[j]);
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    srcdiff_text(translator,
+    svn_process_file(session, revision_one, revision_two, new_pool, translator,
                  comparison <= 0 ? (++i, filename_old.c_str()) : "",
                  comparison >= 0 ? (++j, filename_new.c_str()) : "",
                  directory_length_old,
                  directory_length_new,
                  options,
-                 poptions.language,
+                 language,
                  count, skipped, error, showinput, shownumber);
   }
 
@@ -138,13 +138,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    srcdiff_text(translator,
+        svn_process_file(session, revision_one, revision_two, new_pool, translator,
                  filename_old.c_str(),
                  "",
                  directory_length_old,
                  directory_length_new,
                  options,
-                 poptions.language,
+                 language,
                  count, skipped, error, showinput, shownumber);
   }
 
@@ -164,13 +164,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    srcdiff_text(translator,
+            svn_process_file(session, revision_one, revision_two, new_pool, translator,
                  "",
                  filename_new.c_str(),
                  directory_length_old,
                  directory_length_new,
                  options,
-                 poptions.language,
+                 language,
                  count, skipped, error, showinput, shownumber);
   }
 
@@ -208,7 +208,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 int comparison = strcoll(dir_entries_one[i], dir_entires_two[j]);
 
     // process these directories
-    srcdiff_dir(translator,
+svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 comparison <= 0 ? (++i, filename_old.c_str()) : "",
                 directory_length_old,
                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
@@ -232,7 +232,7 @@ int comparison = strcoll(dir_entries_one[i], dir_entires_two[j]);
     }
 
     // process this directory
-    srcdiff_dir(translator,
+svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 filename_old.c_str(),
                 directory_length_old,
                  "",
@@ -255,7 +255,7 @@ int comparison = strcoll(dir_entries_one[i], dir_entires_two[j]);
       continue;
     }
 
-    srcdiff_dir(translator,
+svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 "",
                 directory_length_old,
                 filename_new.c_str(),
