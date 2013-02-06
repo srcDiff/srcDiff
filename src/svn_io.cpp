@@ -108,6 +108,12 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
       continue;
     }
 
+    apr_allocator_t * allocator;
+    apr_allocator_create(&allocator);
+
+    apr_pool_t * new_pool;
+    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
     // is this a common, inserted, or deleted file?
     int comparison = strcoll(dir_entries_one[i], dir_entries_two[j]);
 
@@ -120,6 +126,9 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                  options,
                  language,
                  count, skipped, error, showinput, shownumber);
+
+    apr_pool_destroy(new_pool);
+
   }
 
   // process all non-directory files that are remaining in the old version
@@ -137,6 +146,12 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
       continue;
     }
 
+    apr_allocator_t * allocator;
+    apr_allocator_create(&allocator);
+
+    apr_pool_t * new_pool;
+    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
     // translate the file listed in the input file using the directory and filename extracted from the path
         svn_process_file(session, revision_one, revision_two, new_pool, translator,
                  filename_old.c_str(),
@@ -146,6 +161,9 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                  options,
                  language,
                  count, skipped, error, showinput, shownumber);
+
+    apr_pool_destroy(new_pool);
+
   }
 
   // process all non-directory files that are remaining in the new version
@@ -163,6 +181,12 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
       continue;
     }
 
+    apr_allocator_t * allocator;
+    apr_allocator_create(&allocator);
+
+    apr_pool_t * new_pool;
+    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
     // translate the file listed in the input file using the directory and filename extracted from the path
             svn_process_file(session, revision_one, revision_two, new_pool, translator,
                  "",
@@ -172,6 +196,9 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                  options,
                  language,
                  count, skipped, error, showinput, shownumber);
+
+    apr_pool_destroy(new_pool);
+
   }
 
   // no need to handle subdirectories, unless recursive
@@ -204,6 +231,12 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
       continue;
     }
 
+    apr_allocator_t * allocator;
+    apr_allocator_create(&allocator);
+
+    apr_pool_t * new_pool;
+    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
     // is this a common, inserted, or deleted directory?
 int comparison = strcoll(dir_entries_one[i], dir_entires_two[j]);
 
@@ -215,6 +248,9 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 directory_length_new,
                 poptions,
                 count, skipped, error, showinput, shownumber, outstat);
+
+    apr_pool_destroy(new_pool);
+
   }
 
   // process all directories that remain in the old version
@@ -231,6 +267,12 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
       continue;
     }
 
+    apr_allocator_t * allocator;
+    apr_allocator_create(&allocator);
+
+    apr_pool_t * new_pool;
+    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
     // process this directory
 svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 filename_old.c_str(),
@@ -239,6 +281,9 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 directory_length_new,
                 poptions,
                 count, skipped, error, showinput, shownumber, outstat);
+
+    apr_pool_destroy(new_pool);
+
   }
 
   // process all directories that remain in the new version
@@ -255,6 +300,12 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
       continue;
     }
 
+    apr_allocator_t * allocator;
+    apr_allocator_create(&allocator);
+
+    apr_pool_t * new_pool;
+    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
 svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 "",
                 directory_length_old,
@@ -262,33 +313,6 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                 directory_length_new,
                 poptions,
                 count, skipped, error, showinput, shownumber, outstat);
-  }
-
-  //
-  for(unsigned int i = 0; i < dir_entries_one.size(); ++i) {
-
-    std::string new_path = directory_old;
-    if(directory_old && directory_old[0] != 0)
-      new_path += "/";
-    new_path += dir_entries_one.at(i);
-
-    apr_allocator_t * allocator;
-    apr_allocator_create(&allocator);
-
-    apr_pool_t * new_pool;
-    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
-
-    svn_dirent_t * dirent;
-    svn_ra_stat(session, new_path.c_str(), revision_one, &dirent, pool);
-
-    if(dirent->kind == svn_node_file)
-      svn_process_file(session, revision_one, revision_two, new_pool, translator, new_path.c_str(), new_path.c_str(), 0,0, options, language, count, skipped, error, showinput, shownumber);
-    else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, revision_one, revision_two, new_pool, translator, new_path.c_str(), 0, new_path.c_str(), 0, options, language, count, skipped, error, showinput, shownumber);
-    else if(dirent->kind == svn_node_none)
-      fprintf(stderr, "%s\n", "Path does not exist");
-    else if(dirent->kind == svn_node_unknown)
-      fprintf(stderr, "%s\n", "Unknown");
 
     apr_pool_destroy(new_pool);
 
