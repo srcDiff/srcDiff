@@ -358,11 +358,11 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
   // set path to include revision
-  std::ostringstream file_one(path_one);
+  std::ostringstream file_one(path_one, std::ios_base::ate);
   file_one << '@';
   file_one << revision_one;
 
-  std::ostringstream file_two(path_two);
+  std::ostringstream file_two(path_two, std::ios_base::ate);
   file_two << '@';
   file_two << revision_two;
 
