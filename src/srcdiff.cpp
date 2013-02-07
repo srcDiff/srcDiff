@@ -653,6 +653,9 @@ int main(int argc, char* argv[]) {
       srcdiff_filelist(translator, options, poptions, count, skipped, error, showinput, shownumber);
 
       // translate from standard input
+    } else if(isoption(options, OPTION_SVN)) {
+
+
     } else if (input_arg_count == 0) {
 
       // translate from standard input using any directory, filename and version given on the command line
