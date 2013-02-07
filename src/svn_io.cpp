@@ -333,13 +333,6 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
 
   }
 
-  // set path to include revision
-  path_one += '@';
-  path_one += revision_one;
-
-  path_two += '@';
-  path_one += revision_two;
-
   // Remove eventually
   int real_language = language ? language : Language::getLanguageFromFilename(path_one);
 
@@ -362,6 +355,13 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
 
   if(showinput && !isoption(local_options, OPTION_QUIET))
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
+
+  // set path to include revision
+  path_one += '@';
+  path_one += revision_one;
+
+  path_two += '@';
+  path_two += revision_two;
 
   translator.translate(path_one, path_two, local_options,
                        NULL,
