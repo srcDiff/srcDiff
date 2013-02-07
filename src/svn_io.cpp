@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 
@@ -321,7 +322,7 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
 }
 
 void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
-
+    std::cerr << path_one << '|' << path_two << '\n';
   // Do not nest individual files
   OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
@@ -357,13 +358,15 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
   // set path to include revision
-  path_one += '@';
-  path_one += revision_one;
+  std::ostringstream file_one(path_one);
+  file_one << '@';
+  file_one << revision_one;
 
-  path_two += '@';
-  path_two += revision_two;
+  std::ostringstream file_two(path_two);
+  file_two << '@';
+  file_two << revision_two;
 
-  translator.translate(path_one, path_two, local_options,
+  translator.translate(file_one.str().c_str(), file_two.str().c_str(), local_options,
                        NULL,
                        filename.c_str(),
                        0,
@@ -445,7 +448,7 @@ int svnReadMatch(const char * URI) {
 }
 
 void * svnReadOpen(const char * URI) {
-
+  std::cout << URI << '\n';
   svn_context * context = new svn_context;
 
   apr_allocator_t * allocator;
