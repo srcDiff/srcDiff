@@ -152,6 +152,10 @@ const int NO_SAME_FLAG_CODE = 256 + 19;
 const char* const NO_PURE_FLAG = "no-pure";
 const int NO_PURE_FLAG_CODE = 256 + 20;
 
+const char * const SVN_FLAG = "svn";
+const int SVN_FLAG_CODE = 256 + 21;
+
+
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
@@ -402,6 +406,10 @@ struct process_options
   bool prefixchange[num_prefixes];
   METHOD_TYPE method;
   std::string css_url;
+
+  const char * svn_url;
+  int revision_one;
+  int revision_two;
 };
 
 process_options* gpoptions = 0;
@@ -739,6 +747,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { NO_SAME_FLAG, no_argument, NULL, NO_SAME_FLAG_CODE },
     { NO_PURE_FLAG, no_argument, NULL, NO_PURE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
+    { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
@@ -814,6 +823,23 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_NESTED;
 
       poptions.file_list_name = optarg;
+      break;
+
+    case SVN_FLAG_CODE:
+
+      // check for missing argument confused by an argument that looks like an option
+      //      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+      {
+
+	options |= OPTION_SVN;
+
+	// filelist mode is default nested mode
+	options |= OPTION_NESTED;
+
+	poptions.svn_url = optarg;
+
+      }
+
       break;
 
     case REGISTER_EXT_FLAG_CODE:
