@@ -17,7 +17,10 @@
 #include "Language.hpp"
 #include "srcmlapps.hpp"
 
+#include "pthread.h"
+
 svn_ra_session_t * global_session;
+pthread_mutex_t mutex;
 
 struct svn_context {
 
@@ -322,7 +325,7 @@ svn_process_dir(session, revision_one, revision_two, new_pool, translator,
 }
 
 void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
-    std::cerr << path_one << '|' << path_two << '\n';
+
   // Do not nest individual files
   OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
@@ -366,6 +369,7 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   file_two << '@';
   file_two << revision_two;
 
+
   translator.translate(file_one.str().c_str(), file_two.str().c_str(), local_options,
                        NULL,
                        filename.c_str(),
@@ -376,6 +380,8 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
 }
 
 void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcDiffTranslator& translator, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+
+  pthread_mutex_init(&mutex, 0);
 
   apr_initialize();
 
@@ -405,8 +411,7 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
   svn_boolean_t trust_server_cert = true;
 
   svn_auth_baton_t * ab;
-  svn_cmdline_create_auth_baton(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert,
-                                cfg_config, ctx->cancel_func, ctx->cancel_baton, pool);
+  svn_cmdline_create_auth_baton(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert, cfg_config, ctx->cancel_func, ctx->cancel_baton, pool);
 
   ctx->auth_baton = ab;
   ctx->conflict_func = NULL;
@@ -437,7 +442,11 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
   apr_pool_destroy(path_pool);
 
+  apr_pool_destroy(pool);
+
   apr_terminate();
+
+  pthread_mutex_destroy(&mutex);
 
 }
 
@@ -472,7 +481,9 @@ void * svnReadOpen(const char * URI) {
 
   svn_revnum_t revision = atoi(end + 1);
 
+  pthread_mutex_lock(&mutex);
   svn_ra_get_file(global_session, path, revision, context->stream, &fetched_rev, &props, context->pool);
+  pthread_mutex_unlock(&mutex);
 
   return context;
 
