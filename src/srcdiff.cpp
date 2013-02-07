@@ -52,6 +52,7 @@
 #include <sys/stat.h>
 
 #include "svn_io.hpp"
+#include <iostream>
 
 #define PROGRAM_NAME "srcdiff"
 
@@ -655,7 +656,14 @@ int main(int argc, char* argv[]) {
       // translate from standard input
     } else if(isoption(options, OPTION_SVN)) {
 
+    if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
+      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+      exit(1);
+    }
+
+      std::cout << "HERE\n";
       svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
+      std::cout << "HERE\n";
 
     } else if (input_arg_count == 0) {
 
