@@ -448,7 +448,7 @@ int svnReadMatch(const char * URI) {
 }
 
 void * svnReadOpen(const char * URI) {
-  std::cout << URI << '\n';
+
   svn_context * context = new svn_context;
 
   apr_allocator_t * allocator;
@@ -468,10 +468,10 @@ void * svnReadOpen(const char * URI) {
   // parse uri
   const char * end = index(URI, '@');
 
-  const char * path = 0;
-  path = strndup(URI, end - path);
+  const char * path = strndup(URI, end - URI);
 
   svn_revnum_t revision = atoi(end + 1);
+  std::cout << path << "\t" << revision << '\n';
 
   svn_ra_get_file(global_session, path, revision, context->stream, &fetched_rev, &props, context->pool);
 
