@@ -471,7 +471,6 @@ void * svnReadOpen(const char * URI) {
   const char * path = strndup(URI, end - URI);
 
   svn_revnum_t revision = atoi(end + 1);
-  std::cout << path << "\t" << revision << '\n';
 
   svn_ra_get_file(global_session, path, revision, context->stream, &fetched_rev, &props, context->pool);
 
