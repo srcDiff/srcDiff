@@ -155,7 +155,7 @@ const char* const NO_PURE_FLAG = "no-pure";
 const int NO_PURE_FLAG_CODE = 256 + 20;
 
 const char * const SVN_FLAG = "svn";
-const int SVN_FLAG_CODE = 256 + 21;
+const int SVN_FLAG_CODE = 256 + 22;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
