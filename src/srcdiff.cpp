@@ -706,6 +706,7 @@ return exit_status;
 
 }
 
+
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions) {
 
@@ -839,7 +840,14 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	// filelist mode is default nested mode
 	options |= OPTION_NESTED;
 
-	poptions.svn_url = optarg;
+	const char * end = index(optarg, '@');
+	poptions.svn_url = strndup(optarg, end - optarg);
+
+	const char * first = index(end + 1, '-');
+	const char * temp_revision = strndup(end + 1, first - (end + 1));
+	poptions.revision_one = atoi(temp_revision);
+	free((void *)temp_revision);
+	poptions.revision_two = atoi(first + 1);
 
       }
 
