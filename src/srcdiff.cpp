@@ -51,6 +51,8 @@
 #include <cstdlib>
 #include <sys/stat.h>
 
+#include "svn_io.hpp"
+
 #define PROGRAM_NAME "srcdiff"
 
 void output_version(const char* name);
@@ -154,8 +156,6 @@ const int NO_PURE_FLAG_CODE = 256 + 20;
 
 const char * const SVN_FLAG = "svn";
 const int SVN_FLAG_CODE = 256 + 21;
-
-
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
@@ -655,6 +655,7 @@ int main(int argc, char* argv[]) {
       // translate from standard input
     } else if(isoption(options, OPTION_SVN)) {
 
+      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
 
     } else if (input_arg_count == 0) {
 
