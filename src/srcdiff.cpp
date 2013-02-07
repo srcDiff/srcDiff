@@ -52,7 +52,6 @@
 #include <sys/stat.h>
 
 #include "svn_io.hpp"
-#include <iostream>
 
 #define PROGRAM_NAME "srcdiff"
 
@@ -661,9 +660,7 @@ int main(int argc, char* argv[]) {
       exit(1);
     }
 
-      std::cout << "HERE\n";
       svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
-      std::cout << "HERE\n";
 
     } else if (input_arg_count == 0) {
 
