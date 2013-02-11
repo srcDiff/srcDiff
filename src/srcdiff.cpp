@@ -534,7 +534,7 @@ int main(int argc, char* argv[]) {
     if (stat(argv[i], &instat) == -1)
       continue;
 
-    if (instat.st_ino == stdiostat.st_ino)
+    if(instat.st_ino == stdiostat.st_ino)
       ++stdiocount;
 
     if (stdiocount > 1) {
@@ -601,6 +601,49 @@ int main(int argc, char* argv[]) {
   }
   */
 
+  bool showinput = false;
+  bool shownumber = false;
+  // output source encoding
+  if (isoption(options, OPTION_VERBOSE)) {
+    fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
+    fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
+    showinput = false;
+    shownumber = true;
+  }
+
+  // filecount
+  int count = 0;
+
+  // files skipped
+  int skipped = 0;
+
+  // file errors
+  int error = 0;
+
+
+  if(isoption(options, OPTION_SVN) &&poptions.revision_one == SVN_INVALID_REVNUM && poptions.revision_two == SVN_INVALID_REVNUM) {
+
+    if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
+      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+      exit(1);
+    }
+
+
+    svn_process_session_all(poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber, poptions.src_encoding,
+                            poptions.xml_encoding,
+                            poptions.srcdiff_filename,
+                            poptions.method,
+                            poptions.given_directory,
+                            poptions.given_filename,
+                            poptions.given_version,
+                            urisprefix,
+                            poptions.tabsize,
+                            poptions.css_url);
+
+    exit(0);
+
+  }
+
   try {
 
     // translator from input to output using determined language
@@ -618,24 +661,6 @@ int main(int argc, char* argv[]) {
                                  poptions.css_url);
 
 
-    bool showinput = false;
-    bool shownumber = false;
-    // output source encoding
-    if (isoption(options, OPTION_VERBOSE)) {
-      fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
-      fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
-      showinput = false;
-      shownumber = true;
-    }
-
-    // filecount
-    int count = 0;
-
-    // files skipped
-    int skipped = 0;
-
-    // file errors
-    int error = 0;
 
 #ifdef __GNUG__
     // setup so we can gracefully stop after a file at a time
@@ -664,15 +689,7 @@ int main(int argc, char* argv[]) {
         exit(1);
       }
 
-      if(poptions.revision_one == SVN_INVALID_REVNUM && poptions.revision_two == SVN_INVALID_REVNUM) {
-
-        svn_process_session_all(translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
-
-      } else {
-
-        svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
-
-      }
+      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
 
     } else if (input_arg_count == 0) {
 

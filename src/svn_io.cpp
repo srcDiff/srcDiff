@@ -450,7 +450,17 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
 }
 
-void svn_process_session_all(srcDiffTranslator& translator, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_session_all(const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
+                                     const char* xml_encoding,    // xml encoding of result srcML file
+                                     const char* srcdiff_filename,  // filename of result srcDiff file
+                                     METHOD_TYPE method,
+                                     const char* directory,       // root unit directory
+                                     const char* filename,        // root unit filename
+                                     const char* version,         // root unit version
+                                     const char* uri[],           // uri prefixes
+                                     int tabsize,                  // size of tabs
+                                     std::string css
+                             ) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -504,6 +514,25 @@ void svn_process_session_all(srcDiffTranslator& translator, const char * url, OP
   svn_revnum_t revision_two = 2;
 
   for(; revision_one < latest_revision; ++revision_one, ++revision_two) {
+
+        std::ostringstream full_srcdiff(srcdiff_filename, std::ios_base::ate);
+    full_srcdiff << '_';
+    full_srcdiff << revision_one;
+    full_srcdiff << '-';
+    full_srcdiff << revision_one;
+
+    srcDiffTranslator translator(language,
+                                 src_encoding,
+                                 xml_encoding,
+                                 full_srcdiff.str().c_str(),
+                                 options,
+                                 method,
+                                 directory,
+                                 filename,
+                                 version,
+                                 uri,
+                                 tabsize,
+                                 css);
 
     const char * path = "";
     apr_pool_t * path_pool;
