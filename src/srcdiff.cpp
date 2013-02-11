@@ -664,7 +664,13 @@ int main(int argc, char* argv[]) {
         exit(1);
       }
 
-      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
+      if(poptions.revision_one == SVN_INVALID_REVNUM && poptions.revision_two == SVN_INVALID_REVNUM) {
+
+      } else {
+
+        svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
+
+      }
 
     } else if (input_arg_count == 0) {
 
