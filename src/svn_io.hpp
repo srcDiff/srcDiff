@@ -32,6 +32,8 @@ void svn_process_file(svn_ra_session_t * session,  svn_revnum_t revision_one, sv
 
 void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcDiffTranslator & translator, const char * url, OPTION_TYPE options, int language, int & count, int & skipped, int & error, bool & showinput, bool shownumber);
 
+void svn_process_session_all(srcDiffTranslator& translator, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+
 // check svn match
 int svnReadMatch(const char * URI);
 

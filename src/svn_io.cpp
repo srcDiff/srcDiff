@@ -99,7 +99,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
     svn_dirent_t * dirent_new;
     svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
-    
+
 
     // skip directories
     if(dirent_old->kind != svn_node_file) {
@@ -123,13 +123,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     svn_process_file(session, revision_one, revision_two, new_pool, translator,
-                 comparison <= 0 ? (++i, filename_old.c_str()) : "",
-                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
-                 directory_length_old,
-                 directory_length_new,
-                 options,
-                 language,
-                 count, skipped, error, showinput, shownumber);
+                     comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                     comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                     directory_length_old,
+                     directory_length_new,
+                     options,
+                     language,
+                     count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -157,14 +157,14 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-        svn_process_file(session, revision_one, revision_two, new_pool, translator,
-                 filename_old.c_str(),
-                 "",
-                 directory_length_old,
-                 directory_length_new,
-                 options,
-                 language,
-                 count, skipped, error, showinput, shownumber);
+    svn_process_file(session, revision_one, revision_two, new_pool, translator,
+                     filename_old.c_str(),
+                     "",
+                     directory_length_old,
+                     directory_length_new,
+                     options,
+                     language,
+                     count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -192,14 +192,14 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-            svn_process_file(session, revision_one, revision_two, new_pool, translator,
-                 "",
-                 filename_new.c_str(),
-                 directory_length_old,
-                 directory_length_new,
-                 options,
-                 language,
-                 count, skipped, error, showinput, shownumber);
+    svn_process_file(session, revision_one, revision_two, new_pool, translator,
+                     "",
+                     filename_new.c_str(),
+                     directory_length_old,
+                     directory_length_new,
+                     options,
+                     language,
+                     count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -222,7 +222,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
     svn_dirent_t * dirent_new;
     svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
-    
+
 
     // skip directories
     if(dirent_old->kind != svn_node_dir) {
@@ -246,12 +246,12 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
     // process these directories
     svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-		    comparison <= 0 ? (++i, filename_old.c_str()) : "",
-		    directory_length_old,
-		    comparison >= 0 ? (++j, filename_new.c_str()) : "",
-		    directory_length_new,
-		    options,
-		    language, count, skipped, error, showinput, shownumber);
+                    comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                    directory_length_old,
+                    comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                    directory_length_new,
+                    options,
+                    language, count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -279,13 +279,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
     // process this directory
     svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-		    filename_old.c_str(),
-		    directory_length_old,
-                 "",
-		    directory_length_new,
-		    options,
-		    language, count, skipped, error, showinput, shownumber);
-    
+                    filename_old.c_str(),
+                    directory_length_old,
+                    "",
+                    directory_length_new,
+                    options,
+                    language, count, skipped, error, showinput, shownumber);
+
     apr_pool_destroy(new_pool);
 
   }
@@ -310,13 +310,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     apr_pool_t * new_pool;
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
-svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                "",
-                directory_length_old,
-                filename_new.c_str(),
-                directory_length_new,
-                options,
-                language, count, skipped, error, showinput, shownumber);
+    svn_process_dir(session, revision_one, revision_two, new_pool, translator,
+                    "",
+                    directory_length_old,
+                    filename_new.c_str(),
+                    directory_length_new,
+                    options,
+                    language, count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -441,6 +441,89 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
     fprintf(stderr, "%s\n", "Unknown");
 
   apr_pool_destroy(path_pool);
+
+  apr_pool_destroy(pool);
+
+  apr_terminate();
+
+  pthread_mutex_destroy(&mutex);
+
+}
+
+void svn_process_session_all(srcDiffTranslator& translator, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+
+  pthread_mutex_init(&mutex, 0);
+
+  apr_initialize();
+
+  apr_allocator_t * allocator;
+  apr_allocator_create(&allocator);
+
+  apr_pool_t * pool;
+  apr_pool_create_ex(&pool, NULL, abortfunc, allocator);
+
+  svn_client_ctx_t * ctx;
+  apr_hash_t * cfg_hash;
+  svn_config_t * cfg_config;
+
+  svn_ra_initialize(pool);
+  svn_config_get_config(&cfg_hash, NULL, pool);
+  svn_client_create_context(&ctx, pool);
+  //svn_client_create_context2(&ctx, cfg_hash, pool);
+  ctx->config = cfg_hash;
+  cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
+
+  svn_boolean_t non_interactive = false;
+  const char * auth_username = "";
+  const char * auth_password = "";
+  const char * config_dir = 0;
+
+  svn_boolean_t no_auth_cache = false;
+  svn_boolean_t trust_server_cert = true;
+
+  svn_auth_baton_t * ab;
+  svn_cmdline_create_auth_baton(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert, cfg_config, ctx->cancel_func, ctx->cancel_baton, pool);
+
+  ctx->auth_baton = ab;
+  ctx->conflict_func = NULL;
+  ctx->conflict_baton = NULL;
+
+  svn_ra_session_t * session;
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
+  global_session = session;
+
+  if(svn_error)
+    fprintf(stderr, "%s\n", svn_error->message);
+
+  svn_revnum_t latest_revision;
+  svn_ra_get_latest_revnum(global_session,
+                           &latest_revision,
+                           pool);
+
+  svn_revnum_t revision_one = 1;
+  svn_revnum_t revision_two = 2;
+
+  for(; revision_one < latest_revision; ++revision_one, ++revision_two) {
+
+    const char * path = "";
+    apr_pool_t * path_pool;
+    apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
+
+    svn_dirent_t * dirent;
+    svn_ra_stat(session, path, revision_one, &dirent, path_pool);
+
+    if(dirent->kind == svn_node_file)
+      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
+    else if(dirent->kind == svn_node_dir)
+      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
+    else if(dirent->kind == svn_node_none)
+      fprintf(stderr, "%s\n", "Path does not exist");
+    else if(dirent->kind == svn_node_unknown)
+      fprintf(stderr, "%s\n", "Unknown");
+
+    apr_pool_destroy(path_pool);
+
+  }
 
   apr_pool_destroy(pool);
 

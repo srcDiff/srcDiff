@@ -666,6 +666,8 @@ int main(int argc, char* argv[]) {
 
       if(poptions.revision_one == SVN_INVALID_REVNUM && poptions.revision_two == SVN_INVALID_REVNUM) {
 
+        svn_process_session_all(translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
+
       } else {
 
         svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
