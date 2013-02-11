@@ -468,7 +468,11 @@ int main(int argc, char* argv[]) {
       0,
       DEFAULT_TABSIZE,
       { false, false, false, false, false, false },
-      METHOD_GROUP
+      METHOD_GROUP,
+      std::string(),
+      0,
+      SVN_INVALID_REVNUM,
+      SVN_INVALID_REVNUM
     };
 
   gpoptions = &poptions;
@@ -590,10 +594,10 @@ int main(int argc, char* argv[]) {
   /*
   // all input is through libarchive
   if (!isoption(options, OPTION_FILELIST)) {
-    if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-      exit(1);
-    }
+  if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
+  fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+  exit(1);
+  }
   }
   */
 
@@ -655,10 +659,10 @@ int main(int argc, char* argv[]) {
       // translate from standard input
     } else if(isoption(options, OPTION_SVN)) {
 
-    if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-      exit(1);
-    }
+      if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
+        fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+        exit(1);
+      }
 
       svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
 
@@ -702,13 +706,13 @@ int main(int argc, char* argv[]) {
 
     }
 
-} catch (const std::exception & e) {
+  } catch (const std::exception & e) {
 
-  fprintf(stderr, "%s: Error Executing command. %s\n", PROGRAM_NAME, e.what());
+    fprintf(stderr, "%s: Error Executing command. %s\n", PROGRAM_NAME, e.what());
 
-}
+  }
 
-return exit_status;
+  return exit_status;
 
 }
 
@@ -841,19 +845,24 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       //      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
       {
 
-	options |= OPTION_SVN;
+        options |= OPTION_SVN;
 
-	// filelist mode is default nested mode
-	options |= OPTION_NESTED;
+        // filelist mode is default nested mode
+        options |= OPTION_NESTED;
+        poptions.svn_url = optarg;
 
-	const char * end = index(optarg, '@');
-	poptions.svn_url = strndup(optarg, end - optarg);
+        const char * end = index(optarg, '@');
+        if(end) {
 
-	const char * first = index(end + 1, '-');
-	const char * temp_revision = strndup(end + 1, first - (end + 1));
-	poptions.revision_one = atoi(temp_revision);
-	free((void *)temp_revision);
-	poptions.revision_two = atoi(first + 1);
+          poptions.svn_url = strndup(optarg, end - optarg);
+
+          const char * first = index(end + 1, '-');
+          const char * temp_revision = strndup(end + 1, first - (end + 1));
+          poptions.revision_one = atoi(temp_revision);
+          free((void *)temp_revision);
+          poptions.revision_two = atoi(first + 1);
+
+        }
 
       }
 
@@ -1971,7 +1980,7 @@ void srcdiff_dir(srcDiffTranslator& translator, const char * directory_old, int 
     srcdiff_dir(translator,
                 filename_old.c_str(),
                 directory_length_old,
-                 "",
+                "",
                 directory_length_new,
                 poptions,
                 count, skipped, error, showinput, shownumber, outstat);
@@ -2031,10 +2040,10 @@ void srcdiff_filelist(srcDiffTranslator& translator, OPTION_TYPE & options, proc
     URIStream uriinput(poptions.file_list_name);
     char* file_one;
     /*
-    if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
+      if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
       exit(1);
-    }
+      }
     */
     while ((file_one = uriinput.readline())) {
 
