@@ -293,14 +293,14 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   // process all directories that remain in the new version
   for ( ; j < m; ++j) {
 
-    filename_new.replace(basesize_old, std::string::npos, dir_entries_two[j]);
+    filename_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
 
     svn_dirent_t * dirent_new;
     svn_ra_stat(session, filename_new.c_str(), revision_two, &dirent_new, pool);
 
     // skip directories
     if(dirent_new->kind != svn_node_dir) {
-      ++i;
+      ++j;
       continue;
     }
 
@@ -534,6 +534,7 @@ void svn_process_session_all(const char * url, OPTION_TYPE options, int language
                                  tabsize,
                                  css);
 
+
     const char * path = "";
     apr_pool_t * path_pool;
     apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
@@ -557,6 +558,7 @@ void svn_process_session_all(const char * url, OPTION_TYPE options, int language
   apr_pool_destroy(pool);
 
   apr_terminate();
+
 
   pthread_mutex_destroy(&mutex);
 
