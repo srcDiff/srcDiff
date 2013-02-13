@@ -40,37 +40,49 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
   apr_hash_t * dirents_one;
   svn_revnum_t fetched_rev_one;
+  std::vector<std::string> dir_entries_one;
 
-  svn_ra_get_dir2(session, &dirents_one, &fetched_rev_one, NULL, directory_old, revision_one, SVN_DIRENT_ALL, pool);
+  if(directory_old) {
+
+    apr_hash_index_t * item;
+    const void * key;
+    void * value;
+
+    svn_ra_get_dir2(session, &dirents_one, &fetched_rev_one, NULL, directory_old, revision_one, SVN_DIRENT_ALL, pool);
+
+    for (item = apr_hash_first(pool, dirents_one); item; item = apr_hash_next(item)) {
+
+      apr_hash_this(item, &key, NULL, &value);
+
+      dir_entries_one.push_back((const char *)key);
+    }
+
+    sort(dir_entries_one.begin(), dir_entries_one.end());
+
+  }
 
   apr_hash_t * dirents_two;
   svn_revnum_t fetched_rev_two;
-
-  svn_ra_get_dir2(session, &dirents_two, &fetched_rev_two, NULL, directory_new, revision_two, SVN_DIRENT_ALL, pool);
-
-  apr_hash_index_t * item;
-  const void * key;
-  void * value;
-
-  std::vector<std::string> dir_entries_one;
-  for (item = apr_hash_first(pool, dirents_one); item; item = apr_hash_next(item)) {
-
-    apr_hash_this(item, &key, NULL, &value);
-
-    dir_entries_one.push_back((const char *)key);
-  }
-
-  sort(dir_entries_one.begin(), dir_entries_one.end());
-
   std::vector<std::string> dir_entries_two;
-  for (item = apr_hash_first(pool, dirents_two); item; item = apr_hash_next(item)) {
 
-    apr_hash_this(item, &key, NULL, &value);
+  if(directory_new) {
 
-    dir_entries_two.push_back((const char *)key);
+    apr_hash_index_t * item;
+    const void * key;
+    void * value;
+
+    svn_ra_get_dir2(session, &dirents_two, &fetched_rev_two, NULL, directory_new, revision_two, SVN_DIRENT_ALL, pool);
+
+    for (item = apr_hash_first(pool, dirents_two); item; item = apr_hash_next(item)) {
+
+      apr_hash_this(item, &key, NULL, &value);
+
+      dir_entries_two.push_back((const char *)key);
+    }
+
+    sort(dir_entries_two.begin(), dir_entries_two.end());
+
   }
-
-  sort(dir_entries_two.begin(), dir_entries_two.end());
 
   // process directory
   std::string filename_old = directory_old;
@@ -246,9 +258,9 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
     // process these directories
     svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                    comparison <= 0 ? (++i, filename_old.c_str()) : "",
+                    comparison <= 0 ? (++i, filename_old.c_str()) : NULL,
                     directory_length_old,
-                    comparison >= 0 ? (++j, filename_new.c_str()) : "",
+                    comparison >= 0 ? (++j, filename_new.c_str()) : NULL,
                     directory_length_new,
                     options,
                     language, count, skipped, error, showinput, shownumber);
@@ -281,7 +293,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     svn_process_dir(session, revision_one, revision_two, new_pool, translator,
                     filename_old.c_str(),
                     directory_length_old,
-                    "",
+                    NULL,
                     directory_length_new,
                     options,
                     language, count, skipped, error, showinput, shownumber);
@@ -311,7 +323,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                    "",
+                    NULL,
                     directory_length_old,
                     filename_new.c_str(),
                     directory_length_new,
@@ -451,15 +463,15 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 }
 
 void svn_process_session_all(const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
-                                     const char* xml_encoding,    // xml encoding of result srcML file
-                                     const char* srcdiff_filename,  // filename of result srcDiff file
-                                     METHOD_TYPE method,
-                                     const char* directory,       // root unit directory
-                                     const char* filename,        // root unit filename
-                                     const char* version,         // root unit version
-                                     const char* uri[],           // uri prefixes
-                                     int tabsize,                  // size of tabs
-                                     std::string css
+                             const char* xml_encoding,    // xml encoding of result srcML file
+                             const char* srcdiff_filename,  // filename of result srcDiff file
+                             METHOD_TYPE method,
+                             const char* directory,       // root unit directory
+                             const char* filename,        // root unit filename
+                             const char* version,         // root unit version
+                             const char* uri[],           // uri prefixes
+                             int tabsize,                  // size of tabs
+                             std::string css
                              ) {
 
   pthread_mutex_init(&mutex, 0);
@@ -515,7 +527,7 @@ void svn_process_session_all(const char * url, OPTION_TYPE options, int language
 
   for(; revision_one < latest_revision; ++revision_one, ++revision_two) {
 
-        std::ostringstream full_srcdiff(srcdiff_filename, std::ios_base::ate);
+    std::ostringstream full_srcdiff(srcdiff_filename, std::ios_base::ate);
     full_srcdiff << '_';
     full_srcdiff << revision_one;
     full_srcdiff << '-';
