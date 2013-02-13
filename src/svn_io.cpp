@@ -552,6 +552,7 @@ void svn_process_session_all(const char * url, OPTION_TYPE options, int language
     full_srcdiff << revision_one;
     full_srcdiff << '-';
     full_srcdiff << revision_two;
+    full_srcdiff << ".xml";
 
     srcDiffTranslator translator(language,
                                  src_encoding,
