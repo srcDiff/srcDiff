@@ -42,6 +42,13 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   svn_revnum_t fetched_rev_one;
   std::vector<std::string> dir_entries_one;
 
+  if(directory_old)
+    std::cerr << "Revision One = " << revision_one << "Path One = " << directory_old;
+  if(directory_new)
+    std::cerr << "\tRevision Two = " << revision_two << "Path Two = " << directory_new;
+
+  std::cerr << '\n';
+
   if(directory_old) {
 
     apr_hash_index_t * item;
@@ -84,16 +91,29 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
   }
 
-  // process directory
-  std::string filename_old = directory_old;
-  if (filename_old != "" && !filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
-    filename_old += PATH_SEPARATOR;
-  int basesize_old = filename_old.length();
+  std::string filename_old = "";
+  int basesize_old = 0;
 
-  std::string filename_new = directory_new;
-  if (filename_new != "" && !filename_new.empty() && filename_new[filename_new.size() - 1] != PATH_SEPARATOR)
-    filename_new += PATH_SEPARATOR;
-  int basesize_new = filename_new.length();
+  // process directory
+  if(directory_old) {
+
+    filename_old = directory_old;
+    if (filename_old != "" && !filename_old.empty() && filename_old[filename_old.size() - 1] != PATH_SEPARATOR)
+      filename_old += PATH_SEPARATOR;
+    basesize_old = filename_old.length();
+
+  }
+
+  std::string filename_new = "";
+  int basesize_new = 0;
+  if(directory_new) {
+
+    filename_new = directory_new;
+    if (filename_new != "" && !filename_new.empty() && filename_new[filename_new.size() - 1] != PATH_SEPARATOR)
+      filename_new += PATH_SEPARATOR;
+    basesize_new = filename_new.length();
+
+  }
 
   // process all non-directory files
   int i = 0;
