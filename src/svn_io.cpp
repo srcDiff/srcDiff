@@ -42,13 +42,6 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
   svn_revnum_t fetched_rev_one;
   std::vector<std::string> dir_entries_one;
 
-  if(directory_old)
-    std::cerr << "Revision One = " << revision_one << "Path One = " << directory_old;
-  if(directory_new)
-    std::cerr << "\tRevision Two = " << revision_two << "Path Two = " << directory_new;
-
-  std::cerr << '\n';
-
   if(directory_old) {
 
     apr_hash_index_t * item;
