@@ -18,6 +18,8 @@
 #include <sstream>
 #include <iostream>
 
+#include <URIStream.hpp>
+
 LineDiffRange::LineDiffRange(std::string file_one, std::string file_two)
   : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL) {}
 
@@ -74,21 +76,10 @@ std::vector<std::string> LineDiffRange::read_file(const char * file) {
 
   std::vector<std::string> lines;
 
-  std::ifstream stream(file);
-  if(!stream || stream.eof())
-    return lines;
+  URIStream stream(file);
 
-  std::string line;
-
-  std::getline(stream, line);
-  while(!stream.eof()) {
-
-    lines.push_back(line);
-    std::getline(stream, line);
-
-  }
-
-  if(line != "") {
+  char * line;
+  while((line = stream.readline())) {
 
     lines.push_back(line);
 
