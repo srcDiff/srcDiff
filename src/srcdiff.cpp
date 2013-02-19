@@ -157,6 +157,9 @@ const int NO_PURE_FLAG_CODE = 256 + 20;
 const char * const SVN_FLAG = "svn";
 const int SVN_FLAG_CODE = 256 + 21;
 
+const char * const SVN_START_FLAG = "svn-start";
+const int SVN_START_FLAG_CODE = 256 + 22;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -621,7 +624,7 @@ int main(int argc, char* argv[]) {
   int error = 0;
 
 
-  if(isoption(options, OPTION_SVN) &&poptions.revision_one == SVN_INVALID_REVNUM && poptions.revision_two == SVN_INVALID_REVNUM) {
+  if(isoption(options, OPTION_SVN) && poptions.revision_two == SVN_INVALID_REVNUM) {
 
     if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
@@ -629,7 +632,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_all(poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber, poptions.src_encoding,
+    svn_process_session_all(poptions.revision_one, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber, poptions.src_encoding,
                             poptions.xml_encoding,
                             poptions.srcdiff_filename,
                             poptions.method,
@@ -787,6 +790,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { NO_PURE_FLAG, no_argument, NULL, NO_PURE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
+    { SVN_START_FLAG, required_argument, NULL, SVN_START_FLAG_CODE },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
@@ -890,6 +894,15 @@ int process_args(int argc, char* argv[], process_options & poptions) {
         }
 
       }
+
+      break;
+
+    case SVN_START_FLAG_CODE:
+
+      // check for missing argument confused by an argument that looks like an option
+      //      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+        poptions.revision_one = atoi(optarg);
 
       break;
 
