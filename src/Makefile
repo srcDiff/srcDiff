@@ -124,6 +124,9 @@ $(OBJ_DIR)srcdiffdirect.o : srcdiffdirect.cpp
 $(OBJ_DIR)srcdiff.o : srcdiff.cpp
 	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -I/opt/local/include $(LIBSVN_INCLUDE) $(LIBAPR_INCLUDE) -c $< -o $@
 
+$(OBJ_DIR)srcdiff_options.o : srcdiff_options.cpp srcdiff_options.hpp
+	$(CXX) $(CXXFLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -I/opt/local/include $(LIBSVN_INCLUDE) $(LIBAPR_INCLUDE) -c $< -o $@
+
 $(OBJ_DIR)srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
@@ -154,13 +157,13 @@ $(OBJ_DIR)srcDiffCommentDiff.o : srcDiffCommentDiff.cpp srcDiffCommentDiff.hpp s
 $(OBJ_DIR)srcDiffDiff.o : srcDiffDiff.cpp srcDiffDiff.hpp srcDiffCommon.hpp srcDiffOutput.hpp srcDiffTypes.hpp srcDiffUtility.hpp
 	$(CXX) $(CXXFLAGS) $(LIBSRCML_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
-$(EXE_DIR)srcdiffdirect : $(OBJ_DIR)srcdiffdirect.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)ColorDiff.o $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)srcDiffMeasure.o $(OBJ_DIR)srcDiffMatch.o $(OBJ_DIR)ShortestEditScript.o $(OBJ_DIR)srcDiffMove.o $(OBJ_DIR)srcDiffMany.o $(OBJ_DIR)srcDiffSingle.o ${OBJ_DIR}svn_io.o
+$(EXE_DIR)srcdiffdirect : $(OBJ_DIR)srcdiffdirect.o $(OBJ_DIR)srcdiff_options.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)ColorDiff.o $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)srcDiffMeasure.o $(OBJ_DIR)srcDiffMatch.o $(OBJ_DIR)ShortestEditScript.o $(OBJ_DIR)srcDiffMove.o $(OBJ_DIR)srcDiffMany.o $(OBJ_DIR)srcDiffSingle.o ${OBJ_DIR}svn_io.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -I/opt/local/include $^ $(LDFLAGS) -o $@
 
-$(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)ColorDiff.o $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)srcDiffMeasure.o $(OBJ_DIR)srcDiffMatch.o $(OBJ_DIR)ShortestEditScript.o $(OBJ_DIR)srcDiffMove.o $(OBJ_DIR)srcDiffMany.o $(OBJ_DIR)srcDiffSingle.o ${OBJ_DIR}svn_io.o
+$(EXE_DIR)srcdiff : $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcdiff_options.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)ColorDiff.o $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)srcDiffMeasure.o $(OBJ_DIR)srcDiffMatch.o $(OBJ_DIR)ShortestEditScript.o $(OBJ_DIR)srcDiffMove.o $(OBJ_DIR)srcDiffMany.o $(OBJ_DIR)srcDiffSingle.o ${OBJ_DIR}svn_io.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -I/opt/local/include $^ $(LDFLAGS) -o $@
 
-$(EXE_DIR)srcdiff.exe :  $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)mingw32.o $(OBJ_DIR)ColorDiff.o $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)srcDiffMeasure.o $(OBJ_DIR)srcDiffMatch.o $(OBJ_DIR)ShortestEditScript.o $(OBJ_DIR)srcDiffMove.o $(OBJ_DIR)srcDiffMany.o $(OBJ_DIR)srcDiffSingle.o ${OBJ_DIR}svn_io.o
+$(EXE_DIR)srcdiff.exe :  $(OBJ_DIR)srcdiff.o $(OBJ_DIR)srcdiff_options.o $(OBJ_DIR)srcMLUtility.o $(OBJ_DIR)srcDiffUtility.o $(OBJ_DIR)srcDiffWhiteSpace.o $(OBJ_DIR)srcDiffCommon.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffNested.o $(OBJ_DIR)srcDiffChange.o $(OBJ_DIR)srcDiffOutput.o $(OBJ_DIR)srcDiffDiff.o $(OBJ_DIR)srcDiffCommentDiff.o $(OBJ_DIR)shortest_edit_script.o $(OBJ_DIR)xmlrw.o $(OBJ_DIR)srcDiffTranslator.o $(OBJ_DIR)mingw32.o $(OBJ_DIR)ColorDiff.o $(OBJ_DIR)LineDiffRange.o $(OBJ_DIR)SAXColorDiff.o $(OBJ_DIR)srcDiffMeasure.o $(OBJ_DIR)srcDiffMatch.o $(OBJ_DIR)ShortestEditScript.o $(OBJ_DIR)srcDiffMove.o $(OBJ_DIR)srcDiffMany.o $(OBJ_DIR)srcDiffSingle.o ${OBJ_DIR}svn_io.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $(LIBXML_INCLUDE) $(LIBSRCML_INCLUDE) -I/opt/local/include $^ $(LDFLAGS) -o $@
 
 $(OBJ_DIR)mingw32.o : mingw32.cpp mingw32.hpp
