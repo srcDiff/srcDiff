@@ -63,7 +63,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
     { NO_PURE_FLAG, no_argument, NULL, NO_PURE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
-    { SVN_START_FLAG, required_argument, NULL, SVN_START_FLAG_CODE },
+    { SVN_CONTINUOUS_FLAG, no_argument, NULL, SVN_CONTINUOUS_FLAG_CODE },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
@@ -170,12 +170,9 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
 
       break;
 
-    case SVN_START_FLAG_CODE:
+    case SVN_CONTINUOUS_FLAG_CODE:
 
-      // check for missing argument confused by an argument that looks like an option
-      //      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
-
-        poptions.revision_one = atoi(optarg);
+      options |= OPTION_SVN_CONTINUOUS;
 
       break;
 

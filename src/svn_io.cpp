@@ -475,7 +475,7 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
 }
 
-void svn_process_session_all(svn_revnum_t start_rev, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
+void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
                              const char* xml_encoding,    // xml encoding of result srcML file
                              const char* srcdiff_filename,  // filename of result srcDiff file
                              METHOD_TYPE method,

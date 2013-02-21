@@ -306,7 +306,7 @@ int main(int argc, char* argv[]) {
   int error = 0;
 
 
-  if(isoption(options, OPTION_SVN) && poptions.revision_two == SVN_INVALID_REVNUM) {
+  if(isoption(options, OPTION_SVN) && isoption(options, OPTION_SVN_CONTINUOUS)) {
 
     if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
@@ -314,7 +314,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_all(poptions.revision_one, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber, poptions.src_encoding,
+    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber, poptions.src_encoding,
                             poptions.xml_encoding,
                             poptions.srcdiff_filename,
                             poptions.method,

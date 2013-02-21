@@ -24,5 +24,8 @@ const OPTION_TYPE OPTION_SRCDIFFONLY  = ull(1) << 48;
 // @srcdiff
 const OPTION_TYPE OPTION_DIFFONLY  = ull(1) << 49;
 
+// @srcdiff
+const OPTION_TYPE OPTION_SVN_CONTINUOUS  = ull(1) << 50;
+
 #endif
 

@@ -94,8 +94,8 @@ const int NO_PURE_FLAG_CODE = 256 + 20;
 const char * const SVN_FLAG = "svn";
 const int SVN_FLAG_CODE = 256 + 21;
 
-const char * const SVN_START_FLAG = "svn-start";
-const int SVN_START_FLAG_CODE = 256 + 22;
+const char * const SVN_CONTINUOUS_FLAG = "svn-continuous";
+const int SVN_CONTINUOUS_FLAG_CODE = 256 + 22;
 
 struct process_options
 {
