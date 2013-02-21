@@ -162,7 +162,9 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
           const char * temp_revision = strndup(end + 1, first - (end + 1));
           poptions.revision_one = atoi(temp_revision);
           free((void *)temp_revision);
-          poptions.revision_two = atoi(first + 1);
+
+          if(first)
+            poptions.revision_two = atoi(first + 1);
 
         }
 

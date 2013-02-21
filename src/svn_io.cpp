@@ -530,11 +530,14 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
   if(svn_error)
     fprintf(stderr, "%s\n", svn_error->message);
 
-  svn_revnum_t latest_revision;
-  svn_ra_get_latest_revnum(global_session,
-                           &latest_revision,
-                           pool);
+  svn_revnum_t latest_revision = end_rev;
+  if(end_rev == SVN_INVALID_REVNUM) {
 
+    svn_ra_get_latest_revnum(global_session,
+                             &latest_revision,
+                             pool);
+
+  }
   svn_revnum_t revision_one = start_rev;
   svn_revnum_t revision_two;
   if(start_rev == SVN_INVALID_REVNUM) {
