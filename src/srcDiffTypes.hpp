@@ -65,7 +65,7 @@ public:
 
   }
 
-
+  const char * filename;
   xmlTextWriterPtr writer;
 
   METHOD_TYPE method;

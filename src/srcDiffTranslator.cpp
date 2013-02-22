@@ -110,31 +110,24 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
   rbuf_old.mutex = &mutex;
   rbuf_new.mutex = &mutex;
-    
+
+  wstate.writer = NULL;
+  wstate.filename = srcdiff_filename;
+
   // writer state
- if(!isoption(global_options, OPTION_VISUALIZE)) {
+  if(isoption(global_options, OPTION_VISUALIZE)) {
 
-  wstate.writer = xmlNewTextWriterFilename(srcdiff_filename, 0);
+    std::string dir = "";
+    if(directory != NULL)
+      dir = directory;
 
-  if (wstate.writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML\n", srcdiff_filename);
+    std::string ver = "";
+    if(version != NULL)
+      ver = version;
 
-    exit(1);
+    colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, this->global_options);
+
   }
-
- } else {
-
-   std::string dir = "";
-   if(directory != NULL)
-     dir = directory;
-
-   std::string ver = "";
-   if(version != NULL)
-     ver = version;
-
-   colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, this->global_options);
-
- }
 
   wstate.method = method;
 
@@ -145,32 +138,44 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
 // Translate from input stream to output stream
 void srcDiffTranslator::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options,
-                            const char* unit_directory, const char* unit_filename, const char* unit_version,
-                            int language) {
+                                  const char* unit_directory, const char* unit_filename, const char* unit_version,
+                                  int language) {
 
   LineDiffRange line_diff_range(path_one, path_two);
 
   line_diff_range.create_line_diff();
 
   if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
-     return;
-
- if(isoption(global_options, OPTION_VISUALIZE)) {
-
-  if(!line_diff_range.is_no_white_space_diff())
     return;
 
-   wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
+  if(wstate.writer == NULL && !isoption(global_options, OPTION_VISUALIZE)) {
 
-  if (wstate.writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
+    wstate.writer = xmlNewTextWriterFilename(wstate.filename, 0);
 
-    exit(1);
+    if (wstate.writer == NULL) {
+      fprintf(stderr, "Unable to open file '%s' as XML\n", wstate.filename);
+
+      exit(1);
+    }
+
   }
 
- }
+  if(isoption(global_options, OPTION_VISUALIZE)) {
+
+    if(!line_diff_range.is_no_white_space_diff())
+      return;
+
+    wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
+
+    if (wstate.writer == NULL) {
+      fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
+
+      exit(1);
+    }
+
+  }
   // root unit for compound srcML documents
- else if (first && ((global_options & OPTION_NESTED) > 0)) {
+  else if (first && ((global_options & OPTION_NESTED) > 0)) {
 
     startUnit(0, global_options, root_directory, root_filename, root_version);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -193,7 +198,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
     is_old = -2;
-    
+
   }
 
   if(!isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
@@ -334,7 +339,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   } else {
 
-   if(!isoption(global_options, OPTION_OUTPUTPURE)) {
+    if(!isoption(global_options, OPTION_OUTPUTPURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -361,20 +366,20 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     // output remaining whitespace
     output_white_space_all(rbuf_old, rbuf_new, wstate);
 
-  // output srcdiff unit ending tag
-  //if(is_old && is_new)
-  //output_node(rbuf_old, rbuf_new, unit_end, SESCOMMON, wstate);
+    // output srcdiff unit ending tag
+    //if(is_old && is_new)
+    //output_node(rbuf_old, rbuf_new, unit_end, SESCOMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
+    output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
 
-  // }
+    // }
 
-  if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_NESTED)) {
+    if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_NESTED)) {
 
-    xmlTextWriterEndElement(wstate.writer);
-    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
+      xmlTextWriterEndElement(wstate.writer);
+      xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
 
-  }
+    }
 
   }
 
@@ -410,20 +415,20 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   rbuf_new.clear();
   wstate.clear();
 
- if(isoption(global_options, OPTION_VISUALIZE)) {
+  if(isoption(global_options, OPTION_VISUALIZE)) {
 
-   xmlTextWriterEndElement(wstate.writer);
+    xmlTextWriterEndElement(wstate.writer);
 
-  // cleanup writer
-   xmlTextWriterEndDocument(wstate.writer);
-   xmlFreeTextWriter(wstate.writer);
-   wstate.writer = NULL;
+    // cleanup writer
+    xmlTextWriterEndDocument(wstate.writer);
+    xmlFreeTextWriter(wstate.writer);
+    wstate.writer = NULL;
 
-   colordiff->colorize(line_diff_range);
+    colordiff->colorize(line_diff_range);
 
-   xmlBufferEmpty(colordiff->getsrcDiffBuffer());
+    xmlBufferEmpty(colordiff->getsrcDiffBuffer());
 
- }
+  }
 
 }
 
@@ -458,11 +463,11 @@ srcDiffTranslator::~srcDiffTranslator() {
 }
 
 void srcDiffTranslator::startUnit(const char * language,
-                            OPTION_TYPE& options,        // many and varied options
-                            const char* directory,       // root unit directory
-                            const char* filename,        // root unit filename
-                            const char* version         // root unit version
-                            ) {
+                                  OPTION_TYPE& options,        // many and varied options
+                                  const char* directory,       // root unit directory
+                                  const char* filename,        // root unit filename
+                                  const char* version         // root unit version
+                                  ) {
 
   if((isoption(options, OPTION_VISUALIZE) || first) && !isoption(global_options, OPTION_XMLDECL))
     xmlTextWriterStartDocument(wstate.writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
