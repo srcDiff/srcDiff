@@ -111,6 +111,8 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   rbuf_old.mutex = &mutex;
   rbuf_new.mutex = &mutex;
 
+  wstate.filename = srcdiff_filename;
+
   if(!isoption(global_options, OPTION_VISUALIZE)) {
 
     wstate.writer = xmlNewTextWriterFilename(wstate.filename, 0);
@@ -122,8 +124,6 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
     }
 
   }
-
-  wstate.filename = srcdiff_filename;
 
   // writer state
   if(isoption(global_options, OPTION_VISUALIZE)) {
