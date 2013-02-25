@@ -112,18 +112,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   rbuf_new.mutex = &mutex;
 
   wstate.filename = srcdiff_filename;
-
-  if(!isoption(global_options, OPTION_VISUALIZE)) {
-
-    wstate.writer = xmlNewTextWriterFilename(wstate.filename, 0);
-
-    if (wstate.writer == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML\n", wstate.filename);
-
-      exit(1);
-    }
-
-  }
+  wstate.writer = NULL;
 
   // writer state
   if(isoption(global_options, OPTION_VISUALIZE)) {
@@ -158,6 +147,18 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
+
+  if(wstate.writer == NULL && !isoption(global_options, OPTION_VISUALIZE)) {
+
+    wstate.writer = xmlNewTextWriterFilename(wstate.filename, 0);
+
+    if (wstate.writer == NULL) {
+      fprintf(stderr, "Unable to open file '%s' as XML\n", wstate.filename);
+
+      exit(1);
+    }
+
+  }
 
   if(isoption(global_options, OPTION_VISUALIZE)) {
 
