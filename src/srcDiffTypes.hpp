@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFFTYPES_HPP
 
 #include <vector>
+#include <string>
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 #include <Options.hpp>
@@ -65,7 +66,7 @@ public:
 
   }
 
-  const char * filename;
+  std::string filename;
   xmlTextWriterPtr writer;
 
   METHOD_TYPE method;

@@ -111,7 +111,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
   rbuf_old.mutex = &mutex;
   rbuf_new.mutex = &mutex;
 
-  wstate.filename = strdup(srcdiff_filename);
+  wstate.filename = srcdiff_filename;
   wstate.writer = NULL;
 
   // writer state
