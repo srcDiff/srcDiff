@@ -150,10 +150,10 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   if(wstate.writer == NULL && !isoption(global_options, OPTION_VISUALIZE)) {
 
-    wstate.writer = xmlNewTextWriterFilename(wstate.filename, 0);
+    wstate.writer = xmlNewTextWriterFilename(wstate.filename.c_str(), 0);
 
     if (wstate.writer == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML\n", wstate.filename);
+      fprintf(stderr, "Unable to open file '%s' as XML\n", wstate.filename.c_str());
 
       exit(1);
     }
