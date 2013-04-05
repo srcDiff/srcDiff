@@ -13,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <URIStream.hpp>
+
 #include "svn_io.hpp"
 #include "Language.hpp"
 #include "srcmlapps.hpp"
@@ -591,6 +593,135 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
     apr_pool_destroy(path_pool);
 
   }
+
+  apr_pool_destroy(pool);
+
+  apr_terminate();
+
+
+  pthread_mutex_destroy(&mutex);
+
+}
+
+void svn_process_session_file(const char * list, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
+                              const char* xml_encoding,    // xml encoding of result srcML file
+                              const char* srcdiff_filename,  // filename of result srcDiff file
+                              METHOD_TYPE method,
+                              const char* directory,       // root unit directory
+                              const char* filename,        // root unit filename
+                              const char* version,         // root unit version
+                              const char* uri[],           // uri prefixes
+                              int tabsize,                  // size of tabs
+                              std::string css
+                              ) {
+
+  pthread_mutex_init(&mutex, 0);
+
+  apr_initialize();
+
+  apr_allocator_t * allocator;
+  apr_allocator_create(&allocator);
+
+  apr_pool_t * pool;
+  apr_pool_create_ex(&pool, NULL, abortfunc, allocator);
+
+  svn_client_ctx_t * ctx;
+  apr_hash_t * cfg_hash;
+  svn_config_t * cfg_config;
+
+  svn_ra_initialize(pool);
+  svn_config_get_config(&cfg_hash, NULL, pool);
+  svn_client_create_context(&ctx, pool);
+  //svn_client_create_context2(&ctx, cfg_hash, pool);
+  ctx->config = cfg_hash;
+  cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
+
+  svn_boolean_t non_interactive = false;
+  const char * auth_username = "";
+  const char * auth_password = "";
+  const char * config_dir = 0;
+
+  svn_boolean_t no_auth_cache = false;
+  svn_boolean_t trust_server_cert = true;
+
+  svn_auth_baton_t * ab;
+  svn_cmdline_create_auth_baton(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert, cfg_config, ctx->cancel_func, ctx->cancel_baton, pool);
+
+  ctx->auth_baton = ab;
+  ctx->conflict_func = NULL;
+  ctx->conflict_baton = NULL;
+
+  svn_ra_session_t * session;
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
+  global_session = session;
+
+  if(svn_error)
+    fprintf(stderr, "%s\n", svn_error->message);
+
+  srcDiffTranslator translator(language,
+                               src_encoding,
+                               xml_encoding,
+                               srcdiff_filename,
+                               options,
+                               method,
+                               directory,
+                               filename,
+                               version,
+                               uri,
+                               tabsize,
+                               css);
+
+
+  try {
+
+    // translate all the filenames listed in the named file
+    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+    URIStream uriinput(list);
+    char * file;
+
+    while ((file = uriinput.readline())) {
+
+      // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
+      file += strspn(file, " \t\f");
+
+      // skip blank lines or comment lines
+      if (file[0] == '\0' || file[0] == '#')
+        continue;
+
+      // remove any end whitespace
+      // TODO:  Extract function, and use elsewhere
+      for (char * p = file + strlen(file) - 1; p != file; --p) {
+        if (isspace(*p))
+          *p = 0;
+        else
+          break;
+      }
+
+      showinput = true;
+
+      //const char * path = "";
+      apr_pool_t * path_pool;
+      apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
+
+      //svn_dirent_t * dirent;
+      //svn_ra_stat(session, path, revision_one, &dirent, path_pool);
+
+      //svn_process_file(session, revision_one, revision_two, pool, translator, path_one, path_two, directory_length_old, directory_length_new, options, language, count, skipped, error, showinput, shownumber);
+
+      apr_pool_destroy(path_pool);
+
+
+      if (isoption(options, OPTION_TERMINATE))
+        return;
+
+    }
+
+  } catch (URIStreamFileError) {
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", list);
+    exit(STATUS_INPUTFILE_PROBLEM);
+  }
+
 
   apr_pool_destroy(pool);
 
