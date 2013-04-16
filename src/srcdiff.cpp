@@ -329,6 +329,29 @@ int main(int argc, char* argv[]) {
 
   }
 
+  if(isoption(options, OPTION_SVN) && isoption(options, OPTION_FILELIST)) {
+
+    if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
+      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+      exit(1);
+    }
+
+
+    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber, poptions.src_encoding,
+                            poptions.xml_encoding,
+                            poptions.srcdiff_filename,
+                            poptions.method,
+                            poptions.given_directory,
+                            poptions.given_filename,
+                            poptions.given_version,
+                            urisprefix,
+                            poptions.tabsize,
+                            poptions.css_url);
+
+    exit(0);
+
+  }
+
   try {
 
     // translator from input to output using determined language
