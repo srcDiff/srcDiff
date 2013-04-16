@@ -615,7 +615,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                               int tabsize,                  // size of tabs
                               std::string css
                               ) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   pthread_mutex_init(&mutex, 0);
 
   apr_initialize();
