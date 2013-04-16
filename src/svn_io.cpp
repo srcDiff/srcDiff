@@ -603,7 +603,7 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
 }
 
-void svn_process_session_file(const char * list, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
+void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_revnum_t revision_two, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
                               const char* xml_encoding,    // xml encoding of result srcML file
                               const char* srcdiff_filename,  // filename of result srcDiff file
                               METHOD_TYPE method,
@@ -677,26 +677,28 @@ void svn_process_session_file(const char * list, const char * url, OPTION_TYPE o
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
     URIStream uriinput(list);
-    char * file;
+    char * line;
 
-    while ((file = uriinput.readline())) {
+    while ((line = uriinput.readline())) {
 
       // skip over whitespace
       // TODO:  Other types of whitespace?  backspace?
-      file += strspn(file, " \t\f");
+      line += strspn(line, " \t\f");
 
       // skip blank lines or comment lines
-      if (file[0] == '\0' || file[0] == '#')
+      if (line[0] == '\0' || line[0] == '#')
         continue;
 
       // remove any end whitespace
       // TODO:  Extract function, and use elsewhere
-      for (char * p = file + strlen(file) - 1; p != file; --p) {
+      for (char * p = line + strlen(line) - 1; p != line; --p) {
         if (isspace(*p))
           *p = 0;
         else
           break;
       }
+
+      char * path = line;
 
       showinput = true;
 
@@ -704,10 +706,17 @@ void svn_process_session_file(const char * list, const char * url, OPTION_TYPE o
       apr_pool_t * path_pool;
       apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
 
-      //svn_dirent_t * dirent;
-      //svn_ra_stat(session, path, revision_one, &dirent, path_pool);
+      svn_dirent_t * dirent;
+      svn_ra_stat(session, path, revision_one, &dirent, path_pool);
 
-      //svn_process_file(session, revision_one, revision_two, pool, translator, path_one, path_two, directory_length_old, directory_length_new, options, language, count, skipped, error, showinput, shownumber);
+    if(dirent->kind == svn_node_file)
+      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
+    else if(dirent->kind == svn_node_dir)
+      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
+    else if(dirent->kind == svn_node_none)
+      fprintf(stderr, "%s\n", "Path does not exist");
+    else if(dirent->kind == svn_node_unknown)
+      fprintf(stderr, "%s\n", "Unknown");
 
       apr_pool_destroy(path_pool);
 
