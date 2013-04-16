@@ -12,6 +12,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 #include <URIStream.hpp>
 
@@ -614,7 +615,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                               int tabsize,                  // size of tabs
                               std::string css
                               ) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   pthread_mutex_init(&mutex, 0);
 
   apr_initialize();
@@ -676,29 +677,30 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(list);
-    char * line;
-
-    while ((line = uriinput.readline())) {
+    std::ifstream input(list);
+    std::string line;
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    while(getline(input, line, '\n'), input) {
 
       // skip over whitespace
       // TODO:  Other types of whitespace?  backspace?
-      line += strspn(line, " \t\f");
-
+      //line += strspn(line, " \t\f");
+      
       // skip blank lines or comment lines
       if (line[0] == '\0' || line[0] == '#')
         continue;
 
       // remove any end whitespace
       // TODO:  Extract function, and use elsewhere
-      for (char * p = line + strlen(line) - 1; p != line; --p) {
-        if (isspace(*p))
-          *p = 0;
-        else
-          break;
-      }
+      //for (char * p = line + strlen(line) - 1; p != line; --p) {
+      //if (isspace(*p))
+      //*p = 0;
+      // else
+      //break;
 
-      char * path = line;
+      //}
+
+      const char * path = line.c_str();
 
       showinput = true;
 
@@ -708,7 +710,6 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
       svn_dirent_t * dirent;
       svn_ra_stat(session, path, revision_one, &dirent, path_pool);
-
     if(dirent->kind == svn_node_file)
       svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_dir)
@@ -735,7 +736,6 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
   apr_pool_destroy(pool);
 
   apr_terminate();
-
 
   pthread_mutex_destroy(&mutex);
 
