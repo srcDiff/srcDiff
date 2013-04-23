@@ -686,7 +686,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
       int white_length = strspn(line.c_str(), " \t\f");
 
       line.erase(0, white_length);
-      
+
       // skip blank lines or comment lines
       if (line[0] == '\0' || line[0] == '#')
         continue;
@@ -694,10 +694,10 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
       // remove any end whitespace
       // TODO:  Extract function, and use elsewhere
       for (int i = line.size() - 1; i != 0; --i) {
-      if (isspace(line[i]))
-      line[i] = 0;
-       else
-      break;
+        if (isspace(line[i]))
+          line[i] = 0;
+        else
+          break;
 
       }
 
@@ -711,14 +711,15 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
       svn_dirent_t * dirent;
       svn_ra_stat(session, path, revision_one, &dirent, path_pool);
-    if(dirent->kind == svn_node_file)
-      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
-    else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
-    else if(dirent->kind == svn_node_none)
-      fprintf(stderr, "%s\n", "Path does not exist");
-    else if(dirent->kind == svn_node_unknown)
-      fprintf(stderr, "%s\n", "Unknown");
+      if(dirent->kind == svn_node_file)
+        svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
+      else if(dirent->kind == svn_node_dir)
+        fprintf(stderr, "Skipping directory: %s", path);
+      //svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
+      else if(dirent->kind == svn_node_none)
+        fprintf(stderr, "%s\n", "Path does not exist");
+      else if(dirent->kind == svn_node_unknown)
+        fprintf(stderr, "%s\n", "Unknown");
 
       apr_pool_destroy(path_pool);
 
