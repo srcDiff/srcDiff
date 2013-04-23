@@ -701,18 +701,28 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
       }
 
-      const char * path = line.c_str();
+      std::string path_one = line.substr(0, line.find('|'));
+      std::string path_two = line.substr(line.find('|') + 1);
 
       showinput = true;
 
       //const char * path = "";
       apr_pool_t * path_pool;
       apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
+      const char * path = path_one.c_str();
+      svn_revnum_t revision = revision_one;
+      if(path_one == "") {
+
+	path = path_two.c_str();
+	revision = revision_two;
+
+      }
 
       svn_dirent_t * dirent;
-      svn_ra_stat(session, path, revision_one, &dirent, path_pool);
+      svn_ra_stat(session, path, revision, &dirent, path_pool);
+
       if(dirent->kind == svn_node_file)
-        svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
+        svn_process_file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
       else if(dirent->kind == svn_node_dir)
         fprintf(stderr, "Skipping directory: %s", path);
       //svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
