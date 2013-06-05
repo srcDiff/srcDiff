@@ -20,17 +20,23 @@ add_definitions(-DREVISION=\"${REVISION}\")
 find_package(LibXml2)
 find_package(LibArchive)
 find_package(LibXslt)
-find_file(LIBAPR_INCLUDE_DIR apr.h /usr/local/include/apr-1 /usr/include/apr-1.0)
 
-#find_path(LIBSVN_LINK_DIR NAMES i386-linux-gnu PATHS /usr/lib})
-#set(LIBAPR_INCLUDE_DIR /usr/include/apr-1)
+if(EXISTS /usr/include/apr-1)
+          set(LIBAPR_INCLUDE_DIR /usr/include/apr-1)
+else(EXISTS /usr/include/apr-1.0)
+          set(LIBAPR_INCLUDE_DIR /usr/include/apr-1.0)
+endif()
 
-include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} /usr/include/subversion-1 ../../../src /usr/include/apr-1 /usr/include/apr-1.0)
+
+#include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} /usr/include/subversion-1 ../../../src /usr/include/apr-1 /usr/include/apr-1.0)
+include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} /usr/include/subversion-1 ../../../src)
 link_directories(../../../src)
 
-if(${LIBSVN_LINK_DIR})
-link_directories(${LIBSVN_LINK_DIR})
-endif(${LIBSVN_LINK_DIR})
+if(EXISTS /usr/include/i386-linux-gnu)
+
+          link_directories(/usr/lib/i386-linux-gnu)
+
+endif()
 
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
