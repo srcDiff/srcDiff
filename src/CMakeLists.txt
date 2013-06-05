@@ -8,6 +8,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcDiff)
 
+set_source_files_properties(shortest_edit_script.c PROPERTIES LANGUAGE CXX)
+
 # get version and revision
 execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
 execute_process(COMMAND cat REVISION COMMAND tr -d "\n" OUTPUT_VARIABLE REVISION)
@@ -39,5 +41,5 @@ find_program(CUT cut PATH /usr/bin)
 find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
 # srcdiff
-add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp svn_io.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.cpp)
+add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp svn_io.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.c)
 target_link_libraries(srcdiff archive xml2 antlr srcml svn_repos-1 svn_ra-1 svn_ra_neon-1 svn_ra_local-1 svn_ra_svn-1 svn_wc-1 svn_fs-1 svn_fs_fs-1 svn_fs_util-1 svn_fs-1 svn_delta-1 svn_client-1 svn_diff-1 svn_subr-1 apr-1 aprutil-1)
