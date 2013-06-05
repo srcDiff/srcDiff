@@ -8,6 +8,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcDiff)
 
+cmake_policy(SET CMP0015 OLD)
+
 set_source_files_properties(shortest_edit_script.c PROPERTIES LANGUAGE CXX)
 
 # get version and revision
