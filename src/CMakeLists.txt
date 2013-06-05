@@ -18,7 +18,14 @@ add_definitions(-DREVISION=\"${REVISION}\")
 find_package(LibXml2)
 find_package(LibArchive)
 find_package(LibXslt)
-include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR})
+find_path(LIBAPR_INCLUDE_DIR NAMES apr-1 apr-1.0 PATHS /usr/include)
+find_path(LIBSVN_LINK_DIR NAMES i386-linux-gnu PATHS /usr/lib})
+include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} /usr/include/subversion-1 ../../../src)
+link_directories(../../../bin)
+
+if(${LIBSVN_LINK_DIR})
+link_directories(${LIBSVN_LINK_DIR})
+endif(${LIBSVN_LINK_DIR})
 
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
@@ -30,4 +37,4 @@ find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
 # srcdiff
 add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp srcdiffdirect.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp svn_io.cpp mingw32.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp)
-target_link_libraries(srcdiff archive xml2 antlr srcml)
+target_link_libraries(srcdiff archive xml2 antlr srcml apr svn_repos-1 svn_ra-1 svn_ra_neon-1 svn_ra_local-1 svn_ra_svn-1 svn_wc-1 svn_fs-1 svn_fs_fs-1 svn_fs_util-1 svn_fs-1 svn_delta-1 svn_client-1 svn_diff-1 svn_subr-1 apr-1 aprutil-1)
