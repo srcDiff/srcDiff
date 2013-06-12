@@ -23,15 +23,10 @@ find_package(LibXml2)
 find_package(LibArchive)
 find_package(LibXslt)
 
-if(EXISTS /usr/include/apr-1)
-          set(LIBAPR_INCLUDE_DIR /usr/include/apr-1)
-else(EXISTS /usr/include/apr-1.0)
-          set(LIBAPR_INCLUDE_DIR /usr/include/apr-1.0)
-endif()
+find_file(LIBSVN_INCLUDE_DIR subversion-1 PATHS /usr/include)
+find_file(LIBAPR_INCLUDE_DIR NAMES apr-1 apr-1.0 PATHS /usr/include)
 
-
-#include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} /usr/include/subversion-1 ../../../src /usr/include/apr-1 /usr/include/apr-1.0)
-include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} /usr/include/subversion-1 ../../../src)
+include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR} ../../../src)
 link_directories(../../../src)
 
 if(EXISTS /usr/include/i386-linux-gnu)
