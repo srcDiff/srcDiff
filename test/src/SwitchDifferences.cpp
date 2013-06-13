@@ -24,6 +24,95 @@ const char * XML_DECLARATION_STANDALONE = "yes";
 
 OPTION_TYPE options;
 
+// output current XML node in reader
+void outputNode(const xmlNode& node, xmlTextWriterPtr writer, bool output_ns) {
+
+  bool isemptyelement = false;
+
+  switch (node.type) {
+  case XML_READER_TYPE_ELEMENT:
+
+    // record if this is an empty element since it will be erased by the attribute copying
+    isemptyelement = node.extra & 0x1;
+
+    // start the element
+    if (node.ns && node.ns->prefix) {
+      std::string s = ((char*) node.ns->prefix);
+      s += ":";
+      s += (char*) node.name;
+
+      xmlTextWriterStartElement(writer, BAD_CAST s.c_str());
+
+    } else
+      xmlTextWriterStartElement(writer, (xmlChar *)node.name);
+
+    // copy all the namespaces
+
+    if(output_ns){
+      xmlNs * ns = node.nsDef;
+      while (ns) {
+
+        std::string ns_name = "xmlns";
+        if(ns->prefix) {
+
+          ns_name += ":";
+          ns_name += (const char *)ns->prefix;
+
+        }
+
+        xmlTextWriterWriteAttribute(writer, (const xmlChar *)ns_name.c_str(), (const xmlChar *)ns->href);
+        ns = ns->next;
+      }
+    }
+
+    // copy all the attributes
+    {
+      xmlAttr * attribute = node.properties;
+      while (attribute) {
+
+        xmlTextWriterWriteAttribute(writer, (const xmlChar *)attribute->name, (const xmlChar *)attribute->children->content);
+        attribute = attribute->next;
+      }
+    }
+
+    // end now if this is an empty element
+    if (isemptyelement) {
+
+      xmlTextWriterEndElement(writer);
+    }
+
+    break;
+
+  case XML_READER_TYPE_END_ELEMENT:
+    xmlTextWriterEndElement(writer);
+    break;
+
+  case XML_READER_TYPE_COMMENT:
+    xmlTextWriterWriteComment(writer, (const xmlChar *)node.content);
+    break;
+
+  case XML_READER_TYPE_TEXT:
+  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+
+    // output the UTF-8 buffer escaping the characters.  Note that the output encoding                                                                                                                                                                                                                                                      
+    // is handled by libxml                                                                                                                                                                                                                                                                                                                 
+    for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
+      if (*p == '&')
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+      else if (*p == '<')
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+      else if (*p == '>')
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+      else
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
+    }
+    break;
+
+  default:
+    break;
+  }
+}
+
 // macros
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
@@ -74,19 +163,20 @@ int main(int argc, char * argv[]) {
   // issue the xml declaration
   xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
+  bool output_ns = true;
   bool is_change = false;
   bool wait_end = false;
   bool output_saved = false;
   std::vector<xmlNodePtr> nodes;
   while(xmlTextReaderRead(reader) == 1) {
 
-    xmlNodePtr node = xmlTextReaderCurrentNode(reader);
+    xmlNodePtr node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
+    node->type = (xmlElementType)xmlTextReaderNodeType(reader);
 
     if(node->ns && node->ns->prefix && strcmp((const char *)node->ns->prefix, DIFF_PREFIX) == 0) {
 
       if(strcmp((const char *)node->name, DELETE_TAG) == 0) {
 
-        free((void *)node->name);
         node->name = (const xmlChar *)strdup(INSERT_TAG);
 
         if(!isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0)
@@ -94,7 +184,6 @@ int main(int argc, char * argv[]) {
 
       } else if(strcmp((const char *)node->name, INSERT_TAG) == 0) {
 
-        free((void *)node->name);
         node->name = (const xmlChar *)strdup(DELETE_TAG);
 
         if(is_change && !isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0) {
@@ -119,7 +208,7 @@ int main(int argc, char * argv[]) {
       nodes.push_back(node);
     else {
 
-      //outputNode(*node, writer);
+      outputNode(*node, writer, output_ns);
 
     }
 
@@ -127,7 +216,7 @@ int main(int argc, char * argv[]) {
 
       for(int i = 0; i < nodes.size(); ++i) {
 
-        //outputNode(*nodes[i], writer);
+        outputNode(*nodes[i], writer, output_ns);
 
       }
 
@@ -135,6 +224,8 @@ int main(int argc, char * argv[]) {
       nodes.clear();
 
     }
+
+    output_ns = false;
 
   }
 
