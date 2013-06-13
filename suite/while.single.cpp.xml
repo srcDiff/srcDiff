@@ -1,50 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="while.single">
 
-<unit>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></while><diff:old status="end"/></unit>
+<unit filename="1|"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while></diff:delete></unit>
 
-<unit>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></while>
-<diff:old status="end"/></unit>
+<unit filename="2|2"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
+}</block></while></diff:delete></unit>
 
-<unit>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></while>
-<diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
-
-<unit>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/>}</block></while>
-<diff:old status="end"/><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
+<unit filename="3|3">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></while><diff:old status="end"/></unit>
-
-<unit>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></while>
-<diff:old status="end"/></unit>
-
-<unit>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></while><diff:old status="end"/>
-</unit>
-
-<unit>
-<diff:old status="start"/><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
-<diff:old status="end"/><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:old status="start"/></while><diff:old status="end"/></unit>
+}</block></while></diff:delete></unit>
 
 </unit>
