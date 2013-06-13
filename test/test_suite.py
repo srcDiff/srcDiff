@@ -511,8 +511,10 @@ current_time = datetime.now()
 os.rename(error_filename, error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension)
 f.close()
 
-os.remove("temp_file_one.cpp")
-os.remove("temp_file_two.cpp")
+if os.path.exists("temp_file_one.cpp") :
+        os.remove("temp_file_one.cpp")
+if os.path.exists("temp_file_two.cpp") :
+        os.remove("temp_file_two.cpp")
 
 # output tool version
 print
