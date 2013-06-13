@@ -88,7 +88,7 @@ int main(int argc, char * argv[]) {
         free((void *)node->name);
         node->name = strdup(INSERT_TAG);
 
-        if(!isendelement(reader) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0)
+        if(!isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0)
           is_change = true;
 
       } else if(strcmp(node->name, INSERT_TAG) == 0) {
@@ -96,7 +96,7 @@ int main(int argc, char * argv[]) {
         free((void *)node->name);
         node->name = strdup(DELETE_TAG);
 
-        if(is_change && !isendelement(reader) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0) {
+        if(is_change && !isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0) {
 
           is_change = false;
           wait_end = true;
