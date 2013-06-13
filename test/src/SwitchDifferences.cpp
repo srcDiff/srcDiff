@@ -28,6 +28,21 @@ OPTION_TYPE options;
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
+const char * const DIFF_PREFIX = "diff";
+const char * const DELETE_TAG = "delete";
+const char * const INSERT_TAG = "insert";
+const char * const CHANGE_ATTR = "change";
+
+const char * get_attr(xNodePtr node, const char * attribute) {
+
+  for(xAttrPtr attr = node->properties; attr; attr = attr->next)
+    if(strcmp(attr->name, attribute) == 0)
+      return attr->value;
+
+  return 0;
+
+}
+
 int main(int argc, char * argv[]) {
 
   /*
@@ -38,109 +53,93 @@ int main(int argc, char * argv[]) {
 
   xmlTextWriterPtr writer = NULL;
 
-    // create the reader for the old file
-    reader = xmlNewTextReaderFilename("/dev/stdin");
-    if (reader == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdin");
+  // create the reader for the old file
+  reader = xmlNewTextReaderFilename("/dev/stdin");
+  if (reader == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdin");
 
-      return 1;
-    }
+    return 1;
+  }
 
-    // create the writer
-    writer = xmlNewTextWriterFilename("/dev/stdout", 0);
-    if (writer == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdout");
+  // create the writer
+  writer = xmlNewTextWriterFilename("/dev/stdout", 0);
+  if (writer == NULL) {
+    fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdout");
 
-      return 1;
-    }
+    return 1;
+  }
 
-    // issue the xml declaration
-    xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+  // issue the xml declaration
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
-    bool in_out_diff = false;
-    bool exited_out_diff = false;
-    bool wait_out_diff = false;
-    bool end_wait_diff = false;
-    std::vector<xNode *> buffer;
-    while(xmlTextReaderRead(reader) == 1) {
+  bool is_change = false;
+  bool wait_end = false;
+  bool output_saved = false;
+  std::vector<xNodePtr> nodes;
+  while(xmlTextReaderRead(reader) == 1) {
 
-      xNodePtr node = getRealCurrentNode(reader, options, 0);
+    xNodePtr node = getRealCurrentNode(reader, options, 0);
 
-      if(!exited_out_diff && strcmp((const char *)node->name, "old") == 0) {
+    if(strcmp(node->ns->prefix, DIFF_PREFIX) == 0) {
 
-        if(in_out_diff)
-          exited_out_diff = true;
+      if(strcmp(node->name, DELETE_TAG) == 0) {
 
-        in_out_diff = !in_out_diff;
-        continue;
+        node->name = INSERT_TAG;
+        if(!isendelement(reader) && get_attr(node, CHANGE_ATTR))
+          is_change = true;
+
       }
 
-      if(wait_out_diff && strcmp((const char *)node->name, "new") == 0) {
+      if(strcmp(node->name, INSERT_TAG) == 0) {
 
-        node->name = "old";
+        node->name = DELETE_TAG;
 
-        wait_out_diff = false;
-        end_wait_diff = true;
-        outputNode(*node, writer);
-        continue;
-      }
+        if(is_change && !isendelement(reader) && get_attr(node, CHANGE_ATTR)) {
 
-      if(in_out_diff) {
+          is_change = false;
+          wait_end = true;
 
-        buffer.push_back(node);
-        continue;
-      }
-
-      if(exited_out_diff) {
-
-        if(strcmp((const char *)node->name, "new") != 0) {
-
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
-
-          for(int i = 0; i < buffer.size(); ++i)
-            outputNode(*buffer[i], writer);
-
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
-
-          buffer = std::vector<xNode *>();
-        } else 
-          wait_out_diff = true;
-
-        exited_out_diff = false;
-        
-        if(strcmp((const char *)node->name, "old") == 0) {
-
-          if(in_out_diff)
-            exited_out_diff = true;
-
-          in_out_diff = !in_out_diff;
-          continue;
         }
 
-      } else if(end_wait_diff) {
+        if(wait_end && isendelement(reader)) {
 
-        xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("<diff:new>"));
-          
-        for(int i = 0; i < buffer.size(); ++i)
-          outputNode(*buffer[i], writer);
-        
-          xmlTextWriterWriteRawLen(writer, LITERALPLUSSIZE("</diff:new>"));
+          wait_end = false;
+          output_saved = true;
 
+        }
 
-        end_wait_diff = false;
-        buffer = std::vector<xNode *>();
       }
 
-      if(strcmp((const char *)node->name, "new") == 0)
-        node->name = "old";
-
-      outputNode(*node, writer);
     }
 
-    xmlFreeTextReader(reader);
+    if(is_change)
+      nodes.push_back(node);
+    else {
+      outputNode(*node, writer);
+      freeXNode(node);
 
-    xmlTextWriterEndDocument(writer);
-    xmlFreeTextWriter(writer);
+    }
+
+    if(output_saved) {
+
+      for(int i = 0; i < nodes.size(); ++i) {
+
+        outputNode(*nodes[i], writer);
+        freeXNode(nodes[i]);
+
+      }
+
+      output_saved = false;
+      nodes.clear();
+
+    }
+
+  }
+
+  xmlFreeTextReader(reader);
+
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
 
   return 0;
 }
