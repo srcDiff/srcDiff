@@ -245,7 +245,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int contex
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
   std::string full_name;
-  if((const char*)curnode->ns->prefix) {
+  if(curnode->ns && (const char*)curnode->ns->prefix) {
 
     full_name = (const char*)curnode->ns->prefix;
     full_name += ":";

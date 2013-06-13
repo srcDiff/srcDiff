@@ -70,6 +70,7 @@ struct xNode {
 };
 
 typedef xNode * xNodePtr;
+typedef xAttr * xAttrPtr;
 
 xNode * createInternalNode(xmlNode & node);
 
