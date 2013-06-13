@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="name.change">
 
-<unit>
-<expr_stmt><expr><name><diff:delete>a</diff:delete><diff:insert>b</diff:insert></name></expr>;</expr_stmt>
+<unit filename="1|1">
+<diff:delete type="change"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
 </unit>
 
-<unit>
-<expr_stmt><expr><name><diff:delete>aaa</diff:delete><diff:insert>aba</diff:insert></name></expr>;</expr_stmt>
+<unit filename="2|2">
+<expr_stmt><diff:delete type="change"><expr><name>a</name> <op:operator>+</op:operator> <name>c</name></expr></diff:delete><diff:insert type="change"><expr><name>b</name> <op:operator>+</op:operator> <name>c</name></expr></diff:insert>;</expr_stmt>
 </unit>
 
-<unit>
-<expr_stmt><expr><name><diff:delete>aaa</diff:delete><diff:insert>aab</diff:insert></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name><diff:delete>aaa</diff:delete><diff:insert>aba</diff:insert></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name><diff:delete>aaa</diff:delete><diff:insert>baa</diff:insert></name></expr>;</expr_stmt>
+<unit filename="3|3">
+<expr_stmt><expr><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
