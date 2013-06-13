@@ -82,7 +82,7 @@ def name2filestr(src_filename):
 def extract_source(srcDiff, operation):
 
 	# run the srcML extractor
-	command = [srcml_utility, "--diff", operation]
+	command = [srcml_utility, "--revision", operation]
 
 	return safe_communicate(command, srcDiff)
 
@@ -111,9 +111,9 @@ def xmldiff(xml_filename1, xml_filename2):
 		return ""
 
 # find differences of two files
-def src2srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist):
+def srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist):
 
-        command = [globals()["src2srcdiff_utility"]]
+        command = [globals()["src2srcdiff_utility"], "-d", directory, "-f", filename, "--operator", "--literal", "--modifier"]
 
         temp_file = open("temp_file_one.cpp", "w")
         temp_file.write(source_file_old)
@@ -309,6 +309,7 @@ error_count = 0
 total_count = 0
 
 dre = re.compile("directory=\"([^\"]*)\"", re.M)
+fre = re.compile("filename=\"([^\"]*)\"", re.M)
 lre = re.compile("language=\"([^\"]*)\"", re.M)
 vre = re.compile("src-version=\"([^\"]*)\"", re.M)
 ere = re.compile("encoding=\"([^\"]*)\"", re.M)
@@ -407,7 +408,7 @@ try:
                                                         unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = src2srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
@@ -419,48 +420,13 @@ try:
 						if result != "":
 							error_count += 1
 							
-							errorlist.append((directory + " " + language, count * 2 - 1, result))
+							errorlist.append((directory + " " + language, count, result))
 
 							# part of list of nested unit number in output
-							print "\033[0;31m" + str(count * 2 - 1) + "\033[0m",
+							print "\033[0;31m" + str(count) + "\033[0m",
 						elif number != 0:
 							# part of list of nested unit number in output
-							print "\033[0;33m" + str(count * 2 - 1) + "\033[0m",
-
-						# total count of test cases
-						total_count = total_count + 1
-
-                                                # switch order of differenes
-                                                unitxml = switch_differences(unitxml)
-
-						# convert the unit in xml to text
-						unit_text_old = extract_source(unitxml, "1")
-						unit_text_new = extract_source(unitxml, "2")
-
-						# convert the unit in xml to text (if needed)
-                                                if doseol:
-                                                        unittext = unix2dos(unittext)
-
-						# convert the text to srcML
-						unitsrcmlraw = src2srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
-
-						# additional, later stage processing
-						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
-						
-						# find the difference
-						result = xmldiff(unitxml, unitsrcml)
-						if count == MAX_COUNT:
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
-						if result != "":
-							error_count += 1
-							
-							errorlist.append((directory + " " + language, count * 2, result))
-
-							# part of list of nested unit number in output
-							print "\033[0;31m" + str(count * 2) + "\033[0m",
-						elif number != 0:
-							# part of list of nested unit number in output
-							print "\033[0;33m" + str(count * 2) + "\033[0m",
+							print "\033[0;33m" + str(count) + "\033[0m",
 	
 					except OSError, (errornum, strerror):
 						continue
