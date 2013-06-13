@@ -78,21 +78,22 @@ int main(int argc, char * argv[]) {
   std::vector<xNodePtr> nodes;
   while(xmlTextReaderRead(reader) == 1) {
 
-    xNodePtr node = getRealCurrentNode(reader, options, 0);
+    xNodePtr node = copyXNode(getRealCurrentNode(reader, options, 0));
 
-    if(strcmp(node->ns->prefix, DIFF_PREFIX) == 0) {
+    if(node->ns && node->ns->prefix && strcmp(node->ns->prefix, DIFF_PREFIX) == 0) {
 
       if(strcmp(node->name, DELETE_TAG) == 0) {
 
-        node->name = INSERT_TAG;
+        free((void *)node->name);
+        node->name = strdup(INSERT_TAG);
+
         if(!isendelement(reader) && get_attr(node, CHANGE_ATTR))
           is_change = true;
 
-      }
+      } else if(strcmp(node->name, INSERT_TAG) == 0) {
 
-      if(strcmp(node->name, INSERT_TAG) == 0) {
-
-        node->name = DELETE_TAG;
+        free((void *)node->name);
+        node->name = strdup(DELETE_TAG);
 
         if(is_change && !isendelement(reader) && get_attr(node, CHANGE_ATTR)) {
 
@@ -115,8 +116,8 @@ int main(int argc, char * argv[]) {
     if(is_change)
       nodes.push_back(node);
     else {
+
       outputNode(*node, writer);
-      freeXNode(node);
 
     }
 
@@ -125,7 +126,6 @@ int main(int argc, char * argv[]) {
       for(int i = 0; i < nodes.size(); ++i) {
 
         outputNode(*nodes[i], writer);
-        freeXNode(nodes[i]);
 
       }
 
