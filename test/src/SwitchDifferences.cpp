@@ -28,17 +28,18 @@ OPTION_TYPE options;
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
+const char * const UNIT_TAG = "unit";
 const char * const DIFF_PREFIX = "diff";
 const char * const DELETE_TAG = "delete";
 const char * const INSERT_TAG = "insert";
 const char * const TYPE_ATTR = "type";
 const char * const CHANGE_ATTR_VALUE = "change";
 
-const char * get_attr(xNodePtr node, const char * attribute) {
+const char * get_attr(xmlNodePtr node, const char * attribute) {
 
-  for(xAttrPtr attr = node->properties; attr; attr = attr->next)
-    if(strcmp(attr->name, attribute) == 0)
-      return attr->value;
+  for(xmlAttrPtr attr = node->properties; attr; attr = attr->next)
+    if(strcmp((const char *)attr->name, attribute) == 0)
+      return (const char *)attr->children->content;
 
   return 0;
 
@@ -76,25 +77,25 @@ int main(int argc, char * argv[]) {
   bool is_change = false;
   bool wait_end = false;
   bool output_saved = false;
-  std::vector<xNodePtr> nodes;
+  std::vector<xmlNodePtr> nodes;
   while(xmlTextReaderRead(reader) == 1) {
 
-    xNodePtr node = copyXNode(getRealCurrentNode(reader, options, 0));
+    xmlNodePtr node = xmlTextReaderCurrentNode(reader);
 
-    if(node->ns && node->ns->prefix && strcmp(node->ns->prefix, DIFF_PREFIX) == 0) {
+    if(node->ns && node->ns->prefix && strcmp((const char *)node->ns->prefix, DIFF_PREFIX) == 0) {
 
-      if(strcmp(node->name, DELETE_TAG) == 0) {
+      if(strcmp((const char *)node->name, DELETE_TAG) == 0) {
 
         free((void *)node->name);
-        node->name = strdup(INSERT_TAG);
+        node->name = (const xmlChar *)strdup(INSERT_TAG);
 
         if(!isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0)
           is_change = true;
 
-      } else if(strcmp(node->name, INSERT_TAG) == 0) {
+      } else if(strcmp((const char *)node->name, INSERT_TAG) == 0) {
 
         free((void *)node->name);
-        node->name = strdup(DELETE_TAG);
+        node->name = (const xmlChar *)strdup(DELETE_TAG);
 
         if(is_change && !isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0) {
 
@@ -118,7 +119,7 @@ int main(int argc, char * argv[]) {
       nodes.push_back(node);
     else {
 
-      outputNode(*node, writer);
+      //outputNode(*node, writer);
 
     }
 
@@ -126,7 +127,7 @@ int main(int argc, char * argv[]) {
 
       for(int i = 0; i < nodes.size(); ++i) {
 
-        outputNode(*nodes[i], writer);
+        //outputNode(*nodes[i], writer);
 
       }
 
