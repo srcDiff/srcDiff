@@ -5,7 +5,6 @@
 <diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{}</block></then></if></diff:delete></unit>
 
 <unit filename="2|2">
-
 <diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> 
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:delete></unit>
 
