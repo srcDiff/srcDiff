@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="while.single">
 
-<unit filename="1|"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while></diff:delete></unit>
+<unit filename="1|"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></while></diff:delete></unit>
 
-<unit filename="2|2"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<unit filename="2|2">
+<diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></while></diff:delete>
+</unit>
+
+<unit filename="3|3">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt></while></diff:delete></unit>
+
+<unit filename="4|"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+}</block></while></diff:delete></unit>
+
+<unit filename="5|5"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></while></diff:delete></unit>
 
-<unit filename="3|3">
+<unit filename="6|6">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
