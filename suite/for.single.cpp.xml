@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="for.single">
 
-<unit filename="1|"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
+<unit filename="1|"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></for></diff:delete></unit>
+
+<unit filename="2|2">
+<diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></for></diff:delete>
+</unit>
+
+<unit filename="3|3">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt></for></diff:delete></unit>
+
+<unit filename="4|"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 }</block></for></diff:delete></unit>
 
-<unit filename="2|2"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
+<unit filename="5|5"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></for></diff:delete></unit>
 
-<unit filename="3|3">
+<unit filename="6|6">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></for></diff:delete></unit>
-
-<unit filename="4|4">
-<diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
-<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></for></diff:delete>
-</unit>
 
 </unit>
