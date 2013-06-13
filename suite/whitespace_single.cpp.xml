@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="whitespace.single">
 
-<unit filename="1|1">
+<unit filename="whitespace_single|whitespace_single">
 <diff:delete type="whitespace">  </diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit filename="2|2">
+<unit filename="whitespace_single|whitespace_single">
   <diff:delete type="whitespace">  </diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 

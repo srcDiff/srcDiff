@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="if.single">
 
-<unit filename="1|"><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
+<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></then></if></diff:delete></unit>
 
-<unit filename="2|2">
+<unit filename="if.single|if.single">
 <diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></then></if></diff:delete>
 </unit>
 
-<unit filename="3|3">
+<unit filename="if.single|if.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if></diff:delete></unit>
 
-<unit filename="4|"><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 }</block></then></if></diff:delete></unit>
 
-<unit filename="5|5"><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></then></if></diff:delete></unit>
 
-<unit filename="6|6">
+<unit filename="if.single|if.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
