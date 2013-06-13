@@ -31,7 +31,8 @@ OPTION_TYPE options;
 const char * const DIFF_PREFIX = "diff";
 const char * const DELETE_TAG = "delete";
 const char * const INSERT_TAG = "insert";
-const char * const CHANGE_ATTR = "change";
+const char * const TYPE_ATTR = "type";
+const char * const CHANGE_ATTR_VALUE = "change";
 
 const char * get_attr(xNodePtr node, const char * attribute) {
 
@@ -87,7 +88,7 @@ int main(int argc, char * argv[]) {
         free((void *)node->name);
         node->name = strdup(INSERT_TAG);
 
-        if(!isendelement(reader) && get_attr(node, CHANGE_ATTR))
+        if(!isendelement(reader) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0)
           is_change = true;
 
       } else if(strcmp(node->name, INSERT_TAG) == 0) {
@@ -95,7 +96,7 @@ int main(int argc, char * argv[]) {
         free((void *)node->name);
         node->name = strdup(DELETE_TAG);
 
-        if(is_change && !isendelement(reader) && get_attr(node, CHANGE_ATTR)) {
+        if(is_change && !isendelement(reader) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0) {
 
           is_change = false;
           wait_end = true;
