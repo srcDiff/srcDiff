@@ -172,6 +172,7 @@ int main(int argc, char * argv[]) {
 
     xmlNodePtr node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
     node->type = (xmlElementType)xmlTextReaderNodeType(reader);
+    node->extra = xmlTextReaderIsEmptyElement(reader);
 
     if(node->ns && node->ns->prefix && strcmp((const char *)node->ns->prefix, DIFF_PREFIX) == 0) {
 
