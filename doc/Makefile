@@ -20,8 +20,10 @@ srcdiff.1 : srcdiff.xml option.dtd option.dtd
 view : man
 	man ./srcdiff.1
 
-srcdiff.1.gz : srcdiff.xml
+srcdiff.1.gz : srcdiff.1
+	cp srcdiff.1 temp
 	gzip -f srcdiff.1
+	mv temp srcdiff.1
 
 srcdiff.html : srcdiff.1
 	${MAN2HTML} < $<| tail -n +3 > $@
