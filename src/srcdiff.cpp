@@ -51,7 +51,9 @@
 #include <cstdlib>
 #include <sys/stat.h>
 
+#ifdef SVN
 #include "svn_io.hpp"
+#endif
 
 #include "srcdiff_options.hpp"
 #include "srcdiff_uri.hpp"
@@ -156,8 +158,10 @@ int main(int argc, char* argv[]) {
       METHOD_GROUP,
       std::string(),
       0,
+#ifdef SVN
       SVN_INVALID_REVNUM,
       SVN_INVALID_REVNUM
+#endif
     };
 
   gpoptions = &poptions;
@@ -305,6 +309,7 @@ int main(int argc, char* argv[]) {
   // file errors
   int error = 0;
 
+#ifdef SVN
 
   if(isoption(options, OPTION_SVN) && isoption(options, OPTION_SVN_CONTINUOUS)) {
 
@@ -351,7 +356,7 @@ int main(int argc, char* argv[]) {
     exit(0);
 
   }
-
+#endif
   try {
 
     // translator from input to output using determined language
@@ -389,6 +394,7 @@ int main(int argc, char* argv[]) {
       // so process the filelist
       srcdiff_filelist(translator, options, poptions, count, skipped, error, showinput, shownumber);
 
+#ifdef SVN
       // translate from standard input
     } else if(isoption(options, OPTION_SVN)) {
 
@@ -398,7 +404,7 @@ int main(int argc, char* argv[]) {
       }
 
       svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, poptions.language, count, skipped, error, showinput,shownumber);
-
+#endif
     } else if (input_arg_count == 0) {
 
       // translate from standard input using any directory, filename and version given on the command line
