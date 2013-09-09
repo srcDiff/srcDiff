@@ -93,7 +93,7 @@ const char* urisprefix[] = {
   SRCML_DIFF_NS_PREFIX_DEFAULT,
 };
 
-OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_THREAD | OPTION_OUTPUTSAME | OPTION_OUTPUTPURE;
+OPTION_TYPE options = OPTION_THREAD | OPTION_OUTPUTSAME | OPTION_OUTPUTPURE;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
