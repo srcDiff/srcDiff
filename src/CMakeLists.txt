@@ -22,6 +22,7 @@ add_definitions(-DREVISION=\"${REVISION}\")
 find_package(LibXml2)
 find_package(LibArchive)
 find_package(LibXslt)
+find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
 
 #find_file(LIBSVN_INCLUDE_DIR subversion-1 PATHS /usr/include)
 #find_file(LIBAPR_INCLUDE_DIR NAMES apr-1 apr-1.0 PATHS /usr/include)
@@ -45,5 +46,5 @@ find_program(CUT cut PATH /usr/bin)
 find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
 # srcdiff
-add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.c)
-target_link_libraries(srcdiff archive xml2 antlr srcml pthread)
+add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.c mingw32.cpp)
+target_link_libraries(srcdiff archive xml2 ${LIBANTLR_LIB} srcml pthread)
