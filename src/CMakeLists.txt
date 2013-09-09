@@ -46,4 +46,4 @@ find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
 # srcdiff
 add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.c)
-target_link_libraries(srcdiff archive xml2 antlr srcml)
+target_link_libraries(srcdiff archive xml2 antlr srcml pthread)
