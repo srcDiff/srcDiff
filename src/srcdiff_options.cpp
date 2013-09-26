@@ -507,7 +507,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      options &= ~OPTION_CPP_MARKUP_ELSE;
+      options &= ~OPTION_CPP_TEXT_ELSE;
       cpp_else = true;
 
       break;
@@ -519,7 +519,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      options |= OPTION_CPP_MARKUP_ELSE;
+      options |= OPTION_CPP_TEXT_ELSE;
       cpp_else = true;
 
       break;
