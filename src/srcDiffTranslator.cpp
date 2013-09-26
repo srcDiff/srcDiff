@@ -175,7 +175,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   }
   // root unit for compound srcML documents
-  else if (first && ((global_options & OPTION_NESTED) > 0)) {
+  else if (first && ((global_options & OPTION_ARCHIVE) > 0)) {
 
     startUnit(0, global_options, root_directory, root_filename, root_version);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -374,7 +374,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     // }
 
-    if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_NESTED)) {
+    if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_ARCHIVE)) {
 
       xmlTextWriterEndElement(wstate.writer);
       xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -528,7 +528,7 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
     (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
-    isoption(OPTION_CPP, options) && (!isoption(OPTION_NESTED, options) || isoption(options, OPTION_VISUALIZE)) ? SRCML_CPP_NS_URI : 0,
+    isoption(OPTION_CPP, options) && (!isoption(OPTION_ARCHIVE, options) || isoption(options, OPTION_VISUALIZE)) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
     (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
@@ -567,9 +567,9 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
 void srcDiffTranslator::set_nested(bool is_nested) {
 
   if(is_nested)
-    global_options |= OPTION_NESTED;
+    global_options |= OPTION_ARCHIVE;
   else
-    global_options &= ~OPTION_NESTED;
+    global_options &= ~OPTION_ARCHIVE;
 }
 
 void srcDiffTranslator::set_root_directory(const char * root_directory) {

@@ -138,7 +138,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       options |= OPTION_FILELIST;
 
       // filelist mode is default nested mode
-      options |= OPTION_NESTED;
+      options |= OPTION_ARCHIVE;
 
       poptions.file_list_name = optarg;
       break;
@@ -153,7 +153,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         options |= OPTION_SVN;
 
         // filelist mode is default nested mode
-        options |= OPTION_NESTED;
+        options |= OPTION_ARCHIVE;
         poptions.svn_url = optarg;
 
         const char * end = index(optarg, '@');
@@ -209,7 +209,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       break;
 
     case NESTED_FLAG_SHORT:
-      options |= OPTION_NESTED;
+      options |= OPTION_ARCHIVE;
       break;
 
     case EXPRESSION_MODE_FLAG_SHORT:
@@ -507,7 +507,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      options &= ~OPTION_CPP_TEXT_ELSE;
+      options &= ~OPTION_CPP_MARKUP_ELSE;
       cpp_else = true;
 
       break;
@@ -519,7 +519,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      options |= OPTION_CPP_TEXT_ELSE;
+      options |= OPTION_CPP_MARKUP_ELSE;
       cpp_else = true;
 
       break;
