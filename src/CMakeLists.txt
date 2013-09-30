@@ -22,7 +22,7 @@ find_package(LibArchive)
 find_package(LibXslt)
 find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
 find_library(LIBSRCML_LIB NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /home/srcml/srcML/bin /srcML/bin /Users/srcml/srcML/bin)
-find_file(LIBSRCML_INCLUDE_DIR NAMES src PATHS /home/srcml/srcML /srcML /Users/srcml/srcML)
+find_file(LIBSRCML_INCLUDE_DIR NAMES src PATHS /home/srcml/srcML /srcML /Users/srcml/srcML NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH)
 
 #find_file(LIBSVN_INCLUDE_DIR subversion-1 PATHS /usr/include)
 #find_file(LIBAPR_INCLUDE_DIR NAMES apr-1 apr-1.0 PATHS /usr/include)
