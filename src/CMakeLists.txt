@@ -44,6 +44,10 @@ find_program(ECHO echo PATH /bin)
 find_program(CUT cut PATH /usr/bin)
 find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin )
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../bin )
+
 # srcdiff
 add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.c mingw32.cpp)
 target_link_libraries(srcdiff archive xml2 ${LIBANTLR_LIB} ${LIBSRCML_LIB} pthread)
