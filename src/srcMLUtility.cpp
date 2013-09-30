@@ -38,10 +38,10 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
   // set input file (must be done)
   translator.setInput(filename);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // translate file
   translator.translate(filename, directory, filename, version, language);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   } catch(...) {
 
   // close the input file
@@ -52,7 +52,7 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
 
   // close the input file
   translator.close();
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 }
 
 void * create_nodes_from_srcML_thread(void * arguments) {
@@ -63,7 +63,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
     args.directory, args.filename, args.version, args.uri, args.tabsize,
                             args.mutex,
                             args.nodes, args.unit_start, args.no_error, args.context);
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     return NULL;
 
 }
@@ -77,17 +77,17 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   xmlTextReaderPtr reader = NULL;
   //xNodePtr unit_end = NULL;
   //NodeSets node_set;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // translate file one
   try {
 
     if(!filename || filename[0] == 0)
       throw FileError();
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, XML_PARSE_HUGE);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if (reader == NULL) {
 
     if(!isoption(options, OPTION_QUIET))
@@ -95,7 +95,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
 
     exit(1);
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // read to unit
   xmlTextReaderRead(reader);
 
@@ -125,7 +125,7 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
     //fprintf(stderr, "Unable to open file '%s'\n", filename);
     
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   xmlBufferEmpty(output_buffer);
 
 }

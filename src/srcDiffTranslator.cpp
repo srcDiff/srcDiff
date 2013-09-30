@@ -175,7 +175,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   }
   // root unit for compound srcML documents
-  else if (first && ((global_options & OPTION_ARCHIVE) > 0)) {
+  else if (first && ((global_options & OPTION_NESTED) > 0)) {
 
     startUnit(0, global_options, root_directory, root_filename, root_version);
     xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -188,7 +188,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // create the reader for the old file
   xNodePtr unit_old = 0;
   NodeSets node_set_old;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   int is_old = 0;
   create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
@@ -206,7 +206,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     is_old = -2;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   /*
 
     Input for file two
@@ -221,26 +221,26 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
                                  , unit_directory, path_two, unit_version, uri, 8
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   pthread_t thread_new;
   if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
 
     is_new = -2;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     is_old = -2;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(is_new != -2 && pthread_join(thread_new, NULL)) {
 
     is_new = -2;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(is_old && is_old > -1)
     node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
 
@@ -265,7 +265,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   diff_set output_diff;
   output_diff.operation = SESCOMMON;
   wstate.output_diff.push_back(&output_diff);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   /*
     unsigned int i;
     for(i = 0; i < rbuf_old.nodes.size() && i < rbuf_new.nodes.size(); ++i) {
@@ -351,7 +351,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
     update_diff_stack(wstate.output_diff, unit_old, SESCOMMON);
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   // run on file level
   if(is_old || is_new) {
@@ -374,7 +374,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     // }
 
-    if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_ARCHIVE)) {
+    if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_NESTED)) {
 
       xmlTextWriterEndElement(wstate.writer);
       xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
@@ -528,7 +528,7 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
     (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
-    isoption(OPTION_CPP, options) && (!isoption(OPTION_ARCHIVE, options) || isoption(options, OPTION_VISUALIZE)) ? SRCML_CPP_NS_URI : 0,
+    isoption(OPTION_CPP, options) && (!isoption(OPTION_NESTED, options) || isoption(options, OPTION_VISUALIZE)) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
     (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
@@ -567,9 +567,9 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
 void srcDiffTranslator::set_nested(bool is_nested) {
 
   if(is_nested)
-    global_options |= OPTION_ARCHIVE;
+    global_options |= OPTION_NESTED;
   else
-    global_options &= ~OPTION_ARCHIVE;
+    global_options &= ~OPTION_NESTED;
 }
 
 void srcDiffTranslator::set_root_directory(const char * root_directory) {

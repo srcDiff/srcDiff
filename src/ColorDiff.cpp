@@ -109,10 +109,10 @@ int ColorDiff::colorize(LineDiffRange & line_diff_range) {
 
   }
 
-  if(isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_OUTPUTSAME) && lines_old.size() == 0 && lines_new.size() == 0)
+  if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_OUTPUTSAME) && lines_old.size() == 0 && lines_new.size() == 0)
     return 0;
 
-  if(isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_OUTPUTPURE) && (size_old == 0 || size_new == 0))
+  if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_OUTPUTPURE) && (size_old == 0 || size_new == 0))
     return 0;
 
   while(lines_old.size() <= size_old)

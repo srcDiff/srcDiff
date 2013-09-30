@@ -183,7 +183,7 @@ int main(int argc, char* argv[]) {
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
   if (input_arg_count / 2 > 1)
-    options |= OPTION_ARCHIVE;
+    options |= OPTION_NESTED;
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
   /*
@@ -436,7 +436,7 @@ int main(int argc, char* argv[]) {
     if (count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
 
-    else if (showinput && isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
+    else if (showinput && isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET)) {
       fprintf(stderr, "\n"
               "Translated: %d\t"
               "Skipped: %d\t"
@@ -498,7 +498,7 @@ void srcdiff_text(srcDiffTranslator& translator, const char* path_one, const cha
                   int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // Do not nest individual files
-  OPTION_TYPE local_options = options & ~OPTION_ARCHIVE;
+  OPTION_TYPE local_options = options & ~OPTION_NESTED;
 
   std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
@@ -673,7 +673,7 @@ void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYP
       // once any source archive is input, then we have to assume nested not just locally
       if (isarchive) {
         translator.set_nested();
-        save_options |= OPTION_ARCHIVE;
+        save_options |= OPTION_NESTED;
         showinput = true;
         //        shownumber = true;
       }
