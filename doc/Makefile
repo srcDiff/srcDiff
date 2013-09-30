@@ -1,8 +1,8 @@
 MAN_PAGES= srcdiff.1
 HTML_PAGES = srcdiff.html
 MAN_GZIP= srcdiff.1.gz
-SRC2SRCML=../../../../../srcML/bin/src2srcml
-SRCML2SRC=../../../../../srcML/bin/srcml2src
+SRC2SRCML=${firstword ${wildcard /home/srcml/srcML/bin/src2srcml /srcML/bin/src2srcml /Users/srcml/srcML/bin/src2srcml }}
+SRCML2SRC=${firstword ${wildcard /home/srcml/srcML/bin/srcml2src /srcML/bin/srcml2src /Users/srcml/srcML/bin/srcml2src }}
 
 DOCBOOK2XMAN=${firstword ${wildcard /usr/bin/db2x_docbook2man /usr/bin/docbook2x-man /opt/local/bin/docbook2man /usr/local/bin/docbook2man}}
 MAN2HTML=${firstword ${wildcard /usr/bin/man2html /opt/local/bin/man2html} /usr/local/bin/man2html}
