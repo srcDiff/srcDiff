@@ -21,14 +21,13 @@ find_package(LibXml2)
 find_package(LibArchive)
 find_package(LibXslt)
 find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
-find_library(LIBSRCML_LIB NAMES libsrcml.so libsrcml.dylib libsrcml.dll PATHS /home/srcml/srcML/bin /srcML/bin /Users/srcml/srcML/bin)
+find_library(LIBSRCML_LIB NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /home/srcml/srcML/bin /srcML/bin /Users/srcml/srcML/bin)
 find_file(LIBSRCML_INCLUDE_DIR NAMES src PATHS /home/srcml/srcML /srcML /Users/srcml/srcML)
 
 #find_file(LIBSVN_INCLUDE_DIR subversion-1 PATHS /usr/include)
 #find_file(LIBAPR_INCLUDE_DIR NAMES apr-1 apr-1.0 PATHS /usr/include)
 
 include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR})
-link_directories(/Users/srcml/srcML-svn/trunk/bin)
 
 if(EXISTS /usr/include/i386-linux-gnu)
 
