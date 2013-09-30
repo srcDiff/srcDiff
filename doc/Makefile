@@ -10,7 +10,7 @@ MAN=${firstword ${wildcard /opt/local/bin/man /usr/bin/man}}
 
 ECHO=/bin/echo
 
-all : man gzip
+all : man srcdiff.html srcdiff.1.gz
 
 man : ${MAN_PAGES}
 
