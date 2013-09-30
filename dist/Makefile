@@ -12,7 +12,7 @@ CP=${firstword ${wildcard /opt/local/bin/gcp /usr/local/bin/gcp /bin/cp}}
 STRIP=${firstword ${wildcard /usr/bin/i686-pc-mingw32-strip /usr/bin/i686-w64-mingw32-strip}}
 
 # svn repo
-SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcDiffPurged/trunk
+SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcDiffPurged/trunk/srcdiff/trunk
 
 # git repo
 GIT_URL=git@github.com:srcML/srcML.git
@@ -38,6 +38,9 @@ DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../dlls
 
+SRCML_DIR_BASE=${firstword ${wildcard /home/srcml/srcML /srcML /Users/srcml/srcML }}
+SRCML_BIN_DIR=${SRCML_DIR_BASE}/bin
+
 # executables
 SRCDIFF_BIN=srcdiff
 SRCDIFF_EXE=srcdiff.exe
@@ -46,7 +49,7 @@ SRCDIFF_PATH=${BIN_DIR}/${SRCDIFF_BIN}
 
 WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRCDIFF_EXE}
 WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCDIFF_EXE}
-LIBSRCML_BASE=${BIN_DIR}/libsrcml
+LIBSRCML_BASE=${SRCML_BIN_DIR}/libsrcml
 LIBSRCML_SO=${LIBSRCML_BASE}.so
 LIBSRCML_DYLIB=${LIBSRCML_BASE}.dylib
 LIBSRCML_DLL=${LIBSRCML_BASE}.dll
