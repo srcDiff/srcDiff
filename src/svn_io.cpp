@@ -355,7 +355,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // Do not nest individual files
-  OPTION_TYPE local_options = options & ~OPTION_NESTED;
+  OPTION_TYPE local_options = options & ~OPTION_ARCHIVE;
 
   std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
