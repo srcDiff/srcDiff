@@ -41,8 +41,6 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
-    { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
     //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
@@ -266,7 +264,8 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         if (!ns_uri[0]) {
           if (!(optind < argc && argv[optind][0] != '-')) {
             fprintf(stderr, "%s: xmlns option selected but not specified.\n", PROGRAM_NAME);
-            exit(STATUS_LANGUAGE_MISSING);
+            //exit(STATUS_LANGUAGE_MISSING);
+	    exit(1);
           }
 
           ns_uri = argv[optind++];
@@ -440,15 +439,6 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       poptions.given_version = optarg;
       break;
 
-    case SETTINGS_FLAG_CODE :
-      output_settings(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
-
-    case FEATURES_FLAG_CODE :
-      output_features(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
       /*
         case INPUT_FORMAT_FLAG_CODE:
 
@@ -489,13 +479,15 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
         fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
-        exit(STATUS_UNIT_INVALID);
+        //exit(STATUS_UNIT_INVALID);
+	exit(1);
       }
 
       // validate range of unit number
       if (poptions.tabsize <= 0) {
         fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.tabsize);
-        exit(STATUS_UNIT_INVALID);
+        //exit(STATUS_UNIT_INVALID);
+	exit(1);
       }
 
       break;
@@ -593,27 +585,27 @@ int option_error_status(int optopt) {
   switch (optopt) {
 
   case FILENAME_FLAG_SHORT:
-    return STATUS_FILENAME_MISSING;
+    return 1;//STATUS_FILENAME_MISSING;
     break;
 
   case LANGUAGE_FLAG_SHORT:
-    return STATUS_LANGUAGE_MISSING;
+    return 1;//STATUS_LANGUAGE_MISSING;
     break;
 
   case DIRECTORY_FLAG_SHORT:
-    return STATUS_DIRECTORY_MISSING;
+    return 1;//STATUS_DIRECTORY_MISSING;
     break;
 
   case SRCVERSION_FLAG_SHORT:
-    return STATUS_VERSION_MISSING;
+    return 1;//STATUS_VERSION_MISSING;
     break;
 
   case ENCODING_FLAG_SHORT:
-    return STATUS_XMLENCODING_MISSING;
+    return 1;//STATUS_XMLENCODING_MISSING;
     break;
 
   case SRC_ENCODING_FLAG_SHORT:
-    return STATUS_SRCENCODING_MISSING;
+    return 1;//STATUS_SRCENCODING_MISSING;
     break;
     /*
       case INPUT_FORMAT_FLAG_CODE:

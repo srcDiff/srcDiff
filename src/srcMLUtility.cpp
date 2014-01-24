@@ -21,7 +21,7 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
   translator.setInput(source_file);
 
   // translate file
-  translator.translate(NULL, dir, source_file, NULL, language);
+  translator.translate(dir, source_file, NULL, language);
 
   // close the input file
   translator.close();
@@ -40,7 +40,7 @@ void translate_to_srcML(int language, const char* src_encoding, const char* xml_
   translator.setInput(filename);
 
   // translate file
-  translator.translate(filename, directory, filename, version, language);
+  translator.translate(directory, filename, version, language);
 
   } catch(...) {
 
