@@ -27,7 +27,6 @@
 #ifndef INCLUDED_SRCDIFFTRANSLATOR_HPP
 #define INCLUDED_SRCDIFFTRANSLATOR_HPP
 
-#include <Language.hpp>
 #include <Options.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
@@ -42,8 +41,7 @@ class srcDiffTranslator {
  public:
 
   // constructor
-  srcDiffTranslator(int language,
-                    const char* src_encoding,
+  srcDiffTranslator(const char* src_encoding,
                     const char* xml_encoding,
                     const char* srcml_filename,
                     OPTION_TYPE global_options,
@@ -59,8 +57,7 @@ class srcDiffTranslator {
   void close();
 
   void translate(const char* path_one, const char* path_two, OPTION_TYPE srcml_option,
-               const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0,
-               int language = 0);
+               const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0);
 
 void startUnit(const char * language,
                OPTION_TYPE& options,        // many and varied options
@@ -86,7 +83,6 @@ void outputNamespaces(const OPTION_TYPE& options);
   const char* root_version;
   const char* src_encoding;
   const char* xml_encoding;
-  int language;
   OPTION_TYPE global_options;
   METHOD_TYPE method;
   const char** uri;

@@ -17,7 +17,6 @@
 #include <URIStream.hpp>
 
 #include "svn_io.hpp"
-#include "Language.hpp"
 #include "srcmlapps.hpp"
 
 #include "pthread.h"
@@ -39,7 +38,7 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
-void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_hash_t * dirents_one;
   svn_revnum_t fetched_rev_one;
@@ -156,7 +155,6 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                      directory_length_old,
                      directory_length_new,
                      options,
-                     language,
                      count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
@@ -191,7 +189,6 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                      directory_length_old,
                      directory_length_new,
                      options,
-                     language,
                      count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
@@ -226,7 +223,6 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                      directory_length_old,
                      directory_length_new,
                      options,
-                     language,
                      count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
@@ -279,7 +275,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                     comparison >= 0 ? (++j, filename_new.c_str()) : NULL,
                     directory_length_new,
                     options,
-                    language, count, skipped, error, showinput, shownumber);
+                    count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -312,7 +308,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                     NULL,
                     directory_length_new,
                     options,
-                    language, count, skipped, error, showinput, shownumber);
+                    count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -344,7 +340,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                     filename_new.c_str(),
                     directory_length_new,
                     options,
-                    language, count, skipped, error, showinput, shownumber);
+                    count, skipped, error, showinput, shownumber);
 
     apr_pool_destroy(new_pool);
 
@@ -352,7 +348,7 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
 }
 
-void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcDiffTranslator& translator, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // Do not nest individual files
   OPTION_TYPE local_options = options & ~OPTION_ARCHIVE;
@@ -366,7 +362,7 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   }
 
   // Remove eventually
-  int real_language = language ? language : Language::getLanguageFromFilename(path_one);
+/*  int real_language = language ? language : Language::getLanguageFromFilename(path_one);
 
   real_language = real_language ? real_language : Language::getLanguageFromFilename(path_two);
 
@@ -382,7 +378,7 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
 
     return;
   }
-
+*/
   ++count;
 
   if(showinput && !isoption(local_options, OPTION_QUIET))
@@ -401,13 +397,12 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   translator.translate(file_one.str().c_str(), file_two.str().c_str(), local_options,
                        NULL,
                        filename.c_str(),
-                       0,
-                       real_language);
+                       0);
 
 
 }
 
-void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcDiffTranslator& translator, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcDiffTranslator& translator, const char * url, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -460,9 +455,9 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
   svn_ra_stat(session, path, revision_one, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
+    svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_dir)
-    svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
+    svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
     fprintf(stderr, "%s\n", "Path does not exist");
   else if(dirent->kind == svn_node_unknown)
@@ -478,7 +473,7 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
 }
 
-void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
+void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const char * url, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
                              const char* xml_encoding,    // xml encoding of result srcML file
                              const char* srcdiff_filename,  // filename of result srcDiff file
                              METHOD_TYPE method,
@@ -561,8 +556,7 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
     full_srcdiff << revision_two;
     full_srcdiff << ".xml";
 
-    srcDiffTranslator translator(language,
-                                 src_encoding,
+    srcDiffTranslator translator(src_encoding,
                                  xml_encoding,
                                  full_srcdiff.str().c_str(),
                                  options,
@@ -583,9 +577,9 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
     svn_ra_stat(session, path, revision_one, &dirent, path_pool);
 
     if(dirent->kind == svn_node_file)
-      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
+      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
+      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
@@ -604,7 +598,7 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
 }
 
-void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_revnum_t revision_two, const char * url, OPTION_TYPE options, int language, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
+void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_revnum_t revision_two, const char * url, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
                               const char* xml_encoding,    // xml encoding of result srcML file
                               const char* srcdiff_filename,  // filename of result srcDiff file
                               METHOD_TYPE method,
@@ -659,8 +653,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
   if(svn_error)
     fprintf(stderr, "%s\n", svn_error->message);
 
-  srcDiffTranslator translator(language,
-                               src_encoding,
+  srcDiffTranslator translator(src_encoding,
                                xml_encoding,
                                srcdiff_filename,
                                options,
@@ -722,10 +715,10 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
       svn_ra_stat(session, path, revision, &dirent, path_pool);
 
       if(dirent->kind == svn_node_file)
-        svn_process_file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, options, language ? language : Language::getLanguageFromFilename(url), count, skipped, error, showinput, shownumber);
+        svn_process_file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, options, count, skipped, error, showinput, shownumber);
       else if(dirent->kind == svn_node_dir)
         fprintf(stderr, "Skipping directory: %s", path);
-      //svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, language, count, skipped, error, showinput, shownumber);
+      //svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
       else if(dirent->kind == svn_node_none)
         fprintf(stderr, "%s\n", "Path does not exist");
       else if(dirent->kind == svn_node_unknown)

@@ -1,65 +1,44 @@
 #include "srcMLUtility.hpp"
 #include "srcDiffDiff.hpp"
-#include <srcMLTranslator.hpp>
-#include <Language.hpp>
+#include <srcml.h>
 
 extern xmlNs diff;
 
 // converts source code to srcML
-void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer) {
+void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
+			const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+			char ** output_buffer, int * output_size) {
 
-  // get language from file extension
-  int language = Language::getLanguageFromFilename(source_file);
+  srcml_archive * archive = srcml_create_archive();
+  srcml_archive_set_src_encoding(archive, xml_encoding);
+  srcml_archive_set_encoding(archive, xml_encoding);
+  srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+  //srcml_archive_set_options(archive, options);
+  srcml_archive_set_directory(archive, directory);
+  srcml_archive_set_filename(archive, filename);
+  srcml_archive_set_version(archive, version);
+  srcml_archive_set_tabstop(archive, tabsize);
 
-  // select basic options
-  OPTION_TYPE options = OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
 
-  // create translator object
-  srcMLTranslator translator(language, output_buffer, options);
+  srcml_write_open_memory(archive, output_buffer, output_size);
 
-  // set input file (must be done)
-  translator.setInput(source_file);
+  srcml_unit * unit = srcml_create_unit(archive);
+  srcml_parse_unit_filename(unit, filename);
 
-  // translate file
-  translator.translate(dir, source_file, NULL, language);
+  srcml_write_unit(archive, unit);
 
-  // close the input file
-  translator.close();
+  srcml_free_unit(unit);
 
-}
-
-void translate_to_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
-                const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
-
-  // create translator object
-  srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
-
-  try {
-
-  // set input file (must be done)
-  translator.setInput(filename);
-
-  // translate file
-  translator.translate(directory, filename, version, language);
-
-  } catch(...) {
-
-  // close the input file
-  translator.close();
-  throw FileError();
-
-  }
-
-  // close the input file
-  translator.close();
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
 
 }
 
 void * create_nodes_from_srcML_thread(void * arguments) {
 
-  create_nodes_args & args = *(create_nodes_args *)arguments;
+    create_nodes_args & args = *(create_nodes_args *)arguments;
 
-    create_nodes_from_srcML(args.language, args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
+    create_nodes_from_srcML(args.src_encoding, args.xml_encoding, args.options,
     args.directory, args.filename, args.version, args.uri, args.tabsize,
                             args.mutex,
                             args.nodes, args.unit_start, args.no_error, args.context);
@@ -69,24 +48,25 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 }
 
 
-void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
   
+  char * output_buffer;
+  int output_size;
+
   xmlTextReaderPtr reader = NULL;
-  //xNodePtr unit_end = NULL;
-  //NodeSets node_set;
 
   // translate file one
   try {
 
     if(!filename || filename[0] == 0)
-      throw FileError();
+	throw std::string();
 
-  translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
+  translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, &output_buffer, &output_size);
 
-  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, XML_PARSE_HUGE);
+  reader = xmlReaderForMemory(output_buffer, strlen(output_buffer), 0, 0, XML_PARSE_HUGE);
 
   if (reader == NULL) {
 
@@ -108,111 +88,22 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   if(no_error) {
 
     collect_nodes(&nodes, reader, options, context, mutex);
-    /*unit_end = */getRealCurrentNode(reader, options, context);
+    getRealCurrentNode(reader, options, context);
 
   }
 
   xmlFreeTextReader(reader);
 
-  // group nodes
-  //node_set = create_node_set(nodes, 0, nodes.size());
-
   } catch(...) {
 
     no_error = -1;
 
-    //if(!isoption(global_options, OPTION_QUIET))
-    //fprintf(stderr, "Unable to open file '%s'\n", filename);
     
   }
 
-  xmlBufferEmpty(output_buffer);
+  free(output_buffer);
 
 }
-
-// create srcdiff unit
-xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new) {
-
-  // get units from source code
-  xNodePtr unit = unit_old;
-
-  // add diff namespace
-  //addNamespace(&unit->nsDef, &diff);
-
-  //merge_filename(unit, unit_new);
-
-  return unit;
-}
-
-/*
-void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
-
-  xmlNsPtr namespaces = *nsDef;
-
-  if(namespaces) {
-
-    for(; namespaces->next; namespaces = namespaces->next)
-      ;
-
-    namespaces->next = ns;
-  }
-  else
-    *nsDef = ns;
-
-}
-
-void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
-
-  xNodePtr unit = unit_old;
-
-  std::string filename_old = "";
-  xmlAttrPtr attr;
-  for(attr = unit->properties; attr; attr = attr->next)
-    if(strcmp((const char *)attr->name, "filename") == 0) {
-
-      filename_old += (const char *)attr->children->content;
-      break;
-    }
-
-  std::string filename_new = "";
-  xmlAttrPtr attr_new;
-  for(attr_new = unit_new->properties; attr_new; attr_new = attr_new->next)
-    if(strcmp((const char *)attr_new->name, "filename") == 0) {
-
-      filename_new += (const char *)attr_new->children->content;
-      break;
-    }
-
-  std::string * filename = NULL;
-  if(attr && attr_new) {
-
-    if(filename_old == filename_new)
-      return;
-
-    filename = new std::string(filename_old + "|" + filename_new);
-    attr->children->content = (xmlChar *)filename->c_str();
-    return;
-
-  }
-
-  if(attr_new) {
-    
-    attr = unit->properties;
-    if(attr) {
-      
-      for(; attr->next; attr = attr->next)
-        ;
-      
-      attr->next = attr_new;
-      
-    } else {
-      
-      unit->properties = attr_new;
-    }
-  }
-
-}
-*/
 
 bool is_separate_token(const char character) {
 
