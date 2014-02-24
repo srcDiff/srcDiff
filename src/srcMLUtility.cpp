@@ -34,9 +34,31 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, xmlB
 
   // create translator object
   //srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
+
+  char * s;
+  int size;
+
   srcml_archive * archive = srcml_create_archive();
-  srcml_archive_set_encoding(archive, xml_encoding);
   srcml_archive_set_src_encoding(archive, xml_encoding);
+  srcml_archive_set_encoding(archive, xml_encoding);
+  srcml_archive_set_options(archive, options);
+  srcml_archive_set_directory(archive, directory);
+  srcml_archive_set_filename(archive, filename);
+  srcml_archive_set_version(archive, version);
+  srcml_archive_set_tabstop(archive, tabsize);
+
+
+  srcml_write_open_memory(archive, &s, &size);
+
+  srcml_unit * unit = srcml_create_unit(archive);
+  srcml_parse_unit_filename(unit, filename);
+
+  srcml_write_unit(archive, unit);
+
+  srcml_free_unit(unit);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
 
 
 }
