@@ -1,16 +1,16 @@
 #include <getopt.h>
 #include <cerrno>
 
-#include "project.hpp"
-
 #include "srcdiff_options.hpp"
 #include "srcmlapps.hpp"
 #include "srcmlns.hpp"
 #include "Options.hpp"
-#include "Language.hpp"
 #include <archive.h>
-#include "libxml_archive_read.hpp"
-#include "libxml_archive_write.hpp"
+
+#include <cstdlib>
+#include <libxml/parser.h>
+//#include "libxml_archive_read.hpp"
+//#include "libxml_archive_write.hpp"
 
 #include "srcDiffOptions.hpp"
 
@@ -195,13 +195,14 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
           fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
           exit(STATUS_ERROR);
         }
-
+/*
         if (!Language::registerUserExt(extension, language)) {
 
           fprintf(stderr, "%s: language \"%s\" is not supported.\n", PROGRAM_NAME, language);
           fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
           exit(STATUS_ERROR);
         }
+*/
       }
 
       break;
@@ -400,6 +401,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       options |= OPTION_LANGUAGE;
 
       // validate language selected
+/*
       poptions.language = Language::getLanguage(optarg);
       if (poptions.language == 0) {
         fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
@@ -407,6 +409,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
 
         exit(STATUS_INVALID_LANGUAGE);
       }
+*/
       break;
 
     case DIRECTORY_FLAG_SHORT:
@@ -474,7 +477,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       options |= OPTION_POSITION;
 
       char * end;
-      poptions.tabsize = pstd::strtol(optarg, &end, 10);
+      poptions.tabsize = strtol(optarg, &end, 10);
 
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {

@@ -12,7 +12,6 @@
 struct create_nodes_args {
 
   // args
-  int language;
   const char* src_encoding;
   const char* xml_encoding;
   xmlBuffer* output_buffer;
@@ -37,12 +36,12 @@ struct create_nodes_args {
 // converts source code to srcML
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer);
 
-void translate_to_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+void translate_to_srcML(const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                         const char* directory, const char* filename, const char* version, const char* uri[], int tabsize);
 
 void * create_nodes_from_srcML_thread(void * arguments);
 
-void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context);

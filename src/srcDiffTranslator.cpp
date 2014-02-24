@@ -25,7 +25,6 @@
 #include "srcDiffTranslator.hpp"
 #include "srcmlns.hpp"
 #include "srcmlapps.hpp"
-#include "srcMLTranslator.hpp"
 #include "shortest_edit_script.h"
 #include "srcDiffConstants.hpp"
 #include "srcDiffUtility.hpp"
@@ -38,6 +37,8 @@
 #include "LineDiffRange.hpp"
 
 #include "xmlrw.hpp"
+
+#include <srcml.h>
 
 // diff nodes
 xNode diff_common_start;
@@ -53,8 +54,7 @@ xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 xAttr diff_type = { 0 };
 
 // constructor
-srcDiffTranslator::srcDiffTranslator(int language,                // programming language of source code
-                                     const char* src_encoding,    // text encoding of source code
+srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encoding of source code
                                      const char* xml_encoding,    // xml encoding of result srcML file
                                      const char* srcdiff_filename,  // filename of result srcDiff file
                                      OPTION_TYPE global_options,             // many and varied options
@@ -68,7 +68,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
                                      )
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), language(language), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
 {
   diff.prefix = uri[7];
 
@@ -138,8 +138,7 @@ srcDiffTranslator::srcDiffTranslator(int language,                // programming
 
 // Translate from input stream to output stream
 void srcDiffTranslator::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options,
-                                  const char* unit_directory, const char* unit_filename, const char* unit_version,
-                                  int language) {
+                                  const char* unit_directory, const char* unit_filename, const char* unit_version) {
 
   LineDiffRange line_diff_range(path_one, path_two);
 
@@ -190,7 +189,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   NodeSets node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { language, src_encoding, xml_encoding, output_srcml_file_old, local_options
+  create_nodes_args args_old = { src_encoding, xml_encoding, output_srcml_file_old, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
                                  , rbuf_old.mutex
                                  , rbuf_old.nodes, &unit_old, is_old, rbuf_old.stream_source };
@@ -217,7 +216,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   NodeSets node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { language, src_encoding, xml_encoding, output_srcml_file_new, local_options
+  create_nodes_args args_new = { src_encoding, xml_encoding, output_srcml_file_new, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
@@ -356,8 +355,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // run on file level
   if(is_old || is_new) {
 
-    Language l(language);
-    startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version);
+      //Language l(language);
+      //startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version);
 
     first = false;
 
@@ -490,7 +489,7 @@ void srcDiffTranslator::startUnit(const char * language,
   const char* const attrs[][2] = {
 
     // revision attribute
-    { UNIT_ATTRIBUTE_REVISION,  isoption(options, OPTION_REVISION) ? srcml_version() : 0 },
+    { UNIT_ATTRIBUTE_REVISION,  isoption(options, OPTION_REVISION) ? srcml_version_string() : 0 },
 
     // language attribute
     { UNIT_ATTRIBUTE_LANGUAGE, language },

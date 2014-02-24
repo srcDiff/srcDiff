@@ -1,11 +1,11 @@
 #include "srcMLUtility.hpp"
 #include "srcDiffDiff.hpp"
-#include <srcMLTranslator.hpp>
-#include <Language.hpp>
+#include <srcml.h>
 
 extern xmlNs diff;
 
 // converts source code to srcML
+/*
 void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer) {
 
   // get language from file extension
@@ -27,31 +27,17 @@ void translate_to_srcML(const char * source_file, const char * srcml_file, const
   translator.close();
 
 }
+*/
 
-void translate_to_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+void translate_to_srcML(const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                 const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
 
   // create translator object
-  srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
+  //srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
+  srcml_archive * archive = srcml_create_archive();
+  srcml_archive_set_encoding(archive, xml_encoding);
+  srcml_archive_set_src_encoding(archive, xml_encoding);
 
-  try {
-
-  // set input file (must be done)
-  translator.setInput(filename);
-
-  // translate file
-  translator.translate(directory, filename, version, language);
-
-  } catch(...) {
-
-  // close the input file
-  translator.close();
-  throw FileError();
-
-  }
-
-  // close the input file
-  translator.close();
 
 }
 
@@ -59,7 +45,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
   create_nodes_args & args = *(create_nodes_args *)arguments;
 
-    create_nodes_from_srcML(args.language, args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
+    create_nodes_from_srcML(args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
     args.directory, args.filename, args.version, args.uri, args.tabsize,
                             args.mutex,
                             args.nodes, args.unit_start, args.no_error, args.context);
@@ -69,7 +55,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 }
 
 
-void create_nodes_from_srcML(int language, const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
@@ -82,9 +68,9 @@ void create_nodes_from_srcML(int language, const char* src_encoding, const char*
   try {
 
     if(!filename || filename[0] == 0)
-      throw FileError();
+	throw std::string();//FileError();
 
-  translate_to_srcML(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
+  translate_to_srcML(src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
 
   reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, XML_PARSE_HUGE);
 
