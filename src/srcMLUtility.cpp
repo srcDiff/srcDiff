@@ -66,7 +66,7 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
 
   translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, &output_buffer, &output_size);
 
-  reader = xmlReaderForMemory(output_buffer, strlen(output_buffer), 0, 0, XML_PARSE_HUGE);
+  reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
   if (reader == NULL) {
 
