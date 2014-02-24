@@ -353,8 +353,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // run on file level
   if(is_old || is_new) {
 
-      //Language l(language);
-      //startUnit(l.getLanguageString(), local_options, unit_directory, unit_filename, unit_version);
+      // @todo need to get this from archive or something
+      startUnit(path_one ? srcml_check_extension(path_one) : srcml_check_extension(path_two), local_options, unit_directory, unit_filename, unit_version);
 
     first = false;
 

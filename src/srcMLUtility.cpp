@@ -36,7 +36,7 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTI
 
 void * create_nodes_from_srcML_thread(void * arguments) {
 
-  create_nodes_args & args = *(create_nodes_args *)arguments;
+    create_nodes_args & args = *(create_nodes_args *)arguments;
 
     create_nodes_from_srcML(args.src_encoding, args.xml_encoding, args.options,
     args.directory, args.filename, args.version, args.uri, args.tabsize,
@@ -62,7 +62,7 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
   try {
 
     if(!filename || filename[0] == 0)
-	throw std::string();//FileError();
+	throw std::string();
 
   translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, &output_buffer, &output_size);
 
@@ -88,111 +88,22 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
   if(no_error) {
 
     collect_nodes(&nodes, reader, options, context, mutex);
-    /*unit_end = */getRealCurrentNode(reader, options, context);
+    getRealCurrentNode(reader, options, context);
 
   }
 
   xmlFreeTextReader(reader);
 
-  // group nodes
-  //node_set = create_node_set(nodes, 0, nodes.size());
-
   } catch(...) {
 
     no_error = -1;
 
-    //if(!isoption(global_options, OPTION_QUIET))
-    //fprintf(stderr, "Unable to open file '%s'\n", filename);
     
   }
 
   free(output_buffer);
 
 }
-
-// create srcdiff unit
-xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new) {
-
-  // get units from source code
-  xNodePtr unit = unit_old;
-
-  // add diff namespace
-  //addNamespace(&unit->nsDef, &diff);
-
-  //merge_filename(unit, unit_new);
-
-  return unit;
-}
-
-/*
-void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns) {
-
-  xmlNsPtr namespaces = *nsDef;
-
-  if(namespaces) {
-
-    for(; namespaces->next; namespaces = namespaces->next)
-      ;
-
-    namespaces->next = ns;
-  }
-  else
-    *nsDef = ns;
-
-}
-
-void merge_filename(xNodePtr unit_old, xNodePtr unit_new) {
-
-  xNodePtr unit = unit_old;
-
-  std::string filename_old = "";
-  xmlAttrPtr attr;
-  for(attr = unit->properties; attr; attr = attr->next)
-    if(strcmp((const char *)attr->name, "filename") == 0) {
-
-      filename_old += (const char *)attr->children->content;
-      break;
-    }
-
-  std::string filename_new = "";
-  xmlAttrPtr attr_new;
-  for(attr_new = unit_new->properties; attr_new; attr_new = attr_new->next)
-    if(strcmp((const char *)attr_new->name, "filename") == 0) {
-
-      filename_new += (const char *)attr_new->children->content;
-      break;
-    }
-
-  std::string * filename = NULL;
-  if(attr && attr_new) {
-
-    if(filename_old == filename_new)
-      return;
-
-    filename = new std::string(filename_old + "|" + filename_new);
-    attr->children->content = (xmlChar *)filename->c_str();
-    return;
-
-  }
-
-  if(attr_new) {
-    
-    attr = unit->properties;
-    if(attr) {
-      
-      for(; attr->next; attr = attr->next)
-        ;
-      
-      attr->next = attr_new;
-      
-    } else {
-      
-      unit->properties = attr_new;
-    }
-  }
-
-}
-*/
 
 bool is_separate_token(const char character) {
 
