@@ -12,7 +12,8 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTI
   srcml_archive * archive = srcml_create_archive();
   srcml_archive_set_src_encoding(archive, xml_encoding);
   srcml_archive_set_encoding(archive, xml_encoding);
-  srcml_archive_set_options(archive, options);
+  srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+  //srcml_archive_set_options(archive, options);
   srcml_archive_set_directory(archive, directory);
   srcml_archive_set_filename(archive, filename);
   srcml_archive_set_version(archive, version);
@@ -30,7 +31,6 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTI
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
-
 
 }
 
@@ -66,7 +66,7 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
 
   translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, &output_buffer, &output_size);
 
-  reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
+  reader = xmlReaderForMemory(output_buffer, strlen(output_buffer), 0, 0, XML_PARSE_HUGE);
 
   if (reader == NULL) {
 
