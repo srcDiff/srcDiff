@@ -131,8 +131,6 @@ srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encodi
 
   wstate.method = method;
 
-  output_srcml_file_old = xmlBufferCreate();
-  output_srcml_file_new = xmlBufferCreate();
 
 }
 
@@ -189,7 +187,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   NodeSets node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { src_encoding, xml_encoding, output_srcml_file_old, local_options
+  create_nodes_args args_old = { src_encoding, xml_encoding, local_options
                                  , unit_directory, path_one, unit_version, uri, 8
                                  , rbuf_old.mutex
                                  , rbuf_old.nodes, &unit_old, is_old, rbuf_old.stream_source };
@@ -216,7 +214,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   NodeSets node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { src_encoding, xml_encoding, output_srcml_file_new, local_options
+  create_nodes_args args_new = { src_encoding, xml_encoding, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
@@ -452,10 +450,6 @@ srcDiffTranslator::~srcDiffTranslator() {
     delete colordiff;
 
   }
-
-  // free the buffer
-  xmlBufferFree(output_srcml_file_old);
-  xmlBufferFree(output_srcml_file_new);
 
   pthread_mutex_destroy(&mutex);
 

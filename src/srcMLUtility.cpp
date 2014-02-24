@@ -5,38 +5,9 @@
 extern xmlNs diff;
 
 // converts source code to srcML
-/*
-void translate_to_srcML(const char * source_file, const char * srcml_file, const char * dir, xmlBuffer* output_buffer) {
-
-  // get language from file extension
-  int language = Language::getLanguageFromFilename(source_file);
-
-  // select basic options
-  OPTION_TYPE options = OPTION_CPP | OPTION_XMLDECL | OPTION_XML  | OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
-
-  // create translator object
-  srcMLTranslator translator(language, output_buffer, options);
-
-  // set input file (must be done)
-  translator.setInput(source_file);
-
-  // translate file
-  translator.translate(dir, source_file, NULL, language);
-
-  // close the input file
-  translator.close();
-
-}
-*/
-
-void translate_to_srcML(const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
-                const char* directory, const char* filename, const char* version, const char* uri[], int tabsize) {
-
-  // create translator object
-  //srcMLTranslator translator(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
-
-  char * s;
-  int size;
+void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
+			const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+			char ** output_buffer, int * output_size) {
 
   srcml_archive * archive = srcml_create_archive();
   srcml_archive_set_src_encoding(archive, xml_encoding);
@@ -48,7 +19,7 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, xmlB
   srcml_archive_set_tabstop(archive, tabsize);
 
 
-  srcml_write_open_memory(archive, &s, &size);
+  srcml_write_open_memory(archive, output_buffer, output_size);
 
   srcml_unit * unit = srcml_create_unit(archive);
   srcml_parse_unit_filename(unit, filename);
@@ -67,7 +38,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
   create_nodes_args & args = *(create_nodes_args *)arguments;
 
-    create_nodes_from_srcML(args.src_encoding, args.xml_encoding, args.output_buffer, args.options,
+    create_nodes_from_srcML(args.src_encoding, args.xml_encoding, args.options,
     args.directory, args.filename, args.version, args.uri, args.tabsize,
                             args.mutex,
                             args.nodes, args.unit_start, args.no_error, args.context);
@@ -77,14 +48,15 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 }
 
 
-void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding, xmlBuffer* output_buffer, OPTION_TYPE& options,
+void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
   
+  char * output_buffer;
+  int output_size;
+
   xmlTextReaderPtr reader = NULL;
-  //xNodePtr unit_end = NULL;
-  //NodeSets node_set;
 
   // translate file one
   try {
@@ -92,9 +64,9 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
     if(!filename || filename[0] == 0)
 	throw std::string();//FileError();
 
-  translate_to_srcML(src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, 8);
+  translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, &output_buffer, &output_size);
 
-  reader = xmlReaderForMemory((const char*) xmlBufferContent(output_buffer), output_buffer->use, 0, 0, XML_PARSE_HUGE);
+  reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
   if (reader == NULL) {
 
@@ -134,7 +106,7 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
     
   }
 
-  xmlBufferEmpty(output_buffer);
+  free(output_buffer);
 
 }
 
