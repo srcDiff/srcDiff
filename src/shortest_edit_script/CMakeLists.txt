@@ -19,8 +19,9 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-if(WIN32)
-subdirs(oldclient shortest_edit_script srcml translator visualization windows)
-else()
-subdirs(oldclient shortest_edit_script srcml translator visualization)
-endif()
+file(GLOB SHORTEST_EDIT_SCRIPT_HEADERS *.h *.hpp)
+file(GLOB SHORTEST_EDIT_SCRIPT_SOURCE *.c *.cpp)
+
+add_library(shortest_edit_script OBJECT ${SHORTEST_EDIT_SCRIPT_HEADERS} ${SHORTEST_EDIT_SCRIPT_SOURCE})
+
+

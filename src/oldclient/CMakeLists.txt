@@ -19,8 +19,23 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+file(GLOB OLDCLIENT_HEADERS *.hpp)
+file(GLOB OLDCLIENT_SOURCE *.cpp)
+
+list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.hpp)
+list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
+
+get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
+get_property(LIBSRCML_LIB GLOBAL PROPERTY LIBSRCML_LIB)
+
+# srcdiff
 if(WIN32)
-subdirs(oldclient shortest_edit_script srcml translator visualization windows)
+add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
+		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>
+		       $<TARGET_OBJECTS:windows>)
 else()
-subdirs(oldclient shortest_edit_script srcml translator visualization)
+add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
+		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
 endif()
+
+target_link_libraries(srcdiff ${LIBXML2_LIBS} ${LIBSRCML_LIB} pthread)
