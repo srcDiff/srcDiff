@@ -1,20 +1,32 @@
-###
-#    CMakeLists.txt
+##
+#  CMakeLists.txt
 #
+#  Copyright (C) 2011-2011  SDML (www.sdml.info)
 #
-#    Optional cmake file for srcML.
-#    The main way to build srcML is with normal Makefile
+#  This file is part of the srcDiff translator.
+#
+#  The srcDiff translator is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  The srcDiff translator is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with the srcDiff translator; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 cmake_minimum_required(VERSION 2.8)
 project(srcDiff)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-include(config)
+include(srcdiff)
 
 # setup project includes
 include_directories(src/shortest_edit_script src/translator src/windows src/oldclient src/srcml	src/visualization)
-
-#set_source_files_properties(shortest_edit_script.c PROPERTIES LANGUAGE CXX)
 
 # get version and revision
 add_definitions(-DVERSION=\"1\")

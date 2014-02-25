@@ -23,8 +23,6 @@
 
 
 find_package(LibXml2 REQUIRED)
-#find_package(LibArchive)
-#find_package(LibXslt)
 find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
 find_library(LIBSRCML_LIB NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /home/srcml/srcML/bin /srcML/bin /Users/srcml/srcML/bin /home/mdecker/srcML/bin /Users/mdecker/srcML/bin)
 set(LIBSRCML_INCLUDE_DIR /Users/mdecker/srcML/src/libsrcml)
@@ -38,11 +36,6 @@ set_property(GLOBAL PROPERTY LIBANTLR_LIB ${LIBANTLR_LIB})
 
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
-#find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
-#find_program(GREP grep PATHS /bin /usr/bin)
-#find_program(ECHO echo PATH /bin)
-#find_program(CUT cut PATH /usr/bin)
-#find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 set_property(GLOBAL PROPERTY ANTLR ${ANTLR})
 
 

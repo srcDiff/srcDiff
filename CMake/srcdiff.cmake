@@ -1,5 +1,5 @@
 ##
-#  CMakeLists.txt
+#  config.cmake
 #
 #  Copyright (C) 2011-2011  SDML (www.sdml.info)
 #
@@ -19,4 +19,4 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-subdirs(oldclient shortest_edit_script srcml translator visualization windows)
+include(config)

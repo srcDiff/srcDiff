@@ -19,4 +19,9 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-subdirs(oldclient shortest_edit_script srcml translator visualization windows)
+file(GLOB VISUALIZATION_HEADERS visualization/*.hpp)
+file(GLOB VISUALIZATION_SOURCE visualization/*.cpp)
+
+# srcdiff
+add_library(visualization OBJECT ${VISUALIZATION_HEADERS} ${VISUALIZATION_SOURCE})
+

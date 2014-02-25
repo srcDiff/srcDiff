@@ -19,4 +19,9 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-subdirs(oldclient shortest_edit_script srcml translator visualization windows)
+file(GLOB WINDOWS_HEADERS windows/*.hpp)
+file(GLOB WINDOWS_SOURCE windows/*.cpp)
+
+# srcdiff
+add_library(windows ${WINDOWS_HEADERS} ${WINDOWS_SOURCE})
+
