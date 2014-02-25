@@ -19,8 +19,8 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB SRCML_HEADERS srcml/*.hpp)
-file(GLOB SRCML_SOURCE srcml/*.cpp)
+file(GLOB SRCML_HEADERS *.hpp)
+file(GLOB SRCML_SOURCE *.cpp)
 
 # srcdiff
 add_library(srcml OBJECT ${SRCML_HEADERS} ${SRCML_SOURCE})

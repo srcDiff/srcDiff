@@ -19,9 +19,9 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB WINDOWS_HEADERS windows/*.hpp)
-file(GLOB WINDOWS_SOURCE windows/*.cpp)
+file(GLOB WINDOWS_HEADERS *.hpp)
+file(GLOB WINDOWS_SOURCE *.cpp)
 
 # srcdiff
-add_library(windows ${WINDOWS_HEADERS} ${WINDOWS_SOURCE})
+add_library(windows OBJECT ${WINDOWS_HEADERS} ${WINDOWS_SOURCE})
 

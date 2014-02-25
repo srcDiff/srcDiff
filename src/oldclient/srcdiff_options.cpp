@@ -1,11 +1,13 @@
 #include <getopt.h>
 #include <cerrno>
 
+#include <srcml.h>
+
 #include <srcdiff_options.hpp>
 #include <srcmlapps.hpp>
 #include <srcmlns.hpp>
 #include <Options.hpp>
-#include <archive.h>
+//#include <archive.h>
 
 #include <cstdlib>
 #include <libxml/parser.h>
@@ -795,7 +797,9 @@ void output_help(const char* name) {
 // output version message
 void output_version(const char* name) {
 
-  printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
+    printf("%s Version %s\n", name, "1");
+
+    printf("Using: %s\n", srcml_version_string());
 
   printf("Using: ");
   if(atoi(xmlParserVersion) == LIBXML_VERSION)
@@ -803,10 +807,13 @@ void output_version(const char* name) {
   else
     printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
 
+
+/*
   if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
     printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
   else
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
+*/
 }
 
 void output_settings(const char * name)

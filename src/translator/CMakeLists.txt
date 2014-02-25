@@ -19,8 +19,8 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB TRANSLATOR_HEADERS translator/*.hpp)
-file(GLOB TRANSLATOR_SOURCE translator/*.cpp)
+file(GLOB TRANSLATOR_HEADERS *.hpp)
+file(GLOB TRANSLATOR_SOURCE *.cpp)
 
 # srcdiff
 add_library(translator OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})

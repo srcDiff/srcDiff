@@ -25,9 +25,17 @@ file(GLOB OLDCLIENT_SOURCE *.cpp)
 list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.hpp)
 list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
 
-# srcdiff
-add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE} 
-		       ${SRCML_HEADERS} ${SRCML_SOURCE} ${SHORTEST_EDIT_SCRIPT_HEADERS} ${SHORTEST_EDIT_SCRIPT_SOURCE}
-		       ${VISUALIZATION_HEADERS} ${VISUALIZATION_SOURCE} ${WINDOWS_HEADERS} ${WINDOWS_SOURCE})
+get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
+get_property(LIBSRCML_LIB GLOBAL PROPERTY LIBSRCML_LIB)
 
-target_link_libraries(srcdiff shortest_edit_script srcml translator visualization windows {LIBXML2_LIB} ${LIBSRCML_LIB} pthread)
+# srcdiff
+if(WIN32)
+add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
+		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>
+		       $<TARGET_OBJECTS:windows>)
+else()
+add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
+		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
+endif()
+
+target_link_libraries(srcdiff ${LIBXML2_LIBS} ${LIBSRCML_LIB} pthread)
