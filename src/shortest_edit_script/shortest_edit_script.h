@@ -10,6 +10,10 @@
 #ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_H
 #define INCLUDED_SHORTEST_EDIT_SCRIPT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // edit constants
 #define SESCOMMON -1
 #define SESINSERT 0
@@ -50,5 +54,9 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
   Parameter edit_script The shortest edit script to free
 */
 void free_shortest_edit_script(struct edit * edit_script);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

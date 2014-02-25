@@ -15,10 +15,9 @@ file(GLOB OLDCLIENT_SOURCE oldclient/*.cpp)
 
 list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_SOURCE_DIR}/src/oldclient/svn_io.hpp)
 list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_SOURCE_DIR}/src/oldclient/svn_io.cpp)
-message(${OLDCLIENT_HEADERS})
 
 file(GLOB TRANSLATOR_HEADERS translator/*.hpp)
-file(GLOB TRANSLTOR_SOURCE translator/*.cpp)
+file(GLOB TRANSLATOR_SOURCE translator/*.cpp)
 
 file(GLOB SRCML_HEADERS srcml/*.hpp)
 file(GLOB SRCML_SOURCE srcml/*.cpp)
