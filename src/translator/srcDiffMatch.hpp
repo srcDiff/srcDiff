@@ -2,9 +2,9 @@
 #define INCLUDED_SRCDIFFMATCH_HPP
 
 #include <vector>
-#include "xmlrw.hpp"
-#include "srcDiffDiff.hpp"
-#include "shortest_edit_script.h"
+#include <xmlrw.hpp>
+#include <srcDiffDiff.hpp>
+#include <shortest_edit_script.h>
 
 struct offset_pair {
 

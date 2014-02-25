@@ -1,8 +1,8 @@
 #ifndef INCLUDED_SRCDIFFMOVE_HPP
 #define INCLUDED_SRCDIFFMOVE_HPP
 
-#include "srcDiffTypes.hpp"
-#include "shortest_edit_script.h"
+#include <srcDiffTypes.hpp>
+#include <shortest_edit_script.h>
 
 bool is_move(NodeSet * node_set, std::vector<xNodePtr> nodes);
 

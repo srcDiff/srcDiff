@@ -1,12 +1,12 @@
-#include "srcDiffMove.hpp"
+#include <srcDiffMove.hpp>
 
 #include <vector>
 #include <map>
 
-#include "xmlrw.hpp"
-#include "srcDiffMeasure.hpp"
-#include "srcDiffOutput.hpp"
-#include "srcDiffUtility.hpp"
+#include <xmlrw.hpp>
+#include <srcDiffMeasure.hpp>
+#include <srcDiffOutput.hpp>
+#include <srcDiffUtility.hpp>
 
 int move_id = 0;
 

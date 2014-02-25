@@ -1,11 +1,11 @@
-#include "srcDiffNested.hpp"
-#include "shortest_edit_script.h"
-#include "srcDiffWhiteSpace.hpp"
-#include "srcDiffChange.hpp"
-#include "srcDiffOutput.hpp"
-#include "srcDiffDiff.hpp"
-#include "srcDiffUtility.hpp"
-#include "srcDiffMeasure.hpp"
+#include <srcDiffNested.hpp>
+#include <shortest_edit_script.h>
+#include <srcDiffWhiteSpace.hpp>
+#include <srcDiffChange.hpp>
+#include <srcDiffOutput.hpp>
+#include <srcDiffDiff.hpp>
+#include <srcDiffUtility.hpp>
+#include <srcDiffMeasure.hpp>
 
 #include <string.h>
 

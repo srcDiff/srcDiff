@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFFOUTPUT_HPP
 #define INCLUDED_SRCDIFFOUTPUT_HPP
 
-#include "srcDiffTypes.hpp"
+#include <srcDiffTypes.hpp>
 #include <vector>
 
 void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode * node, int operation, writer_state & wstate);

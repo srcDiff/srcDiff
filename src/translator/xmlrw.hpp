@@ -31,7 +31,7 @@
 #include <libxml/xmlwriter.h>
 
 #include <Options.hpp>
-#include "srcDiffOptions.hpp"
+#include <srcDiffOptions.hpp>
 
 //typedef xmlNode xNode;
 //typedef xmlNodePtr xNodePtr;

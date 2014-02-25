@@ -9,11 +9,11 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include "SAX2ColorDiff.hpp"
-#include "shortest_edit_script.h"
-#include "LineDiffRange.hpp"
-#include "srcDiffUtility.hpp"
-//#include "srcDiffOptions.hpp"
+#include <SAX2ColorDiff.hpp>
+#include <shortest_edit_script.h>
+#include <LineDiffRange.hpp>
+#include <srcDiffUtility.hpp>
+//#include <srcDiffOptions.hpp>
 
 const char * const normal_color = "normal";
 

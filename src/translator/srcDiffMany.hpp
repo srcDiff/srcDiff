@@ -1,9 +1,9 @@
 #ifndef INCLUDED_SRCDIFFMANY_HPP
 #define INCLUDED_SRCDIFFMANY_HPP
 
-#include "srcDiffTypes.hpp"
-#include "shortest_edit_script.h"
-#include "xmlrw.hpp"
+#include <srcDiffTypes.hpp>
+#include <shortest_edit_script.h>
+#include <xmlrw.hpp>
 #include <vector>
 
 typedef std::vector<IntPairs> Moves;

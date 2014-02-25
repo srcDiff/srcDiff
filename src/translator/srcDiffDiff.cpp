@@ -1,21 +1,21 @@
-#include "srcDiffDiff.hpp"
-#include "srcDiffUtility.hpp"
-#include "srcDiffOutput.hpp"
-#include "srcDiffCommon.hpp"
-#include "srcDiffChange.hpp"
-#include "srcDiffCommentDiff.hpp"
-#include "srcDiffWhiteSpace.hpp"
-#include "srcDiffNested.hpp"
-#include "srcDiffMeasure.hpp"
-#include "srcDiffMatch.hpp"
-#include "srcDiffMove.hpp"
-#include "srcDiffMany.hpp"
-#include "srcDiffSingle.hpp"
+#include <srcDiffDiff.hpp>
+#include <srcDiffUtility.hpp>
+#include <srcDiffOutput.hpp>
+#include <srcDiffCommon.hpp>
+#include <srcDiffChange.hpp>
+#include <srcDiffCommentDiff.hpp>
+#include <srcDiffWhiteSpace.hpp>
+#include <srcDiffNested.hpp>
+#include <srcDiffMeasure.hpp>
+#include <srcDiffMatch.hpp>
+#include <srcDiffMove.hpp>
+#include <srcDiffMany.hpp>
+#include <srcDiffSingle.hpp>
 #include <pthread.h>
-#include "ShortestEditScript.hpp"
+#include <ShortestEditScript.hpp>
 
 #include <string.h>
-#include "Methods.hpp"
+#include <Methods.hpp>
 
 // more external variables
 extern xNode diff_common_start;

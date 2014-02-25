@@ -1,8 +1,8 @@
 #ifndef INCLUDED_SRCDIFFDIFF_HPP
 #define INCLUDED_SRCDIFFDIFF_HPP
 
-#include "srcDiffTypes.hpp"
-#include "shortest_edit_script.h"
+#include <srcDiffTypes.hpp>
+#include <shortest_edit_script.h>
 
 #include <vector>
 

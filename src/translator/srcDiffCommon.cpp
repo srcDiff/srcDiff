@@ -1,8 +1,8 @@
-#include "srcDiffCommon.hpp"
-#include "srcDiffConstants.hpp"
-#include "srcDiffUtility.hpp"
-#include "srcDiffOutput.hpp"
-#include "srcDiffWhiteSpace.hpp"
+#include <srcDiffCommon.hpp>
+#include <srcDiffConstants.hpp>
+#include <srcDiffUtility.hpp>
+#include <srcDiffOutput.hpp>
+#include <srcDiffWhiteSpace.hpp>
 
 #include <string>
 

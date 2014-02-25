@@ -1,4 +1,4 @@
-#include "mingw32.hpp"
+#include <mingw32.hpp>
 
 char * strndup(const char * s1, size_t n) {
 

@@ -1,5 +1,5 @@
-#include "srcMLUtility.hpp"
-#include "srcDiffDiff.hpp"
+#include <srcMLUtility.hpp>
+#include <srcDiffDiff.hpp>
 #include <srcml.h>
 
 extern xmlNs diff;

@@ -22,7 +22,7 @@
   Useful xml Reader Writer functions
 */
 
-#include "xmlrw.hpp"
+#include <xmlrw.hpp>
 #include <iostream>
 #include <cstring>
 #include <map>
@@ -30,10 +30,10 @@
 #include <string>
 #include <algorithm>
 
-#include "shortest_edit_script.h"
+#include <shortest_edit_script.h>
 
 #ifdef __MINGW32__
-#include "mingw32.hpp"
+#include <mingw32.hpp>
 #endif
 
 typedef std::map<std::string, xNode*> NodeMap;

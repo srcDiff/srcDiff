@@ -1,13 +1,13 @@
-#include "srcDiffSingle.hpp"
+#include <srcDiffSingle.hpp>
 
-#include "shortest_edit_script.h"
-#include "srcDiffCommentDiff.hpp"
-#include "srcDiffCommon.hpp"
-#include "srcDiffChange.hpp"
-#include "srcDiffDiff.hpp"
-#include "srcDiffNested.hpp"
-#include "srcDiffOutput.hpp"
-#include "srcDiffWhiteSpace.hpp"
+#include <shortest_edit_script.h>
+#include <srcDiffCommentDiff.hpp>
+#include <srcDiffCommon.hpp>
+#include <srcDiffChange.hpp>
+#include <srcDiffDiff.hpp>
+#include <srcDiffNested.hpp>
+#include <srcDiffOutput.hpp>
+#include <srcDiffWhiteSpace.hpp>
 
 #include <string.h>
 

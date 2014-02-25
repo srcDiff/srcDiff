@@ -7,10 +7,10 @@
   mjd52@zips.uakron.edu
 */
 
-#include "LineDiffRange.hpp"
+#include <LineDiffRange.hpp>
 
-#include "shortest_edit_script.h"
-#include "srcDiffUtility.hpp"
+#include <shortest_edit_script.h>
+#include <srcDiffUtility.hpp>
 
 #include <string>
 #include <vector>

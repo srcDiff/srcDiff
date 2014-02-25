@@ -8,54 +8,36 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcDiff)
 
-set_source_files_properties(shortest_edit_script.c PROPERTIES LANGUAGE CXX)
+#set_source_files_properties(shortest_edit_script.c PROPERTIES LANGUAGE CXX)
 
-# get version and revision
-execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
-execute_process(COMMAND cat REVISION COMMAND tr -d "\n" OUTPUT_VARIABLE REVISION)
-add_definitions(-DVERSION=\"${VERSION}\")
-add_definitions(-DREVISION=\"${REVISION}\")
-#add_definitions(-DSVN)
+file(GLOB OLDCLIENT_HEADERS oldclient/*.hpp)
+file(GLOB OLDCLIENT_SOURCE oldclient/*.cpp)
 
-# get needed packages and include
-find_package(LibXml2)
-find_package(LibArchive)
-find_package(LibXslt)
-find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
+list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_SOURCE_DIR}/src/oldclient/svn_io.hpp)
+list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_SOURCE_DIR}/src/oldclient/svn_io.cpp)
+message(${OLDCLIENT_HEADERS})
 
-if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-find_library(LIBSRCML_LIB NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /home/srcml/srcML/bin /srcML/bin /Users/srcml/srcML/bin /home/mdecker/srcML/bin /Users/mdecker/srcML/bin)
-set(LIBSRCML_INCLUDE_DIR /Users/mdecker/srcML/src/libsrcml)
+file(GLOB TRANSLATOR_HEADERS translator/*.hpp)
+file(GLOB TRANSLTOR_SOURCE translator/*.cpp)
+
+file(GLOB SRCML_HEADERS srcml/*.hpp)
+file(GLOB SRCML_SOURCE srcml/*.cpp)
+
+file(GLOB SHORTEST_EDIT_SCRIPT_HEADERS shortest_edit_script/*.h shortest_edit_script/*.hpp)
+file(GLOB SHORTEST_EDIT_SCRIPT_SOURCE shortest_edit_script/*.c shortest_edit_script/*.cpp)
+
+file(GLOB VISUALIZATION_HEADERS visualization/*.hpp)
+file(GLOB VISUALIZATION_SOURCE visualization/*.cpp)
+
+if(WIN32)
+file(GLOB WINDOWS_HEADERS windows/*.hpp)
+file(GLOB WINDOWS_SOURCE windows/*.cpp)
 endif()
-
-find_file(LIBSVN_INCLUDE_DIR subversion-1 PATHS /usr/include /usr/local/include)
-find_file(LIBAPR_INCLUDE_DIR NAMES apr-1 apr-1.0 PATHS /usr/include)
-
-include_directories(. ${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR})
-
-if(EXISTS /usr/include/i386-linux-gnu)
-
-          link_directories(/usr/lib/i386-linux-gnu)
-
-endif()
-
-# define needed programs
-find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
-find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
-find_program(GREP grep PATHS /bin /usr/bin)
-find_program(ECHO echo PATH /bin)
-find_program(CUT cut PATH /usr/bin)
-find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../bin )
 
 # srcdiff
-if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.c URIStream.cpp srcmlapps.cpp)# svn_io.cpp)
-else()
-add_executable(srcdiff srcdiff.cpp ColorDiff.cpp srcDiffChange.cpp srcDiffMatch.cpp srcDiffSingle.cpp LineDiffRange.cpp srcDiffCommentDiff.cpp srcDiffMeasure.cpp srcDiffTranslator.cpp srcdiff_options.cpp SAX2ColorDiff.cpp srcDiffCommon.cpp srcDiffMove.cpp srcDiffUtility.cpp ShortestEditScript.cpp srcDiffDiff.cpp srcDiffNested.cpp  srcDiffWhiteSpace.cpp srcDiffMany.cpp srcDiffOutput.cpp srcMLUtility.cpp xmlrw.cpp shortest_edit_script.c mingw32.cpp)
-endif()
-target_link_libraries(srcdiff archive xml2 ${LIBANTLR_LIB} ${LIBSRCML_LIB} pthread)# /usr/lib/libapr-1.so /usr/lib/libaprutil-1.so /usr/lib/libsvn_client-1.so;/usr/lib/libsvn_delta-1.so;/usr/lib/libsvn_diff-1.so;/usr/lib/libsvn_fs-1.so;/usr/lib/libsvn_fs_base-1.so;/usr/lib/libsvn_fs_fs-1.so;/usr/lib/libsvn_fs_util-1.so;/usr/lib/libsvn_ra-1.so;/usr/lib/libsvn_ra_local-1.so;/usr/lib/libsvn_ra_neon-1.so;/usr/lib/libsvn_ra_svn-1.so;/usr/lib/libsvn_repos-1.so;/usr/lib/libsvn_subr-1.so;/usr/lib/libsvn_wc-1.so)
+add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE} 
+		       ${SRCML_HEADERS} ${SRCML_SOURCE} ${SHORTEST_EDIT_SCRIPT_HEADERS} ${SHORTEST_EDIT_SCRIPT_SOURCE}
+		       ${VISUALIZATION_HEADERS} ${VISUALIZATION_SOURCE} ${WINDOWS_HEADERS} ${WINDOWS_SOURCE})
+
+target_link_libraries(srcdiff archive xml2 ${LIBANTLR_LIB} ${LIBSRCML_LIB} pthread)
 

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFFCHANGE_HPP
 #define  INCLUDED_SRCDIFFCHANGE_HPP
 
-#include "srcDiffTypes.hpp"
+#include <srcDiffTypes.hpp>
 
 void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
                                , reader_state & rbuf_new, unsigned int end_new

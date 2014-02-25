@@ -31,11 +31,11 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include "srcDiffTypes.hpp"
-#include "Methods.hpp"
-#include "ColorDiff.hpp"
+#include <srcDiffTypes.hpp>
+#include <Methods.hpp>
+#include <ColorDiff.hpp>
 
-#include "pthread.h"
+#include <pthread.h>
 
 class srcDiffTranslator {
  public:

@@ -12,13 +12,13 @@
 #include <fstream>
 #include <sstream>
 #include <libxml/parserInternals.h>
-#include "LineDiffRange.hpp"
-#include "shortest_edit_script.h"
-#include "SAX2ColorDiff.hpp"
+#include <LineDiffRange.hpp>
+#include <shortest_edit_script.h>
+#include <SAX2ColorDiff.hpp>
 
-#include "srcDiffOutput.hpp"
+#include <srcDiffOutput.hpp>
 
-#include "ColorDiff.hpp"
+#include <ColorDiff.hpp>
 
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff);

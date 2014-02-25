@@ -20,8 +20,8 @@
 #include <svn_string.h>
 #include <svn_subst.h>
 
-#include "srcDiffTranslator.hpp"
-#include "Options.hpp"
+#include <srcDiffTranslator.hpp>
+#include <Options.hpp>
 
 #ifndef INCLUDDED_SVN_IO_HPP
 #define INCLUDDED_SVN_IO_HPP

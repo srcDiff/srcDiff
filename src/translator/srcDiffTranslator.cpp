@@ -22,21 +22,21 @@
   Class for straightforward translation from source code to srcDiff
 */
 
-#include "srcDiffTranslator.hpp"
-#include "srcmlns.hpp"
-#include "srcmlapps.hpp"
-#include "shortest_edit_script.h"
-#include "srcDiffConstants.hpp"
-#include "srcDiffUtility.hpp"
-#include "srcDiffWhiteSpace.hpp"
-#include "srcDiffCommon.hpp"
-#include "srcDiffChange.hpp"
-#include "srcDiffOutput.hpp"
-#include "srcDiffDiff.hpp"
-#include "srcMLUtility.hpp"
-#include "LineDiffRange.hpp"
+#include <srcDiffTranslator.hpp>
+#include <srcmlns.hpp>
+#include <srcmlapps.hpp>
+#include <shortest_edit_script.h>
+#include <srcDiffConstants.hpp>
+#include <srcDiffUtility.hpp>
+#include <srcDiffWhiteSpace.hpp>
+#include <srcDiffCommon.hpp>
+#include <srcDiffChange.hpp>
+#include <srcDiffOutput.hpp>
+#include <srcDiffDiff.hpp>
+#include <srcMLUtility.hpp>
+#include <LineDiffRange.hpp>
 
-#include "xmlrw.hpp"
+#include <xmlrw.hpp>
 
 #include <srcml.h>
 

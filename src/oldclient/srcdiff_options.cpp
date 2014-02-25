@@ -1,18 +1,18 @@
 #include <getopt.h>
 #include <cerrno>
 
-#include "srcdiff_options.hpp"
-#include "srcmlapps.hpp"
-#include "srcmlns.hpp"
-#include "Options.hpp"
+#include <srcdiff_options.hpp>
+#include <srcmlapps.hpp>
+#include <srcmlns.hpp>
+#include <Options.hpp>
 #include <archive.h>
 
 #include <cstdlib>
 #include <libxml/parser.h>
-//#include "libxml_archive_read.hpp"
-//#include "libxml_archive_write.hpp"
+//#include <libxml_archive_read.hpp>
+//#include <libxml_archive_write.hpp>
 
-#include "srcDiffOptions.hpp"
+#include <srcDiffOptions.hpp>
 
 #define PROGRAM_NAME "srcdiff"
 

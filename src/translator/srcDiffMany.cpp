@@ -1,12 +1,12 @@
-#include "srcDiffMany.hpp"
+#include <srcDiffMany.hpp>
 
-#include "srcDiffChange.hpp"
-#include "srcDiffDiff.hpp"
-#include "srcDiffMatch.hpp"
-#include "srcDiffMeasure.hpp"
-#include "srcDiffNested.hpp"
-#include "srcDiffSingle.hpp"
-#include "srcDiffUtility.hpp"
+#include <srcDiffChange.hpp>
+#include <srcDiffDiff.hpp>
+#include <srcDiffMatch.hpp>
+#include <srcDiffMeasure.hpp>
+#include <srcDiffNested.hpp>
+#include <srcDiffSingle.hpp>
+#include <srcDiffUtility.hpp>
 
 void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
                       , int start_old, int end_old

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFFSINGLE_HPP
 #define INCLUDED_SRCDIFFSINGLE_HPP
 
-#include "srcDiffTypes.hpp"
+#include <srcDiffTypes.hpp>
 #include <vector>
 
 void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old

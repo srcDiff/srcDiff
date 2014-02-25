@@ -16,10 +16,10 @@
 
 #include <URIStream.hpp>
 
-#include "svn_io.hpp"
-#include "srcmlapps.hpp"
+#include <svn_io.hpp>
+#include <srcmlapps.hpp>
 
-#include "pthread.h"
+#include <pthread.h>
 
 svn_ra_session_t * global_session;
 pthread_mutex_t mutex;

@@ -7,8 +7,8 @@
   mjd52@zips.uakron.edu
 */
 
-#include "shortest_edit_script.h"
-#include "ShortestEditScript.hpp"
+#include <shortest_edit_script.h>
+#include <ShortestEditScript.hpp>
 
 #include <string>
 #include <vector>

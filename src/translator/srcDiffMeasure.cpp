@@ -1,9 +1,9 @@
-#include "srcDiffMeasure.hpp"
+#include <srcDiffMeasure.hpp>
 
-#include "srcDiffTypes.hpp"
-#include "srcDiffUtility.hpp"
-#include "shortest_edit_script.h"
-#include "ShortestEditScript.hpp"
+#include <srcDiffTypes.hpp>
+#include <srcDiffUtility.hpp>
+#include <shortest_edit_script.h>
+#include <ShortestEditScript.hpp>
 
 void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
                 NodeSet * node_set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {

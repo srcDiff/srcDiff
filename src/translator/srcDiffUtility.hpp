@@ -1,10 +1,10 @@
 #ifndef INCLUDED_SRCDIFFUTILITY_HPP
 #define INCLUDED_SRCDIFFUTILITY_HPP
 
-#include "shortest_edit_script.h"
+#include <shortest_edit_script.h>
 
-#include "srcDiffOptions.hpp"
-#include "xmlrw.hpp"
+#include <srcDiffOptions.hpp>
+#include <xmlrw.hpp>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>

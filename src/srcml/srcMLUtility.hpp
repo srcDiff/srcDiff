@@ -1,13 +1,13 @@
 #ifndef INCLUDED_SRCMLUTILITY_HPP
 #define INCLUDED_SRCMLUTILITY_HPP
 
-#include "srcDiffUtility.hpp"
+#include <srcDiffUtility.hpp>
 #include <Options.hpp>
 #include <vector>
 
-#include "xmlrw.hpp"
+#include <xmlrw.hpp>
 
-#include "pthread.h"
+#include <pthread.h>
 
 struct create_nodes_args {
 

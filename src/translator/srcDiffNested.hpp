@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFFNESTED_HPP
 #define INCLUDED_SRCDIFFNESTED_HPP
 
-#include "srcDiffTypes.hpp"
+#include <srcDiffTypes.hpp>
 #include <vector>
 
 bool complete_nestable(NodeSets & structure_one, std::vector<xNodePtr> & nodes_one

@@ -28,18 +28,18 @@
 #endif
 #include <sys/types.h>
 #include <dirent.h>
-#include "srcmlapps.hpp"
-#include "srcmlns.hpp"
-#include "Options.hpp"
-#include "Methods.hpp"
-#include "URIStream.hpp"
+#include <srcmlapps.hpp>
+#include <srcmlns.hpp>
+#include <Options.hpp>
+#include <Methods.hpp>
+#include <URIStream.hpp>
 #include <getopt.h>
 #include <dirent.h>
 #include <algorithm>
 #include <archive.h>
-//#include "libxml_archive_read.hpp"
-//#include "libxml_archive_write.hpp"
-#include "srcDiffTranslator.hpp"
+//#include <libxml_archive_read.hpp>
+//#include <libxml_archive_write.hpp>
+#include <srcDiffTranslator.hpp>
 
 #include <srcml.h>
 
@@ -51,11 +51,11 @@
 #include <sys/stat.h>
 
 #ifdef SVN
-#include "svn_io.hpp"
+#include <svn_io.hpp>
 #endif
 
-#include "srcdiff_options.hpp"
-#include "srcdiff_uri.hpp"
+#include <srcdiff_options.hpp>
+#include <srcdiff_uri.hpp>
 
 #define PROGRAM_NAME "srcdiff"
 

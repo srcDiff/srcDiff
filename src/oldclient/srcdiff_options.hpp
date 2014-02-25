@@ -1,8 +1,8 @@
 #ifndef INCLUDED_SRCDIFF_OPTIONS_HPP
 #define INCLUDED_SRCDIFF_OPTIONS_HPP
 
-#include "srcdiff_uri.hpp"
-#include "Methods.hpp"
+#include <srcdiff_uri.hpp>
+#include <Methods.hpp>
 
 const char* const DEBUG_FLAG = "debug";
 const char DEBUG_FLAG_SHORT = 'g';

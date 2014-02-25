@@ -1,9 +1,9 @@
 #ifndef INCLUDED_SRCDIFF_URI_HPP
 #define INCLUDED_SRCDIFF_URI_HPP
 
-#include "srcmlapps.hpp"
-#include "srcmlns.hpp"
-#include "Options.hpp"
+#include <srcmlapps.hpp>
+#include <srcmlns.hpp>
+#include <Options.hpp>
 
 struct uridata {
   char const * const uri;

@@ -13,7 +13,7 @@
 #include <fstream>
 #include <string>
 #include <Options.hpp>
-#include "srcDiffOptions.hpp"
+#include <srcDiffOptions.hpp>
 
 struct source_diff {
 

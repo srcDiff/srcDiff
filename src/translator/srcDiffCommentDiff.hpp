@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFFCOMMENTDIFF_HPP
 #define INCLUDED_SRCDIFFCOMMENTDIFFZS_HPP
 
-#include "srcDiffTypes.hpp"
+#include <srcDiffTypes.hpp>
 #include <vector>
 
 NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end);

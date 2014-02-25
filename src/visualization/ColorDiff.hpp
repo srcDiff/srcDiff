@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <Options.hpp>
-#include "LineDiffRange.hpp"
+#include <LineDiffRange.hpp>
 
 class ColorDiff {
 

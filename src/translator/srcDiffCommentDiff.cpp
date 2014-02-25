@@ -1,10 +1,10 @@
-#include "srcDiffCommentDiff.hpp"
-#include "shortest_edit_script.h"
-#include "ShortestEditScript.hpp"
-#include "srcDiffUtility.hpp"
-#include "srcDiffCommon.hpp"
-#include "srcDiffChange.hpp"
-#include "srcDiffDiff.hpp"
+#include <srcDiffCommentDiff.hpp>
+#include <shortest_edit_script.h>
+#include <ShortestEditScript.hpp>
+#include <srcDiffUtility.hpp>
+#include <srcDiffCommon.hpp>
+#include <srcDiffChange.hpp>
+#include <srcDiffDiff.hpp>
 
 /*
   Collect paragraphs

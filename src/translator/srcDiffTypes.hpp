@@ -7,11 +7,11 @@
 #include <libxml/xmlwriter.h>
 #include <Options.hpp>
 
-#include "Methods.hpp"
+#include <Methods.hpp>
 
-#include "xmlrw.hpp"
+#include <xmlrw.hpp>
 
-#include "pthread.h"
+#include <pthread.h>
 
 struct diff_set {
 

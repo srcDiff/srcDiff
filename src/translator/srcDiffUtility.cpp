@@ -1,9 +1,9 @@
-#include "srcDiffUtility.hpp"
-#include "srcDiffTypes.hpp"
+#include <srcDiffUtility.hpp>
+#include <srcDiffTypes.hpp>
 #include <string.h>
 #include <vector>
 #include <string>
-#include "xmlrw.hpp"
+#include <xmlrw.hpp>
 
 bool is_change(edit * edit_script) {
 

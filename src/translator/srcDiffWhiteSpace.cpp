@@ -1,9 +1,9 @@
-#include "srcDiffWhiteSpace.hpp"
-#include "shortest_edit_script.h"
-#include "srcDiffConstants.hpp"
-#include "srcDiffUtility.hpp"
-#include "srcDiffCommon.hpp"
-#include "srcDiffOutput.hpp"
+#include <srcDiffWhiteSpace.hpp>
+#include <shortest_edit_script.h>
+#include <srcDiffConstants.hpp>
+#include <srcDiffUtility.hpp>
+#include <srcDiffCommon.hpp>
+#include <srcDiffOutput.hpp>
 
 // more external variables
 extern xNode diff_common_start;
