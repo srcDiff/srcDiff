@@ -24,8 +24,8 @@
 
 find_package(LibXml2 REQUIRED)
 find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
-find_library(LIBSRCML_LIB NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /home/srcml/srcML/bin /srcML/bin /Users/srcml/srcML/bin /home/mdecker/srcML/bin /Users/mdecker/srcML/bin)
-set(LIBSRCML_INCLUDE_DIR /Users/mdecker/srcML/src/libsrcml)
+find_library(LIBSRCML_LIB NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /usr/local/lib)
+set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
 include_directories(${LIBXML2_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR})
 
