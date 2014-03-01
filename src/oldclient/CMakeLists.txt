@@ -39,3 +39,10 @@ add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS
 endif()
 
 target_link_libraries(srcdiff ${LIBXML2_LIBS} ${LIBSRCML_LIB} pthread)
+
+set_target_properties(srcdiff PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+install(TARGETS srcdiff
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
