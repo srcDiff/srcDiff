@@ -33,4 +33,4 @@ add_definitions(-DVERSION=\"1\")
 add_definitions(-DREVISION=\"1\")
 
 # include sub directories
-subdirs(src)
+add_subdirectory(src)
