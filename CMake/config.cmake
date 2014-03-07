@@ -36,8 +36,3 @@ set_property(GLOBAL PROPERTY LIBANTLR_LIB ${LIBANTLR_LIB})
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
 set_property(GLOBAL PROPERTY ANTLR ${ANTLR})
-
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../bin )
