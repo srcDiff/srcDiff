@@ -25,9 +25,6 @@ file(GLOB OLDCLIENT_SOURCE *.cpp)
 list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.hpp)
 list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
 
-get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
-get_property(LIBSRCML_LIB GLOBAL PROPERTY LIBSRCML_LIB)
-
 # srcdiff
 if(WIN32)
 add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
@@ -38,11 +35,8 @@ add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
 endif()
 
-target_link_libraries(srcdiff ${LIBXML2_LIBS} ${LIBSRCML_LIB} pthread)
+target_link_libraries(srcdiff ${LIBXML2_LIBRARIES} ${LIBSRCML_LIBRARY} pthread)
 
-set_target_properties(srcdiff PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-install(TARGETS srcdiff
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
+install(TARGETS srcdiff RUNTIME DESTINATION bin)

@@ -21,23 +21,11 @@
 #
 #  Build configuration file
 
-
+# find needed libraries
 find_package(LibXml2 REQUIRED)
-find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
-find_library(LIBSRCML_LIB NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /usr/local/lib)
+find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /usr/local/lib)
 set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
+# include needed includes
 include_directories(${LIBXML2_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR})
 
-set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
-set_property(GLOBAL PROPERTY LIBSRCML_LIB ${LIBSRCML_LIB})
-set_property(GLOBAL PROPERTY LIBANTLR_LIB ${LIBANTLR_LIB})
-
-# define needed programs
-find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
-set_property(GLOBAL PROPERTY ANTLR ${ANTLR})
-
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../bin )

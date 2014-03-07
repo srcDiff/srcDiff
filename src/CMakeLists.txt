@@ -19,8 +19,12 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+add_subdirectory(oldclient)
+add_subdirectory(shortest_edit_script)
+add_subdirectory(srcml)
+add_subdirectory(translator)
+add_subdirectory(visualization)
+
 if(WIN32)
-subdirs(oldclient shortest_edit_script srcml translator visualization windows)
-else()
-subdirs(oldclient shortest_edit_script srcml translator visualization)
+add_subdirectory(windows)
 endif()
