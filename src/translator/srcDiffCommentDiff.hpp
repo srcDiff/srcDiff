@@ -1,5 +1,5 @@
 #ifndef INCLUDED_SRCDIFFCOMMENTDIFF_HPP
-#define INCLUDED_SRCDIFFCOMMENTDIFFZS_HPP
+#define INCLUDED_SRCDIFFCOMMENTDIFF_HPP
 
 #include <srcDiffTypes.hpp>
 #include <vector>
