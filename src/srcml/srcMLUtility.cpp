@@ -7,9 +7,10 @@ extern xmlNs diff;
 // converts source code to srcML
 void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
 			const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+      srcml_archive * extensions,
 			char ** output_buffer, int * output_size) {
 
-  srcml_archive * archive = srcml_create_archive();
+  srcml_archive * archive = srcml_clone_archive(extensions);
   srcml_archive_set_src_encoding(archive, xml_encoding);
   srcml_archive_set_encoding(archive, xml_encoding);
   srcml_archive_set_options(archive, options);
@@ -39,7 +40,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
     create_nodes_args & args = *(create_nodes_args *)arguments;
 
     create_nodes_from_srcML(args.src_encoding, args.xml_encoding, args.options,
-    args.directory, args.filename, args.version, args.uri, args.tabsize,
+    args.directory, args.filename, args.version, args.uri, args.tabsize, args.extensions,
                             args.mutex,
                             args.nodes, args.unit_start, args.no_error, args.context);
 
@@ -50,6 +51,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
 void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
                              const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
+                             srcml_archive * extensions,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
   
@@ -64,7 +66,7 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
     if(!filename || filename[0] == 0)
 	throw std::string();
 
-  translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, &output_buffer, &output_size);
+  translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, extensions, &output_buffer, &output_size);
 
   reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 

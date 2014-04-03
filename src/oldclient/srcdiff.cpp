@@ -448,6 +448,8 @@ int main(int argc, char* argv[]) {
 
   }
 
+  srcml_free_archive(poptions.archive);
+  
   return exit_status;
 
 }

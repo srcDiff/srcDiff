@@ -186,7 +186,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   int is_old = 0;
   create_nodes_args args_old = { src_encoding, xml_encoding, local_options
-                                 , unit_directory, path_one, unit_version, uri, 8
+                                 , unit_directory, path_one, unit_version, uri, 8, archive
                                  , rbuf_old.mutex
                                  , rbuf_old.nodes, &unit_old, is_old, rbuf_old.stream_source };
   pthread_t thread_old;
@@ -214,6 +214,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   int is_new = 0;
   create_nodes_args args_new = { src_encoding, xml_encoding, local_options
                                  , unit_directory, path_two, unit_version, uri, 8
+                                 , archive
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
 
@@ -352,7 +353,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   if(is_old || is_new) {
 
       // @todo need to get this from archive or something
-      startUnit(path_one ? srcml_check_extension(path_one) : srcml_check_extension(path_two), local_options, unit_directory, unit_filename, unit_version);
+      startUnit(path_one ? srcml_archive_check_extension(archive, path_one) : srcml_archive_check_extension(archive, path_two), local_options, unit_directory, unit_filename, unit_version);
 
     first = false;
 
