@@ -141,17 +141,11 @@ int main(int argc, char* argv[]) {
   process_options poptions =
     {
       0,
-      STDIN,
       0,
       0,
       0,
       0, //DEFAULT_TEXT_ENCODING,
-      DEFAULT_XML_ENCODING,
-      0,
-      0,
-      0,
-      DEFAULT_TABSIZE,
-      { false, false, false, false, false, false },
+
       METHOD_GROUP,
       std::string(),
       archive, 
@@ -292,8 +286,8 @@ int main(int argc, char* argv[]) {
   bool shownumber = false;
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
-    fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
-    fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
+    fprintf(stderr, "Source encoding:  %s\n", srcml_archive_get_src_encoding(poptions.archive));
+    fprintf(stderr, "XML encoding:  %s\n", srcml_archive_get_encoding(poptions.archive));
     showinput = false;
     shownumber = true;
   }
@@ -317,15 +311,16 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber, poptions.src_encoding,
-                            poptions.xml_encoding,
+    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber,
+                            srcml_archive_get_src_encoding(poptions.archive),
+                            srcml_archive_get_encoding(poptions.archive),
                             poptions.srcdiff_filename,
                             poptions.method,
-                            poptions.given_directory,
-                            poptions.given_filename,
-                            poptions.given_version,
-                            urisprefix,
-                            poptions.tabsize,
+                            srcml_archive_get_directory(poptions.archive),
+                            srcml_archive_get_filename(poptions.archivce),
+                            srcml_archive_get_version(poptions.archive),
+                            0,
+                            srcml_archive_get_tabsize(poptions.archive),
                             poptions.css_url);
 
     exit(0);
@@ -340,15 +335,16 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber, poptions.src_encoding,
-                            poptions.xml_encoding,
+    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber,
+                            srcml_archive_get_src_encoding(poptions.archive),
+                            srcml_archive_get_encoding(poptions.archive),
                             poptions.srcdiff_filename,
                             poptions.method,
-                            poptions.given_directory,
-                            poptions.given_filename,
-                            poptions.given_version,
-                            urisprefix,
-                            poptions.tabsize,
+                            srcml_archive_get_directory(poptions.archive),
+                            srcml_archive_get_filename(poptions.archive),
+                            srcml_archive_get_version(poptions.archive),
+                            0,
+                            srcml_archive_get_tabsize(poptions.archive),
                             poptions.css_url);
 
     exit(0);
@@ -358,16 +354,8 @@ int main(int argc, char* argv[]) {
   try {
 
     // translator from input to output using determined language
-    srcDiffTranslator translator(poptions.src_encoding,
-                                 poptions.xml_encoding,
-                                 poptions.srcdiff_filename,
-                                 options,
+    srcDiffTranslator translator(poptions.srcdiff_filename,
                                  poptions.method,
-                                 poptions.given_directory,
-                                 poptions.given_filename,
-                                 poptions.given_version,
-                                 urisprefix,
-                                 poptions.tabsize,
                                  poptions.css_url,
                                  poptions.archive);
 
@@ -530,7 +518,7 @@ void srcdiff_text(srcDiffTranslator& translator, const char* path_one, const cha
   if(showinput && !isoption(local_options, OPTION_QUIET))
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
-  translator.translate(path_one, path_two, local_options, gpoptions->given_directory, filename.c_str(), 0);
+  translator.translate(path_one, path_two, srcml_archive_get_directory(gpoptions->archive), filename.c_str(), 0);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
@@ -853,7 +841,7 @@ void srcdiff_dir_top(srcDiffTranslator& translator, const char * directory_old, 
 
   }
 
-  translator.set_root_directory(poptions.given_directory ? poptions.given_directory : directory.c_str());
+  translator.set_root_directory(srcml_archive_get_directory(gpoptions->archive) ? srcml_archive_get_directory(gpoptions->archive) : directory.c_str());
 
   srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
 }

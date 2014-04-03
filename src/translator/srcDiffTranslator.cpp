@@ -52,23 +52,13 @@ xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 xAttr diff_type = { 0 };
 
 // constructor
-srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encoding of source code
-                                     const char* xml_encoding,    // xml encoding of result srcML file
-                                     const char* srcdiff_filename,  // filename of result srcDiff file
-                                     OPTION_TYPE global_options,             // many and varied options
+srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      METHOD_TYPE method,
-                                     const char* directory,       // root unit directory
-                                     const char* filename,        // root unit filename
-                                     const char* version,         // root unit version
-                                     const char* uri[],           // uri prefixes
-                                     int tabsize,                  // size of tabs
                                      std::string css,
                                      srcml_archive * archive)
-  : first(true),
-    root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), global_options(global_options), method(method), uri(uri), tabsize(tabsize), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
+  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
 {
-  diff.prefix = uri[7];
+  diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
   if(!isoption(global_options, SRCML_OPTION_ARCHIVE)) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
 
@@ -121,12 +111,12 @@ srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encodi
   if(isoption(global_options, OPTION_VISUALIZE)) {
 
     std::string dir = "";
-    if(directory != NULL)
-      dir = directory;
+    if(srcml_archive_get_directory(archive) != NULL)
+      dir = srcml_archive_get_directory(archive);
 
     std::string ver = "";
-    if(version != NULL)
-      ver = version;
+    if(srcml_archive_get_version(archive) != NULL)
+      ver = srcml_archive_get_version(archive);
 
     colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, this->global_options);
 
@@ -138,7 +128,7 @@ srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encodi
 }
 
 // Translate from input stream to output stream
-void srcDiffTranslator::translate(const char* path_one, const char* path_two, OPTION_TYPE local_options,
+void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                   const char* unit_directory, const char* unit_filename, const char* unit_version) {
 
   LineDiffRange line_diff_range(path_one, path_two);
