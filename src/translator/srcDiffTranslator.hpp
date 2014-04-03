@@ -66,7 +66,7 @@ void startUnit(const char * language,
                const char* version         // root unit version
                );
 
-void outputNamespaces(const OPTION_TYPE& options);
+void outputNamespaces(const OPTION_TYPE& options, bool output_cpp);
 
   // destructor
   ~srcDiffTranslator();

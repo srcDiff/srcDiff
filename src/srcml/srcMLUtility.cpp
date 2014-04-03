@@ -12,10 +12,10 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTI
   srcml_archive * archive = srcml_create_archive();
   srcml_archive_set_src_encoding(archive, xml_encoding);
   srcml_archive_set_encoding(archive, xml_encoding);
-  srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-  //srcml_archive_set_options(archive, options);
-  srcml_archive_set_directory(archive, directory);
+  srcml_archive_set_options(archive, options);
+  srcml_archive_set_language(archive, srcml_archive_check_extension(archive, filename));
   srcml_archive_set_filename(archive, filename);
+  srcml_archive_set_directory(archive, directory);
   srcml_archive_set_version(archive, version);
   srcml_archive_set_tabstop(archive, tabsize);
 

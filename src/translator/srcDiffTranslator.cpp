@@ -354,7 +354,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   if(is_old || is_new) {
 
       // @todo need to get this from archive or something
-      startUnit(path_one ? srcml_check_extension(path_one) : srcml_check_extension(path_two), local_options, unit_directory, unit_filename, unit_version);
+      srcml_archive * archive = srcml_create_archive();
+      startUnit(path_one ? srcml_archive_check_extension(archive, path_one) : srcml_archive_check_extension(archive, path_two), local_options, unit_directory, unit_filename, unit_version);
+      srcml_free_archive(archive);
 
     first = false;
 
@@ -462,7 +464,7 @@ void srcDiffTranslator::startUnit(const char * language,
                                   const char* version         // root unit version
                                   ) {
 
-  if((isoption(options, OPTION_VISUALIZE) || first) && !isoption(global_options, OPTION_XMLDECL))
+  if((isoption(options, OPTION_VISUALIZE) || first) && !isoption(global_options, SRCML_OPTION_XML_DECL))
     xmlTextWriterStartDocument(wstate.writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   // start of main tag
@@ -475,8 +477,11 @@ void srcDiffTranslator::startUnit(const char * language,
   xmlTextWriterStartElement(wstate.writer, BAD_CAST maintag.c_str());
 
   // outer units have namespaces
-  if (!isoption(options, OPTION_NAMESPACEDECL)) {
-    outputNamespaces(options);
+  if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
+
+    std::string lang = language;
+    outputNamespaces(options, lang != "Java");
+
   }
 
   // list of attributes
@@ -512,7 +517,8 @@ void srcDiffTranslator::startUnit(const char * language,
 
 }
 
-void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
+void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options, bool output_cpp) {
+
 
   // figure out which namespaces are needed
   char const * const ns[] = {
@@ -521,22 +527,22 @@ void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options) {
     (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_SRC_NS_URI : 0,
 
     // main cpp namespace declaration
-    isoption(OPTION_CPP, options) && (!isoption(OPTION_ARCHIVE, options) || isoption(options, OPTION_VISUALIZE)) ? SRCML_CPP_NS_URI : 0,
+    output_cpp && (!isoption(SRCML_OPTION_ARCHIVE, options) || isoption(options, OPTION_VISUALIZE)) ? SRCML_CPP_NS_URI : 0,
 
     // optional debugging xml namespace
     (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
 
     // optional literal xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
     // optional operator xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
     // optional modifier xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
     // optional position xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
+    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
     // optional diff xml namespace
     (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_DIFF_NS_URI : 0,
