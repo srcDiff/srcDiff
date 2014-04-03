@@ -33,12 +33,8 @@
 #include <Options.hpp>
 #include <srcDiffOptions.hpp>
 
-//typedef xmlNode xNode;
-//typedef xmlNodePtr xNodePtr;
-
 struct xNs {
 
-  //xNs * next;
   const char * href;
   const char * prefix;
 
@@ -49,7 +45,7 @@ struct xAttr {
   xAttr * next;
   const char * name;
   const char * value;
-  //xNs ns;
+
 };
 
 struct xNode {
@@ -58,9 +54,9 @@ struct xNode {
   const char * name;
   xNs * ns;
   const char * content;
-  //xNs * nsDef;
   xAttr * properties;
   unsigned short extra;
+
   bool is_empty;
   bool free;
 
