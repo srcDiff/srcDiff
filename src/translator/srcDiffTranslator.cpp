@@ -148,15 +148,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
-  srcml_archive_set_filename(archive, unit_filename);
-
   // create the reader for the old file
   xNodePtr unit_old = 0;
   NodeSets node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { src_encoding, xml_encoding, local_options
-                                 , unit_directory, path_one, unit_version, uri, 8, archive
+  create_nodes_args args_old = { path_one, unit_directory, unit_filename, unit_version, uri, 8, archive
                                  , rbuf_old.mutex
                                  , rbuf_old.nodes, &unit_old, is_old, rbuf_old.stream_source };
   pthread_t thread_old;
@@ -182,8 +179,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   NodeSets node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { src_encoding, xml_encoding, local_options
-                                 , unit_directory, path_two, unit_version, uri, 8
+  create_nodes_args args_new = { path_two, unit_directory, unit_filename, unit_version, uri, 8
                                  , archive
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
@@ -213,8 +209,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   if(is_new && is_new > -1)
     node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
-
-  srcml_archive_set_filename(archive, 0);
 
   /*
 

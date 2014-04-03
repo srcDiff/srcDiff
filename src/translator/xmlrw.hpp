@@ -72,7 +72,7 @@ xNode * createInternalNode(xmlNode & node);
 
 bool operator==(const xNode& n1, const xNode& n2);
 
-xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context);
+xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
 
 xNode * copyXNode(xNode * node);
 
@@ -100,7 +100,7 @@ inline bool isendelement(const xmlTextReaderPtr& reader) {
   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
 }
 
-xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context);
+xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
 
 void freeXNode(xNode * node);
 

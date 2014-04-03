@@ -185,7 +185,7 @@ bool operator==(const xNode& n1, const xNode& n2) {
                                                         );
 }
 
-xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context) {
+xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context) {
 
   xNode* pnode = getCurrentNode(reader, options, context);
 
@@ -261,7 +261,7 @@ xNode * copyXNode(xNodePtr node) {
   return xnode;
 }
 
-xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context) {
+xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context) {
 
   xmlNode* curnode = xmlTextReaderCurrentNode(reader);
 
