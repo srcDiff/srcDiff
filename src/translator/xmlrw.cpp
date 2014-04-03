@@ -85,15 +85,51 @@ xNode * createInternalNode(xmlNode & node) {
 
   xmlAttrPtr attribute = node.properties;
   xnode->properties = 0;
+
+  if(strcmp((const char*)xnode->name, "unit") == 0) {
+
+    xmlNsPtr ns = node.ns;
+    while(ns) {
+
+      if(strcmp((const char *)ns->href, "http://www.sdml.info/srcML/cpp") != 0) {
+
+        ns = ns->next;
+        continue;
+
+      }
+
+      xAttr * attr = new xAttr;
+      std::string cpp_ns = "xmlns";
+      if(ns->prefix) {
+
+        cpp_ns += ":";
+        cpp_ns += (const char *)ns->prefix;
+
+      }
+
+      attr->name = strdup(cpp_ns.c_str());
+      attr->value = strdup((const char *)ns->href);
+      attr->next = 0;
+
+      xnode->properties = attr;
+
+      break;
+
+    }
+
+  }
+
   if(attribute) {
 
-    xAttr * attr;
-    attr = new xAttr;
+    xAttr * attr = new xAttr;
     attr->name = strdup((const char *)attribute->name);
     attr->value = strdup((const char *)attribute->children->content);
     attr->next = 0;
 
-    xnode->properties = attr;;
+    if(!xnode->properties)
+      xnode->properties = attr;
+    else
+      xnode->properties->next = attr;
 
     attribute = attribute->next;
 

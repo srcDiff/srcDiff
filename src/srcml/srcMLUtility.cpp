@@ -32,7 +32,6 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTI
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
-fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, *output_buffer);
 
 }
 
