@@ -18,10 +18,12 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTI
   srcml_archive_set_language(archive, srcml_archive_check_extension(archive, filename));
   srcml_archive_set_tabstop(archive, tabsize);
 
-
   srcml_write_open_memory(archive, output_buffer, output_size);
 
   srcml_unit * unit = srcml_create_unit(archive);
+  srcml_unit_set_filename(unit, srcml_archive_get_filename(archive));
+  srcml_unit_set_directory(unit, directory);
+  srcml_unit_set_version(unit, version);
   srcml_parse_unit_filename(unit, filename);
 
   srcml_write_unit(archive, unit);
@@ -30,6 +32,7 @@ void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTI
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
+fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, *output_buffer);
 
 }
 

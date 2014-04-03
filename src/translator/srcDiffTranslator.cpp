@@ -71,6 +71,7 @@ srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encodi
   diff.prefix = uri[7];
 
   if(!isoption(global_options, SRCML_OPTION_ARCHIVE)) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+
   srcml_write_open_filename(archive, srcdiff_filename);
   srcml_archive_register_namespace(archive, diff.prefix, diff.href);
 
@@ -147,6 +148,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
+  srcml_archive_set_filename(archive, unit_filename);
+
   // create the reader for the old file
   xNodePtr unit_old = 0;
   NodeSets node_set_old;
@@ -210,6 +213,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   if(is_new && is_new > -1)
     node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
+
+  srcml_archive_set_filename(archive, 0);
 
   /*
 
@@ -416,118 +421,13 @@ srcDiffTranslator::~srcDiffTranslator() {
 
 }
 
-void srcDiffTranslator::startUnit(const char * language,
-                                  OPTION_TYPE& options,        // many and varied options
-                                  const char* directory,       // root unit directory
-                                  const char* filename,        // root unit filename
-                                  const char* version         // root unit version
-                                  ) {
-
-  if((isoption(options, OPTION_VISUALIZE) || first) && !isoption(global_options, SRCML_OPTION_XML_DECL))
-    xmlTextWriterStartDocument(wstate.writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
-
-  // start of main tag
-  std::string maintag = uri[0];
-  if (!maintag.empty())
-    maintag += ":";
-  maintag += "unit";
-
-  // start of main tag
-  xmlTextWriterStartElement(wstate.writer, BAD_CAST maintag.c_str());
-
-  // outer units have namespaces
-  if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
-
-    std::string lang = language;
-    outputNamespaces(options, lang != "Java");
-
-  }
-
-  // list of attributes
-  const char* const attrs[][2] = {
-
-    // revision attribute
-    { UNIT_ATTRIBUTE_REVISION,  isoption(options, OPTION_REVISION) ? srcml_version_string() : 0 },
-
-    // language attribute
-    { UNIT_ATTRIBUTE_LANGUAGE, language },
-
-    // directory attribute
-    { UNIT_ATTRIBUTE_DIRECTORY, (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_DIRECTORY) ? root_directory : directory },
-
-    // filename attribute
-    { UNIT_ATTRIBUTE_FILENAME, (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_FILENAME) ? root_filename : filename },
-
-    // version attribute
-    { UNIT_ATTRIBUTE_VERSION,  (isoption(options, OPTION_VISUALIZE) || first) && isoption(global_options, OPTION_VERSION) ? root_version : version },
-
-    // position tab setting
-    //{ tabattribute.c_str(), isoption(options, OPTION_POSITION) ? stabs.str().c_str() : 0 },
-
-  };
-
-  // output attributes
-  for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
-    if (!attrs[i][1])
-      continue;
-
-    xmlTextWriterWriteAttribute(wstate.writer, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
-  }
-
-}
-
-void srcDiffTranslator::outputNamespaces(const OPTION_TYPE& options, bool output_cpp) {
-
-
-  // figure out which namespaces are needed
-  char const * const ns[] = {
-
-    // main srcML namespace declaration always used
-    (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_SRC_NS_URI : 0,
-
-    // main cpp namespace declaration
-    output_cpp && (!isoption(SRCML_OPTION_ARCHIVE, options) || isoption(options, OPTION_VISUALIZE)) ? SRCML_CPP_NS_URI : 0,
-
-    // optional debugging xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
-
-    // optional literal xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
-
-    // optional operator xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
-
-    // optional modifier xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
-
-    // optional position xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) && isoption(SRCML_OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
-
-    // optional diff xml namespace
-    (isoption(options, OPTION_VISUALIZE) || first) ? SRCML_DIFF_NS_URI : 0,
-  };
-
-  // output the namespaces
-  for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
-    if (!ns[i])
-      continue;
-
-    std::string prefix = "xmlns";
-    if (uri[i][0] != '\0') {
-      prefix += ':';
-      prefix += uri[i];
-    }
-
-    xmlTextWriterWriteAttribute(wstate.writer, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
-  }
-}
-
 void srcDiffTranslator::set_nested(bool is_nested) {
 
   if(is_nested)
     global_options |= OPTION_ARCHIVE;
   else
     global_options &= ~OPTION_ARCHIVE;
+
 }
 
 void srcDiffTranslator::set_root_directory(const char * root_directory) {
