@@ -36,6 +36,7 @@
 #include <ColorDiff.hpp>
 
 #include <pthread.h>
+#include <srcml.h>
 
 class srcDiffTranslator {
  public:
@@ -51,8 +52,8 @@ class srcDiffTranslator {
                     const char* version,
                     const char* uri[],
                     int tabsize, 
-                    std::string css
-		  );
+                    std::string css,
+                    srcml_archive * archive);
 
   void close();
 
@@ -87,6 +88,7 @@ void outputNamespaces(const OPTION_TYPE& options, bool output_cpp);
   METHOD_TYPE method;
   const char** uri;
   int tabsize;
+  srcml_archive * archive;
 
   pthread_mutex_t mutex;
   reader_state rbuf_old;

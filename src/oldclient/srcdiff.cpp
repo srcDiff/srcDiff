@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   //Language::register_standard_file_extensions();
-
+  srcml_archive * archive = srcml_create_archive();
   process_options poptions =
     {
       0,
@@ -154,6 +154,7 @@ int main(int argc, char* argv[]) {
       { false, false, false, false, false, false },
       METHOD_GROUP,
       std::string(),
+      archive, 
       0,
 #ifdef SVN
       SVN_INVALID_REVNUM,
@@ -367,7 +368,8 @@ int main(int argc, char* argv[]) {
                                  poptions.given_version,
                                  urisprefix,
                                  poptions.tabsize,
-                                 poptions.css_url);
+                                 poptions.css_url,
+                                 poptions.archive);
 
 
 
@@ -526,10 +528,7 @@ void srcdiff_text(srcDiffTranslator& translator, const char* path_one, const cha
   if(showinput && !isoption(local_options, OPTION_QUIET))
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
-  translator.translate(path_one, path_two, local_options,
-                       gpoptions->given_directory,
-                       filename.c_str(),
-                       0);
+  translator.translate(path_one, path_two, local_options, gpoptions->given_directory, filename.c_str(), 0);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file

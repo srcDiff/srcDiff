@@ -38,8 +38,6 @@
 
 #include <xmlrw.hpp>
 
-#include <srcml.h>
-
 // diff nodes
 xNode diff_common_start;
 xNode diff_common_end;
@@ -64,11 +62,11 @@ srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encodi
                                      const char* version,         // root unit version
                                      const char* uri[],           // uri prefixes
                                      int tabsize,                  // size of tabs
-                                     std::string css
-                                     )
+                                     std::string css,
+                                     srcml_archive * archive)
   : first(true),
     root_directory(directory), root_filename(filename), root_version(version),
-    src_encoding(src_encoding), xml_encoding(xml_encoding), global_options(global_options), method(method), uri(uri), tabsize(tabsize), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
+    src_encoding(src_encoding), xml_encoding(xml_encoding), global_options(global_options), method(method), uri(uri), tabsize(tabsize), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
 {
   diff.prefix = uri[7];
 

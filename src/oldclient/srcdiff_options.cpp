@@ -197,6 +197,8 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
           fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
           exit(STATUS_ERROR);
         }
+
+        srcml_archive_register_file_extension(poptions.archive, extension, language);
 /*
         if (!Language::registerUserExt(extension, language)) {
 
