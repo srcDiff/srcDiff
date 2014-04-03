@@ -100,20 +100,12 @@ const int SVN_CONTINUOUS_FLAG_CODE = 256 + 22;
 
 struct process_options
 {
-  // options
-  // output filename
+
   const char* srcdiff_filename;
   const char* file_list_name;
   const char* input_format;
   const char* output_format;
   int language;
-  const char* src_encoding;
-  const char* xml_encoding;
-  const char* given_directory;
-  const char* given_filename;
-  const char* given_version;
-  int tabsize;
-  bool prefixchange[num_prefixes];
   METHOD_TYPE method;
   std::string css_url;
   srcml_archive * archive;
@@ -121,6 +113,7 @@ struct process_options
   const char * svn_url;
   int revision_one;
   int revision_two;
+  
 };
 
 int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE & options, const char * urisprefix[]);

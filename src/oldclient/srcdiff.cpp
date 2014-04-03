@@ -175,7 +175,7 @@ int main(int argc, char* argv[]) {
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
   if (input_arg_count / 2 > 1)
-    options |= SRCML_OPTION_ARCHIVE;
+    srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
   /*

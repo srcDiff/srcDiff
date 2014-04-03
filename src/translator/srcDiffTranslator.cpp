@@ -60,8 +60,6 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
 {
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
-  if(!isoption(global_options, SRCML_OPTION_ARCHIVE)) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-
   srcml_write_open_filename(archive, srcdiff_filename);
   srcml_archive_register_namespace(archive, diff.prefix, diff.href);
 
