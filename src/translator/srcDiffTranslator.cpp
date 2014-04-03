@@ -70,6 +70,10 @@ srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encodi
 {
   diff.prefix = uri[7];
 
+  srcml_write_open_filename(archive, srcdiff_filename);
+  if(!isoption(global_options, SRCML_OPTION_ARCHIVE)) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+  srcml_archive_register_namespace(archive, diff.prefix, diff.href);
+
   // diff tags
   diff_common_start.name = DIFF_SESCOMMON;
   diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
@@ -143,32 +147,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
-  if(wstate.writer == NULL && !isoption(global_options, OPTION_VISUALIZE)) {
-
-    wstate.writer = xmlNewTextWriterFilename(wstate.filename.c_str(), 0);
-
-    if (wstate.writer == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML\n", wstate.filename.c_str());
-
-      exit(1);
-    }
-
-  }
-
-  if(isoption(global_options, OPTION_VISUALIZE)) {
-
-    if(!line_diff_range.is_no_white_space_diff())
-      return;
-
-    wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
-
-    if (wstate.writer == NULL) {
-      fprintf(stderr, "Unable to open file '%s' as XML\n", path_one);
-
-      exit(1);
-    }
-
-  }
   // root unit for compound srcML documents
   else if (first && ((global_options & OPTION_ARCHIVE) > 0)) {
 
@@ -263,37 +241,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   wstate.output_diff.push_back(&output_diff);
 
   /*
-    unsigned int i;
-    for(i = 0; i < rbuf_old.nodes.size() && i < rbuf_new.nodes.size(); ++i) {
-
-    if(rbuf_old.nodes.at(i)->type != rbuf_new.nodes.at(i)->type)
-    break;
-
-    if((xmlReaderTypes)rbuf_old.nodes.at(i)->type != XML_READER_TYPE_TEXT
-    && (xmlReaderTypes)rbuf_old.nodes.at(i)->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
-    continue;
-
-    if(strcmp(rbuf_old.nodes.at(i)->name, rbuf_new.nodes.at(i)->name) != 0)
-    break;
-
-    if(strcmp(rbuf_old.nodes.at(i)->content, rbuf_new.nodes.at(i)->content) != 0)
-    break;
-
-    }
-
-    if(i == rbuf_old.nodes.size() && i == rbuf_new.nodes.size()) {
-
-    for(i = 0; i < rbuf_old.nodes.size(); ++i)
-    outputNode(*rbuf_old.nodes.at(i), wstate.writer);
-
-
-    } else {
-  */
-
-  // create srcdiff unit
-  //xNodePtr unit = create_srcdiff_unit(unit_old, unit_new);
-
-  /*
 
     Output srcDiff
 
@@ -352,10 +299,34 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
   // run on file level
   if(is_old || is_new) {
 
-      // @todo need to get this from archive or something
-      startUnit(path_one ? srcml_archive_check_extension(archive, path_one) : srcml_archive_check_extension(archive, path_two), local_options, unit_directory, unit_filename, unit_version);
+    if(!isoption(global_options, OPTION_VISUALIZE)) {
 
-    first = false;
+      wstate.buffer = xmlBufferCreate();
+      wstate.writer = xmlNewTextWriterMemory(wstate.buffer, 0);
+
+    }
+
+/*
+     else {
+
+      if(!line_diff_range.is_no_white_space_diff())
+        return;
+
+      wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
+
+    }
+*/
+
+
+    if (wstate.writer == NULL) {
+
+        fprintf(stderr, "Unable to open file '%s' for XML\n", path_one);
+
+        exit(1);
+
+    }
+
+    output_node(rbuf_old, rbuf_new, unit_old, SESCOMMON, wstate);
 
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
@@ -368,14 +339,23 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
     output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
 
+    xmlTextWriterEndDocument(wstate.writer);
+    xmlFreeTextWriter(wstate.writer);
+
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_xml(unit, (const char *)wstate.buffer->content);
+    srcml_write_unit(archive, unit);
+
     // }
 
+/*
     if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_ARCHIVE)) {
 
       xmlTextWriterEndElement(wstate.writer);
       xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
 
     }
+*/
 
   }
 
@@ -433,15 +413,7 @@ srcDiffTranslator::~srcDiffTranslator() {
 
   if(!isoption(global_options, OPTION_VISUALIZE)) {
 
-    if(!first) {
-
-      xmlTextWriterEndElement(wstate.writer);
-
-      // cleanup writer
-      xmlTextWriterEndDocument(wstate.writer);
-      xmlFreeTextWriter(wstate.writer);
-
-    }
+    srcml_close_archive(archive);
 
   } else {
 
