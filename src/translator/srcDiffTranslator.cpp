@@ -70,8 +70,8 @@ srcDiffTranslator::srcDiffTranslator(const char* src_encoding,    // text encodi
 {
   diff.prefix = uri[7];
 
-  srcml_write_open_filename(archive, srcdiff_filename);
   if(!isoption(global_options, SRCML_OPTION_ARCHIVE)) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+  srcml_write_open_filename(archive, srcdiff_filename);
   srcml_archive_register_namespace(archive, diff.prefix, diff.href);
 
   // diff tags
@@ -146,17 +146,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two, OP
 
   if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
-
-  // root unit for compound srcML documents
-  else if (first && ((global_options & OPTION_ARCHIVE) > 0)) {
-
-    startUnit(0, global_options, root_directory, root_filename, root_version);
-    xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
-
-    first = false;
-
-  }
-
 
   // create the reader for the old file
   xNodePtr unit_old = 0;
