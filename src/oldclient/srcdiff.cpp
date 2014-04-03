@@ -92,7 +92,7 @@ const char* urisprefix[] = {
   SRCML_DIFF_NS_PREFIX_DEFAULT,
 };
 
-OPTION_TYPE options = OPTION_THREAD | OPTION_OUTPUTSAME | OPTION_OUTPUTPURE;
+OPTION_TYPE options = SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH | OPTION_THREAD | OPTION_OUTPUTSAME | OPTION_OUTPUTPURE;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   //Language::register_standard_file_extensions();
-
+  srcml_archive * archive = srcml_create_archive();
   process_options poptions =
     {
       0,
@@ -154,6 +154,7 @@ int main(int argc, char* argv[]) {
       { false, false, false, false, false, false },
       METHOD_GROUP,
       std::string(),
+      archive, 
       0,
 #ifdef SVN
       SVN_INVALID_REVNUM,
@@ -367,7 +368,8 @@ int main(int argc, char* argv[]) {
                                  poptions.given_version,
                                  urisprefix,
                                  poptions.tabsize,
-                                 poptions.css_url);
+                                 poptions.css_url,
+                                 poptions.archive);
 
 
 
@@ -446,6 +448,8 @@ int main(int argc, char* argv[]) {
 
   }
 
+  srcml_free_archive(poptions.archive);
+  
   return exit_status;
 
 }
@@ -526,10 +530,7 @@ void srcdiff_text(srcDiffTranslator& translator, const char* path_one, const cha
   if(showinput && !isoption(local_options, OPTION_QUIET))
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
-  translator.translate(path_one, path_two, local_options,
-                       gpoptions->given_directory,
-                       filename.c_str(),
-                       0);
+  translator.translate(path_one, path_two, local_options, gpoptions->given_directory, filename.c_str(), 0);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file

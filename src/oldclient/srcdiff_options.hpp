@@ -3,6 +3,7 @@
 
 #include <srcdiff_uri.hpp>
 #include <Methods.hpp>
+#include <srcml.h>
 
 const char* const DEBUG_FLAG = "debug";
 const char DEBUG_FLAG_SHORT = 'g';
@@ -115,6 +116,7 @@ struct process_options
   bool prefixchange[num_prefixes];
   METHOD_TYPE method;
   std::string css_url;
+  srcml_archive * archive;
 
   const char * svn_url;
   int revision_one;
