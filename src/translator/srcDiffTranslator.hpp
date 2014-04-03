@@ -54,22 +54,9 @@ class srcDiffTranslator {
   // destructor
   ~srcDiffTranslator();
 
-  void set_nested(bool is_nested = true);
-
-  void set_root_directory(const char * root_directory);
-
  private:
 
-  bool first;
-  const char* root_directory;
-  const char* root_filename;
-  const char* root_version;
-  const char* src_encoding;
-  const char* xml_encoding;
-  OPTION_TYPE global_options;
   METHOD_TYPE method;
-  const char** uri;
-  int tabsize;
   srcml_archive * archive;
 
   pthread_mutex_t mutex;

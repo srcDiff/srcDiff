@@ -106,7 +106,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
   wstate.writer = NULL;
 
   // writer state
-  if(isoption(global_options, OPTION_VISUALIZE)) {
+  if(isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
 
     std::string dir = "";
     if(srcml_archive_get_directory(archive) != NULL)
@@ -116,7 +116,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, this->global_options);
+    colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, srcml_archive_get_options(archive));
 
   }
 
@@ -133,7 +133,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   line_diff_range.create_line_diff();
 
-  if(!isoption(global_options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
+  if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
   // create the reader for the old file
@@ -141,7 +141,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   NodeSets node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { path_one, unit_directory, unit_filename, unit_version, uri, 8, archive
+  create_nodes_args args_old = { path_one, unit_directory, unit_filename, unit_version, archive
                                  , rbuf_old.mutex
                                  , rbuf_old.nodes, &unit_old, is_old, rbuf_old.stream_source };
   pthread_t thread_old;
@@ -151,7 +151,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  if(!isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
+  if(!isoption(srcml_archive_get_options(archive), OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
 
     is_old = -2;
 
@@ -167,8 +167,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   NodeSets node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { path_two, unit_directory, unit_filename, unit_version, uri, 8
-                                 , archive
+  create_nodes_args args_new = { path_two, unit_directory, unit_filename, unit_version, archive
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
 
@@ -179,7 +178,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  if(isoption(global_options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
+  if(isoption(srcml_archive_get_options(archive), OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
 
     is_old = -2;
 
@@ -245,7 +244,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   } else if(rbuf_old.nodes.empty()) {
 
-    if(!isoption(global_options, OPTION_OUTPUTPURE)) {
+    if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTPURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -258,7 +257,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   } else {
 
-    if(!isoption(global_options, OPTION_OUTPUTPURE)) {
+    if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTPURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -275,7 +274,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   // run on file level
   if(is_old || is_new) {
 
-    if(!isoption(global_options, OPTION_VISUALIZE)) {
+    if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
 
       wstate.buffer = xmlBufferCreate();
       wstate.writer = xmlNewTextWriterMemory(wstate.buffer, 0);
@@ -368,7 +367,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   rbuf_new.clear();
   wstate.clear();
 
-  if(isoption(global_options, OPTION_VISUALIZE)) {
+  if(isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
 
     xmlTextWriterEndElement(wstate.writer);
 
@@ -388,7 +387,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
-  if(!isoption(global_options, OPTION_VISUALIZE)) {
+  if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
 
     srcml_close_archive(archive);
 
@@ -403,17 +402,3 @@ srcDiffTranslator::~srcDiffTranslator() {
 
 }
 
-void srcDiffTranslator::set_nested(bool is_nested) {
-
-  if(is_nested)
-    global_options |= OPTION_ARCHIVE;
-  else
-    global_options &= ~OPTION_ARCHIVE;
-
-}
-
-void srcDiffTranslator::set_root_directory(const char * root_directory) {
-
-
-  this->root_directory = root_directory;
-}

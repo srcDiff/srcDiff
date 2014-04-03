@@ -25,7 +25,7 @@ static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
 ColorDiff::ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file
-                     , std::string directory, std::string version, std::string css, OPTION_TYPE & options) 
+                     , std::string directory, std::string version, std::string css, OPTION_TYPE options) 
   : first(true), srcdiff(srcdiff), css_url(css), options(options) {
 
   if(colordiff_file != "-")

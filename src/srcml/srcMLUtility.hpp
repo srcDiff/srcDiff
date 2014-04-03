@@ -18,8 +18,6 @@ struct create_nodes_args {
   const char* directory;
   const char* filename;
   const char* version;
-  const char** uri;
-  int tabsize;
   srcml_archive * main_archive;
 
   // pthreads

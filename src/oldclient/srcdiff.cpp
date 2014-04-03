@@ -783,7 +783,7 @@ void srcdiff_archive(srcDiffTranslator& translator, const char* path, OPTION_TYP
 void srcdiff_dir_top(srcDiffTranslator& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
-  translator.set_nested();
+  srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
 
   // record the stat info on the output file
 
@@ -829,7 +829,7 @@ void srcdiff_dir_top(srcDiffTranslator& translator, const char * directory_old, 
 
   }
 
-  translator.set_root_directory(srcml_archive_get_directory(gpoptions->archive) ? srcml_archive_get_directory(gpoptions->archive) : directory.c_str());
+ if(!srcml_archive_get_directory(gpoptions->archive)) srcml_archive_set_directory(gpoptions->archive, directory.c_str());
 
   srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
 }

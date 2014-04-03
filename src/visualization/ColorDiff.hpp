@@ -23,7 +23,7 @@ private :
 public:
 
   ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::string directory, std::string version, std::string css,
-            OPTION_TYPE & options);
+            OPTION_TYPE options);
   ~ColorDiff();
 
   xmlBuffer * getsrcDiffBuffer();
