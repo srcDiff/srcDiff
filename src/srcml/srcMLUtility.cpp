@@ -5,33 +5,27 @@
 extern xmlNs diff;
 
 // converts source code to srcML
-void translate_to_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
-			const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
-      srcml_archive * extensions,
+void translate_to_srcML(const char * path, const char* directory, const char* filename, const char* version,  srcml_archive * main_archive,
 			char ** output_buffer, int * output_size) {
 
-  srcml_archive * archive = srcml_clone_archive(extensions);
-  srcml_archive_set_src_encoding(archive, xml_encoding);
-  srcml_archive_set_encoding(archive, xml_encoding);
-  srcml_archive_set_options(archive, options);
-  srcml_archive_set_language(archive, srcml_archive_check_extension(archive, filename));
-  srcml_archive_set_filename(archive, filename);
-  srcml_archive_set_directory(archive, directory);
-  srcml_archive_set_version(archive, version);
-  srcml_archive_set_tabstop(archive, tabsize);
+  srcml_archive * unit_archive = srcml_clone_archive(main_archive);
+  srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH);
 
+  srcml_write_open_memory(unit_archive, output_buffer, output_size);
 
-  srcml_write_open_memory(archive, output_buffer, output_size);
+  srcml_unit * unit = srcml_create_unit(unit_archive);
+  srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, path));
+  srcml_unit_set_filename(unit, filename);
+  srcml_unit_set_directory(unit, directory);
+  srcml_unit_set_version(unit, version);
+  srcml_parse_unit_filename(unit, path);
 
-  srcml_unit * unit = srcml_create_unit(archive);
-  srcml_parse_unit_filename(unit, filename);
-
-  srcml_write_unit(archive, unit);
+  srcml_write_unit(unit_archive, unit);
 
   srcml_free_unit(unit);
 
-  srcml_close_archive(archive);
-  srcml_free_archive(archive);
+  srcml_close_archive(unit_archive);
+  srcml_free_archive(unit_archive);
 
 }
 
@@ -39,8 +33,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
     create_nodes_args & args = *(create_nodes_args *)arguments;
 
-    create_nodes_from_srcML(args.src_encoding, args.xml_encoding, args.options,
-    args.directory, args.filename, args.version, args.uri, args.tabsize, args.extensions,
+    create_nodes_from_srcML(args.path, args.directory, args.filename, args.version, args.main_archive,
                             args.mutex,
                             args.nodes, args.unit_start, args.no_error, args.context);
 
@@ -49,9 +42,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 }
 
 
-void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding, OPTION_TYPE& options,
-                             const char* directory, const char* filename, const char* version, const char* uri[], int tabsize,
-                             srcml_archive * extensions,
+void create_nodes_from_srcML(const char * path, const char* directory, const char* filename, const char* version,  srcml_archive * main_archive,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
   
@@ -66,13 +57,13 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
     if(!filename || filename[0] == 0)
 	throw std::string();
 
-  translate_to_srcML(src_encoding, xml_encoding, options, directory, filename, version, uri, 8, extensions, &output_buffer, &output_size);
+  translate_to_srcML(path, directory, filename, version, main_archive, &output_buffer, &output_size);
 
   reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
   if (reader == NULL) {
 
-    if(!isoption(options, OPTION_QUIET))
+    if(!isoption(srcml_archive_get_options(main_archive), OPTION_QUIET))
        fprintf(stderr, "Unable to open file '%s' as XML\n", filename);
 
     exit(1);
@@ -81,7 +72,7 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
   // read to unit
   xmlTextReaderRead(reader);
 
-  *unit_start = getRealCurrentNode(reader, options, context);
+  *unit_start = getRealCurrentNode(reader, srcml_archive_get_options(main_archive), context);
 
   // Read past unit tag open
   no_error = xmlTextReaderRead(reader);
@@ -89,8 +80,8 @@ void create_nodes_from_srcML(const char* src_encoding, const char* xml_encoding,
   // collect if non empty files
   if(no_error) {
 
-    collect_nodes(&nodes, reader, options, context, mutex);
-    getRealCurrentNode(reader, options, context);
+    collect_nodes(&nodes, reader, srcml_archive_get_options(main_archive), context, mutex);
+    getRealCurrentNode(reader, srcml_archive_get_options(main_archive), context);
 
   }
 
@@ -116,7 +107,7 @@ bool is_separate_token(const char character) {
 
 
 // collect the differnces
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE & options, int context, pthread_mutex_t * mutex) {
+void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE options, int context, pthread_mutex_t * mutex) {
 
   int not_done = 1;
   while(not_done) {

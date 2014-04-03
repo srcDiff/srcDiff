@@ -67,6 +67,7 @@ public:
   }
 
   std::string filename;
+  xmlBufferPtr buffer;
   xmlTextWriterPtr writer;
 
   METHOD_TYPE method;

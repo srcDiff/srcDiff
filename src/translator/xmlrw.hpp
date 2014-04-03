@@ -33,12 +33,8 @@
 #include <Options.hpp>
 #include <srcDiffOptions.hpp>
 
-//typedef xmlNode xNode;
-//typedef xmlNodePtr xNodePtr;
-
 struct xNs {
 
-  //xNs * next;
   const char * href;
   const char * prefix;
 
@@ -49,7 +45,7 @@ struct xAttr {
   xAttr * next;
   const char * name;
   const char * value;
-  //xNs ns;
+
 };
 
 struct xNode {
@@ -58,9 +54,9 @@ struct xNode {
   const char * name;
   xNs * ns;
   const char * content;
-  //xNs * nsDef;
   xAttr * properties;
   unsigned short extra;
+
   bool is_empty;
   bool free;
 
@@ -76,7 +72,7 @@ xNode * createInternalNode(xmlNode & node);
 
 bool operator==(const xNode& n1, const xNode& n2);
 
-xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context);
+xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
 
 xNode * copyXNode(xNode * node);
 
@@ -104,7 +100,7 @@ inline bool isendelement(const xmlTextReaderPtr& reader) {
   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
 }
 
-xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE & options, int context);
+xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
 
 void freeXNode(xNode * node);
 

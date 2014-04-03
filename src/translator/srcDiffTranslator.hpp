@@ -42,52 +42,21 @@ class srcDiffTranslator {
  public:
 
   // constructor
-  srcDiffTranslator(const char* src_encoding,
-                    const char* xml_encoding,
-                    const char* srcml_filename,
-                    OPTION_TYPE global_options,
+  srcDiffTranslator(const char* srcml_filename,
                     METHOD_TYPE method,
-                    const char* directory,
-                    const char* filename,
-                    const char* version,
-                    const char* uri[],
-                    int tabsize, 
                     std::string css,
                     srcml_archive * archive);
 
   void close();
 
-  void translate(const char* path_one, const char* path_two, OPTION_TYPE srcml_option,
-               const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0);
-
-void startUnit(const char * language,
-               OPTION_TYPE& options,        // many and varied options
-               const char* directory,       // root unit directory
-               const char* filename,        // root unit filename
-               const char* version         // root unit version
-               );
-
-void outputNamespaces(const OPTION_TYPE& options, bool output_cpp);
+  void translate(const char* path_one, const char* path_two, const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0);
 
   // destructor
   ~srcDiffTranslator();
 
-  void set_nested(bool is_nested = true);
-
-  void set_root_directory(const char * root_directory);
-
  private:
 
-  bool first;
-  const char* root_directory;
-  const char* root_filename;
-  const char* root_version;
-  const char* src_encoding;
-  const char* xml_encoding;
-  OPTION_TYPE global_options;
   METHOD_TYPE method;
-  const char** uri;
-  int tabsize;
   srcml_archive * archive;
 
   pthread_mutex_t mutex;
