@@ -31,6 +31,7 @@
 #include <algorithm>
 
 #include <shortest_edit_script.h>
+#include <srcml.h>
 
 #ifdef __MINGW32__
 #include <mingw32.hpp>
@@ -41,7 +42,7 @@ typedef std::map<std::string, xNode*> NodeMap;
 NodeMap starttags;
 NodeMap endtags;
 
-xNode * createInternalNode(xmlNode & node) {
+xNode * createInternalNode(xmlNode & node, bool is_archive) {
 
   xNode * xnode = new xNode;
 
@@ -71,34 +72,54 @@ xNode * createInternalNode(xmlNode & node) {
   xmlAttrPtr attribute = node.properties;
   xnode->properties = 0;
 
-  if(strcmp((const char*)xnode->name, "unit") == 0) {
+  xmlNsPtr ns = node.nsDef;
+  xAttr * ns_attr = 0;
+  if(strcmp((const char*)xnode->name, "unit") == 0 && ns) {
 
-    xmlNsPtr ns = node.ns;
-    while(ns) {
-
-      if(strcmp((const char *)ns->href, "http://www.sdml.info/srcML/cpp") != 0) {
-
+    while(is_archive && ns && strcmp((const char *)ns->href, "http://www.sdml.info/srcML/cpp") != 0)
         ns = ns->next;
-        continue;
 
-      }
 
-      xAttr * attr = new xAttr;
-      std::string cpp_ns = "xmlns";
+    xAttr * attr = new xAttr;
+
+    std::string ns_name = "xmlns";
+    if(ns->prefix) {
+
+      ns_name += ":";
+      ns_name += (const char *)ns->prefix;
+
+    }
+
+    attr->name = strdup((const char *)ns_name.c_str());
+    attr->value = strdup((const char *)ns->href);
+    attr->next = 0;
+
+    xnode->properties = attr;
+    ns_attr = attr;
+
+    ns = ns->next;
+
+    while(!is_archive && ns) {
+
+      xAttr * nattr = new xAttr;
+
+      std::string ns_name = "xmlns";
       if(ns->prefix) {
 
-        cpp_ns += ":";
-        cpp_ns += (const char *)ns->prefix;
+        ns_name += ":";
+        ns_name += (const char *)ns->prefix;
 
       }
 
-      attr->name = strdup(cpp_ns.c_str());
-      attr->value = strdup((const char *)ns->href);
-      attr->next = 0;
+      nattr->name = strdup((const char *)ns_name.c_str());
+      nattr->value = strdup((const char *)ns->href);
+      nattr->next = 0;
 
-      xnode->properties = attr;
+      attr->next = nattr;
+      attr = nattr;
+      ns_attr = nattr;
 
-      break;
+      ns = ns->next;
 
     }
 
@@ -114,7 +135,7 @@ xNode * createInternalNode(xmlNode & node) {
     if(!xnode->properties)
       xnode->properties = attr;
     else
-      xnode->properties->next = attr;
+      ns_attr->next = attr;
 
     attribute = attribute->next;
 
@@ -284,7 +305,7 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context)
       node = lb->second;
     } else {
 
-      node = createInternalNode(*curnode);
+      node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
       node->extra = 0;
       starttags.insert(lb, NodeMap::value_type(full_name, node));
     }
@@ -297,17 +318,17 @@ xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context)
       node = lb->second;
     } else {
 
-      node = createInternalNode(*curnode);
+      node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
       node->extra = 0;
       endtags.insert(lb, NodeMap::value_type(full_name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
-    node = createInternalNode(*curnode);
+    node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
     node->free = true;
     node->extra = xmlTextReaderIsEmptyElement(reader);
   } else {
-    node = createInternalNode(*curnode);
+    node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
     node->free = true;
   }
 
