@@ -68,7 +68,7 @@ struct xNode {
 typedef xNode * xNodePtr;
 typedef xAttr * xAttrPtr;
 
-xNode * createInternalNode(xmlNode & node);
+xNode * createInternalNode(xmlNode & node, bool is_archive);
 
 bool operator==(const xNode& n1, const xNode& n2);
 

@@ -61,7 +61,6 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
   srcml_write_open_filename(archive, srcdiff_filename);
-  srcml_archive_register_namespace(archive, diff.prefix, diff.href);
 
   // diff tags
   diff_common_start.name = DIFF_SESCOMMON;
@@ -301,6 +300,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
+    /** @todo when output non-archive additional namespaces not appended, because not collected 
+      However this is correct when output is to archive */
     output_node(rbuf_old, rbuf_new, unit_old, SESCOMMON, wstate);
 
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);

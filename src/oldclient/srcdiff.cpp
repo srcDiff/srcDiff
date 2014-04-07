@@ -137,6 +137,9 @@ int main(int argc, char* argv[]) {
 
   //Language::register_standard_file_extensions();
   srcml_archive * archive = srcml_create_archive();
+  srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+  srcml_archive_register_namespace(archive, "diff", "http://www.sdml.info/srcDiff");
+  
   process_options poptions =
     {
       0,
