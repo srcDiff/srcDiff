@@ -70,10 +70,10 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
     { TABS_FLAG, required_argument, NULL, TABS_FLAG_CODE },
-    { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
-    { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
-    { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
-    { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
+    { POSITION_FLAG, no_argument, &curoption, SRCML_OPTION_POSITION },
+    { LITERAL_FLAG, no_argument, &curoption, SRCML_OPTION_LITERAL },
+    { OPERATOR_FLAG, no_argument, &curoption, SRCML_OPTION_OPERATOR },
+    { MODIFIER_FLAG, no_argument, &curoption, SRCML_OPTION_MODIFIER },
     { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, CPP_MARKUP_ELSE_FLAG_CODE },
     { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, CPP_TEXTONLY_ELSE_FLAG_CODE },
     { CPP_MARKUP_IF0_FLAG, no_argument, NULL, CPP_MARKUP_IF0_FLAG_CODE },
@@ -94,7 +94,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       break;
 
     if (curoption) {
-      options |= curoption;
+      srcml_archive_enable_option(poptions.archive, curoption);
       continue;
     }
 
