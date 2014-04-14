@@ -282,6 +282,10 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     /** @todo when output non-archive additional namespaces not appended, because not collected 
       However this is correct when output is to archive */
     srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, srcml_archive_check_extension(archive, path_one ? path_one : path_two));
+    srcml_unit_set_filename(unit, unit_filename);
+    srcml_unit_set_directory(unit, unit_directory);
+    srcml_unit_set_version(unit, unit_version);
     srcml_write_start_unit(archive, unit);
 
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
