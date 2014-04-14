@@ -136,11 +136,17 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
+  srcml_unit * unit = srcml_create_unit(archive);
+  srcml_unit_set_language(unit, srcml_archive_check_extension(archive, path_one ? path_one : path_two));
+  srcml_unit_set_filename(unit, unit_filename);
+  srcml_unit_set_directory(unit, unit_directory);
+  srcml_unit_set_version(unit, unit_version);
+
   // create the reader for the old file
   NodeSets node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { path_one, unit_directory, unit_filename, unit_version, archive
+  create_nodes_args args_old = { path_one, archive, unit
                                  , rbuf_old.mutex
                                  , rbuf_old.nodes, is_old, rbuf_old.stream_source };
   pthread_t thread_old;
@@ -165,7 +171,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   NodeSets node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { path_two, unit_directory, unit_filename, unit_version, archive
+  create_nodes_args args_new = { path_two, archive, unit
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, is_new, rbuf_new.stream_source };
 
@@ -280,11 +286,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     /** @todo when output non-archive additional namespaces not appended, because not collected 
       However this is correct when output is to archive */
-    srcml_unit * unit = srcml_create_unit(archive);
-    srcml_unit_set_language(unit, srcml_archive_check_extension(archive, path_one ? path_one : path_two));
-    srcml_unit_set_filename(unit, unit_filename);
-    srcml_unit_set_directory(unit, unit_directory);
-    srcml_unit_set_version(unit, unit_version);
     srcml_write_start_unit(archive, unit);
 
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
