@@ -168,12 +168,19 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   */
 
+  srcml_unit * unit_new = srcml_create_unit(archive);
+  srcml_unit_set_language(unit_new, srcml_archive_check_extension(archive, path_one ? path_one : path_two));
+  srcml_unit_set_filename(unit_new, unit_filename);
+  srcml_unit_set_directory(unit_new, unit_directory);
+  srcml_unit_set_version(unit_new, unit_version);
+
   NodeSets node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { path_two, archive, unit
+  create_nodes_args args_new = { path_two, archive, unit_new
                                  , rbuf_new.mutex
                                  , rbuf_new.nodes, is_new, rbuf_new.stream_source };
+
 
   pthread_t thread_new;
   if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
@@ -200,6 +207,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   if(is_new && is_new > -1)
     node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
+
+  srcml_free_unit(unit_new);
 
   /*
 
