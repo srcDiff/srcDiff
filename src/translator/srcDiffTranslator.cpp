@@ -102,7 +102,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
   rbuf_new.mutex = &mutex;
 
   wstate.filename = srcdiff_filename;
-  wstate.writer = NULL;
+  //wstate.writer = NULL;
 
   // writer state
   if(isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
@@ -275,55 +275,24 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
 
-      wstate.buffer = xmlBufferCreate();
-      wstate.writer = xmlNewTextWriterMemory(wstate.buffer, 0);
-
-    }
-
-/*
-     else {
-
-      if(!line_diff_range.is_no_white_space_diff())
-        return;
-
-      wstate.writer = xmlNewTextWriterMemory(colordiff->getsrcDiffBuffer(), 0);
-
-    }
-*/
-
-
-    if (wstate.writer == NULL) {
-
-        fprintf(stderr, "Unable to open file '%s' for XML\n", path_one);
-
-        exit(1);
+      wstate.archive = archive;
 
     }
 
     /** @todo when output non-archive additional namespaces not appended, because not collected 
       However this is correct when output is to archive */
-    output_node(rbuf_old, rbuf_new, unit_old, SESCOMMON, wstate);
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_write_start_unit(archive, unit);
 
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
     // output remaining whitespace
     output_white_space_all(rbuf_old, rbuf_new, wstate);
 
-    // output srcdiff unit ending tag
-    //if(is_old && is_new)
-    //output_node(rbuf_old, rbuf_new, unit_end, SESCOMMON, wstate);
-
     output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
 
-    xmlTextWriterEndDocument(wstate.writer);
-    xmlFreeTextWriter(wstate.writer);
-
-    srcml_unit * unit = srcml_create_unit(archive);
-    if(wstate.buffer->use) wstate.buffer->content[wstate.buffer->use - 1] = '\0';
-    //srcml_unit_set_xml(unit, (const char *)wstate.buffer->content);
-    srcml_write_unit(archive, unit);
-
-    // }
+    srcml_write_end_unit(archive);
+    srcml_free_unit(unit);
 
 /*
     if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_ARCHIVE)) {
