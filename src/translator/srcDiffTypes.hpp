@@ -69,6 +69,7 @@ public:
   std::string filename;
   xmlBufferPtr buffer;
   xmlTextWriterPtr writer;
+  srcml_archive * archive;
 
   METHOD_TYPE method;
 

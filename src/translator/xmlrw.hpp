@@ -33,6 +33,8 @@
 #include <Options.hpp>
 #include <srcDiffOptions.hpp>
 
+#include <srcml.h>
+
 struct xNs {
 
   const char * href;
@@ -109,5 +111,7 @@ void eat_element(xmlTextReaderPtr& reader);
 void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
 
 void outputNode(const xNode& node, xmlTextWriterPtr writer);
+
+void outputNode(const xNode& node, srcml_archive * archive);
 
 #endif
