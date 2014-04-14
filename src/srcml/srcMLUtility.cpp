@@ -35,7 +35,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
     create_nodes_from_srcML(args.path, args.directory, args.filename, args.version, args.main_archive,
                             args.mutex,
-                            args.nodes, args.unit_start, args.no_error, args.context);
+                            args.nodes, args.no_error, args.context);
 
     return NULL;
 
@@ -44,7 +44,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
 void create_nodes_from_srcML(const char * path, const char* directory, const char* filename, const char* version,  srcml_archive * main_archive,
                              pthread_mutex_t * mutex,
-                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context) {
+                             std::vector<xNode *> & nodes, int & no_error, int context) {
   
   char * output_buffer;
   int output_size;
@@ -72,8 +72,6 @@ void create_nodes_from_srcML(const char * path, const char* directory, const cha
   // read to unit
   xmlTextReaderRead(reader);
 
-  *unit_start = getRealCurrentNode(reader, srcml_archive_get_options(main_archive), context);
-
   // Read past unit tag open
   no_error = xmlTextReaderRead(reader);
 
@@ -81,7 +79,6 @@ void create_nodes_from_srcML(const char * path, const char* directory, const cha
   if(no_error) {
 
     collect_nodes(&nodes, reader, srcml_archive_get_options(main_archive), context, mutex);
-    getRealCurrentNode(reader, srcml_archive_get_options(main_archive), context);
 
   }
 

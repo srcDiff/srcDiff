@@ -25,7 +25,6 @@ struct create_nodes_args {
 
   // returns
   std::vector<xNode *> & nodes;
-  xNodePtr * unit_start;
   int & no_error;
   int context;
 
@@ -39,7 +38,7 @@ void * create_nodes_from_srcML_thread(void * arguments);
 
 void create_nodes_from_srcML(const char * path, const char* directory, const char* filename, const char* version,  srcml_archive * main_archive,
                              pthread_mutex_t * mutex,
-                             std::vector<xNode *> & nodes, xNodePtr * unit_start, int & no_error, int context);
+                             std::vector<xNode *> & node, int & no_error, int context);
 
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new);

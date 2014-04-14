@@ -51,6 +51,8 @@ xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 // diff attribute
 xAttr diff_type = { 0 };
 
+xNode unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, false, false, 0, 0 };
+
 // constructor
 srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      METHOD_TYPE method,
@@ -102,7 +104,6 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
   rbuf_new.mutex = &mutex;
 
   wstate.filename = srcdiff_filename;
-  //wstate.writer = NULL;
 
   // writer state
   if(isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
@@ -136,13 +137,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     return;
 
   // create the reader for the old file
-  xNodePtr unit_old = 0;
   NodeSets node_set_old;
 
   int is_old = 0;
   create_nodes_args args_old = { path_one, unit_directory, unit_filename, unit_version, archive
                                  , rbuf_old.mutex
-                                 , rbuf_old.nodes, &unit_old, is_old, rbuf_old.stream_source };
+                                 , rbuf_old.nodes, is_old, rbuf_old.stream_source };
   pthread_t thread_old;
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
@@ -162,13 +162,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   */
 
-  xNodePtr unit_new = 0;
   NodeSets node_set_new;
 
   int is_new = 0;
   create_nodes_args args_new = { path_two, unit_directory, unit_filename, unit_version, archive
                                  , rbuf_new.mutex
-                                 , rbuf_new.nodes, &unit_new, is_new, rbuf_new.stream_source };
+                                 , rbuf_new.nodes, is_new, rbuf_new.stream_source };
 
   pthread_t thread_new;
   if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
@@ -223,9 +222,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   // output srcdiff unit
   if(!rbuf_old.nodes.empty() && !rbuf_new.nodes.empty()) {
 
-    update_diff_stack(rbuf_old.open_diff, unit_old, SESCOMMON);
-    update_diff_stack(rbuf_new.open_diff, unit_new, SESCOMMON);
-    update_diff_stack(wstate.output_diff, unit_old, SESCOMMON);
+    update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
+    update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
 
   } else if(rbuf_old.nodes.empty() && rbuf_new.nodes.empty()) {
 
@@ -251,8 +250,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     }
 
     update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
-    update_diff_stack(rbuf_new.open_diff, unit_new, SESCOMMON);
-    update_diff_stack(wstate.output_diff, unit_new, SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
+    update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
 
   } else {
 
@@ -263,9 +262,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-    update_diff_stack(rbuf_old.open_diff, unit_old, SESCOMMON);
+    update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
     update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
-    update_diff_stack(wstate.output_diff, unit_old, SESCOMMON);
+    update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
 
   }
 
@@ -311,12 +310,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   free_node_sets(node_set_old);
   free_node_sets(node_set_new);
-
-  if(unit_old && unit_old->free)
-    freeXNode(unit_old);
-
-  if(unit_new && unit_new->free)
-    freeXNode(unit_new);
 
   // Because of grouping need to output a common to end grouping need to deallocate as well
   for(unsigned int i = 0; i < rbuf_old.nodes.size(); ++i) {
