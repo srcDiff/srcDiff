@@ -549,3 +549,66 @@ void outputNode(const xNode& node, xmlTextWriterPtr writer) {
     break;
   }
 }
+
+// output current XML node in reader
+void outputNode(const xNode& node, srcml_archive * archive) {
+
+  bool isemptyelement = false;
+
+  switch (node.type) {
+  case XML_READER_TYPE_ELEMENT:
+
+    // record if this is an empty element since it will be erased by the attribute copying
+    isemptyelement = node.extra & 0x1;
+
+    // start the element
+    srcml_write_start_element(archive, node.ns->prefix, node.name, 0);
+
+    // copy all the attributes
+    {
+      xAttr * attribute = node.properties;
+      while (attribute) {
+
+        srcml_write_attribute(archive, 0, attribute->name, 0, attribute->value);
+        attribute = attribute->next;
+      }
+    }
+
+    // end now if this is an empty element
+    if (isemptyelement) {
+
+      srcml_write_end_element(archive);
+    }
+
+    break;
+
+  case XML_READER_TYPE_END_ELEMENT:
+    srcml_write_end_element(archive);
+    break;
+
+  case XML_READER_TYPE_COMMENT:
+    //xmlTextWriterWriteComment(archive, (const xmlChar *)node.content);
+    break;
+
+  case XML_READER_TYPE_TEXT:
+  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+
+    // output the UTF-8 buffer escaping the characters.  Note that the output encoding
+    // is handled by libxml
+    srcml_write_string(archive, node.content);
+    /*for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
+      if (*p == '&')
+        xmlTextWriterWriteRawLen(archive, BAD_CAST (unsigned char*) "&amp;", 5);
+      else if (*p == '<')
+        xmlTextWriterWriteRawLen(archive, BAD_CAST (unsigned char*) "&lt;", 4);
+      else if (*p == '>')
+        xmlTextWriterWriteRawLen(archive, BAD_CAST (unsigned char*) "&gt;", 4);
+      else
+        xmlTextWriterWriteRawLen(archive, BAD_CAST (unsigned char*) p, 1);
+    }*/
+    break;
+
+  default:
+    break;
+  }
+}

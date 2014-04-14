@@ -320,7 +320,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     srcml_unit * unit = srcml_create_unit(archive);
     if(wstate.buffer->use) wstate.buffer->content[wstate.buffer->use - 1] = '\0';
-    srcml_unit_set_xml(unit, (const char *)wstate.buffer->content);
+    //srcml_unit_set_xml(unit, (const char *)wstate.buffer->content);
     srcml_write_unit(archive, unit);
 
     // }

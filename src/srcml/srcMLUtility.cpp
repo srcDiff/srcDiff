@@ -9,7 +9,7 @@ void translate_to_srcML(const char * path, const char* directory, const char* fi
 			char ** output_buffer, int * output_size) {
 
   srcml_archive * unit_archive = srcml_clone_archive(main_archive);
-  srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH);
+  srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
 
   srcml_write_open_memory(unit_archive, output_buffer, output_size);
 
