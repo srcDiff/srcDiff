@@ -83,15 +83,11 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
         points[1] = forward_paths[diagonal_pos];
 
         return 2 * distance - 1;
+
       }
 
     }
 
-  }
-
-  for(distance = 0; distance <= center; ++distance ) {
-
-    int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
 
       int diagonal_pos = diagonal + delta + center;
@@ -111,7 +107,8 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
 
-        return 2 * distance - 1;
+        return 2 * distance;
+
       }
 
     }
@@ -119,5 +116,6 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
   }
 
   return -2;
+
 }
 
