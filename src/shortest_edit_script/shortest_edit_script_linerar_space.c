@@ -9,7 +9,7 @@
   mjd52@zips.uakron.edu
 */
 
-#include <shortest_edit_script.h>
+//#include <shortest_edit_script.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -65,6 +65,7 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
 
       // not sure if > or >= or if matters
       if(!is_even && forward_paths[diagonal_pos].x > reverse_paths[diagonal_pos].x && forward_paths[diagonal_pos].y > reverse_paths[diagonal_pos].y) {
+
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
 
@@ -90,6 +91,7 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
       }
 
       if(!is_even && reverse_paths[diagonal_pos].x < forward_paths[diagonal_pos].x && reverse_paths[diagonal_pos].y < forward_paths[diagonal_pos].y) {
+
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
 
@@ -122,7 +124,7 @@ int shortest_edit_script_linear_space(int sequence_one_size, const void * sequen
   if(sequence_one_size > 0 && sequence_two_size > 0) {
 
     struct point points[2];
-    int distance = compute_middle_snake(sequence_one_size, sequence_one, sequence_two_size, sequence_two, compare, points, accessor, context);
+    int distance = compute_middle_snake(sequence_one_size, sequence_one, sequence_two_size, sequence_two, points, compare, accessor, context);
 
     if(distance > 1) {
 
@@ -132,9 +134,18 @@ int shortest_edit_script_linear_space(int sequence_one_size, const void * sequen
         fprintf(stdout, "%s", (const char *)accessor(pos, sequence_one, context));
       shortest_edit_script_linear_space(sequence_one_size - points[1].x, sequence_one + points[1].x + 1, sequence_two_size - points[1].y, sequence_two + points[1].y + 1, compare, accessor, context);
 
-
     }
 
+  } else if(sequence_one_size > sequence_two_size) {
+
+      size_t pos;
+      for(pos = 0; pos < sequence_one_size; ++pos)
+        fprintf(stdout, "%s", (const char *)accessor(pos, sequence_one, context));
+
+  } else {
+      size_t pos;
+      for(pos = 0; pos < sequence_two_size; ++pos)
+        fprintf(stdout, "%s", (const char *)accessor(pos, sequence_two, context));
   }
 
 
@@ -142,3 +153,28 @@ int shortest_edit_script_linear_space(int sequence_one_size, const void * sequen
 
 }
 
+int str_compare(void * str_one, void * str_two, void * context) {
+
+  return strcmp((const char *)str_one, (const char *)str_two);
+
+}
+
+const void * str_accessor(int index, void * array, void * context) {
+
+  return (void *)((const char **)array)[index];
+
+}
+
+//#if 0
+int main(int argc, char * argv[]) {
+
+  const char * sequence_one[] = { "a", "b", "c", "e" };
+  const char * sequence_two[] = { "a", "c", "e", "f" };
+
+  shortest_edit_script_linear_space(4, sequence_one, 4, sequence_two, str_compare, str_accessor, 0);
+
+  return 0;
+
+}
+
+//#endif
