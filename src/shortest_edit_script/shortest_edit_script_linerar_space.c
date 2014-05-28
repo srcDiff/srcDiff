@@ -23,20 +23,6 @@ struct point {
 
 };
 
-/*
-  Finds the shortest edit script between two sequences.
-   
-  Parameter sequence_one_size    The size of the first sequence
-  Parameter sequence_one         The first sequence
-  Parameter sequence_two_size    The size of the second sequence
-  Parameter sequence_two         The second sequence
-  Parameter edit_script          The shortest edit script
-
-  Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
-*/
-int shortest_edit_script_linear_space(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two,
-  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), struct edit ** edit_script, const void * context) {  return -2; }
-
 int compute_middle_snake(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two, struct point points[2],
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
@@ -114,6 +100,43 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
     }
 
   }
+
+  return -2;
+
+}
+
+/*
+  Finds the shortest edit script between two sequences.
+   
+  Parameter sequence_one_size    The size of the first sequence
+  Parameter sequence_one         The first sequence
+  Parameter sequence_two_size    The size of the second sequence
+  Parameter sequence_two         The second sequence
+  Parameter edit_script          The shortest edit script
+
+  Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
+*/
+int shortest_edit_script_linear_space(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two,
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
+
+  if(sequence_one_size > 0 && sequence_two_size > 0) {
+
+    struct point points[2];
+    int distance = compute_middle_snake(sequence_one_size, sequence_one, sequence_two_size, sequence_two, compare, points, accessor, context);
+
+    if(distance > 1) {
+
+      shortest_edit_script_linear_space(points[0].x, sequence_one, points[0].y, sequence_two, compare, accessor, context);
+      size_t pos;
+      for(pos = points[0].x + 1; pos < points[1].x; ++pos)
+        fprintf(stdout, "%s", (const char *)accessor(pos, sequence_one, context));
+      shortest_edit_script_linear_space(sequence_one_size - points[1].x, sequence_one + points[1].x + 1, sequence_two_size - points[1].y, sequence_two + points[1].y + 1, compare, accessor, context);
+
+
+    }
+
+  }
+
 
   return -2;
 
