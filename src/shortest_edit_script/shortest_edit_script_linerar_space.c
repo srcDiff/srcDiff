@@ -65,7 +65,7 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
 
       int diagonal_pos = diagonal + center;
-      int column = forward_paths[diagonal_pos - 1].x;
+      int column = forward_paths[diagonal_pos - 1].x + 1;
       if(diagonal == -distance || (diagonal == distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x))
         column = forward_paths[diagonal_pos + 1].x;
       int row = column - diagonal;
@@ -77,7 +77,8 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
 
       }
 
-      if(!is_even && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].y && forward_paths[diagonal_pos].y >= reverse_paths[diagonal_pos].y) {
+      // not sure if > or >= or if matters
+      if(!is_even && forward_paths[diagonal_pos].x > reverse_paths[diagonal_pos].x && forward_paths[diagonal_pos].y > reverse_paths[diagonal_pos].y) {
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
 
@@ -86,6 +87,34 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
 
     }
 
+  }
+
+  for(distance = 0; distance <= center; ++distance ) {
+
+    int diagonal;
+    for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
+
+      int diagonal_pos = diagonal + delta + center;
+      int row = forward_paths[diagonal_pos - 1].y - 1;
+      if(diagonal == -distance || (diagonal == distance && forward_paths[diagonal_pos - 1].y < forward_paths[diagonal_pos + 1].y))
+        row = forward_paths[diagonal_pos + 1].y;
+      int column = row + diagonal + delta;
+
+      while(column < sequence_one_size && row < sequence_two_size && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
+
+        --column;
+        --row;
+
+      }
+
+      if(!is_even && reverse_paths[diagonal_pos].x < forward_paths[diagonal_pos].x && reverse_paths[diagonal_pos].y < forward_paths[diagonal_pos].y) {
+        points[0] = reverse_paths[diagonal_pos];
+        points[1] = forward_paths[diagonal_pos];
+
+        return 2 * distance - 1;
+      }
+
+    }
 
   }
 
