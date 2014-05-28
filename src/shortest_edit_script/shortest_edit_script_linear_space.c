@@ -46,10 +46,9 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
 
   int distance;
   for(distance = 0; distance <= center; ++distance ) {
-    fprintf(stderr, "Distance: %d\n", distance);
+
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-      fprintf(stderr, "Diagonal: %d\n", diagonal);
 
       int diagonal_pos = diagonal + center;
 
@@ -57,7 +56,6 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
       if(diagonal == -distance || (diagonal == distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x))
         column = forward_paths[diagonal_pos + 1].x;
       int row = column - diagonal;
-      fprintf(stderr, "Point: (%d,%d)\n", column, row);
 
       while(column < (sequence_one_size - 1) && row < (sequence_two_size - 1) && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
@@ -65,7 +63,6 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
         ++row;
 
       }
-      fprintf(stderr, "Point: (%d,%d)\n", column, row);
 
       forward_paths[diagonal_pos].x = column;
       forward_paths[diagonal_pos].y = row;
@@ -84,7 +81,6 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
     }
 
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-      fprintf(stderr, "Diagonal: %d\n", diagonal);
 
       int diagonal_pos = diagonal + delta + center;
 
@@ -93,14 +89,12 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
         row = reverse_paths[diagonal_pos - 1].y;
       int column = row + (diagonal + delta);
 
-      fprintf(stderr, "Point: (%d,%d)\n", column, row);
       while(column > 0 && row > 0 && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
         --column;
         --row;
 
       }
-      fprintf(stderr, "Point: (%d,%d)\n", column, row);
 
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
