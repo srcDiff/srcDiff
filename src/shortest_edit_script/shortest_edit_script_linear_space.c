@@ -53,10 +53,15 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
       int diagonal_pos = diagonal + center;
 
       int column;
-      if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x))
+      if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x)) {
+
         column = forward_paths[diagonal_pos + 1].x;
-      else
+
+      } else {
+
         column = forward_paths[diagonal_pos - 1].x + 1;
+
+      }
 
       int row = column - diagonal;
 
@@ -88,10 +93,16 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       int diagonal_pos = diagonal + delta + center;
 
       int row;
-      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y))
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y) ? "true" : "false");
+      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y)) {
+
         row = reverse_paths[diagonal_pos - 1].y;
-      else
-         row = reverse_paths[diagonal_pos + 1].y - 1;
+
+      } else {
+
+        row = reverse_paths[diagonal_pos + 1].y - 1;
+
+      }
 
       int column = row + (diagonal + delta);
       fprintf(stderr, "Point: (%d,%d)\n", column, row);
