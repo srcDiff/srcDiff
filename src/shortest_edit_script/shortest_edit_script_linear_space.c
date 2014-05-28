@@ -52,9 +52,12 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
 
       int diagonal_pos = diagonal + center;
 
-      int column = forward_paths[diagonal_pos - 1].x + 1;
-      if(diagonal == -distance || (diagonal == distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x))
+      int column;
+      if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x))
         column = forward_paths[diagonal_pos + 1].x;
+      else
+        column = forward_paths[diagonal_pos - 1].x + 1;
+
       int row = column - diagonal;
 
       while(column < (sequence_one_size - 1) && row < (sequence_two_size - 1) && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
@@ -79,15 +82,19 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
       }
 
     }
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
 
       int diagonal_pos = diagonal + delta + center;
 
-      int row = reverse_paths[diagonal_pos + 1].y - 1;
-      if(diagonal == -distance || (diagonal == distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y))
+      int row;
+      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y))
         row = reverse_paths[diagonal_pos - 1].y;
+      else
+         row = reverse_paths[diagonal_pos + 1].y - 1;
+
       int column = row + (diagonal + delta);
+      fprintf(stderr, "Point: (%d,%d)\n", column, row);
 
       while(column > 0 && row > 0 && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
@@ -95,7 +102,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
         --row;
 
       }
-
+      fprintf(stderr, "Point: (%d,%d)\n", column, row);
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
       if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
@@ -109,7 +116,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
       }
 
     }
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   }
 
   return -2;
@@ -179,10 +186,10 @@ const void * str_accessor(int index, const void * array, const void * context) {
 //#if 0
 int main(int argc, char * argv[]) {
 
-  const char * sequence_one[] = { "a", "b", "c", "e" };
-  const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
-  //const char * sequence_two[] = { "b", "c", "d", "e" };
+  //const char * sequence_two[] = { "a", "c", "e", "f" };
+  const char * sequence_one[] = { "a", "b", "c", "e" };
+  const char * sequence_two[] = { "b", "c", "d", "e" };
 
   shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, str_compare, str_accessor, 0);
 
