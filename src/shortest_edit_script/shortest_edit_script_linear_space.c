@@ -110,7 +110,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
       int column = row + (diagonal + delta);
 
-      while(column > 0 && row > 0 && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
+      while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
         --column;
         --row;
@@ -150,17 +150,12 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 */
 int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_start, int sequence_one_size, const void * sequence_two, int sequence_two_start, int sequence_two_size,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_start);
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_size);
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_start);
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_size);
+
   int distance = -2;
   if((sequence_one_size - sequence_one_start) > 0 && (sequence_two_size - sequence_two_start) > 0) {
 
     struct point points[2];
     distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_size, sequence_two, sequence_two_start, sequence_two_size, points, compare, accessor, context);
-    fprintf(stderr, "Point (%d, %d)\n", points[0].x, points[0].y);
-    fprintf(stderr, "Point (%d, %d)\n", points[1].x, points[1].y);
 
     if(distance > 1) {
 
