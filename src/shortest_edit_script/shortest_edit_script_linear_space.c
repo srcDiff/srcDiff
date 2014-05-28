@@ -135,31 +135,30 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
     struct point points[2];
     distance = compute_middle_snake(sequence_one, sequence_one_size, sequence_two, sequence_two_size, points, compare, accessor, context);
-    fprintf(stderr, "Point Start: (%d,%d)\n", points[0].x, points[0].y);
-    fprintf(stderr, "Point End: (%d,%d)\n",   points[1].x, points[1].y);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, distance);
+
     if(distance > 1) {
 
       shortest_edit_script_linear_space(sequence_one, points[0].x, sequence_two, points[0].y, compare, accessor, context);
       size_t pos;
       for(pos = points[0].x; pos <= points[1].x; ++pos)
         fprintf(stdout, "%s\n", (const char *)accessor(pos, sequence_one, context));
-      shortest_edit_script_linear_space(sequence_one + points[1].x + 1, sequence_one_size - (points[1].x + 1), sequence_two + points[1].y + 1, sequence_two_size - (points[1].y + 1), compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one + points[1].x, sequence_one_size - (points[1].x + 1), sequence_two + points[1].y, sequence_two_size - (points[1].y + 1), compare, accessor, context);
+
+    } else if(sequence_one_size > sequence_two_size) {
+
+        size_t pos;
+        for(pos = 0; pos < sequence_one_size; ++pos)
+          fprintf(stdout, "%s\n", (const char *)accessor(pos, sequence_one, context));
+
+    } else {
+
+        size_t pos;
+        for(pos = 0; pos < sequence_two_size; ++pos)
+          fprintf(stdout, "%s\n", (const char *)accessor(pos, sequence_two, context));
 
     }
 
-  } else if(sequence_one_size > sequence_two_size) {
-
-      size_t pos;
-      for(pos = 0; pos < sequence_one_size; ++pos)
-        fprintf(stdout, "%s\n", (const char *)accessor(pos, sequence_one, context));
-
-  } else {
-      size_t pos;
-      for(pos = 0; pos < sequence_two_size; ++pos)
-        fprintf(stdout, "%s\n", (const char *)accessor(pos, sequence_two, context));
   }
-
 
   return -2;
 
