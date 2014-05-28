@@ -87,25 +87,23 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
       }
 
     }
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
 
       int diagonal_pos = diagonal + delta + center;
 
       int row;
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y) ? "true" : "false");
       if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y)) {
 
-        row = reverse_paths[diagonal_pos - 1].y;
+        row = reverse_paths[diagonal_pos - 1].y - 1;
 
       } else {
 
-        row = reverse_paths[diagonal_pos + 1].y - 1;
+        row = reverse_paths[diagonal_pos + 1].y;
 
       }
 
       int column = row + (diagonal + delta);
-      fprintf(stderr, "Point: (%d,%d)\n", column, row);
 
       while(column > 0 && row > 0 && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
@@ -113,7 +111,7 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         --row;
 
       }
-      fprintf(stderr, "Point: (%d,%d)\n", column, row);
+
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
       if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
@@ -127,7 +125,7 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       }
 
     }
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   }
 
   return -2;
@@ -197,10 +195,10 @@ const void * str_accessor(int index, const void * array, const void * context) {
 //#if 0
 int main(int argc, char * argv[]) {
 
-  //const char * sequence_one[] = { "a", "b", "c", "e" };
-  //const char * sequence_two[] = { "a", "c", "e", "f" };
   const char * sequence_one[] = { "a", "b", "c", "e" };
-  const char * sequence_two[] = { "b", "c", "d", "e" };
+  const char * sequence_two[] = { "a", "c", "e", "f" };
+  //const char * sequence_one[] = { "a", "b", "c", "e" };
+  //const char * sequence_two[] = { "b", "c", "d", "e" };
 
   shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, str_compare, str_accessor, 0);
 
