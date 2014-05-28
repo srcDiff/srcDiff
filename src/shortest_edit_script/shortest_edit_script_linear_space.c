@@ -46,9 +46,10 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
 
   int distance;
   for(distance = 0; distance <= center; ++distance ) {
-
+    fprintf(stderr, "Distance: %d\n", distance);
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
+    fprintf(stderr, "Diagonal: %d\n", diagonal);
 
       int diagonal_pos = diagonal + center;
       int column = forward_paths[diagonal_pos - 1].x + 1;
@@ -63,8 +64,12 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
 
       }
 
+      forward_paths[diagonal_pos].x = column;
+      forward_paths[diagonal_pos].y = row;
+
       // not sure if > or >= or if matters
-      if(!is_even && forward_paths[diagonal_pos].x > reverse_paths[diagonal_pos].x && forward_paths[diagonal_pos].y > reverse_paths[diagonal_pos].y) {
+      if(!is_even && diagonal >= (delta - (distance - 1)) && diagonal <= (delta + (distance - 1))
+       && forward_paths[diagonal_pos].x > reverse_paths[diagonal_pos].x && forward_paths[diagonal_pos].y > reverse_paths[diagonal_pos].y) {
 
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
@@ -74,8 +79,9 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
       }
 
     }
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
+    fprintf(stderr, "Diagonal: %d\n", diagonal);
 
       int diagonal_pos = diagonal + delta + center;
       int row = forward_paths[diagonal_pos - 1].y - 1;
@@ -90,7 +96,11 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
 
       }
 
-      if(!is_even && reverse_paths[diagonal_pos].x < forward_paths[diagonal_pos].x && reverse_paths[diagonal_pos].y < forward_paths[diagonal_pos].y) {
+      reverse_paths[diagonal_pos].x = column;
+      reverse_paths[diagonal_pos].y = row;
+
+      if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
+       && reverse_paths[diagonal_pos].x < forward_paths[diagonal_pos].x && reverse_paths[diagonal_pos].y < forward_paths[diagonal_pos].y) {
 
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
@@ -100,7 +110,7 @@ int compute_middle_snake(int sequence_one_size, const void * sequence_one, int s
       }
 
     }
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   }
 
   return -2;
