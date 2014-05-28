@@ -153,13 +153,13 @@ int shortest_edit_script_linear_space(int sequence_one_size, const void * sequen
 
 }
 
-int str_compare(void * str_one, void * str_two, void * context) {
+int str_compare(const void * str_one, const void * str_two, const void * context) {
 
   return strcmp((const char *)str_one, (const char *)str_two);
 
 }
 
-const void * str_accessor(int index, void * array, void * context) {
+const void * str_accessor(int index, const void * array, const void * context) {
 
   return (void *)((const char **)array)[index];
 
