@@ -40,7 +40,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_size, const
 
   struct point * reverse_paths = (struct point *)malloc(sizeof(struct point) * paths_length);
   size_t path_pos;
-  struct point end_point = { sequence_one_size - 1, sequence_two_size - 1 };
+  struct point end_point = { sequence_one_size, sequence_two_size };
   for(path_pos = 0; path_pos < paths_length; ++path_pos)
     reverse_paths[path_pos] = end_point;
 
@@ -156,11 +156,11 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
       shortest_edit_script_linear_space(sequence_one, points[0].x, sequence_two, points[0].y, compare, accessor, context);
       size_t pos;
-      for(pos = points[0].x; pos <= points[1].x; ++pos)
+      for(pos = points[0].x + 1; pos <= points[1].x; ++pos)
         fprintf(stdout, "%s\n", (const char *)accessor(pos, sequence_one, context));
-      shortest_edit_script_linear_space(sequence_one + points[1].x, sequence_one_size - (points[1].x + 1), sequence_two + points[1].y, sequence_two_size - (points[1].y + 1), compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one + points[1].x + 1, sequence_one_size - (points[1].x + 1), sequence_two + points[1].y + 1, sequence_two_size - (points[1].y + 1), compare, accessor, context);
 
-    } else if(sequence_one_size > sequence_two_size) {
+    } else if(sequence_two_size > sequence_one_size) {
 
         size_t pos;
         for(pos = 0; pos < sequence_one_size; ++pos)
