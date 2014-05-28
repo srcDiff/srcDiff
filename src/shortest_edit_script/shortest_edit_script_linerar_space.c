@@ -15,24 +15,6 @@
 #include <string.h>
 #include <stdio.h>
 
-/*
-  Make a compact edit script from the found edits.
-
-  Parameter last_edit            The last edit found
-  Parameter edit_script          The shortest edit script
-
-  Returns -1 on fail, 0 otherwise
-*/
-int make_edit_script(struct edit * last_edit, struct edit ** edit_script);
-
-/*
-  Copy a node from the heap.
-
-  Parameter edit          Edit to copy
-
-  Returns The copied edit or NULL if failed
-*/
-struct edit * copy_edit(struct edit * edit);
 
 /*
   Finds the shortest edit script between two sequences.
@@ -45,7 +27,8 @@ struct edit * copy_edit(struct edit * edit);
 
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two, int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), struct edit ** edit_script, const void * context) {
+int shortest_edit_script_linear_space(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two,
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), struct edit ** edit_script, const void * context) {
 
 
   // center to start building differences
@@ -205,157 +188,3 @@ int shortest_edit_script(int sequence_one_size, const void * sequence_one, int s
   return -2;
 }
 
-
-
-/*
-  Free the memory in a shortest edit script.
-
-  Parameter edit_script The shortest edit script to free
-*/
-void free_shortest_edit_script(struct edit * edit_script) {
-
-  // free memory
-  while(edit_script != NULL) {
-
-    // set next edit
-    struct edit * temp_edit = edit_script;
-    edit_script = edit_script->next;
-
-    // free edit
-    free(temp_edit);
-    temp_edit = NULL;
-
-  }
-
-}
-
-/*
-  Make a compact edit script from the found edits.
-
-  Parameter last_edit            The last edit found
-  Parameter edit_script          The shortest edit script
-
-  Returns Then number of edits or an error code (-1 malloc) 
-*/
-int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
-
-  struct edit * current_edit = last_edit;
-
-  // holds the length of the short edit script
-  int distance = 0;
-
-  // check not NULL
-  if(current_edit == NULL)
-    return distance;
-
-  current_edit->next = NULL;
-
-  // find first edit in shortest edit script
-  while(current_edit->previous != NULL) {
-
-    current_edit->previous->next = current_edit;
-    current_edit = current_edit->previous;
-
-  }
-
-  // copy first edit
-  if(((*edit_script) = copy_edit(current_edit)) == NULL)
-    return -1;
-
-  current_edit = (*edit_script);
-
-  // condense edit script
-  while(current_edit != NULL) {
-
-    // one more compact edit
-    ++distance;
-
-    // find same continous edits
-    current_edit->length = 1;
-
-    // condense insert edit
-    if(current_edit->operation == SESINSERT)
-      while(current_edit->next != NULL
-            && (current_edit->operation == current_edit->next->operation)
-            && (current_edit->offset_sequence_one == current_edit->next->offset_sequence_one)) {
-
-        // add adjacent edit
-        current_edit->next = current_edit->next->next;
-
-        // update length
-        ++current_edit->length;
-
-      }
-
-    // condense delete
-    else
-      while(current_edit->next != NULL
-            && (current_edit->operation == current_edit->next->operation)
-            && ((current_edit->offset_sequence_one + current_edit->length) == current_edit->next->offset_sequence_one)) {
-
-        // add adjacent edit
-        current_edit->next = current_edit->next->next;
-
-        // update length
-        ++current_edit->length;
-
-      }
-
-    // copy next edit
-    if(current_edit->next != NULL) {
-
-      struct edit * next;
-      if((next = copy_edit(current_edit->next)) == NULL) {
-
-        // free allocated edit
-        free_shortest_edit_script(current_edit);
-
-        // no script on error
-        (*edit_script) = NULL;
-
-        return -1;
-
-      }
-
-      current_edit->next = next;
-
-      // reattach with copied edit
-      current_edit->next->previous = current_edit;
-
-    }
-
-    // correct offset
-    --current_edit->offset_sequence_one;
-    --current_edit->offset_sequence_two;
-
-    current_edit = current_edit->next;
-
-  }
-
-  return distance;
-
-}
-
-/*
-  Copy a node from the heap.
-
-  Parameter edit          Edit to copy
-
-  Returns The copied edit or NULL if failed
-*/
-struct edit * copy_edit(struct edit * edit) {
-
-  struct edit * new_edit;
-  if((new_edit = (struct edit *)calloc(1, sizeof(struct edit))) == NULL)
-    return NULL;
-
-  // copy contents
-  new_edit->operation = edit->operation;
-  new_edit->offset_sequence_one = edit->offset_sequence_one;
-  new_edit->offset_sequence_two = edit->offset_sequence_two;
-  new_edit->length = edit->length;
-  new_edit->next = edit->next;
-  new_edit->previous = edit->previous;
-
-  return new_edit;
-}
