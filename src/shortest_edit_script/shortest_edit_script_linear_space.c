@@ -31,7 +31,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
   int is_even = delta % 2 == 0;
 
   // compute center
-  int center = ceil(((sequence_one_size - sequence_one_start) + (sequence_two_size - sequence_two_start)) / 2);
+  int center = ceil(((sequence_one_size - sequence_one_start) + (sequence_two_size - sequence_two_start)) / 2) + 1;
 
   unsigned int paths_length = center * 2 + 1;
   // allocate arrays to record furthest reaching paths
@@ -82,7 +82,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
       // not sure if > or >= or if matters
       if(!is_even && diagonal >= (delta - (distance - 1)) && diagonal <= (delta + (distance - 1))
-       && forward_paths[diagonal_pos].x > reverse_paths[diagonal_pos].x && forward_paths[diagonal_pos].y > reverse_paths[diagonal_pos].y) {
+       && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].x && forward_paths[diagonal_pos].y >= reverse_paths[diagonal_pos].y) {
 
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
@@ -120,7 +120,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
       if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
-       && reverse_paths[diagonal_pos].x < forward_paths[diagonal_pos].x && reverse_paths[diagonal_pos].y < forward_paths[diagonal_pos].y) {
+       && reverse_paths[diagonal_pos].x <= forward_paths[diagonal_pos].x && reverse_paths[diagonal_pos].y <= forward_paths[diagonal_pos].y) {
 
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
