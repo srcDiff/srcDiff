@@ -154,7 +154,7 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
     if(distance > 1) {
 
-      shortest_edit_script_linear_space(sequence_one, points[0].x, sequence_two, points[0].y, compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one, points[0].x + 1, sequence_two, points[0].y + 1, compare, accessor, context);
       size_t pos;
       for(pos = points[0].x + 1; pos <= points[1].x; ++pos)
         fprintf(stdout, "%s\n", (const char *)accessor(pos, sequence_one, context));
@@ -195,10 +195,10 @@ const void * str_accessor(int index, const void * array, const void * context) {
 //#if 0
 int main(int argc, char * argv[]) {
 
-  const char * sequence_one[] = { "a", "b", "c", "e" };
-  const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
-  //const char * sequence_two[] = { "b", "c", "d", "e" };
+  //const char * sequence_two[] = { "a", "c", "e", "f" };
+  const char * sequence_one[] = { "a", "b", "c", "e" };
+  const char * sequence_two[] = { "b", "c", "d", "e" };
 
   shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, str_compare, str_accessor, 0);
 
