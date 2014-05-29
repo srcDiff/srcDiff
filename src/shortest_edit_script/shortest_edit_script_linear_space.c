@@ -84,7 +84,8 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
       // not sure if > or >= or if matters
       if(!is_even && diagonal >= (delta - (distance - 1)) && diagonal <= (delta + (distance - 1))
-       && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].x && forward_paths[diagonal_pos].y >= reverse_paths[diagonal_pos].y) {
+       && (forward_paths[diagonal_pos].x - forward_paths[diagonal_pos].y) && (reverse_paths[diagonal_pos].x - reverse_paths[diagonal_pos].y)
+        && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].x) {
 
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
@@ -123,7 +124,8 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
       if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
-       && reverse_paths[diagonal_pos].x <= forward_paths[diagonal_pos].x && reverse_paths[diagonal_pos].y <= forward_paths[diagonal_pos].y) {
+       && (forward_paths[diagonal_pos].x - forward_paths[diagonal_pos].y) && (reverse_paths[diagonal_pos].x - reverse_paths[diagonal_pos].y)
+        && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].x) {
 
         points[0] = reverse_paths[diagonal_pos];
         points[1] = forward_paths[diagonal_pos];
@@ -169,9 +171,9 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
       shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, compare, accessor, context);
       size_t pos;
-      for(pos = points[0].x + 1; pos < points[1].x; ++pos)
+      for(pos = points[0].x + 1; pos <= points[1].x; ++pos)
         fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
-      shortest_edit_script_linear_space(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one, points[1].x + 1, sequence_one_end, sequence_two, points[1].y + 1, sequence_two_end, compare, accessor, context);
 
     } else if((sequence_two_end - sequence_two_start) > (sequence_one_end - sequence_one_start)) {
 
@@ -212,10 +214,14 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
   //const char * sequence_two[] = { "b", "c", "d", "e" };
-  const char * sequence_one[] = { "a", "b", "c", "d" };
-  const char * sequence_two[] = { "a", "b", "e", "f" };
+  //const char * sequence_one[] = { "a", "b", "c", "d" };
+  //const char * sequence_two[] = { "a", "b", "e", "f" };
+  // (0, 0) (0, 1) (1, 0)
+  //
+  const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
+  const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
 
-  shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
 
   return 0;
 
