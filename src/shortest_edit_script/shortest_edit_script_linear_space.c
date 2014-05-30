@@ -103,7 +103,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
       int row;
       int column;
-      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y)) {
+      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].x > reverse_paths[diagonal_pos - 1].x)) {
 
         column = reverse_paths[diagonal_pos - 1].x;
         row = reverse_paths[diagonal_pos - 1].y;
@@ -124,22 +124,6 @@ fprintf(stderr, "Point: (%d, %d)->", column, row);
 
       }
 fprintf(stderr, "(%d, %d)->", column, row);
-      if(distance != 0) {
-
-        if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y)) {
-
-          row -= 1;
-
-        } else {
-
-          column -= 1;
-
-
-        }
-
-      }
-fprintf(stderr, "(%d, %d)\n", column, row);
-
 
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
@@ -154,6 +138,22 @@ fprintf(stderr, "(%d, %d)\n", column, row);
         return 2 * distance;
 
       }
+
+      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].x > reverse_paths[diagonal_pos - 1].x)) {
+
+        row -= 1;
+
+      } else {
+
+        column -= 1;
+
+
+      }
+fprintf(stderr, "(%d, %d)\n", column, row);
+
+
+      reverse_paths[diagonal_pos].x = column;
+      reverse_paths[diagonal_pos].y = row;
 
     }
 
@@ -187,10 +187,10 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
     distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
     fprintf(stderr, "Point: (%d, %d)\n", points[0].x, points[0].y);
     fprintf(stderr, "Point: (%d, %d)\n", points[1].x, points[1].y);
-    return distance;
+    //return distance;
     if(distance > 1) {
 
-      shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x + 1, sequence_two, sequence_two_start, points[0].y + 1, compare, accessor, context);
       size_t pos;
       for(pos = points[0].x + 1; pos <= points[1].x; ++pos)
         fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
@@ -237,8 +237,6 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "b", "c", "d", "e" };
   //const char * sequence_one[] = { "a", "b", "c", "d" };
   //const char * sequence_two[] = { "a", "b", "e", "f" };
-  // (0, 0) (0, 1) (1, 0)
-  //
   const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
   const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
 
