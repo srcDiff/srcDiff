@@ -54,7 +54,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-    fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + center;
 
@@ -73,19 +73,19 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
       int save_column = column;
       int save_row = row;
-fprintf(stderr, "Point: (%d, %d)->", column, row);
+// fprintf(stderr, "Point: (%d, %d)->", column, row);
       while(column < sequence_one_end && row < sequence_two_end && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
         ++column;
         ++row;
 
       }
-fprintf(stderr, "(%d, %d)\n", column, row);
+// fprintf(stderr, "(%d, %d)\n", column, row);
 
       forward_paths[diagonal_pos].x = column;
       forward_paths[diagonal_pos].y = row;
- fprintf(stderr, "Point: (%d, %d)\n", forward_paths[diagonal_pos].x, forward_paths[diagonal_pos].y);
- fprintf(stderr, "Point: (%d, %d)\n", reverse_paths[diagonal_pos].x, reverse_paths[diagonal_pos].y);
+ // fprintf(stderr, "Point: (%d, %d)\n", forward_paths[diagonal_pos].x, forward_paths[diagonal_pos].y);
+ // fprintf(stderr, "Point: (%d, %d)\n", reverse_paths[diagonal_pos].x, reverse_paths[diagonal_pos].y);
       // not sure if > or >= or if matters
       if(!is_even && diagonal >= (delta - (distance - 1)) && diagonal <= (delta + (distance - 1))
        && (forward_paths[diagonal_pos].x - forward_paths[diagonal_pos].y) == (reverse_paths[diagonal_pos].x - reverse_paths[diagonal_pos].y)
@@ -106,7 +106,7 @@ fprintf(stderr, "(%d, %d)\n", column, row);
     }
 
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-    fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + delta + center;
 
@@ -121,12 +121,12 @@ fprintf(stderr, "(%d, %d)\n", column, row);
 
       }
 
-      int column = row + diagonal;
+      int column = row + diagonal + delta;
 
       int save_column = column;
       int save_row = row;
 
-fprintf(stderr, "Point: (%d, %d)->", column, row);
+// fprintf(stderr, "Point: (%d, %d)->", column, row);
       while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column - 1, sequence_one, context), accessor(row - 1, sequence_two, context), context) == 0) {
 
         --column;
@@ -137,9 +137,9 @@ fprintf(stderr, "Point: (%d, %d)->", column, row);
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
 
-fprintf(stderr, "(%d, %d)\n", column, row);
-fprintf(stderr, "Point: (%d, %d)\n", forward_paths[diagonal_pos].x, forward_paths[diagonal_pos].y);
-fprintf(stderr, "Point: (%d, %d)\n", reverse_paths[diagonal_pos].x, reverse_paths[diagonal_pos].y);
+// fprintf(stderr, "(%d, %d)\n", column, row);
+// fprintf(stderr, "Point: (%d, %d)\n", forward_paths[diagonal_pos].x, forward_paths[diagonal_pos].y);
+// fprintf(stderr, "Point: (%d, %d)\n", reverse_paths[diagonal_pos].x, reverse_paths[diagonal_pos].y);
       if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
        && (forward_paths[diagonal_pos].x - forward_paths[diagonal_pos].y) == (reverse_paths[diagonal_pos].x - reverse_paths[diagonal_pos].y)
         && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].x) {
@@ -177,10 +177,10 @@ fprintf(stderr, "Point: (%d, %d)\n", reverse_paths[diagonal_pos].x, reverse_path
 */
 int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
- fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_start);
- fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_end);
- fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_start);
- fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_end);
+ // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_start);
+ // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_end);
+ // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_start);
+ // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_end);
   int distance = -2;
   if((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0) {
 
@@ -188,7 +188,7 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
     distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
     // fprintf(stderr, "Point: (%d, %d)\n", points[0].x, points[0].y);
     // fprintf(stderr, "Point: (%d, %d)\n", points[1].x, points[1].y);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, distance);
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, distance);
 
     if(distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
@@ -198,7 +198,7 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
       size_t pos;
       for(pos = points[0].x; pos < points[1].x; ++pos)
         fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
-      shortest_edit_script_linear_space(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one, points[1].x + 1, sequence_one_end, sequence_two, points[1].y + 1, sequence_two_end, compare, accessor, context);
 
     } else if((sequence_two_end - sequence_two_start) > (sequence_one_end - sequence_one_start)) {
 
