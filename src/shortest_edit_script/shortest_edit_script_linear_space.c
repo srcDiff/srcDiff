@@ -37,7 +37,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
   // allocate arrays to record furthest reaching paths
   struct point * forward_paths = (struct point *)malloc(sizeof(struct point) * paths_length);
   size_t path_pos;
-  struct point start_point = { sequence_one_start, sequence_two_start };
+  struct point start_point = { sequence_one_start - 1, sequence_two_start - 1 };
   for(path_pos = 0; path_pos < paths_length; ++path_pos)
     forward_paths[path_pos] = start_point;
 
@@ -54,7 +54,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+    fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + center;
 
@@ -73,14 +73,14 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
       int save_column = column;
       int save_row = row;
-// fprintf(stderr, "Point: (%d, %d)->", column, row);
-      while(column < sequence_one_end && row < sequence_two_end && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
+fprintf(stderr, "Point: (%d, %d)->", column, row);
+      while(column < (sequence_one_end - 1) && row < (sequence_two_end - 1) && compare(accessor(column + 1, sequence_one, context), accessor(row + 1, sequence_two, context), context) == 0) {
 
         ++column;
         ++row;
 
       }
-// fprintf(stderr, "(%d, %d)\n", column, row);
+fprintf(stderr, "(%d, %d)\n", column, row);
 
       forward_paths[diagonal_pos].x = column;
       forward_paths[diagonal_pos].y = row;
@@ -106,27 +106,45 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
     }
 
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+    fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + delta + center;
 
-      int row;
+      int row, column;
       if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].x > reverse_paths[diagonal_pos - 1].x)) {
 
-        row = reverse_paths[diagonal_pos - 1].y - 1;
+        if(distance > 0) {
+
+          row = reverse_paths[diagonal_pos - 1].y - 1;
+          column = row + diagonal + delta;
+
+        } else {
+
+          column = reverse_paths[diagonal_pos - 1].x - 1;
+          row = reverse_paths[diagonal_pos - 1].y - 1;
+
+        }
 
       } else {
 
-        row = reverse_paths[diagonal_pos + 1].y;
+        if(distance > 0) {
+
+          row = reverse_paths[diagonal_pos + 1].y;
+          column = row + diagonal + delta;
+
+        } else {
+
+          column = reverse_paths[diagonal_pos + 1].x - 1;
+          row = reverse_paths[diagonal_pos + 1].y - 1;
+
+        }
 
       }
-
-      int column = row + diagonal + delta;
 
       int save_column = column;
       int save_row = row;
 
-// fprintf(stderr, "Point: (%d, %d)->", column, row);
+fprintf(stderr, "Point: (%d, %d)->", column, row);
       while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column - 1, sequence_one, context), accessor(row - 1, sequence_two, context), context) == 0) {
 
         --column;
@@ -137,7 +155,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
       reverse_paths[diagonal_pos].x = column;
       reverse_paths[diagonal_pos].y = row;
 
-// fprintf(stderr, "(%d, %d)\n", column, row);
+fprintf(stderr, "(%d, %d)\n", column, row);
 // fprintf(stderr, "Point: (%d, %d)\n", forward_paths[diagonal_pos].x, forward_paths[diagonal_pos].y);
 // fprintf(stderr, "Point: (%d, %d)\n", reverse_paths[diagonal_pos].x, reverse_paths[diagonal_pos].y);
       if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
@@ -186,10 +204,10 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
     struct point points[2];
     distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
-    // fprintf(stderr, "Point: (%d, %d)\n", points[0].x, points[0].y);
-    // fprintf(stderr, "Point: (%d, %d)\n", points[1].x, points[1].y);
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, distance);
-
+    fprintf(stderr, "Point: (%d, %d)\n", points[0].x, points[0].y);
+    fprintf(stderr, "Point: (%d, %d)\n", points[1].x, points[1].y);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, distance);
+return -2;
     if(distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
     if(distance > 1) {
