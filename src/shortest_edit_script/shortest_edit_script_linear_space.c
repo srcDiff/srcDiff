@@ -71,7 +71,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
       } else {
 
         column = forward_paths[diagonal_pos - 1].x + 1;
-        row = forward_paths[diagonal_pos + 1].y;
+        row = forward_paths[diagonal_pos - 1].y;
       }
 
       int save_column = column;
@@ -259,10 +259,10 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "b", "c", "d", "e" };
   //const char * sequence_one[] = { "a", "b", "c", "d" };
   //const char * sequence_two[] = { "a", "b", "e", "f" };
-  const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
-  const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
+  //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
+  //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
 
-  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, str_compare, str_accessor, 0);
 
   return 0;
 
