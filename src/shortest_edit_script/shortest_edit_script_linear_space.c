@@ -226,7 +226,7 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
     if(distance > 1) {
 
       shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x + 1, sequence_two, sequence_two_start, points[0].y + 1, compare, accessor, context);
-      size_t pos;
+      int pos;
       for(pos = points[0].x + 1; pos <= points[1].x; ++pos)
         fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
       shortest_edit_script_linear_space(sequence_one, points[1].x + 1, sequence_one_end, sequence_two, points[1].y + 1, sequence_two_end, compare, accessor, context);
@@ -272,12 +272,14 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "b", "c", "d", "e" };
   //const char * sequence_one[] = { "a", "b", "c", "d" };
   //const char * sequence_two[] = { "a", "b", "e", "f" };
-  //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
-  //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
-  const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
-  const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
+  const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
+  const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
+  //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
+  //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
-  shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, str_compare, str_accessor, 0);
 
   return 0;
 
