@@ -207,14 +207,14 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
     fprintf(stderr, "Point: (%d, %d)\n", points[0].x, points[0].y);
     fprintf(stderr, "Point: (%d, %d)\n", points[1].x, points[1].y);
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, distance);
-return -2;
+
     if(distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
     if(distance > 1) {
 
-      shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x + 1, sequence_two, sequence_two_start, points[0].y + 1, compare, accessor, context);
       size_t pos;
-      for(pos = points[0].x; pos < points[1].x; ++pos)
+      for(pos = points[0].x + 1; pos <= points[1].x; ++pos)
         fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
       shortest_edit_script_linear_space(sequence_one, points[1].x + 1, sequence_one_end, sequence_two, points[1].y + 1, sequence_two_end, compare, accessor, context);
 
@@ -257,8 +257,8 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
   //const char * sequence_two[] = { "b", "c", "d", "e" };
-  const char * sequence_one[] = { "a", "b", "c", "d" };
-  const char * sequence_two[] = { "a", "b", "e", "f" };
+  //const char * sequence_one[] = { "a", "b", "c", "d" };
+  //const char * sequence_two[] = { "a", "b", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
   //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
 
