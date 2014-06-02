@@ -38,12 +38,12 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
   // allocate arrays to record furthest reaching paths
   struct point * forward_paths = (struct point *)malloc(sizeof(struct point) * paths_length);
   size_t path_pos;
-  struct point start_point = { sequence_one_start - 1, sequence_two_start - 1 };
+  struct point start_point = { sequence_one_start, sequence_two_start };
   for(path_pos = 0; path_pos < paths_length; ++path_pos)
     forward_paths[path_pos] = start_point;
 
   struct point * reverse_paths = (struct point *)malloc(sizeof(struct point) * paths_length);
-  struct point end_point = { sequence_one_end - 1, sequence_two_end - 1 };
+  struct point end_point = { sequence_one_end, sequence_two_end };
   for(path_pos = 0; path_pos < paths_length; ++path_pos)
     reverse_paths[path_pos] = end_point;
 
@@ -55,7 +55,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+   // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + center;
 
@@ -77,7 +77,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
       int save_column = column;
       int save_row = row;
 // fprintf(stderr, "Point: (%d, %d)->", column, row);
-      while(column < (sequence_one_end - 1) && row < (sequence_two_end - 1) && compare(accessor(column + 1, sequence_one, context), accessor(row + 1, sequence_two, context), context) == 0) {
+      while(column < sequence_one_end && row < sequence_two_end && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
         ++column;
         ++row;
@@ -107,7 +107,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
     }
 
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+   // (stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + delta + center;
 
@@ -127,8 +127,8 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
       int save_column = column;
       int save_row = row;
 
- // fprintf(stderr, "Point: (%d, %d)->", column, row);
-      while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
+// (stderr, "Point: (%d, %d)->", column, row);
+      while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column - 1, sequence_one, context), accessor(row - 1, sequence_two, context), context) == 0) {
 
         --column;
         --row;
@@ -166,7 +166,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
         column =  reverse_paths[diagonal_pos].x;
         row =  reverse_paths[diagonal_pos].y;
-      while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
+      while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column - 1, sequence_one, context), accessor(row - 1, sequence_two, context), context) == 0) {
 
         --column;
         --row;
@@ -208,10 +208,10 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 */
 int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
- // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_start);
- // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_end);
- // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_start);
- // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_end);
+// (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_start);
+// (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_end);
+// (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_start);
+// (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_end);
   int distance = -2;
   if((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0) {
 
@@ -225,11 +225,11 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
     if(distance > 1) {
 
-      shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x + 1, sequence_two, sequence_two_start, points[0].y + 1, compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, compare, accessor, context);
       int pos;
-      for(pos = points[0].x + 1; pos <= points[1].x; ++pos)
+      for(pos = points[0].x; pos < points[1].x; ++pos)
         fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
-      shortest_edit_script_linear_space(sequence_one, points[1].x + 1, sequence_one_end, sequence_two, points[1].y + 1, sequence_two_end, compare, accessor, context);
+      shortest_edit_script_linear_space(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, compare, accessor, context);
 
     } else if((sequence_two_end - sequence_two_start) > (sequence_one_end - sequence_one_start)) {
 
@@ -280,7 +280,7 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
   //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, str_compare, str_accessor, 0);
-  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, str_compare, str_accessor, 0);
 
   return 0;
