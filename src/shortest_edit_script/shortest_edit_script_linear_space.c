@@ -128,7 +128,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
       int save_row = row;
 
  // fprintf(stderr, "Point: (%d, %d)->", column, row);
-      while(column >= sequence_one_start && row >= sequence_two_start && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
+      while(column > sequence_one_start && row > sequence_two_start && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
         --column;
         --row;
@@ -272,14 +272,16 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "b", "c", "d", "e" };
   //const char * sequence_one[] = { "a", "b", "c", "d" };
   //const char * sequence_two[] = { "a", "b", "e", "f" };
-  //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
-  //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
-  const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
-  const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
+  const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
+  const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
+  //const char * sequence_one[] = { "a", "b", "b", "a", "c", "b", "a" };
+  //const char * sequence_two[] = { "c", "a", "b", "a", "b", "c" };
+  //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
+  //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
   //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
-  shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, str_compare, str_accessor, 0);
 
   return 0;
 
