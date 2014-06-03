@@ -263,6 +263,7 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
 }
 
+//#if 0
 int str_compare(const void * str_one, const void * str_two, const void * context) {
 
   return strcmp((const char *)str_one, (const char *)str_two);
@@ -275,7 +276,6 @@ const void * str_accessor(int index, const void * array, const void * context) {
 
 }
 
-//#if 0
 int main(int argc, char * argv[]) {
 
   //const char * sequence_one[] = { "a", "b", "c", "e" };
