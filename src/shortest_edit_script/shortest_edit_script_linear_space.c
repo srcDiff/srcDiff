@@ -23,6 +23,47 @@ struct point {
 
 };
 
+struct point compure_forward_path(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
+  struct point * forward_paths, int distance, int diagonal, int center,
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
+
+  int diagonal_pos = diagonal + center;
+
+  int column, row;
+  if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x)) {
+
+    column = forward_paths[diagonal_pos + 1].x;
+    if(distance != 0) 
+      row = forward_paths[diagonal_pos + 1].y + 1;
+    else
+      row = forward_paths[diagonal_pos + 1].y;
+
+  } else {
+
+    column = forward_paths[diagonal_pos - 1].x + 1;
+    row = forward_paths[diagonal_pos - 1].y;
+  }
+
+  int save_column = column;
+  int save_row = row;
+
+  struct point start_snake = { column, row };
+
+// fprintf(stderr, "Point: (%d, %d)->", column, row);
+  while(column < sequence_one_end && row < sequence_two_end && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
+
+    ++column;
+    ++row;
+
+  }
+// fprintf(stderr, "(%d, %d)\n", column, row);
+  forward_paths[diagonal_pos].x = column;
+  forward_paths[diagonal_pos].y = row;
+
+  return start_snake;
+
+}
+
 int compute_middle_snake(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end, struct point points[2],
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_end);
@@ -57,43 +98,15 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
-      int diagonal_pos = diagonal + center;
+      struct point start_snake = compure_forward_path(sequence_one, sequence_one_end, sequence_two, sequence_two_end,
+       forward_paths, distance, diagonal, center, compare, accessor, context);
 
-      int column, row;
-      if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x)) {
-
-        column = forward_paths[diagonal_pos + 1].x;
-        if(distance != 0) 
-          row = forward_paths[diagonal_pos + 1].y + 1;
-        else
-          row = forward_paths[diagonal_pos + 1].y;
-
-      } else {
-
-        column = forward_paths[diagonal_pos - 1].x + 1;
-        row = forward_paths[diagonal_pos - 1].y;
-      }
-
-      int save_column = column;
-      int save_row = row;
-// fprintf(stderr, "Point: (%d, %d)->", column, row);
-      while(column < sequence_one_end && row < sequence_two_end && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
-
-        ++column;
-        ++row;
-
-      }
-// fprintf(stderr, "(%d, %d)\n", column, row);
-
-      forward_paths[diagonal_pos].x = column;
-      forward_paths[diagonal_pos].y = row;
       // not sure if > or >= or if matters
       if(!is_even && diagonal >= (delta - (distance - 1)) && diagonal <= (delta + (distance - 1))
        && (forward_paths[diagonal_pos].x - forward_paths[diagonal_pos].y) == (reverse_paths[diagonal_pos].x - reverse_paths[diagonal_pos].y)
         && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].x) {
 
-        struct point start_snake = { save_column, save_row };
-        struct point end_snake = { column, row };
+        struct point end_snake = { forward_paths[diagonal_pos].x, forward_paths[diagonal_pos].y };
         points[0] = start_snake;
         points[1] = end_snake;
 
@@ -280,7 +293,7 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
   //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, str_compare, str_accessor, 0);
 
   return 0;
