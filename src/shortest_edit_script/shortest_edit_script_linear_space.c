@@ -23,7 +23,7 @@ struct point {
 
 };
 
-struct point compute_forward_path(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
+struct point compute_next_forward_path_snake(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
   struct point * forward_paths, int distance, int diagonal, int diagonal_pos,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
@@ -62,7 +62,7 @@ struct point compute_forward_path(const void * sequence_one, int sequence_one_en
 
 }
 
-struct point compute_reverse_path(const void * sequence_one, int sequence_one_start, const void * sequence_two, int sequence_two_start,
+struct point compute_next_reverse_path_snake(const void * sequence_one, int sequence_one_start, const void * sequence_two, int sequence_two_start,
   struct point * reverse_paths, int distance, int diagonal, int diagonal_pos,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
@@ -121,12 +121,16 @@ struct point compute_reverse_path(const void * sequence_one, int sequence_one_st
 
 int compute_middle_snake(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end, struct point points[2],
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
+
 // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_end);
 // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_end);
+
   // compute delta
   int delta = (sequence_one_end - sequence_one_start) - (sequence_two_end - sequence_two_start);
   int is_even = delta % 2 == 0;
+
 // fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, is_even ? "true" : "false");
+
   // compute center
   int center = ceil(((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) / 2) + 1;
 
@@ -151,11 +155,12 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
+
    // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + center;
 
-      struct point start_snake = compute_forward_path(sequence_one, sequence_one_end, sequence_two, sequence_two_end,
+      struct point start_snake = compute_next_forward_path_snake(sequence_one, sequence_one_end, sequence_two, sequence_two_end,
         forward_paths, distance, diagonal, diagonal_pos, compare, accessor, context);
 
       // not sure if > or >= or if matters
@@ -177,14 +182,16 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
     }
 
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
+
    // (stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + delta + center;
 
-      struct point end_snake = compute_reverse_path(sequence_one, sequence_one_start, sequence_two, sequence_two_start,
+      struct point end_snake = compute_next_reverse_path_snake(sequence_one, sequence_one_start, sequence_two, sequence_two_start,
         reverse_paths, distance, diagonal, diagonal_pos, compare, accessor, context);
 
 // fprintf(stderr, "(%d, %d)\n", reverse_paths[diagonal_pos].x, reverse_paths[diagonal_pos].y);
+
       if(is_even && (diagonal + delta) >= -distance && (diagonal + delta) <= distance
        && (forward_paths[diagonal_pos].x - forward_paths[diagonal_pos].y) == (reverse_paths[diagonal_pos].x - reverse_paths[diagonal_pos].y)
         && forward_paths[diagonal_pos].x >= reverse_paths[diagonal_pos].x) {
@@ -232,15 +239,18 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 */
 int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
+
 // (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_start);
 // (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_one_end);
 // (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_start);
 // (stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, sequence_two_end);
+
   int distance = -2;
   if((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0) {
 
     struct point points[2];
     distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
+
     // fprintf(stderr, "Point: (%d, %d)\n", points[0].x, points[0].y);
     // fprintf(stderr, "Point: (%d, %d)\n", points[1].x, points[1].y);
     // fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, distance);
