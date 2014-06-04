@@ -30,7 +30,7 @@ struct point compute_next_forward_path_snake(const void * sequence_one, int sequ
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
   int column, row;
-  if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x)) {
+  if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x <= forward_paths[diagonal_pos + 1].x)) {
 
     column = forward_paths[diagonal_pos + 1].x;
     if(distance != 0) 
@@ -149,7 +149,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
   for(distance = 0; distance <= center; ++distance ) {
 
     int diagonal;
-    for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
+    for(diagonal = distance; diagonal >= -distance; diagonal -= 2) {
 
       int diagonal_pos = diagonal + center;
 
@@ -174,7 +174,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
     }
 
-    for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
+    for(diagonal = distance; diagonal >= -distance; diagonal -= 2) {
 
       int diagonal_pos = diagonal + delta + center;
 
@@ -399,20 +399,20 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
   //const char * sequence_two[] = { "b", "c", "d", "e" };
-  const char * sequence_one[] = { "a", "b", "c", "d" };
-  const char * sequence_two[] = { "a", "b", "e", "f" };
+  //const char * sequence_one[] = { "a", "b", "c", "d" };
+  //const char * sequence_two[] = { "a", "b", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
   //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
   //const char * sequence_one[] = { "a", "b", "b", "a", "c", "b", "a" };
   //const char * sequence_two[] = { "c", "a", "b", "a", "b", "c" };
-  //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
-  //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
+  const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
+  const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
   struct edit * edit_script;
 
-  shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, &edit_script, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, &edit_script, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, &edit_script, str_compare, str_accessor, 0);
 
   for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
 
