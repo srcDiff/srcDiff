@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <shortest_edit_script.h>
+
 struct point {
 
   int x;
@@ -224,42 +226,146 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
+
+int shortest_edit_script_linear_space_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
+  struct edit ** edit_script, struct edit ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
+
+  if(edit_script) (*edit_script) = 0;
+  if(last_edit) (*last_edit) = 0;
 
   int distance = -2;
   if((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0) {
 
     struct point points[2];
     distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
-
+fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
     if(distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
     if(distance > 1) {
 
-      shortest_edit_script_linear_space(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, compare, accessor, context);
-      int pos;
-      for(pos = points[0].x; pos < points[1].x; ++pos)
-        fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
-      shortest_edit_script_linear_space(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, compare, accessor, context);
+      struct edit * previous_edits = 0;
+      struct edit * previous_last_edit = 0;
+      shortest_edit_script_linear_space_inner(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, &previous_edits, &previous_last_edit, compare, accessor, context);
 
-    } else if((sequence_two_end - sequence_two_start) > (sequence_one_end - sequence_one_start)) {
+      if(edit_script) (*edit_script) = previous_edits;
 
-        size_t pos;
-        for(pos = sequence_one_start; pos < sequence_one_end; ++pos)
-          fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
+      // int pos;
+      // for(pos = points[0].x; pos < points[1].x; ++pos)
+      //   fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
+
+      struct edit * new_edits = 0;
+      struct edit * next_last_edit = 0;
+      shortest_edit_script_linear_space_inner(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, &new_edits, &next_last_edit, compare, accessor, context);
+
+      previous_last_edit->next = new_edits;
+      new_edits->previous = previous_last_edit;
+
+      if(last_edit) (*last_edit) = next_last_edit;
+
+    } else if((sequence_two_end - sequence_two_start) < (sequence_one_end - sequence_one_start)) {
+
+      // fprintf(stderr, "Range Old: %d->%d\n", sequence_one_start, sequence_one_end);
+      // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
+      // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
+      struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
+      new_edit->operation = SESDELETE;
+
+      if((sequence_two_end - sequence_two_start) <= 0) {
+
+        new_edit->offset_sequence_one = points[0].x;
+        new_edit->offset_sequence_two = points[0].y;
+        new_edit->length = points[1].x - points[0].x;
+
+      } else if(points[0].x > sequence_one_start && points[0].y >= sequence_two_start 
+        && compare(accessor(points[0].x - 1, sequence_one, context), accessor(points[0].y, sequence_two, context), context) != 0) {
+
+        new_edit->offset_sequence_one = points[0].x - 1;
+        new_edit->offset_sequence_two = points[0].y;
+        new_edit->length = (points[0].x - 1) - sequence_one_start;
+
+      } else {
+
+        new_edit->offset_sequence_one = points[1].x + 1;
+        new_edit->offset_sequence_two = points[1].y;
+        new_edit->length = sequence_one_end - (points[1].x + 1); 
+
+      }
+
+      if(edit_script) (*edit_script) = new_edit;
+      if(last_edit) (*last_edit) = new_edit;
 
     } else {
 
-        size_t pos;
-        for(pos = sequence_two_start; pos < sequence_two_end; ++pos)
-          fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_two, context));
+      // fprintf(stderr, "Range Old: %d->%d\n", sequence_one_start, sequence_one_end);
+      // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
+      // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
+      struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
+      new_edit->operation = SESINSERT;
+
+      if((sequence_one_end - sequence_one_start) <= 0) {
+
+        new_edit->offset_sequence_one = points[0].x;
+        new_edit->offset_sequence_two = points[0].y;
+        new_edit->length = points[1].y - points[0].y;
+
+      } else if(points[0].x >= sequence_one_start && points[0].y > sequence_two_start 
+        && compare(accessor(points[0].x, sequence_one, context), accessor(points[0].y - 1, sequence_two, context), context) != 0) {
+
+        new_edit->offset_sequence_one = points[0].x;
+        new_edit->offset_sequence_two = points[0].y - 1;
+        new_edit->length = (points[0].y - 1) - sequence_two_start;
+
+      } else {
+
+        new_edit->offset_sequence_one = points[1].x;
+        new_edit->offset_sequence_two = points[1].y + 1;
+        new_edit->length = sequence_two_end - (points[1].y + 1); 
+
+      }
+
+      if(edit_script) (*edit_script) = new_edit;
+      if(last_edit) (*last_edit) = new_edit;
 
     }
+
+  } else if(!((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0)) {
+
+    struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
+
+    if((sequence_one_end - sequence_one_start) > 0) {
+
+      new_edit->operation = SESDELETE;
+      new_edit->offset_sequence_one = sequence_one_start;
+      new_edit->offset_sequence_two = sequence_two_start;
+      new_edit->length = sequence_one_end - sequence_one_start;
+
+
+    } else if((sequence_two_end - sequence_two_start) > 0) {
+
+      new_edit->operation = SESINSERT;
+      new_edit->offset_sequence_one = sequence_one_start;
+      new_edit->offset_sequence_two = sequence_two_start;
+      new_edit->length = sequence_two_end - sequence_two_start;
+
+    }
+
+    if(edit_script) (*edit_script) = new_edit;
+    if(last_edit) (*last_edit) = new_edit;
 
   }
 
   return distance;
+
+}
+
+int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
+  struct edit ** edit_script,
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) { 
+
+  return shortest_edit_script_linear_space_inner(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end,
+    edit_script, 0,
+    compare, accessor, context);
 
 }
 
@@ -291,9 +397,19 @@ int main(int argc, char * argv[]) {
   //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
   //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
-  //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, str_compare, str_accessor, 0);
-  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, str_compare, str_accessor, 0);
+  struct edit * edit_script;
+
+  //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, &edit_script, str_compare, str_accessor, 0);
+
+  // for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
+
+  //   const char ** sequence = current_edit->operation == SESINSERT ? sequence_one : sequence_two;
+  //   fprintf(stdout, "%s ", sequence[current_edit->operation == SESDELETE ? current_edit->offset_sequence_one : current_edit->offset_sequence_two]);
+
+  // }
+
 
   return 0;
 
