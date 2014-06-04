@@ -231,6 +231,8 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
   struct edit ** edit_script, struct edit ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
 
+  //fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", sequence_one_start, sequence_two_start, sequence_one_end, sequence_two_end);
+
   if(edit_script) (*edit_script) = 0;
   if(last_edit) (*last_edit) = 0;
 
@@ -239,7 +241,10 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     struct point points[2];
     distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
-fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
+
+    //fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
+    //fprintf(stderr, "Distance: %d\n", distance);
+
     if(distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
     if(distance > 1) {
@@ -277,20 +282,20 @@ fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1]
 
         new_edit->offset_sequence_one = points[0].x;
         new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = points[1].x - points[0].x;
+        new_edit->length = 1;
 
       } else if(points[0].x > sequence_one_start && points[0].y >= sequence_two_start 
         && compare(accessor(points[0].x - 1, sequence_one, context), accessor(points[0].y, sequence_two, context), context) != 0) {
 
         new_edit->offset_sequence_one = points[0].x - 1;
         new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = (points[0].x - 1) - sequence_one_start;
+        new_edit->length = 1;
 
       } else {
 
         new_edit->offset_sequence_one = points[1].x + 1;
         new_edit->offset_sequence_two = points[1].y;
-        new_edit->length = sequence_one_end - (points[1].x + 1); 
+        new_edit->length = 1;
 
       }
 
@@ -311,20 +316,20 @@ fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1]
 
         new_edit->offset_sequence_one = points[0].x;
         new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = points[1].y - points[0].y;
+        new_edit->length = 1;
 
       } else if(points[0].x >= sequence_one_start && points[0].y > sequence_two_start 
         && compare(accessor(points[0].x, sequence_one, context), accessor(points[0].y - 1, sequence_two, context), context) != 0) {
 
         new_edit->offset_sequence_one = points[0].x;
         new_edit->offset_sequence_two = points[0].y - 1;
-        new_edit->length = (points[0].y - 1) - sequence_two_start;
+        new_edit->length = 1;
 
       } else {
 
         new_edit->offset_sequence_one = points[1].x;
         new_edit->offset_sequence_two = points[1].y + 1;
-        new_edit->length = sequence_two_end - (points[1].y + 1); 
+        new_edit->length = 1;
 
       }
 
@@ -394,10 +399,10 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
   //const char * sequence_two[] = { "b", "c", "d", "e" };
-  //const char * sequence_one[] = { "a", "b", "c", "d" };
-  //const char * sequence_two[] = { "a", "b", "e", "f" };
-  const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
-  const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
+  const char * sequence_one[] = { "a", "b", "c", "d" };
+  const char * sequence_two[] = { "a", "b", "e", "f" };
+  //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
+  //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
   //const char * sequence_one[] = { "a", "b", "b", "a", "c", "b", "a" };
   //const char * sequence_two[] = { "c", "a", "b", "a", "b", "c" };
   //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
@@ -405,15 +410,19 @@ int main(int argc, char * argv[]) {
 
   struct edit * edit_script;
 
-  //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
-  shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, &edit_script, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, &edit_script, str_compare, str_accessor, 0);
 
   for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
 
     const char ** sequence = current_edit->operation == SESDELETE ? sequence_one : sequence_two;
-    fprintf(stderr, "%s: ",current_edit->operation == SESDELETE ? "DELETE" : "INSERT");
-    fprintf(stderr, "%s\n", sequence[current_edit->operation == SESDELETE ? current_edit->offset_sequence_one : current_edit->offset_sequence_two]);
+    for(int i = 0; i < current_edit->length; ++i) {
+
+      fprintf(stderr, "%s: ",current_edit->operation == SESDELETE ? "DELETE" : "INSERT");
+      fprintf(stderr, "%s\n", sequence[current_edit->operation == SESDELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
+
+    }
 
   }
 
