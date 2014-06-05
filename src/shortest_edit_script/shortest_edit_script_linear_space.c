@@ -236,7 +236,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
   if(edit_script) (*edit_script) = 0;
   if(last_edit) (*last_edit) = 0;
 
-  int distance = -2;
+  int distance = 0;
   if((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0) {
 
     struct point points[2];
@@ -338,7 +338,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     }
 
-  } else if(!((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0)) {
+  } else if((sequence_one_end - sequence_one_start) > 0 || (sequence_two_end - sequence_two_start) > 0) {
 
     struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
     new_edit->previous = 0;
@@ -370,17 +370,16 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
 }
 
-int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
+int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
   struct edit ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) { 
 
-  return shortest_edit_script_linear_space_inner(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end,
-    edit_script, 0,
+  return shortest_edit_script_linear_space_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0,
     compare, accessor, context);
 
 }
 
-//#if 0
+#if 0
 int str_compare(const void * str_one, const void * str_two, const void * context) {
 
   return strcmp((const char *)str_one, (const char *)str_two);
@@ -395,8 +394,8 @@ const void * str_accessor(int index, const void * array, const void * context) {
 
 int main(int argc, char * argv[]) {
 
-  //const char * sequence_one[] = { "a", "b", "c", "e" };
-  //const char * sequence_two[] = { "a", "c", "e", "f" };
+  const char * sequence_one[] = { "a", "b", "c", "e" };
+  const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
   //const char * sequence_two[] = { "b", "c", "d", "e" };
   //const char * sequence_one[] = { "a", "b", "c", "d" };
@@ -405,20 +404,22 @@ int main(int argc, char * argv[]) {
   //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
   //const char * sequence_one[] = { "a", "b", "b", "a", "c", "b", "a" };
   //const char * sequence_two[] = { "c", "a", "b", "a", "b", "c" };
-  const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
-  const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
+  //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
+  //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
   struct edit * edit_script;
 
-  //shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, &edit_script, str_compare, str_accessor, 0);
-  shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, &edit_script, str_compare, str_accessor, 0);
 
   for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
 
     const char ** sequence = current_edit->operation == SESDELETE ? sequence_one : sequence_two;
     for(int i = 0; i < current_edit->length; ++i) {
 
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_one);
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_two);
       fprintf(stderr, "%s: ",current_edit->operation == SESDELETE ? "DELETE" : "INSERT");
       fprintf(stderr, "%s\n", sequence[current_edit->operation == SESDELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
 
@@ -430,4 +431,4 @@ int main(int argc, char * argv[]) {
 
 }
 
-//#endif
+#endif
