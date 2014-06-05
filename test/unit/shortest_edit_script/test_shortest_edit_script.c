@@ -230,7 +230,7 @@ int main(int argc, char * argv[]) {
     // One Edit Stack
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit last_edit = { SESINSERT, 201, 101, 50, NULL, NULL };
+    struct edit last_edit = { SESINSERT, 200, 101, 50, NULL, NULL };
     struct edit * edit_script;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
@@ -263,7 +263,7 @@ int main(int argc, char * argv[]) {
     }
 
     last_edit->operation               = SESINSERT;
-    last_edit->offset_sequence_one     = 201;
+    last_edit->offset_sequence_one     = 200;
     last_edit->offset_sequence_two     = 101;
     last_edit->length                  = 50;
 
@@ -293,8 +293,8 @@ int main(int argc, char * argv[]) {
     // Two SESInsert Edit Condense one
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &first_edit };
 
     struct edit * edit_script;
 
@@ -318,8 +318,8 @@ int main(int argc, char * argv[]) {
     // Two SESInsert Edit No Condense
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESINSERT, 2, 1, 1, NULL, &first_edit };
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &first_edit };
 
     struct edit * edit_script;
 
@@ -353,8 +353,8 @@ int main(int argc, char * argv[]) {
     // Two SESDelete Edit Condense
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 2, 1, 1, NULL, &first_edit };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
 
@@ -380,8 +380,8 @@ int main(int argc, char * argv[]) {
     // Two SESDelete Edit No Condense
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 1, 1, 1, NULL, &first_edit };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
 
@@ -415,8 +415,8 @@ int main(int argc, char * argv[]) {
     // Two SESInsert/SESDelete Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 2, 1, 1, NULL, &first_edit };
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
 
@@ -450,8 +450,8 @@ int main(int argc, char * argv[]) {
     // Two SESInsert/SESDelete Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 1, 1, 1, NULL, &first_edit };
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
 
@@ -485,43 +485,43 @@ int main(int argc, char * argv[]) {
     // Two SESDelete/SESInsert Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &first_edit };
+
+    struct edit * edit_script;
+
+    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
+
+    assert(make_edit_script(&last_edit, &edit_script) == 2);
+
+    struct edit * edit = edit_script;
+
+    assert(edit->operation               == SESDELETE);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    assert(edit->previous                == NULL);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    assert(edit->next                    == NULL);
+
+    free_shortest_edit_script(edit_script);
+
+  }
+
+  {
+    // Two SESDelete/SESInsert Edit
+    // operation, offset_sequence_one, offset_sequence_two, length, next, previous
+
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
     struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &first_edit };
-
-    struct edit * edit_script;
-
-    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
-
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
-
-    struct edit * edit = edit_script;
-
-    assert(edit->operation               == SESDELETE);
-    assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == 0);
-    assert(edit->length                  == 1);
-
-    assert(edit->previous                == NULL);
-
-    edit = edit->next;
-
-    assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == 0);
-    assert(edit->length                  == 1);
-
-    assert(edit->next                    == NULL);
-
-    free_shortest_edit_script(edit_script);
-
-  }
-
-  {
-    // Two SESDelete/SESInsert Edit
-    // operation, offset_sequence_one, offset_sequence_two, length, next, previous
-
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESINSERT, 2, 1, 1, NULL, &first_edit };
 
     struct edit * edit_script;
 
@@ -555,9 +555,9 @@ int main(int argc, char * argv[]) {
     // Three SESInsert Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESINSERT, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit middle_edit = { SESINSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
@@ -583,81 +583,81 @@ int main(int argc, char * argv[]) {
     // Three SESInsert Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESINSERT, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 2, 1, 1, NULL, &middle_edit };
-
-    struct edit * edit_script;
-
-    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
-
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
-
-    struct edit * edit = edit_script;
-
-    assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == 0);
-    assert(edit->length                  == 2);
-
-    assert(edit->previous                == NULL);
-
-    edit = edit->next;
-
-    assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 1);
-    assert(edit->offset_sequence_two     == 0);
-    assert(edit->length                  == 1);
-
-    assert(edit->next                    == NULL);
-
-    free_shortest_edit_script(edit_script);
-
-  }
-
-  {
-    // Three SESInsert Edit
-    // operation, offset_sequence_one, offset_sequence_two, length, next, previous
-
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESINSERT, 2, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 2, 1, 1, NULL, &middle_edit };
-
-    struct edit * edit_script;
-
-    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
-
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
-
-    struct edit * edit = edit_script;
-
-    assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == 0);
-    assert(edit->length                  == 1);
-
-    assert(edit->previous                == NULL);
-
-    edit = edit->next;
-
-    assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 1);
-    assert(edit->offset_sequence_two     == 0);
-    assert(edit->length                  == 2);
-
-    assert(edit->next                    == NULL);
-
-    free_shortest_edit_script(edit_script);
-
-  }
-
-  {
-    // Three SESInsert Edit
-    // operation, offset_sequence_one, offset_sequence_two, length, next, previous
-
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESINSERT, 2, 1, 1, NULL, &first_edit };
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit middle_edit = { SESINSERT, 0, 1, 1, NULL, &first_edit };
     struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
+
+    struct edit * edit_script;
+
+    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
+
+    assert(make_edit_script(&last_edit, &edit_script) == 2);
+
+    struct edit * edit = edit_script;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 2);
+
+    assert(edit->previous                == NULL);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 1);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    assert(edit->next                    == NULL);
+
+    free_shortest_edit_script(edit_script);
+
+  }
+
+  {
+    // Three SESInsert Edit
+    // operation, offset_sequence_one, offset_sequence_two, length, next, previous
+
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit middle_edit = { SESINSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
+
+    struct edit * edit_script;
+
+    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
+
+    assert(make_edit_script(&last_edit, &edit_script) == 2);
+
+    struct edit * edit = edit_script;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    assert(edit->previous                == NULL);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 1);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 2);
+
+    assert(edit->next                    == NULL);
+
+    free_shortest_edit_script(edit_script);
+
+  }
+
+  {
+    // Three SESInsert Edit
+    // operation, offset_sequence_one, offset_sequence_two, length, next, previous
+
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit middle_edit = { SESINSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
@@ -698,9 +698,9 @@ int main(int argc, char * argv[]) {
     // Three SESDelete Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESDELETE, 2, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 3, 1, 1, NULL, &middle_edit };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit middle_edit = { SESDELETE, 2, 0, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESDELETE, 3, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
@@ -726,9 +726,9 @@ int main(int argc, char * argv[]) {
     // Three SESDelete Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESDELETE, 2, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 2, 1, 1, NULL, &middle_edit };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit middle_edit = { SESDELETE, 2, 0, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
@@ -762,9 +762,9 @@ int main(int argc, char * argv[]) {
     // Three SESDelete Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESDELETE, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 2, 1, 1, NULL, &middle_edit };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit middle_edit = { SESDELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
@@ -798,9 +798,9 @@ int main(int argc, char * argv[]) {
     // Three SESDelete Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESDELETE, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 1, 1, 1, NULL, &middle_edit };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit middle_edit = { SESDELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
@@ -841,9 +841,9 @@ int main(int argc, char * argv[]) {
     // Three SESInsert/SESDelete Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESINSERT, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESDELETE, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
+    struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
+    struct edit middle_edit = { SESDELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
@@ -884,9 +884,9 @@ int main(int argc, char * argv[]) {
     // Three SESDelete/SESInsert Edit
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit first_edit = { SESDELETE, 1, 1, 1, NULL, NULL };
-    struct edit middle_edit = { SESINSERT, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 1, 1, 1, NULL, &middle_edit };
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit middle_edit = { SESINSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
