@@ -417,7 +417,7 @@ int merge_sequential_edits(struct edit ** edit_script) {
 
         // add adjacent edit
         current_edit->next = current_edit->next->next;
-        current_edit->next->previous = current_edit;
+        if(current_edit->next) current_edit->next->previous = current_edit;
 
         // delete edit
         free(save_edit);
@@ -439,7 +439,7 @@ int merge_sequential_edits(struct edit ** edit_script) {
 
         // add adjacent edit
         current_edit->next = current_edit->next->next;
-        current_edit->next->previous = current_edit;
+        if(current_edit->next) current_edit->next->previous = current_edit;
 
         // delete edit
         free(save_edit);
