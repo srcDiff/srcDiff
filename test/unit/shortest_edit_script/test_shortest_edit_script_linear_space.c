@@ -50,7 +50,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit_script == NULL);
 
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -70,7 +70,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit_script == NULL);
 
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -98,7 +98,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
 
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -126,7 +126,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -153,7 +153,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
 
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -181,7 +181,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -208,7 +208,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
  
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -235,7 +235,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -262,7 +262,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -289,7 +289,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -316,7 +316,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -343,7 +343,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -370,7 +370,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -397,7 +397,7 @@ int main(int argc, char * argv[]) {
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -424,7 +424,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -452,7 +452,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -480,7 +480,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -508,7 +508,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   
   }
 
@@ -544,7 +544,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -579,7 +579,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   {
@@ -615,7 +615,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
   
-    free_shortest_edit_script_linear_space(edit_script);
+    free_shortest_edit_script(edit_script);
   }
 
   return 0;

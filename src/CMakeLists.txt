@@ -32,13 +32,13 @@ endif()
 #
 # build_library
 #
-# Used to help with the creation of the srcML library.
+# Used to help with the creation of the srcdiff library.
 # - LIBRARY_NAME is the name of the library and target
 # - LIBRARY_TYPE is either STATIC or SHARED.
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
+    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization> oldclient/URIStream.cpp)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
@@ -48,7 +48,7 @@ else()
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcml)
 endif()
 
-    target_link_libraries(${LIBRARY_NAME} PRIVATE ${LIBSRCML_LIBRARIES})
+    target_link_libraries(${LIBRARY_NAME} PRIVATE ${LIBXML2_LIBRARIES} ${LIBSRCML_LIBRARY} pthread)
 
 endmacro()
 
@@ -65,4 +65,4 @@ elseif(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
 endif()
 
-install(TARGETS srcml_shared srcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS srcdiff_shared srcdiff_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
