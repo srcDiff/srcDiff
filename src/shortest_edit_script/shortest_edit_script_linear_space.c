@@ -133,8 +133,11 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
   int delta = (sequence_one_end - sequence_one_start) - (sequence_two_end - sequence_two_start);
   int is_even = delta % 2 == 0;
 
+  // compute max_distance
+  int max_distance = ceil(((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) / 2) + 1;
+
   // compute center
-  int center = ceil(((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) / 2) + 1;
+  int center = ((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) * 2 + 1;
 
   unsigned int paths_length = center * 2 + 1;
 
@@ -154,7 +157,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
   points[1] = end_point;
 
   int distance;
-  for(distance = 0; distance <= center; ++distance ) {
+  for(distance = 0; distance <= max_distance; ++distance ) {
 
     int diagonal;
     for(diagonal = distance; diagonal >= -distance; diagonal -= 2) {
