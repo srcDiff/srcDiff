@@ -325,8 +325,10 @@ int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
     }
 
     // correct offset
-    --current_edit->offset_sequence_one;
-    --current_edit->offset_sequence_two;
+    if(current_edit->operation == SESDELETE)
+      --current_edit->offset_sequence_one;
+    else
+      --current_edit->offset_sequence_two;
 
     current_edit = current_edit->next;
 
