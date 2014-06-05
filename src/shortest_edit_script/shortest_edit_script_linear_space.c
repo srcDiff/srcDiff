@@ -77,7 +77,7 @@ struct point compute_next_reverse_path_snake(const void * sequence_one, int sequ
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
       int row, column;
-      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y)) {
+      if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].x > reverse_paths[diagonal_pos - 1].x)) {
 
           row = reverse_paths[diagonal_pos - 1].y;
           column = reverse_paths[diagonal_pos - 1].x;
@@ -99,10 +99,9 @@ struct point compute_next_reverse_path_snake(const void * sequence_one, int sequ
 
       }
 
-
       if(distance > 0) {
 
-        if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].y > reverse_paths[diagonal_pos - 1].y)) {
+        if(diagonal == distance || (diagonal != -distance && reverse_paths[diagonal_pos + 1].x > reverse_paths[diagonal_pos - 1].x)) {
 
           reverse_paths[diagonal_pos].x = column;
           reverse_paths[diagonal_pos].y = row -= 1;
