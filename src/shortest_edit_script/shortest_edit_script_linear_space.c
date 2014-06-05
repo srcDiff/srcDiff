@@ -387,9 +387,9 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
   int edit_distance = shortest_edit_script_linear_space_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0,
     compare, accessor, context);
 
-  merge_sequential_edits(edit_script);
+  int edit_size = merge_sequential_edits(edit_script);
 
-  return edit_distance;
+  return edit_size;
 
 }
 
