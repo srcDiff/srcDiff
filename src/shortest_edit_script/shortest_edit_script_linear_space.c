@@ -292,7 +292,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
         new_edit->offset_sequence_two = points[0].y;
         new_edit->length = 1;
 
-      } else if((points[0].x <= sequence_one_end && points[0].y >= sequence_two_end)
+      } else if(points[0].x >= sequence_one_end
         || (points[0].x > sequence_one_start && points[0].y >= sequence_two_start 
         && compare(accessor(points[0].x - 1, sequence_one, context), accessor(points[0].y, sequence_two, context), context) != 0)) {
 
@@ -327,7 +327,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
         new_edit->offset_sequence_two = points[0].y;
         new_edit->length = 1;
 
-      } else if((points[0].x >= sequence_one_end && points[0].y <= sequence_two_end)
+      } else if(points[0].y >= sequence_two_end
        || (points[0].x >= sequence_one_start && points[0].y > sequence_two_start 
         && compare(accessor(points[0].x, sequence_one, context), accessor(points[0].y - 1, sequence_two, context), context) != 0)) {
 
