@@ -21,3 +21,4 @@
 
 include(config)
 include(install)
+include(testing)

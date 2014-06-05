@@ -34,3 +34,7 @@ add_definitions(-DREVISION=\"1\")
 
 # include sub directories
 add_subdirectory(src)
+
+if(BUILD_UNIT_TESTS)
+    add_subdirectory(test)
+endif()

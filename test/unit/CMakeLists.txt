@@ -1,7 +1,7 @@
 ##
-#  config.cmake
+#  CMakeLists.txt
 #
-#  Copyright (C) 2011-2011  SDML (www.sdml.info)
+#  Copyright (C) 2014  SDML (www.sdml.info)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -18,17 +18,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#
-#  Build configuration file
 
-# build options
-option(BUILD_UNIT_TESTS "Build unit tests for srcDiff" OFF)
-
-# find needed libraries
-find_package(LibXml2 REQUIRED)
-find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /usr/local/lib)
-set(LIBSRCML_INCLUDE_DIR /usr/local/include)
-
-# include needed includes
-include_directories(${LIBXML2_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR})
-
+# include sub directories
+add_subdirectory(shortest_edit_script)
