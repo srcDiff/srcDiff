@@ -384,7 +384,16 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
   struct edit ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) { 
 
-  shortest_edit_script_linear_space_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0,
+  int sequence_one_start = 0, sequence_two_start = 0;
+  while(sequence_one_start < sequence_one_end && sequence_two_start < sequence_two_end 
+    && compare(accessor(sequence_one_start, sequence_one, context), accessor(sequence_two_start, sequence_two, context), context) == 0) {
+
+    ++sequence_one_start;
+    ++sequence_two_start;
+
+  }
+
+  shortest_edit_script_linear_space_inner(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, edit_script, 0,
     compare, accessor, context);
 
   int edit_distance = merge_sequential_edits(edit_script);
