@@ -388,6 +388,8 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
   merge_sequential_edits(edit_script);
 
+  return edit_distance;
+
 }
 
 int merge_sequential_edits(struct edit ** edit_script) {
@@ -444,11 +446,13 @@ int merge_sequential_edits(struct edit ** edit_script) {
 
       }
 
-      current_edit = current_edit->next;
-
     }
 
+    current_edit = current_edit->next;
+
   }
+
+  return edit_distance;
 
 }
 
