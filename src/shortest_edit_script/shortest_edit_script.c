@@ -3,6 +3,8 @@
 
   Compute the shortest edit script between two sequences.
 
+  Miller and Myers Shortest Edit Script Algorithm.
+
   Michael J. Decker
   mjd52@zips.uakron.edu
 */
@@ -43,7 +45,9 @@ struct edit * copy_edit(struct edit * edit);
 
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two, int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), struct edit ** edit_script, const void * context) {
+int shortest_edit_script(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
+  struct edit ** edit_script, 
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
 
   // center to start building differences
@@ -323,8 +327,10 @@ int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
     }
 
     // correct offset
-    --current_edit->offset_sequence_one;
-    --current_edit->offset_sequence_two;
+    if(current_edit->operation == SESDELETE)
+      --current_edit->offset_sequence_one;
+    else
+      --current_edit->offset_sequence_two;
 
     current_edit = current_edit->next;
 

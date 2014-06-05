@@ -1,7 +1,7 @@
 ##
 #  CMakeLists.txt
 #
-#  Copyright (C) 2011-2011  SDML (www.sdml.info)
+#  Copyright (C) 2014  SDML (www.sdml.info)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -19,24 +19,5 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-cmake_minimum_required(VERSION 2.8)
-project(srcDiff)
-
-enable_testing()
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-include(srcdiff)
-
-# setup project includes
-include_directories(src/shortest_edit_script src/translator src/windows src/oldclient src/srcml	src/visualization)
-
-# get version and revision
-add_definitions(-DVERSION=\"1\")
-add_definitions(-DREVISION=\"1\")
-
 # include sub directories
-add_subdirectory(src)
-
-if(BUILD_UNIT_TESTS)
-    add_subdirectory(test)
-endif()
+add_subdirectory(shortest_edit_script)

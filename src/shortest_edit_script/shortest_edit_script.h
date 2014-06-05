@@ -24,6 +24,7 @@ extern "C" {
 
 // single edit script
 struct edit {
+
   int operation;
   int offset_sequence_one;
   int offset_sequence_two;
@@ -32,6 +33,7 @@ struct edit {
   // links
   struct edit * next;
   struct edit * previous;
+
 };
 
 /*
@@ -43,10 +45,14 @@ struct edit {
   Parameter sequence_two         The second sequence
   Parameter edit_script          The shortest edit script
 
-  Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
+  Returns The number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script(int sequence_one_size, const void * sequence_one, int sequence_two_size, const void * sequence_two, int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), struct edit ** edit_script, const void * context);
-
+int shortest_edit_script(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
+  struct edit ** edit_script, 
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);
+int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
+  struct edit ** edit_script,
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);
 
 /*
   Free the memory in a shortest edit script.

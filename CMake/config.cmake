@@ -21,6 +21,9 @@
 #
 #  Build configuration file
 
+# build options
+option(BUILD_UNIT_TESTS "Build unit tests for srcDiff" OFF)
+
 # find needed libraries
 find_package(LibXml2 REQUIRED)
 find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /usr/local/lib)

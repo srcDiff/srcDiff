@@ -12,9 +12,9 @@ ShortestEditScript::~ShortestEditScript() {
 
 }
 
-int ShortestEditScript::compute(int size_one, const void * structure_one, int size_two, const void * structure_two) {
+int ShortestEditScript::compute(const void * structure_one, int size_one, const void * structure_two, int size_two) {
 
-  return shortest_edit_script(size_one, structure_one, size_two, structure_two, compare, accessor, &edit_script, context);
+  return shortest_edit_script_linear_space(structure_one, size_one, structure_two, size_two, &edit_script, compare, accessor, context);
 
 }
 
