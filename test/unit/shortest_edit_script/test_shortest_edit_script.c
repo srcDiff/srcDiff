@@ -983,7 +983,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_one     == 1);
     assert(edit->offset_sequence_two     == 1);
     assert(edit->length                  == 1);
 
@@ -1012,7 +1012,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 1);
-    assert(edit->offset_sequence_two     == 0);
+    assert(edit->offset_sequence_two     == 1);
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
@@ -1038,7 +1038,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == -1);
+    assert(edit->offset_sequence_one     == 0);
     assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 1);
 
@@ -1067,7 +1067,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == -1);
+    assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
@@ -1093,7 +1093,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_one     == 1);
     assert(edit->offset_sequence_two     == 1);
     assert(edit->length                  == 1);
 
@@ -1121,7 +1121,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 1);
-    assert(edit->offset_sequence_two     == 0);
+    assert(edit->offset_sequence_two     == 1);
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
@@ -1148,7 +1148,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 2);
-    assert(edit->offset_sequence_two     == 1);
+    assert(edit->offset_sequence_two     == 2);
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
@@ -1174,7 +1174,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 1);
+    assert(edit->offset_sequence_one     == 2);
     assert(edit->offset_sequence_two     == 2);
     assert(edit->length                  == 1);
 
@@ -1202,7 +1202,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 3);
-    assert(edit->offset_sequence_two     == 2);
+    assert(edit->offset_sequence_two     == 3);
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
@@ -1228,7 +1228,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 2);
+    assert(edit->offset_sequence_one     == 3);
     assert(edit->offset_sequence_two     == 3);
     assert(edit->length                  == 1);
 
@@ -1256,7 +1256,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 2);
-    assert(edit->offset_sequence_two     == 1);
+    assert(edit->offset_sequence_two     == 2);
     assert(edit->length                  == 2);
 
     assert(edit->next                    == NULL);
@@ -1282,7 +1282,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 1);
+    assert(edit->offset_sequence_one     == 2);
     assert(edit->offset_sequence_two     == 2);
     assert(edit->length                  == 2);
 
@@ -1311,7 +1311,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == -1);
+    assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 5);
 
     assert(edit->next                    == NULL);
@@ -1338,7 +1338,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == -1);
+    assert(edit->offset_sequence_one     == 0);
     assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 5);
 
@@ -1367,7 +1367,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == -1);
+    assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 5);
 
     assert(edit->next                    == NULL);
@@ -1394,7 +1394,7 @@ int main(int argc, char * argv[]) {
     struct edit * edit = edit_script;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == -1);
+    assert(edit->offset_sequence_one     == 0);
     assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 5);
 
@@ -1422,7 +1422,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 3);
-    assert(edit->offset_sequence_two     == 2);
+    assert(edit->offset_sequence_two     == 3);
     assert(edit->length                  == 1);
 
     assert(edit->previous                == NULL);
@@ -1430,7 +1430,7 @@ int main(int argc, char * argv[]) {
     edit = edit->next;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 3);
+    assert(edit->offset_sequence_one     == 4);
     assert(edit->offset_sequence_two     == 3);
     assert(edit->length                  == 1);
 
@@ -1457,7 +1457,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 2);
-    assert(edit->offset_sequence_two     == 1);
+    assert(edit->offset_sequence_two     == 2);
     assert(edit->length                  == 2);
 
     assert(edit->previous                == NULL);
@@ -1465,7 +1465,7 @@ int main(int argc, char * argv[]) {
     edit = edit->next;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 3);
+    assert(edit->offset_sequence_one     == 4);
     assert(edit->offset_sequence_two     == 2);
     assert(edit->length                  == 2);
 
@@ -1493,7 +1493,7 @@ int main(int argc, char * argv[]) {
 
     assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 0);
-    assert(edit->offset_sequence_two     == -1);
+    assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 5);
 
     assert(edit->previous                == NULL);
@@ -1501,7 +1501,7 @@ int main(int argc, char * argv[]) {
     edit = edit->next;
 
     assert(edit->operation               == SESINSERT);
-    assert(edit->offset_sequence_one     == 4);
+    assert(edit->offset_sequence_one     == 5);
     assert(edit->offset_sequence_two     == 0);
     assert(edit->length                  == 5);
 
