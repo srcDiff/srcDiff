@@ -1,5 +1,5 @@
 /*
-  Shortest_edit_script_t.c
+  test_hortest_edit_script.c
 
   Unit tests for shortest_edit_script.
 
