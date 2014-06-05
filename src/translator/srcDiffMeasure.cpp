@@ -29,7 +29,7 @@ void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std:
   text_old_length = node_set_old_text.size();
   text_new_length = node_set_new_text.size();
 
-  ses.compute(node_set_old_text.size(), (const void *)&node_set_old_text, node_set_new_text.size(), (const void *)&node_set_new_text);
+  ses.compute((const void *)&node_set_old_text, node_set_old_text.size(), (const void *)&node_set_new_text, node_set_new_text.size());
 
 }
 
@@ -165,8 +165,8 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set
       node_set_new_text.push_back(node_set_new->at(i));
 
   edit * edit_script;
-  shortest_edit_script(node_set_old_text.size(), (void *)&node_set_old_text, node_set_new_text.size(),
-                       (void *)&node_set_new_text, node_index_compare, node_index, &edit_script, &dnodes);
+  shortest_edit_script((void *)&node_set_old_text, node_set_old_text.size(),
+                       (void *)&node_set_new_text, node_set_new_text.size(), &edit_script, node_index_compare, node_index, &dnodes);
 
   edit * edits = edit_script;
   unsigned int similarity = 0;

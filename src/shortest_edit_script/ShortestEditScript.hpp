@@ -22,7 +22,7 @@ public:
 
   edit * get_script();
 
-  int compute(int size_one, const void * structure_one, int size_two, const void * structure_two);
+  int compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
 
   //void reset();
 

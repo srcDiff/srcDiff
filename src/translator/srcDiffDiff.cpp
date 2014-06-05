@@ -239,7 +239,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
-  int distance = ses.compute(node_sets_old->size(), (const void *)node_sets_old, node_sets_new->size(), (const void *)node_sets_new);
+  int distance = ses.compute((const void *)node_sets_old, node_sets_old->size(), (const void *)node_sets_new, node_sets_new->size());
 
   edit * edit_script = ses.get_script();
 

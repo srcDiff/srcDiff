@@ -211,7 +211,7 @@ void startDocument(void* ctx) {
 
     edit * edit_script;
 
-    int distance = shortest_edit_script(path_one.size(), &path_one, path_two.size(), &path_two, line_compare, line_accessor, &edit_script, NULL);
+    int distance = shortest_edit_script(&path_one, path_one.size(), &path_two, path_two.size(), &edit_script, line_compare, line_accessor, NULL);
 
     if(distance < 0) {
 
