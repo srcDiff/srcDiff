@@ -244,18 +244,18 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
   if(edit_script) (*edit_script) = 0;
   if(last_edit) (*last_edit) = 0;
 
-  int distance = 0;
+  int edit_distance = 0;
   if((sequence_one_end - sequence_one_start) > 0 && (sequence_two_end - sequence_two_start) > 0) {
 
     struct point points[2];
-    distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
+    edit_distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
 
     //fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
-    //fprintf(stderr, "Distance: %d\n", distance);
+    //fprintf(stderr, "Distance: %d\n", edit_distance);
 
-    if(distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
+    if(edit_distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
-    if(distance > 1) {
+    if(edit_distance > 1) {
 
       struct edit * previous_edits = 0;
       struct edit * previous_last_edit = 0;
@@ -376,7 +376,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
   }
 
-  return distance;
+  return edit_distance;
 
 }
 
@@ -384,12 +384,12 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
   struct edit ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) { 
 
-  int edit_distance = shortest_edit_script_linear_space_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0,
+  shortest_edit_script_linear_space_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0,
     compare, accessor, context);
 
-  int edit_size = merge_sequential_edits(edit_script);
+  int edit_distance = merge_sequential_edits(edit_script);
 
-  return edit_size;
+  return edit_distance;
 
 }
 
