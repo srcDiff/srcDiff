@@ -379,7 +379,7 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
 
 }
 
-#if 0
+//#if 0
 int str_compare(const void * str_one, const void * str_two, const void * context) {
 
   return strcmp((const char *)str_one, (const char *)str_two);
@@ -409,9 +409,9 @@ int main(int argc, char * argv[]) {
 
   struct edit * edit_script;
 
-  shortest_edit_script_linear_space(sequence_one, 0, 4, sequence_two, 0, 4, &edit_script, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 0, 7, sequence_two, 0, 6, &edit_script, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 0, 10, sequence_two, 0, 14, &edit_script, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 7, sequence_two, 6, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script_linear_space(sequence_one, 10, sequence_two, 14, &edit_script, str_compare, str_accessor, 0);
 
   for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
 
@@ -431,4 +431,4 @@ fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current
 
 }
 
-#endif
+//#endif
