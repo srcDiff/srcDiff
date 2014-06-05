@@ -18,6 +18,15 @@
 
 #include <shortest_edit_script.h>
 
+/*
+  Make a compact edit script from the found edits.
+
+  Parameter edit_script          The shortest edit script
+
+  Returns -1 on fail, 0 otherwise
+*/
+int merge_sequential_edits(struct edit ** edit_script);
+
 struct point {
 
   int x;
@@ -374,8 +383,72 @@ int shortest_edit_script_linear_space(const void * sequence_one, int sequence_on
   struct edit ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) { 
 
-  return shortest_edit_script_linear_space_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0,
+  int edit_distance = shortest_edit_script_linear_space_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0,
     compare, accessor, context);
+
+  merge_sequential_edits(edit_script);
+
+}
+
+int merge_sequential_edits(struct edit ** edit_script) {
+
+  int edit_distance = 0;
+  struct edit * current_edit = *edit_script;
+
+  // condense edit script
+  while(current_edit != NULL) {
+
+    ++edit_distance;
+
+    // condense insert edit
+    if(current_edit->operation == SESINSERT) {
+
+      while(current_edit->next != NULL
+            && (current_edit->operation == current_edit->next->operation)
+            && (current_edit->offset_sequence_one == current_edit->next->offset_sequence_one)) {
+
+        // update length
+        current_edit->length += current_edit->next->length;
+
+        // save edit for deletion
+        struct edit * save_edit = current_edit->next;
+
+        // add adjacent edit
+        current_edit->next = current_edit->next->next;
+        current_edit->next->previous = current_edit;
+
+        // delete edit
+        free(save_edit);
+
+      }
+
+    // condense delete
+    } else {
+
+      while(current_edit->next != NULL
+            && (current_edit->operation == current_edit->next->operation)
+            && ((current_edit->offset_sequence_one + current_edit->length) == current_edit->next->offset_sequence_one)) {
+
+        // update length
+        current_edit->length += current_edit->next->length;
+
+        // save edit for deletion
+        struct edit * save_edit = current_edit->next;
+
+        // add adjacent edit
+        current_edit->next = current_edit->next->next;
+        current_edit->next->previous = current_edit;
+
+        // delete edit
+        free(save_edit);
+
+      }
+
+      current_edit = current_edit->next;
+
+    }
+
+  }
 
 }
 
