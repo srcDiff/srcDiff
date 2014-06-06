@@ -7,7 +7,8 @@
   mjd52@zips.uakron.edu
 */
 
-#include "shortest_edit_script.h"
+#include <shortest_edit_script.h>
+#include <shortest_edit_script_private.h>
 
 #include <stdlib.h>
 #include <stdio.h>
