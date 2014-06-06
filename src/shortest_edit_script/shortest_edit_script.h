@@ -53,6 +53,10 @@ int shortest_edit_script(const void * sequence_one, int sequence_one_size, const
 int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
   struct edit ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);
+int shortest_edit_script_hybrid(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
+  struct edit ** edit_script,
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context,
+  int threshold);
 
 /*
   Free the memory in a shortest edit script.
