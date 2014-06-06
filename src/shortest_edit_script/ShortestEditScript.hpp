@@ -10,13 +10,13 @@ private:
   const void * context;
   int (*compare)(const void * item_one, const void * item_two, const void * context);
   const void * (*accessor)(int index, const void * structure, const void * context);
-
+  int threshold;
 
 public:
 
   ShortestEditScript(int (*compare)(const void * item_one, const void * item_two, const void * context),
                      const void * (*accessor)(int index, const void * structure, const void * context),
-                                        const void * context);
+                                        const void * context, int threshold = 1000);
 
   ~ShortestEditScript();
 
