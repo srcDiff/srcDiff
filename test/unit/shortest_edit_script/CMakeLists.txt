@@ -22,3 +22,4 @@
 # add tests
 add_unit_test(test_shortest_edit_script.c)
 add_unit_test(test_shortest_edit_script_linear_space.c)
+add_unit_test(test_shortest_edit_script_hybrid.c)

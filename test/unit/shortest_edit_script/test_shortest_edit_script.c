@@ -7,8 +7,8 @@
   mjd52@zips.uakron.edu
 */
 
-#include "shortest_edit_script.h"
-#include "shortest_edit_script.c"
+#include <shortest_edit_script.h>
+#include <shortest_edit_script_private.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -219,10 +219,25 @@ int main(int argc, char * argv[]) {
   {
     // NULL
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(NULL, &edit_script) == 0);
+    assert(make_edit_script(NULL, &edit_script, NULL) == 0);
+
+  } 
+
+  {
+    // NULL
+    struct edit * edit_script;
+    struct edit * last_edit;
+
+    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
+
+    assert(make_edit_script(NULL, &edit_script, &last_edit) == 0);
+
+    assert(edit_script == NULL);
+    assert(last_edit   == NULL);
 
   }
 
@@ -230,12 +245,13 @@ int main(int argc, char * argv[]) {
     // One Edit Stack
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit last_edit = { SESINSERT, 200, 101, 50, NULL, NULL };
+    struct edit start_edit = { SESINSERT, 200, 101, 50, NULL, NULL };
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 1);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 1);
 
     assert(edit_script->operation               == SESINSERT);
     assert(edit_script->offset_sequence_one     == 200);
@@ -244,7 +260,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit_script->next                    == NULL);
     assert(edit_script->previous                == NULL);
-    
+
+    assert(edit_script == last_edit);
 
     free_shortest_edit_script(edit_script);
 
@@ -254,27 +271,28 @@ int main(int argc, char * argv[]) {
     // One Edit Malloc
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
-    struct edit * last_edit;
+    struct edit * start_edit;
 
-    if((last_edit = (struct edit *)malloc(sizeof(struct edit))) == NULL) {
+    if((start_edit = (struct edit *)malloc(sizeof(struct edit))) == NULL) {
 
       fprintf(stderr, "Malloc Error");
       return -1;
     }
 
-    last_edit->operation               = SESINSERT;
-    last_edit->offset_sequence_one     = 200;
-    last_edit->offset_sequence_two     = 101;
-    last_edit->length                  = 50;
+    start_edit->operation               = SESINSERT;
+    start_edit->offset_sequence_one     = 200;
+    start_edit->offset_sequence_two     = 101;
+    start_edit->length                  = 50;
 
-    last_edit->next = NULL;
-    last_edit->previous = NULL;
+    start_edit->next = NULL;
+    start_edit->previous = NULL;
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(last_edit, &edit_script) == 1);
+    assert(make_edit_script(start_edit, &edit_script, &last_edit) == 1);
 
     assert(edit_script->operation               == SESINSERT);
     assert(edit_script->offset_sequence_one     == 200);
@@ -283,8 +301,10 @@ int main(int argc, char * argv[]) {
 
     assert(edit_script->next                    == NULL);
     assert(edit_script->previous                == NULL);
+
+    assert(edit_script == last_edit);
     
-    free(last_edit);
+    free(start_edit);
     free_shortest_edit_script(edit_script);
 
   }
@@ -294,13 +314,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESINSERT, 0, 1, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 1);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 1);
 
     assert(edit_script->operation               == SESINSERT);
     assert(edit_script->offset_sequence_one     == 0);
@@ -309,6 +330,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit_script->next                    == NULL);
     assert(edit_script->previous                == NULL);
+
+    assert(edit_script == last_edit);
     
     free_shortest_edit_script(edit_script);
 
@@ -319,13 +342,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESINSERT, 1, 1, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -344,6 +368,8 @@ int main(int argc, char * argv[]) {
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
     
     free_shortest_edit_script(edit_script);
 
@@ -354,13 +380,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESDELETE, 2, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 1);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 1);
 
     struct edit * edit = edit_script;
 
@@ -371,6 +398,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
     assert(edit->previous                == NULL);
+
+    assert(edit == last_edit);
 
     free_shortest_edit_script(edit_script);
 
@@ -381,13 +410,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESDELETE, 1, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -406,6 +436,8 @@ int main(int argc, char * argv[]) {
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
     
     free_shortest_edit_script(edit_script);
 
@@ -416,13 +448,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESDELETE, 2, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -441,6 +474,8 @@ int main(int argc, char * argv[]) {
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
 
     free_shortest_edit_script(edit_script);
 
@@ -451,13 +486,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
-    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESDELETE, 1, 0, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -477,6 +513,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -486,13 +524,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
-    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESINSERT, 0, 1, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -512,6 +551,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -521,13 +562,14 @@ int main(int argc, char * argv[]) {
     // operation, offset_sequence_one, offset_sequence_two, length, next, previous
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
-    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESINSERT, 1, 1, 1, NULL, &first_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -546,6 +588,8 @@ int main(int argc, char * argv[]) {
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
 
     free_shortest_edit_script(edit_script);
 
@@ -557,13 +601,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
     struct edit middle_edit = { SESINSERT, 0, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 1);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 1);
 
     struct edit * edit = edit_script;
 
@@ -574,6 +619,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->previous                == NULL);
     assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
 
     free_shortest_edit_script(edit_script);
 
@@ -585,13 +632,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
     struct edit middle_edit = { SESINSERT, 0, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -611,6 +659,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -621,13 +671,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
     struct edit middle_edit = { SESINSERT, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESINSERT, 1, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -647,6 +698,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -657,13 +710,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
     struct edit middle_edit = { SESINSERT, 1, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 3);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 3);
 
     struct edit * edit = edit_script;
 
@@ -689,6 +743,8 @@ int main(int argc, char * argv[]) {
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
 
     free_shortest_edit_script(edit_script);
 
@@ -700,13 +756,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
     struct edit middle_edit = { SESDELETE, 2, 0, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 3, 0, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESDELETE, 3, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 1);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 1);
 
     struct edit * edit = edit_script;
 
@@ -718,6 +775,8 @@ int main(int argc, char * argv[]) {
     assert(edit->previous                == NULL);
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -728,13 +787,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
     struct edit middle_edit = { SESDELETE, 2, 0, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESDELETE, 2, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -754,6 +814,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -764,13 +826,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
     struct edit middle_edit = { SESDELETE, 1, 0, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 2, 0, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESDELETE, 2, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 2);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 2);
 
     struct edit * edit = edit_script;
 
@@ -790,6 +853,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -800,13 +865,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
     struct edit middle_edit = { SESDELETE, 1, 0, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESDELETE, 1, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 3);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 3);
 
     struct edit * edit = edit_script;
 
@@ -832,6 +898,8 @@ int main(int argc, char * argv[]) {
     assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
 
     free_shortest_edit_script(edit_script);
 
@@ -843,13 +911,14 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESINSERT, 0, 1, 1, NULL, NULL };
     struct edit middle_edit = { SESDELETE, 1, 0, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESINSERT, 0, 1, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
+    struct edit * last_edit;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 3);
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 3);
 
     struct edit * edit = edit_script;
 
@@ -876,6 +945,8 @@ int main(int argc, char * argv[]) {
 
     assert(edit->next                    == NULL);
 
+    assert(edit == last_edit);
+
     free_shortest_edit_script(edit_script);
 
   }
@@ -886,13 +957,59 @@ int main(int argc, char * argv[]) {
 
     struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
     struct edit middle_edit = { SESINSERT, 0, 1, 1, NULL, &first_edit };
-    struct edit last_edit =  { SESDELETE, 1, 0, 1, NULL, &middle_edit };
+    struct edit start_edit =  { SESDELETE, 1, 0, 1, NULL, &middle_edit };
+
+    struct edit * edit_script;
+    struct edit * last_edit;
+
+    fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
+
+    assert(make_edit_script(&start_edit, &edit_script, &last_edit) == 3);
+
+    struct edit * edit = edit_script;
+
+    assert(edit->operation               == SESDELETE);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    assert(edit->previous                == NULL);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESDELETE);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    assert(edit->next                    == NULL);
+
+    assert(edit == last_edit);
+
+    free_shortest_edit_script(edit_script);
+
+  }
+
+  {
+    // Three SESDelete/SESInsert Edit
+    // operation, offset_sequence_one, offset_sequence_two, length, next, previous
+
+    struct edit first_edit = { SESDELETE, 1, 0, 1, NULL, NULL };
+    struct edit middle_edit = { SESINSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit start_edit =  { SESDELETE, 1, 0, 1, NULL, &middle_edit };
 
     struct edit * edit_script;
 
     fprintf(stderr, "make_edit_script test: %d\n", ++test_case_number);
 
-    assert(make_edit_script(&last_edit, &edit_script) == 3);
+    assert(make_edit_script(&start_edit, &edit_script, NULL) == 3);
 
     struct edit * edit = edit_script;
 
@@ -938,7 +1055,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 0);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 0);
 
     assert(edit_script == NULL);
 
@@ -958,7 +1075,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 0);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 0);
 
     assert(edit_script == NULL);
 
@@ -978,7 +1095,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1006,7 +1123,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1033,7 +1150,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1061,7 +1178,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1088,7 +1205,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
  
     struct edit * edit = edit_script;
 
@@ -1115,7 +1232,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1142,7 +1259,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1169,7 +1286,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1196,7 +1313,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1223,7 +1340,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1250,7 +1367,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1277,7 +1394,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1305,7 +1422,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1333,7 +1450,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1361,7 +1478,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1389,7 +1506,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 1);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
 
     struct edit * edit = edit_script;
 
@@ -1416,7 +1533,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 2);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 2);
 
     struct edit * edit = edit_script;
 
@@ -1451,7 +1568,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 2);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 2);
 
     struct edit * edit = edit_script;
 
@@ -1487,7 +1604,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script(sequence_one_size, (void *)test_sequence_one, sequence_two_size, (void *)test_sequence_two, compare, accessor, &edit_script, 0) == 2);
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 2);
 
     struct edit * edit = edit_script;
 

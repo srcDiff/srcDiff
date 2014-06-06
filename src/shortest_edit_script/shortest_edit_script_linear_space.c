@@ -5,8 +5,8 @@
 
   Miller and Myers Shortest Edit Script Algorithm.
 
-  Michael J. Decker
-  mjd52@zips.uakron.edu
+  Michael John Decker
+  mdecker6@kent.edu
 */
 
 //#include <shortest_edit_script.h>
@@ -17,22 +17,8 @@
 #include <math.h>
 
 #include <shortest_edit_script.h>
+#include <shortest_edit_script_private.h>
 
-/*
-  Make a compact edit script from the found edits.
-
-  Parameter edit_script          The shortest edit script
-
-  Returns -1 on fail, 0 otherwise
-*/
-int merge_sequential_edits(struct edit ** edit_script);
-
-struct point {
-
-  int x;
-  int y;
-
-};
 
 struct point compute_next_forward_path_snake(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
   struct point * forward_paths, int distance, int diagonal, int diagonal_pos,

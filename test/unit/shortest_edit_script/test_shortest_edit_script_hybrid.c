@@ -1,7 +1,7 @@
 /*
-  test_shortest_edit_script_linear_space.c
+  test_shortest_edit_script_hybrid.c
 
-  Unit tests for shortest_edit_script_linear_space.
+  Unit tests for shortest_edit_script_hybrid.
 
   Michael J. Decker
   mjd52@zips.uakron.edu
@@ -47,7 +47,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 0);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 0);
 
     assert(edit_script == NULL);
 
@@ -67,7 +67,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 0);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 0);
 
     assert(edit_script == NULL);
 
@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -115,7 +115,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -142,7 +142,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -170,7 +170,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -197,7 +197,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
  
     struct edit * edit = edit_script;
 
@@ -224,7 +224,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -251,7 +251,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -278,7 +278,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -305,7 +305,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -332,7 +332,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -359,7 +359,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -386,7 +386,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -414,7 +414,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -442,7 +442,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -470,7 +470,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -498,7 +498,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 1);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 1);
 
     struct edit * edit = edit_script;
 
@@ -525,7 +525,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 2);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 2);
 
     struct edit * edit = edit_script;
 
@@ -560,7 +560,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 2);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 2);
 
     struct edit * edit = edit_script;
 
@@ -596,7 +596,7 @@ int main(int argc, char * argv[]) {
 
     fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
 
-    assert(shortest_edit_script_linear_space((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 2);
+    assert(shortest_edit_script_hybrid((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == 2);
 
     struct edit * edit = edit_script;
 
