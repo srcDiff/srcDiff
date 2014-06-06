@@ -344,7 +344,7 @@ int shortest_edit_script(const void * sequence_one, int sequence_one_size, const
   struct edit ** edit_script, 
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
-  return shortest_edit_script_inner(sequence_one, sequence_two_size, sequence_two, sequence_two_size, edit_script, compare, accessor, context);
+  return shortest_edit_script_inner(sequence_one, sequence_one_size, sequence_two, sequence_two_size, edit_script, compare, accessor, context);
 
 }
 
