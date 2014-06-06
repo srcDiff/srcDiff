@@ -23,7 +23,7 @@
 
   Returns -1 on fail, 0 otherwise
 */
-int make_edit_script(struct edit * last_edit, struct edit ** edit_script);
+int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struct edit ** last_edit);
 
 /*
   Copy a node from the heap.
@@ -45,8 +45,8 @@ struct edit * copy_edit(struct edit * edit);
 
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two,  int sequence_two_start, int sequence_two_end,
-  struct edit ** edit_script, 
+int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
+  struct edit ** edit_script, struct edit ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
 
@@ -173,7 +173,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
       if(row == sequence_one_end && column == sequence_two_end) {
 
         // make shortest edit script
-        int edit_distance = make_edit_script(&edit_pointers[edit_array][edit], edit_script);
+        int edit_distance = make_edit_script(&edit_pointers[edit_array][edit], edit_script, last_edit);
 
         // clean allocates
         int i;
@@ -211,7 +211,7 @@ int shortest_edit_script(const void * sequence_one, int sequence_one_end, const 
   struct edit ** edit_script, 
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
-  return shortest_edit_script_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, compare, accessor, context);
+  return shortest_edit_script_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0, compare, accessor, context);
 
 }
 
@@ -247,9 +247,11 @@ void free_shortest_edit_script(struct edit * edit_script) {
 
   Returns Then number of edits or an error code (-1 malloc) 
 */
-int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
+int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struct edit ** last_edit) {
 
-  struct edit * current_edit = last_edit;
+  struct edit * current_edit = start_edit;
+
+  if(last_edit) (*last_edit) = NULL;
 
   // holds the length of the short edit script
   int distance = 0;
@@ -331,6 +333,10 @@ int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
 
       // reattach with copied edit
       current_edit->next->previous = current_edit;
+
+    } else {
+
+      if(last_edit) (*last_edit) = current_edit;
 
     }
 
