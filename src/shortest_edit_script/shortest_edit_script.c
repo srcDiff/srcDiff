@@ -45,7 +45,7 @@ struct edit * copy_edit(struct edit * edit);
 
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
+int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
   struct edit ** edit_script, 
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
@@ -337,6 +337,14 @@ int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
   }
 
   return distance;
+
+}
+
+int shortest_edit_script(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
+  struct edit ** edit_script, 
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
+
+  return shortest_edit_script_inner(sequence_one, sequence_two_size, sequence_two, sequence_two_size, edit_script, compare, accessor, context);
 
 }
 
