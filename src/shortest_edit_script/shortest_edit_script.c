@@ -37,30 +37,30 @@ struct edit * copy_edit(struct edit * edit);
 /*
   Finds the shortest edit script between two sequences.
    
-  Parameter sequence_one_size    The size of the first sequence
+  Parameter sequence_one_end    The size of the first sequence
   Parameter sequence_one         The first sequence
-  Parameter sequence_two_size    The size of the second sequence
+  Parameter sequence_two_end    The size of the second sequence
   Parameter sequence_two         The second sequence
   Parameter edit_script          The shortest edit script
 
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
-int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
+int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two,  int sequence_two_start, int sequence_two_end,
   struct edit ** edit_script, 
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
 
   // center to start building differences
-  int center = sequence_one_size;
+  int center = sequence_one_end - sequence_one_start;
 
   // max edit distance
-  int max_distance = sequence_one_size + sequence_two_size;
+  int max_distance = (sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start);
 
   // last row with edit distance for each diagonal
   int last_distance[max_distance + 1];
 
   // hold all allocates
-  struct edit * edit_pointers[sequence_two_size + 1];
+  struct edit * edit_pointers[(sequence_two_end - sequence_two_start) + 1];
 
   int num_edits = -1;
 
@@ -75,9 +75,9 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size,
   }
 
   // initialization, slide 0 along 0 diagonal and find 1st edit
-  int row = 0;
-  int column = 0;
-  for(; row < sequence_one_size && row < sequence_two_size && compare(accessor(row, sequence_one, context), accessor(row, sequence_two, context), context) == 0; ++row)
+  int row = sequence_one_start;
+  int column = sequence_two_start;
+  for(; row < sequence_one_end && row < sequence_two_end && compare(accessor(row, sequence_one, context), accessor(row, sequence_two, context), context) == 0; ++row)
     ;
 
   // set 0 diagonal's row of distance and set beginning of script
@@ -86,13 +86,13 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size,
 
   // set starting diagonal bounds
   int lower_bound;
-  if(row == sequence_one_size)
+  if(row == sequence_one_end)
     lower_bound = center + 1;
   else
     lower_bound = center - 1;
 
   int upper_bound;
-  if(row == sequence_two_size)
+  if(row == sequence_two_end)
     upper_bound = center - 1;
   else
     upper_bound = center + 1;
@@ -114,11 +114,11 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size,
 
       // locate next edit
       ++num_edits;
-      int edit_array = num_edits / (sequence_one_size + 1);
-      int edit = num_edits % (sequence_one_size + 1);
+      int edit_array = num_edits / (sequence_one_end + 1);
+      int edit = num_edits % (sequence_one_end + 1);
 
       if(edit == 0)
-        if((edit_pointers[edit_array] = (struct edit *)calloc(sequence_one_size + 1, sizeof(struct edit))) == NULL) {
+        if((edit_pointers[edit_array] = (struct edit *)calloc(sequence_one_end + 1, sizeof(struct edit))) == NULL) {
 
           // clean allocates
           int i;
@@ -160,7 +160,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size,
       script[diagonal] = &edit_pointers[edit_array][edit];
 
       // slide down the diagonal
-      while(row < sequence_one_size && column < sequence_two_size && compare(accessor(row, sequence_one, context), accessor(column, sequence_two, context), context) == 0) {
+      while(row < sequence_one_end && column < sequence_two_end && compare(accessor(row, sequence_one, context), accessor(column, sequence_two, context), context) == 0) {
 
         ++row;
         ++column;
@@ -170,7 +170,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size,
       last_distance[diagonal] = row;
 
       // reached lower right (finished)
-      if(row == sequence_one_size && column == sequence_two_size) {
+      if(row == sequence_one_end && column == sequence_two_end) {
 
         // make shortest edit script
         int edit_distance = make_edit_script(&edit_pointers[edit_array][edit], edit_script);
@@ -186,11 +186,11 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size,
       }
 
       // reached bottom do not go farther down next iteration (decrement will set to only check diagonal + 1)
-      if(row == sequence_one_size)
+      if(row == sequence_one_end)
         lower_bound = diagonal + 2;
 
       // reached right edge do not go farther down right iteration (increment will set to only check diagonal - 1)
-      if(column == sequence_two_size)
+      if(column == sequence_two_end)
         upper_bound = diagonal - 2;
 
     }
@@ -205,6 +205,14 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_size,
   (*edit_script) = NULL;
 
   return -2;
+}
+
+int shortest_edit_script(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
+  struct edit ** edit_script, 
+  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
+
+  return shortest_edit_script_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, compare, accessor, context);
+
 }
 
 
@@ -337,14 +345,6 @@ int make_edit_script(struct edit * last_edit, struct edit ** edit_script) {
   }
 
   return distance;
-
-}
-
-int shortest_edit_script(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
-  struct edit ** edit_script, 
-  int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
-
-  return shortest_edit_script_inner(sequence_one, sequence_one_size, sequence_two, sequence_two_size, edit_script, compare, accessor, context);
 
 }
 
