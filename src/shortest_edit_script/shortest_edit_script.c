@@ -35,7 +35,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   int center = (sequence_one_end - sequence_one_start) + 1;
 
   // max edit distance
-  int max_distance = (sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start);
+  int max_distance = ((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) * 2;
 
   // last row with edit distance for each diagonal
   int last_distance[max_distance + 1];
@@ -329,7 +329,7 @@ int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struc
 struct edit * copy_edit(struct edit * edit) {
 
   struct edit * new_edit;
-  if((new_edit = (struct edit *)calloc(1, sizeof(struct edit))) == NULL)
+  if((new_edit = (struct edit *)malloc(sizeof(struct edit))) == NULL)
     return NULL;
 
   // copy contents
