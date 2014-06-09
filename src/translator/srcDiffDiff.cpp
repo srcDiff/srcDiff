@@ -262,6 +262,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
     // determine ending position to output
     diff_end_old = rbuf_old.last_output;
     diff_end_new = rbuf_new.last_output;
+
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
@@ -269,8 +270,9 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
     } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
-      diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
+      diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
+
     }
 
     // output area in common
