@@ -57,6 +57,34 @@ char* URIStream::readline() {
 
   endpos = startpos;
 
+  #ifdef LIBXML2_NEW_BUFFER
+    if (endpos >= xmlBufUse(input->buffer)) {
+#else
+    if (endpos >= input->buffer->use) {
+#endif
+
+    // shrink the part of the buffer that we are not using yet
+    // this is a large buffer, so this will not happen very often, and
+    // only if libxml decides for this input source it should
+
+#ifdef LIBXML2_NEW_BUFFER
+    int removed = (int)xmlBufShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+#else
+    int removed = (int)xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+#endif
+    endpos -= removed;
+    startpos -= removed;
+
+    // refill the buffer
+    // put an appropriate value for the length, but note that libxml
+    // basically uses 4 or a min value (which is currently around 4096)
+    int size = xmlParserInputBufferGrow(input, 4096);
+
+    // found problem or eof
+    if (size == -1 || size == 0)
+      eof = true;
+  }
+
   // find a line in the buffer
 #ifdef LIBXML2_NEW_BUFFER
   while (xmlBufContent(input->buffer)[endpos] != '\n') {
