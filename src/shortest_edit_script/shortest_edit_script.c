@@ -40,7 +40,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   int max_diagonals = 2 * max_distance + 1;
 
   // last row with edit distance for each diagonal
-  int last_distance[max_diagonals];
+  struct point last_distance[max_diagonals];
 
   // hold all allocates
   struct edit * edit_pointers[max_diagonals];
@@ -64,7 +64,8 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
     ;
 
   // set 0 diagonal's row of distance and set beginning of script
-  last_distance[center] = row;
+  last_distance[center].x = row;
+  last_distance[center].y = column;
   script[center] = NULL;
 
   // identical files
@@ -84,7 +85,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
     // for each possible diagonal
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-      //fprintf(stderr, "Distance %d Diagonal: %d\n", distance, diagonal);
+      // fprintf(stderr, "Distance %d Diagonal: %d\n", distance, diagonal);
 
       // locate next edit
       ++num_edits;
@@ -110,25 +111,25 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
       int diagonal_pos = diagonal + center;
 
       // move down if no right distance or has farthest down the diagonal
-      if(diagonal == -distance || (diagonal != distance && (last_distance[diagonal_pos + 1] >= last_distance[diagonal_pos - 1]))) {
+      if(diagonal == -distance || (diagonal != distance && (last_distance[diagonal_pos + 1].x >= last_distance[diagonal_pos - 1].x))) {
 
         // move down (set delete operation) and append edit
-        row = last_distance[diagonal_pos + 1];
+        row = last_distance[diagonal_pos + 1].x;
+        column= last_distance[diagonal_pos + 1].y + 1;
         edit_pointers[edit_array][edit].operation = SESINSERT;
         edit_pointers[edit_array][edit].previous = script[diagonal_pos + 1];
 
       } else {
 
         // move right (set insert operation) and append edit
-        row = last_distance[diagonal_pos - 1] + 1;
+        row = last_distance[diagonal_pos - 1].x + 1;
+        column = last_distance[diagonal_pos - 1].y;
         edit_pointers[edit_array][edit].operation = SESDELETE;
         edit_pointers[edit_array][edit].previous = script[diagonal_pos - 1];
 
       }
 
-      // calculate column
-      column = row - diagonal;
-      //fprintf(stderr, "Point: (%d,%d)\n", row, column);
+      // fprintf(stderr, "Point: (%d,%d)\n", row, column);
 
       edit_pointers[edit_array][edit].offset_sequence_one = row;
       edit_pointers[edit_array][edit].offset_sequence_two = column;
@@ -141,13 +142,15 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
 
         ++row;
         ++column;
+
       }
 
       // update diagonal's last distance with row
-      last_distance[diagonal_pos] = row;
+      last_distance[diagonal_pos].x = row;
+      last_distance[diagonal_pos].y = column;
 
       // reached lower right (finished)
-      if(row >= sequence_one_end && column >= sequence_two_end) {
+      if(row == sequence_one_end && column == sequence_two_end) {
 
         // make shortest edit script
         int edit_distance = make_edit_script(&edit_pointers[edit_array][edit], edit_script, last_edit);
@@ -169,7 +172,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   // no edit script on error
   (*edit_script) = NULL;
   (*last_edit) = NULL;
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   return -2;
 }
 
