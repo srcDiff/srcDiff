@@ -35,19 +35,21 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   int center = (sequence_one_end - sequence_one_start) + 1;
 
   // max edit distance
-  int max_distance = ((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) * 2;
+  int max_distance = ((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start));
+
+  int max_diagonals = 2 * max_distance + 1;
 
   // last row with edit distance for each diagonal
-  int last_distance[max_distance + 1];
+  int last_distance[max_diagonals];
 
   // hold all allocates
-  struct edit * edit_pointers[max_distance + 1];
+  struct edit * edit_pointers[max_diagonals];
 
   int num_edits = -1;
 
   // internal script of edits
-  //struct edit * script[max_distance + 1];
-  struct edit ** script = (struct edit **)calloc(max_distance + 1, sizeof(struct edit *));
+  //struct edit * script[max_diagonals];
+  struct edit ** script = (struct edit **)calloc(max_diagonals, sizeof(struct edit *));
   if(script == NULL) {
 
     (*edit_script) = NULL;
