@@ -172,7 +172,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   // no edit script on error
   (*edit_script) = NULL;
   (*last_edit) = NULL;
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   return -2;
 }
 
