@@ -25,7 +25,7 @@ struct point compute_next_forward_path_snake(const void * sequence_one, int sequ
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
   int column, row;
-  if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x <= forward_paths[diagonal_pos + 1].x)) {
+  if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x)) {
 
     column = forward_paths[diagonal_pos + 1].x;
     if(distance != 0) 
