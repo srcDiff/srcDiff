@@ -619,6 +619,55 @@ int main(int argc, char * argv[]) {
     free_shortest_edit_script(edit_script);
   }
 
+  {
+    // edit distance = 4
+    int sequence_one_size = 14;
+    const char * test_sequence_one[] = { "a", "b", "c", "d", "e", "d", "f", "g", "h", "d", "i", "i", "i", "j" };
+
+    int sequence_two_size = 9;
+    const char * test_sequence_two[] =  { "k", "l", "m", "b", "k", "n", "b", "o", "j" };
+
+    struct edit * edit_script;
+
+    fprintf(stderr, "shortest_edit_script test: %d\n", ++test_case_number);
+
+    assert(shortest_edit_script((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == 4);
+
+    struct edit * edit = edit_script;
+
+    assert(edit->operation               == SESDELETE);
+    assert(edit->offset_sequence_one     == 0);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 1);
+
+    assert(edit->previous                == NULL);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 1);
+    assert(edit->offset_sequence_two     == 0);
+    assert(edit->length                  == 3);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESDELETE);
+    assert(edit->offset_sequence_one     == 2);
+    assert(edit->offset_sequence_two     == 4);
+    assert(edit->length                  == 11);
+
+    edit = edit->next;
+
+    assert(edit->operation               == SESINSERT);
+    assert(edit->offset_sequence_one     == 13);
+    assert(edit->offset_sequence_two     == 4);
+    assert(edit->length                  == 4);
+
+    assert(edit->next                    == NULL);
+  
+    free_shortest_edit_script(edit_script);
+  }
+
   return 0;
 
 }

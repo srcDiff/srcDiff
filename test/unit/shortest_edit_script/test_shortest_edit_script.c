@@ -1629,7 +1629,6 @@ int main(int argc, char * argv[]) {
 
   {
     // edit distance = 4
-    // all different test case
     int sequence_one_size = 14;
     const char * test_sequence_one[] = { "a", "b", "c", "d", "e", "d", "f", "g", "h", "d", "i", "i", "i", "j" };
 

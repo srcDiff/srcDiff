@@ -111,7 +111,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
       int diagonal_pos = diagonal + center;
 
       // move down if no right distance or has farthest down the diagonal
-      if(diagonal == -distance || (diagonal != distance && (last_distance[diagonal_pos + 1].x >= last_distance[diagonal_pos - 1].x))) {
+      if(diagonal == -distance || (diagonal != distance && (last_distance[diagonal_pos - 1].x < last_distance[diagonal_pos + 1].x))) {
 
         // move down (set delete operation) and append edit
         row = last_distance[diagonal_pos + 1].x;
@@ -347,3 +347,57 @@ struct edit * copy_edit(struct edit * edit) {
 
   return new_edit;
 }
+
+#if 0
+int str_compare(const void * str_one, const void * str_two, const void * context) {
+
+  return strcmp((const char *)str_one, (const char *)str_two);
+
+}
+
+const void * str_accessor(int index, const void * array, const void * context) {
+
+  return (void *)((const char **)array)[index];
+
+}
+
+int main(int argc, char * argv[]) {
+
+  const char * sequence_one[] = { "a", "b", "c", "e" };
+  const char * sequence_two[] = { "a", "c", "e", "f" };
+  //const char * sequence_one[] = { "a", "b", "c", "e" };
+  //const char * sequence_two[] = { "b", "c", "d", "e" };
+  //const char * sequence_one[] = { "a", "b", "c", "d" };
+  //const char * sequence_two[] = { "a", "b", "e", "f" };
+  //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
+  //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
+  //const char * sequence_one[] = { "a", "b", "b", "a", "c", "b", "a" };
+  //const char * sequence_two[] = { "c", "a", "b", "a", "b", "c" };
+  //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
+  //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
+
+  struct edit * edit_script;
+
+  shortest_edit_script(sequence_one, 4, sequence_two, 4, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script(sequence_one, 7, sequence_two, 6, &edit_script, str_compare, str_accessor, 0);
+  //shortest_edit_script(sequence_one, 10, sequence_two, 14, &edit_script, str_compare, str_accessor, 0);
+
+  for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
+
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_one);
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_two);
+    const char ** sequence = current_edit->operation == SESDELETE ? sequence_one : sequence_two;
+    for(int i = 0; i < current_edit->length; ++i) {
+
+      fprintf(stderr, "%s: ",current_edit->operation == SESDELETE ? "DELETE" : "INSERT");
+      fprintf(stderr, "%s\n", sequence[current_edit->operation == SESDELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
+
+    }
+
+  }
+
+  return 0;
+
+}
+#endif
+
