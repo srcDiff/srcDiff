@@ -54,11 +54,9 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
 
     if(edit_distance > 1) {
 
-      int max_distance = ceil(((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) / 2) * 2;
-
       struct edit * previous_edits = 0;
       struct edit * previous_last_edit = 0;
-      if(max_distance < threshold)
+      if(edit_distance < threshold)
         shortest_edit_script_inner(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, &previous_edits, &previous_last_edit, compare, accessor, context);
       else
         shortest_edit_script_hybrid_inner(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, &previous_edits, &previous_last_edit, compare, accessor, context, threshold);
@@ -71,7 +69,7 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
 
       struct edit * new_edits = 0;
       struct edit * next_last_edit = 0;
-      if(max_distance < threshold)
+      if(edit_distance < threshold)
         shortest_edit_script_inner(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, &new_edits, &next_last_edit, compare, accessor, context);
       else
         shortest_edit_script_hybrid_inner(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, &new_edits, &next_last_edit, compare, accessor, context, threshold);
