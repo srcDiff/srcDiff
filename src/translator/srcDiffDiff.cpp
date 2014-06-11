@@ -234,7 +234,6 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
