@@ -236,6 +236,7 @@ int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struc
 
   struct edit * current_edit = start_edit;
 
+  if(edit_script) (*edit_script) = NULL;
   if(last_edit) (*last_edit) = NULL;
 
   // holds the length of the short edit script
