@@ -212,7 +212,7 @@ int shortest_edit_script_hybrid(const void * sequence_one, int sequence_one_end,
 
 }
 
-//#if 0
+#if 0
 int str_compare(const void * str_one, const void * str_two, const void * context) {
 
   return strcmp((const char *)str_one, (const char *)str_two);
@@ -227,8 +227,8 @@ const void * str_accessor(int index, const void * array, const void * context) {
 
 int main(int argc, char * argv[]) {
 
-  const char * sequence_one[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v"  };
-  const char * sequence_two[] = { "e", "f", "g", "h", "i", "j", "k", "l", "m", "w", "o", "p", "q", "r", "s", "t", "u" };
+  const char * sequence_one[] = { "a", "b", "c", "e" };
+  const char * sequence_two[] = { "a", "c", "e", "f" };
   //const char * sequence_one[] = { "a", "b", "c", "e" };
   //const char * sequence_two[] = { "b", "c", "d", "e" };
   //const char * sequence_one[] = { "a", "b", "c", "d" };
@@ -242,7 +242,7 @@ int main(int argc, char * argv[]) {
 
   struct edit * edit_script;
 
-  shortest_edit_script_linear_space(sequence_one, 22, sequence_two, 17, &edit_script, str_compare, str_accessor, 0);
+  shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 7, sequence_two, 6, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 10, sequence_two, 14, &edit_script, str_compare, str_accessor, 0);
 
@@ -263,4 +263,4 @@ fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current
   return 0;
 
 }
-//#endif
+#endif
