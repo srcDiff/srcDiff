@@ -54,7 +54,7 @@ struct point compute_next_forward_path_snake(const void * sequence_one, int sequ
   forward_paths[diagonal_pos].x = column;
   forward_paths[diagonal_pos].y = row;
 
-  fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", save_column, save_row, column, row);
+  // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", save_column, save_row, column, row);
 
   return start_snake;
 
@@ -182,7 +182,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
     int diagonal;
     for(diagonal = distance; diagonal >= -distance; diagonal -= 2) {
 
-      fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+      // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + center;
 
@@ -209,7 +209,7 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
 
     for(diagonal = distance; diagonal >= -distance; diagonal -= 2) {
 
-      fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
+      // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + delta + center;
 
@@ -277,8 +277,8 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
     struct point points[2];
     edit_distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
 
-    fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
-    fprintf(stderr, "Distance: %d\n", edit_distance);
+    // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
+    // fprintf(stderr, "Distance: %d\n", edit_distance);
 
     if(edit_distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
