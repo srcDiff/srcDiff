@@ -40,10 +40,10 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   int max_diagonals = 2 * max_distance + 1;
 
   // last row with edit distance for each diagonal
-  struct point last_distance[max_diagonals];
+  struct point * last_distance = (struct point *)calloc(max_diagonals, sizeof(struct point));
 
   // hold all allocates
-  struct edit * edit_pointers[max_diagonals];
+  struct edit ** edit_pointers = (struct edit **)calloc(max_diagonals, sizeof(struct edit *));
 
   int num_edits = -1;
 
@@ -155,10 +155,14 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
         // make shortest edit script
         int edit_distance = make_edit_script(&edit_pointers[edit_array][edit], edit_script, last_edit);
 
+        free(last_distance);
+
         // clean allocates
         int i;
         for(i = 0; i <= edit_array; ++i)
           free(edit_pointers[i]);
+
+        free(edit_pointers);
 
         free(script);
 
@@ -168,6 +172,19 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
     }
 
   }
+
+  free(last_distance);
+
+  int edit_array = num_edits / (max_distance + 1);
+
+  // clean allocates
+  int i;
+  for(i = 0; i <= edit_array; ++i)
+    free(edit_pointers[i]);
+
+  free(edit_pointers);
+
+  free(script);
 
   // no edit script on error
   (*edit_script) = NULL;
