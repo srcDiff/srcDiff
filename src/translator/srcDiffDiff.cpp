@@ -265,20 +265,20 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
     } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
     }
 
     // output area in common
     output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
-
     // detect and change
     edit * edit_next = edits->next;
+
     if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");
