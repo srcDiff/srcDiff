@@ -2,6 +2,8 @@
 #include <srcDiffDiff.hpp>
 #include <srcml.h>
 
+#include <string.h>
+
 extern xmlNs diff;
 
 // converts source code to srcML

@@ -9,6 +9,8 @@
 #include <Options.hpp>
 //#include <archive.h>
 
+#include <string.h>
+
 #include <cstdlib>
 #include <libxml/parser.h>
 //#include <libxml_archive_read.hpp>

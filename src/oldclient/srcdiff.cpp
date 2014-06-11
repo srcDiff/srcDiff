@@ -49,6 +49,8 @@
 #include <cctype>
 #include <cstdlib>
 #include <sys/stat.h>
+#include <signal.h>
+#include <errno.h>
 
 #ifdef SVN
 #include <svn_io.hpp>
