@@ -1714,10 +1714,10 @@ int main(int argc, char * argv[]) {
 
     edit = edit->next;
 
-    assert(edit->operation               == SESINSERT);
+    assert(edit->operation               == SESDELETE);
     assert(edit->offset_sequence_one     == 21);
-    assert(edit->offset_sequence_two     == 417);
-    assert(edit->length                  == 4);
+    assert(edit->offset_sequence_two     == 17);
+    assert(edit->length                  == 1);
 
     assert(edit->next                    == NULL);
   
