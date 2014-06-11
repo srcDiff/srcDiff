@@ -31,11 +31,8 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   struct edit ** edit_script, struct edit ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
-  // center to start building differences
-  int center = (sequence_one_end - sequence_one_start) + 1;
-
   // max edit distance
-  int max_distance = ((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start));
+  int max_distance = (sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start) + 1;
 
   int max_diagonals = 2 * max_distance + 1;
 
@@ -62,6 +59,9 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   int column = sequence_two_start;
   for(; row < sequence_one_end && column < sequence_two_end && compare(accessor(row, sequence_one, context), accessor(column, sequence_two, context), context) == 0; ++row, ++column)
     ;
+
+  // center to start building differences
+  int center = max_distance;
 
   // set 0 diagonal's row of distance and set beginning of script
   last_distance[center].x = row;
