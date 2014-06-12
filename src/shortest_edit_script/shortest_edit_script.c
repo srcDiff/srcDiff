@@ -32,7 +32,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
   // max edit distance
-  int max_distance = (sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start);
+  int max_distance = (sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start) + 1;
 
   int max_diagonals = 2 * max_distance + 1;
 
