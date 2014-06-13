@@ -1052,11 +1052,11 @@ int main(int argc, char * argv[]) {
     int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context,
     int threshold);
 
-  #define test_shortest_edit_script(SHORTEST_EDIT_SCRIPT_FUNCTION, EDIT_DISTANCE)                                                                                                                  \
+  #define test_shortest_edit_script(SHORTEST_EDIT_SCRIPT_FUNCTION, EDIT_DISTANCE, TEST_NUMBER)                                                                                                     \
     const char * shortest_edit_script_function_name = SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script ? "shortest_edit_script" :                                                             \
     SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script_linear_space ? "shortest_edit_script_linear_space" : "shortest_edit_script_hybrid";                                                      \
                                                                                                                                                                                                    \
-    fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);                                                                                                      \
+    fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, TEST_NUMBER);                                                                                                      \
                                                                                                                                                                                                    \
     if(SHORTEST_EDIT_SCRIPT_FUNCTION != shortest_edit_script_hybrid) {                                                                                                                             \
                                                                                                                                                                                                    \
@@ -1071,8 +1071,6 @@ int main(int argc, char * argv[]) {
 
   for(size_t function_pos = 0; shortest_edit_script_functions[function_pos]; ++function_pos) {
 
-      test_case_number = 0;
-
       {
         // NULL test case
         int sequence_one_size = 0;
@@ -1083,7 +1081,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 0)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 0, 1)
 
         assert(edit_script == NULL);
 
@@ -1101,7 +1099,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 0)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 0, 2)
 
         assert(edit_script == NULL);
 
@@ -1119,7 +1117,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 3)
 
         struct edit * edit = edit_script;
 
@@ -1145,7 +1143,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 4)
 
         struct edit * edit = edit_script;
 
@@ -1170,7 +1168,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 5)
 
         struct edit * edit = edit_script;
 
@@ -1196,7 +1194,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 6)
 
         struct edit * edit = edit_script;
 
@@ -1221,7 +1219,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 7)
      
         struct edit * edit = edit_script;
 
@@ -1246,7 +1244,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 8)
 
         struct edit * edit = edit_script;
 
@@ -1271,7 +1269,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 9)
 
         struct edit * edit = edit_script;
 
@@ -1296,7 +1294,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 10)
 
         struct edit * edit = edit_script;
 
@@ -1321,7 +1319,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 11)
 
         struct edit * edit = edit_script;
 
@@ -1346,7 +1344,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 12)
 
         struct edit * edit = edit_script;
 
@@ -1371,7 +1369,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 13)
 
         struct edit * edit = edit_script;
 
@@ -1396,7 +1394,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 14)
 
         struct edit * edit = edit_script;
 
@@ -1422,7 +1420,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 15)
 
         struct edit * edit = edit_script;
 
@@ -1448,7 +1446,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 16)
 
         struct edit * edit = edit_script;
 
@@ -1474,7 +1472,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 17)
 
         struct edit * edit = edit_script;
 
@@ -1500,7 +1498,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1, 18)
 
         struct edit * edit = edit_script;
 
@@ -1525,7 +1523,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2, 19)
 
         struct edit * edit = edit_script;
 
@@ -1558,7 +1556,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2, 20)
 
         struct edit * edit = edit_script;
 
@@ -1592,7 +1590,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2, 21)
 
         struct edit * edit = edit_script;
 
@@ -1625,7 +1623,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 4)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 4, 22)
 
         struct edit * edit = edit_script;
 
@@ -1671,7 +1669,7 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 4)
+        test_shortest_edit_script(shortest_edit_script_functions[function_pos], 4, 23)
 
         struct edit * edit = edit_script;
 
