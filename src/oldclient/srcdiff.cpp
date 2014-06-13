@@ -94,8 +94,7 @@ const char* urisprefix[] = {
   SRCML_DIFF_NS_PREFIX_DEFAULT,
 };
 
-OPTION_TYPE options = SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_CPPIF_CHECK | SRCML_OPTION_TERNARY
-  | OPTION_THREAD | OPTION_OUTPUTSAME | OPTION_OUTPUTPURE;
+OPTION_TYPE options = OPTION_THREAD | OPTION_OUTPUTSAME | OPTION_OUTPUTPURE;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -141,6 +140,7 @@ int main(int argc, char* argv[]) {
   //Language::register_standard_file_extensions();
   srcml_archive * archive = srcml_create_archive();
   srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+  srcml_archive_enable_option(archive, SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_CPPIF_CHECK | SRCML_OPTION_TERNARY);
   srcml_archive_register_namespace(archive, "diff", "http://www.sdml.info/srcDiff");
   
   process_options poptions =
