@@ -165,7 +165,7 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
         output_pure_operation_white_space(rbuf_old, 0
                                           , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, SESINSERT, wstate);
         // update for common
-        last_diff_old = edits->offset_sequence_one + 1;
+        last_diff_old = edits->offset_sequence_one;
         last_diff_new = edits->offset_sequence_two + edits->length;
 
         break;
@@ -178,7 +178,7 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
-        last_diff_new = edits->offset_sequence_two + 1;
+        last_diff_new = edits->offset_sequence_two;
 
         break;
       }
@@ -298,7 +298,7 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
                                           , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, SESINSERT, wstate);
 
         // update for common
-        last_diff_old = edits->offset_sequence_one + 1;
+        last_diff_old = edits->offset_sequence_one;
         last_diff_new = edits->offset_sequence_two + edits->length;
 
         break;
@@ -311,7 +311,7 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
-        last_diff_new = edits->offset_sequence_two + 1;
+        last_diff_new = edits->offset_sequence_two;
 
         break;
       }
@@ -425,7 +425,7 @@ void output_comment_word(reader_state & rbuf_old, NodeSets * node_sets_old, read
                                           , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1, SESINSERT, wstate);
 
         // update for common
-        last_diff_old = edits->offset_sequence_one + 1;
+        last_diff_old = edits->offset_sequence_one;
         last_diff_new = edits->offset_sequence_two + edits->length;
 
         break;
@@ -438,7 +438,7 @@ void output_comment_word(reader_state & rbuf_old, NodeSets * node_sets_old, read
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
-        last_diff_new = edits->offset_sequence_two + 1;
+        last_diff_new = edits->offset_sequence_two;
 
         break;
       }
