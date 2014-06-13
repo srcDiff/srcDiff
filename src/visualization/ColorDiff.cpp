@@ -21,11 +21,10 @@
 #include <ColorDiff.hpp>
 
 // forward declarations
-static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff);
+static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
-ColorDiff::ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file
-                     , std::string directory, std::string version, std::string css, OPTION_TYPE options) 
+ColorDiff::ColorDiff(std::string colordiff_file, std::string directory, std::string version, std::string css, OPTION_TYPE options) 
   : first(true), srcdiff(srcdiff), css_url(css), options(options) {
 
   if(colordiff_file != "-")
@@ -53,19 +52,7 @@ ColorDiff::~ColorDiff() {
   }
 }
 
-xmlBuffer * ColorDiff::getsrcDiffBuffer() {
-
-  return srcdiff;
-
-}
-
-void ColorDiff::setsrcDiffBuffer(xmlBuffer * srcdiff_buffer) {
-
-  srcdiff = srcdiff_buffer;
-
-}
-
-int ColorDiff::colorize(LineDiffRange & line_diff_range) {
+int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
 
   unsigned int size_old = line_diff_range.get_length_file_one();
   unsigned int size_new = line_diff_range.get_length_file_two();
@@ -155,9 +142,9 @@ int ColorDiff::colorize(LineDiffRange & line_diff_range) {
 }
 
 // create the ctxt
-static xmlParserCtxtPtr createURLParserCtxt(xmlBuffer * srcdiff) {
+static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
 
-  xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt((const char *)xmlBufferContent(srcdiff), srcdiff->use);
+  xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(srcdiff, strlen(srcdiff));
   //xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
 
   if (ctxt == NULL) {

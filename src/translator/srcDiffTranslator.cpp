@@ -116,7 +116,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = new ColorDiff(xmlBufferCreate(), srcdiff_filename, dir, ver, css, srcml_archive_get_options(archive));
+    colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, srcml_archive_get_options(archive));
 
   }
 
@@ -305,16 +305,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
 
     srcml_write_end_unit(archive);
-    srcml_free_unit(unit);
-
-/*
-    if(!isoption(global_options, OPTION_VISUALIZE) && isoption(global_options, OPTION_ARCHIVE)) {
-
-      xmlTextWriterEndElement(wstate.writer);
-      xmlTextWriterWriteRawLen(wstate.writer, BAD_CAST "\n\n", 2);
-
-    }
-*/
 
   }
 
@@ -346,18 +336,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   if(isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
 
-    xmlTextWriterEndElement(wstate.writer);
-
-    // cleanup writer
-    xmlTextWriterEndDocument(wstate.writer);
-    xmlFreeTextWriter(wstate.writer);
-    wstate.writer = NULL;
-
-    colordiff->colorize(line_diff_range);
-
-    xmlBufferEmpty(colordiff->getsrcDiffBuffer());
+    colordiff->colorize(srcml_unit_get_xml(unit), line_diff_range);
 
   }
+
+  srcml_free_unit(unit);
 
 }
 
@@ -370,7 +353,6 @@ srcDiffTranslator::~srcDiffTranslator() {
 
   } else {
 
-    xmlBufferFree(colordiff->getsrcDiffBuffer());
     delete colordiff;
 
   }

@@ -22,14 +22,11 @@ private :
 
 public:
 
-  ColorDiff(xmlBuffer * srcdiff, std::string colordiff_file, std::string directory, std::string version, std::string css,
+  ColorDiff(std::string colordiff_file, std::string directory, std::string version, std::string css,
             OPTION_TYPE options);
   ~ColorDiff();
 
-  xmlBuffer * getsrcDiffBuffer();
-  void setsrcDiffBuffer(xmlBuffer * srcdiff_buffer);
-
-  int colorize(LineDiffRange & line_diff_range);
+  int colorize(const char * srcdiff, LineDiffRange & line_diff_range);
 
 };
 
