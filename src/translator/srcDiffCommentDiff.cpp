@@ -110,7 +110,7 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
-    } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == SESINSERT && edits->offset_sequence_one != 0 && last_diff_old <= edits->offset_sequence_one)  {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
@@ -243,7 +243,7 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
-    } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == SESINSERT && edits->offset_sequence_one != 0 && last_diff_old <= edits->offset_sequence_one)  {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
@@ -376,7 +376,7 @@ void output_comment_word(reader_state & rbuf_old, NodeSets * node_sets_old, read
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
-    } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
+    } else if(edits->operation == SESINSERT && edits->offset_sequence_one != 0 && last_diff_old <= edits->offset_sequence_one)  {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
       diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
