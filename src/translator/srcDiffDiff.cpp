@@ -362,6 +362,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
         break;
       }
+      
     }
 
   }
