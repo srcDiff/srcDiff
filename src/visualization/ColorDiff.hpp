@@ -15,7 +15,7 @@ private :
   std::string directory;
   std::string version;
   std::string css_url;
-  OPTION_TYPE & options;
+  OPTION_TYPE options;
 
   std::ostream * outfile;
 
