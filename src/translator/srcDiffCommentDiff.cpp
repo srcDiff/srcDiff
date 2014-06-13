@@ -108,12 +108,13 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
     } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
-      diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
+      diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
+
     }
 
     // output area in common
@@ -240,12 +241,13 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
     } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
-      diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
+      diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
+
     }
 
     // output area in common
@@ -372,12 +374,13 @@ void output_comment_word(reader_state & rbuf_old, NodeSets * node_sets_old, read
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old) - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
 
     } else if(edits->operation == SESINSERT && last_diff_old <= edits->offset_sequence_one) {
 
-      diff_end_old = node_sets_old->at(edits->offset_sequence_one)->back() + 1;
-      diff_end_new = node_sets_new->at(last_diff_new + (edits->offset_sequence_one - last_diff_old))->back() + 1;
+      diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
+      diff_end_new = node_sets_new->at(edits->offset_sequence_two - 1)->back() + 1;
+
     }
 
     // output area in common
