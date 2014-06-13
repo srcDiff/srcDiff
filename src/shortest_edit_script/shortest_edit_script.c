@@ -55,21 +55,21 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   }
 
   // initialization, slide 0 along 0 diagonal and find 1st edit
-  int row = sequence_one_start;
-  int column = sequence_two_start;
-  for(; row < sequence_one_end && column < sequence_two_end && compare(accessor(row, sequence_one, context), accessor(column, sequence_two, context), context) == 0; ++row, ++column)
+  int column = sequence_one_start;
+  int row = sequence_two_start;
+  for(; column < sequence_one_end && row < sequence_two_end && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0; ++column, ++row)
     ;
 
   // center to start building differences
   int center = max_distance + 1;
 
-  // set 0 diagonal's row of distance and set beginning of script
-  last_distance[center].x = row;
-  last_distance[center].y = column;
+  // set 0 diagonal's position and set beginning of script
+  last_distance[center].x = column;
+  last_distance[center].y = row;
   script[center] = NULL;
 
   // identical files
-  if(row >= sequence_one_end && column >= sequence_two_end) {
+  if(column >= sequence_one_end && row >= sequence_two_end) {
     
     if(edit_script) (*edit_script) = NULL;;
     if(last_edit) (*last_edit) = NULL;;
@@ -114,43 +114,43 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
       if(diagonal == -distance || (diagonal != distance && (last_distance[diagonal_pos - 1].x < last_distance[diagonal_pos + 1].x))) {
 
         // move down (set delete operation) and append edit
-        row = last_distance[diagonal_pos + 1].x;
-        column= last_distance[diagonal_pos + 1].y + 1;
+        column = last_distance[diagonal_pos + 1].x;
+        row= last_distance[diagonal_pos + 1].y + 1;
         edit_pointers[edit_array][edit].operation = SESINSERT;
         edit_pointers[edit_array][edit].previous = script[diagonal_pos + 1];
 
       } else {
 
         // move right (set insert operation) and append edit
-        row = last_distance[diagonal_pos - 1].x + 1;
-        column = last_distance[diagonal_pos - 1].y;
+        column = last_distance[diagonal_pos - 1].x + 1;
+        row = last_distance[diagonal_pos - 1].y;
         edit_pointers[edit_array][edit].operation = SESDELETE;
         edit_pointers[edit_array][edit].previous = script[diagonal_pos - 1];
 
       }
 
-      // fprintf(stderr, "Point: (%d,%d)\n", row, column);
+      // fprintf(stderr, "Point: (%d,%d)\n", column, row);
 
-      edit_pointers[edit_array][edit].offset_sequence_one = row;
-      edit_pointers[edit_array][edit].offset_sequence_two = column;
+      edit_pointers[edit_array][edit].offset_sequence_one = column;
+      edit_pointers[edit_array][edit].offset_sequence_two = row;
 
       // update the script
       script[diagonal_pos] = &edit_pointers[edit_array][edit];
 
       // slide down the diagonal
-      while(row < sequence_one_end && column < sequence_two_end && compare(accessor(row, sequence_one, context), accessor(column, sequence_two, context), context) == 0) {
+      while(column < sequence_one_end && row < sequence_two_end && compare(accessor(column, sequence_one, context), accessor(row, sequence_two, context), context) == 0) {
 
-        ++row;
         ++column;
+        ++row;
 
       }
 
-      // update diagonal's last distance with row
-      last_distance[diagonal_pos].x = row;
-      last_distance[diagonal_pos].y = column;
+      // update diagonal's last distance with position
+      last_distance[diagonal_pos].x = column;
+      last_distance[diagonal_pos].y = row;
 
       // reached lower right (finished)
-      if(row == sequence_one_end && column == sequence_two_end) {
+      if(column == sequence_one_end && row == sequence_two_end) {
 
         // make shortest edit script
         int edit_distance = make_edit_script(&edit_pointers[edit_array][edit], edit_script, last_edit);
