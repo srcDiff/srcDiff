@@ -186,7 +186,7 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
                , std::vector<xNodePtr> & nodes_match, NodeSet * match, int operation) {
 
   int match_pos = node_set.size();
-  int match_similarity = -1;
+  int match_similarity = 0;
   if(node_set.size() > 0) {
 
     if(!((node_set.at(0)->size() > match->size() && (node_set.at(0)->size()) > (2 * match->size()))
