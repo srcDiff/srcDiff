@@ -1064,6 +1064,7 @@ int main(int argc, char * argv[]) {
         assert(shortest_edit_script_function((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == EDIT_DISTANCE);    \
                                                                                                                                                                                                    \
     } else {                                                                                                                                                                                       \
+                                                                                                                                                                                                   \
         shortest_edit_script_hybrid_function_pointer shortest_edit_script_function = SHORTEST_EDIT_SCRIPT_FUNCTION;                                                                                \
         assert(shortest_edit_script_function((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == EDIT_DISTANCE); \
     } 
