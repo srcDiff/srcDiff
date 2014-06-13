@@ -323,8 +323,8 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
       }
 
-        // many to many handling
-        output_many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
+      // many to many handling
+      output_many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
 
       // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;
