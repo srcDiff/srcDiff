@@ -76,11 +76,11 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
   int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
 
-    if(node_compare(rbuf_old.nodes.at(i), rbuf_new.nodes.at(j)) == 0)
+    if(node_compare(rbuf_old.nodes.at(i), rbuf_new.nodes.at(j)) == 0) {
 
       output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESCOMMON, wstate);
 
-    else if(is_white_space(rbuf_old.nodes.at(i)) && is_white_space(rbuf_new.nodes.at(j))) {
+    } else if(is_white_space(rbuf_old.nodes.at(i)) && is_white_space(rbuf_new.nodes.at(j))) {
       
       int olength = i;
       int nlength = j;
