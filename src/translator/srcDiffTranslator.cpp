@@ -309,7 +309,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     srcml_write_end_unit(srcdiff_unit);
 
-    srcml_write_unit(archive, srcdiff_unit);
+    if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
+
+      srcml_write_unit(archive, srcdiff_unit);
+
+    }
 
   }
 
