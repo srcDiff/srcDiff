@@ -62,7 +62,8 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
 {
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
-  srcml_write_open_filename(archive, srcdiff_filename);
+  if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE))
+    srcml_write_open_filename(archive, srcdiff_filename);
 
   // diff tags
   diff_common_start.name = DIFF_SESCOMMON;
@@ -136,19 +137,18 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
-  srcml_unit * unit = srcml_create_unit(archive);
-  srcml_unit_set_language(unit, srcml_archive_check_extension(archive, path_one ? path_one : path_two));
-  srcml_unit_set_filename(unit, unit_filename);
-  srcml_unit_set_directory(unit, unit_directory);
-  srcml_unit_set_version(unit, unit_version);
 
   // create the reader for the old file
   NodeSets node_set_old;
 
   int is_old = 0;
-  create_nodes_args args_old = { path_one, archive, unit
-                                 , rbuf_old.mutex
-                                 , rbuf_old.nodes, is_old, rbuf_old.stream_source };
+  create_nodes_args args_old = { path_one, archive
+                                , srcml_archive_check_extension(archive, path_one ? path_one : path_two)
+                                , unit_filename
+                                , unit_directory
+                                , unit_version
+                                , rbuf_old.mutex
+                                , rbuf_old.nodes, is_old, rbuf_old.stream_source };
   pthread_t thread_old;
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
@@ -162,26 +162,22 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  srcml_free_unit(unit);
-
   /*
 
     Input for file two
 
   */
 
-  srcml_unit * unit_new = srcml_create_unit(archive);
-  srcml_unit_set_language(unit_new, srcml_archive_check_extension(archive, path_one ? path_one : path_two));
-  srcml_unit_set_filename(unit_new, unit_filename);
-  srcml_unit_set_directory(unit_new, unit_directory);
-  srcml_unit_set_version(unit_new, unit_version);
-
   NodeSets node_set_new;
 
   int is_new = 0;
-  create_nodes_args args_new = { path_two, archive, unit_new
-                                 , rbuf_new.mutex
-                                 , rbuf_new.nodes, is_new, rbuf_new.stream_source };
+  create_nodes_args args_new = { path_two, archive
+                                , srcml_archive_check_extension(archive, path_one ? path_one : path_two)
+                                , unit_filename
+                                , unit_directory
+                                , unit_version
+                                , rbuf_new.mutex
+                                , rbuf_new.nodes, is_new, rbuf_new.stream_source };
 
 
   pthread_t thread_new;
@@ -209,8 +205,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   if(is_new && is_new > -1)
     node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
-
-  srcml_free_unit(unit_new);
 
   /*
 

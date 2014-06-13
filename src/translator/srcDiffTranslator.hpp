@@ -65,11 +65,7 @@ class srcDiffTranslator {
 
   writer_state wstate;
 
-  xmlBuffer * output_srcml_file_old;
-  xmlBuffer * output_srcml_file_new;
-
   ColorDiff * colordiff;
-  //xmlTextWriterPtr writer;
 
 };
 

@@ -16,7 +16,10 @@ struct create_nodes_args {
   // args
   const char* path;
   srcml_archive * main_archive;
-  srcml_unit * unit;
+  const char * language;
+  const char * filename;
+  const char * directory;
+  const char * version;
 
   // pthreads
   pthread_mutex_t * mutex;
@@ -29,12 +32,14 @@ struct create_nodes_args {
 };
 
 // converts source code to srcML
-void translate_to_srcML(const char * path, srcml_archive * main_archive, srcml_unit * unit,
+void translate_to_srcML(const char * path, srcml_archive * main_archive,
+                        const char * language, const char * filename, const char * directory, const char * version,
                    			char ** output_buffer, int * output_size); 
 
 void * create_nodes_from_srcML_thread(void * arguments);
 
-void create_nodes_from_srcML(const char * path, srcml_archive * main_archive, srcml_unit * unit,
+void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
+                             const char * language, const char * filename, const char * directory, const char * version,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & node, int & no_error, int context);
 

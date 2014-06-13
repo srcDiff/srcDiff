@@ -7,7 +7,8 @@
 extern xmlNs diff;
 
 // converts source code to srcML
-void translate_to_srcML(const char * path, srcml_archive * main_archive, srcml_unit * unit,
+void translate_to_srcML(const char * path, srcml_archive * main_archive,
+      const char * language, const char * filename, const char * directory, const char * version,
 			char ** output_buffer, int * output_size) {
 
   srcml_archive * unit_archive = srcml_clone_archive(main_archive);
@@ -15,9 +16,13 @@ void translate_to_srcML(const char * path, srcml_archive * main_archive, srcml_u
 
   srcml_write_open_memory(unit_archive, output_buffer, output_size);
 
+  srcml_unit * unit = srcml_create_unit(unit_archive);
+
   srcml_parse_unit_filename(unit, path);
 
   srcml_write_unit(unit_archive, unit);
+
+  srcml_free_unit(unit);
 
   srcml_close_archive(unit_archive);
   srcml_free_archive(unit_archive);
@@ -28,7 +33,8 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 
     create_nodes_args & args = *(create_nodes_args *)arguments;
 
-    create_nodes_from_srcML(args.path, args.main_archive, args.unit,
+    create_nodes_from_srcML(args.path, args.main_archive,
+                            args.language, args.filename, args.directory, args.version,
                             args.mutex,
                             args.nodes, args.no_error, args.context);
 
@@ -37,7 +43,8 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 }
 
 
-void create_nodes_from_srcML(const char * path, srcml_archive * main_archive, srcml_unit * unit,
+void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
+                             const char * language, const char * filename, const char * directory, const char * version,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, int & no_error, int context) {
   
@@ -49,7 +56,7 @@ void create_nodes_from_srcML(const char * path, srcml_archive * main_archive, sr
   // translate file one
   try {
 
-  translate_to_srcML(path, main_archive, unit, &output_buffer, &output_size);
+  translate_to_srcML(path, main_archive, language, filename, directory, version, &output_buffer, &output_size);
 
   reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
