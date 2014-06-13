@@ -96,8 +96,13 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       break;
 
     if (curoption) {
-      srcml_archive_enable_option(poptions.archive, curoption);
+
+      if(curoption & (SRCML_OPTION_POSITION | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER))
+        srcml_archive_enable_option(poptions.archive, curoption);
+      else
+      options |= curoption;
       continue;
+
     }
 
     // treat --xmlns:prefix=url as --xmlns=url for processing
@@ -140,7 +145,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       options |= OPTION_FILELIST;
 
       // filelist mode is default nested mode
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
+      options |= SRCML_OPTION_ARCHIVE;
 
       poptions.file_list_name = optarg;
       break;
@@ -155,7 +160,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         options |= OPTION_SVN;
 
         // filelist mode is default nested mode
-        srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
+        options |= SRCML_OPTION_ARCHIVE;
         poptions.svn_url = optarg;
 
         const char * end = index(optarg, '@');
@@ -214,7 +219,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       break;
 
     case NESTED_FLAG_SHORT:
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
+      options |= SRCML_OPTION_ARCHIVE;
       break;
 
     case EXPRESSION_MODE_FLAG_SHORT:
@@ -296,56 +301,56 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       if(optarg != NULL)
         poptions.css_url = optarg;
 
-      srcml_archive_enable_option(poptions.archive, OPTION_VISUALIZE);
+      options |= OPTION_VISUALIZE;
 
       break;
 
     case SAME_FLAG_CODE:
 
-      srcml_archive_enable_option(poptions.archive, options |= OPTION_OUTPUTSAME);
+      options |= OPTION_OUTPUTSAME;
 
       break;
 
     case PURE_FLAG_CODE:
 
-      srcml_archive_enable_option(poptions.archive, options |= OPTION_OUTPUTPURE);
+      options |= OPTION_OUTPUTPURE;
 
       break;
 
     case CHANGE_FLAG_CODE:
 
-      srcml_archive_enable_option(poptions.archive, OPTION_CHANGE);
-      srcml_archive_disable_option(poptions.archive, OPTION_OUTPUTSAME);
-      srcml_archive_disable_option(poptions.archive, OPTION_OUTPUTPURE);
+      options |= OPTION_CHANGE;
+      options &= ~OPTION_OUTPUTSAME;
+      options &= ~OPTION_OUTPUTPURE;
 
       break;
 
     case SRCDIFFONLY_FLAG_CODE:
 
-      srcml_archive_enable_option(poptions.archive, OPTION_SRCDIFFONLY);
+      options |= OPTION_SRCDIFFONLY;
 
       break;
 
     case DIFFONLY_FLAG_CODE:
 
-      srcml_archive_enable_option(poptions.archive, OPTION_DIFFONLY);
+      options |= OPTION_DIFFONLY;
 
       break;
 
     case NO_SAME_FLAG_CODE:
 
-      srcml_archive_disable_option(poptions.archive, OPTION_OUTPUTSAME);
+      options &= ~OPTION_OUTPUTSAME;
 
       break;
 
     case NO_PURE_FLAG_CODE:
 
-      srcml_archive_disable_option(poptions.archive, OPTION_OUTPUTPURE);
+      options &= ~OPTION_OUTPUTPURE;
 
       break;
 
     case DEBUG_FLAG_SHORT:
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_DEBUG);
+      options |= SRCML_OPTION_DEBUG;
       break;
 
 
@@ -414,7 +419,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
       */
 
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_POSITION);
+      options |= SRCML_OPTION_POSITION;
 
       char * end;
       srcml_archive_set_tabstop(poptions.archive, strtol(optarg, &end, 10));
@@ -428,7 +433,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_CPP_TEXT_ELSE);
+      options |= SRCML_OPTION_CPP_TEXT_ELSE;
       cpp_else = true;
 
       break;
@@ -440,7 +445,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_disable_option(poptions.archive, SRCML_OPTION_CPP_TEXT_ELSE);
+      options &= ~SRCML_OPTION_CPP_TEXT_ELSE;
       cpp_else = true;
 
       break;
@@ -452,7 +457,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_CPP_MARKUP_IF0);
+      options |= SRCML_OPTION_CPP_MARKUP_IF0;
       cpp_if0 = true;
 
       break;
@@ -464,7 +469,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_disable_option(poptions.archive, SRCML_OPTION_CPP_MARKUP_IF0);
+      options &= ~SRCML_OPTION_CPP_MARKUP_IF0;
       cpp_if0 = true;
 
       break;

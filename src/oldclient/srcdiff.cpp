@@ -288,7 +288,7 @@ int main(int argc, char* argv[]) {
   bool showinput = false;
   bool shownumber = false;
   // output source encoding
-  if (isoption(srcml_archive_get_options(poptions.archive), OPTION_VERBOSE)) {
+  if (isoption(options, OPTION_VERBOSE)) {
     fprintf(stderr, "Source encoding:  %s\n", srcml_archive_get_src_encoding(poptions.archive));
     fprintf(stderr, "XML encoding:  %s\n", srcml_archive_get_encoding(poptions.archive));
     showinput = false;
