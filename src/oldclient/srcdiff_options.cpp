@@ -100,7 +100,8 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       if(curoption & (SRCML_OPTION_POSITION | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER))
         srcml_archive_enable_option(poptions.archive, curoption);
       else
-      options |= curoption;
+        options |= curoption;
+
       continue;
 
     }
@@ -148,6 +149,12 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       options |= SRCML_OPTION_ARCHIVE;
 
       poptions.file_list_name = optarg;
+      break;
+
+      case VERBOSE_FLAG_SHORT :
+
+        options |= OPTION_VERBOSE;
+
       break;
 
 #ifdef SVN
