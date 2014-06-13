@@ -1751,6 +1751,8 @@ int main(int argc, char * argv[]) {
 
   }
 
+  #undef test_shortest_edit_script
+
   return 0;
 
 }
