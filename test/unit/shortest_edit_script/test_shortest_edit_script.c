@@ -1053,6 +1053,11 @@ int main(int argc, char * argv[]) {
     int threshold);
 
   #define test_shortest_edit_script(SHORTEST_EDIT_SCRIPT_FUNCTION, EDIT_DISTANCE) \
+    const char * shortest_edit_script_function_name = SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script ? "shortest_edit_script" : \
+    SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script_linear_space ? "shortest_edit_script_linear_space" : "shortest_edit_script_hybrid"; \
+    \
+    fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number); \
+   \
     if(SHORTEST_EDIT_SCRIPT_FUNCTION != shortest_edit_script_hybrid) { \
         \
         shortest_edit_script_function_pointer shortest_edit_script_function = SHORTEST_EDIT_SCRIPT_FUNCTION; \
@@ -1067,9 +1072,6 @@ int main(int argc, char * argv[]) {
 
       test_case_number = 0;
 
-      const char * shortest_edit_script_function_name = shortest_edit_script_functions[function_pos] == shortest_edit_script ? "shortest_edit_script" : 
-        shortest_edit_script_functions[function_pos] == shortest_edit_script_linear_space ? "shortest_edit_script_linear_space" : "shortest_edit_script_hybrid";
-
       {
         // NULL test case
         int sequence_one_size = 0;
@@ -1079,8 +1081,6 @@ int main(int argc, char * argv[]) {
         const char ** test_sequence_two = NULL;
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 0)
 
@@ -1100,8 +1100,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 0)
 
         assert(edit_script == NULL);
@@ -1119,8 +1117,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] = { "a", "b" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
@@ -1148,8 +1144,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1174,8 +1168,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] = { "a", "b" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
@@ -1203,8 +1195,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1229,8 +1219,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] = { "a", "b" , "c"};
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
      
@@ -1257,8 +1245,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1283,8 +1269,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] = { "a", "b", "d" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
@@ -1311,8 +1295,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1337,8 +1319,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] = { "a", "b", "c", "e" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
@@ -1365,8 +1345,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1392,8 +1370,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1418,8 +1394,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] =  { "a", "b" , "c", "d", "e" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
@@ -1447,8 +1421,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1474,8 +1446,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] =  { "a", "b" , "c", "d", "e" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
@@ -1503,8 +1473,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1531,8 +1499,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 1)
 
         struct edit * edit = edit_script;
@@ -1557,8 +1523,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] = { "a", "b", "c", "e", "f" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2)
 
@@ -1592,8 +1556,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] = { "a", "b", "e", "f", "g" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2)
 
@@ -1629,8 +1591,6 @@ int main(int argc, char * argv[]) {
 
         struct edit * edit_script;
 
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
-
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 2)
 
         struct edit * edit = edit_script;
@@ -1663,8 +1623,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] =  { "k", "l", "m", "b", "k", "n", "b", "o", "j" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 4)
 
@@ -1711,8 +1669,6 @@ int main(int argc, char * argv[]) {
         const char * test_sequence_two[] =  { "e", "f", "g", "h", "i", "j", "k", "l", "m", "w", "o", "p", "q", "r", "s", "t", "u" };
 
         struct edit * edit_script;
-
-        fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);
 
         test_shortest_edit_script(shortest_edit_script_functions[function_pos], 4)
 
