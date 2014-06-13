@@ -1052,21 +1052,21 @@ int main(int argc, char * argv[]) {
     int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context,
     int threshold);
 
-  #define test_shortest_edit_script(SHORTEST_EDIT_SCRIPT_FUNCTION, EDIT_DISTANCE) \
-    const char * shortest_edit_script_function_name = SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script ? "shortest_edit_script" : \
-    SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script_linear_space ? "shortest_edit_script_linear_space" : "shortest_edit_script_hybrid"; \
-    \
-    fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number); \
-   \
-    if(SHORTEST_EDIT_SCRIPT_FUNCTION != shortest_edit_script_hybrid) { \
-        \
-        shortest_edit_script_function_pointer shortest_edit_script_function = SHORTEST_EDIT_SCRIPT_FUNCTION; \
-        assert(shortest_edit_script_function((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == EDIT_DISTANCE); \
-        \
-    } else { \
-        shortest_edit_script_hybrid_function_pointer shortest_edit_script_function = SHORTEST_EDIT_SCRIPT_FUNCTION; \
+  #define test_shortest_edit_script(SHORTEST_EDIT_SCRIPT_FUNCTION, EDIT_DISTANCE)                                                                                                                  \
+    const char * shortest_edit_script_function_name = SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script ? "shortest_edit_script" :                                                             \
+    SHORTEST_EDIT_SCRIPT_FUNCTION == shortest_edit_script_linear_space ? "shortest_edit_script_linear_space" : "shortest_edit_script_hybrid";                                                      \
+                                                                                                                                                                                                   \
+    fprintf(stderr, "%s test: %d\n", shortest_edit_script_function_name, ++test_case_number);                                                                                                      \
+                                                                                                                                                                                                   \
+    if(SHORTEST_EDIT_SCRIPT_FUNCTION != shortest_edit_script_hybrid) {                                                                                                                             \
+                                                                                                                                                                                                   \
+        shortest_edit_script_function_pointer shortest_edit_script_function = SHORTEST_EDIT_SCRIPT_FUNCTION;                                                                                       \
+        assert(shortest_edit_script_function((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0) == EDIT_DISTANCE);    \
+                                                                                                                                                                                                   \
+    } else {                                                                                                                                                                                       \
+        shortest_edit_script_hybrid_function_pointer shortest_edit_script_function = SHORTEST_EDIT_SCRIPT_FUNCTION;                                                                                \
         assert(shortest_edit_script_function((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == EDIT_DISTANCE); \
-    }
+    } 
 
   for(size_t function_pos = 0; shortest_edit_script_functions[function_pos]; ++function_pos) {
 
