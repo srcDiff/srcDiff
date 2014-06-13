@@ -200,6 +200,12 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 
   for(unsigned int i = 1; i < node_set.size(); ++i) {
 
+    if(node_set.size() > match->size() && (node_set.size()) > (2 * match->size()))
+      continue;
+
+    if(match->size() > node_set.size() && (match->size()) > (2 * node_set.size()))
+      continue;
+
     int similarity;
     if((similarity =
         (operation == SESDELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
