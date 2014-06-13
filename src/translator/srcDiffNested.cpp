@@ -185,25 +185,30 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNod
 int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
                , std::vector<xNodePtr> & nodes_match, NodeSet * match, int operation) {
 
-  int match_pos = 0;
-  int match_similarity = 0;
+  int match_pos = node_set.size();
+  int match_similarity = -1;
   if(node_set.size() > 0) {
 
-    match_pos = 0;
-    if(operation == SESDELETE)
-      match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
-    else
-      match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
+    if(!((node_set.at(0)->size() > match->size() && (node_set.at(0)->size()) > (2 * match->size()))
+      || (match->size() > node_set.at(0)->size() && (match->size()) > (2 * node_set.at(0)->size())))) {
+
+      match_pos = 0;
+      if(operation == SESDELETE)
+        match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
+      else
+        match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
+
+    }
 
   } else
     return 1;
 
   for(unsigned int i = 1; i < node_set.size(); ++i) {
 
-    if(node_set.size() > match->size() && (node_set.size()) > (2 * match->size()))
+    if(node_set.at(i)->size() > match->size() && (node_set.at(i)->size()) > (2 * match->size()))
       continue;
 
-    if(match->size() > node_set.size() && (match->size()) > (2 * node_set.size()))
+    if(match->size() > node_set.at(i)->size() && (match->size()) > (2 * node_set.at(i)->size()))
       continue;
 
     int similarity;
