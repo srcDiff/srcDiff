@@ -287,15 +287,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   // run on file level
   if(is_old || is_new) {
 
-    if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
-
-      wstate.archive = archive;
-
-    }
+    wstate.unit = unit;
 
     /** @todo when output non-archive additional namespaces not appended, because not collected 
       However this is correct when output is to archive */
-    srcml_write_start_unit(archive, unit);
+    srcml_write_start_unit(unit);
 
     output_diffs(rbuf_old, &node_set_old, rbuf_new, &node_set_new, wstate);
 
@@ -304,7 +300,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     output_node(rbuf_old, rbuf_new, &flush, SESCOMMON, wstate);
 
-    srcml_write_end_unit(archive);
+    srcml_write_end_unit(unit);
+
+    srcml_write_unit(archive, unit);
 
   }
 

@@ -112,6 +112,6 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
 
 void outputNode(const xNode& node, xmlTextWriterPtr writer);
 
-void outputNode(const xNode& node, srcml_archive * archive);
+void outputNode(const xNode& node, srcml_unit * unit);
 
 #endif
