@@ -17,8 +17,8 @@ cat list | gxargs -I% -P 10 bash -c "../bin/srcdiff --literal --operator --modif
 
 #cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier old/% -o old/%.1.xml"
 #cat files | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier new/% -o new/%.1.xml"
-cat list | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier old/% -o old/%.1.xml"
-cat list | gxargs -I% -P 10 bash -c "src2srcml --literal --operator --modifier new/% -o new/%.1.xml"
+cat list | gxargs -I% -P 10 bash -c "srcml --literal --operator --modifier old/% -o old/%.1.xml"
+cat list | gxargs -I% -P 10 bash -c "srcml --literal --operator --modifier new/% -o new/%.1.xml"
 
 #cat  files | gxargs -I% -P 10 bash -c "../bin/srcdiff --srcml old/%.1.xml new/%.1.xml > new/%.xml"
 
