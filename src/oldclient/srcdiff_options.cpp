@@ -146,12 +146,13 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       options |= OPTION_FILELIST;
 
       // filelist mode is default nested mode
-      options |= SRCML_OPTION_ARCHIVE;
+      srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
 
       poptions.file_list_name = optarg;
+  
       break;
 
-      case VERBOSE_FLAG_SHORT :
+    case VERBOSE_FLAG_SHORT :
 
         options |= OPTION_VERBOSE;
 
@@ -167,7 +168,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         options |= OPTION_SVN;
 
         // filelist mode is default nested mode
-        options |= SRCML_OPTION_ARCHIVE;
+        srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
         poptions.svn_url = optarg;
 
         const char * end = index(optarg, '@');

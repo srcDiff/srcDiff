@@ -306,7 +306,7 @@ int main(int argc, char* argv[]) {
 
 #ifdef SVN
 
-  if(isoption(srcml_archive_get_options(poptions.archive), OPTION_SVN) && isoption(srcml_archive_get_options(poptions.archive), OPTION_SVN_CONTINUOUS)) {
+  if(isoption(options, OPTION_SVN) && isoption(options, OPTION_SVN_CONTINUOUS)) {
 
     if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
@@ -314,7 +314,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, srcml_archive_get_options(poptions.archive), count, skipped, error, showinput,shownumber,
+    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber,
                             srcml_archive_get_src_encoding(poptions.archive),
                             srcml_archive_get_encoding(poptions.archive),
                             poptions.srcdiff_filename,
@@ -330,7 +330,7 @@ int main(int argc, char* argv[]) {
 
   }
 
-  if(isoption(srcml_archive_get_options(poptions.archive), OPTION_SVN) && isoption(srcml_archive_get_options(poptions.archive), OPTION_FILELIST)) {
+  if(isoption(options, OPTION_SVN) && isoption(options, OPTION_FILELIST)) {
 
     if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
@@ -338,7 +338,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, srcml_archive_get_options(poptions.archive), count, skipped, error, showinput,shownumber,
+    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber,
                             srcml_archive_get_src_encoding(poptions.archive),
                             srcml_archive_get_encoding(poptions.archive),
                             poptions.srcdiff_filename,
@@ -370,7 +370,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     // translate input filenames from list in file
-    if (isoption(srcml_archive_get_options(poptions.archive), OPTION_FILELIST)) {
+    if (isoption(options, OPTION_FILELIST)) {
 
       // if we don't have a filelist yet, get it from the first argument
       if (!poptions.file_list_name && input_arg_count > 0)
@@ -385,14 +385,14 @@ int main(int argc, char* argv[]) {
 
 #ifdef SVN
       // translate from standard input
-    } else if(isoption(srcml_archive_get_options(poptions.archive), OPTION_SVN)) {
+    } else if(isoption(options, OPTION_SVN)) {
 
       if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
         fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
         exit(1);
       }
 
-      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, srcml_archive_get_options(poptions.archive), count, skipped, error, showinput,shownumber);
+      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, count, skipped, error, showinput,shownumber);
 #endif
     } else if (input_arg_count == 0) {
 
@@ -424,7 +424,7 @@ int main(int argc, char* argv[]) {
     if (count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
 
-    else if (showinput && isoption(srcml_archive_get_options(poptions.archive), SRCML_OPTION_ARCHIVE) && !isoption(srcml_archive_get_options(poptions.archive), OPTION_QUIET)) {
+    else if (showinput && isoption(options, SRCML_OPTION_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
       fprintf(stderr, "\n"
               "Translated: %d\t"
               "Skipped: %d\t"
@@ -1190,7 +1190,7 @@ void srcdiff_filelist(srcDiffTranslator& translator, process_options& poptions, 
 
       *separator = '|';
 
-      if (isoption(srcml_archive_get_options(poptions.archive), OPTION_TERMINATE))
+      if (isoption(options, OPTION_TERMINATE))
         return;
 
       /*
