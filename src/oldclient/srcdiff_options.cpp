@@ -146,7 +146,8 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       options |= OPTION_FILELIST;
 
       // filelist mode is default nested mode
-      srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
+      if(!isoption(options, OPTION_VISUALIZE))
+        srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
 
       poptions.file_list_name = optarg;
   
@@ -168,7 +169,9 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         options |= OPTION_SVN;
 
         // filelist mode is default nested mode
-        srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
+        if(!isoption(options, OPTION_VISUALIZE))
+          srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
+  
         poptions.svn_url = optarg;
 
         const char * end = index(optarg, '@');
@@ -310,6 +313,8 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
         poptions.css_url = optarg;
 
       options |= OPTION_VISUALIZE;
+
+      srcml_archive_disable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
 
       break;
 
