@@ -57,12 +57,13 @@ xNode unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, fal
 srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      METHOD_TYPE method,
                                      std::string css,
-                                     srcml_archive * archive)
-  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL)
+                                     srcml_archive * archive,
+                                     OPTION_TYPE & options)
+  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL), options(options)
 {
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
-  if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE))
+  if(!isoption(options, OPTION_VISUALIZE))
     srcml_write_open_filename(archive, srcdiff_filename);
 
   // diff tags
@@ -107,7 +108,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
   wstate.filename = srcdiff_filename;
 
   // writer state
-  if(isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
+  if(isoption(options, OPTION_VISUALIZE)) {
 
     std::string dir = "";
     if(srcml_archive_get_directory(archive) != NULL)
@@ -117,7 +118,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, srcml_archive_get_options(archive));
+    colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, options);
 
   }
 
@@ -303,7 +304,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     srcml_write_end_unit(srcdiff_unit);
 
-    if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
+    if(!isoption(options, OPTION_VISUALIZE)) {
 
       srcml_write_unit(archive, srcdiff_unit);
 
@@ -337,7 +338,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   rbuf_new.clear();
   wstate.clear();
 
-  if(isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
+  if(isoption(options, OPTION_VISUALIZE)) {
 
     colordiff->colorize(srcml_unit_get_xml(srcdiff_unit), line_diff_range);
 
@@ -350,7 +351,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
-  if(!isoption(srcml_archive_get_options(archive), OPTION_VISUALIZE)) {
+  if(!isoption(options, OPTION_VISUALIZE)) {
 
     srcml_close_archive(archive);
 

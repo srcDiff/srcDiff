@@ -360,7 +360,8 @@ int main(int argc, char* argv[]) {
     srcDiffTranslator translator(poptions.srcdiff_filename,
                                  poptions.method,
                                  poptions.css_url,
-                                 poptions.archive);
+                                 poptions.archive,
+                                 options);
 
 
 
