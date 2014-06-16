@@ -1069,7 +1069,8 @@ int main(int argc, char * argv[]) {
         assert(shortest_edit_script_function((void *)test_sequence_one, sequence_one_size, (void *)test_sequence_two, sequence_two_size, &edit_script, compare, accessor, 0, 2) == EDIT_DISTANCE); \
     } 
 
-  for(size_t function_pos = 0; shortest_edit_script_functions[function_pos]; ++function_pos) {
+    size_t function_pos;
+    for(old/kspread/part/Canvas.cpp|new/kspread/part/Canvas.cppfunction_pos = 0; shortest_edit_script_functions[function_pos]; ++function_pos) {
 
       {
         // NULL test case
