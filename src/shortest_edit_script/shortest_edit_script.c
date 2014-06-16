@@ -80,7 +80,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
 
   // for each edit distance
   int distance;
-  for(distance = 1; distance <= max_distance; ++distance) {
+  for(distance = 1; distance < max_distance; ++distance) {
 
     // for each possible diagonal
     int diagonal;

@@ -1070,7 +1070,7 @@ int main(int argc, char * argv[]) {
     } 
 
     size_t function_pos;
-    for(old/kspread/part/Canvas.cpp|new/kspread/part/Canvas.cppfunction_pos = 0; shortest_edit_script_functions[function_pos]; ++function_pos) {
+    for(function_pos = 0; shortest_edit_script_functions[function_pos]; ++function_pos) {
 
       {
         // NULL test case
