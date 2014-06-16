@@ -48,7 +48,6 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
     //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
-    //    { FILELIST_FLAG, optional_argument, NULL, FILELIST_FLAG_CODE },
     { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },

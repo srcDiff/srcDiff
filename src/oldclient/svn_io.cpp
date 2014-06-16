@@ -394,7 +394,7 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   file_two << revision_two;
 
 
-  translator.translate(file_one.str().c_str(), file_two.str().c_str(), local_options,
+  translator.translate(file_one.str().c_str(), file_two.str().c_str(),
                        NULL,
                        filename.c_str(),
                        0);
@@ -473,17 +473,12 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
 }
 
-void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const char * url, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
-                             const char* xml_encoding,    // xml encoding of result srcML file
+void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const char * url, int& count, int & skipped, int & error, bool & showinput, bool shownumber,
                              const char* srcdiff_filename,  // filename of result srcDiff file
                              METHOD_TYPE method,
-                             const char* directory,       // root unit directory
-                             const char* filename,        // root unit filename
-                             const char* version,         // root unit version
-                             const char* uri[],           // uri prefixes
-                             int tabsize,                  // size of tabs
-                             std::string css
-                             ) {
+                             std::string css,
+                             srcml_archive * archive,
+                             OPTION_TYPE options) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -556,17 +551,11 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
     full_srcdiff << revision_two;
     full_srcdiff << ".xml";
 
-    srcDiffTranslator translator(src_encoding,
-                                 xml_encoding,
-                                 full_srcdiff.str().c_str(),
-                                 options,
+    srcDiffTranslator translator(full_srcdiff.str().c_str(),
                                  method,
-                                 directory,
-                                 filename,
-                                 version,
-                                 uri,
-                                 tabsize,
-                                 css);
+                                 css,
+                                 archive,
+                                 options);
 
 
     const char * path = "";
@@ -598,17 +587,12 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
 }
 
-void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_revnum_t revision_two, const char * url, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const char* src_encoding,    // text encoding of source code
-                              const char* xml_encoding,    // xml encoding of result srcML file
-                              const char* srcdiff_filename,  // filename of result srcDiff file
-                              METHOD_TYPE method,
-                              const char* directory,       // root unit directory
-                              const char* filename,        // root unit filename
-                              const char* version,         // root unit version
-                              const char* uri[],           // uri prefixes
-                              int tabsize,                  // size of tabs
-                              std::string css
-                              ) {
+void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_revnum_t revision_two, const char * url, int& count, int & skipped, int & error, bool & showinput, bool shownumber,
+                            const char* srcdiff_filename,  // filename of result srcDiff file
+                            METHOD_TYPE method,
+                            std::string css,
+                            srcml_archive * archive,
+                            OPTION_TYPE options) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -653,17 +637,11 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
   if(svn_error)
     fprintf(stderr, "%s\n", svn_error->message);
 
-  srcDiffTranslator translator(src_encoding,
-                               xml_encoding,
-                               srcdiff_filename,
-                               options,
+  srcDiffTranslator translator(srcdiff_filename,
                                method,
-                               directory,
-                               filename,
-                               version,
-                               uri,
-                               tabsize,
-                               css);
+                               css,
+                               archive,
+                               options);
 
 
   try {

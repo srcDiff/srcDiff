@@ -22,8 +22,12 @@
 file(GLOB OLDCLIENT_HEADERS *.hpp)
 file(GLOB OLDCLIENT_SOURCE *.cpp)
 
-list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.hpp)
-list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
+if(NOT SVN_ENABLED)
+
+    list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.hpp)
+    list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
+
+endif()
 
 # srcdiff
 if(WIN32)
@@ -35,7 +39,7 @@ add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
 endif()
 
-target_link_libraries(srcdiff ${LIBXML2_LIBRARIES} ${LIBSRCML_LIBRARY} pthread)
+target_link_libraries(srcdiff ${LIBXML2_LIBRARIES} ${LIBSRCML_LIBRARY} pthread ${LIBSVN_LIBRARIES})
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 

@@ -314,17 +314,12 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber,
-                            srcml_archive_get_src_encoding(poptions.archive),
-                            srcml_archive_get_encoding(poptions.archive),
+    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, count, skipped, error, showinput,shownumber,
                             poptions.srcdiff_filename,
                             poptions.method,
-                            srcml_archive_get_directory(poptions.archive),
-                            srcml_archive_get_filename(poptions.archivce),
-                            srcml_archive_get_version(poptions.archive),
-                            0,
-                            srcml_archive_get_tabsize(poptions.archive),
-                            poptions.css_url);
+                            poptions.css_url,
+                            poptions.archive,
+                            options);
 
     exit(0);
 
@@ -338,17 +333,12 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, options, count, skipped, error, showinput,shownumber,
-                            srcml_archive_get_src_encoding(poptions.archive),
-                            srcml_archive_get_encoding(poptions.archive),
+    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, count, skipped, error, showinput,shownumber,
                             poptions.srcdiff_filename,
                             poptions.method,
-                            srcml_archive_get_directory(poptions.archive),
-                            srcml_archive_get_filename(poptions.archive),
-                            srcml_archive_get_version(poptions.archive),
-                            0,
-                            srcml_archive_get_tabsize(poptions.archive),
-                            poptions.css_url);
+                            poptions.css_url,
+                            poptions.archive,
+                            options);
 
     exit(0);
 

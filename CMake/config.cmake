@@ -24,11 +24,20 @@
 # build options
 option(BUILD_UNIT_TESTS "Build unit tests for srcDiff" OFF)
 
+option(SVN_ENABLED "Build in svn source input support" OFF)
+if(SVN_ENABLED)
+
+set(LIBSVN_INCLUDE /usr/local/include/subversion-1;/usr/include/apr-1)
+set(LIBSVN_LIBRARIES /usr/local/lib/libsvn_client-1.dylib;/usr/local/lib/libsvn_fs_util-1.dylib;/usr/local/lib/libsvn_repos-1.dylib;/usr/local/lib/libsvn_delta-1.dylib;/usr/local/lib/libsvn_ra-1.dylib;/usr/local/lib/libsvn_subr-1.dylib;/usr/local/lib/libsvn_diff-1.dylib;/usr/local/lib/libsvn_ra_local-1.dylib;/usr/local/lib/libsvn_wc-1.dylib;/usr/local/lib/libsvn_fs-1.dylib;/usr/local/lib/libsvn_ra_serf-1.dylib;/usr/local/lib/libsvn_fs_fs-1.dylib;/usr/local/lib/libsvn_ra_svn-1.dylib;libapr-1.dylib;libaprutil-1.dylib)
+add_definitions(-DSVN)
+
+endif()
+
 # find needed libraries
 find_package(LibXml2 REQUIRED)
 find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /usr/local/lib)
 set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
 # include needed includes
-include_directories(${LIBXML2_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR})
+include_directories(${LIBXML2_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR} ${LIBSVN_INCLUDE})
 
