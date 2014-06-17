@@ -281,6 +281,10 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
 bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
+  /** @todo may want to add this or something similar */
+  // if(structure_two->size() < structure_one->size())
+  //   return false;
+
   int block = is_block_type(structure_two, nodes_two);
 
   if(block == -1)
@@ -301,13 +305,26 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
   return false;
 }
 
-void set_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
-                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+void set_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
 
-  nodes_one.at(structure_one->at(0))->nest = ++nest_id;
-  nodes_one.at(structure_one->back())->nest = nest_id;
-  nodes_two.at(structure_two->at(0))->nest = nest_id;
-  nodes_two.at(structure_two->back())->nest = nest_id;
+  ++nest_id;
+
+  for(int i = start_old; i < end_old; ++i) {
+
+    nodes_old.at(node_sets_old->at(i)->at(0))->nest = nest_id;
+    nodes_old.at(node_sets_old->at(i)->back())->nest = nest_id;
+
+
+  }
+
+  for(int i = start_new; i < end_new; ++i) {
+
+    nodes_new.at(node_sets_new->at(i)->at(0))->nest = nest_id;
+    nodes_new.at(node_sets_new->at(i)->back())->nest = nest_id;
+
+
+  }
 
 }
 
