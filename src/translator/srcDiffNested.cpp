@@ -315,14 +315,12 @@ void set_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, i
     nodes_old.at(node_sets_old->at(i)->at(0))->nest = nest_id;
     nodes_old.at(node_sets_old->at(i)->back())->nest = nest_id;
 
-
   }
 
   for(int i = start_new; i < end_new; ++i) {
 
     nodes_new.at(node_sets_new->at(i)->at(0))->nest = nest_id;
     nodes_new.at(node_sets_new->at(i)->back())->nest = nest_id;
-
 
   }
 
@@ -338,8 +336,128 @@ void clear_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
+void clear_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
+
+  for(int i = start_old; i < end_old; ++i) {
+
+    nodes_old.at(node_sets_old->at(i)->at(0))->nest = 0;
+    nodes_old.at(node_sets_old->at(i)->back())->nest = 0;
+
+  }
+
+  for(int i = start_new; i < end_new; ++i) {
+
+    nodes_new.at(node_sets_new->at(i)->at(0))->nest = 0;
+    nodes_new.at(node_sets_new->at(i)->back())->nest = 0;
+
+  }
+
+}
+
+void output_nested_recursive(reader_state & rbuf_old,
+                  NodeSets * nodes_sets_old,
+                  int start_old, int end_old,
+                  reader_state & rbuf_new,
+                  NodeSets * node_sets_new,
+                  int start_new, int end_new,
+                  int operation, writer_state & wstate) {
+
+  clear_nestable(nodes_sets_old, rbuf_old.nodes, start_old, end_old, node_sets_new, rbuf_new.nodes, start_new, end_new);
+
+  output_white_space_prefix(rbuf_old, rbuf_new, wstate);
+/*
+  unsigned int end_pos;
+
+  // idea best match first of multi then pass all on to algorithm or set ending pos to recurse down
+  if(operation == SESDELETE) {
+
+    NodeSets node_set = create_node_set(rbuf_old.nodes, structure_old->at(1), structure_old->back()
+                                                               , rbuf_new.nodes.at(structure_new->at(0)));
+
+    NodeSets nest_set = create_node_set(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
+
+    unsigned int match = best_match(rbuf_old.nodes, node_set, rbuf_new.nodes, nest_set.at(0), SESDELETE);
+
+    if(match < node_set.size()) {
+
+      end_pos = node_set.at(match)->at(0) - 1;
+
+      for(; (signed)end_pos > structure_old->at(0) && is_white_space(rbuf_old.nodes.at(end_pos)); --end_pos)
+        ;
+
+      ++end_pos;
+
+      output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+
+      output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+
+      // collect subset of nodes
+      NodeSets next_node_set_old
+        = create_node_set(rbuf_old.nodes, end_pos, node_set.back()->back() + 1);
+
+      output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &nest_set, wstate);
+
+      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
+
+      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+
+    } else {
+
+      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
+
+    }
+
+  } else {
+
+    NodeSets node_set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
+                                                               , rbuf_old.nodes.at(structure_old->at(0)));
+
+    NodeSets nest_set = create_node_set(rbuf_old.nodes, structure_old->at(0), structure_old->back() + 1);
+
+    unsigned int match = best_match(rbuf_new.nodes, node_set, rbuf_old.nodes, nest_set.at(0), SESINSERT);
+
+    if(match < node_set.size()) {
+
+      end_pos = node_set.at(match)->at(0) - 1;
+
+      for(; (signed)end_pos > structure_new->at(0) && is_white_space(rbuf_new.nodes.at(end_pos)); --end_pos)
+        ;
+
+      ++end_pos;
+
+      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
+
+      output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+
+      // collect subset of nodes
+      NodeSets next_node_set_new
+        = create_node_set(rbuf_new.nodes, end_pos, node_set.back()->back() + 1);
+
+      output_diffs(rbuf_old, &nest_set, rbuf_new, &next_node_set_new, wstate);
+
+      output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
+
+      output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
+
+    } else {
+
+      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
+
+    }
+
+  }
+
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+  //diff_old_start.properties = 0;
+  //diff_new_start.properties = 0;
+  */
+
+}
+
 void output_nested(reader_state & rbuf_old, NodeSet * structure_old
-                   , reader_state & rbuf_new ,NodeSet * structure_new
+                   , reader_state & rbuf_new, NodeSet * structure_new
                    , int operation, writer_state & wstate) {
 
   clear_nestable(structure_old, rbuf_old.nodes, structure_new, rbuf_new.nodes);
