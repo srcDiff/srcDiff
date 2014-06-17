@@ -53,7 +53,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, *node_sets_new, rbuf_new.nodes, edits->offset_sequence_two, SESINSERT);
+        add_construct(constructs, *node_sets_new, rbuf_new.nodes, edits->offset_sequence_two + i, SESINSERT);
 
       }
 
@@ -63,7 +63,7 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, *node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, SESDELETE);
+        add_construct(constructs, *node_sets_old, rbuf_old.nodes, edits->offset_sequence_one + i, SESDELETE);
 
       }
 
