@@ -366,19 +366,22 @@ void output_nested_recursive(reader_state & rbuf_old,
   clear_nestable(nodes_sets_old, rbuf_old.nodes, start_old, end_old, node_sets_new, rbuf_new.nodes, start_new, end_new);
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
-/*
+
   unsigned int end_pos;
 
   // idea best match first of multi then pass all on to algorithm or set ending pos to recurse down
   if(operation == SESDELETE) {
 
-    NodeSets node_set = create_node_set(rbuf_old.nodes, structure_old->at(1), structure_old->back()
-                                                               , rbuf_new.nodes.at(structure_new->at(0)));
+    NodeSets node_set = create_node_set(rbuf_old.nodes,
+      nodes_sets_old->at(start_old)->at(1),
+      nodes_sets_old->at(end_old - 1)->back());
 
-    NodeSets nest_set = create_node_set(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
+    NodeSets nest_set;
 
-    unsigned int match = best_match(rbuf_old.nodes, node_set, rbuf_new.nodes, nest_set.at(0), SESDELETE);
+    for(int i = start_old; i < end_old; ++i)
+        nest_set.push_back(node_sets_new->at(i));
 
+/*
     if(match < node_set.size()) {
 
       end_pos = node_set.at(match)->at(0) - 1;
@@ -407,9 +410,9 @@ void output_nested_recursive(reader_state & rbuf_old,
       output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
 
     }
-
+*/
   } else {
-
+/*
     NodeSets node_set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
                                                                , rbuf_old.nodes.at(structure_old->at(0)));
 
@@ -445,14 +448,13 @@ void output_nested_recursive(reader_state & rbuf_old,
       output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
 
     }
-
+*/
   }
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   //diff_old_start.properties = 0;
   //diff_new_start.properties = 0;
-  */
 
 }
 
