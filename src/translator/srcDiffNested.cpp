@@ -328,16 +328,6 @@ void set_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, i
 
 }
 
-void clear_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
-                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
-
-  nodes_one.at(structure_one->at(0))->nest = 0;
-  nodes_one.at(structure_one->back())->nest = 0;
-  nodes_two.at(structure_two->at(0))->nest = 0;
-  nodes_two.at(structure_two->back())->nest = 0;
-
-}
-
 void output_nested(reader_state & rbuf_old, NodeSet * structure_old
                    , reader_state & rbuf_new ,NodeSet * structure_new
                    , int operation, writer_state & wstate) {
