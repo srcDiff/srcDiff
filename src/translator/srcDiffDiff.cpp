@@ -89,6 +89,7 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
         // could be a closing tag, but then something should be wrong.
         // TODO: remove this and make sure it works
+      break;
         node_set->push_back(i);
       }
 
