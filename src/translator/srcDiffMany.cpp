@@ -238,14 +238,16 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
 
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-                      , SESINSERT, wstate);
+          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
+                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1,
+                                SESINSERT, wstate);
 
       } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
                             , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
 
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-                      , SESDELETE, wstate);
+          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
+                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1,
+                                SESINSERT, wstate);
 
       } else {
 

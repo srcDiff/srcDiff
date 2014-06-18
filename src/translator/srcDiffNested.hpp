@@ -18,6 +18,14 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
 
 bool has_internal_structure(NodeSet * structure, std::vector<xNodePtr> & nodes, const char * type);
 
+void output_nested_recursive(reader_state & rbuf_old,
+                  NodeSets * nodes_sets_old,
+                  int start_old, int end_old,
+                  reader_state & rbuf_new,
+                  NodeSets * nodes_sets_new,
+                  int start_new, int end_new,
+                  int operation, writer_state & wstate);
+
 void output_nested(reader_state & rbuf_old, NodeSet * structure_old
                    , reader_state & rbuf_new ,NodeSet * structure_new
                    , int operation, writer_state & wstate);
