@@ -380,6 +380,23 @@ void output_nested_recursive(reader_state & rbuf_old,
 
         ++end_pos;
 
+    } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "while") == 0) {
+
+        while(!(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(end_pos))->type == XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(end_pos))->name, "condition") == 0))
+          ++end_pos;
+
+        ++end_pos;
+
+    } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "for") == 0) {
+
+        while(!(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(end_pos))->type == XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(end_pos))->name, "incr") == 0))
+          ++end_pos;
+
+        ++end_pos;
+        ++end_pos;
+
     }
 
     NodeSets node_set = create_node_set(rbuf_old.nodes,
@@ -412,6 +429,23 @@ void output_nested_recursive(reader_state & rbuf_old,
           && strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(end_pos))->name, "then") == 0))
           ++end_pos;
 
+        ++end_pos;
+
+    } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "while") == 0) {
+
+        while(!(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(end_pos))->type == XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(end_pos))->name, "condition") == 0))
+          ++end_pos;
+
+        ++end_pos;
+
+    } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "for") == 0) {
+
+        while(!(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(end_pos))->type == XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(end_pos))->name, "incr") == 0))
+          ++end_pos;
+
+        ++end_pos;
         ++end_pos;
 
     }
