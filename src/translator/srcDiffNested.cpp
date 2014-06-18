@@ -367,13 +367,24 @@ void output_nested_recursive(reader_state & rbuf_old,
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
-  unsigned int end_pos;
-
   // idea best match first of multi then pass all on to algorithm or set ending pos to recurse down
   if(operation == SESDELETE) {
 
+    unsigned int end_pos = nodes_sets_old->at(start_old)->at(1);
+
+    if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "if") == 0) {
+
+        while(!(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(end_pos))->type == XML_READER_TYPE_ELEMENT
+          && strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(end_pos))->name, "then") == 0))
+          ++end_pos;
+
+        ++end_pos;
+
+    }
+
     NodeSets node_set = create_node_set(rbuf_old.nodes,
-      nodes_sets_old->at(start_old)->at(1),
+      //nodes_sets_old->at(start_old)->at(1),
+      end_pos,
       nodes_sets_old->at(end_old - 1)->back());
 
     NodeSets nest_set;
@@ -381,7 +392,7 @@ void output_nested_recursive(reader_state & rbuf_old,
     for(int i = start_new; i < end_new; ++i)
         nest_set.push_back(nodes_sets_new->at(i));
 
-      output_change(rbuf_old, nodes_sets_old->at(start_old)->at(1), rbuf_new, rbuf_new.last_output, wstate);
+      output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
@@ -393,8 +404,21 @@ void output_nested_recursive(reader_state & rbuf_old,
 
   } else {
 
+    unsigned int end_pos = nodes_sets_new->at(start_new)->at(1);
+
+    if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "if") == 0) {
+
+        while(!(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(end_pos))->type == XML_READER_TYPE_ELEMENT
+          && strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(end_pos))->name, "then") == 0))
+          ++end_pos;
+
+        ++end_pos;
+
+    }
+
     NodeSets node_set = create_node_set(rbuf_new.nodes,
-      nodes_sets_new->at(start_new)->at(1),
+      //nodes_sets_old->at(start_old)->at(1),
+      end_pos,
       nodes_sets_new->at(end_new - 1)->back());
 
     NodeSets nest_set;
@@ -402,7 +426,7 @@ void output_nested_recursive(reader_state & rbuf_old,
     for(int i = start_old; i < end_old; ++i)
         nest_set.push_back(nodes_sets_old->at(i));
 
-      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, nodes_sets_new->at(start_new)->at(1), wstate);
+      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
 
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
