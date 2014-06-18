@@ -367,7 +367,6 @@ void output_nested_recursive(reader_state & rbuf_old,
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
-  // idea best match first of multi then pass all on to algorithm or set ending pos to recurse down
   if(operation == SESDELETE) {
 
     unsigned int end_pos = nodes_sets_old->at(start_old)->at(1);

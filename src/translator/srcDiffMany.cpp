@@ -239,22 +239,22 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
 
           int nest_length = 1;
-          while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)
+          while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
             ++nest_length;
 
-          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
-                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length,
+          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
+                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1,
                                 SESINSERT, wstate);
 
       } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
                             , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
 
           int nest_length = 1;
-          while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
+          while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)
             ++nest_length;
 
-          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
-                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1,
+          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
+                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length,
                                 SESDELETE, wstate);
 
       } else {
