@@ -381,36 +381,16 @@ void output_nested_recursive(reader_state & rbuf_old,
     for(int i = start_old; i < end_old; ++i)
         nest_set.push_back(node_sets_new->at(i));
 
-/*
-    if(match < node_set.size()) {
-
-      end_pos = node_set.at(match)->at(0) - 1;
-
-      for(; (signed)end_pos > structure_old->at(0) && is_white_space(rbuf_old.nodes.at(end_pos)); --end_pos)
-        ;
-
-      ++end_pos;
-
-      output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+      output_change(rbuf_old, nodes_sets_old->at(start_old)->at(1), rbuf_new, rbuf_new.last_output, wstate);
 
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
-      // collect subset of nodes
-      NodeSets next_node_set_old
-        = create_node_set(rbuf_old.nodes, end_pos, node_set.back()->back() + 1);
-
-      output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &nest_set, wstate);
+      output_diffs(rbuf_old, &node_set, rbuf_new, &nest_set, wstate);
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
-      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+      output_change(rbuf_old, nodes_sets_old->at(end_pos - 1)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
 
-    } else {
-
-      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
-
-    }
-*/
   } else {
 /*
     NodeSets node_set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
