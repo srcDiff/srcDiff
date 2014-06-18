@@ -1,1 +1,9 @@
 srcDiffTestReport*
+
+# linux test
+files
+linux-3.2.8.tar.bz2
+linux-3.2.9.tar.bz2
+list
+new/
+old/
