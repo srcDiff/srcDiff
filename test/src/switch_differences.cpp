@@ -16,7 +16,7 @@
 
 #include <Options.hpp>
 
-#include "../../src/xmlrw.hpp"
+#include <xmlrw.hpp>
 
 const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
