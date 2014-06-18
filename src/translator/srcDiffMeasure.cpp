@@ -112,6 +112,51 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 
 }
 
+double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  diff_nodes dnodes = { nodes_old, nodes_new };
+
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+
+  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
+
+    return MAX_INT;
+
+  }
+
+  ShortestEditScript ses(node_index_compare, node_index, &dnodes);
+  int text_old_length;
+  int text_new_length;
+  compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
+
+  edit * edits = ses.get_script();
+  unsigned int similarity = 0;
+  for(; edits; edits = edits->next) {
+
+    switch(edits->operation) {
+
+    case SESDELETE :
+
+      similarity += edits->length;
+      break;
+
+      }
+
+  }
+
+  similarity = text_old_length - similarity;
+
+  if(similarity <= 0)
+    similarity = 0;
+
+
+  return ((double)similarity) / (text_old_length < text_new_length ? text_old_length : text_new_length);
+
+}
+
 int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
                            NodeSet * node_set_new) {
 
