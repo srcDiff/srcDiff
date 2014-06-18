@@ -10,6 +10,10 @@ bool complete_nestable(NodeSets & structure_one, std::vector<xNodePtr> & nodes_o
 bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two);
 
+void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
+                 , int start_nest_old, int end_nest_old, int start_nest_new, int end_nest_new);
+
 void set_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
                  , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new);
 
