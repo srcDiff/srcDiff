@@ -306,14 +306,14 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 }
 
 void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new,
-                 int & start_nest_old, int & nest_old_length, int & start_nest_new, int & nest_new_length) {
+                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
+                 , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new) {
 
   start_nest_old = start_old;  
-  nest_old_length = 0;  
+  end_nest_old = start_old;  
 
   start_nest_new = start_new;  
-  nest_new_length = 0;  
+  end_nest_new = start_new;  
 
   for(int i = start_old; i < end_old; ++i) {
 
@@ -321,11 +321,11 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
       if(is_nestable(node_sets_new->at(j), nodes_new, node_sets_old->at(i), nodes_old)) {
 
-        nest_old_length = 1;
-        nest_new_length = 1;
+        end_nest_old = i + 1;
+        end_nest_new = j + 1;
 
-        while((j + nest_new_length) < end_new && is_nestable(node_sets_new->at(j + nest_new_length), nodes_new, node_sets_old->at(i), nodes_old))
-          ++nest_new_length;
+        while(end_nest_new < end_new && is_nestable(node_sets_new->at(end_nest_new), nodes_new, node_sets_old->at(i), nodes_old))
+          ++end_nest_new;
 
         return;
 
@@ -341,11 +341,11 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
       if(is_nestable(node_sets_old->at(j), nodes_old, node_sets_new->at(i), nodes_new)) {
 
-        nest_old_length = 1;
-        nest_new_length = 1;
+        end_nest_old = j + 1;
+        end_nest_new = i + 1;
 
-        while((j + nest_old_length) < end_old && is_nestable(node_sets_old->at(j + nest_old_length), nodes_old, node_sets_new->at(i), nodes_new))
-          ++nest_old_length;
+        while(end_nest_old < end_old && is_nestable(node_sets_old->at(end_nest_old), nodes_old, node_sets_new->at(i), nodes_new))
+          ++end_nest_old;
 
         return;
 
