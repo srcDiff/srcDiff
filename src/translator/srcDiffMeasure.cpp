@@ -45,7 +45,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
 
-    return MAX_INT;
+    return 0;
 
   }
 
