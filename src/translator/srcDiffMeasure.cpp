@@ -119,6 +119,14 @@ double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * n
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
 
+  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
+
+    return 0;
+
+  }
+
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
   int text_old_length;
   int text_new_length;
@@ -144,7 +152,7 @@ double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * n
   if(similarity <= 0)
     similarity = 0;
 
-  return ((double)similarity) / (text_old_length < text_new_length ? text_old_length : text_new_length);
+  return ((double)similarity) / (text_old_length < text_new_length ? text_new_length : text_old_length);
 
 }
 
