@@ -135,7 +135,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   line_diff_range.create_line_diff();
 
-  if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
+  if(!isoption(options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
 
@@ -157,7 +157,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  if(!isoption(srcml_archive_get_options(archive), OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
+  if(!isoption(options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
 
     is_old = -2;
 
@@ -188,7 +188,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  if(isoption(srcml_archive_get_options(archive), OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
+  if(isoption(options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
 
     is_old = -2;
 
@@ -254,7 +254,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   } else if(rbuf_old.nodes.empty()) {
 
-    if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTPURE)) {
+    if(!isoption(options, OPTION_OUTPUTPURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -267,7 +267,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   } else {
 
-    if(!isoption(srcml_archive_get_options(archive), OPTION_OUTPUTPURE)) {
+    if(!isoption(options, OPTION_OUTPUTPURE)) {
 
       is_old = 0;
       is_new = 0;
