@@ -410,7 +410,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 
-      output_change(rbuf_old, rbuf_new.last_output, rbuf_new, nodes_sets_new->at(end_new - 1)->back() + 1, wstate);
+      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, nodes_sets_new->at(end_new - 1)->back() + 1, wstate);
   }
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
