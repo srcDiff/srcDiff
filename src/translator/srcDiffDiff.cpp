@@ -291,24 +291,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
          && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
              || node_sets_new->at(edit_next->offset_sequence_two)->size() > 1)) {
 
-        if(node_compare(rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one)->at(0))
-                        , rbuf_new.nodes.at(node_sets_new->at(edit_next->offset_sequence_two)->at(0))) == 0) {
-
-           if(is_same_nestable(node_sets_old->at(edits->offset_sequence_one)
-                         , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)) {
-
-            set_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
-                        , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->offset_sequence_two + edit_next->length);
-
-          } else if(is_same_nestable(node_sets_new->at(edit_next->offset_sequence_two)
-                                , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes)) {
-
-             set_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
-                        , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->offset_sequence_two + edit_next->length);
-
-          }
-
-        } else if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
+        if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
                          , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)) {
 
             set_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
@@ -328,7 +311,7 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
         check_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
                         , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->offset_sequence_two + edit_next->length
                         , start_nest_old, end_nest_old, start_nest_new, end_nest_new);
-        
+
         set_nestable(node_sets_old, rbuf_old.nodes, start_nest_old, end_nest_old
                         , node_sets_new, rbuf_new.nodes, start_nest_new, end_nest_new);
       }

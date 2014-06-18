@@ -228,10 +228,37 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 
 }
 
+bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
+                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+
+  /** @todo may want to add this or something similar */
+  // if(structure_two->size() < structure_one->size())
+  //   return false;
+
+  int block = is_block_type(structure_two, nodes_two);
+
+  if(block == -1)
+    return false;
+
+  if(is_nest_type(structure_one, nodes_one, block)) {
+
+    return true;
+
+  }
+
+  if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
+
+    return true;
+
+  }
+
+  return false;
+}
+
 bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_one
                       , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
+  if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
     return false;
 
   //unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
@@ -281,28 +308,11 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
 bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  /** @todo may want to add this or something similar */
-  // if(structure_two->size() < structure_one->size())
-  //   return false;
+  if(node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
+    return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
+  else
+    return is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two);
 
-  int block = is_block_type(structure_two, nodes_two);
-
-  if(block == -1)
-    return false;
-
-  if(is_nest_type(structure_one, nodes_one, block)) {
-
-    return true;
-
-  }
-
-  if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
-
-    return true;
-
-  }
-
-  return false;
 }
 
 void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
