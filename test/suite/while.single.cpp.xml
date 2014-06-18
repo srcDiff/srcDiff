@@ -28,4 +28,18 @@
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></while></diff:delete></unit>
 
+<unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common>
+}</block></while></diff:delete></unit>
+
+<unit filename="while.single|while.single">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:common>
+}</block></while></diff:delete></unit>
+
 </unit>
