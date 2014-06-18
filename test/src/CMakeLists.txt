@@ -25,4 +25,4 @@ file(GLOB TEST_SRC *.cpp)
 
 add_executable(switch_differences ${TEST_SRC})
 target_link_libraries(switch_differences ${LIBXML2_LIBRARIES})
-
+set_target_properties(switch_differences PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

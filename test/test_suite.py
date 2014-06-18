@@ -14,14 +14,14 @@ from datetime import datetime, time
 maxcount = 700
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
-
 FIELD_WIDTH_LANGUAGE = 5
+
 FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
 
 srcml_utility = "srcml2src"
-switch_utility = "bin/SwitchDifferences"
+switch_utility = "../bin/switch_differences"
 src2srcdiff_utility = "../bin/srcdiff"
 
 # extracts a particular unit from a srcML file
@@ -293,7 +293,7 @@ elif len(sys.argv) > 2:
 		speclang = sys.argv[3]
 
 # base directory
-base_dir = "../suite"
+base_dir = "suite"
 
 errorlist = []
 
