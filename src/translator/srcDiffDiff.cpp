@@ -322,6 +322,15 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
           }
 
+      } else {
+
+        int start_nest_old, nest_old_length, start_nest_new, nest_new_length;
+        check_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->length
+                        , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->length
+                        , start_nest_old, nest_old_length, start_nest_new, nest_new_length);
+
+        set_nestable(node_sets_old, rbuf_old.nodes, start_nest_old, nest_old_length
+                        , node_sets_new, rbuf_new.nodes, start_nest_new, nest_new_length);
       }
 
       // many to many handling
