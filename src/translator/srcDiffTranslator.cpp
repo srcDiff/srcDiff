@@ -282,7 +282,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   srcml_unit * srcdiff_unit = srcml_create_unit(archive);
   srcml_unit_set_language(srcdiff_unit, srcml_archive_check_extension(archive, path_one ? path_one : path_two));
-  srcml_unit_set_filename(srcdiff_unit, unit_filename);
+  srcml_archive_get_filename(archive) ? srcml_unit_set_filename(srcdiff_unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(srcdiff_unit, unit_filename);
   srcml_unit_set_directory(srcdiff_unit, unit_directory);
   srcml_unit_set_version(srcdiff_unit, unit_version);
 

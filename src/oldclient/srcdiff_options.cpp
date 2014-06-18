@@ -391,6 +391,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       srcml_archive_set_filename(poptions.archive, optarg);
+      
       break;
 
     case SRCVERSION_FLAG_SHORT:
