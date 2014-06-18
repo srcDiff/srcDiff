@@ -38,7 +38,7 @@ struct nest_info {
 // possible is mostly for block and may need to have to test for internal block structure
 
 const char * const block_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
-const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", "return", 0 };
+const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", "elseif", "return", 0 };
 const char * const else_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const while_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const for_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
@@ -48,7 +48,7 @@ const char * const struct_nest_types[] = { "decl_stmt", "function_decl", 0 };
 const char * const union_nest_types[] = { "decl_stmt",  "function_decl", 0 };
 
 const char * const basic_possible_nest_types[] = { 0 };
-const char * const block_possible_nest_types[] = { "block", 0 };
+const char * const block_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const if_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const else_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const while_possible_nest_types[] = { "block", "if", "while", "for", 0 };
@@ -307,7 +307,7 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
 
 bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
     return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
   else
