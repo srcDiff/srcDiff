@@ -34,7 +34,22 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
         finish_old = node_sets_old->at(end_old)->back() + 1;
         finish_new = node_sets_new->at(end_new)->back() + 1;
 
-        output_change_white_space(rbuf_old, node_sets_old->at(start_nest_old)->at(0), rbuf_new, node_sets_new->at(start_nest_new)->at(0), wstate);
+        unsigned int pre_nest_end_old = 0;
+        if(start_nest_old > 0) {
+
+          pre_nest_end_old = node_sets_old->at(start_nest_old - 1)->back() + 1;
+
+        }
+
+        unsigned int pre_nest_end_new = 0;
+        if(start_nest_new > 0) {
+
+          pre_nest_end_new = node_sets_new->at(start_nest_new - 1)->back() + 1;
+
+        }
+
+        output_change_white_space(rbuf_old, pre_nest_end_old, rbuf_new, pre_nest_end_new, wstate);
+
         if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
           output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,
                                     rbuf_new, node_sets_new, start_nest_new, end_nest_new,
