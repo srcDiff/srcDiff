@@ -20,10 +20,10 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
   if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size()
     && start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size()) {
 
-    int start_nest_old, end_nest_old, start_nest_new, end_nest_new;
+    int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
     check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
                     , node_sets_new, rbuf_new.nodes, start_new, end_new + 1
-                    , start_nest_old, end_nest_old, start_nest_new, end_nest_new);
+                    , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
     finish_old = node_sets_old->at(end_old)->back() + 1;
     finish_new = node_sets_new->at(end_new)->back() + 1;
@@ -32,7 +32,7 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
     if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
       output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,
                                 rbuf_new, node_sets_new, start_nest_new, end_nest_new,
-                                (end_nest_old - start_nest_old) == 1 ? SESDELETE : SESINSERT, wstate);
+                                operation, wstate);
 
   } else {
 

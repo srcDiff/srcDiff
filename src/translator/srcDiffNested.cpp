@@ -314,7 +314,8 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
                  , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
-                 , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new) {
+                 , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
+                 , int & operation) {
 
   start_nest_old = start_old;  
   end_nest_old = start_old;  
@@ -323,7 +324,6 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
   end_nest_new = start_new;  
 
   for(int i = start_old; i < end_old; ++i) {
-
 
     for(int j = start_new; j < end_new; ++j) {
 
@@ -338,6 +338,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
         end_nest_old = i + 1;
         end_nest_new = j + 1;
+        operation = SESDELETE;
 
         while(end_nest_new < end_new && is_nestable(node_sets_new->at(end_nest_new), nodes_new, node_sets_old->at(i), nodes_old)) {
 
@@ -377,6 +378,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
         end_nest_old = j + 1;
         end_nest_new = i + 1;
+        operation = SESINSERT;
 
         while(end_nest_old < end_old && is_nestable(node_sets_old->at(end_nest_old), nodes_old, node_sets_new->at(i), nodes_new)) {
 
