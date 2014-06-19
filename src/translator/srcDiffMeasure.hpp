@@ -19,4 +19,7 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
                        NodeSet * node_set_new);
 
+void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new, int & similarity, int & difference, int & text_old_length, int & text_new_length);
+
 #endif
