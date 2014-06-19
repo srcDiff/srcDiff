@@ -79,7 +79,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
     if(node_compare(rbuf_old.nodes.at(i), rbuf_new.nodes.at(j)) == 0) {
 
       output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESCOMMON, wstate);
-
+        
     } else if(is_white_space(rbuf_old.nodes.at(i)) && is_white_space(rbuf_new.nodes.at(j))) {
       
       int olength = i;

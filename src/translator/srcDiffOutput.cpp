@@ -65,7 +65,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
       update_diff_stack(wstate.output_diff, &diff_new_end, SESINSERT);
 
-    } else {
+    } else if(delay_operation == SESCOMMON)  {
 
       outputNode(diff_common_end, wstate.unit);
 
@@ -79,7 +79,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     delay = false;
     delay_operation = -2;
 
-  } else if(delay && (delay_operation != operation)) {
+  } else if(delay) {
 
     delay = false;
     delay_operation = -2;
@@ -101,8 +101,11 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
       delay_operation = wstate.output_diff.back()->operation;
       return;
 
-    } else
+    } else {
+
       outputNode(*node, wstate.unit);
+
+    }
 
     if(wstate.output_diff.back()->operation == SESCOMMON) {
 
