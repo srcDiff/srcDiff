@@ -31,15 +31,6 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
   static bool delay = false;
   static int delay_operation = -2;
 
-  /*
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
-      if((*node == diff_old_end
-          || *node == diff_new_end
-          || *node == diff_common_end))
-        return;
-  */
-
   // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SESDELETE 
