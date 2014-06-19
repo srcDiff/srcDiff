@@ -79,8 +79,9 @@ void create_linked_list(int olength, int nlength, difference * differences, offs
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length) {
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
+  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
 
-  return 4 * similarity < 3 * min_size && 10 * difference <= min_size;
+  return 4 * similarity < 3 * min_size || difference > min_size;
 
 }
 

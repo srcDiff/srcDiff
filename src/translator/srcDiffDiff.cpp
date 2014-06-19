@@ -307,13 +307,13 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
       } else if(edits->length == 1 || edit_next->length == 1) {
 
-        int start_nest_old, end_nest_old, start_nest_new, end_nest_new;
-        check_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
-                        , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->offset_sequence_two + edit_next->length
-                        , start_nest_old, end_nest_old, start_nest_new, end_nest_new);
+        // int start_nest_old, end_nest_old, start_nest_new, end_nest_new;
+        // check_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
+        //                 , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->offset_sequence_two + edit_next->length
+        //                 , start_nest_old, end_nest_old, start_nest_new, end_nest_new);
 
-        set_nestable(node_sets_old, rbuf_old.nodes, start_nest_old, end_nest_old
-                        , node_sets_new, rbuf_new.nodes, start_nest_new, end_nest_new);
+        // set_nestable(node_sets_old, rbuf_old.nodes, start_nest_old, end_nest_old
+        //                 , node_sets_new, rbuf_new.nodes, start_nest_new, end_nest_new);
       }
 
       // many to many handling
