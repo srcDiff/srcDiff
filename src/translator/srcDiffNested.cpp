@@ -569,7 +569,7 @@ void output_nested_recursive(reader_state & rbuf_old,
       output_change(rbuf_old, rbuf_old.last_output, rbuf_new, nodes_sets_new->at(end_new - 1)->back() + 1, wstate);
   }
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
+  //output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   //diff_old_start.properties = 0;
   //diff_new_start.properties = 0;
