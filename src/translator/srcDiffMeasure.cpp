@@ -54,21 +54,31 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
   compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
-  unsigned int similarity = 0;
+
+  int delete_similarity = 0;
+  int insert_similarity = 0;
   for(; edits; edits = edits->next) {
 
     switch(edits->operation) {
 
-    case SESDELETE :
+      case SESDELETE :
 
-      similarity += edits->length;
-      break;
+        delete_similarity += edits->length;
+        break;
+
+      case SESINSERT :
+
+        insert_similarity += edits->length;
+        break;
 
       }
 
   }
 
-  similarity = text_old_length - similarity;
+  delete_similarity = text_old_length - delete_similarity;
+  insert_similarity = text_new_length - insert_similarity;
+
+  int similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
   if(similarity <= 0)
     similarity = 0;
@@ -101,6 +111,7 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
   compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
+  
   similarity = 0, difference = 0;
 
   int delete_similarity = 0;
