@@ -37,6 +37,14 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
                                   rbuf_new, node_sets_new, start_nest_new, end_nest_new,
                                   operation, wstate);
 
+      /** @todo may only need to do this if not at end */
+      if(end_nest_old > end_old && end_nest_new > end_new) {
+
+        output_change(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
+        return;
+
+      }
+
     } else {
 
       if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size()) {
@@ -52,7 +60,7 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
     }
 
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
-
+              
   }
 
 }
