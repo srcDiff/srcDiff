@@ -40,6 +40,7 @@ struct nest_info {
 const char * const block_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", "elseif", "return", 0 };
 const char * const else_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
+const char * const elseif_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const while_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const for_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const function_nest_types[] = { "expr_stmt", "decl_stmt", "if", "while", "for", 0 };
@@ -51,6 +52,7 @@ const char * const basic_possible_nest_types[] = { 0 };
 const char * const block_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const if_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const else_possible_nest_types[] = { "block", "if", "while", "for", 0 };
+const char * const elseif_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const while_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const for_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const function_possible_nest_types[] = { 0 };
@@ -64,6 +66,7 @@ const nest_info nesting[] = {
   { "block", block_nest_types, block_possible_nest_types },
   { "if", if_nest_types, if_possible_nest_types },
   { "else", else_nest_types, else_possible_nest_types },
+  { "elseif", elseif_nest_types, elseif_possible_nest_types },
   { "while", while_nest_types, while_possible_nest_types },
   { "for", for_nest_types, for_possible_nest_types },
   { "function", function_nest_types, function_possible_nest_types },
@@ -465,7 +468,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     unsigned int end_pos = nodes_sets_old->at(start_old)->at(1);
 
-    if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "if") == 0) {
+    if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
 
         while(!(rbuf_old.nodes.at(end_pos)->type == XML_READER_TYPE_ELEMENT
           && strcmp(rbuf_old.nodes.at(end_pos)->name, "then") == 0))
@@ -516,7 +519,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     unsigned int end_pos = nodes_sets_new->at(start_new)->at(1);
 
-    if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "if") == 0) {
+    if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
 
         while(!(rbuf_new.nodes.at(end_pos)->type == XML_READER_TYPE_ELEMENT
           && strcmp(rbuf_new.nodes.at(end_pos)->name, "then") == 0))
