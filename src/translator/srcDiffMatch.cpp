@@ -76,6 +76,12 @@ void create_linked_list(int olength, int nlength, difference * differences, offs
 
 }
 
+bool reject_match(int similarity, int text_old_length, int text_new_length) {
+
+  return false;
+
+}
+
 void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
                                , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
                                , offset_pair ** matches) {
@@ -129,15 +135,16 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
 
     for(int j = 0; j < olength; ++j) {
 
+      int text_old_length, text_new_length;
       int similarity = compute_similarity(nodes_old, node_sets_old->at(j)
-                                          , nodes_new, node_sets_new->at(i));
+                                          , nodes_new, node_sets_new->at(i), text_old_length, text_new_length);
 
       //unsigned long long max_similarity = (unsigned long long)-1;
       int max_similarity = -1;
       int unmatched = 0;
 
       // check if unmatched
-      if(similarity == MAX_INT) {
+      if(similarity == MAX_INT || reject_match(similarity, text_old_length, text_new_length)) {
 
         similarity = 0;
         unmatched = 1;
