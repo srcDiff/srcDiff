@@ -48,7 +48,7 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 
         }
 
-        output_change_white_space(rbuf_old, pre_nest_end_old, rbuf_new, pre_nest_end_new, wstate);
+        output_change(rbuf_old, pre_nest_end_old, rbuf_new, pre_nest_end_new, wstate);
 
         if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
           output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,

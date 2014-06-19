@@ -511,7 +511,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
       output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
-      output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
       output_diffs(rbuf_old, &node_set, rbuf_new, &nest_set, wstate);
 
