@@ -191,7 +191,7 @@ void output_pure_operation_white_space(reader_state & rbuf_old, unsigned int end
 
   output_change(rbuf_old, oend, rbuf_new, nend, wstate);
 
-  output_white_space_suffix(rbuf_old, rbuf_new, wstate);
+  //output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
   //  output_white_space_pure_statement_end(rbuf_old, rbuf_new, operation, wstate);
 
