@@ -186,8 +186,8 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
                , std::vector<xNodePtr> & nodes_match, NodeSet * match, int operation) {
 
   int match_pos = node_set.size();
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, match_pos);
   int match_similarity = 0;
+  
   if(node_set.size() > 0) {
 
     if(!((node_set.at(0)->size() > match->size() && (node_set.at(0)->size()) > (2 * match->size()))
@@ -209,11 +209,7 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
     if(match->size() > node_set.at(i)->size() && (match->size()) > (2 * node_set.at(i)->size()))
       continue;
 
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
     int similarity = compute_similarity(nodes, node_set.at(i), nodes_match, match);
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, similarity);
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(similarity > match_similarity) {
 
       match_pos = i;
