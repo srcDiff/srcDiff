@@ -336,7 +336,9 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
         if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(j)) < 0.9)
           continue;
 
+        start_nest_old = i;
         end_nest_old = i + 1;
+        start_nest_new = j;
         end_nest_new = j + 1;
         operation = SESDELETE;
 
@@ -376,7 +378,9 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
         if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_sets_old->at(j), nodes_new, node_set.at(match)) < 0.9)
           continue;
 
+        start_nest_old = j;
         end_nest_old = j + 1;
+        start_nest_new = i;
         end_nest_new = i + 1;
         operation = SESINSERT;
 
