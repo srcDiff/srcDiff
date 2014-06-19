@@ -14,4 +14,18 @@
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:common>
 }</block></then></if></diff:delete></unit>
 
+<unit filename="if.multiple|if.multiple">
+<diff:insert>    </diff:insert><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{ 
+
+    <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</diff:common>
+}<diff:insert>    </diff:insert></block></then></if>
+
+<if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+    
+    <diff:common><expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+
+</diff:common>}</block></then></if></diff:delete></unit>
+
 </unit>

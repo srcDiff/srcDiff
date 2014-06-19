@@ -24,18 +24,26 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
       && start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size()) {
 
       int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
-      check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
-                      , node_sets_new, rbuf_new.nodes, start_new, end_new + 1
-                      , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
-      finish_old = node_sets_old->at(end_old)->back() + 1;
-      finish_new = node_sets_new->at(end_new)->back() + 1;
+      do {
 
-      output_change_white_space(rbuf_old, node_sets_old->at(start_nest_old)->at(0), rbuf_new, node_sets_new->at(start_nest_new)->at(0), wstate);
-      if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
-        output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,
-                                  rbuf_new, node_sets_new, start_nest_new, end_nest_new,
-                                  operation, wstate);
+        check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
+                        , node_sets_new, rbuf_new.nodes, start_new, end_new + 1
+                        , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
+
+        finish_old = node_sets_old->at(end_old)->back() + 1;
+        finish_new = node_sets_new->at(end_new)->back() + 1;
+
+        output_change_white_space(rbuf_old, node_sets_old->at(start_nest_old)->at(0), rbuf_new, node_sets_new->at(start_nest_new)->at(0), wstate);
+        if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
+          output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,
+                                    rbuf_new, node_sets_new, start_nest_new, end_nest_new,
+                                    operation, wstate);
+
+        start_old = end_nest_old;
+        start_new = end_nest_new;
+
+      } while((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0 && end_nest_old <= end_old && end_nest_new <= end_new);
 
       /** @todo may only need to do this if not at end */
       if(end_nest_old > end_old && end_nest_new > end_new) {
