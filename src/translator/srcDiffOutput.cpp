@@ -71,7 +71,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     delay_operation = -2;
 
   } else if(delay) {
-
+    /** @todo may want to place the delay operations different back in here, and have common output before each operation.  So do not nest delete/insert in common. */
     delay = false;
     delay_operation = -2;
 
