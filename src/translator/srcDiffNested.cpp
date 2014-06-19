@@ -186,6 +186,7 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
                , std::vector<xNodePtr> & nodes_match, NodeSet * match, int operation) {
 
   int match_pos = node_set.size();
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, match_pos);
   int match_similarity = 0;
   if(node_set.size() > 0) {
 
@@ -193,10 +194,7 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
       || (match->size() > node_set.at(0)->size() && (match->size()) > (2 * node_set.at(0)->size())))) {
 
       match_pos = 0;
-      if(operation == SESDELETE)
-        match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
-      else
-        match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
+      match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
 
     }
 
@@ -211,11 +209,12 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
     if(match->size() > node_set.at(i)->size() && (match->size()) > (2 * node_set.at(i)->size()))
       continue;
 
-    int similarity;
-    if((similarity =
-        (operation == SESDELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
-        : compute_similarity(nodes_match, match, nodes, node_set.at(i)))
-       > match_similarity) {
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, i);
+    int similarity = compute_similarity(nodes, node_set.at(i), nodes_match, match);
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, similarity);
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    if(similarity > match_similarity) {
 
       match_pos = i;
       match_similarity = similarity;
@@ -347,7 +346,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
             NodeSets node_set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
                                                                  , nodes_new.at(node_sets_new->at(end_nest_new)->at(0)));
 
-            int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(j), SESDELETE);
+            int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(end_nest_new), SESDELETE);
+
             if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(end_nest_new)) < 0.9)
               return;
 
@@ -385,7 +385,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
             NodeSets node_set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
                                                              , nodes_old.at(node_sets_old->at(end_nest_old)->at(0)));
 
-            int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(j), SESDELETE);
+            int match = best_match(nodes_new, node_set, nodes_old, node_sets_old->at(end_nest_old), SESINSERT);
             if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_sets_old->at(end_nest_old), nodes_new, node_set.at(match)) < 0.9)
               return;
 
