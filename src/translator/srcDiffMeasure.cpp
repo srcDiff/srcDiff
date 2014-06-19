@@ -34,7 +34,7 @@ void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std:
 }
 
 int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new) {
+                       NodeSet * node_set_new, int & text_old_length, int & text_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -50,8 +50,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
   }
 
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
-  int text_old_length;
-  int text_new_length;
+
   compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
@@ -75,6 +74,16 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
     similarity = 0;
 
   return similarity;
+
+}
+
+int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new) {
+
+  int text_old_length;
+  int text_new_length;
+
+  return compute_similarity(nodes_old, node_set_old, nodes_new, node_set_new, text_old_length, text_new_length);
 
 }
 
