@@ -89,7 +89,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
 
-  return 4 * similarity < 3 * min_size || difference > max_size;
+  return 10 * similarity < 7 * min_size || difference > max_size;
 
 }
 
