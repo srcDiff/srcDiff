@@ -475,14 +475,14 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
 
-        while(!(rbuf_old.nodes.at(end_pos)->type == XML_READER_TYPE_ELEMENT
+        while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
           && strcmp(rbuf_old.nodes.at(end_pos)->name, "then") == 0))
 
           ++end_pos;
 
     } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "while") == 0) {
 
-        while(!(rbuf_old.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT
+        while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(rbuf_old.nodes.at(end_pos)->name, "condition") == 0))
           ++end_pos;
 
@@ -490,7 +490,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "for") == 0) {
 
-        while(!((rbuf_old.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT || rbuf_old.nodes.at(end_pos)->extra & 0x1)
+        while(!((rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || rbuf_old.nodes.at(end_pos)->extra & 0x1)
           && strcmp(rbuf_old.nodes.at(end_pos)->name, "incr") == 0))
           ++end_pos;
 
@@ -525,13 +525,13 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
 
-        while(!(rbuf_new.nodes.at(end_pos)->type == XML_READER_TYPE_ELEMENT
+        while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
           && strcmp(rbuf_new.nodes.at(end_pos)->name, "then") == 0))
           ++end_pos;
 
     } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "while") == 0) {
 
-        while(!(rbuf_new.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT
+        while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(rbuf_new.nodes.at(end_pos)->name, "condition") == 0))
           ++end_pos;
 
@@ -539,7 +539,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "for") == 0) {
 
-        while(!((rbuf_new.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT || rbuf_new.nodes.at(end_pos)->extra & 0x1)
+        while(!((rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || rbuf_new.nodes.at(end_pos)->extra & 0x1)
           && strcmp(rbuf_new.nodes.at(end_pos)->name, "incr") == 0))
           ++end_pos;
 
