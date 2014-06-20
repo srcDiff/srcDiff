@@ -38,7 +38,7 @@ struct nest_info {
 // possible is mostly for block and may need to have to test for internal block structure
 
 const char * const block_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
-const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", "return", 0 };
+const char * const if_nest_types[] = { "expr_stmt", "decl_stmt", "else", "elseif", "return", 0 };
 const char * const else_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const while_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
 const char * const for_nest_types[] = { "expr_stmt", "decl_stmt", "return", 0 };
@@ -48,7 +48,7 @@ const char * const struct_nest_types[] = { "decl_stmt", "function_decl", 0 };
 const char * const union_nest_types[] = { "decl_stmt",  "function_decl", 0 };
 
 const char * const basic_possible_nest_types[] = { 0 };
-const char * const block_possible_nest_types[] = { "block", 0 };
+const char * const block_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const if_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const else_possible_nest_types[] = { "block", "if", "while", "for", 0 };
 const char * const while_possible_nest_types[] = { "block", "if", "while", "for", 0 };
@@ -63,6 +63,8 @@ const nest_info nesting[] = {
 
   { "block", block_nest_types, block_possible_nest_types },
   { "if", if_nest_types, if_possible_nest_types },
+  { "then", if_nest_types, if_possible_nest_types },
+  { "elseif", if_nest_types, if_possible_nest_types },
   { "else", else_nest_types, else_possible_nest_types },
   { "while", while_nest_types, while_possible_nest_types },
   { "for", for_nest_types, for_possible_nest_types },
@@ -187,16 +189,14 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 
   int match_pos = node_set.size();
   int match_similarity = 0;
+
   if(node_set.size() > 0) {
 
     if(!((node_set.at(0)->size() > match->size() && (node_set.at(0)->size()) > (2 * match->size()))
       || (match->size() > node_set.at(0)->size() && (match->size()) > (2 * node_set.at(0)->size())))) {
 
       match_pos = 0;
-      if(operation == SESDELETE)
-        match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
-      else
-        match_similarity = compute_similarity(nodes_match, match, nodes, node_set.at(0));
+      match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
 
     }
 
@@ -211,11 +211,8 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
     if(match->size() > node_set.at(i)->size() && (match->size()) > (2 * node_set.at(i)->size()))
       continue;
 
-    int similarity;
-    if((similarity =
-        (operation == SESDELETE) ? compute_similarity(nodes, node_set.at(i), nodes_match, match) 
-        : compute_similarity(nodes_match, match, nodes, node_set.at(i)))
-       > match_similarity) {
+    int similarity = compute_similarity(nodes, node_set.at(i), nodes_match, match);
+    if(similarity > match_similarity) {
 
       match_pos = i;
       match_similarity = similarity;
@@ -228,10 +225,37 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 
 }
 
+bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
+                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+
+  /** @todo may want to add this or something similar */
+  // if(structure_two->size() < structure_one->size())
+  //   return false;
+
+  int block = is_block_type(structure_two, nodes_two);
+
+  if(block == -1)
+    return false;
+
+  if(is_nest_type(structure_one, nodes_one, block)) {
+
+    return true;
+
+  }
+
+  if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
+
+    return true;
+
+  }
+
+  return false;
+}
+
 bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_one
                       , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  if(!is_nestable(structure_one, nodes_one, structure_two, nodes_two))
+  if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
     return false;
 
   //unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
@@ -281,33 +305,126 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
 bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  int block = is_block_type(structure_two, nodes_two);
+  if(node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
+    return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
+  else
+    return is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two);
 
-  if(block == -1)
-    return false;
-
-  if(is_nest_type(structure_one, nodes_one, block)) {
-
-    return true;
-
-  }
-
-  if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
-
-    return true;
-
-  }
-
-  return false;
 }
 
-void set_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
-                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
+                 , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
+                 , int & operation) {
 
-  nodes_one.at(structure_one->at(0))->nest = ++nest_id;
-  nodes_one.at(structure_one->back())->nest = nest_id;
-  nodes_two.at(structure_two->at(0))->nest = nest_id;
-  nodes_two.at(structure_two->back())->nest = nest_id;
+  start_nest_old = start_old;  
+  end_nest_old = start_old;  
+
+  start_nest_new = start_new;  
+  end_nest_new = start_new;  
+
+  for(int i = start_old; i < end_old; ++i) {
+
+    for(int j = start_new; j < end_new; ++j) {
+
+      if(is_nestable(node_sets_new->at(j), nodes_new, node_sets_old->at(i), nodes_old)) {
+
+        NodeSets node_set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
+                                                             , nodes_new.at(node_sets_new->at(j)->at(0)));
+
+        int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(j), SESDELETE);
+        if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(j)) < 0.9)
+          continue;
+
+        start_nest_old = i;
+        end_nest_old = i + 1;
+        start_nest_new = j;
+        end_nest_new = j + 1;
+        operation = SESDELETE;
+
+        while(end_nest_new < end_new && is_nestable(node_sets_new->at(end_nest_new), nodes_new, node_sets_old->at(i), nodes_old)) {
+
+            NodeSets node_set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
+                                                                 , nodes_new.at(node_sets_new->at(end_nest_new)->at(0)));
+
+            int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(end_nest_new), SESDELETE);
+
+            if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(end_nest_new)) < 0.9)
+              return;
+
+          ++end_nest_new;
+
+        }
+
+        return;
+
+      }
+
+    }
+
+  }
+
+  for(int i = start_new; i < end_new; ++i) {
+
+    for(int j = start_old; j < end_old; ++j) {
+
+      if(is_nestable(node_sets_old->at(j), nodes_old, node_sets_new->at(i), nodes_new)) {
+
+        NodeSets node_set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
+                                                             , nodes_old.at(node_sets_old->at(j)->at(0)));
+
+        int match = best_match(nodes_new, node_set, nodes_old, node_sets_old->at(j), SESINSERT);
+
+        if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_sets_old->at(j), nodes_new, node_set.at(match)) < 0.9)
+          continue;
+
+        start_nest_old = j;
+        end_nest_old = j + 1;
+        start_nest_new = i;
+        end_nest_new = i + 1;
+        operation = SESINSERT;
+
+        while(end_nest_old < end_old && is_nestable(node_sets_old->at(end_nest_old), nodes_old, node_sets_new->at(i), nodes_new)) {
+
+            NodeSets node_set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
+                                                             , nodes_old.at(node_sets_old->at(end_nest_old)->at(0)));
+
+            int match = best_match(nodes_new, node_set, nodes_old, node_sets_old->at(end_nest_old), SESINSERT);
+            if(match >= node_set.size() || compute_percent_similarity(nodes_old, node_sets_old->at(end_nest_old), nodes_new, node_set.at(match)) < 0.9)
+              return;
+
+          ++end_nest_old;
+
+        }
+
+        return;
+
+      }
+
+    }
+
+  }
+
+}
+
+void set_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
+
+  ++nest_id;
+
+  for(int i = start_old; i < end_old; ++i) {
+
+    nodes_old.at(node_sets_old->at(i)->at(0))->nest = nest_id;
+    nodes_old.at(node_sets_old->at(i)->back())->nest = nest_id;
+
+  }
+
+  for(int i = start_new; i < end_new; ++i) {
+
+    nodes_new.at(node_sets_new->at(i)->at(0))->nest = nest_id;
+    nodes_new.at(node_sets_new->at(i)->back())->nest = nest_id;
+
+  }
 
 }
 
@@ -321,8 +438,146 @@ void clear_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
+void clear_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
+
+  for(int i = start_old; i < end_old; ++i) {
+
+    nodes_old.at(node_sets_old->at(i)->at(0))->nest = 0;
+    nodes_old.at(node_sets_old->at(i)->back())->nest = 0;
+
+  }
+
+  for(int i = start_new; i < end_new; ++i) {
+
+    nodes_new.at(node_sets_new->at(i)->at(0))->nest = 0;
+    nodes_new.at(node_sets_new->at(i)->back())->nest = 0;
+
+  }
+
+}
+
+void output_nested_recursive(reader_state & rbuf_old,
+                  NodeSets * nodes_sets_old,
+                  int start_old, int end_old,
+                  reader_state & rbuf_new,
+                  NodeSets * nodes_sets_new,
+                  int start_new, int end_new,
+                  int operation, writer_state & wstate) {
+
+  clear_nestable(nodes_sets_old, rbuf_old.nodes, start_old, end_old, nodes_sets_new, rbuf_new.nodes, start_new, end_new);
+
+  output_white_space_prefix(rbuf_old, rbuf_new, wstate);
+
+  if(operation == SESDELETE) {
+
+    unsigned int end_pos = nodes_sets_old->at(start_old)->at(1);
+
+    if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
+
+        while(!(rbuf_old.nodes.at(end_pos)->type == XML_READER_TYPE_ELEMENT
+          && strcmp(rbuf_old.nodes.at(end_pos)->name, "then") == 0))
+
+          ++end_pos;
+
+    } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "while") == 0) {
+
+        while(!(rbuf_old.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_old.nodes.at(end_pos)->name, "condition") == 0))
+          ++end_pos;
+
+        ++end_pos;
+
+    } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "for") == 0) {
+
+        while(!((rbuf_old.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT || rbuf_old.nodes.at(end_pos)->extra & 0x1)
+          && strcmp(rbuf_old.nodes.at(end_pos)->name, "incr") == 0))
+          ++end_pos;
+
+        ++end_pos;
+        ++end_pos;
+
+    }
+
+    NodeSets node_set = create_node_set(rbuf_old.nodes,
+      //nodes_sets_old->at(start_old)->at(1),
+      end_pos,
+      nodes_sets_old->at(end_old - 1)->back());
+
+    NodeSets nest_set;
+
+    for(int i = start_new; i < end_new; ++i)
+        nest_set.push_back(nodes_sets_new->at(i));
+
+      output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+
+      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
+
+      output_diffs(rbuf_old, &node_set, rbuf_new, &nest_set, wstate);
+
+      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
+
+      output_change(rbuf_old, nodes_sets_old->at(end_old - 1)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+
+  } else {
+
+    unsigned int end_pos = nodes_sets_new->at(start_new)->at(1);
+
+    if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
+
+        while(!(rbuf_new.nodes.at(end_pos)->type == XML_READER_TYPE_ELEMENT
+          && strcmp(rbuf_new.nodes.at(end_pos)->name, "then") == 0))
+          ++end_pos;
+
+    } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "while") == 0) {
+
+        while(!(rbuf_new.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_new.nodes.at(end_pos)->name, "condition") == 0))
+          ++end_pos;
+
+        ++end_pos;
+
+    } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "for") == 0) {
+
+        while(!((rbuf_new.nodes.at(end_pos)->type == XML_READER_TYPE_END_ELEMENT || rbuf_new.nodes.at(end_pos)->extra & 0x1)
+          && strcmp(rbuf_new.nodes.at(end_pos)->name, "incr") == 0))
+          ++end_pos;
+
+        ++end_pos;
+        ++end_pos;
+
+    }
+
+    NodeSets node_set = create_node_set(rbuf_new.nodes,
+      //nodes_sets_old->at(start_old)->at(1),
+      end_pos,
+      nodes_sets_new->at(end_new - 1)->back());
+
+    NodeSets nest_set;
+
+    for(int i = start_old; i < end_old; ++i)
+        nest_set.push_back(nodes_sets_old->at(i));
+
+      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
+
+      output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
+
+      output_diffs(rbuf_old, &nest_set, rbuf_new, &node_set, wstate);
+
+      output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
+
+      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, nodes_sets_new->at(end_new - 1)->back() + 1, wstate);
+  }
+
+  //output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+  //diff_old_start.properties = 0;
+  //diff_new_start.properties = 0;
+
+}
+
 void output_nested(reader_state & rbuf_old, NodeSet * structure_old
-                   , reader_state & rbuf_new ,NodeSet * structure_new
+                   , reader_state & rbuf_new, NodeSet * structure_new
                    , int operation, writer_state & wstate) {
 
   clear_nestable(structure_old, rbuf_old.nodes, structure_new, rbuf_new.nodes);

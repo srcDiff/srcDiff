@@ -19,6 +19,10 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# include sub directories
-add_subdirectory(unit)
-add_subdirectory(src)
+include_directories(.)
+
+file(GLOB TEST_SRC *.cpp)
+
+add_executable(switch_differences ${TEST_SRC})
+target_link_libraries(switch_differences ${LIBXML2_LIBRARIES})
+set_target_properties(switch_differences PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

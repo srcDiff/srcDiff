@@ -12,6 +12,12 @@
 <unit filename="for.single|for.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
+<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></for></diff:delete>
+</unit>
+
+<unit filename="for.single|for.single">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt></for></diff:delete></unit>
 
 <unit filename="for.single|for.single"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
@@ -19,6 +25,11 @@
 }</block></for></diff:delete></unit>
 
 <unit filename="for.single|for.single"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
+<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
+}</block></for></diff:delete></unit>
+
+<unit filename="for.single|for.single"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></for></diff:delete></unit>
 

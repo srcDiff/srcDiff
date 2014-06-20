@@ -17,68 +17,74 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
   unsigned int finish_old = rbuf_old.last_output;
   unsigned int finish_new = rbuf_new.last_output;
 
-  if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size()) {
+  if((start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size())
+      || (start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size())) {
 
-    finish_old = node_sets_old->at(end_old)->back() + 1;
-  }
+    if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size()
+      && start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size()) {
 
-  if(start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size()) {
+      int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
 
-    finish_new = node_sets_new->at(end_new)->back() + 1;
-  }
-  /*
-  NodeSets slice_old;
+      do {
 
-  for(int i = start_old; i <= end_old; ++i) {
+        check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
+                        , node_sets_new, rbuf_new.nodes, start_new, end_new + 1
+                        , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
-    slice_old.push_back(node_sets_old->at(i));
+        finish_old = node_sets_old->at(end_old)->back() + 1;
+        finish_new = node_sets_new->at(end_new)->back() + 1;
 
-  }
+        unsigned int pre_nest_end_old = 0;
+        if(start_nest_old > 0) {
 
-  NodeSets slice_new;
+          pre_nest_end_old = node_sets_old->at(start_nest_old - 1)->back() + 1;
 
-  for(int i = start_new; i <= end_new; ++i) {
+        }
 
-    slice_new.push_back(node_sets_new->at(i));
+        unsigned int pre_nest_end_new = 0;
+        if(start_nest_new > 0) {
 
-  }
+          pre_nest_end_new = node_sets_new->at(start_nest_new - 1)->back() + 1;
 
-  if(slice_old.size() == 1 && slice_new.size() > 0
-     && complete_nestable(slice_new, rbuf_new.nodes, node_sets_old->at(start_old), rbuf_old.nodes)) {
+        }
 
-    NodeSet node_set;
+        output_change(rbuf_old, pre_nest_end_old, rbuf_new, pre_nest_end_new, wstate);
 
-    for(unsigned int i = 0; i < slice_new.size(); ++i) {
+        if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
+          output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,
+                                    rbuf_new, node_sets_new, start_nest_new, end_nest_new,
+                                    operation, wstate);
 
-      for(unsigned int j = 0; j < slice_new.at(i)->size(); ++j) {
+        start_old = end_nest_old;
+        start_new = end_nest_new;
 
-        node_set.push_back(slice_new.at(i)->at(j));
+      } while((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0 && end_nest_old <= end_old && end_nest_new <= end_new);
 
+      /** @todo may only need to do this if not at end */
+      if(end_nest_old > end_old && end_nest_new > end_new) {
+
+        output_change(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
+        return;
+
+      }
+
+    } else {
+
+      if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size()) {
+
+        finish_old = node_sets_old->at(end_old)->back() + 1;
+      }
+
+      if(start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size()) {
+
+        finish_new = node_sets_new->at(end_new)->back() + 1;
       }
 
     }
 
-    output_nested(rbuf_old, node_sets_old->at(start_old), rbuf_new, &node_set, SESDELETE, wstate);
-
-  } else if(slice_new.size() == 1 && slice_old.size() > 0
-            && complete_nestable(slice_old, rbuf_old.nodes, node_sets_new->at(start_new), rbuf_new.nodes)) {
-    NodeSet node_set;
-
-    for(unsigned int i = 0; i < slice_old.size(); ++i) {
-
-      for(unsigned int j = 0; j < slice_old.at(i)->size(); ++j) {
-
-        node_set.push_back(slice_old.at(i)->at(j));
-
-      }
-
-    }
-
-    output_nested(rbuf_old, &node_set, rbuf_new, node_sets_new->at(start_new), SESINSERT, wstate);
-
-  } else
-  */
     output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
+              
+  }
 
 }
 
@@ -238,14 +244,24 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
 
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-                      , SESINSERT, wstate);
+          int nest_length = 1;
+          while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
+            ++nest_length;
+
+          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
+                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1,
+                                SESINSERT, wstate);
 
       } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
                             , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
 
-        output_nested(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i), rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)
-                      , SESDELETE, wstate);
+          int nest_length = 1;
+          while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)
+            ++nest_length;
+
+          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
+                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length,
+                                SESDELETE, wstate);
 
       } else {
 

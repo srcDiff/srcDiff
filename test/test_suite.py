@@ -14,14 +14,14 @@ from datetime import datetime, time
 maxcount = 700
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
-
 FIELD_WIDTH_LANGUAGE = 5
+
 FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
 
 srcml_utility = "srcml2src"
-switch_utility = "bin/SwitchDifferences"
+switch_utility = "../bin/switch_differences"
 src2srcdiff_utility = "../bin/srcdiff"
 
 # extracts a particular unit from a srcML file
@@ -123,22 +123,8 @@ def srcdiff(source_file_old, source_file_new, encoding, language, directory, fil
         temp_file.write(source_file_new)
         temp_file.close()
 
-#	if directory != "":
-#		command.extend(["--directory", directory])
-#
-#      	if filename != "":
-#		command.extend(["--filename", filename])
 
-#	command.extend(prefixlist)
-
-	#print command
-
-	# run the srcml processor
-#	command.append("--src-encoding=" + encoding)
-
-#	command.append("--quiet")
-
-	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory)
+	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "")
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
@@ -275,13 +261,13 @@ specnum = 0
 speclang = ""
 if len(sys.argv) == 3:
 	result = sys.argv[2]
-	if result == "C++" or result == "C" or result == "Java" or result == "C++0x":
+	if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" :
 		speclang = result
 	else:
 		specnum = int(sys.argv[2])
 elif len(sys.argv) == 2:
 	result = sys.argv[1]
-	if result == "C++" or result == "C" or result == "Java" or result == "C++0x":
+	if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" :
 		speclang = result
 		specname = ""
 	else:
@@ -293,7 +279,7 @@ elif len(sys.argv) > 2:
 		speclang = sys.argv[3]
 
 # base directory
-base_dir = "../suite"
+base_dir = "suite"
 
 errorlist = []
 

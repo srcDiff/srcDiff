@@ -31,15 +31,6 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
   static bool delay = false;
   static int delay_operation = -2;
 
-  /*
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
-      if((*node == diff_old_end
-          || *node == diff_new_end
-          || *node == diff_common_end))
-        return;
-  */
-
   // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SESDELETE 
@@ -65,7 +56,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
       update_diff_stack(wstate.output_diff, &diff_new_end, SESINSERT);
 
-    } else {
+    } else if(delay_operation == SESCOMMON)  {
 
       outputNode(diff_common_end, wstate.unit);
 
@@ -79,8 +70,8 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     delay = false;
     delay_operation = -2;
 
-  } else if(delay && (delay_operation != operation)) {
-
+  } else if(delay) {
+    /** @todo may want to place the delay operations different back in here, and have common output before each operation.  So do not nest delete/insert in common. */
     delay = false;
     delay_operation = -2;
 
@@ -93,15 +84,19 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
-    if(ismethod(wstate.method, METHOD_GROUP) && operation != SESMOVE && (*node == diff_old_end || *node == diff_new_end || (0 && *node == diff_common_end))) {
+    /** @todo why was delay of common disabled */
+    if(ismethod(wstate.method, METHOD_GROUP) && operation != SESMOVE && (*node == diff_old_end || *node == diff_new_end || *node == diff_common_end)) {
 
 
       delay = true;
       delay_operation = wstate.output_diff.back()->operation;
       return;
 
-    } else
+    } else {
+
       outputNode(*node, wstate.unit);
+
+    }
 
     if(wstate.output_diff.back()->operation == SESCOMMON) {
 

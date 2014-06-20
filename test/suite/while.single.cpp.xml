@@ -12,6 +12,12 @@
 <unit filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
+<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></while></diff:delete>
+</unit>
+
+<unit filename="while.single|while.single">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt></while></diff:delete></unit>
 
 <unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
@@ -20,6 +26,12 @@
 
 <unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
+}</block></while></diff:delete></unit>
+
+<unit filename="while.single|while.single">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common>
 }</block></while></diff:delete></unit>
 
 <unit filename="while.single|while.single">

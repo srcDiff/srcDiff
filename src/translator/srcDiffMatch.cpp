@@ -76,6 +76,28 @@ void create_linked_list(int olength, int nlength, difference * differences, offs
 
 }
 
+bool reject_match(int similarity, int difference, int text_old_length, int text_new_length, std::string old_tag, std::string new_tag) {
+
+  if(old_tag != new_tag) return true;
+
+  if(old_tag == "name" || old_tag == "expr" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition"
+    || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
+    || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
+    || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
+    return false;
+
+  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
+  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
+
+  if(min_size <= 2)
+    return 2 * similarity < min_size || difference > max_size;
+  else if(min_size <= 3)
+    return 3 * similarity < 2 * min_size || difference > max_size;
+  else
+    return 10 * similarity < 7 * min_size || difference > max_size;
+
+}
+
 void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
                                , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
                                , offset_pair ** matches) {
@@ -129,15 +151,18 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
 
     for(int j = 0; j < olength; ++j) {
 
-      int similarity = compute_similarity(nodes_old, node_sets_old->at(j)
-                                          , nodes_new, node_sets_new->at(i));
+      int similarity, difference, text_old_length, text_new_length;
+      compute_measures(nodes_old, node_sets_old->at(j), nodes_new, node_sets_new->at(i),
+        similarity, difference, text_old_length, text_new_length);
 
       //unsigned long long max_similarity = (unsigned long long)-1;
       int max_similarity = -1;
       int unmatched = 0;
 
       // check if unmatched
-      if(similarity == MAX_INT) {
+      if(similarity == MAX_INT 
+        || reject_match(similarity, difference, text_old_length, text_new_length,
+          nodes_old.at(node_sets_old->at(j)->at(0))->name, nodes_new.at(node_sets_new->at(i)->at(0))->name)) {
 
         similarity = 0;
         unmatched = 1;
