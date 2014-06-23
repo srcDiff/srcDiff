@@ -143,12 +143,15 @@ bool is_single_call_expr(std::vector<xNodePtr> & nodes, int start_pos) {
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (strcmp((const char *)nodes.at(start_pos)->name, "expr_stmt") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "expr") != 0)) return false;
 
+  if(nodes.at(start_pos)->extra & 0x1) return false;
+
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "expr_stmt") == 0)
-  ++start_pos;
+    ++start_pos;
+
+  if(nodes.at(start_pos)->extra & 0x1) return false;
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "expr") == 0)
-  ++start_pos;
-
+    ++start_pos;
 
   if(strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return false;
 
