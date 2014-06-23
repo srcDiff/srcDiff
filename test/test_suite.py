@@ -113,16 +113,15 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist):
 
-        command = [globals()["src2srcdiff_utility"], "-d", directory, "-f", filename, "--operator", "--literal", "--modifier"]
+	command = [globals()["src2srcdiff_utility"], "-d", directory, "-f", filename, "--operator", "--literal", "--modifier"]
 
-        temp_file = open("temp_file_one.cpp", "w")
-        temp_file.write(source_file_old)
-        temp_file.close()
+	temp_file = open("temp_file_one.cpp", "w")
+	temp_file.write(source_file_old)
+	temp_file.close()
 
-        temp_file = open("temp_file_two.cpp", "w")
-        temp_file.write(source_file_new)
-        temp_file.close()
-
+	temp_file = open("temp_file_two.cpp", "w")
+	temp_file.write(source_file_new)
+	temp_file.close()
 
 	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "")
 
@@ -223,18 +222,18 @@ def getnested(xml_file):
 		return 0
 
 class Tee(object):
-    def __init__(self, name):
-        self.file = open(name, "w")
-        self.stdout = sys.stdout
-        sys.stdout = self
+	def __init__(self, name):
+		self.file = open(name, "w")
+		self.stdout = sys.stdout
+		sys.stdout = self
 
-    def __del__(self):
-        sys.stdout = self.stdout
-        self.file.close()
+	def __del__(self):
+		sys.stdout = self.stdout
+		self.file.close()
 
-    def write(self, data):
-        self.file.write(data)
-        self.stdout.write(data)
+	def write(self, data):
+		self.file.write(data)
+		self.stdout.write(data)
 
 Tee(error_filename)
 
@@ -247,8 +246,8 @@ print
 # Handle optional dos line endings
 doseol = False
 if len(sys.argv) > 1 and sys.argv[1] == "--dos":
-        sys.argv.pop(0)
-        doseol = True
+		sys.argv.pop(0)
+		doseol = True
 
 specname = ""
 if len(sys.argv) > 1:
@@ -390,8 +389,8 @@ try:
 						unit_text_new = extract_source(unitxml, "2")
 
 						# convert the unit in xml to text (if needed)
-                                                if doseol:
-                                                        unittext = unix2dos(unittext)
+						if doseol:
+								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
 						unitsrcmlraw = srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
@@ -418,14 +417,14 @@ try:
 						total_count = total_count + 1
 
 						# convert the unit in xml to text
-                                                unitxml = switch_differences(unitxml)
+						unitxml = switch_differences(unitxml)
 
 						unit_text_old = extract_source(unitxml, "1")
 						unit_text_new = extract_source(unitxml, "2")
 
 						# convert the unit in xml to text (if needed)
-                                                if doseol:
-                                                        unittext = unix2dos(unittext)
+						if doseol:
+								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
 						unitsrcmlraw = srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
@@ -532,9 +531,9 @@ os.rename(error_filename, error_filename + "_" + current_time.isoformat().replac
 f.close()
 
 if os.path.exists("temp_file_one.cpp") :
-        os.remove("temp_file_one.cpp")
+		os.remove("temp_file_one.cpp")
 if os.path.exists("temp_file_two.cpp") :
-        os.remove("temp_file_two.cpp")
+		os.remove("temp_file_two.cpp")
 
 # output tool version
 print
