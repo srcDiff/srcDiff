@@ -341,7 +341,22 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
     return false;
 
-  if(old_tag == "call") {
+  if(is_single_call_expr(nodes_old, old_pos) && is_single_call_expr(nodes_new, new_pos)) {
+
+    while(nodes_old.at(old_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+      || strcmp((const char *)nodes_old.at(old_pos)->name, "call") != 0)
+      ++old_pos;
+
+    while(nodes_new.at(new_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+      || strcmp((const char *)nodes_new.at(new_pos)->name, "call") != 0)
+      ++new_pos;
+
+    std::string old_name = get_call_name(nodes_old, old_pos);
+    std::string new_name = get_call_name(nodes_new, new_pos);
+
+    if(old_name == new_name) return false;
+
+  } else if(old_tag == "call") {
 
     std::string old_name = get_call_name(nodes_old, old_pos);
     std::string new_name = get_call_name(nodes_new, new_pos);
