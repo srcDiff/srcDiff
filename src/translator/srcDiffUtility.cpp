@@ -216,9 +216,9 @@ void skip_type(std::vector<xNodePtr> & nodes, int & start_pos) {
 
     if(strcmp((const char *)nodes.at(start_pos)->name, "type") == 0) {
 
-      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
+      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->extra & 0x1 == 0)
         ++open_type_count;
-      else
+      else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         --open_type_count;
 
     }
@@ -235,8 +235,7 @@ void skip_specifiers(std::vector<xNodePtr> & nodes, int & start_pos) {
    || strcmp((const char *)nodes.at(start_pos)->name, "specifier") != 0)
       return;
 
-
-  while(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+  while(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
     && strcmp((const char *)nodes.at(start_pos)->name, "specifier") == 0) {
 
     int open_specifier_count = nodes.at(name_start_pos)->extra & 0x1 ? 0 : 1;
@@ -246,9 +245,9 @@ void skip_specifiers(std::vector<xNodePtr> & nodes, int & start_pos) {
 
       if(strcmp((const char *)nodes.at(start_pos)->name, "specifier") == 0) {
 
-        if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
+        if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->extra & 0x1 == 0)
           ++open_specifier_count;
-        else
+        else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
           --open_specifier_count;
 
       }
@@ -264,6 +263,7 @@ void skip_specifiers(std::vector<xNodePtr> & nodes, int & start_pos) {
 std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return "";
+  if(nodes.at(start_pos)->extra & 0x1) return ""
 
   int name_start_pos = start_pos + 1;
 
@@ -281,6 +281,7 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "decl") != 0)) return "";
+  if(nodes.at(start_pos)->extra & 0x1) return ""
 
   int name_start_pos = start_pos + 1;
 
@@ -301,6 +302,7 @@ std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos)
     || (strcmp((const char *)nodes.at(start_pos)->name, "function") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "function_decl") != 0)
       && strcmp((const char *)nodes.at(start_pos)->name, "constructor") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "constructor_decl") != 0
       && strcmp((const char *)nodes.at(start_pos)->name, "destructor") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "destructor_decl") != 0) return "";
+  if(nodes.at(start_pos)->extra & 0x1) return ""
 
   int name_start_pos = start_pos + 1;
 
@@ -312,7 +314,6 @@ std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos)
   while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
    || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
     ++name_start_pos;
-
 
   return get_name(nodes, name_start_pos);
 
