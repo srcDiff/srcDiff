@@ -460,6 +460,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
               nodes_old, node_sets_old->at(k)->at(0), nodes_new, node_set.at(match)->at(0)))
               continue;
 
+          valid_nests.push_back(k);
+
         }
 
         start_nest_old = valid_nests.front();
