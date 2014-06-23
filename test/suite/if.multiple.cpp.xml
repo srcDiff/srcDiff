@@ -38,7 +38,7 @@
     <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
-<diff:delete>   <expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
+<diff:delete>    <expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
 <diff:delete type="whitespace">
 </diff:delete>    }</block></while>
 
