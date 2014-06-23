@@ -138,16 +138,7 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
   return 0;
 }
 
-std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
-
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return "";
-
-  int name_start_pos = start_pos + 1;
-
-  while((nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0) && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0))
-    ++name_start_pos;
-
-  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0) return "";
+std::string get_name(std::vector<xNodePtr> & nodes, int name_start_pos) {
 
   int open_name_count = 1;
   int name_pos = name_start_pos + 1;
@@ -175,6 +166,22 @@ std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
   }
 
   return name;
+
+}
+
+std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return "";
+
+  int name_start_pos = start_pos + 1;
+
+  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0 && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0))
+    ++name_start_pos;
+
+  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0) return "";
+
+  return get_name(nodes, name_start_pos);
 
 }
 
