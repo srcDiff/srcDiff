@@ -160,28 +160,12 @@ bool go_down_a_level(reader_state & rbuf_old, NodeSets * node_sets_old
      && strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
     return true;
 
-  unsigned int similarity = compute_similarity(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
+  int similarity, difference, text_old_length, text_new_length;
+  compute_measures(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new),
+    similarity, difference, text_old_length, text_new_length);
 
-  unsigned int olength = node_sets_old->at(start_old)->size();
-  unsigned int nlength = node_sets_new->at(start_new)->size();
-
-  unsigned int size_old = 0;
-
-  for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))))
-      ++size_old;
-
-  unsigned int size_new = 0;
-
-  for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))))
-      ++size_new;
-
-  unsigned int min_length = size_old;
-  if(size_new < min_length)
-    min_length = size_new;
-
-  return 4 * similarity >= 3 * min_length;
+  return !reject_match(similarity, difference, text_old_length, text_new_length,
+          rbuf_old.nodes, node_sets_old->at(start_old)->at(0), rbuf_new.nodes, node_sets_new->at(start_new)->at(0));
 
 }
 
