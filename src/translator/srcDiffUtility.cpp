@@ -328,11 +328,11 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
 
   if(min_size <= 2)
-    return 2 * similarity < min_size || difference > max_size;
+    return 2 * similarity < min_size || difference > min_size;
   else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || difference > max_size;
+    return 3 * similarity < 2 * min_size || difference > min_size;
   else
-    return 10 * similarity < 7 * min_size || difference > max_size;
+    return 10 * similarity < 7 * min_size || difference > min_size;
 
 }
 
