@@ -357,7 +357,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
           int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(end_nest_new), SESDELETE);
 
-          if(match >= node_set.size()) continue;
+          if(match >= node_set.size()) return;
 
           int similarity, difference, text_old_length, text_new_length;
           compute_measures(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(end_nest_new),
@@ -365,7 +365,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
           if(reject_match(similarity, difference, text_old_length, text_new_length,
             nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(end_nest_new)->at(0)))
-            continue;
+            return;
 
           ++end_nest_new;
 
