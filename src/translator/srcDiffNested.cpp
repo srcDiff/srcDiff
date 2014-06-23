@@ -192,8 +192,8 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 
   if(node_set.size() > 0) {
 
-    if(!((node_set.at(0)->size() > match->size() && (node_set.at(0)->size()) > (2 * match->size()))
-      || (match->size() > node_set.at(0)->size() && (match->size()) > (2 * node_set.at(0)->size())))) {
+    if(!((node_set.at(0)->size() > match->size() && (node_set.at(0)->size()) > (4 * match->size()))
+      || (match->size() > node_set.at(0)->size() && (match->size()) > (4 * node_set.at(0)->size())))) {
 
       match_pos = 0;
       match_similarity = compute_similarity(nodes, node_set.at(0), nodes_match, match);
@@ -205,10 +205,10 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 
   for(unsigned int i = 1; i < node_set.size(); ++i) {
 
-    if(node_set.at(i)->size() > match->size() && (node_set.at(i)->size()) > (2 * match->size()))
+    if(node_set.at(i)->size() > match->size() && (node_set.at(i)->size()) > (4 * match->size()))
       continue;
 
-    if(match->size() > node_set.at(i)->size() && (match->size()) > (2 * node_set.at(i)->size()))
+    if(match->size() > node_set.at(i)->size() && (match->size()) > (4 * node_set.at(i)->size()))
       continue;
 
     int similarity = compute_similarity(nodes, node_set.at(i), nodes_match, match);
@@ -352,13 +352,12 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
         while(end_nest_new < end_new && is_nestable(node_sets_new->at(end_nest_new), nodes_new, node_sets_old->at(i), nodes_old)) {
 
-            NodeSets node_set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
-                                                                 , nodes_new.at(node_sets_new->at(end_nest_new)->at(0)));
+          NodeSets node_set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
+                                                               , nodes_new.at(node_sets_new->at(end_nest_new)->at(0)));
 
-            int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(end_nest_new), SESDELETE);
+          int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(end_nest_new), SESDELETE);
 
-
-        if(match >= node_set.size()) continue;
+          if(match >= node_set.size()) continue;
 
           int similarity, difference, text_old_length, text_new_length;
           compute_measures(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(end_nest_new),
