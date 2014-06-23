@@ -312,6 +312,34 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
+bool reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
+
+  std::string old_tag = nodes_old.at(old_pos)->name;
+  std::string new_tag = nodes_new.at(new_pos)->name;
+
+  if(old_tag != new_tag) return true;
+
+  if(old_tag == "then" || new_tag == "block") {
+
+  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
+  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
+
+  if(min_size <= 2)
+    return 2 * similarity < min_size || difference > max_size;
+  else if(min_size <= 3)
+    return 3 * similarity < 2 * min_size || difference > max_size;
+  else
+    return 10 * similarity < 7 * min_size || difference > max_size;
+
+  } else {
+
+    return reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, old_pos, nodes_new, new_pos);
+
+  }
+
+}
+
 void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
                  , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
                  , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
@@ -340,7 +368,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
         compute_measures(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(j),
           similarity, difference, text_old_length, text_new_length);
 
-        if(reject_match(similarity, difference, text_old_length, text_new_length,
+        if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
           nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(j)->at(0)))
           continue;
 
@@ -363,7 +391,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           compute_measures(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(end_nest_new),
             similarity, difference, text_old_length, text_new_length);
 
-          if(reject_match(similarity, difference, text_old_length, text_new_length,
+          if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
             nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(end_nest_new)->at(0)))
             return;
 
@@ -396,7 +424,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
         compute_measures(nodes_old, node_sets_old->at(j), nodes_new, node_set.at(match),
           similarity, difference, text_old_length, text_new_length);
 
-        if(reject_match(similarity, difference, text_old_length, text_new_length,
+        if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
           nodes_old, node_sets_old->at(j)->at(0), nodes_new, node_set.at(match)->at(0)))
           continue;
 
@@ -419,7 +447,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
             compute_measures(nodes_old, node_sets_old->at(end_nest_old), nodes_new, node_set.at(match),
               similarity, difference, text_old_length, text_new_length);
 
-            if(reject_match(similarity, difference, text_old_length, text_new_length,
+            if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
               nodes_old, node_sets_old->at(end_nest_old)->at(0), nodes_new, node_set.at(match)->at(0)))
               return;
 

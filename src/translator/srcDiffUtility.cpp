@@ -322,7 +322,6 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
     if(old_name == new_name) return false;
 
-
   }
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
