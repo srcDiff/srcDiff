@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="decl_stmt.multiple">
+
+<unit filename="decl_stmt.multiple|decl_stmt.multiple">
+<decl_stmt><decl><type><name><diff:delete type="change">int</diff:delete><diff:insert type="change">double</diff:insert></name></type> <name>a</name><diff:insert> <init>= <expr><name>foo</name> <op:operator>+</op:operator> <name>bar</name></expr></init></diff:insert></decl>;</decl_stmt>
+</unit>
+
+</unit>
