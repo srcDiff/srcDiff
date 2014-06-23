@@ -49,7 +49,8 @@ void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, NodeSet * nod
     if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i)))
       && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, "(") != 0
       && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, ")") != 0
-      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, ";") != 0)
+      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, ";") != 0
+      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, ",") != 0)
       node_set_old_text.push_back(node_set_old->at(i));
 
   NodeSet node_set_new_text;
@@ -58,7 +59,8 @@ void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, NodeSet * nod
     if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i)))
       && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, "(") != 0
       && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, ")") != 0
-      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, ";") != 0)
+      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, ";") != 0
+      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, ",") != 0)
       node_set_new_text.push_back(node_set_new->at(i));
 
   text_old_length = node_set_old_text.size();
