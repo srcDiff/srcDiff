@@ -146,26 +146,52 @@ std::string get_name(std::vector<xNodePtr> & nodes, int name_start_pos) {
 
   while(open_name_count) {
 
-    if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return name;
+    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_pos)->name, "argument_list") == 0) return name;
 
-    if(strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0) {
+    if(strcmp((const char *)nodes.at(name_pos)->name, "name") == 0) {
 
-      if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
+      if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
         ++open_name_count;
       else
         --open_name_count;
 
-      continue;
+    } else if(is_text(nodes.at(name_pos)) && !is_white_space(nodes.at(name_pos))) {
+
+      name += (const char *)nodes.at(name_pos)->content;
 
     }
 
-    if(is_text(nodes.at(name_pos)) && !is_white_space(nodes.at(name_pos)))
-      name += (const char *)nodes.at(name_pos)->content;
-
+    ++name_pos;
 
   }
 
   return name;
+
+}
+
+void skip_type(std::vector<xNodePtr> & nodes, int & start_pos) {
+
+  while(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(start_pos)->name, "type") != 0)
+    ++start_pos;
+
+  ++start_pos;
+  int open_type_count = 1;
+
+  while(open_type_count) {
+
+    if(strcmp((const char *)nodes.at(start_pos)->name, "type") == 0) {
+
+      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
+        ++open_type_count;
+      else
+        --open_type_count;
+
+    }
+
+    ++start_pos;
+
+  }
 
 }
 
@@ -185,4 +211,21 @@ std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+    || (strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "decl") != 0)) return "";
+
+  int name_start_pos = start_pos + 1;
+
+  skip_type(nodes, name_start_pos);
+
+  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
+    ++name_start_pos;
+
+
+  return get_name(nodes, name_start_pos);
+
+}
 
