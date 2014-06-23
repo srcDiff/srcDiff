@@ -155,7 +155,9 @@ std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   while(open_name_count) {
 
-    if(strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0) {
+    if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return name;
+
+    if(strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0) {
 
       if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
         ++open_name_count;

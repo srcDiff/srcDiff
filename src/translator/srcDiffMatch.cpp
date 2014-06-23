@@ -1,5 +1,6 @@
 #include <srcDiffMatch.hpp>
 #include <srcDiffMeasure.hpp>
+#include <srcDiffUtility.hpp>
 #include <string.h>
 
 
@@ -76,7 +77,11 @@ void create_linked_list(int olength, int nlength, difference * differences, offs
 
 }
 
-bool reject_match(int similarity, int difference, int text_old_length, int text_new_length, std::string old_tag, std::string new_tag) {
+bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
+
+  std::string old_tag = nodes_old.at(old_pos)->name;
+  std::string new_tag = nodes_new.at(new_pos)->name;
 
   if(old_tag != new_tag) return true;
 
@@ -85,6 +90,15 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
     || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
     return false;
+
+  if(old_tag == "call") {
+
+    std::string old_name = get_call_name(nodes_old, old_pos);
+    std::string new_name = get_call_name(nodes_new, new_pos);
+
+    if(old_name == new_name) return false;
+
+  }
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
@@ -162,7 +176,7 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
       // check if unmatched
       if(similarity == MAX_INT 
         || reject_match(similarity, difference, text_old_length, text_new_length,
-          nodes_old.at(node_sets_old->at(j)->at(0))->name, nodes_new.at(node_sets_new->at(i)->at(0))->name)) {
+          nodes_old, node_sets_old->at(j)->at(0), nodes_new, node_sets_new->at(i)->at(0))) {
 
         similarity = 0;
         unmatched = 1;

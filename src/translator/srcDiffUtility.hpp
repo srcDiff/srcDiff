@@ -32,4 +32,6 @@ bool is_text(xNodePtr node);
 // diff node comparison function
 int node_set_syntax_compare(const void * e1, const void * e2, const void * context);
 
+std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos);
+
 #endif
