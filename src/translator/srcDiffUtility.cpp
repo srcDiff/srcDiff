@@ -138,4 +138,44 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
   return 0;
 }
 
+std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return "";
+
+  int name_start_pos = start_pos + 1;
+
+  while((nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0) && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0))
+    ++name_start_pos;
+
+  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0) return "";
+
+  int open_name_count = 1;
+  int name_pos = name_start_pos + 1;
+  std::string name = "";
+
+  while(open_name_count) {
+
+    if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return name;
+
+    if(strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0) {
+
+      if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
+        ++open_name_count;
+      else
+        --open_name_count;
+
+      continue;
+
+    }
+
+    if(is_text(nodes.at(name_pos)) && !is_white_space(nodes.at(name_pos)))
+      name += (const char *)nodes.at(name_pos)->content;
+
+
+  }
+
+  return name;
+
+}
+
 
