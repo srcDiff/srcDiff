@@ -100,6 +100,16 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   }
 
+  if(old_tag == "decl" || old_tag == "decl_stmt") {
+
+    std::string old_name = get_decl_name(nodes_old, old_pos);
+    std::string new_name = get_decl_name(nodes_new, new_pos);
+
+    if(old_name == new_name) return false;
+
+
+  }
+
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
 
