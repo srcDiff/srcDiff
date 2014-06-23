@@ -48,7 +48,7 @@
 </diff:delete></unit>
 
 <unit filename="if.multiple|if.multiple">
-<diff:delete><if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><call><name>c</name><argument_list>(<diff:delete><argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument></diff:delete>)</argument_list></call></expr>;</expr_stmt>
