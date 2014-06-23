@@ -270,12 +270,12 @@ double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * n
   delete_similarity = text_old_length - delete_similarity;
   insert_similarity = text_new_length - insert_similarity;
 
-  int similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+  int similarity = delete_similarity < insert_similarity ? insert_similarity : delete_similarity;
 
   if(similarity <= 0)
     similarity = 0;
 
-  return ((double)similarity) / (text_old_length < text_new_length ? text_new_length : text_old_length);
+  return ((double)similarity) / (text_old_length < text_new_length ? text_old_length : text_new_length);
 
 }
 

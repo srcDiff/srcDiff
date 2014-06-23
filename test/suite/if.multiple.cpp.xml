@@ -28,4 +28,23 @@
 
 </diff:common>}</block></then></if></diff:delete></unit>
 
+<unit filename="if.multiple|if.multiple">
+<diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:common>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+</diff:common><diff:insert>    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+</diff:insert><diff:common>    <while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+<diff:delete>   <expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
+<diff:delete type="whitespace">
+</diff:delete>    }</block></while>
+
+</diff:common><comment type="line">// foobar</comment>
+}</block></then> <else>else 
+    <expr_stmt><expr><name>h</name></expr>;</expr_stmt></else></if>
+</diff:delete></unit>
+
 </unit>
