@@ -372,32 +372,38 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(j)->at(0)))
           continue;
 
+        std::vector<int> valid_nests;
+        valid_nests.push_back(j);
+
         start_nest_old = i;
         end_nest_old = i + 1;
-        start_nest_new = j;
-        end_nest_new = j + 1;
         operation = SESDELETE;
 
-        while(end_nest_new < end_new && is_nestable(node_sets_new->at(end_nest_new), nodes_new, node_sets_old->at(i), nodes_old)) {
+        for(int k = j + 1; k < end_new; ++k) {
+
+          if(!is_nestable(node_sets_new->at(k), nodes_new, node_sets_old->at(i), nodes_old)) continue;
 
           NodeSets node_set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
-                                                               , nodes_new.at(node_sets_new->at(end_nest_new)->at(0)));
+                                                               , nodes_new.at(node_sets_new->at(k)->at(0)));
 
-          int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(end_nest_new), SESDELETE);
+          int match = best_match(nodes_old, node_set, nodes_new, node_sets_new->at(k), SESDELETE);
 
-          if(match >= node_set.size()) return;
+          if(match >= node_set.size()) continue;
 
           int similarity, difference, text_old_length, text_new_length;
-          compute_measures(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(end_nest_new),
+          compute_measures(nodes_old, node_set.at(match), nodes_new, node_sets_new->at(k),
             similarity, difference, text_old_length, text_new_length);
 
           if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-            nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(end_nest_new)->at(0)))
-            return;
+            nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(k)->at(0)))
+            continue;
 
-          ++end_nest_new;
+          valid_nests.push_back(k);
 
         }
+
+        start_nest_new = valid_nests.front();
+        end_nest_new = valid_nests.back() + 1;
 
         return;
 
@@ -428,32 +434,36 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           nodes_old, node_sets_old->at(j)->at(0), nodes_new, node_set.at(match)->at(0)))
           continue;
 
-        start_nest_old = j;
-        end_nest_old = j + 1;
+        std::vector<int> valid_nests;
+        valid_nests.push_back(j);
+
         start_nest_new = i;
         end_nest_new = i + 1;
         operation = SESINSERT;
 
-        while(end_nest_old < end_old && is_nestable(node_sets_old->at(end_nest_old), nodes_old, node_sets_new->at(i), nodes_new)) {
+        for(int k = j + 1; k < end_old; ++k) {
+        
+          if(!is_nestable(node_sets_old->at(k), nodes_old, node_sets_new->at(i), nodes_new)) continue;
 
             NodeSets node_set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
-                                                             , nodes_old.at(node_sets_old->at(end_nest_old)->at(0)));
+                                                             , nodes_old.at(node_sets_old->at(k)->at(0)));
 
-            int match = best_match(nodes_new, node_set, nodes_old, node_sets_old->at(end_nest_old), SESINSERT);
+            int match = best_match(nodes_new, node_set, nodes_old, node_sets_old->at(k), SESINSERT);
 
-            if(match >= node_set.size()) return;
+            if(match >= node_set.size()) continue;
 
             int similarity, difference, text_old_length, text_new_length;
-            compute_measures(nodes_old, node_sets_old->at(end_nest_old), nodes_new, node_set.at(match),
+            compute_measures(nodes_old, node_sets_old->at(k), nodes_new, node_set.at(match),
               similarity, difference, text_old_length, text_new_length);
 
             if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-              nodes_old, node_sets_old->at(end_nest_old)->at(0), nodes_new, node_set.at(match)->at(0)))
-              return;
-
-          ++end_nest_old;
+              nodes_old, node_sets_old->at(k)->at(0), nodes_new, node_set.at(match)->at(0)))
+              continue;
 
         }
+
+        start_nest_old = valid_nests.front();
+        end_nest_old = valid_nests.back() + 1;
 
         return;
 
