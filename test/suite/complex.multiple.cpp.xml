@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="complex.multiple">
+
+<unit filename="complex.multiple|complex.multiple">
+<diff:delete><if>if <condition>(<expr><call><name><name>shape</name>-&gt;<name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr>&quot;text:anchor-type&quot;</expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+    <diff:common><decl_stmt><decl><type><name>QString</name></type> <name>anchorType</name><diff:delete> <init>= <expr><call><name><name>shape</name>-&gt;<name>additionalAttribute</name></name><argument_list>(<argument><expr>&quot;text:anchor-type&quot;</expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
+</diff:common>    <diff:insert type="change"><if>if <condition>(<expr><call><name><name>shape</name>-&gt;<name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr>&quot;text:anchor-type&quot;</expr></argument>)</argument_list></call></expr>)</condition><then>
+    <expr_stmt><expr><name>anchorType</name> = <call><name><name>shape</name>-&gt;<name>additionalAttribute</name></name><argument_list>(<argument><expr>&quot;text:anchor-type&quot;</expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+<elseif>else <if>if <condition>(<expr><call><name><name>element</name>.<name>hasAttributeNS</name></name><argument_list>(<argument><expr><name><name>KoXmlNS</name>::<name>text</name></name></expr></argument>, <argument><expr>&quot;anchor-type&quot;</expr></argument>)</argument_list></call></expr>)</condition><then>
+    <expr_stmt><expr><name>anchorType</name> = <call><name><name>element</name>.<name>attributeNS</name></name><argument_list>(<argument><expr><name><name>KoXmlNS</name>::<name>text</name></name></expr></argument>, <argument><expr>&quot;anchor-type&quot;</expr></argument>)</argument_list></call></expr>;</expr_stmt></then></if></elseif>
+<else>else
+    <expr_stmt><expr><name>anchorType</name> = &quot;as-char&quot;</expr>;</expr_stmt></else></if> <comment type="line">// default value</comment>
+
+</diff:insert><diff:common><comment type="line">// page anchored shapes are handled differently</comment>
+<diff:delete type="whitespace">    </diff:delete><if>if <condition>(<expr><name>anchorType</name> != &quot;page&quot;</expr>)</condition><then> <block>{
+    <diff:delete type="whitespace">    </diff:delete><decl_stmt><decl><type><name>KoTextAnchor</name> *</type><name>anchor</name> <init>= <expr>new <call><name>KoTextAnchor</name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><call><name><name>anchor</name>-&gt;<name>loadOdfFromShape</name></name><argument_list>(<argument><expr><name>element</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><call><name><name>d</name>-&gt;<name>textSharedData</name>-&gt;<name>shapeInserted</name></name><argument_list>(<argument><expr><name>shape</name></expr></argument>, <argument><expr><name>element</name></expr></argument>, <argument><expr><name><name>d</name>-&gt;<name>context</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <diff:delete type="whitespace">    </diff:delete><decl_stmt><decl><type><name>KoTextDocumentLayout</name> *</type><name>layout</name> <init>= <expr><call><name><name>qobject_cast</name><argument_list>&lt;<argument><expr><name>KoTextDocumentLayout</name>*</expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><call><name><name>cursor</name>.<name>block</name></name><argument_list>()</argument_list></call>.<call><name>document</name><argument_list>()</argument_list></call>-&gt;<call><name>documentLayout</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <diff:delete type="whitespace">    </diff:delete><if>if <condition>(<expr><name>layout</name></expr>)</condition><then> <block>{
+        <diff:delete type="whitespace">    </diff:delete><decl_stmt><decl><type><name>KoInlineTextObjectManager</name> *</type><name>textObjectManager</name> <init>= <expr><call><name><name>layout</name>-&gt;<name>inlineTextObjectManager</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <diff:delete type="whitespace">    </diff:delete><if>if <condition>(<expr><name>textObjectManager</name></expr>)</condition><then> <block>{
+            <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><call><name><name>textObjectManager</name>-&gt;<name>insertInlineObject</name></name><argument_list>(<argument><expr><name>cursor</name></expr></argument>, <argument><expr><name>anchor</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <diff:delete type="whitespace">    </diff:delete>}</block></then></if>
+    <diff:delete type="whitespace">    </diff:delete>}</block></then></if>
+<diff:delete type="whitespace">    </diff:delete>}</block></then><diff:delete type="whitespace">
+   </diff:delete> <else>else <block>{
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><call><name><name>d</name>-&gt;<name>textSharedData</name>-&gt;<name>shapeInserted</name></name><argument_list>(<argument><expr><name>shape</name></expr></argument>, <argument><expr><name>element</name></expr></argument>, <argument><expr><name><name>d</name>-&gt;<name>context</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<diff:delete type="whitespace">    </diff:delete>}</block></else></if>
+</diff:common>}</block></then></if>
+</diff:delete></unit>
+
+</unit>
