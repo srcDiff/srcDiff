@@ -1,6 +1,7 @@
 #include <srcDiffMatch.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffUtility.hpp>
+#include <srcDiffNested.hpp>
 #include <string.h>
 
 
@@ -141,7 +142,9 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
       // check if unmatched
       if(similarity == MAX_INT 
         || reject_match(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_sets_old->at(j)->at(0), nodes_new, node_sets_new->at(i)->at(0))) {
+          nodes_old, node_sets_old->at(j)->at(0), nodes_new, node_sets_new->at(i)->at(0))
+        || is_better_nested(nodes_old, node_sets_old->at(j), nodes_new, node_sets_new->at(i),
+            similarity, difference, text_old_length, text_new_length)) {
 
         similarity = 0;
         unmatched = 1;

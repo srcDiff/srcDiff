@@ -312,6 +312,54 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
+bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
+                    std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new,
+                    int similarity, int difference, int text_old_length, int text_new_length) {
+
+    if(is_nestable(node_set_new, nodes_new, node_set_old, nodes_old)) {
+
+      NodeSets node_set = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back()
+                                                             , nodes_new.at(node_set_new->at(0)));
+
+      int match = best_match(nodes_old, node_set, nodes_new, node_set_new, SESDELETE);
+
+      if(match < node_set.size()) {
+
+        int nest_similarity, nest_difference, nest_text_old_length, nest_text_new_length;
+        compute_measures(nodes_old, node_set.at(match), nodes_new, node_set_new,
+          nest_similarity, nest_difference, nest_text_old_length, nest_text_new_length);
+
+        if(nest_similarity >= similarity && nest_difference < difference)
+         return true;
+    
+      }
+
+    }
+
+    if(is_nestable(node_set_old, nodes_old, node_set_new, nodes_new)) {
+
+      NodeSets node_set = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back()
+                                                             , nodes_old.at(node_set_old->at(0)));
+
+      int match = best_match(nodes_new, node_set, nodes_old, node_set_old, SESINSERT);
+
+      if(match < node_set.size()) {
+
+        int nest_similarity, nest_difference, nest_text_old_length, nest_text_new_length;
+        compute_measures(nodes_old, node_set_old, nodes_new, node_set.at(match),
+          nest_similarity, nest_difference, nest_text_old_length, nest_text_new_length);
+
+        if(nest_similarity >= similarity && nest_difference < difference)
+         return true;
+    
+      }
+
+    }
+
+    return false;
+
+}
+
 bool reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
 
