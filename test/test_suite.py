@@ -123,7 +123,7 @@ def srcdiff(source_file_old, source_file_new, encoding, language, directory, fil
 	temp_file.write(source_file_new)
 	temp_file.close()
 
-	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "")
+	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "")
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
