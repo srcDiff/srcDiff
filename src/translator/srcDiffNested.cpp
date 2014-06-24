@@ -360,6 +360,34 @@ bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 
 }
 
+bool is_reverse_nest_better(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_outer,
+                    std::vector<xNodePtr> & nodes_inner, NodeSet * node_set_inner,
+                    int similarity, int difference, int text_outer_length, int text_inner_length) {
+
+    if(is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
+
+      NodeSets node_set = create_node_set(nodes_outer, node_set_outer->at(1), node_set_outer->back()
+                                                             , nodes_inner.at(node_set_inner->at(0)));
+
+      int match = best_match(nodes_outer, node_set, nodes_inner, node_set_inner, SESDELETE);
+
+      if(match < node_set.size()) {
+
+        int nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length;
+        compute_measures(nodes_outer, node_set.at(match), nodes_inner, node_set_inner,
+          nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
+
+        if(nest_similarity >= similarity && nest_difference < difference)
+         return true;
+    
+      }
+
+    }
+
+    return false;
+
+}
+
 bool reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
 
@@ -399,6 +427,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
   start_nest_new = start_new;  
   end_nest_new = start_new;  
 
+  /** @todo there are triggers for one being nested in other, but it is actually better the other way. */
+
   for(int i = start_old; i < end_old; ++i) {
 
     for(int j = start_new; j < end_new; ++j) {
@@ -417,7 +447,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(j)->at(0)))
+          nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(j)->at(0))
+          || is_reverse_nest_better(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
           continue;
 
         std::vector<int> valid_nests;
