@@ -34,25 +34,25 @@ void output_start_node(void* ctx, const xmlChar* localname, const xmlChar* prefi
 
 void output_end_node(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *UR);
 
-xmlSAXHandler factory() {
+xmlSAXHandler color_diff::factory() {
 
   xmlSAXHandler sax = { 0 };
 
   sax.initialized    = XML_SAX2_MAGIC;
 
-  sax.startDocument = &startDocument;
-  sax.endDocument = &endDocument;
+  sax.startDocument = &color_diff::startDocument;
+  sax.endDocument = &color_diff::endDocument;
 
-  sax.startElementNs = &startElementNs;
-  sax.endElementNs = &endElementNs;
+  sax.startElementNs = &color_diff::startElementNs;
+  sax.endElementNs = &color_diff::endElementNs;
 
-  sax.characters = &characters;
-  sax.comment = &comment;
+  sax.characters = &color_diff::characters;
+  sax.comment = &color_diff::comment;
 
   return sax;
 }
 
-void output_start_document(std::ostream & colordiff_file, std::string & css_url) {
+void color_diff::output_start_document(std::ostream & colordiff_file, std::string & css_url) {
 
   colordiff_file << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"\n";
   colordiff_file << "[\n";
@@ -177,17 +177,17 @@ void output_start_document(std::ostream & colordiff_file, std::string & css_url)
 
 }
 
-void output_end_document(std::ostream & colordiff_file) {
+void color_diff::output_end_document(std::ostream & colordiff_file) {
 
   colordiff_file << "</body>\n";
   colordiff_file << "</html>\n";
 
 }
 
-void startDocument(void* ctx) {
+void color_diff::startDocument(void* ctx) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
+  struct color_diff::source_diff * data = (color_diff::source_diff *)ctxt->_private;
 
   std::string file_name = "";
 
@@ -516,10 +516,10 @@ void startDocument(void* ctx) {
 
 }
 
-void endDocument(void* ctx) {
+void color_diff::endDocument(void* ctx) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
+  struct color_diff::source_diff * data = (color_diff::source_diff *)ctxt->_private;
 
   //fprintf(stderr, "%s\n\n", __FUNCTION__);
 
@@ -532,12 +532,12 @@ void endDocument(void* ctx) {
   data->colordiff_file << "</div>\n";
 }
 
-void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void color_diff::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                     const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
+  struct color_diff::source_diff * data = (color_diff::source_diff *)ctxt->_private;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
@@ -558,10 +558,10 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
 }
 
-void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+void color_diff::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
+  struct color_diff::source_diff * data = (color_diff::source_diff *)ctxt->_private;
 
   if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
@@ -577,10 +577,10 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
 }
 
 
-void characters(void* ctx, const xmlChar* ch, int len) {
+void color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  struct source_diff * data = (source_diff *)ctxt->_private;
+  struct color_diff::source_diff * data = (color_diff::source_diff *)ctxt->_private;
 
   static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
     + std::string(diff_color_common) + std::string("\"");
@@ -815,7 +815,7 @@ void characters(void* ctx, const xmlChar* ch, int len) {
 
 }
 
-void comments(void* ctx, const xmlChar* ch) {
+void color_diff::comment(void* ctx, const xmlChar* ch) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 }

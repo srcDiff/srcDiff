@@ -41,18 +41,18 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE)
     add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization> oldclient/URIStream.cpp)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
+    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcdiff LINK_FLAGS_DEBUG "/SAFESEH:NO")
 elseif(APPLE)
-    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcml)
+    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
 else()
-    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcml)
+    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
 endif()
 
-    target_link_libraries(${LIBRARY_NAME} PRIVATE ${LIBXML2_LIBRARIES} ${LIBSRCML_LIBRARY} pthread)
+    target_link_libraries(${LIBRARY_NAME} PRIVATE ${SRCDIFF_LIBRARIES})
 
 endmacro()
 
-# Building static and dynamic libraries for srcML.
+# Building static and dynamic libraries for srcDiff.
 build_library(srcdiff_static STATIC)
 set_target_properties(srcdiff_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 

@@ -34,10 +34,21 @@ add_definitions(-DSVN)
 endif()
 
 # find needed libraries
-find_package(LibXml2 REQUIRED)
-find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.dylib libsrcml.so PATHS /usr/local/lib)
+
+find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.a PATHS /usr/local/lib)
 set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
+set(Boost_NO_BOOST_CMAKE ON)
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
+
+find_package(LibXml2 REQUIRED)
+
+find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
+
+# Set srcdiff libraries
+set(SRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBSVN_LIBRARIES} CACHE STRING "srcDiff Link Libraries")
+
 # include needed includes
-include_directories(${LIBXML2_INCLUDE_DIR} ${LIBSRCML_INCLUDE_DIR} ${LIBSVN_INCLUDE})
+include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBSVN_INCLUDE})
 

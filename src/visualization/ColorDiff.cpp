@@ -37,12 +37,12 @@ ColorDiff::~ColorDiff() {
 
   if(first) {
 
-    output_start_document(*outfile, css_url);
+    color_diff::output_start_document(*outfile, css_url);
     first = false;
   
   }
 
-  output_end_document(*outfile);
+  color_diff::output_end_document(*outfile);
 
   if(outfile != &std::cout) {
 
@@ -110,7 +110,7 @@ int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
 
   if(first) {
 
-    output_start_document(*outfile, css_url);
+    color_diff::output_start_document(*outfile, css_url);
     first = false;
 
   }
@@ -119,13 +119,13 @@ int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
 
   // setup sax handler
-  xmlSAXHandler sax = factory();
+  xmlSAXHandler sax = color_diff::factory();
   ctxt->sax = &sax;
 
   std::vector<int> stack = std::vector<int>();
   stack.push_back(SESCOMMON);
 
-  struct source_diff data = { 1, 1, &stack, lines_old, lines_new, line_diff_range.get_file_one(), line_diff_range.get_file_two()
+  struct color_diff::source_diff data = { 1, 1, &stack, lines_old, lines_new, line_diff_range.get_file_one(), line_diff_range.get_file_two()
                               , *outfile, options, "", false, false, false };
 
   ctxt->_private = &data;

@@ -78,7 +78,7 @@ const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
 const char FILELIST_COMMENT = '#';
 
-void libxml_error(void *ctx, const char *msg, ...) {}
+void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
 
 int option_error_status(int optopt);
 
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 
   LIBXML_TEST_VERSION
 
-    xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
+    xmlGenericErrorFunc handler = (xmlGenericErrorFunc) srcdiff_libxml_error;
   initGenericErrorDefaultFunc(&handler);
 
   /* signal handling */
