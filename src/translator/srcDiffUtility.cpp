@@ -422,7 +422,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string old_condition = get_condition(nodes_old, old_pos);
     std::string new_condition = get_condition(nodes_new, new_pos);
 
-    if(old_condition == new_condition) return false;
+    //if(old_condition == new_condition) return false;
 
   }
 
