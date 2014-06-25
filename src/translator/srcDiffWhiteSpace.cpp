@@ -380,27 +380,57 @@ void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_sta
     ++npivot;
   }
 
-  if(ostart < opivot) {
+  if(wstate.output_diff.back()->operation == SESINSERT) {
 
-    output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+    if(nstart < npivot) {
 
-    for(int k = ostart; k < opivot; ++k)
-      output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(k), SESDELETE, wstate);
+      output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
 
-    // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+      for(int k = nstart; k < npivot; ++k)
+        output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(k), SESINSERT, wstate);
 
-  }
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
 
-  if(nstart < npivot) {
+    }
 
-    output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+    if(ostart < opivot) {
 
-    for(int k = nstart; k < npivot; ++k)
-      output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(k), SESINSERT, wstate);
+      output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
 
-    // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+      for(int k = ostart; k < opivot; ++k)
+        output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(k), SESDELETE, wstate);
+
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+
+    }
+
+  } else {
+
+    if(ostart < opivot) {
+
+      output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+
+      for(int k = ostart; k < opivot; ++k)
+        output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(k), SESDELETE, wstate);
+
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+
+    }
+
+    if(nstart < npivot) {
+
+      output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+
+      for(int k = nstart; k < npivot; ++k)
+        output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(k), SESINSERT, wstate);
+
+      // output diff tag
+      output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+
+    }
 
   }
 
