@@ -304,6 +304,41 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+std::string get_condition(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  int condition_start_pos = start_pos;
+
+  while(nodes.at(condition_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(condition_start_pos)->name, "condition") != 0)
+    ++condition_start_pos;
+
+  std::string condition = "";
+  int open_condition_count = nodes.at(condition_start_pos)->extra & 0x1 ? 0 : 1;
+  int condition_pos = condition_start_pos + 1;
+
+  while(open_condition_count) {
+
+    if(strcmp((const char *)nodes.at(condition_pos)->name, "condition") == 0) {
+
+      if(nodes.at(condition_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(condition_pos)->extra & 0x1) == 0)
+        ++open_condition_count;
+      else if(nodes.at(condition_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        --open_condition_count;
+
+    } else if(is_text(nodes.at(condition_pos)) && !is_white_space(nodes.at(condition_pos))) {
+
+      condition += (const char *)nodes.at(condition_pos)->content;
+
+    }
+
+    ++condition_pos;
+
+  }
+
+  return condition;
+
+}
+
 std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -381,6 +416,13 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string new_name = get_decl_name(nodes_new, new_pos);
 
     if(old_name == new_name) return false;
+
+  } else if(old_tag == "if") {
+
+    std::string old_condition = get_condition(nodes_old, old_pos);
+    std::string new_condition = get_condition(nodes_new, new_pos);
+
+    if(old_condition == new_condition) return false;
 
   }
 
