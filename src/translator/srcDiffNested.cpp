@@ -68,6 +68,7 @@ const nest_info nesting[] = {
   { "else", else_nest_types, else_possible_nest_types },
   { "while", while_nest_types, while_possible_nest_types },
   { "for", for_nest_types, for_possible_nest_types },
+  { "foreach", for_nest_types, for_possible_nest_types },
   { "function", function_nest_types, function_possible_nest_types },
   { "class", class_nest_types, class_possible_nest_types },
   { "struct", struct_nest_types, struct_possible_nest_types },
