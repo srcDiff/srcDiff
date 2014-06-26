@@ -13,7 +13,7 @@ from datetime import datetime, time
 
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
-FIELD_WIDTH_LANGUAGE = 5
+FIELD_WIDTH_LANGUAGE = 11
 
 FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
