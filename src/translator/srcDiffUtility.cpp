@@ -435,7 +435,7 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
-bool up_to_block_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std::vector<xNodePtr> & nodes_new, int start_pos_new) {
+bool for_group_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std::vector<xNodePtr> & nodes_new, int start_pos_new) {
 
   int end_pos_old = find_end(nodes_old, start_pos_old);
   int end_pos_new = find_end(nodes_new, start_pos_new);
@@ -447,8 +447,9 @@ bool up_to_block_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, s
 
   for(int i = 0; i < node_sets_old.size() && i < node_sets_new.size(); ++i) {
 
-    if(strcmp((const char *)nodes_old.at(node_sets_old.at(i)->at(0))->name, "block") == 0
-      && strcmp((const char *)nodes_new.at(node_sets_new.at(i)->at(0))->name, "block") == 0) {
+    if(is_text(nodes_old.at(node_sets_old.at(i)->at(0))) && is_text(nodes_new.at(node_sets_new.at(i)->at(0))) 
+      && strcmp((const char *)nodes_old.at(node_sets_old.at(i)->at(0))->content, ")") == 0
+      && strcmp((const char *)nodes_new.at(node_sets_new.at(i)->at(0))->content, ")") == 0) {
 
       free_node_sets(node_sets_old);
       free_node_sets(node_sets_new);
@@ -547,7 +548,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     bool old_has_block = conditional_has_block(nodes_old, old_pos);
     bool new_has_block = conditional_has_block(nodes_new, new_pos);
 
-    if(old_has_block && new_has_block && up_to_block_matches(nodes_old, old_pos, nodes_new, new_pos))
+    if(old_has_block == new_has_block && for_group_matches(nodes_old, old_pos, nodes_new, new_pos))
       return false;
     
   }

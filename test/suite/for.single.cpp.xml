@@ -39,4 +39,9 @@
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></for></diff:delete></unit>
 
+<unit filename="for.single|for.single">
+<for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>)
+<diff:delete type="change">    <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">    <empty_stmt>;</empty_stmt></diff:insert></for>
+</unit>
+
 </unit>

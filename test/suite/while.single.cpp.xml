@@ -40,4 +40,8 @@
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></while></diff:delete></unit>
 
+<unit filename="while.single|while.single">
+<while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition>
+<diff:delete type="change">    <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">    <empty_stmt>;</empty_stmt></diff:insert></while>
+</unit>
 </unit>
