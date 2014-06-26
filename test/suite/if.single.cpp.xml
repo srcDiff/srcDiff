@@ -46,4 +46,10 @@
     <diff:common><expr_stmt><expr><call><name>kunmap</name><argument_list>(<argument><expr><call><name>sg_page</name><argument_list>(<argument><expr><name><name>cmd</name><op:operator>-&gt;</op:operator><name>t_data_sg</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></then></if></elseif></if></diff:delete>
 </unit>
 
+<unit filename="if.single|if.single">
+<if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then><diff:delete type="change">
+    <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"> 
+    <empty_stmt>;</empty_stmt></diff:insert></then></if>
+</unit>
+
 </unit>

@@ -57,4 +57,35 @@
 </diff:common>}</block></then></if>
 </diff:delete></unit>
 
+<unit filename="if.multiple|if.multiple">
+<if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator><op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <block>{
+
+<diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+
+
+</diff:delete>}</block></then></if><diff:delete type="whitespace">
+</diff:delete></unit>
+
+<unit filename="if.multiple|if.multiple">
+<diff:delete type="change"><if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <block>{
+
+    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+
+
+}</block></then></if></diff:delete><diff:insert type="change"><if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> 
+    <empty_stmt>;</empty_stmt></then></if></diff:insert>
+</unit>
+
 </unit>
