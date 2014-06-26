@@ -145,17 +145,17 @@ int main(int argc, char * argv[]) {
   xmlTextWriterPtr writer = NULL;
 
   // create the reader for the old file
-  reader = xmlNewTextReaderFilename("/dev/stdin");
+  reader = xmlNewTextReaderFilename("-");
   if (reader == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdin");
+    fprintf(stderr, "Unable to open file '%s' as XML", "-");
 
     return 1;
   }
 
   // create the writer
-  writer = xmlNewTextWriterFilename("/dev/stdout", 0);
+  writer = xmlNewTextWriterFilename("-", 0);
   if (writer == NULL) {
-    fprintf(stderr, "Unable to open file '%s' as XML", "/dev/stdout");
+    fprintf(stderr, "Unable to open file '%s' as XML", "-");
 
     return 1;
   }
