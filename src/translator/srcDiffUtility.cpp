@@ -435,6 +435,46 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+bool up_to_block_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std::vector<xNodePtr> & nodes_new, int start_pos_new) {
+
+  int end_pos_old = find_end(nodes_old, start_pos_old);
+  int end_pos_new = find_end(nodes_new, start_pos_new);
+
+  diff_nodes dnodes = { nodes_old, nodes_new };
+
+  NodeSets node_sets_old = create_node_set(nodes_old, start_pos_old + 1, end_pos_old);
+  NodeSets node_sets_new = create_node_set(nodes_new, start_pos_new + 1, end_pos_new);
+
+  for(int i = 0; i < node_sets_old.size() && i < node_sets_new.size(); ++i) {
+
+    if(strcmp((const char *)nodes_old.at(node_sets_old.at(i)->at(0))->name, "block") == 0
+      && strcmp((const char *)nodes_new.at(node_sets_new.at(i)->at(0))->name, "block") == 0) {
+
+      free_node_sets(node_sets_old);
+      free_node_sets(node_sets_new);
+
+      return true;
+
+    }
+
+    if(node_set_syntax_compare((void *)node_sets_old.at(i), (void *)node_sets_new.at(i), (void *)&dnodes) != 0) {
+
+      free_node_sets(node_sets_old);
+      free_node_sets(node_sets_new);
+
+      return false;
+
+    }
+
+  }
+
+  free_node_sets(node_sets_old);
+  free_node_sets(node_sets_new);
+
+  return true;
+
+}
+
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
 
@@ -499,8 +539,17 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     bool old_has_block = conditional_has_block(nodes_old, old_pos);
     bool new_has_block = conditional_has_block(nodes_new, new_pos);
 
-    if(old_condition == new_condition && old_has_block == new_has_block) return false;
+    if(old_condition == new_condition && old_has_block == new_has_block)
+     return false;
 
+  } else if(old_tag == "for" || old_tag == "foreach") {
+
+    bool old_has_block = conditional_has_block(nodes_old, old_pos);
+    bool new_has_block = conditional_has_block(nodes_new, new_pos);
+
+    if(old_has_block && new_has_block && up_to_block_matches(nodes_old, old_pos, nodes_new, new_pos))
+      return false;
+    
   }
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
