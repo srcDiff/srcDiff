@@ -11,7 +11,6 @@ import subprocess
 import difflib
 from datetime import datetime, time
 
-maxcount = 700
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
 FIELD_WIDTH_LANGUAGE = 5
@@ -357,9 +356,6 @@ try :
 						count = count + 1
 
 						if specnum != 0 and count > specnum :
-							break
-
-						if count > maxcount :
 							break
 
 						# save the particular nested unit
