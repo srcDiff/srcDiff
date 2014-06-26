@@ -363,6 +363,23 @@ std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos)
 
 }
 
+std::string get_class_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+    || (strcmp((const char *)nodes.at(start_pos)->name, "class") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "struct") != 0
+      && strcmp((const char *)nodes.at(start_pos)->name, "union") != 0)) return "";
+  if(nodes.at(start_pos)->extra & 0x1) return "";
+
+  int name_start_pos = start_pos + 1;
+
+  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
+    ++name_start_pos;
+
+  return get_name(nodes, name_start_pos);
+
+}
+
 int find_end(std::vector<xNodePtr> & nodes, int start_pos) {
 
   xNodePtr & start_node = nodes.at(start_pos);
@@ -487,8 +504,6 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "expr"
     || old_tag == "default" || old_tag == "comment"
-    // change to class name
-    || old_tag == "class" || old_tag == "struct" || old_tag == "union"
     || old_tag == "private" || old_tag == "protected" || old_tag == "public"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
@@ -553,6 +568,13 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     if(old_has_block == new_has_block && for_group_matches(nodes_old, old_pos, nodes_new, new_pos))
       return false;
     
+  } else if(old_tag == "class" || old_tag == "struct" || old_tag == "union") {
+
+    std::string old_name = get_class_type_name(nodes_old, old_pos);
+    std::string new_name = get_class_type_name(nodes_new, new_pos);
+
+    if(old_name == new_name) return false;
+
   }
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
