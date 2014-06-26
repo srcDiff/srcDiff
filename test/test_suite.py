@@ -125,19 +125,6 @@ def srcdiff(source_file_old, source_file_new, encoding, language, directory, fil
 
 	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "")
 
-# additional processing stages
-def srcML2srcMLStages(srcmlfile, otherxmlns):
-
-	newfile = srcmlfile
-	for a in otherxmlns:
-		url = a.split('=')[1]
-		if url == 'http://www.sdml.info/srcExpr':
-			command = [srcexprtranslator]
-			newfile = safe_communicate(command, newfile)
-		
-	return newfile
-
-#
 def getsrcmlattribute(xml_file, command):
 
 	last_line = safe_communicate([srcml_utility, command], xml_file)
@@ -468,17 +455,12 @@ if ki:
 # and delete error file
 print
 
-#for oldfile in os.listdir("."):
-#	if re.match(error_filename + ".+", oldfile):
-#		os.remove(oldfile)
-
-
-
 f = open(error_filename, "w")
 
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
 else:
+
 	# break errorlist into two, one with original name, one with a name with a dot in it
 	oerrorlist = []
 	xerrorlist = []
