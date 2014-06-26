@@ -124,55 +124,55 @@ def srcdiff(source_file_version_one, source_file_version_two, encoding, language
 
 	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "")
 
-def getsrcmlattribute(xml_file, command) :
+def get_srcml_attribute(xml_file, command) :
 
 	last_line = safe_communicate([srcml_utility, command], xml_file)
 
 	return last_line.strip()
 
-def getsrcmlattributefile(xml_file, command) :
+def get_srcml_attribute_file(xml_file, command) :
 
 	last_line = safe_communicate_file([srcml_utility, command], xml_file)
 
 	return last_line.strip()
 
 # directory attribute
-def getdirectory(xml_file) :
+def get_directory(xml_file) :
 
-	return getsrcmlattribute(xml_file, "-d")
+	return get_srcml_attribute(xml_file, "-d")
 
 # language attribute
-def getlanguage(xml_file) :
+def get_language(xml_file) :
 	
-	return getsrcmlattribute(xml_file, "-l")
+	return get_srcml_attribute(xml_file, "-l")
 
 # xml encoding
-def getencoding(xml_file) :
+def get_encoding(xml_file) :
 
-	return getsrcmlattribute(xml_file, "-x")
+	return get_srcml_attribute(xml_file, "-x")
 
 # version attribute
-def getversion(xml_file) :
+def get_version(xml_file) :
 
-	return getsrcmlattribute(xml_file, "-x")
+	return get_srcml_attribute(xml_file, "-x")
 
 # filename attribute
-def getfilename(xml_file) :
+def get_filename(xml_file) :
 
-	return getsrcmlattribute(xml_file, "-f")
+	return get_srcml_attribute(xml_file, "-f")
 
 # xmlns attribute
-def getfullxmlns(xml_file) :
+def get_full_xmlns(xml_file) :
 
 	l = []
-	for a in getsrcmlattribute(xml_file, "--info").split() :
+	for a in get_srcml_attribute(xml_file, "--info").split() :
 		if a[0 :5] == "xmlns" :
 			l.append("--" + a.replace('"', ""))
 	
 	return l
 
 # xmlns attribute
-def defaultxmlns(l) :
+def default_xmlns(l) :
 
 	newl = []
 	for a in l :
@@ -181,7 +181,7 @@ def defaultxmlns(l) :
 			newl.append(a)
 	return newl
 
-def nondefaultxmlns(l) :
+def nondefault_xmlns(l) :
 
 	newl = []
 	for a in l :
@@ -191,14 +191,14 @@ def nondefaultxmlns(l) :
 	return newl
 
 # version of srcml2src
-def srcml2srcversion() :
+def srcml2src_version() :
 
 	last_line = safe_communicate([srcml_utility, "-V"], "")
 
 	return last_line.splitlines()[0].strip()
 
 # number of nested units
-def getnested(xml_file) :
+def get_nested(xml_file) :
 
 	snumber = safe_communicate([srcml_utility, "-n"], xml_file)
 
@@ -226,7 +226,7 @@ Tee(error_filename)
 print "Testing:"
 print 
 
-print srcml2srcversion()
+print srcml2src_version()
 print
 
 # Handle optional dos line endings
@@ -303,7 +303,7 @@ try :
 				xml_filename = os.path.join(root, name)
 			
 				# get all the info
-				info = getsrcmlattributefile(xml_filename, "--longinfo")
+				info = get_srcml_attribute_file(xml_filename, "--longinfo")
 				if info == None :
 					print "Problem with", xml_filename
 					continue
@@ -376,10 +376,10 @@ try :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
 
 						# additional, later stage processing
-						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
+						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
@@ -410,10 +410,10 @@ try :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
 
 						# additional, later stage processing
-						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
+						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
@@ -515,6 +515,6 @@ if os.path.exists("temp_file_two.cpp") :
 
 # output tool version
 print
-print srcml2srcversion(), srcml_utility
+print srcml2src_version(), srcml_utility
 
 exit
