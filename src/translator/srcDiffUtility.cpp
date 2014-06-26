@@ -491,7 +491,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
     if(old_name == new_name) return false;
 
-  } else if(old_tag == "if") {
+  } else if(old_tag == "if" || old_tag == "while" || old_tag == "for" || old_tag == "foreach") {
 
     std::string old_condition = get_condition(nodes_old, old_pos);
     std::string new_condition = get_condition(nodes_new, new_pos);
