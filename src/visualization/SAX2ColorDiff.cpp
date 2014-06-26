@@ -72,7 +72,7 @@ void color_diff::output_start_document(std::ostream & colordiff_file, std::strin
     colordiff_file << "<style type=\"text/css\">\n";
     colordiff_file << "body\n";
     colordiff_file << "{\n";
-    colordiff_file << "font-family:courier;\n";
+    colordiff_file << "font-family:menlo, courier;\n";
     colordiff_file << "}\n";
     colordiff_file << ".srcdiff\n";
     colordiff_file << "{\n";
