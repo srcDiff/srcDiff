@@ -11,4 +11,26 @@
 
 </public></diff:delete>}</block>;</class></unit>
 
+<unit filename="class.single|class.single">
+<diff:delete type="change"><class>class <name>A</name> <block>{<private type="default">
+
+</private><public>public:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</public>}</block>;</class></diff:delete><diff:insert type="change"><class>class <name>B</name> <block>{<private type="default">
+
+</private>}</block>;</class></diff:insert></unit>
+
+<unit filename="class.single|class.single">
+<class>class <name><diff:delete type="change">A</diff:delete><diff:insert type="change">B</diff:insert></name> <block>{<private type="default">
+
+</private><public>public:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</public>}</block>;</class></unit>
+
 </unit>
