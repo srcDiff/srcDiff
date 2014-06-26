@@ -362,33 +362,44 @@ std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos)
 
 }
 
-bool has_block(std::vector<xNodePtr> & nodes, int start_pos) {
+bool has_block(std::vector<xNodePtr> & nodes, int & start_pos) {
 
   xNodePtr & start_node = nodes.at(start_pos);
 
   if(start_node->type != XML_READER_TYPE_ELEMENT || start_node->extra & 0x1) return false;
 
-  int current_pos = start_pos + 1;
+  start_pos += 1;
   int open_structure_count = 1;
 
   while(open_structure_count) {
 
-    if(strcmp((const char *)nodes.at(current_pos)->name, (const char *)start_node->name) == 0) {
+    if(strcmp((const char *)nodes.at(start_pos)->name, (const char *)start_node->name) == 0) {
 
-      if(nodes.at(current_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(current_pos)->extra & 0x1) == 0)
+      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
         ++open_structure_count;
-      else if(nodes.at(current_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+      else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         --open_structure_count;
 
-    } else if(nodes.at(current_pos)->type == XML_READER_TYPE_ELEMENT
-              && strcmp((const char *)nodes.at(current_pos)->name, "block") == 0)
+    } else if(nodes.at(start_pos)->type == XML_READER_TYPE_ELEMENT
+              && strcmp((const char *)nodes.at(start_pos)->name, "block") == 0)
       return true;
 
-    ++current_pos;
+    ++start_pos;
 
   }
 
   return false;
+}
+
+bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  xNodePtr & start_node = nodes.at(start_pos);
+
+  int block_pos = start_pos;
+  bool is_block = has_block(nodes, block_pos);
+
+  return is_block;
+
 }
 
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
@@ -452,8 +463,8 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string old_condition = get_condition(nodes_old, old_pos);
     std::string new_condition = get_condition(nodes_new, new_pos);
 
-    bool old_has_block = has_block(nodes_old, old_pos);
-    bool new_has_block = has_block(nodes_new, new_pos);
+    bool old_has_block = conditional_has_block(nodes_old, old_pos);
+    bool new_has_block = conditional_has_block(nodes_new, new_pos);
 
     if(old_condition == new_condition && old_has_block == new_has_block) return false;
 
