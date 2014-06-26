@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 #
-# update.py
+# test_suite.py
 #
-# Michael L. Collard
+# Original by Michael L. Collard
+# Updated/Modified for srcdiff by Michael John Decker
 
 import sys
 import os.path
