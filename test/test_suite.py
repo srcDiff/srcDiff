@@ -102,7 +102,7 @@ def unix2dos(srctext) :
 	return safe_communicate(command, srctext)
 
 # find differences of two files
-def xmldiff(xml_filename1, xml_filename2) :
+def linediff(xml_filename1, xml_filename2) :
 
 	if xml_filename1 != xml_filename2 :
 		return list(difflib.unified_diff(xml_filename1.splitlines(1), xml_filename2.splitlines(1)))
@@ -382,7 +382,7 @@ try :
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
 						
 						# find the difference
-						result = xmldiff(unitxml, unitsrcml)
+						result = linediff(unitxml, unitsrcml)
 						if count == MAX_COUNT :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
 						if result != "" :
@@ -416,7 +416,7 @@ try :
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
 						
 						# find the difference
-						result = xmldiff(unitxml, unitsrcml)
+						result = linediff(unitxml, unitsrcml)
 						if count == MAX_COUNT :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
 						if result != "" :
