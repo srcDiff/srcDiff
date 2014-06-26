@@ -33,4 +33,26 @@
 
 </public>}</block>;</class></unit>
 
+<unit filename="class.single|class.single">
+<class>class <block>{<private type="default">
+
+</private><public>public:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name><diff:delete type="change">h</diff:delete><diff:insert type="change">i</diff:insert></name><parameter_list>()</parameter_list>;</function_decl>
+
+</public>}</block>;</class></unit>
+
+<unit filename="class.single|class.single">
+<diff:delete type="change"><class>class <block>{<private type="default">
+
+</private><public>public:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</public>}</block>;</class></diff:delete><diff:insert type="change"><class>class <block>{<private type="default">
+    
+</private>}</block>;</class></diff:insert></unit>
+
 </unit>

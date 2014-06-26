@@ -373,10 +373,14 @@ std::string get_class_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
   int name_start_pos = start_pos + 1;
 
   while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
+   || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0
+    && strcmp((const char *)nodes.at(name_start_pos)->name, "block") != 0))
     ++name_start_pos;
 
-  return get_name(nodes, name_start_pos);
+  if(strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0)
+    return get_name(nodes, name_start_pos);
+  else
+    return "";
 
 }
 
@@ -573,7 +577,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string old_name = get_class_type_name(nodes_old, old_pos);
     std::string new_name = get_class_type_name(nodes_new, new_pos);
 
-    if(old_name == new_name) return false;
+    if(old_name == new_name && old_name != "") return false;
 
   }
 
