@@ -540,9 +540,9 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     if(old_name == new_name) return false;
 
 
-  } else if(old_tag == "function" || old_tag == "function_decl"
-    || old_tag == "constructor" || old_tag == "constructor_decl"
-    || old_tag == "destructor" || old_tag == "destructor_decl") {
+  } else if(old_tag == "function"    || old_tag == "function_decl"
+         || old_tag == "constructor" || old_tag == "constructor_decl"
+         || old_tag == "destructor"  || old_tag == "destructor_decl") {
 
     std::string old_name = get_decl_name(nodes_old, old_pos);
     std::string new_name = get_decl_name(nodes_new, new_pos);
