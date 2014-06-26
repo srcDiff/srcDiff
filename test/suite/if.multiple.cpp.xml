@@ -58,7 +58,7 @@
 </diff:delete></unit>
 
 <unit filename="if.multiple|if.multiple">
-<if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator><op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <block>{
+<if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <block>{
 
 <diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>

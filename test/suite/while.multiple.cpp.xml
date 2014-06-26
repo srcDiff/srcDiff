@@ -15,4 +15,35 @@
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:common>
 }</block></while></diff:delete></unit>
 
+<unit filename="while.multiple|while.multiple">
+<while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition> <block>{
+
+<diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+
+
+</diff:delete>}</block></while><diff:delete type="whitespace">
+</diff:delete></unit>
+
+<unit filename="while.multiple|while.multiple">
+<diff:delete type="change"><while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition> <block>{
+
+    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+
+
+}</block></while></diff:delete><diff:insert type="change"><while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition> 
+    <empty_stmt>;</empty_stmt></while></diff:insert>
+</unit>
+
 </unit>

@@ -12,4 +12,35 @@
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common>
 }</block></for></diff:delete></unit>
 
+<unit filename="for.multiple|for.multiple">
+<for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>) <block>{
+
+<diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+
+
+</diff:delete>}</block></for><diff:delete type="whitespace">
+</diff:delete></unit>
+
+<unit filename="for.multiple|for.multiple">
+<diff:delete type="change"><for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>) <block>{
+
+    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+
+
+}</block></for></diff:delete><diff:insert type="change"><for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>) 
+    <empty_stmt>;</empty_stmt></for></diff:insert>
+</unit>
+
 </unit>
