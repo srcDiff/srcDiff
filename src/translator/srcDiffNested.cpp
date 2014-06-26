@@ -229,10 +229,6 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & node_set
 bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  /** @todo may want to add this or something similar */
-  // if(structure_two->size() < structure_one->size())
-  //   return false;
-
   int block = is_block_type(structure_two, nodes_two);
 
   if(block == -1)
@@ -393,8 +389,6 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
   start_nest_new = start_new;  
   end_nest_new = start_new;  
-
-  /** @todo there are triggers for one being nested in other, but it is actually better the other way. */
 
   for(int i = start_old; i < end_old; ++i) {
 

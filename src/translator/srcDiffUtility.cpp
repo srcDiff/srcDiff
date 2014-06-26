@@ -447,6 +447,7 @@ bool for_group_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std
 
   for(int i = 0; i < node_sets_old.size() && i < node_sets_new.size(); ++i) {
 
+    /** @todo possible has group tag or whatever although does not currently exist (may have at some point though) */
     if(is_text(nodes_old.at(node_sets_old.at(i)->at(0))) && is_text(nodes_new.at(node_sets_new.at(i)->at(0))) 
       && strcmp((const char *)nodes_old.at(node_sets_old.at(i)->at(0))->content, ")") == 0
       && strcmp((const char *)nodes_new.at(node_sets_new.at(i)->at(0))->content, ")") == 0) {

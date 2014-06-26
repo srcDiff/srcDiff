@@ -71,7 +71,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
     delay_operation = -2;
 
   } else if(delay) {
-    /** @todo may want to place the delay operations different back in here, and have common output before each operation.  So do not nest delete/insert in common. */
+
     delay = false;
     delay_operation = -2;
 
@@ -84,7 +84,6 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
-    /** @todo why was delay of common disabled */
     if(ismethod(wstate.method, METHOD_GROUP) && operation != SESMOVE && (*node == diff_old_end || *node == diff_new_end || *node == diff_common_end)) {
 
 
