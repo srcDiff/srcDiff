@@ -398,7 +398,28 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
   int block_pos = start_pos;
   bool is_block = has_block(nodes, block_pos);
 
-  return is_block;
+  if(!is_block) return false;
+
+  int previous_element_pos = block_pos - 1;
+
+  while(previous_element_pos > start_pos
+    && (nodes.at(previous_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+    && nodes.at(previous_element_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT))
+    --previous_element_pos;
+
+  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "then") == 0)
+    return true;
+
+  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "condition") == 0)
+    return true;
+
+  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "incr") == 0)
+    return true;
+
+  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "init") == 0)
+    return true;
+
+  return false;
 
 }
 
