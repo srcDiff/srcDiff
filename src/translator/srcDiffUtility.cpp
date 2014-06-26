@@ -362,7 +362,7 @@ std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos)
 
 }
 
-bool has_block(NodeSet * structure, std::vector<xNodePtr> & nodes, int start_pos) {
+bool has_block(std::vector<xNodePtr> & nodes, int start_pos) {
 
   xNodePtr & start_node = nodes.at(start_pos);
 
@@ -452,10 +452,10 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string old_condition = get_condition(nodes_old, old_pos);
     std::string new_condition = get_condition(nodes_new, new_pos);
 
-    bool old_has_block;
-    bool new_has_block;
+    bool old_has_block = has_block(nodes_old, old_pos);
+    bool new_has_block = has_block(nodes_new, new_pos);
 
-    if(old_condition == new_condition) return false;
+    if(old_condition == new_condition && old_has_block == new_has_block) return false;
 
   }
 
