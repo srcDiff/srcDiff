@@ -25,6 +25,10 @@
     <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
 
 
 </diff:delete>}</block></while><diff:delete type="whitespace">
@@ -40,6 +44,10 @@
     <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
 
 
 }</block></while></diff:delete><diff:insert type="change"><while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition> 
