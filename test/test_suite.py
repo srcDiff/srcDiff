@@ -110,16 +110,16 @@ def linediff(xml_filename1, xml_filename2) :
 		return ""
 
 # find differences of two files
-def srcdiff(source_file_old, source_file_new, encoding, language, directory, filename, prefixlist) :
+def srcdiff(source_file_version_one, source_file_version_two, encoding, language, directory, filename, prefixlist) :
 
 	command = [globals()["srcdiff_utility"], "-d", directory, "-f", filename, "--operator", "--literal", "--modifier"]
 
 	temp_file = open("temp_file_one.cpp", "w")
-	temp_file.write(source_file_old)
+	temp_file.write(source_file_version_one)
 	temp_file.close()
 
 	temp_file = open("temp_file_two.cpp", "w")
-	temp_file.write(source_file_new)
+	temp_file.write(source_file_version_two)
 	temp_file.close()
 
 	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "")
@@ -368,15 +368,15 @@ try :
 						total_count = total_count + 1
 
 						# convert the unit in xml to text
-						unit_text_old = extract_source(unitxml, "1")
-						unit_text_new = extract_source(unitxml, "2")
+						unit_text_version_one = extract_source(unitxml, "1")
+						unit_text_version_two = extract_source(unitxml, "2")
 
 						# convert the unit in xml to text (if needed)
 						if doseol :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
@@ -402,15 +402,15 @@ try :
 						# convert the unit in xml to text
 						unitxml = switch_differences(unitxml)
 
-						unit_text_old = extract_source(unitxml, "1")
-						unit_text_new = extract_source(unitxml, "2")
+						unit_text_version_one = extract_source(unitxml, "1")
+						unit_text_version_two = extract_source(unitxml, "2")
 
 						# convert the unit in xml to text (if needed)
 						if doseol :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_old, unit_text_new, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
