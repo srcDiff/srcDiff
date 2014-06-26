@@ -33,7 +33,7 @@ def safe_communicate(command, inp) :
 		try :
 			return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(inp)[0]
 		except OSError, (errornum, strerror) :
-			sperrorlist.append((command, xml_filename, errornum, strerror))
+			sperrorlist.append((command, inp, errornum, strerror))
 			raise
 
 # extracts a particular unit from a srcML file
@@ -47,7 +47,7 @@ def safe_communicate_file(command, filename) :
 		try :
 			return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
 		except OSError, (errornum, strerror) :
-			sperrorlist.append((command, xml_filename, errornum, strerror))
+			sperrorlist.append((command, filename, errornum, strerror))
 			raise
 
 # extracts a particular unit from a srcML file
@@ -63,7 +63,7 @@ def safe_communicate_two_files(command, filename_one, filename_two, directory) :
 		try :
 			return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
 		except OSError, (errornum, strerror) :
-			sperrorlist.append((command, xml_filename, errornum, strerror))
+			sperrorlist.append((command, directory, errornum, strerror))
 			raise
 
 # extracts a particular unit from a srcML file
