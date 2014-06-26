@@ -49,4 +49,41 @@
     <empty_stmt>;</empty_stmt></foreach></diff:insert>
 </unit>
 
+<unit filename="foreach.multiple|foreach.multiple">
+<foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>) <block>{
+
+<diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
+
+</diff:delete>}</block></foreach><diff:delete type="whitespace">
+</diff:delete></unit>
+
+<unit filename="foreach.multiple|foreach.multiple">
+<diff:delete type="change"><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>) <block>{
+
+    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
+
+}</block></foreach></diff:delete><diff:insert type="change"><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>) 
+    <empty_stmt>;</empty_stmt></foreach></diff:insert>
+</unit>
+
 </unit>
