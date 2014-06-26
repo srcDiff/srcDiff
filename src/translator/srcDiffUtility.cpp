@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <xmlrw.hpp>
+#include <srcDiffDiff.hpp>
 
 bool is_change(edit * edit_script) {
 
@@ -362,62 +363,73 @@ std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos)
 
 }
 
-bool has_block(std::vector<xNodePtr> & nodes, int & start_pos) {
+int find_end(std::vector<xNodePtr> & nodes, int start_pos) {
 
   xNodePtr & start_node = nodes.at(start_pos);
 
-  if(start_node->type != XML_READER_TYPE_ELEMENT || start_node->extra & 0x1) return false;
+  if(start_node->type != XML_READER_TYPE_ELEMENT || start_node->extra & 0x1) return -1;
 
-  start_pos += 1;
+  int end_pos = start_pos + 1;
   int open_structure_count = 1;
 
   while(open_structure_count) {
 
-    if(strcmp((const char *)nodes.at(start_pos)->name, (const char *)start_node->name) == 0) {
+    if(strcmp((const char *)nodes.at(end_pos)->name, (const char *)start_node->name) == 0) {
 
-      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
+      if(nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(end_pos)->extra & 0x1) == 0)
         ++open_structure_count;
-      else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+      else if(nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         --open_structure_count;
 
-    } else if(nodes.at(start_pos)->type == XML_READER_TYPE_ELEMENT
-              && strcmp((const char *)nodes.at(start_pos)->name, "block") == 0)
-      return true;
+    }
 
-    ++start_pos;
+    if(open_structure_count == 0) return end_pos;
+
+    ++end_pos;
 
   }
 
-  return false;
+  return -1;
+
 }
 
 bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
 
   xNodePtr & start_node = nodes.at(start_pos);
 
-  int block_pos = start_pos;
-  bool is_block = has_block(nodes, block_pos);
+  int end_pos = find_end(nodes, start_pos);
 
-  if(!is_block) return false;
+  if(end_pos == -1) return false;
 
-  int previous_element_pos = block_pos - 1;
+  NodeSets node_sets = create_node_set(nodes, start_pos + 1, end_pos);
 
-  while(previous_element_pos > start_pos
-    && (nodes.at(previous_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-    && nodes.at(previous_element_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT))
-    --previous_element_pos;
+  for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
 
-  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "then") == 0)
-    return true;
+    if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0) {
 
-  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "condition") == 0)
-    return true;
+      free_node_sets(node_sets);
 
-  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "incr") == 0)
-    return true;
+      return true;
 
-  if(strcmp((const char *)nodes.at(previous_element_pos)->name, "init") == 0)
-    return true;
+    } else if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "then") == 0) {
+
+      int next_element_pos = (*itr)->at(0) + 1;
+      while(nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        ++next_element_pos;
+
+      free_node_sets(node_sets);
+
+      if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+        && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0)
+        return true;
+      else
+        return false;
+
+    }
+
+  }
+
+  free_node_sets(node_sets);
 
   return false;
 
