@@ -745,7 +745,7 @@ void * svnReadOpen(const char * URI) {
   svn_stringbuf_t * str = svn_stringbuf_create_ensure(0, context->pool);
   context->stream = svn_stream_from_stringbuf(str, context->pool);
 
-  svn_revnum_t fetched_rev;
+  svn_revnum_t fetched_rev = 0;
   apr_hash_t * props;
 
   // parse uri
