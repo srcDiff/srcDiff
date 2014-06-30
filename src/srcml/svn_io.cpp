@@ -780,8 +780,6 @@ int svnRead(void * context, char * buffer, int len) {
 
   if(error) return 0;
 
-  if(length < 0) return 0;
-
   return length;
 }
 
