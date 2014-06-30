@@ -711,8 +711,10 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
     }
 
   } catch (URIStreamFileError) {
+
     fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", list);
     exit(STATUS_INPUTFILE_PROBLEM);
+
   }
 
 
