@@ -734,10 +734,10 @@ void * svnReadOpen(const char * URI) {
 
   svn_context * context = new svn_context;
 
-  apr_allocator_t * allocator;
+  apr_allocator_t * allocator = 0;
   apr_allocator_create(&allocator);
 
-  apr_pool_t * pool;
+  apr_pool_t * pool = 0;
   apr_pool_create_ex(&pool, NULL, abortfunc, allocator);
 
   context->pool = pool;
@@ -746,7 +746,7 @@ void * svnReadOpen(const char * URI) {
   context->stream = svn_stream_from_stringbuf(str, context->pool);
 
   svn_revnum_t fetched_rev = 0;
-  apr_hash_t * props;
+  apr_hash_t * props = 0;
 
   // parse uri
   const char * end = index(URI, '@');
