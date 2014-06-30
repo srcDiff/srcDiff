@@ -28,20 +28,21 @@ struct create_nodes_args {
   std::vector<xNode *> & nodes;
   int & no_error;
   int context;
+  OPTION_TYPE options;
 
 };
 
 // converts source code to srcML
 void translate_to_srcML(const char * path, srcml_archive * main_archive,
                         const char * language, const char * filename, const char * directory, const char * version,
-                   			char ** output_buffer, int * output_size); 
+                   			char ** output_buffer, int * output_size, OPTION_TYPE options); 
 
 void * create_nodes_from_srcML_thread(void * arguments);
 
 void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
                              const char * language, const char * filename, const char * directory, const char * version,
                              pthread_mutex_t * mutex,
-                             std::vector<xNode *> & node, int & no_error, int context);
+                             std::vector<xNode *> & node, int & no_error, int context, OPTION_TYPE options);
 
 // create srcdiff unit
 xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new);

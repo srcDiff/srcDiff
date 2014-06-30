@@ -1,15 +1,19 @@
 #include <srcMLUtility.hpp>
 #include <srcDiffDiff.hpp>
 #include <srcml.h>
+#ifdef SVN
+#include <svn_io.hpp>
+#endif
 
 #include <string.h>
 
 extern xmlNs diff;
 
+
 // converts source code to srcML
 void translate_to_srcML(const char * path, srcml_archive * main_archive,
       const char * language, const char * filename, const char * directory, const char * version,
-			char ** output_buffer, int * output_size) {
+			char ** output_buffer, int * output_size, OPTION_TYPE options) {
 
   srcml_archive * unit_archive = srcml_clone_archive(main_archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
@@ -18,7 +22,20 @@ void translate_to_srcML(const char * path, srcml_archive * main_archive,
 
   srcml_unit * unit = srcml_create_unit(unit_archive);
 
-  srcml_parse_unit_filename(unit, path);
+#ifdef SVN
+  if(isoption(options, OPTION_SVN)) {
+#endif
+
+    srcml_parse_unit_filename(unit, path);
+
+#ifdef SVN
+  } else {
+
+    void * context = svnReadOpen(path);
+    srcml_parse_unit_io(unit, context, svnRead, svnReadClose);
+
+}
+#endif
 
   srcml_write_unit(unit_archive, unit);
 
@@ -36,7 +53,8 @@ void * create_nodes_from_srcML_thread(void * arguments) {
     create_nodes_from_srcML(args.path, args.main_archive,
                             args.language, args.filename, args.directory, args.version,
                             args.mutex,
-                            args.nodes, args.no_error, args.context);
+                            args.nodes, args.no_error, args.context,
+                            args.options);
 
     return NULL;
 
@@ -46,7 +64,7 @@ void * create_nodes_from_srcML_thread(void * arguments) {
 void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
                              const char * language, const char * filename, const char * directory, const char * version,
                              pthread_mutex_t * mutex,
-                             std::vector<xNode *> & nodes, int & no_error, int context) {
+                             std::vector<xNode *> & nodes, int & no_error, int context, OPTION_TYPE options) {
   
   char * output_buffer;
   int output_size;
@@ -56,7 +74,7 @@ void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
   // translate file one
   try {
 
-  translate_to_srcML(path, main_archive, language, filename, directory, version, &output_buffer, &output_size);
+  translate_to_srcML(path, main_archive, language, filename, directory, version, &output_buffer, &output_size, options);
 
   reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 

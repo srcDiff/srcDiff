@@ -25,6 +25,7 @@
 option(BUILD_UNIT_TESTS "Build unit tests for srcDiff" OFF)
 
 option(SVN_ENABLED "Build in svn source input support" OFF)
+
 if(SVN_ENABLED)
 
 set(LIBSVN_INCLUDE /usr/local/include/subversion-1;/usr/include/apr-1)
@@ -47,7 +48,7 @@ find_package(LibXml2 REQUIRED)
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
 # Set srcdiff libraries
-set(SRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBSVN_LIBRARIES} CACHE STRING "srcDiff Link Libraries")
+set(SRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBSVN_LIBRARIES} CACHE INTERNAL "srcDiff Link Libraries")
 
 # include needed includes
 include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBSVN_INCLUDE})

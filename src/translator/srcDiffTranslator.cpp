@@ -149,7 +149,10 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                 , unit_directory
                                 , unit_version
                                 , rbuf_old.mutex
-                                , rbuf_old.nodes, is_old, rbuf_old.stream_source };
+                                , rbuf_old.nodes
+                                , is_old
+                                , rbuf_old.stream_source
+                                , options };
   pthread_t thread_old;
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
 
@@ -178,7 +181,10 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                 , unit_directory
                                 , unit_version
                                 , rbuf_new.mutex
-                                , rbuf_new.nodes, is_new, rbuf_new.stream_source };
+                                , rbuf_new.nodes
+                                , is_new
+                                , rbuf_new.stream_source
+                                , options };
 
 
   pthread_t thread_new;
