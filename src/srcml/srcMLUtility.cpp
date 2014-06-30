@@ -32,6 +32,12 @@ void translate_to_srcML(const char * path, srcml_archive * main_archive,
   } else {
 
     void * context = svnReadOpen(path);
+
+    const char * end = index(path, '@');
+    const char * filename = strndup(path, end - path);
+    srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, filename));
+    free((void *)filename);
+
     srcml_parse_unit_io(unit, context, svnRead, svnReadClose);
 
 }
