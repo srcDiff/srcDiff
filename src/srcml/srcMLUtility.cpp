@@ -23,7 +23,7 @@ void translate_to_srcML(const char * path, srcml_archive * main_archive,
   srcml_unit * unit = srcml_create_unit(unit_archive);
 
 #ifdef SVN
-  if(isoption(options, OPTION_SVN)) {
+  if(!isoption(options, OPTION_SVN)) {
 #endif
 
     srcml_parse_unit_filename(unit, path);
