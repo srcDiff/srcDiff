@@ -634,8 +634,12 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
   svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
   global_session = session;
 
-  if(svn_error)
+  if(svn_error) {
+
     fprintf(stderr, "%s\n", svn_error->message);
+    exit(1);
+
+  }
 
   srcDiffTranslator translator(srcdiff_filename,
                                method,
