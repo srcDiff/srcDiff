@@ -420,8 +420,8 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
   svn_ra_initialize(pool);
   svn_config_get_config(&cfg_hash, NULL, pool);
-  svn_client_create_context(&ctx, pool);
-  //svn_client_create_context2(&ctx, cfg_hash, pool);
+  svn_client_create_context2(&ctx, 0, pool);
+
   ctx->config = cfg_hash;
   cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
 
@@ -496,8 +496,8 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
   svn_ra_initialize(pool);
   svn_config_get_config(&cfg_hash, NULL, pool);
-  svn_client_create_context(&ctx, pool);
-  //svn_client_create_context2(&ctx, cfg_hash, pool);
+  svn_client_create_context2(&ctx, 0, pool);
+
   ctx->config = cfg_hash;
   cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
 
@@ -610,8 +610,8 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
   svn_ra_initialize(pool);
   svn_config_get_config(&cfg_hash, NULL, pool);
-  svn_client_create_context(&ctx, pool);
-  //svn_client_create_context2(&ctx, cfg_hash, pool);
+  svn_client_create_context2(&ctx, 0, pool);
+
   ctx->config = cfg_hash;
   cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
 
