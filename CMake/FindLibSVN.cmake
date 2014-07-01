@@ -25,7 +25,7 @@
 # LIBSVN_INCLUDE_DIR libsvn include directory
 # LIBSVN_LIBRARIES   libsvn libraries
 
-find_path(LIBSVN_INCLUDE_DIR NAMES subvesion-1/svn_types.h PATH_SUFFIXES/subversion-1)
+find_path(LIBSVN_INCLUDE_DIR NAMES subvesion-1/svn_types.h PATH_SUFFIXES subversion-1)
 
 find_library(LIBSVN_CLIENT   NAMES libsvn_client-1)
 find_library(LIBSVN_FS_UTIL  NAMES libsvn_fs_util-1)
@@ -44,7 +44,9 @@ find_library(LIBSVN_RA_SVN   NAMES libsvn_ra_svn-1)
 set(LIBSVN_LIBRARIES ${LIBSVN_CLIENT} ${LIBSVN_FS_UTIL} ${LIBSVN_REPOS} ${LIBSVN_DELTA} ${LIBSVN_RA} ${LIBSVN_SUBR} ${LIBSVN_DIFF}
  ${LIBSVN_RA_LOCAL} ${LIBSVN_WC} ${LIBSVN_FS} ${LIBSVN_RA_SERF} ${LIBSVN_FS_FS} ${LIBSVN_RA_SVN})
 
-include(FindPackageHandleStandardArgs.cmake)
+find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES Modules/FindPackageHandleStandardArgs.cmake HINTS /usr/local/share/cmake /usr/share/cmake)
+message("HERE" ${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH})
+include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH} FindPackageHandleStandardArgs.cmake)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(LibSVN REQUIRED_VARS LIBSVN_LIBRARIES LIBSVN_INCLUDE_DIR)
 
