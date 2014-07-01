@@ -18,6 +18,7 @@
 
 #include <svn_io.hpp>
 #include <srcmlapps.hpp>
+#include <svn_version.h>
 
 #include <pthread.h>
 
@@ -420,7 +421,12 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
   svn_ra_initialize(pool);
   svn_config_get_config(&cfg_hash, NULL, pool);
+  
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
   svn_client_create_context2(&ctx, 0, pool);
+#else
+  svn_client_create_context(&ctx, pool);
+#endif
 
   ctx->config = cfg_hash;
   cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
@@ -441,7 +447,13 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
+
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
   svn_error_t * svn_error = svn_client_open_ra_session2(&session, url, 0, ctx, pool, pool);
+#else
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
+#endif
+
   global_session = session;
 
   if(svn_error)
@@ -496,7 +508,12 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
   svn_ra_initialize(pool);
   svn_config_get_config(&cfg_hash, NULL, pool);
+  
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
   svn_client_create_context2(&ctx, 0, pool);
+#else
+  svn_client_create_context(&ctx, pool);
+#endif
 
   ctx->config = cfg_hash;
   cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
@@ -517,7 +534,13 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
+
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
   svn_error_t * svn_error = svn_client_open_ra_session2(&session, url, 0, ctx, pool, pool);
+#else
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
+#endif
+
   global_session = session;
 
   if(svn_error)
@@ -610,7 +633,12 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
   svn_ra_initialize(pool);
   svn_config_get_config(&cfg_hash, NULL, pool);
+  
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
   svn_client_create_context2(&ctx, 0, pool);
+#else
+  svn_client_create_context(&ctx, pool);
+#endif
 
   ctx->config = cfg_hash;
   cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
@@ -631,7 +659,13 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
+
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
   svn_error_t * svn_error = svn_client_open_ra_session2(&session, url, 0, ctx, pool, pool);
+#else
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
+#endif
+
   global_session = session;
 
   if(svn_error) {
