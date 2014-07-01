@@ -25,7 +25,7 @@
 # LIBAPR_INCLUDE_DIR libsvn include directory
 # LIBAPR_LIBRARIES   libsvn libraries
 
-find_path(LIBAPR_INCLUDE_DIR NAMES apr-1/apr.h PATH_SUFFIXES apr-1 HINTS /usr/local/include /usr/include)
+find_path(LIBAPR_INCLUDE_DIR NAMES apr.h HINTS /usr/local/include/apr-1 /usr/include/apr-1)
 
 find_library(LIBAPR_APR     NAMES apr-1     HINTS /usr/local/lib /usr/lib)
 find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib)

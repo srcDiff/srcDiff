@@ -25,7 +25,7 @@
 # LIBSVN_INCLUDE_DIR libsvn include directory
 # LIBSVN_LIBRARIES   libsvn libraries
 
-find_path(LIBSVN_INCLUDE_DIR NAMES subversion-1/svn_types.h PATH_SUFFIXES subversion-1 HINTS /usr/local/include /usr/include)
+find_path(LIBSVN_INCLUDE_DIR NAMES svn_types.h HINTS /usr/local/include/subversion-1 /usr/include/subversion-1)
 
 find_library(LIBSVN_CLIENT   NAMES svn_client-1   HINTS /usr/local/lib /usr/lib)
 find_library(LIBSVN_FS_UTIL  NAMES svn_fs_util-1  HINTS /usr/local/lib /usr/lib)

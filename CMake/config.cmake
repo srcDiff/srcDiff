@@ -1,7 +1,7 @@
 ##
 #  config.cmake
 #
-#  Copyright (C) 2011-2011  SDML (www.sdml.info)
+#  Copyright (C) 2011-2011 SDML (www.sdml.info)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -28,8 +28,9 @@ option(SVN_ENABLED "Build in svn source input support" OFF)
 
 if(SVN_ENABLED)
 
-set(LIBSVN_INCLUDE /usr/local/include/subversion-1;/usr/include/apr-1)
-set(LIBSVN_LIBRARIES /usr/local/lib/libsvn_client-1.dylib;/usr/local/lib/libsvn_fs_util-1.dylib;/usr/local/lib/libsvn_repos-1.dylib;/usr/local/lib/libsvn_delta-1.dylib;/usr/local/lib/libsvn_ra-1.dylib;/usr/local/lib/libsvn_subr-1.dylib;/usr/local/lib/libsvn_diff-1.dylib;/usr/local/lib/libsvn_ra_local-1.dylib;/usr/local/lib/libsvn_wc-1.dylib;/usr/local/lib/libsvn_fs-1.dylib;/usr/local/lib/libsvn_ra_serf-1.dylib;/usr/local/lib/libsvn_fs_fs-1.dylib;/usr/local/lib/libsvn_ra_svn-1.dylib;libapr-1.dylib;libaprutil-1.dylib)
+find_package(LibApr REQUIRED)
+find_package(LibSvn REQUIRED)
+
 add_definitions(-DSVN)
 
 endif()
@@ -48,8 +49,8 @@ find_package(LibXml2 REQUIRED)
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
 # Set srcdiff libraries
-set(SRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBSVN_LIBRARIES} CACHE INTERNAL "srcDiff Link Libraries")
+set(SRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} CACHE INTERNAL "srcDiff Link Libraries")
 
 # include needed includes
-include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBSVN_INCLUDE})
+include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR})
 
