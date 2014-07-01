@@ -4,28 +4,31 @@
 #include <Options.hpp>
 
 // @srcdiff
-const OPTION_TYPE OPTION_THREAD  = ull(1) << 43;
+const OPTION_TYPE OPTION_THREAD         = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_VISUALIZE  = ull(1) << 44;
+const OPTION_TYPE OPTION_VISUALIZE      = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_OUTPUTSAME  = ull(1) << 45;
+const OPTION_TYPE OPTION_OUTPUTSAME     = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_OUTPUTPURE  = ull(1) << 46;
+const OPTION_TYPE OPTION_OUTPUTPURE     = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_CHANGE  = ull(1) << 47;
+const OPTION_TYPE OPTION_CHANGE         = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SRCDIFFONLY  = ull(1) << 48;
+const OPTION_TYPE OPTION_SRCDIFFONLY    = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_DIFFONLY  = ull(1) << 49;
+const OPTION_TYPE OPTION_DIFFONLY       = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SVN_CONTINUOUS  = ull(1) << 50;
+const OPTION_TYPE OPTION_SVN_CONTINUOUS = ull(1) << __COUNTER__;
+
+// @src2srcml
+const OPTION_TYPE OPTION_SVN            = ull(1) << __COUNTER__;
 
 #endif
 

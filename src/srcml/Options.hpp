@@ -261,9 +261,6 @@ const OPTION_TYPE OPTION_REVISION  = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_NULL  = ull(1) << __COUNTER__;
 
 // @src2srcml
-const OPTION_TYPE OPTION_SVN  = ull(1) << __COUNTER__;
-
-// @src2srcml
 const OPTION_TYPE OPTION_LINE  = ull(1) << __COUNTER__;
 
 // @src2srcml
