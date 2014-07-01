@@ -1,7 +1,7 @@
 ##
-#  FindLibSVN.cmake
+#  FindLibSvn.cmake
 #
-#  Copyright (C) 2011-2011  SDML (www.sdml.info)
+#  Copyright (C) 2014 SDML (www.sdml.info)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -48,6 +48,6 @@ find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandard
 
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
-find_package_handle_standard_args(LibSVN REQUIRED_VARS LIBSVN_LIBRARIES LIBSVN_INCLUDE_DIR)
+find_package_handle_standard_args(LibSvn REQUIRED_VARS LIBSVN_LIBRARIES LIBSVN_INCLUDE_DIR)
 
 mark_as_advanced(LIBSVN_LIBRARIES LIBSVN_INCLUDE_DIR)
