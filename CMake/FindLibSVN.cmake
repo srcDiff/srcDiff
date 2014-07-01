@@ -25,21 +25,21 @@
 # LIBSVN_INCLUDE_DIR libsvn include directory
 # LIBSVN_LIBRARIES   libsvn libraries
 
-find_path(LIBSVN_INCLUDE_DIR NAMES subversion-1/svn_types.h PATH_SUFFIXES subversion-1 HINTS /usr/local/include/ /usr/include/)
+find_path(LIBSVN_INCLUDE_DIR NAMES subversion-1/svn_types.h PATH_SUFFIXES subversion-1 HINTS /usr/local/include /usr/include)
 
-find_library(LIBSVN_CLIENT   NAMES libsvn_client-1   HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_FS_UTIL  NAMES libsvn_fs_util-1  HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_REPOS    NAMES libsvn_repos-1    HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_DELTA    NAMES libsvn_delta-1    HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA       NAMES libsvn_ra-1       HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_SUBR     NAMES libsvn_subr-1     HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_DIFF     NAMES libsvn_diff-1     HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA_LOCAL NAMES libsvn_ra_local-1 HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_WC       NAMES libsvn_wc-1       HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_FS       NAMES libsvn_fs-1       HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA_SERF  NAMES libsvn_ra_serf-1  HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_FS_FS    NAMES libsvn_fs_fs-1    HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA_SVN   NAMES libsvn_ra_svn-1   HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_CLIENT   NAMES svn_client-1   HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_FS_UTIL  NAMES svn_fs_util-1  HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_REPOS    NAMES svn_repos-1    HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_DELTA    NAMES svn_delta-1    HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA       NAMES svn_ra-1       HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_SUBR     NAMES svn_subr-1     HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_DIFF     NAMES svn_diff-1     HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA_LOCAL NAMES svn_ra_local-1 HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_WC       NAMES svn_wc-1       HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_FS       NAMES svn_fs-1       HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA_SERF  NAMES svn_ra_serf-1  HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_FS_FS    NAMES svn_fs_fs-1    HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA_SVN   NAMES svn_ra_svn-1   HINTS /usr/local/lib /usr/lib)
 
 set(LIBSVN_LIBRARIES ${LIBSVN_CLIENT} ${LIBSVN_FS_UTIL} ${LIBSVN_REPOS} ${LIBSVN_DELTA} ${LIBSVN_RA} ${LIBSVN_SUBR} ${LIBSVN_DIFF}
  ${LIBSVN_RA_LOCAL} ${LIBSVN_WC} ${LIBSVN_FS} ${LIBSVN_RA_SERF} ${LIBSVN_FS_FS} ${LIBSVN_RA_SVN})
