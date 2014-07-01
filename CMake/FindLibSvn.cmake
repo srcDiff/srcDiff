@@ -41,8 +41,59 @@ find_library(LIBSVN_RA_SERF  NAMES svn_ra_serf-1  HINTS /usr/local/lib /usr/lib)
 find_library(LIBSVN_FS_FS    NAMES svn_fs_fs-1    HINTS /usr/local/lib /usr/lib)
 find_library(LIBSVN_RA_SVN   NAMES svn_ra_svn-1   HINTS /usr/local/lib /usr/lib)
 
-set(LIBSVN_LIBRARIES ${LIBSVN_CLIENT} ${LIBSVN_FS_UTIL} ${LIBSVN_REPOS} ${LIBSVN_DELTA} ${LIBSVN_RA} ${LIBSVN_SUBR} ${LIBSVN_DIFF}
- ${LIBSVN_RA_LOCAL} ${LIBSVN_WC} ${LIBSVN_FS} ${LIBSVN_RA_SERF} ${LIBSVN_FS_FS} ${LIBSVN_RA_SVN})
+set(LIBSVN_LIBRARIES "")
+
+if(LIBSVN_CLIENT)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_CLIENT})
+endif()
+
+if(LIBSVN_FS_UTIL)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_FS_UTIL})
+endif()
+
+if(LIBSVN_REPOS)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_REPOS})
+endif()
+
+if(LIBSVN_DELTA)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_DELTA})
+endif()
+
+if(LIBSVN_RA)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_RA}
+endif()
+
+if(LIBSVN_SUBR)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_SUBR})
+endif()
+
+if(LIBSVN_DIFF)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_DIFF})
+endif()
+
+if(LIBSVN_RA_LOCAL)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_RA_LOCAL})
+endif()
+
+if(LIBSVN_WC)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_WC})
+endif()
+
+if(LIBSVN_FS)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_FS})
+endif()
+
+if(LIBSVN_RA_SERF)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_RA_SERF})
+endif()
+
+if(LIBSVN_FS_FS)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_FS_FS})
+endif()
+
+if(LIBSVN_RA_SVN)
+    list(APPEND LIBSVN_LIBRARIES ${LIBSVN_RA_SVN})
+endif()
 
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
     HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules)
