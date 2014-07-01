@@ -30,7 +30,15 @@ find_path(LIBAPR_INCLUDE_DIR NAMES apr.h HINTS /usr/local/include/apr-1 /usr/inc
 find_library(LIBAPR_APR     NAMES apr-1     HINTS /usr/local/lib /usr/lib)
 find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib)
 
-set(LIBAPR_LIBRARIES ${LIBAPR_APR} ${LIBAPR_APRUTIL})
+set(LIBAPR_LIBRARIES "")
+
+if(LIBAPR_APR)
+    list(APPEND LIBAPR_LIBRARIES ${LIBAPR_APR})
+endif()
+
+if(LIBAPR_APRUTIL)
+    list(APPEND LIBAPR_LIBRARIES ${LIBAPR_APRUTIL})
+endif()
 
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
     HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules)
