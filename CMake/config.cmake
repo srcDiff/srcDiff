@@ -54,6 +54,10 @@ set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRAR
 # Set libsrcdiff libraries
 set(SRCDIFF_LIBRARIES crypto CACHE INTERNAL "srcdiff Link Libraries")
 
+if(NOT WIN32 AND NOT APPLE)
+list(APPEND SRCDIFF_LIBRARIES rt)
+endif()
+
 # include needed includes
 include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR})
 
