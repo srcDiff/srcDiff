@@ -32,7 +32,8 @@ find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib)
 
 set(LIBAPR_LIBRARIES ${LIBAPR_APR} ${LIBAPR_APRUTIL})
 
-find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake HINTS /usr/local/share/cmake/Modules /usr/share/cmake/Modules)
+find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
+    HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules)
 
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
