@@ -25,29 +25,30 @@
 # LIBSVN_INCLUDE_DIR libsvn include directory
 # LIBSVN_LIBRARIES   libsvn libraries
 
-find_path(LIBSVN_INCLUDE_DIR NAMES subvesion-1/svn_types.h PATH_SUFFIXES subversion-1)
+find_path(LIBSVN_INCLUDE_DIR NAMES subversion-1/svn_types.h PATH_SUFFIXES subversion-1 HINTS /usr/local/include/ /usr/include/)
 
-find_library(LIBSVN_CLIENT   NAMES libsvn_client-1)
-find_library(LIBSVN_FS_UTIL  NAMES libsvn_fs_util-1)
-find_library(LIBSVN_REPOS    NAMES libsvn_repos-1)
-find_library(LIBSVN_DELTA    NAMES libsvn_delta-1)
-find_library(LIBSVN_RA       NAMES libsvn_ra-1)
-find_library(LIBSVN_SUBR     NAMES libsvn_subr-1)
-find_library(LIBSVN_DIFF     NAMES libsvn_diff-1)
-find_library(LIBSVN_RA_LOCAL NAMES libsvn_ra_local-1)
-find_library(LIBSVN_WC       NAMES libsvn_wc-1)
-find_library(LIBSVN_FS       NAMES libsvn_fs-1)
-find_library(LIBSVN_RA_SERF  NAMES libsvn_ra_serf-1)
-find_library(LIBSVN_FS_FS    NAMES libsvn_fs_fs-1)
-find_library(LIBSVN_RA_SVN   NAMES libsvn_ra_svn-1)
+find_library(LIBSVN_CLIENT   NAMES libsvn_client-1   HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_FS_UTIL  NAMES libsvn_fs_util-1  HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_REPOS    NAMES libsvn_repos-1    HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_DELTA    NAMES libsvn_delta-1    HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA       NAMES libsvn_ra-1       HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_SUBR     NAMES libsvn_subr-1     HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_DIFF     NAMES libsvn_diff-1     HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA_LOCAL NAMES libsvn_ra_local-1 HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_WC       NAMES libsvn_wc-1       HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_FS       NAMES libsvn_fs-1       HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA_SERF  NAMES libsvn_ra_serf-1  HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_FS_FS    NAMES libsvn_fs_fs-1    HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_RA_SVN   NAMES libsvn_ra_svn-1   HINTS /usr/local/lib /usr/lib)
 
 set(LIBSVN_LIBRARIES ${LIBSVN_CLIENT} ${LIBSVN_FS_UTIL} ${LIBSVN_REPOS} ${LIBSVN_DELTA} ${LIBSVN_RA} ${LIBSVN_SUBR} ${LIBSVN_DIFF}
  ${LIBSVN_RA_LOCAL} ${LIBSVN_WC} ${LIBSVN_FS} ${LIBSVN_RA_SERF} ${LIBSVN_FS_FS} ${LIBSVN_RA_SVN})
+message("HERE " ${LIBSVN_INCLUDE_DIR})
+message("HERE " ${LIBSVN_LIBRARIES})
+find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake HINTS /usr/local/share/cmake/Modules /usr/share/cmake/Modules)
 
-find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES Modules/FindPackageHandleStandardArgs.cmake HINTS /usr/local/share/cmake /usr/share/cmake)
-message("HERE" ${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH})
-include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH} FindPackageHandleStandardArgs.cmake)
+include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(LibSVN REQUIRED_VARS LIBSVN_LIBRARIES LIBSVN_INCLUDE_DIR)
+find_package_handle_standard_args(LibSVN REQUIRED_VARS LIBSVN_LIBRARIES LIBSVN_INCLUDE_DIR)
 
 mark_as_advanced(LIBSVN_LIBRARIES LIBSVN_INCLUDE_DIR)
