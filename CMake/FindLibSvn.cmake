@@ -43,8 +43,7 @@ find_library(LIBSVN_RA_SVN   NAMES svn_ra_svn-1   HINTS /usr/local/lib /usr/lib)
 
 set(LIBSVN_LIBRARIES ${LIBSVN_CLIENT} ${LIBSVN_FS_UTIL} ${LIBSVN_REPOS} ${LIBSVN_DELTA} ${LIBSVN_RA} ${LIBSVN_SUBR} ${LIBSVN_DIFF}
  ${LIBSVN_RA_LOCAL} ${LIBSVN_WC} ${LIBSVN_FS} ${LIBSVN_RA_SERF} ${LIBSVN_FS_FS} ${LIBSVN_RA_SVN})
-message("HERE " ${LIBSVN_INCLUDE_DIR})
-message("HERE " ${LIBSVN_LIBRARIES})
+
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake HINTS /usr/local/share/cmake/Modules /usr/share/cmake/Modules)
 
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
