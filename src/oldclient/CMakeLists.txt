@@ -39,7 +39,7 @@ add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
 endif()
 
-target_link_libraries(srcdiff srcdiff_static)
+target_link_libraries(srcdiff srcdiff_static ${SRCDIFF_LIBRARIES})
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
