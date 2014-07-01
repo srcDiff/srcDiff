@@ -131,7 +131,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
 void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                   const char* unit_directory, const char* unit_filename, const char* unit_version) {
 
-  LineDiffRange line_diff_range(path_one, path_two);
+  LineDiffRange line_diff_range(path_one, path_two, options);
 
   line_diff_range.create_line_diff();
 

@@ -10,6 +10,8 @@
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 
+#include <Options.hpp>
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -28,9 +30,11 @@ private:
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;
 
+  OPTION_TYPE options;
+
 public:
 
-  LineDiffRange(std::string file_one, std::string file_two);
+  LineDiffRange(std::string file_one, std::string file_two, OPTION_TYPE options);
 
   ~LineDiffRange();
 
@@ -47,7 +51,8 @@ public:
 
   void create_line_diff();
 
-  static std::vector<std::string> read_file(const char * file);
+  static std::vector<std::string> read_local_file(const char * file);
+  static std::vector<std::string> read_svn_file(const char * file);
 
 };
 

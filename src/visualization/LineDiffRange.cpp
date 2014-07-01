@@ -20,8 +20,8 @@
 
 #include <URIStream.hpp>
 
-LineDiffRange::LineDiffRange(std::string file_one, std::string file_two)
-  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL) {}
+LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, OPTION_TYPE options)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), options(options) {}
 
 LineDiffRange::~LineDiffRange() {
 
@@ -72,7 +72,25 @@ const void * line_accessor(int position, const void * lines, const void * contex
   return &line;
 }
 
-std::vector<std::string> LineDiffRange::read_file(const char * file) {
+std::vector<std::string> LineDiffRange::read_local_file(const char * file) {
+
+  std::vector<std::string> lines;
+
+  URIStream stream(file);
+
+  char * line;
+  while((line = stream.readline())) {
+
+    lines.push_back(line);
+
+  }
+
+  return lines;
+
+}
+
+
+std::vector<std::string> LineDiffRange::read_svn_file(const char * file) {
 
   std::vector<std::string> lines;
 
@@ -126,8 +144,17 @@ std::string LineDiffRange::get_line_diff_range() {
 
 void LineDiffRange::create_line_diff() {
 
-  lines_one = read_file(file_one.c_str());
-  lines_two = read_file(file_two.c_str());
+  if(!isoption(options, OPTION_SVN)) {
+
+    lines_one = read_local_file(file_one.c_str());
+    lines_two = read_local_file(file_two.c_str());
+
+  } else {
+
+    lines_one = read_svn_file(file_one.c_str());
+    lines_two = read_svn_file(file_two.c_str());    
+
+  }
 
   int distance = ses.compute(&lines_one, lines_one.size(), &lines_two, lines_two.size());
 

@@ -37,6 +37,20 @@ URIStream::URIStream(const char* uriname)
     done = true;
 }
 
+URIStream::URIStream(svn_context * context)
+  : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
+{
+
+  if (!(input = xmlParserInputBufferCreateIO(svnRead, svnReadClose, context, XML_CHAR_ENCODING_NONE)))
+    throw URIStreamFileError();
+
+  // get some data into the buffer
+  int size = xmlParserInputBufferGrow(input, 4096);
+
+  // found problem or eof
+  if (size == -1 || size == 0)
+    done = true;
+}
 
 std::string URIStream::readlines() {
 

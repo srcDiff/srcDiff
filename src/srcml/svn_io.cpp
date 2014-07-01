@@ -25,13 +25,6 @@
 svn_ra_session_t * global_session;
 pthread_mutex_t mutex;
 
-struct svn_context {
-
-  svn_stream_t * stream;
-  apr_pool_t * pool;
-
-};
-
 int abortfunc(int retcode) {
 
   std::cout << retcode << '\n';
