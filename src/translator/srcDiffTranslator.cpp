@@ -38,6 +38,9 @@
 
 #include <xmlrw.hpp>
 
+#include <strings.h>
+#include <cstring>
+
 // diff nodes
 xNode diff_common_start;
 xNode diff_common_end;
