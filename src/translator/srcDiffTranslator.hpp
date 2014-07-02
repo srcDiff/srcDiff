@@ -53,6 +53,8 @@ class srcDiffTranslator {
 
   void translate(const char* path_one, const char* path_two, const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0);
 
+  srcml_archive * get_archive();
+
   // destructor
   ~srcDiffTranslator();
 

@@ -379,6 +379,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
 }
 
+srcml_archive * srcDiffTranslator::get_archive() {
+
+  return archive;
+
+}
+
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
