@@ -131,9 +131,9 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
 // Translate from input stream to output stream
 void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                   const char* unit_directory, const char* unit_filename, const char* unit_version) {
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   LineDiffRange line_diff_range(path_one, path_two, url, options);
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   line_diff_range.create_line_diff();
 
   if(!isoption(options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)

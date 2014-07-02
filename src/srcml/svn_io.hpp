@@ -53,7 +53,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                              srcml_archive * archive,
                              OPTION_TYPE options);
 
-void svn_session_create(const char * url, svn_ra_session_t ** session, apr_pool_t * pool);
+void svn_session_create(const char * url, svn_ra_session_t ** session, apr_pool_t ** pool);
 
 void svn_session_destroy(svn_ra_session_t * session, apr_pool_t * pool);
 

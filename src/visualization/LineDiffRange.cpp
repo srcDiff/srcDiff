@@ -156,7 +156,7 @@ void LineDiffRange::create_line_diff() {
 
     svn_ra_session_t * session;
     apr_pool_t * pool;
-    svn_session_create(url, &session, pool);
+    svn_session_create(url, &session, &pool);
     lines_one = read_svn_file(file_one.c_str());
     lines_two = read_svn_file(file_two.c_str());
     svn_session_destroy(session, pool);
