@@ -97,6 +97,8 @@ std::vector<std::string> LineDiffRange::read_svn_file(const char * file) {
 
   std::vector<std::string> lines;
 
+  if(file == 0 || file[0] == 0) return lines;
+
   svn_context * context = (svn_context *)svnReadOpen(file);
 
   URIStream stream(context);
