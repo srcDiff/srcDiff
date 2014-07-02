@@ -46,8 +46,8 @@ class srcDiffTranslator {
                     METHOD_TYPE method,
                     std::string css,
                     srcml_archive * archive,
-                    OPTION_TYPE & options,
-                    const char * url = 0);
+                    const char * url,
+                    OPTION_TYPE & options);
 
   void close();
 

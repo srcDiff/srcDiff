@@ -21,7 +21,7 @@
 #include <URIStream.hpp>
 #include <svn_io.hpp>
 
-LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, OPTION_TYPE options, const char * url)
+LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, const char * url, OPTION_TYPE options)
   : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), options(options) {}
 
 LineDiffRange::~LineDiffRange() {

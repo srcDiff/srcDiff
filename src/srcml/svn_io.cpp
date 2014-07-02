@@ -471,6 +471,7 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
                                  method,
                                  css,
                                  archive,
+                                 url,
                                  options);
 
     apr_allocator_t * allocator;
@@ -520,6 +521,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                                method,
                                css,
                                archive,
+                               url,
                                options);
 
 
