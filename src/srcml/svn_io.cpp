@@ -427,9 +427,7 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
   apr_pool_destroy(path_pool);
 
-  apr_pool_destroy(pool);
-
-  apr_terminate();
+  svn_session_destroy(session, pool);
 
   pthread_mutex_destroy(&mutex);
 
@@ -506,10 +504,7 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
   }
 
-  apr_pool_destroy(pool);
-
-  apr_terminate();
-
+  svn_session_destroy(session, pool);
 
   pthread_mutex_destroy(&mutex);
 
@@ -612,10 +607,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
   }
 
-
-  apr_pool_destroy(pool);
-
-  apr_terminate();
+  svn_session_destroy(session, pool);
 
   pthread_mutex_destroy(&mutex);
 
@@ -677,6 +669,14 @@ void create_svn_session(const char * url, svn_ra_session_t ** session, apr_pool_
     exit(1);
 
   }
+
+}
+
+void svn_session_destroy(svn_ra_session_t * session, apr_pool_t * pool) {
+
+  apr_pool_destroy(pool);
+
+  apr_terminate();
 
 }
 
