@@ -74,7 +74,7 @@ void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
   
   if(path == 0 || path[0] == 0 || path[0] == '@') {
 
-    no_error = -1;
+    no_error = 0;
     return;
 
   }
