@@ -293,7 +293,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   srcml_unit * srcdiff_unit = srcml_create_unit(archive);
 
   const char * path = path_one;
-  if(!path_one)
+  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;
 
   const char * language_string = "";
