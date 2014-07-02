@@ -46,7 +46,8 @@ class srcDiffTranslator {
                     METHOD_TYPE method,
                     std::string css,
                     srcml_archive * archive,
-                    OPTION_TYPE & options);
+                    OPTION_TYPE & options,
+                    const char * url = 0);
 
   void close();
 
@@ -67,6 +68,8 @@ class srcDiffTranslator {
   writer_state wstate;
 
   ColorDiff * colordiff;
+
+  const char * url;
 
   OPTION_TYPE & options;
 

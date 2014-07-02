@@ -58,8 +58,9 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      METHOD_TYPE method,
                                      std::string css,
                                      srcml_archive * archive,
-                                     OPTION_TYPE & options)
-  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL), options(options)
+                                     OPTION_TYPE & options,
+                                     const char * url)
+  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL), url(url), options(options)
 {
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
@@ -131,7 +132,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
 void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                   const char* unit_directory, const char* unit_filename, const char* unit_version) {
 
-  LineDiffRange line_diff_range(path_one, path_two, options);
+  LineDiffRange line_diff_range(path_one, path_two, options, url);
 
   line_diff_range.create_line_diff();
 

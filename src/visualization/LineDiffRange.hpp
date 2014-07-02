@@ -30,11 +30,13 @@ private:
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;
 
+  const char * url;
+
   OPTION_TYPE options;
 
 public:
 
-  LineDiffRange(std::string file_one, std::string file_two, OPTION_TYPE options);
+  LineDiffRange(std::string file_one, std::string file_two, OPTION_TYPE options, const char * url = 0);
 
   ~LineDiffRange();
 

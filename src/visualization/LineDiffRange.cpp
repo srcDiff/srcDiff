@@ -19,9 +19,10 @@
 #include <iostream>
 
 #include <URIStream.hpp>
+#include <svn_io.hpp>
 
-LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, OPTION_TYPE options)
-  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), options(options) {}
+LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, OPTION_TYPE options, const char * url)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), options(options) {}
 
 LineDiffRange::~LineDiffRange() {
 
@@ -151,6 +152,9 @@ void LineDiffRange::create_line_diff() {
 
   } else {
 
+    svn_ra_session_t * session;
+    apr_pool_t * pool;
+    create_svn_session(url, &session, pool);
     lines_one = read_svn_file(file_one.c_str());
     lines_two = read_svn_file(file_two.c_str());    
 
