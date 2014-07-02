@@ -79,7 +79,7 @@ std::vector<std::string> LineDiffRange::read_local_file(const char * file) {
 
   std::vector<std::string> lines;
 
-  if(file == 0 || file[0] == 0) return lines;
+  if(file == 0 || file[0] == 0|| file[0] == '@') return lines;
 
   URIStream stream(file);
 
