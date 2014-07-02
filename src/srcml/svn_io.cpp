@@ -399,7 +399,7 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
   apr_pool_t * pool;
   svn_ra_session_t * session;
-  create_svn_session(url, &session, pool);
+  svn_session_create(url, &session, pool);
 
   const char * path = "";
   apr_pool_t * path_pool;
@@ -436,7 +436,7 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
   apr_pool_t * pool;
   svn_ra_session_t * session;
-  create_svn_session(url, &session, pool);
+  svn_session_create(url, &session, pool);
 
   svn_revnum_t latest_revision = end_rev;
   if(end_rev == SVN_INVALID_REVNUM) {
@@ -514,7 +514,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
   apr_pool_t * pool;
   svn_ra_session_t * session;
-  create_svn_session(url, &session, pool);
+  svn_session_create(url, &session, pool);
 
 
   srcDiffTranslator translator(srcdiff_filename,
@@ -607,7 +607,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
 }
 
-void create_svn_session(const char * url, svn_ra_session_t ** session, apr_pool_t * pool) {
+void svn_session_create(const char * url, svn_ra_session_t ** session, apr_pool_t * pool) {
 
   apr_initialize();
 
@@ -719,6 +719,7 @@ int svnRead(void * context, char * buffer, int len) {
   if(error) return 0;
 
   return length;
+
 }
 
 // close the open file
@@ -733,4 +734,5 @@ int svnReadClose(void * context) {
   delete ctx;
 
   return 1;
+  
 }
