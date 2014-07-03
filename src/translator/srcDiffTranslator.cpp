@@ -293,7 +293,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   srcml_unit * srcdiff_unit = srcml_create_unit(archive);
 
   const char * path = path_one;
-  if(!path_one)
+  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;
 
   const char * language_string = "";
@@ -371,11 +371,18 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   if(isoption(options, OPTION_VISUALIZE)) {
 
-    colordiff->colorize(srcml_unit_get_xml(srcdiff_unit), line_diff_range);
+    if(is_old || is_new)
+      colordiff->colorize(srcml_unit_get_xml(srcdiff_unit), line_diff_range);
 
   }
 
   srcml_free_unit(srcdiff_unit);
+
+}
+
+srcml_archive * srcDiffTranslator::get_archive() {
+
+  return archive;
 
 }
 

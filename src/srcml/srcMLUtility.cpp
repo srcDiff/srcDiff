@@ -72,6 +72,13 @@ void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
                              pthread_mutex_t * mutex,
                              std::vector<xNode *> & nodes, int & no_error, int context, OPTION_TYPE options) {
   
+  if(path == 0 || path[0] == 0 || path[0] == '@') {
+
+    no_error = 0;
+    return;
+
+  }
+
   char * output_buffer;
   int output_size;
 

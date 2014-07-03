@@ -54,7 +54,10 @@ public:
   void create_line_diff();
 
   static std::vector<std::string> read_local_file(const char * file);
+
+ #ifdef SVN
   static std::vector<std::string> read_svn_file(const char * file);
+#endif
 
 };
 

@@ -19,7 +19,9 @@
 #include <iostream>
 
 #include <URIStream.hpp>
+#ifdef SVN
 #include <svn_io.hpp>
+#endif
 
 LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, const char * url, OPTION_TYPE options)
   : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), options(options) {}
@@ -77,6 +79,8 @@ std::vector<std::string> LineDiffRange::read_local_file(const char * file) {
 
   std::vector<std::string> lines;
 
+  if(file == 0 || file[0] == 0|| file[0] == '@') return lines;
+
   URIStream stream(file);
 
   char * line;
@@ -90,10 +94,12 @@ std::vector<std::string> LineDiffRange::read_local_file(const char * file) {
 
 }
 
-
+#ifdef SVN
 std::vector<std::string> LineDiffRange::read_svn_file(const char * file) {
 
   std::vector<std::string> lines;
+
+  if(file == 0 || file[0] == 0) return lines;
 
   svn_context * context = (svn_context *)svnReadOpen(file);
 
@@ -109,6 +115,7 @@ std::vector<std::string> LineDiffRange::read_svn_file(const char * file) {
   return lines;
 
 }
+#endif
 
 std::string LineDiffRange::get_line_diff_range() {
 
@@ -147,11 +154,12 @@ std::string LineDiffRange::get_line_diff_range() {
 
 void LineDiffRange::create_line_diff() {
 
+#ifdef SVN
   if(!isoption(options, OPTION_SVN)) {
-
+#endif
     lines_one = read_local_file(file_one.c_str());
     lines_two = read_local_file(file_two.c_str());
-
+#ifdef SVN
   } else {
 
     svn_ra_session_t * session;
@@ -162,7 +170,8 @@ void LineDiffRange::create_line_diff() {
     svn_session_destroy(session, pool);
 
   }
-
+#endif
+  
   int distance = ses.compute(&lines_one, lines_one.size(), &lines_two, lines_two.size());
 
   if(distance < 0) {

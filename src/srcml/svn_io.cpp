@@ -356,23 +356,12 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   }
 
   // Remove eventually
-/*  int real_language = language ? language : Language::getLanguageFromFilename(path_one);
 
-  real_language = real_language ? real_language : Language::getLanguageFromFilename(path_two);
+  srcml_archive * archive = translator.get_archive();
 
-  if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
-    local_options |= OPTION_CPP;
-
-  if (!real_language && !isoption(options, OPTION_QUIET)) {
-    fprintf(stderr, !shownumber ? "Skipped '%s|%s':  Unregistered extension\n" :
-            "    - '%s|%s'\tSkipped: Unregistered extension\n",
-            path_one, path_two);
-
-    ++skipped;
-
+  if(srcml_archive_check_extension(archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(archive, path_two) == SRCML_LANGUAGE_NONE)
     return;
-  }
-*/
+
   ++count;
 
   if(showinput && !isoption(local_options, OPTION_QUIET))

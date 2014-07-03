@@ -37,6 +37,7 @@ URIStream::URIStream(const char* uriname)
     done = true;
 }
 
+#ifdef SVN
 URIStream::URIStream(svn_context * context)
   : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
 {
@@ -51,6 +52,7 @@ URIStream::URIStream(svn_context * context)
   if (size == -1 || size == 0)
     done = true;
 }
+#endif
 
 std::string URIStream::readlines() {
 
