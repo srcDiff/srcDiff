@@ -144,7 +144,8 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNodePt
     int current_operation = wstate.output_diff.back()->operation;
     int size = wstate.output_diff.back()->open_tags.size();
 
-    if(size > 0 && ((*node == diff_old_start && current_operation == SESDELETE)
+    if(size > 0 && operation != SESMOVE &&
+       ((*node == diff_old_start && current_operation == SESDELETE)
                     || (*node == diff_new_start && current_operation == SESINSERT)
                     || (*node == diff_common_start && current_operation == SESCOMMON))) {
 
