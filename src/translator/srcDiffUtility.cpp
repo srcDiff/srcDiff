@@ -83,20 +83,20 @@ int node_compare(xNode * node1, xNode * node2) {
   return attribute_compare(node1->properties, node2->properties);
 }
 
-bool is_white_space(xNodePtr node) {
+bool is_white_space(const xNodePtr node) {
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
 
 }
 
-bool is_new_line(xNodePtr node) {
+bool is_new_line(const xNodePtr node) {
 
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content[0] == '\n';
 
 }
 
-bool is_text(xNodePtr node) {
+bool is_text(const xNodePtr node) {
 
   return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
 }

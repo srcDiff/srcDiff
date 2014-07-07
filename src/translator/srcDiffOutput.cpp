@@ -1,4 +1,5 @@
 #include <srcDiffOutput.hpp>
+#include <srcDiffUtility.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>
 
@@ -16,7 +17,7 @@ extern xNode diff_new_end;
 
 int move_operation = SESCOMMON;
 
-void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode * node, int operation, writer_state & wstate) {
+void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNodePtr node, int operation, writer_state & wstate) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -202,10 +203,10 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNode *
 
 }
 
-void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNode * node, int operation) {
+void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation) {
 
   // Skip empty node
-  if(node->is_empty)
+  if(node->is_empty || is_text(node))
     return;
 
   if(open_diffs.back()->operation != operation) {
@@ -225,8 +226,8 @@ void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNode * node,
     if(open_diffs.size() == 1 && open_diffs.back()->open_tags.size() == 1)
       return;
 
-
     open_diffs.back()->open_tags.pop_back();
+
   }
 
   //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
