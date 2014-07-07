@@ -359,7 +359,7 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
   if(old_tag != new_tag) return true;
 
-  if(old_tag == "then" || new_tag == "block") {
+  if(old_tag == "then" || old_tag == "block" || old_tag == "comment") {
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
