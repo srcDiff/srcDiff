@@ -304,9 +304,9 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   skip_type(nodes, name_start_pos);
 
-  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+  if(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
    || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
-    ++name_start_pos;
+    return "";
 
 
   return get_name(nodes, name_start_pos);
