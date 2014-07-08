@@ -375,7 +375,7 @@ std::string get_class_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (strcmp((const char *)nodes.at(start_pos)->name, "class") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "struct") != 0
-      && strcmp((const char *)nodes.at(start_pos)->name, "union") != 0)) return "";
+      && strcmp((const char *)nodes.at(start_pos)->name, "union") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "enum") != 0)) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
   int name_start_pos = start_pos + 1;
@@ -580,7 +580,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     if(old_has_block == new_has_block && for_group_matches(nodes_old, old_pos, nodes_new, new_pos))
       return false;
     
-  } else if(old_tag == "class" || old_tag == "struct" || old_tag == "union") {
+  } else if(old_tag == "class" || old_tag == "struct" || old_tag == "union" || old_tag == "enum") {
 
     std::string old_name = get_class_type_name(nodes_old, old_pos);
     std::string new_name = get_class_type_name(nodes_new, new_pos);
