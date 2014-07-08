@@ -506,6 +506,40 @@ bool for_group_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std
 
 }
 
+std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+    || strcmp((const char *)nodes.at(start_pos)->name, "case") != 0) return "";
+
+  std::string case_expr = "";
+
+  int expr_pos = start_pos + 1;
+  int open_expr_count = nodes.at(expr_pos)->extra & 0x1 ? 0 : 1;
+  ++expr_pos;
+
+  while(open_expr_count) {
+
+    if(strcmp((const char *)nodes.at(expr_pos)->name, "expr") == 0) {
+
+      if(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(expr_pos)->extra & 0x1) == 0)
+        ++open_expr_count;
+      else if(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        --open_expr_count;
+
+    } else if(is_text(nodes.at(expr_pos)) && !is_white_space(nodes.at(expr_pos))) {
+
+      case_expr += (const char *)nodes.at(expr_pos)->content;
+
+    }
+
+    ++expr_pos;
+
+  }
+
+  return case_expr;
+
+}
+
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
 
@@ -516,7 +550,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "expr"
     || old_tag == "default" || old_tag == "comment"
-    || old_tag == "private" || old_tag == "protected" || old_tag == "public" || "old_tag" == "signals"
+    || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
     || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
@@ -561,7 +595,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
     if(old_name == new_name) return false;
 
-  } else if(old_tag == "if" || old_tag == "while") {
+  } else if(old_tag == "if" || old_tag == "while" || old_tag == "switch") {
 
     std::string old_condition = get_condition(nodes_old, old_pos);
     std::string new_condition = get_condition(nodes_new, new_pos);
@@ -580,6 +614,14 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     if(old_has_block == new_has_block && for_group_matches(nodes_old, old_pos, nodes_new, new_pos))
       return false;
     
+  } else if(old_tag == "case") { 
+
+    std::string old_expr = get_case_expr(nodes_old, old_pos);
+    std::string new_expr = get_case_expr(nodes_new, new_pos);
+
+    if(old_expr == new_expr) return false;
+
+
   } else if(old_tag == "class" || old_tag == "struct" || old_tag == "union" || old_tag == "enum") {
 
     std::string old_name = get_class_type_name(nodes_old, old_pos);
