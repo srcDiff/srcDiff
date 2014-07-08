@@ -214,9 +214,17 @@ std::string get_name(std::vector<xNodePtr> & nodes, int name_start_pos) {
 
 void skip_type(std::vector<xNodePtr> & nodes, int & start_pos) {
 
-  while(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(start_pos)->name, "type") != 0)
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+   && strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") == 0)
     ++start_pos;
+
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+   && strcmp((const char *)nodes.at(start_pos)->name, "decl") == 0)
+    ++start_pos;
+
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(start_pos)->name, "type") != 0)
+    return;
 
   int open_type_count = nodes.at(start_pos)->extra & 0x1 ? 0 : 1;
   ++start_pos;
