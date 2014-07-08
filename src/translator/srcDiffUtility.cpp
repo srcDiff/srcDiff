@@ -516,7 +516,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "expr"
     || old_tag == "default" || old_tag == "comment"
-    || old_tag == "private" || old_tag == "protected" || old_tag == "public"
+    || old_tag == "private" || old_tag == "protected" || old_tag == "public" || "old_tag" == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
     || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
