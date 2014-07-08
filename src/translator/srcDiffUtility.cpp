@@ -511,9 +511,19 @@ std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || strcmp((const char *)nodes.at(start_pos)->name, "case") != 0) return "";
 
+  // skip case tag and case text
+  int expr_pos = start_pos + 1;
+
+  if(is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':')) return "";
+
+  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+    || strcmp((const char *)nodes.at(expr_pos)->name, "expr") != 0) && !(is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':')))
+    ++expr_pos;
+
+  if(is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':')) return "";
+
   std::string case_expr = "";
 
-  int expr_pos = start_pos + 1;
   int open_expr_count = nodes.at(expr_pos)->extra & 0x1 ? 0 : 1;
   ++expr_pos;
 
@@ -620,7 +630,6 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string new_expr = get_case_expr(nodes_new, new_pos);
 
     if(old_expr == new_expr) return false;
-
 
   } else if(old_tag == "class" || old_tag == "struct" || old_tag == "union" || old_tag == "enum") {
 
