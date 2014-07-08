@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="enum.single">
+
+<unit filename="enum.single|enum.single">
+<enum>enum <name>A</name> <block>{
+
+<diff:delete><decl><name>a</name></decl><op:operator>,</op:operator>
+<decl><name>b</name></decl><op:operator>,</op:operator>
+<decl><name>c</name></decl><op:operator>,</op:operator>
+<decl><name>d</name></decl><op:operator>,</op:operator>
+<decl><name>e</name></decl></diff:delete>
+
+}</block>;</enum></unit>
+
+<unit filename="enum.single|enum.single">
+<diff:delete type="change"><enum>enum <name>B</name> <block>{
+
+<decl><name>a</name></decl><op:operator>,</op:operator>
+<decl><name>b</name></decl><op:operator>,</op:operator>
+<decl><name>c</name></decl><op:operator>,</op:operator>
+<decl><name>d</name></decl><op:operator>,</op:operator>
+<decl><name>e</name></decl>
+
+}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum <name>A</name> <block>{
+
+
+
+}</block>;</enum></diff:insert></unit>
+
+<unit filename="enum.single|enum.single">
+<enum>enum <name><diff:delete type="change">A</diff:delete><diff:insert type="change">B</diff:insert></name> <block>{
+
+<decl><name>a</name></decl><op:operator>,</op:operator>
+<decl><name>b</name></decl><op:operator>,</op:operator>
+<decl><name>c</name></decl><op:operator>,</op:operator>
+<decl><name>d</name></decl><op:operator>,</op:operator>
+<decl><name>e</name></decl>
+
+}</block>;</enum></unit>
+
+<unit filename="enum.single|enum.single">
+<enum>enum <name>A</name> <block>{
+
+<decl><name>a</name></decl><op:operator>,</op:operator>
+<decl><name>b</name></decl><op:operator>,</op:operator>
+<decl><name>c</name></decl><op:operator>,</op:operator>
+<decl><name>d</name></decl><op:operator>,</op:operator>
+<diff:delete type="change"><decl><name>e</name></decl></diff:delete><diff:insert type="change"><decl><name>f</name></decl></diff:insert>
+
+}</block>;</enum></unit>
+
+<unit filename="enum.single|enum.single">
+<diff:delete type="change"><enum>enum <block>{
+
+<decl><name>a</name></decl><op:operator>,</op:operator>
+<decl><name>b</name></decl><op:operator>,</op:operator>
+<decl><name>c</name></decl><op:operator>,</op:operator>
+<decl><name>d</name></decl><op:operator>,</op:operator>
+<decl><name>e</name></decl>
+
+}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum <block>{
+
+
+
+}</block>;</enum></diff:insert>
+</unit>
+
+</unit>
