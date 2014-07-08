@@ -65,4 +65,15 @@
 }</block>;</enum></diff:insert>
 </unit>
 
+<unit filename="enum.single|enum.single">
+<enum>enum <name>A</name> <block>{
+
+<decl><name>a</name><diff:delete> <init>= <expr><lit:literal type="number">0</lit:literal></expr></init></diff:delete></decl><op:operator>,</op:operator>
+<decl><name>b</name></decl><op:operator>,</op:operator>
+<decl><name>c</name></decl><op:operator>,</op:operator>
+<decl><name>d</name></decl><op:operator>,</op:operator>
+<decl><name>e</name></decl>
+
+}</block>;</enum></unit>
+
 </unit>
