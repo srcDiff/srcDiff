@@ -587,6 +587,10 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
     if(old_name == new_name && old_name != "") return false;
 
+  } else if(old_tag == "comment") {
+
+    if(node_compare(nodes_old.at(old_pos), nodes_new.at(new_pos)) == 0) return false;
+
   }
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
