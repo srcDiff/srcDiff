@@ -509,18 +509,21 @@ bool for_group_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std
 std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || strcmp((const char *)nodes.at(start_pos)->name, "case") != 0) return "";
+    || strcmp((const char *)nodes.at(start_pos)->name, "case") != 0 || (nodes.at(start_pos)->extra & 0x1)) return "";
 
   // skip case tag and case text
   int expr_pos = start_pos + 1;
 
-  if(is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':')) return "";
+  if((is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':'))
+     || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "case") == 0)) return "";
 
-  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || strcmp((const char *)nodes.at(expr_pos)->name, "expr") != 0) && !(is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':')))
+  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(expr_pos)->name, "expr") != 0) 
+    && !(is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':'))
+    && !(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "case") == 0))
     ++expr_pos;
 
-  if(is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':')) return "";
+  if((is_text(nodes.at(expr_pos)) && index(nodes.at(expr_pos)->content, ':'))
+    || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "case") == 0)) return "";
 
   std::string case_expr = "";
 
