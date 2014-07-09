@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="access_region.single">
+
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><public>public:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</public></diff:delete>}</block>;</class></unit>
+
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><private>private:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</private></diff:delete>}</block>;</class></unit>
+
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><protected>protected:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</protected></diff:delete>}</block>;</class></unit>
+
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><signals>signals:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</signals></diff:delete>}</block>;</class></unit>
+
+</unit>
