@@ -41,4 +41,40 @@
 
 </signals></diff:delete>}</block>;</class></unit>
 
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<public>public:
+
+<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+
+</public>}</block>;</class></unit>
+
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<private>private:
+
+<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+
+</private>}</block>;</class></unit>
+
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<protected>protected:
+
+<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+
+</protected>}</block>;</class></unit>
+
+<unit filename="access_region.single|access_region.single">
+<class>class <name>A</name> <block>{<signals>signals:
+
+<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+
+</signals>}</block>;</class></unit>
+
 </unit>
