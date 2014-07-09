@@ -16,4 +16,49 @@
 
 </public></diff:delete>}</block>;</class></unit>
 
+<unit filename="access_region.multiple|access_region.multiple">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><private>private:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</private><private>private:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</private></diff:delete>}</block>;</class></unit>
+
+<unit filename="access_region.multiple|access_region.multiple">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><protected>protected:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</protected><protected>protected:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</protected></diff:delete>}</block>;</class></unit>
+
+<unit filename="access_region.multiple|access_region.multiple">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><signals>signals:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</signals><signals>signals:
+    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+
+</signals></diff:delete>}</block>;</class></unit>
+
 </unit>
