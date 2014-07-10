@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="case.multiple">
+
+<unit filename="case.multiple|case.multiple">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<diff:delete>        <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete>
+
+    <break>break;</break>
+
+
+</case>}</block></switch></unit>
+
+<unit filename="case.multiple|case.multiple">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+<diff:delete>    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+
+    <break>break;</break>
+
+
+</case></diff:delete>}</block></switch></unit>
+
+</unit>
