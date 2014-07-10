@@ -4,29 +4,68 @@
 <unit filename="case.multiple|case.multiple">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-    <case>case <expr><name>bar</name></expr>:
+<diff:delete>    <case>case <expr><name>bar</name></expr>:
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-<diff:delete>        <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete>
 
     <break>break;</break>
 
+    </case><case>case <expr><name>foobar</name></expr>:
+
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+
+    <break>break;</break>
+
+</case></diff:delete>}</block></switch></unit>
+
+<unit filename="case.multiple|case.multiple">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete type="change">        <expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+
+    <break>break;</break>
+
+    </case><case>case <expr><name>foobar</name></expr>:
+
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+<diff:delete type="change">        <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
+
+    <break>break;</break>
 
 </case>}</block></switch></unit>
 
 <unit filename="case.multiple|case.multiple">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-<diff:delete>    <case>case <expr><name>bar</name></expr>:
+    <case>case <expr><name>bar</name></expr>:
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<diff:delete>        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
+<diff:delete type="whitespace">
+</diff:delete>    <break>break;</break>
 
-    <break>break;</break>
+    </case><case>case <expr><name>foobar</name></expr>:
 
+        <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
+<diff:delete>        <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>l</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>m</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>n</name></expr>;</expr_stmt></diff:delete>
+<diff:delete type="whitespace">
+</diff:delete>    <break>break;</break>
 
-</case></diff:delete>}</block></switch></unit>
+</case>}</block></switch></unit>
 
 </unit>
