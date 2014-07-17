@@ -1,7 +1,7 @@
 ##
-#  config.cmake
+#  srcdiff.cmake
 #
-#  Copyright (C) 2011-2011  SDML (www.sdml.info)
+#  Copyright (C) 2014 SDML (www.sdml.info)
 #
 #  This file is part of the srcDiff translator.
 #
