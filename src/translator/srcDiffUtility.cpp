@@ -621,10 +621,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   } else if(old_tag == "for" || old_tag == "foreach") {
 
-    bool old_has_block = conditional_has_block(nodes_old, old_pos);
-    bool new_has_block = conditional_has_block(nodes_new, new_pos);
-
-    if(old_has_block == new_has_block && for_group_matches(nodes_old, old_pos, nodes_new, new_pos))
+    if(for_group_matches(nodes_old, old_pos, nodes_new, new_pos))
       return false;
     
   } else if(old_tag == "case") { 
