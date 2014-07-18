@@ -464,6 +464,34 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+bool if_has_else(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  xNodePtr & start_node = nodes.at(start_pos);
+
+  int end_pos = find_end(nodes, start_pos);
+
+  if(end_pos == -1) return false;
+
+  NodeSets node_sets = create_node_set(nodes, start_pos + 1, end_pos);
+
+  for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
+
+    if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "else") == 0 || strcmp((const char *)nodes.at((*itr)->at(0))->name, "elseif") == 0) {
+
+      free_node_sets(node_sets);
+
+      return true;
+
+    }
+
+  }
+
+  free_node_sets(node_sets);
+
+  return false;
+
+}
+
 bool for_group_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std::vector<xNodePtr> & nodes_new, int start_pos_new) {
 
   int end_pos_old = find_end(nodes_old, start_pos_old);
@@ -616,7 +644,11 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     bool old_has_block = conditional_has_block(nodes_old, old_pos);
     bool new_has_block = conditional_has_block(nodes_new, new_pos);
 
-    if(old_condition == new_condition && old_has_block == new_has_block)
+    bool old_has_else = if_has_else(nodes_old, old_pos);
+    bool new_has_else = if_has_else(nodes_new, new_pos);
+
+    if(old_condition == new_condition 
+      && (old_has_block == new_has_block || ((old_has_block || !old_has_else) && (new_has_block || !old_has_else))))
      return false;
 
   } else if(old_tag == "while" || old_tag == "switch") {
