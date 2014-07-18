@@ -593,7 +593,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(old_tag != new_tag) return true;
 
-  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "expr"
+  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition"
     || old_tag == "default" || old_tag == "comment"
     || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
@@ -601,6 +601,8 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     || old_tag == "argument"
     || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
     return false;
+
+  if(old_tag == "expr" && similarity > 0) return false;
 
   if(is_single_call_expr(nodes_old, old_pos) && is_single_call_expr(nodes_new, new_pos)) {
 
