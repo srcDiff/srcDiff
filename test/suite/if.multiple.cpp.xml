@@ -77,7 +77,7 @@
 </diff:delete></unit>
 
 <unit filename="if.multiple|if.multiple">
-<diff:delete type="change"><if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <block>{
+<if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then><diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -92,8 +92,8 @@
     <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
 
 
-}</block></then></if></diff:delete><diff:insert type="change"><if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> 
-    <empty_stmt>;</empty_stmt></then></if></diff:insert>
+}</block></diff:delete><diff:insert type="change">
+    <empty_stmt>;</empty_stmt></diff:insert></then></if>
 </unit>
 
 </unit>

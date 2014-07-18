@@ -35,7 +35,7 @@
 </diff:delete></unit>
 
 <unit filename="while.multiple|while.multiple">
-<while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition> <diff:delete type="change"><block>{
+<while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
