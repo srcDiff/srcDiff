@@ -400,7 +400,7 @@ int find_end(std::vector<xNodePtr> & nodes, int start_pos) {
 
   xNodePtr & start_node = nodes.at(start_pos);
 
-  if(start_node->type != XML_READER_TYPE_ELEMENT || start_node->extra & 0x1) return -1;
+  if(start_node->type != (xmlElementType)XML_READER_TYPE_ELEMENT || start_node->extra & 0x1) return -1;
 
   int end_pos = start_pos + 1;
   int open_structure_count = 1;
