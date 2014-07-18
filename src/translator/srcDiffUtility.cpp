@@ -648,7 +648,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     bool new_has_else = if_has_else(nodes_new, new_pos);
 
     if(old_condition == new_condition 
-      && (old_has_block == new_has_block || ((old_has_block || !old_has_else) && (new_has_block || !old_has_else))))
+      && (old_has_block == new_has_block || ((old_has_block || !old_has_else) && (new_has_block || !new_has_else))))
      return false;
 
   } else if(old_tag == "while" || old_tag == "switch") {
