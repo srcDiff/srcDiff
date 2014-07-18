@@ -217,6 +217,9 @@ void skip_type(std::vector<xNodePtr> & nodes, int & start_pos) {
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
    && strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") == 0)
     ++start_pos;
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+   && strcmp((const char *)nodes.at(start_pos)->name, "param") == 0)
+    ++start_pos;
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
    && strcmp((const char *)nodes.at(start_pos)->name, "decl") == 0)
@@ -297,7 +300,8 @@ std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
 std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || (strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "decl") != 0)) return "";
+    || (strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "param") != 0
+    && strcmp((const char *)nodes.at(start_pos)->name, "decl") != 0)) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
   int name_start_pos = start_pos + 1;
@@ -594,7 +598,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
-    || old_tag == "argument" || old_tag == "param"
+//    || old_tag == "argument" || old_tag == "param"
     || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
     return false;
 
@@ -620,7 +624,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
     if(old_name == new_name) return false;
 
-  } else if(old_tag == "decl" || old_tag == "decl_stmt") {
+  } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "param") {
 
     std::string old_name = get_decl_name(nodes_old, old_pos);
     std::string new_name = get_decl_name(nodes_new, new_pos);
