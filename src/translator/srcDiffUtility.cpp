@@ -288,7 +288,7 @@ std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
    || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0 && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0))
     ++name_start_pos;
 
-  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0) return "";
+  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return "";
 
   return get_name(nodes, name_start_pos);
 
