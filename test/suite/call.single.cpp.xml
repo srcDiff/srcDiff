@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="call.single">
+
+<unit filename="call.single|call.single">
+<diff:delete><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete></unit>
+
+<unit filename="call.single|call.single">
+<diff:delete type="change"><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete><diff:insert type="change"><expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:insert></unit>
+
+<unit filename="call.single|call.single">
+<expr_stmt><expr><call><name>a</name><argument_list>(<diff:insert><argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument>, <argument><expr><name>foobar</name></expr></argument></diff:insert>)</argument_list></call></expr>;</expr_stmt></unit>
+
+<unit filename="call.single|call.single">
+<expr_stmt><expr><call><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name><argument_list>(<argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument>, <argument><expr><name>foobar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit filename="call.single|call.single">
+<expr_stmt><expr><diff:insert><call><name>a</name><argument_list>(<argument><expr><diff:common><call><name>b</name><argument_list>()</argument_list></call></diff:common></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt></unit>
+
+</unit>

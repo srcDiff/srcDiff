@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="call.multiple">
+
+<unit filename="call.multiple|call.multiple">
+<expr_stmt><expr><diff:delete><name>treeRoot</name> <op:operator>&lt;&lt;</op:operator></diff:delete><diff:insert><call><name><name>treeRoot</name><op:operator>.</op:operator><name>insert</name></name><argument_list>(<argument><expr><name>index</name></expr></argument>,<diff:common> </diff:common><argument><expr><diff:common><call><name><name>root</name><op:operator>-&gt;</op:operator><name>styleId</name></name><argument_list>()</argument_list></call></diff:common></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt></unit>
+
+</unit>
