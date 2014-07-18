@@ -32,7 +32,7 @@
 </diff:delete></unit>
 
 <unit filename="for.multiple|for.multiple">
-<diff:delete type="change"><for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>) <block>{
+<for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>)<diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -47,9 +47,8 @@
     <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
 
 
-}</block></for></diff:delete><diff:insert type="change"><for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>) 
-    <empty_stmt>;</empty_stmt></for></diff:insert>
-</unit>
+}</block></diff:delete><diff:insert type="change">
+    <empty_stmt>;</empty_stmt></diff:insert></for></unit>
 
 <unit filename="for.multiple|for.multiple">
 <for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>) <block>{
@@ -70,7 +69,7 @@
 </diff:delete></unit>
 
 <unit filename="for.multiple|for.multiple">
-<diff:delete type="change"><for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>) <block>{
+<for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)<diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -84,8 +83,7 @@
     <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
 
-}</block></for></diff:delete><diff:insert type="change"><for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>) 
-    <empty_stmt>;</empty_stmt></for></diff:insert>
-</unit>
+}</block></diff:delete><diff:insert type="change">
+    <empty_stmt>;</empty_stmt></diff:insert></for></unit>
 
 </unit>
