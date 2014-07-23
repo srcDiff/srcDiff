@@ -4,6 +4,7 @@
 #include <shortest_edit_script.h>
 
 #include <srcDiffOptions.hpp>
+#include <srcDiffTypes.hpp>
 #include <xmlrw.hpp>
 
 #include <libxml/xmlreader.h>
@@ -33,6 +34,6 @@ bool is_text(const xNodePtr node);
 int node_set_syntax_compare(const void * e1, const void * e2, const void * context);
 
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos);
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new);
 
 #endif

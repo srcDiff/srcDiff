@@ -358,7 +358,10 @@ bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 }
 
 bool reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int old_pos = node_set_old->at(0);
+  int new_pos = node_set_new->at(0);
 
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
@@ -379,7 +382,7 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
   } else {
 
-    return reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, old_pos, nodes_new, new_pos);
+    return reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
 
   }
 
@@ -418,7 +421,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(j)->at(0))
+          nodes_old, node_set.at(match), nodes_new, node_sets_new->at(j))
           || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
           continue;
 
@@ -447,7 +450,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
             similarity, difference, text_old_length, text_new_length);
 
           if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-            nodes_old, node_set.at(match)->at(0), nodes_new, node_sets_new->at(k)->at(0)))
+            nodes_old, node_set.at(match), nodes_new, node_sets_new->at(k)))
             continue;
 
           valid_nests.push_back(k);
@@ -487,7 +490,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_sets_old->at(j)->at(0), nodes_new, node_set.at(match)->at(0)))
+          nodes_old, node_sets_old->at(j), nodes_new, node_set.at(match)))
           continue;
 
         std::vector<int> valid_nests;
@@ -515,7 +518,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
               similarity, difference, text_old_length, text_new_length);
 
             if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-              nodes_old, node_sets_old->at(k)->at(0), nodes_new, node_set.at(match)->at(0)))
+              nodes_old, node_sets_old->at(k), nodes_new, node_set.at(match)))
               continue;
 
           valid_nests.push_back(k);

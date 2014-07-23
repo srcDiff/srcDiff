@@ -165,7 +165,7 @@ bool go_down_a_level(reader_state & rbuf_old, NodeSets * node_sets_old
     similarity, difference, text_old_length, text_new_length);
 
   return !reject_match(similarity, difference, text_old_length, text_new_length,
-          rbuf_old.nodes, node_sets_old->at(start_old)->at(0), rbuf_new.nodes, node_sets_new->at(start_new)->at(0));
+          rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
 
 }
 

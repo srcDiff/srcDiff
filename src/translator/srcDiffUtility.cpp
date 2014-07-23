@@ -1,5 +1,4 @@
 #include <srcDiffUtility.hpp>
-#include <srcDiffTypes.hpp>
 #include <string.h>
 #include <vector>
 #include <string>
@@ -587,7 +586,10 @@ std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
 }
 
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, int old_pos, std::vector<xNodePtr> & nodes_new, int new_pos) {
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int old_pos = node_set_old->at(0);
+  int new_pos = node_set_new->at(0);
 
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
