@@ -403,36 +403,6 @@ std::string get_class_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
-int find_end(std::vector<xNodePtr> & nodes, int start_pos) {
-
-  xNodePtr & start_node = nodes.at(start_pos);
-
-  if(start_node->type != (xmlElementType)XML_READER_TYPE_ELEMENT || start_node->extra & 0x1) return -1;
-
-  int end_pos = start_pos + 1;
-  int open_structure_count = 1;
-
-  while(open_structure_count) {
-
-    if(strcmp((const char *)nodes.at(end_pos)->name, (const char *)start_node->name) == 0) {
-
-      if(nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(end_pos)->extra & 0x1) == 0)
-        ++open_structure_count;
-      else if(nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
-        --open_structure_count;
-
-    }
-
-    if(open_structure_count == 0) return end_pos;
-
-    ++end_pos;
-
-  }
-
-  return -1;
-
-}
-
 bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
   NodeSets node_sets = create_node_set(nodes, node_set->at(1), node_set->back());
@@ -488,6 +458,44 @@ bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
   free_node_sets(node_sets);
 
   return false;
+
+}
+
+bool if_then_equal(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  diff_nodes dnodes = { nodes_old, nodes_new };
+
+  NodeSets node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
+  NodeSets node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
+
+  NodeSets::iterator then_old;
+  for(then_old = node_sets_old.begin(); then_old != node_sets_old.end(); ++then_old) {
+
+    if(strcmp((const char *)nodes_old.at((*then_old)->at(0))->name, "then") == 0) {
+
+      break;
+
+    }
+
+  }
+
+  NodeSets::iterator then_new;
+  for(then_new = node_sets_new.begin(); then_new != node_sets_new.end(); ++then_new) {
+
+    if(strcmp((const char *)nodes_new.at((*then_new)->at(0))->name, "then") == 0) {
+
+      break;
+
+    }
+
+  }
+
+  bool then_is_equal = node_set_syntax_compare((void *)*then_old, (void *)*then_new, (void *)&dnodes) == 0;
+
+  free_node_sets(node_sets_old);
+  free_node_sets(node_sets_new);
+
+  return then_is_equal;
 
 }
 
@@ -652,8 +660,8 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     bool old_has_else = if_has_else(nodes_old, node_set_old);
     bool new_has_else = if_has_else(nodes_new, node_set_new);
 
-    if(old_condition == new_condition 
-      && (old_has_block == new_has_block || ((old_has_block || !old_has_else) && (new_has_block || !new_has_else))))
+    if(if_then_equal(nodes_old, node_set_old, nodes_new, node_set_new) || (old_condition == new_condition
+      && (old_has_block == new_has_block || ((old_has_block || !old_has_else) && (new_has_block || !new_has_else)))))
      return false;
 
   } else if(old_tag == "while" || old_tag == "switch") {

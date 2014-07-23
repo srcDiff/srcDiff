@@ -52,4 +52,7 @@
     <empty_stmt>;</empty_stmt></diff:insert></then></if>
 </unit>
 
+<unit filename="if.single|if.single">
+<if>if <condition>(<expr><diff:delete type="change"><name>p</name> <op:operator>&gt;=</op:operator> <call><name>count</name><argument_list>()</argument_list></call></diff:delete><diff:insert type="change"><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>, <argument><expr><name>p</name></expr></argument>)</argument_list></call></diff:insert></expr>)</condition><then> <break>break;</break></then></if></unit>
+
 </unit>
