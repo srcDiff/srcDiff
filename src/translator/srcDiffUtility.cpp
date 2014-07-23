@@ -491,15 +491,12 @@ bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
 }
 
-bool for_group_matches(std::vector<xNodePtr> & nodes_old, int start_pos_old, std::vector<xNodePtr> & nodes_new, int start_pos_new) {
-
-  int end_pos_old = find_end(nodes_old, start_pos_old);
-  int end_pos_new = find_end(nodes_new, start_pos_new);
+bool for_group_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  NodeSets node_sets_old = create_node_set(nodes_old, start_pos_old + 1, end_pos_old);
-  NodeSets node_sets_new = create_node_set(nodes_new, start_pos_new + 1, end_pos_new);
+  NodeSets node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
+  NodeSets node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
 
   for(int i = 0; i < node_sets_old.size() && i < node_sets_new.size(); ++i) {
 
@@ -668,7 +665,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   } else if(old_tag == "for" || old_tag == "foreach") {
 
-    if(for_group_matches(nodes_old, old_pos, nodes_new, new_pos))
+    if(for_group_matches(nodes_old, node_set_old, nodes_new, node_set_new))
       return false;
     
   } else if(old_tag == "case") { 
