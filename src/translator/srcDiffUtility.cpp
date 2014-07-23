@@ -704,10 +704,10 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(min_child_length > 1) { 
 
-    if(min_child_length <= 2 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+    if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
       return false;
 
-    if(min_child_length >= 3 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
+    if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
       return false;
 
   }
