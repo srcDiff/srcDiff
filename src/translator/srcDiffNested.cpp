@@ -370,15 +370,27 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
   if(old_tag == "then" || old_tag == "block" || old_tag == "comment") {
 
-  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
-  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
+    int syntax_similarity, syntax_difference, children_length_old, children_length_new;
+    compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
 
-  if(min_size <= 2)
-    return 2 * similarity < min_size || difference > min_size;
-  else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || difference > min_size;
-  else
-    return 10 * similarity < 7 * min_size || difference > min_size;
+    int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
+    int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
+
+    if(min_child_length <= 2 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+      return false;
+
+    if(min_child_length >= 3 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
+      return false;
+
+    int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
+    int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
+
+    if(min_size <= 2)
+      return 2 * similarity < min_size || difference > min_size;
+    else if(min_size <= 3)
+      return 3 * similarity < 2 * min_size || difference > min_size;
+    else
+      return 10 * similarity < 7 * min_size || difference > min_size;
 
   } else {
 
