@@ -22,7 +22,7 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set
 void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
                        NodeSet * node_set_new, int & similarity, int & difference, int & text_old_length, int & text_new_length);
 
-void compute_syntactic_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new, int & similarity, int & difference, int &children_old_length, int &children_new_length);
+void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length);
 
 #endif

@@ -184,8 +184,8 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 
 }
 
-void compute_syntactic_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new, int & similarity, int & difference, int &children_old_length, int &children_new_length) {
+void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 

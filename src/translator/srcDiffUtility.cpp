@@ -1,9 +1,10 @@
 #include <srcDiffUtility.hpp>
+#include <srcDiffDiff.hpp>
+#include <srcDiffMeasure.hpp>
 #include <string.h>
 #include <vector>
 #include <string>
 #include <xmlrw.hpp>
-#include <srcDiffDiff.hpp>
 
 bool is_change(edit * edit_script) {
 
@@ -691,6 +692,10 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     if(node_compare(nodes_old.at(old_pos), nodes_new.at(new_pos)) == 0) return false;
 
   }
+
+
+  int syntax_similarity, syntax_difference, children_length_old, children_length_new;
+  compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
