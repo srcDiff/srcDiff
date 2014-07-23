@@ -193,7 +193,8 @@ NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, 
   for(int i = start; i < end; ++i) {
 
     // skip whitespace
-    if(!is_text(nodes.at(i))) {
+    if(!is_text(nodes.at(i))/* && strcmp(nodes.at(i)->name, "op:operator") != 0 
+      && strcmp(nodes.at(i)->name, "lit:literal") != 0 && strcmp(nodes.at(i)->name, "type:modifier") != 0*/) {
 
       std::vector <int> * node_set = new std::vector <int>;
 
