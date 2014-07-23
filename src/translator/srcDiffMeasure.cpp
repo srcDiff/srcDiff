@@ -2,6 +2,7 @@
 
 #include <srcDiffTypes.hpp>
 #include <srcDiffUtility.hpp>
+#include <srcDiffDiff.hpp>
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 #include <cstring>
@@ -175,6 +176,74 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 
   delete_similarity = text_old_length - delete_similarity;
   insert_similarity = text_new_length - insert_similarity;
+
+  similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+
+  if(similarity <= 0)
+    similarity = 0;
+
+}
+
+void compute_syntactic_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
+                       NodeSet * node_set_new, int & similarity, int & difference, int &children_old_length, int &children_new_length) {
+
+  diff_nodes dnodes = { nodes_old, nodes_new };
+
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+
+  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0) {
+
+    similarity = 0;
+    difference = MAX_INT;
+
+    return;
+
+  }
+
+  ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
+
+  // collect subset of nodes
+  NodeSets next_node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
+  NodeSets next_node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
+  children_old_length = next_node_sets_old.size();
+  children_new_length = next_node_sets_new.size();
+
+  int distance = ses.compute((const void *)&next_node_sets_old, children_old_length, (const void *)&next_node_sets_new, children_new_length);
+
+  free_node_sets(next_node_sets_old);
+  free_node_sets(next_node_sets_new);
+
+  edit * edits = ses.get_script();
+
+  similarity = 0, difference = 0;
+
+  int delete_similarity = 0;
+  int insert_similarity = 0;
+  for(; edits; edits = edits->next) {
+
+    difference += edits->length;
+
+    switch(edits->operation) {
+
+      case SESDELETE :
+
+        delete_similarity += edits->length;
+        break;
+
+      case SESINSERT :
+
+        insert_similarity += edits->length;
+        break;
+
+      }
+
+  }
+
+  delete_similarity = children_old_length - delete_similarity;
+  insert_similarity = children_new_length - insert_similarity;
 
   similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
