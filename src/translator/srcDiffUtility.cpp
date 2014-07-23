@@ -139,6 +139,12 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
   return 0;
 }
 
+
+/*
+  End Internal heuristic functions for reject_match
+*/
+
+
 bool is_single_call_expr(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -427,15 +433,9 @@ int find_end(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
-bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
+bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
-  xNodePtr & start_node = nodes.at(start_pos);
-
-  int end_pos = find_end(nodes, start_pos);
-
-  if(end_pos == -1) return false;
-
-  NodeSets node_sets = create_node_set(nodes, start_pos + 1, end_pos);
+  NodeSets node_sets = create_node_set(nodes, node_set->at(1), node_set->back());
 
   for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
 
@@ -469,15 +469,9 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
-bool if_has_else(std::vector<xNodePtr> & nodes, int start_pos) {
+bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
-  xNodePtr & start_node = nodes.at(start_pos);
-
-  int end_pos = find_end(nodes, start_pos);
-
-  if(end_pos == -1) return false;
-
-  NodeSets node_sets = create_node_set(nodes, start_pos + 1, end_pos);
+  NodeSets node_sets = create_node_set(nodes, node_set->at(1), node_set->back());
 
   for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
 
@@ -586,6 +580,10 @@ std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+/*
+  End internal heuristic functions for reject_match
+*/
+
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
@@ -651,11 +649,11 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string old_condition = get_condition(nodes_old, old_pos);
     std::string new_condition = get_condition(nodes_new, new_pos);
 
-    bool old_has_block = conditional_has_block(nodes_old, old_pos);
-    bool new_has_block = conditional_has_block(nodes_new, new_pos);
+    bool old_has_block = conditional_has_block(nodes_old, node_set_old);
+    bool new_has_block = conditional_has_block(nodes_new, node_set_new);
 
-    bool old_has_else = if_has_else(nodes_old, old_pos);
-    bool new_has_else = if_has_else(nodes_new, new_pos);
+    bool old_has_else = if_has_else(nodes_old, node_set_old);
+    bool new_has_else = if_has_else(nodes_new, node_set_new);
 
     if(old_condition == new_condition 
       && (old_has_block == new_has_block || ((old_has_block || !old_has_else) && (new_has_block || !new_has_else))))

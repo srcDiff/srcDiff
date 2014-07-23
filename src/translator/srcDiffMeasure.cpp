@@ -184,6 +184,49 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 
 }
 
+// create the node sets for shortest edit script
+NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
+
+  NodeSets node_sets;
+
+  // runs on a subset of base array
+  for(int i = start; i < end; ++i) {
+
+    // skip whitespace
+    if(!is_white_space(nodes.at(i)) && (!is_text(nodes.at(i))
+     || (strcmp(nodes.at(i)->content, ";") != 0 && strcmp(nodes.at(i)->content, "(") != 0
+      && strcmp(nodes.at(i)->content, ")") != 0 && strcmp(nodes.at(i)->content, ",") != 0))) {
+
+      std::vector <int> * node_set = new std::vector <int>;
+
+      // text is separate node if not surrounded by a tag in range
+      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
+        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
+        node_set->push_back(i);
+
+      } else if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
+
+        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
+
+        collect_entire_tag(nodes, *node_set, i);
+
+      } else {
+
+        // could be a closing tag, but then something should be wrong.
+        // TODO: remove this and make sure it works
+      break;
+        node_set->push_back(i);
+      }
+
+      node_sets.push_back(node_set);
+
+    }
+
+  }
+
+  return node_sets;
+
+}
 void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
                        NodeSet * node_set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length) {
 
@@ -206,11 +249,10 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_s
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
   // collect subset of nodes
-  NodeSets next_node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
-  NodeSets next_node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
+  NodeSets next_node_sets_old = create_significant_node_sets(nodes_old, node_set_old->at(1), node_set_old->back());
+  NodeSets next_node_sets_new = create_significant_node_sets(nodes_new, node_set_new->at(1), node_set_new->back());
   children_old_length = next_node_sets_old.size();
   children_new_length = next_node_sets_new.size();
-
   int distance = ses.compute((const void *)&next_node_sets_old, children_old_length, (const void *)&next_node_sets_new, children_new_length);
 
   free_node_sets(next_node_sets_old);
