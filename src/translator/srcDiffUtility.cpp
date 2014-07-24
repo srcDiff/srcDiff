@@ -606,7 +606,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
     || old_tag == "argument"
-    || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
+    || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier")
     return false;
 
   if(old_tag == "expr" && similarity > 0) return false;
