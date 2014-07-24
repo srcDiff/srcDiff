@@ -141,7 +141,7 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
 
 
 /*
-  End Internal heuristic functions for reject_match
+  Begin internal heuristic functions for reject_match
 */
 
 
@@ -600,7 +600,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(old_tag != new_tag) return true;
 
-  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition"
+  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "init"
     || old_tag == "default" || old_tag == "comment"
     || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
