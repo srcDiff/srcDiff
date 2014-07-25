@@ -316,9 +316,15 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   skip_type(nodes, name_start_pos);
 
-  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
+  while(!(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+      && strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0)
+    && !(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+      && strcmp((const char *)nodes.at(name_start_pos)->name, "decl") == 0))
     ++name_start_pos;
+
+  if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+      && strcmp((const char *)nodes.at(name_start_pos)->name, "decl") == 0)
+    return "";
 
   return get_name(nodes, name_start_pos);
 
@@ -638,7 +644,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string old_name = get_decl_name(nodes_old, old_pos);
     std::string new_name = get_decl_name(nodes_new, new_pos);
 
-    if(old_name == new_name) return false;
+    if(old_name == new_name && old_name != "") return false;
 
   } else if(old_tag == "function"    || old_tag == "function_decl"
          || old_tag == "constructor" || old_tag == "constructor_decl"
