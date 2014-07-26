@@ -368,7 +368,8 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
   if(old_tag != new_tag) return true;
 
-  if(old_tag == "then" || old_tag == "block" || old_tag == "comment") {
+  if(old_tag == "then" || old_tag == "block" || old_tag == "comment"
+    || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier") {
 
     int syntax_similarity, syntax_difference, children_length_old, children_length_new;
     compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
