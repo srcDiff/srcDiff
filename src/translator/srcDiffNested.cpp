@@ -63,22 +63,22 @@ const char * const call_possible_nest_types[]     = { "call", 0 };
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {
 
-  { "block", block_nest_types, block_possible_nest_types },
-  { "if", if_nest_types, if_possible_nest_types },
-  { "then", if_nest_types, if_possible_nest_types },
-  { "elseif", if_nest_types, if_possible_nest_types },
-  { "else", else_nest_types, else_possible_nest_types },
-  { "while", while_nest_types, while_possible_nest_types },
-  { "for", for_nest_types, for_possible_nest_types },
-  { "foreach", for_nest_types, for_possible_nest_types },
-  { "function", function_nest_types, function_possible_nest_types },
-  { "class", class_nest_types, class_possible_nest_types },
-  { "struct", struct_nest_types, struct_possible_nest_types },
-  { "union", union_nest_types, union_possible_nest_types },
-  { "call", call_nest_types, call_possible_nest_types },
-  { "argument_list", call_nest_types, call_possible_nest_types },
-  { "argument", call_nest_types, call_possible_nest_types },
-  { "expr", call_nest_types, call_possible_nest_types },
+  { "block",         block_nest_types,    block_possible_nest_types    },
+  { "if",            if_nest_types,       if_possible_nest_types       },
+  { "then",          if_nest_types,       if_possible_nest_types       },
+  { "elseif",        if_nest_types,       if_possible_nest_types       },
+  { "else",          else_nest_types,     else_possible_nest_types     },
+  { "while",         while_nest_types,    while_possible_nest_types    },
+  { "for",           for_nest_types,      for_possible_nest_types      },
+  { "foreach",       for_nest_types,      for_possible_nest_types      },
+  { "function",      function_nest_types, function_possible_nest_types },
+  { "class",         class_nest_types,    class_possible_nest_types    },
+  { "struct",        struct_nest_types,   struct_possible_nest_types   },
+  { "union",         union_nest_types,    union_possible_nest_types    },
+  { "call",          call_nest_types,     call_possible_nest_types     },
+  { "argument_list", call_nest_types,     call_possible_nest_types     },
+  { "argument",      call_nest_types,     call_possible_nest_types     },
+  { "expr",          call_nest_types,     call_possible_nest_types     },
 
   { 0, 0, 0 }
 
