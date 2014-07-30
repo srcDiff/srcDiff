@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="for.multiple">
 
-<unit filename="for.multiple|for.multiple"><diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)
+<unit filename="for.multiple|for.multiple"><diff:delete><for>for<control>(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)</control>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for></diff:delete></unit>
 
 <unit filename="for.multiple|for.multiple">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><for>for(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>) <block>{
+<diff:delete><for>for<control>(<init>;</init><condition><expr><lit:literal type="number">1</lit:literal></expr>;</condition><incr/>)</control> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common>
 }</block></for></diff:delete></unit>
 
 <unit filename="for.multiple|for.multiple">
-<for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>) <block>{
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>)</control> <block>{
 
 <diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -32,7 +32,7 @@
 </diff:delete></unit>
 
 <unit filename="for.multiple|for.multiple">
-<for>for(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>)<diff:delete type="change"> <block>{
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>)</control><diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -51,7 +51,7 @@
     <empty_stmt>;</empty_stmt></diff:insert></for></unit>
 
 <unit filename="for.multiple|for.multiple">
-<for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>) <block>{
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 
 <diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -69,7 +69,7 @@
 </diff:delete></unit>
 
 <unit filename="for.multiple|for.multiple">
-<for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)<diff:delete type="change"> <block>{
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>

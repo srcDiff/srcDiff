@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="foreach.single">
 
-<unit filename="foreach.single|foreach.single"><diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)
+<unit filename="foreach.single|foreach.single"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></foreach></diff:delete></unit>
 
 <unit filename="foreach.single|foreach.single">
-<diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)
+<diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control>
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></foreach></diff:delete>
 </unit>
 
 <unit filename="foreach.single|foreach.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)
+<diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control>
 <diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></foreach></diff:delete>
 </unit>
 
 <unit filename="foreach.single|foreach.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)
+<diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt></foreach></diff:delete></unit>
 
-<unit filename="foreach.single|foreach.single"><diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>) <block>{
+<unit filename="foreach.single|foreach.single"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 }</block></foreach></diff:delete></unit>
 
-<unit filename="foreach.single|foreach.single"><diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>) <block>{
+<unit filename="foreach.single|foreach.single"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></foreach></diff:delete></unit>
 
 <unit filename="foreach.single|foreach.single"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>) <block>{
+<diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></foreach></diff:delete></unit>
 
 <unit filename="foreach.single|foreach.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>) <block>{
+<diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></foreach></diff:delete></unit>
 
 <unit filename="foreach.single|foreach.single">
-<foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control>
 <diff:delete type="change">    <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">    <empty_stmt>;</empty_stmt></diff:insert></foreach>
 </unit>
 
 <unit filename="foreach.single|foreach.single">
-<foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)<diff:delete type="change">
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change">
     <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"> 
     <empty_stmt>;</empty_stmt></diff:insert></foreach>
 </unit>
 
 <unit filename="foreach.single|foreach.single">
-<foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)<diff:delete type="change">
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change">
     <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"> 
     <empty_stmt>;</empty_stmt></diff:insert></foreach>
 </unit>
