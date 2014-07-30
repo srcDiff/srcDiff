@@ -591,6 +591,10 @@ std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+/*
+  End internal heuristic functions for reject_match
+*/
+
 struct interchange_list {
 
   const char * const name;
@@ -598,17 +602,17 @@ struct interchange_list {
 
 };
 
-static const char * const if_interchange[] = { "if", "while", "for", "foreach", 0 };
-static const char * const else_interchange[] = { "else", "elseif", 0 };
+static const char * const if_interchange[]   = { "if",   "while", "for", "foreach", 0 };
+static const char * const else_interchange[] = { "else", "elseif",                  0 };
 static const interchange_list interchange_lists[] = {
 
-  { "if", if_interchange },
-  { "while", if_interchange },
-  { "for", if_interchange },
+  { "if",      if_interchange },
+  { "while",   if_interchange },
+  { "for",     if_interchange },
   { "foreach", if_interchange },
   
-  { "else", else_interchange },
-  { "elseif", else_interchange },
+  { "else",    else_interchange },
+  { "elseif",  else_interchange },
 
   { 0, 0 }
 
@@ -636,10 +640,6 @@ bool is_interchangeable_match(const std::string & old_tag, const std::string & n
 
 }
 
-/*
-  End internal heuristic functions for reject_match
-*/
-
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
@@ -649,7 +649,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
 
-  if(old_tag != new_tag) return true;
+  if(old_tag != new_tag && !is_interchangeable_match(old_tag, new_tag)) return true;
 
   if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "init"
     || old_tag == "default" || old_tag == "comment"
