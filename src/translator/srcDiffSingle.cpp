@@ -14,7 +14,7 @@
 extern xNode diff_common_start;
 extern xNode diff_common_end;
 
-void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
+void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_old
                       , reader_state & rbuf_new, NodeSets * node_sets_new
                       , unsigned int start_new
@@ -72,5 +72,26 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
 
     output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
+
+}
+
+void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_sets_old
+                      , unsigned int start_old
+                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , unsigned int start_new
+                      , writer_state & wstate) {
+
+}
+
+void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
+                      , unsigned int start_old
+                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , unsigned int start_new
+                      , writer_state & wstate) {
+
+  if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->front())->name, (const char *)rbuf_new.nodes.at(node_sets_new->at(start_new)->front())->name) == 0)
+    output_recursive_same(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
+  else
+    output_recursive_interchangeable(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
 
 }
