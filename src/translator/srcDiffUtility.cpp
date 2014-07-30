@@ -141,7 +141,7 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
 
 
 /*
-  End Internal heuristic functions for reject_match
+  Begin internal heuristic functions for reject_match
 */
 
 
@@ -316,9 +316,15 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   skip_type(nodes, name_start_pos);
 
-  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
+  while(!(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+      && strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0)
+    && !(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+      && strcmp((const char *)nodes.at(name_start_pos)->name, "decl") == 0))
     ++name_start_pos;
+
+  if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+      && strcmp((const char *)nodes.at(name_start_pos)->name, "decl") == 0)
+    return "";
 
   return get_name(nodes, name_start_pos);
 
@@ -645,13 +651,13 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(old_tag != new_tag) return true;
 
-  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition"
+  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "init"
     || old_tag == "default" || old_tag == "comment"
     || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
     || old_tag == "argument"
-    || old_tag == "lit:literal" || old_tag == "op:operator" || old_tag == "type:modifier")
+    || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier")
     return false;
 
   if(old_tag == "expr" && similarity > 0) return false;
@@ -683,7 +689,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     std::string old_name = get_decl_name(nodes_old, old_pos);
     std::string new_name = get_decl_name(nodes_new, new_pos);
 
-    if(old_name == new_name) return false;
+    if(old_name == new_name && old_name != "") return false;
 
   } else if(old_tag == "function"    || old_tag == "function_decl"
          || old_tag == "constructor" || old_tag == "constructor_decl"
