@@ -512,19 +512,19 @@ bool for_control_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_o
   NodeSets node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
   NodeSets node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
 
-  NodeSets::iterator control_itr_old = node_sets_old.begin();
-  for(; control_itr_old != node_sets_old.end(); ++control_itr_old)
-    if(strcmp((const char *)nodes_old.at((*control_itr_old)->front())->name, "control") == 0)
+  NodeSets::size_type control_pos_old;
+  for(control_pos_old = 0; control_pos_old < node_sets_old.size(); ++control_pos_old)
+    if(strcmp((const char *)nodes_old.at(node_sets_old.at(control_pos_old)->front())->name, "control") == 0)
       break;
 
 
-  NodeSets::iterator control_itr_new = node_sets_new.begin();
-  for(; control_itr_new != node_sets_new.end(); ++control_itr_new)
-    if(strcmp((const char *)nodes_new.at((*control_itr_new)->front())->name, "control") == 0)
+  NodeSets::size_type control_pos_new;
+  for(control_pos_new = 0; control_pos_new < node_sets_new.size(); ++control_pos_new)
+    if(strcmp((const char *)nodes_new.at(node_sets_new.at(control_pos_new)->front())->name, "control") == 0)
       break;
 
-  bool matches = control_itr_old != node_sets_old.end() && control_itr_new != node_sets_new.end() 
-    && node_set_syntax_compare((void *)&(*control_itr_old), (void *)&(*control_itr_new), (void *)&dnodes);
+  bool matches = control_pos_old != node_sets_old.size() && control_pos_new != node_sets_new.size() 
+    && node_set_syntax_compare((void *)node_sets_old.at(control_pos_old), (void *)node_sets_new.at(control_pos_new), (void *)&dnodes);
 
   free_node_sets(node_sets_old);
   free_node_sets(node_sets_new);
