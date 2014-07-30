@@ -505,42 +505,31 @@ bool if_then_equal(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, st
 
 }
 
-bool for_group_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+bool for_control_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
   NodeSets node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
   NodeSets node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
 
-  for(int i = 0; i < node_sets_old.size() && i < node_sets_new.size(); ++i) {
+  NodeSets::iterator control_itr_old = node_sets_old.begin();
+  for(; control_itr_old != node_sets_old.end(); ++control_itr_old)
+    if(strcmp((const char *)nodes_old.at((*control_itr_old)->front())->name, "control") == 0)
+      break;
 
-    /** @todo possible has group tag or whatever although does not currently exist (may have at some point though) */
-    if(is_text(nodes_old.at(node_sets_old.at(i)->at(0))) && is_text(nodes_new.at(node_sets_new.at(i)->at(0))) 
-      && strcmp((const char *)nodes_old.at(node_sets_old.at(i)->at(0))->content, ")") == 0
-      && strcmp((const char *)nodes_new.at(node_sets_new.at(i)->at(0))->content, ")") == 0) {
 
-      free_node_sets(node_sets_old);
-      free_node_sets(node_sets_new);
+  NodeSets::iterator control_itr_new = node_sets_new.begin();
+  for(; control_itr_new != node_sets_new.end(); ++control_itr_new)
+    if(strcmp((const char *)nodes_new.at((*control_itr_new)->front())->name, "control") == 0)
+      break;
 
-      return true;
-
-    }
-
-    if(node_set_syntax_compare((void *)node_sets_old.at(i), (void *)node_sets_new.at(i), (void *)&dnodes) != 0) {
-
-      free_node_sets(node_sets_old);
-      free_node_sets(node_sets_new);
-
-      return false;
-
-    }
-
-  }
+  bool matches = control_itr_old != node_sets_old.end() && control_itr_new != node_sets_new.end() 
+    && node_set_syntax_compare((void *)&(*control_itr_old), (void *)&(*control_itr_new), (void *)&dnodes);
 
   free_node_sets(node_sets_old);
   free_node_sets(node_sets_new);
 
-  return true;
+  return matches;
 
 }
 
@@ -757,7 +746,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
   } else if(old_tag == "for" || old_tag == "foreach") {
 
-    if(for_group_matches(nodes_old, node_set_old, nodes_new, node_set_new))
+    if(for_control_matches(nodes_old, node_set_old, nodes_new, node_set_new))
       return false;
     
   } else if(old_tag == "case") { 
@@ -809,9 +798,21 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
 
-  return true;
+  std::string old_condition = "";
+  if(old_tag == "if" || old_tag == "while") {
 
-  //return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+    old_condition = get_condition(nodes_old, old_pos);
+
+  }
+
+  std::string new_condition = "";
+  if(new_tag == "if" || new_tag == "while") {
+
+    new_condition = get_condition(nodes_new, new_pos);
+
+  }
+
+  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
 
 }
 
