@@ -28,7 +28,7 @@ struct nest_info {
 
   const char * type;
 
-  const char * const *  nest_items;
+  const char * const * nest_items;
 
   const char * const * possible_nest_items;
 

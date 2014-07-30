@@ -585,6 +585,51 @@ std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+struct interchange_list {
+
+  const char * const name;
+  const char * const * list;
+
+};
+
+static const char * const if_interchange[] = { "if", "while", "for", "foreach", 0 };
+static const char * const else_interchange[] = { "else", "elseif", 0 };
+static const interchange_list interchange_lists[] = {
+
+  { "if", if_interchange },
+  { "while", if_interchange },
+  { "for", if_interchange },
+  { "foreach", if_interchange },
+  
+  { "else", else_interchange },
+  { "elseif", else_interchange },
+
+  { 0, 0 }
+
+};
+
+bool is_interchangeable_match(const std::string & old_tag, const std::string & new_tag) {
+
+  for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
+
+    if(interchange_lists[list_pos].name == old_tag) {
+
+      for(size_t pos = 0; interchange_lists[list_pos].list[pos]; ++pos) {
+
+        if(interchange_lists[list_pos].list[pos] == new_tag)
+          return true;
+
+      }
+
+
+    }
+
+  }
+
+  return false;
+
+}
+
 /*
   End internal heuristic functions for reject_match
 */
