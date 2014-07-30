@@ -640,7 +640,40 @@ bool is_interchangeable_match(const std::string & old_tag, const std::string & n
 
 }
 
-bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
+bool reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int syntax_similarity, syntax_difference, children_length_old, children_length_new;
+  compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
+
+  int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
+  int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
+
+  if(min_child_length > 1) { 
+
+    if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+      return false;
+
+    if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
+      return false;
+
+  }
+
+  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
+  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
+
+  if(min_size <= 2)
+    return 2 * similarity < min_size || difference > min_size;
+  else if(min_size <= 3)
+    return 3 * similarity < 2 * min_size || difference > min_size;
+  else if(min_size <= 30)
+    return 10 * similarity < 7 * min_size || difference > min_size;
+  else
+    return 2 * similarity < min_size || difference > min_size;
+
+}
+
+bool reject_match_same(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
   int old_pos = node_set_old->at(0);
@@ -649,7 +682,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
 
-  if(old_tag != new_tag && !is_interchangeable_match(old_tag, new_tag)) return true;
+  if(old_tag != new_tag) return true;
 
   if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "init"
     || old_tag == "default" || old_tag == "comment"
@@ -763,17 +796,39 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   }
 
-  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
-  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
-
-  if(min_size <= 2)
-    return 2 * similarity < min_size || difference > min_size;
-  else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || difference > min_size;
-  else if(min_size <= 30)
-    return 10 * similarity < 7 * min_size || difference > min_size;
-  else
-    return 2 * similarity < min_size || difference > min_size;
+  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
 
 }
 
+bool reject_match_interchangeable(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int old_pos = node_set_old->at(0);
+  int new_pos = node_set_new->at(0);
+
+  std::string old_tag = nodes_old.at(old_pos)->name;
+  std::string new_tag = nodes_new.at(new_pos)->name;
+
+  return true;
+
+  //return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+
+}
+
+bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int old_pos = node_set_old->at(0);
+  int new_pos = node_set_new->at(0);
+
+  std::string old_tag = nodes_old.at(old_pos)->name;
+  std::string new_tag = nodes_new.at(new_pos)->name;
+
+  if(old_tag == new_tag)
+    return reject_match_same(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  else if(is_interchangeable_match(old_tag, new_tag)) 
+    return reject_match_interchangeable(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  else
+    return true;
+
+}
