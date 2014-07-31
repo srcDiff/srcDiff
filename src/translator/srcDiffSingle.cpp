@@ -98,10 +98,12 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
   bool is_same_keyword = node_compare(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)),
                   rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1))) == 0;
 
+  int old_collect_start_pos = 1;
   if(!is_same_keyword) {
 
     output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)), SESDELETE, wstate);
     ++rbuf_old.last_output;
+    old_collect_start_pos = 2;
 
   }
 
@@ -111,10 +113,12 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
 
   output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), SESINSERT, wstate);
 
+  int new_collect_start_pos = 1;
   if(!is_same_keyword){
 
     output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1)), SESINSERT, wstate);
     ++rbuf_new.last_output;
+    new_collect_start_pos = 2;
 
   }
 
@@ -122,11 +126,11 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
 
   // collect subset of nodes
   NodeSets next_node_set_old
-    = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
+    = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(old_collect_start_pos)
                       , node_sets_old->at(start_old)->back());
 
   NodeSets next_node_set_new
-    = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
+    = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
                       , node_sets_new->at(start_new)->back());
 
   output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
