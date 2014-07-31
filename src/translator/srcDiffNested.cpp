@@ -558,7 +558,17 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
   end_nest_check_new:
 
-  if(!valid_nests_old.empty() && (valid_nests_new.empty() || (start_nest_old - start_old) < (start_nest_new - start_new))) {
+  /** @todo may need a more exact check to pick most optimal or another check 
+
+    For now if only valid, less than or equal and do not cross, or cross and larger.
+
+  */
+  if(!valid_nests_old.empty() && (valid_nests_new.empty()
+   || ((start_nest_old - start_old) <= (start_nest_new - start_new) 
+      && start_nest_old < valid_nests_new.front() && valid_nests_old.back() < start_nest_new)
+   || (((start_nest_old >= valid_nests_new.front() && start_nest_old <= valid_nests_new.back())
+        || (start_nest_new >= valid_nests_old.front() && start_nest_new <= valid_nests_old.back()))
+      && (valid_nests_old.back() - valid_nests_old.front()) >= (valid_nests_new.back() - valid_nests_new.front())))) {
 
       start_nest_new = valid_nests_old.front();
       end_nest_new = valid_nests_old.back() + 1;
