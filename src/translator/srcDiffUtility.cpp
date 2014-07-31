@@ -705,7 +705,8 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
     bool is_pseudo_new = find_attribute(nodes_new.at(new_pos), "type") != 0;
 
     if(is_pseudo_old == is_pseudo_new) return false;
-    /** @todo need to unwrap pseudo block and match internals of both blocks, or have attribute deleted */
+    /** @todo need to unwrap pseudo block and match internals of both blocks, or have attribute deleted
+        May need to put in interchange or handle as special case. */
     else return true;
 
   }
