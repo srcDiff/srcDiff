@@ -419,6 +419,9 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
   start_nest_new = start_new;  
   end_nest_new = start_new;  
 
+  std::vector<int> valid_nests_old;
+  std::vector<int> valid_nests_new;
+
   for(int i = start_old; i < end_old; ++i) {
 
     if(nodes_old.at(node_sets_old->at(i)->at(0))->move) continue;
@@ -445,8 +448,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
           continue;
 
-        std::vector<int> valid_nests;
-        valid_nests.push_back(j);
+        valid_nests_old.push_back(j);
 
         start_nest_old = i;
         end_nest_old = i + 1;
@@ -473,20 +475,19 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
             nodes_old, node_set.at(match), nodes_new, node_sets_new->at(k)))
             continue;
 
-          valid_nests.push_back(k);
+          valid_nests_old.push_back(k);
 
         }
 
-        start_nest_new = valid_nests.front();
-        end_nest_new = valid_nests.back() + 1;
-
-        return;
+        goto end_nest_check_old;
 
       }
 
     }
 
   }
+
+  end_nest_check_old:
 
   for(int i = start_new; i < end_new; ++i) {
 
@@ -513,8 +514,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           nodes_old, node_sets_old->at(j), nodes_new, node_set.at(match)))
           continue;
 
-        std::vector<int> valid_nests;
-        valid_nests.push_back(j);
+        valid_nests_new.push_back(j);
 
         start_nest_new = i;
         end_nest_new = i + 1;
@@ -541,18 +541,32 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
               nodes_old, node_sets_old->at(k), nodes_new, node_set.at(match)))
               continue;
 
-          valid_nests.push_back(k);
+          valid_nests_new.push_back(k);
 
         }
 
-        start_nest_old = valid_nests.front();
-        end_nest_old = valid_nests.back() + 1;
+        //start_nest_old = valid_nests.front();
+        //end_nest_old = valid_nests.back() + 1;
 
-        return;
+        goto end_nest_check_new;
 
       }
 
     }
+
+  }
+
+  end_nest_check_new:
+
+  if(!valid_nests_old.empty() && (valid_nests_new.empty() || (start_nest_old - start_old) < (start_nest_new - start_new))) {
+
+      start_nest_new = valid_nests_old.front();
+      end_nest_new = valid_nests_old.back() + 1;
+
+  } else if(!valid_nests_new.empty()) {
+
+      start_nest_old = valid_nests_new.front();
+      end_nest_old = valid_nests_new.back() + 1;
 
   }
 
