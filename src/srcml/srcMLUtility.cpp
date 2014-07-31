@@ -16,7 +16,7 @@ void translate_to_srcML(const char * path, srcml_archive * main_archive,
 			char ** output_buffer, int * output_size, OPTION_TYPE options) {
 
   srcml_archive * unit_archive = srcml_clone_archive(main_archive);
-  srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK );
+  srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
 
   srcml_write_open_memory(unit_archive, output_buffer, output_size);
 

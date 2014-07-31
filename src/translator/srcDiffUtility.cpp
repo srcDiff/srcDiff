@@ -139,6 +139,19 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
   return 0;
 }
 
+const char * find_attribute(const xNodePtr node, const char * attr_name) {
+
+  xAttr * attr = node->properties;
+
+  for(; attr && strcmp((const char *)attr->name, attr_name) != 0; attr = attr->next)
+    ;
+
+  if(attr)
+    return attr->value;
+
+  return 0;
+
+}
 
 /*
   Begin internal heuristic functions for reject_match
@@ -415,7 +428,7 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
   for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
 
-    if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0) {
+    if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0 && find_attribute(nodes.at((*itr)->at(0)), "type") == 0) {
 
       free_node_sets(node_sets);
 
@@ -430,7 +443,8 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
       free_node_sets(node_sets);
 
       if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-        && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0)
+        && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0
+        && find_attribute(nodes.at((*itr)->at(0)), "type") == 0)
         return true;
       else
         return false;
