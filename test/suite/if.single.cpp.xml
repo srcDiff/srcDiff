@@ -6,13 +6,13 @@
 
 <unit filename="if.single|if.single">
 <diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:common><block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></diff:common></then></if></diff:delete>
+<block type="pseudo"><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></block></then></if></diff:delete>
 </unit>
 
 <unit filename="if.single|if.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then>
-<diff:common><block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block></diff:common></then></if></diff:delete>
+<block type="pseudo"><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></block></then></if></diff:delete>
 </unit>
 
 <unit filename="if.single|if.single">
