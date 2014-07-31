@@ -444,7 +444,7 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
       if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
         && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0
-        && find_attribute(nodes.at((*itr)->at(0)), "type") == 0)
+        && find_attribute(nodes.at((next_element_pos)), "type") == 0)
         return true;
       else
         return false;
