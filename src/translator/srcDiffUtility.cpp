@@ -591,14 +591,14 @@ struct interchange_list {
 
 };
 
-static const char * const if_interchange[]   = { "if",   "while", /*"for", "foreach",*/ 0 };
+static const char * const if_interchange[]   = { "if",   "while", "for", "foreach", 0 };
 static const char * const else_interchange[] = { "else", "elseif",                  0 };
 static const interchange_list interchange_lists[] = {
 
   { "if",      if_interchange },
   { "while",   if_interchange },
-  //{ "for",     if_interchange },
-  //{ "foreach", if_interchange },
+  { "for",     if_interchange },
+  { "foreach", if_interchange },
   
   { "else",    else_interchange },
   { "elseif",  else_interchange },
