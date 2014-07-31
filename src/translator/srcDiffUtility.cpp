@@ -687,7 +687,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
   if(old_tag != new_tag) return true;
 
-  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "init"
+  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "condition" || old_tag == "init"
     || old_tag == "default" || old_tag == "comment"
     || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
@@ -697,6 +697,18 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
     return false;
 
   if(old_tag == "expr" && similarity > 0) return false;
+
+
+  if(old_tag == "block") {
+
+    bool is_pseudo_old = find_attribute(nodes_old.at(old_pos), "type") != 0;
+    bool is_pseudo_new = find_attribute(nodes_new.at(new_pos), "type") != 0;
+
+    if(is_pseudo_old == is_pseudo_new) return false;
+    /** @todo need to unwrap pseudo block and match internals of both blocks, or have attribute deleted */
+    else return true;
+
+  }
 
   if(is_single_call_expr(nodes_old, old_pos) && is_single_call_expr(nodes_new, new_pos)) {
 
