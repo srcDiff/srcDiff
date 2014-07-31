@@ -93,14 +93,16 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
   output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
 
   output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESDELETE, wstate);
+  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)), SESDELETE, wstate);
 
+  rbuf_old.last_output += 2;
 
   output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
 
-  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESINSERT, wstate);
+  output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), SESINSERT, wstate);
+  output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1)), SESINSERT, wstate);
 
-  ++rbuf_old.last_output;
-  ++rbuf_new.last_output;
+  rbuf_new.last_output += 2;
 
   // collect subset of nodes
   NodeSets next_node_set_old
