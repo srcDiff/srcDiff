@@ -38,19 +38,19 @@ struct nest_info {
 // possible is mostly for block and may need to have to test for internal block structure
 
 const char * const block_nest_types[]             = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
-const char * const if_nest_types[]                = { "expr_stmt", "decl_stmt", "else", "elseif", "return", "comment", 0 };
+const char * const if_nest_types[]                = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
 const char * const else_nest_types[]              = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
 const char * const while_nest_types[]             = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
 const char * const for_nest_types[]               = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
 const char * const function_nest_types[]          = { "expr_stmt", "decl_stmt", "if", "while", "for", "foreach",       0 };
 const char * const class_nest_types[]             = { "decl_stmt", "function_decl",                                    0 };
 const char * const struct_nest_types[]            = { "decl_stmt", "function_decl",                                    0 };
-const char * const union_nest_types[]             = { "decl_stmt",  "function_decl",                                   0 };
+const char * const union_nest_types[]             = { "decl_stmt", "function_decl",                                    0 };
 const char * const call_nest_types[]              = {                                                                  0 };
 
 const char * const basic_possible_nest_types[]    = {                                                                  0 };
 const char * const block_possible_nest_types[]    = { "block", "if", "while", "for", "foreach",                        0 };
-const char * const if_possible_nest_types[]       = { "block", "if", "while", "for", "foreach",                        0 };
+const char * const if_possible_nest_types[]       = { "block", "if", "while", "for", "foreach", "else", "elseif",      0 };
 const char * const else_possible_nest_types[]     = { "block", "if", "while", "for", "foreach",                        0 };
 const char * const while_possible_nest_types[]    = { "block", "if", "while", "for", "foreach",                        0 };
 const char * const for_possible_nest_types[]      = { "block", "if", "while", "for", "foreach",                        0 };

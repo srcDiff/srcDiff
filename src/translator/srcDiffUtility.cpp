@@ -600,8 +600,8 @@ static const interchange_list interchange_lists[] = {
   //{ "for",     if_interchange },
   //{ "foreach", if_interchange },
   
-  //{ "else",    else_interchange },
-  //{ "elseif",  else_interchange },
+  { "else",    else_interchange },
+  { "elseif",  else_interchange },
 
   { 0, 0 }
 
