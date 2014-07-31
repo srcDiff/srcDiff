@@ -8,6 +8,7 @@
 #include <srcDiffNested.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffWhiteSpace.hpp>
+#include <srcDiffUtility.hpp>
 
 #include <string.h>
 
@@ -93,16 +94,31 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
   output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
 
   output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESDELETE, wstate);
-  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)), SESDELETE, wstate);
 
-  rbuf_old.last_output += 2;
+  bool is_same_keyword = node_compare(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)),
+                  rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1))) == 0;
+
+  if(!is_same_keyword) {
+
+    output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)), SESDELETE, wstate);
+    ++rbuf_old.last_output;
+
+  }
+
+  ++rbuf_old.last_output;
 
   output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
 
   output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), SESINSERT, wstate);
-  output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1)), SESINSERT, wstate);
 
-  rbuf_new.last_output += 2;
+  if(!is_same_keyword){
+
+    output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1)), SESINSERT, wstate);
+    ++rbuf_new.last_output;
+
+  }
+
+  ++rbuf_new.last_output;
 
   // collect subset of nodes
   NodeSets next_node_set_old
