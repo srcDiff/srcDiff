@@ -47,9 +47,8 @@
 </unit>
 
 <unit filename="if.single|if.single">
-<if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then><block type="pseudo"><diff:delete type="change">
-    <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"> 
-    <empty_stmt>;</empty_stmt></diff:insert></block></then></if>
+<if>if<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then>
+    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></then></if>
 </unit>
 
 <unit filename="if.single|if.single">
