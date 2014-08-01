@@ -378,6 +378,52 @@ std::string get_condition(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  int control_start_pos = start_pos;
+
+  while(nodes.at(control_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(control_start_pos)->name, "control") != 0)
+    ++control_start_pos;
+
+  if(nodes.at(control_start_pos)->extra & 0x1) return "";
+  
+  int control_end_pos = control_start_pos + 1;
+  int open_control_count = 1;
+
+  while(open_control_count) {
+
+    if(strcmp((const char *)nodes.at(control_end_pos)->name, "control") == 0) {
+
+      if(nodes.at(control_end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(control_end_pos)->extra & 0x1) == 0)
+        ++open_control_count;
+      else if(nodes.at(control_end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        --open_control_count;
+
+    }
+
+    ++control_end_pos;
+
+  }
+
+  NodeSets control_node_sets = create_node_set(nodes, control_start_pos + 1, control_end_pos);
+
+  NodeSets::const_iterator citr;
+  for(citr = control_node_sets.begin(); citr != control_node_sets.end(); ++citr)
+    if(strcmp((const char *)nodes.at((*citr)->front())->name, "condition") == 0)
+      break;
+
+  if(citr == control_node_sets.end()) return "";
+
+  std::string condition = "";
+  for(NodeSet::const_iterator node_itr = (*citr)->begin(); node_itr != (*citr)->end(); ++node_itr)
+    if(is_text(nodes.at(*node_itr)))
+      condition += (const char *)nodes.at(*node_itr)->content;
+
+  return condition;
+
+}
+
 std::string get_function_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
