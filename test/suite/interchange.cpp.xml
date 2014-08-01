@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="interchange">
+
+<unit filename="interchange|interchange">
+<diff:delete><if>if<diff:insert><while>while<diff:common><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition></diff:common><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></while></diff:insert></if></diff:delete>
+</unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><if>if<diff:insert><for>for<control>(<init>;</init> <diff:common><condition><diff:delete>(</diff:delete><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr><diff:delete type="change">)</diff:delete><diff:insert type="change">;</diff:insert></condition></diff:common><incr/>)</control><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></for></diff:insert></if></diff:delete>
+</unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><for>for<diff:insert><while>while<diff:delete><control>(<init>;</init> <diff:common><condition><diff:insert>(</diff:insert><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr><diff:delete type="change">;</diff:delete><diff:insert type="change">)</diff:insert></condition></diff:common><diff:insert type="whitespace"> </diff:insert><incr/>)</control> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></for></diff:delete>
+</unit>
+
+</unit>

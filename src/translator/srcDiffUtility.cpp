@@ -350,9 +350,9 @@ std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
   while(nodes.at(control_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
    || strcmp((const char *)nodes.at(control_start_pos)->name, "control") != 0)
     ++control_start_pos;
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(nodes.at(control_start_pos)->extra & 0x1) return "";
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   int control_end_pos = control_start_pos + 1;
   int open_control_count = 1;
 
