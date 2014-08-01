@@ -452,7 +452,6 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
         start_nest_old = i;
         end_nest_old = i + 1;
-        operation = SESDELETE;
 
         for(int k = j + 1; k < end_new; ++k) {
 
@@ -518,7 +517,6 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
         start_nest_new = i;
         end_nest_new = i + 1;
-        operation = SESINSERT;
 
         for(int k = j + 1; k < end_old; ++k) {
 
@@ -571,12 +569,14 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
       && (valid_nests_old.back() - valid_nests_old.front()) >= (valid_nests_new.back() - valid_nests_new.front())))) {
 
       start_nest_new = valid_nests_old.front();
-      end_nest_new = valid_nests_old.back() + 1;
+       end_nest_new = valid_nests_old.back() + 1;
+       operation = SESDELETE;
 
   } else if(!valid_nests_new.empty()) {
 
       start_nest_old = valid_nests_new.front();
       end_nest_old = valid_nests_new.back() + 1;
+      operation = SESINSERT;
 
   }
 
