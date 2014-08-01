@@ -2,23 +2,23 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="while.single">
 
 <unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt></while></diff:delete></unit>
+<block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while></diff:delete></unit>
 
 <unit filename="while.single|while.single">
 <diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
-<diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></while></diff:delete>
+<block type="pseudo"><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
 </unit>
 
 <unit filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
-<diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></while></diff:delete>
+<block type="pseudo"><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
 </unit>
 
 <unit filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition>
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt></while></diff:delete></unit>
+<block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block></while></diff:delete></unit>
 
 <unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition> <block>{
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -42,6 +42,6 @@
 
 <unit filename="while.single|while.single">
 <while>while<condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition>
-<diff:delete type="change">    <expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">    <empty_stmt>;</empty_stmt></diff:insert></while>
+    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></while>
 </unit>
 </unit>
