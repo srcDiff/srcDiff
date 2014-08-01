@@ -84,12 +84,6 @@
 <unit filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><expr><name>a</name><diff:insert> <op:operator>:</op:operator> <name>b</name></diff:insert></expr><diff:delete><op:operator>,</op:operator><range> <expr><name>b</name></expr></range></diff:delete></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-
-
-
-
-
-
 <unit filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><while>while<diff:common><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name><diff:delete type="change">b</diff:delete><diff:insert type="change">c</diff:insert></name></expr>)</condition></diff:common> <diff:delete><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></while></diff:insert></if></diff:delete></unit>
 
@@ -128,5 +122,47 @@
 
 <unit filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:delete type="change"><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name>b</name></expr></init>)</control></diff:delete><control>(<init><expr><name>a</name></expr><op:operator>,</op:operator><range> <expr><name>c</name></expr></range></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for></diff:delete></unit>
+
+
+
+
+<unit filename="interchange|interchange">
+<diff:delete><while>while<diff:insert><if>if<diff:common><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name><diff:delete type="change">c</diff:delete><diff:insert type="change">b</diff:insert></name></expr>)</condition></diff:common><diff:delete type="whitespace"> </diff:delete><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></while></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><for>for<diff:insert><if>if<diff:delete><control>(<init>;</init> <diff:common><condition><diff:insert>(</diff:insert><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name><diff:delete type="change">c</diff:delete><diff:insert type="change">b</diff:insert></name></expr><diff:delete type="change">;</diff:delete><diff:insert type="change">)</diff:insert></condition></diff:common><incr/>)</control></diff:delete><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></for></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><for>for<diff:insert><if>if<diff:delete type="change"><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name>c</name></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></for></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><if>if<diff:delete type="change"><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name>c</name></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></foreach></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><if>if<diff:delete type="change"><control>(<init><expr><name>a</name></expr><op:operator>,</op:operator><range> <expr><name>c</name></expr></range></init>)</control></diff:delete><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></foreach></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><for>for<diff:insert><while>while<diff:delete><control>(<init>;</init> <diff:common><condition><diff:insert>(</diff:insert><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name><diff:delete type="change">c</diff:delete><diff:insert type="change">b</diff:insert></name></expr><diff:delete type="change">;</diff:delete><diff:insert type="change">)</diff:insert></condition></diff:common><diff:insert type="whitespace"> </diff:insert><incr/>)</control> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></for></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><for>for<diff:insert><while>while<diff:delete><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name>c</name></expr></init>)<diff:insert type="change"><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition></diff:insert></control></diff:delete><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></for></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><while>while<diff:delete><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name>c</name></expr></init>)<diff:insert type="change"><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition></diff:insert></control></diff:delete><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></foreach></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><while>while<diff:delete><control>(<init><expr><name>a</name></expr><op:operator>,</op:operator><range> <expr><name>c</name></expr></range></init>)<diff:insert type="change"><condition>(<expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition></diff:insert></control></diff:delete><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></foreach></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><for>for<diff:delete type="change"><control>(<init><expr><name>a</name></expr><op:operator>,</op:operator><range> <expr><name>c</name></expr></range></init>)</control></diff:delete><control>(<init>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition><incr/>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><for>for<diff:delete type="change"><control>(<init><expr><name>a</name></expr><op:operator>,</op:operator><range> <expr><name>c</name></expr></range></init>)</control></diff:delete><control>(<init>;</init> <condition><expr><name>a</name> <op:operator>&amp;&amp;</op:operator> <name>b</name></expr>;</condition><incr/>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name><diff:delete type="change">c</diff:delete><diff:insert type="change">b</diff:insert></name></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><for>for<diff:delete type="change"><control>(<init><expr><name>a</name></expr><op:operator>,</op:operator><range> <expr><name>c</name></expr></range></init>)</control></diff:delete><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name>b</name></expr></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
 </unit>
