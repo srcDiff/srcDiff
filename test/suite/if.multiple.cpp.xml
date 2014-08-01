@@ -44,7 +44,7 @@
 
 </diff:common><comment type="line">// foobar</comment>
 }</block></then> <else>else 
-    <expr_stmt><expr><name>h</name></expr>;</expr_stmt></else></if>
+    <block type="pseudo"><expr_stmt><expr><name>h</name></expr>;</expr_stmt></block></else></if>
 </diff:delete></unit>
 
 <unit filename="if.multiple|if.multiple">
@@ -93,7 +93,7 @@
 
 
 }</block></diff:delete><diff:insert type="change">
-    <empty_stmt>;</empty_stmt></diff:insert></then></if>
+    <block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></then></if>
 </unit>
 
 </unit>

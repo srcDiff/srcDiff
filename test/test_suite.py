@@ -381,6 +381,10 @@ try :
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
+
+						test_number = count * 2 - 1
+						if directory == "interchange" :
+							test_number = count
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
@@ -388,14 +392,17 @@ try :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
 						if result != "" :
 							error_count += 1
-							
-							errorlist.append((directory + " " + language, count * 2 - 1, result))
+
+							errorlist.append((directory + " " + language, test_number, result))
 
 							# part of list of nested unit number in output
-							print "\033[0;31m" + str(count * 2 - 1) + "\033[0m",
+							print "\033[0;31m" + str(test_number) + "\033[0m",
 						elif number != 0 :
 							# part of list of nested unit number in output
-							print "\033[0;33m" + str(count * 2 - 1) + "\033[0m",
+							print "\033[0;33m" + str(test_number) + "\033[0m",
+
+						if directory == "interchange" :
+							continue
 
 						# total count of test cases
 						total_count = total_count + 1

@@ -33,6 +33,8 @@ bool is_text(const xNodePtr node);
 // diff node comparison function
 int node_set_syntax_compare(const void * e1, const void * e2, const void * context);
 
+bool is_interchangeable_match(const std::string & old_tag, const std::string & new_tag);
+
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new);
 

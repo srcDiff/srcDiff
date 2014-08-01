@@ -51,6 +51,6 @@
 
 
 }</block></diff:delete><diff:insert type="change">
-    <empty_stmt>;</empty_stmt></diff:insert></while></unit>
+    <block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></while></unit>
 
 </unit>

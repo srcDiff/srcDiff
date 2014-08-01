@@ -28,7 +28,7 @@ struct nest_info {
 
   const char * type;
 
-  const char * const *  nest_items;
+  const char * const * nest_items;
 
   const char * const * possible_nest_items;
 
@@ -37,48 +37,51 @@ struct nest_info {
 // may need to change collection algorithm to gather full and nested of same type and match based on that
 // possible is mostly for block and may need to have to test for internal block structure
 
-const char * const block_nest_types[]             = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
-const char * const if_nest_types[]                = { "expr_stmt", "decl_stmt", "else", "elseif", "return", "comment", 0 };
-const char * const else_nest_types[]              = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
-const char * const while_nest_types[]             = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
-const char * const for_nest_types[]               = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
-const char * const function_nest_types[]          = { "expr_stmt", "decl_stmt", "if", "while", "for", "foreach",       0 };
-const char * const class_nest_types[]             = { "decl_stmt", "function_decl",                                    0 };
-const char * const struct_nest_types[]            = { "decl_stmt", "function_decl",                                    0 };
-const char * const union_nest_types[]             = { "decl_stmt",  "function_decl",                                   0 };
-const char * const call_nest_types[]              = {                                                                  0 };
+const char * const block_nest_types[]                = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
+const char * const if_nest_types[]                   = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
+const char * const else_nest_types[]                 = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
+const char * const while_nest_types[]                = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
+const char * const for_nest_types[]                  = { "expr_stmt", "decl_stmt", "return", "comment",                   0 };
+const char * const for_control_nest_types[]          = { "condition", "comment",                                          0 };
+const char * const function_nest_types[]             = { "expr_stmt", "decl_stmt", "if", "while", "for", "foreach",       0 };
+const char * const class_nest_types[]                = { "decl_stmt", "function_decl",                                    0 };
+const char * const struct_nest_types[]               = { "decl_stmt", "function_decl",                                    0 };
+const char * const union_nest_types[]                = { "decl_stmt", "function_decl",                                    0 };
+const char * const call_nest_types[]                 = {                                                                  0 };
 
-const char * const basic_possible_nest_types[]    = {                                                                  0 };
-const char * const block_possible_nest_types[]    = { "block", "if", "while", "for", "foreach",                        0 };
-const char * const if_possible_nest_types[]       = { "block", "if", "while", "for", "foreach",                        0 };
-const char * const else_possible_nest_types[]     = { "block", "if", "while", "for", "foreach",                        0 };
-const char * const while_possible_nest_types[]    = { "block", "if", "while", "for", "foreach",                        0 };
-const char * const for_possible_nest_types[]      = { "block", "if", "while", "for", "foreach",                        0 };
-const char * const function_possible_nest_types[] = {                                                                  0 };
-const char * const class_possible_nest_types[]    = {                                                                  0 };
-const char * const struct_possible_nest_types[]   = {                                                                  0 };
-const char * const union_possible_nest_types[]    = {                                                                  0 };
-const char * const call_possible_nest_types[]     = { "call",                                                          0 };
+const char * const basic_possible_nest_types[]       = {                                                                  0 };
+const char * const block_possible_nest_types[]       = { "block", "if", "while", "for", "foreach",                        0 };
+const char * const if_possible_nest_types[]          = { "block", "if", "while", "for", "foreach", "else", "elseif",      0 };
+const char * const else_possible_nest_types[]        = { "block", "if", "while", "for", "foreach",                        0 };
+const char * const while_possible_nest_types[]       = { "block", "if", "while", "for", "foreach",                        0 };
+const char * const for_possible_nest_types[]         = { "block", "if", "while", "for", "foreach",                        0 };
+const char * const for_control_possible_nest_types[] = {                                                                  0 };
+const char * const function_possible_nest_types[]    = {                                                                  0 };
+const char * const class_possible_nest_types[]       = {                                                                  0 };
+const char * const struct_possible_nest_types[]      = {                                                                  0 };
+const char * const union_possible_nest_types[]       = {                                                                  0 };
+const char * const call_possible_nest_types[]        = { "call",                                                          0 };
 
 // tags that can have something nested in them (incomplete)
-const nest_info nesting[] = {
+const nest_info nesting[] = {   
 
-  { "block",         block_nest_types,    block_possible_nest_types    },
-  { "if",            if_nest_types,       if_possible_nest_types       },
-  { "then",          if_nest_types,       if_possible_nest_types       },
-  { "elseif",        if_nest_types,       if_possible_nest_types       },
-  { "else",          else_nest_types,     else_possible_nest_types     },
-  { "while",         while_nest_types,    while_possible_nest_types    },
-  { "for",           for_nest_types,      for_possible_nest_types      },
-  { "foreach",       for_nest_types,      for_possible_nest_types      },
-  { "function",      function_nest_types, function_possible_nest_types },
-  { "class",         class_nest_types,    class_possible_nest_types    },
-  { "struct",        struct_nest_types,   struct_possible_nest_types   },
-  { "union",         union_nest_types,    union_possible_nest_types    },
-  { "call",          call_nest_types,     call_possible_nest_types     },
-  { "argument_list", call_nest_types,     call_possible_nest_types     },
-  { "argument",      call_nest_types,     call_possible_nest_types     },
-  { "expr",          call_nest_types,     call_possible_nest_types     },
+  { "block",         block_nest_types,       block_possible_nest_types       },
+  { "if",            if_nest_types,          if_possible_nest_types          },
+  { "then",          if_nest_types,          if_possible_nest_types          },
+  { "elseif",        if_nest_types,          if_possible_nest_types          },
+  { "else",          else_nest_types,        else_possible_nest_types        },
+  { "while",         while_nest_types,       while_possible_nest_types       },
+  { "for",           for_nest_types,         for_possible_nest_types         },
+  { "foreach",       for_nest_types,         for_possible_nest_types         },
+  { "control",       for_control_nest_types, for_control_possible_nest_types },
+  { "function",      function_nest_types,    function_possible_nest_types    },
+  { "class",         class_nest_types,       class_possible_nest_types       },
+  { "struct",        struct_nest_types,      struct_possible_nest_types      },
+  { "union",         union_nest_types,       union_possible_nest_types       },
+  { "call",          call_nest_types,        call_possible_nest_types        },
+  { "argument_list", call_nest_types,        call_possible_nest_types        },
+  { "argument",      call_nest_types,        call_possible_nest_types        },
+  { "expr",          call_nest_types,        call_possible_nest_types        },
 
   { 0, 0, 0 }
 
@@ -366,7 +369,7 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
 
-  if(old_tag != new_tag) return true;
+  if(old_tag != new_tag && !is_interchangeable_match(old_tag, new_tag)) return true;
 
   if(old_tag == "then" || old_tag == "block" || old_tag == "comment"
     || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier") {
@@ -416,6 +419,9 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
   start_nest_new = start_new;  
   end_nest_new = start_new;  
 
+  std::vector<int> valid_nests_old;
+  std::vector<int> valid_nests_new;
+
   for(int i = start_old; i < end_old; ++i) {
 
     if(nodes_old.at(node_sets_old->at(i)->at(0))->move) continue;
@@ -442,12 +448,10 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
           continue;
 
-        std::vector<int> valid_nests;
-        valid_nests.push_back(j);
+        valid_nests_old.push_back(j);
 
         start_nest_old = i;
         end_nest_old = i + 1;
-        operation = SESDELETE;
 
         for(int k = j + 1; k < end_new; ++k) {
 
@@ -470,20 +474,19 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
             nodes_old, node_set.at(match), nodes_new, node_sets_new->at(k)))
             continue;
 
-          valid_nests.push_back(k);
+          valid_nests_old.push_back(k);
 
         }
 
-        start_nest_new = valid_nests.front();
-        end_nest_new = valid_nests.back() + 1;
-
-        return;
+        goto end_nest_check_old;
 
       }
 
     }
 
   }
+
+  end_nest_check_old:
 
   for(int i = start_new; i < end_new; ++i) {
 
@@ -510,12 +513,10 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           nodes_old, node_sets_old->at(j), nodes_new, node_set.at(match)))
           continue;
 
-        std::vector<int> valid_nests;
-        valid_nests.push_back(j);
+        valid_nests_new.push_back(j);
 
         start_nest_new = i;
         end_nest_new = i + 1;
-        operation = SESINSERT;
 
         for(int k = j + 1; k < end_old; ++k) {
 
@@ -538,18 +539,44 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
               nodes_old, node_sets_old->at(k), nodes_new, node_set.at(match)))
               continue;
 
-          valid_nests.push_back(k);
+          valid_nests_new.push_back(k);
 
         }
 
-        start_nest_old = valid_nests.front();
-        end_nest_old = valid_nests.back() + 1;
+        //start_nest_old = valid_nests.front();
+        //end_nest_old = valid_nests.back() + 1;
 
-        return;
+        goto end_nest_check_new;
 
       }
 
     }
+
+  }
+
+  end_nest_check_new:
+
+  /** @todo may need a more exact check to pick most optimal or another check 
+
+    For now if only valid, less than or equal and do not cross, or cross and larger.
+
+  */
+  if(!valid_nests_old.empty() && (valid_nests_new.empty()
+   || ((start_nest_old - start_old) <= (start_nest_new - start_new) 
+      && start_nest_old < valid_nests_new.front() && valid_nests_old.back() < start_nest_new)
+   || (((start_nest_old >= valid_nests_new.front() && start_nest_old <= valid_nests_new.back())
+        || (start_nest_new >= valid_nests_old.front() && start_nest_new <= valid_nests_old.back()))
+      && (valid_nests_old.back() - valid_nests_old.front()) >= (valid_nests_new.back() - valid_nests_new.front())))) {
+
+      start_nest_new = valid_nests_old.front();
+       end_nest_new = valid_nests_old.back() + 1;
+       operation = SESDELETE;
+
+  } else if(!valid_nests_new.empty()) {
+
+      start_nest_old = valid_nests_new.front();
+      end_nest_old = valid_nests_new.back() + 1;
+      operation = SESINSERT;
 
   }
 
@@ -638,8 +665,8 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "for") == 0) {
 
-        while(!((rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || rbuf_old.nodes.at(end_pos)->extra & 0x1)
-          && strcmp(rbuf_old.nodes.at(end_pos)->name, "incr") == 0))
+        while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_old.nodes.at(end_pos)->name, "control") == 0))
           ++end_pos;
 
         ++end_pos;
@@ -687,8 +714,8 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "for") == 0) {
 
-        while(!((rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || rbuf_new.nodes.at(end_pos)->extra & 0x1)
-          && strcmp(rbuf_new.nodes.at(end_pos)->name, "incr") == 0))
+        while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && strcmp(rbuf_new.nodes.at(end_pos)->name, "control") == 0))
           ++end_pos;
 
         ++end_pos;

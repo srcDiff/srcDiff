@@ -139,6 +139,19 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
   return 0;
 }
 
+const char * find_attribute(const xNodePtr node, const char * attr_name) {
+
+  xAttr * attr = node->properties;
+
+  for(; attr && strcmp((const char *)attr->name, attr_name) != 0; attr = attr->next)
+    ;
+
+  if(attr)
+    return attr->value;
+
+  return 0;
+
+}
 
 /*
   Begin internal heuristic functions for reject_match
@@ -330,7 +343,60 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
+std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  int control_start_pos = start_pos;
+
+  while(nodes.at(control_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(control_start_pos)->name, "control") != 0)
+    ++control_start_pos;
+
+  if(nodes.at(control_start_pos)->extra & 0x1) return "";
+
+  int control_end_pos = control_start_pos + 1;
+  int open_control_count = 1;
+
+  while(open_control_count) {
+
+    if(strcmp((const char *)nodes.at(control_end_pos)->name, "control") == 0) {
+
+      if(nodes.at(control_end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(control_end_pos)->extra & 0x1) == 0)
+        ++open_control_count;
+      else if(nodes.at(control_end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        --open_control_count;
+
+    }
+
+    ++control_end_pos;
+
+  }
+
+  NodeSets control_node_sets = create_node_set(nodes, control_start_pos + 1, control_end_pos);
+
+  NodeSets::const_iterator citr;
+  for(citr = control_node_sets.begin(); citr != control_node_sets.end(); ++citr)
+    if(strcmp((const char *)nodes.at((*citr)->front())->name, "condition") == 0)
+      break;
+
+  if(citr == control_node_sets.end()) return "";
+
+  std::string condition = "";
+  for(NodeSet::const_iterator node_itr = (*citr)->begin(); node_itr != (*citr)->end(); ++node_itr)
+    if(is_text(nodes.at(*node_itr)))
+      condition += (const char *)nodes.at(*node_itr)->content;
+
+  if(condition.size() > 0 && *--condition.end() == ';')
+    condition.erase(--condition.end());
+
+  return condition;
+
+}
+
 std::string get_condition(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  if(strcmp((const char *)nodes.at(start_pos)->name, "for") == 0
+    || strcmp((const char *)nodes.at(start_pos)->name, "foreach") == 0)
+    return get_for_condition(nodes, start_pos);
 
   int condition_start_pos = start_pos;
 
@@ -360,6 +426,12 @@ std::string get_condition(std::vector<xNodePtr> & nodes, int start_pos) {
     ++condition_pos;
 
   }
+
+  if(condition.size() > 0 && *condition.begin() == '(')
+    condition.erase(condition.begin());
+
+  if(condition.size() > 0 && *--condition.end() == ')')
+    condition.erase(--condition.end());
 
   return condition;
 
@@ -415,7 +487,7 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
   for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
 
-    if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0) {
+    if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0 && find_attribute(nodes.at((*itr)->at(0)), "type") == 0) {
 
       free_node_sets(node_sets);
 
@@ -430,7 +502,8 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
       free_node_sets(node_sets);
 
       if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-        && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0)
+        && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0
+        && find_attribute(nodes.at((next_element_pos)), "type") == 0)
         return true;
       else
         return false;
@@ -505,42 +578,31 @@ bool if_then_equal(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, st
 
 }
 
-bool for_group_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+bool for_control_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
   NodeSets node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
   NodeSets node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
 
-  for(int i = 0; i < node_sets_old.size() && i < node_sets_new.size(); ++i) {
+  NodeSets::size_type control_pos_old;
+  for(control_pos_old = 0; control_pos_old < node_sets_old.size(); ++control_pos_old)
+    if(strcmp((const char *)nodes_old.at(node_sets_old.at(control_pos_old)->front())->name, "control") == 0)
+      break;
 
-    /** @todo possible has group tag or whatever although does not currently exist (may have at some point though) */
-    if(is_text(nodes_old.at(node_sets_old.at(i)->at(0))) && is_text(nodes_new.at(node_sets_new.at(i)->at(0))) 
-      && strcmp((const char *)nodes_old.at(node_sets_old.at(i)->at(0))->content, ")") == 0
-      && strcmp((const char *)nodes_new.at(node_sets_new.at(i)->at(0))->content, ")") == 0) {
 
-      free_node_sets(node_sets_old);
-      free_node_sets(node_sets_new);
+  NodeSets::size_type control_pos_new;
+  for(control_pos_new = 0; control_pos_new < node_sets_new.size(); ++control_pos_new)
+    if(strcmp((const char *)nodes_new.at(node_sets_new.at(control_pos_new)->front())->name, "control") == 0)
+      break;
 
-      return true;
-
-    }
-
-    if(node_set_syntax_compare((void *)node_sets_old.at(i), (void *)node_sets_new.at(i), (void *)&dnodes) != 0) {
-
-      free_node_sets(node_sets_old);
-      free_node_sets(node_sets_new);
-
-      return false;
-
-    }
-
-  }
+  bool matches = control_pos_old != node_sets_old.size() && control_pos_new != node_sets_new.size() 
+    && node_set_syntax_compare((void *)node_sets_old.at(control_pos_old), (void *)node_sets_new.at(control_pos_new), (void *)&dnodes);
 
   free_node_sets(node_sets_old);
   free_node_sets(node_sets_new);
 
-  return true;
+  return matches;
 
 }
 
@@ -595,7 +657,85 @@ std::string get_case_expr(std::vector<xNodePtr> & nodes, int start_pos) {
   End internal heuristic functions for reject_match
 */
 
-bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
+struct interchange_list {
+
+  const char * const name;
+  const char * const * list;
+
+};
+
+static const char * const if_interchange[]   = { "if",   "while", "for", "foreach", 0 };
+static const char * const else_interchange[] = { "else", "elseif",                  0 };
+static const interchange_list interchange_lists[] = {
+
+  { "if",      if_interchange },
+  { "while",   if_interchange },
+  { "for",     if_interchange },
+  { "foreach", if_interchange },
+  
+  { "else",    else_interchange },
+  { "elseif",  else_interchange },
+
+  { 0, 0 }
+
+};
+
+bool is_interchangeable_match(const std::string & old_tag, const std::string & new_tag) {
+
+  for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
+
+    if(interchange_lists[list_pos].name == old_tag) {
+
+      for(size_t pos = 0; interchange_lists[list_pos].list[pos]; ++pos) {
+
+        if(interchange_lists[list_pos].list[pos] == new_tag)
+          return true;
+
+      }
+
+
+    }
+
+  }
+
+  return false;
+
+}
+
+bool reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int syntax_similarity, syntax_difference, children_length_old, children_length_new;
+  compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
+
+  int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
+  int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
+
+  if(min_child_length > 1) { 
+
+    if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+      return false;
+
+    if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
+      return false;
+
+  }
+
+  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
+  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
+
+  if(min_size <= 2)
+    return 2 * similarity < min_size || difference > min_size;
+  else if(min_size <= 3)
+    return 3 * similarity < 2 * min_size || difference > min_size;
+  else if(min_size <= 30)
+    return 10 * similarity < 7 * min_size || difference > min_size;
+  else
+    return 2 * similarity < min_size || difference > min_size;
+
+}
+
+bool reject_match_same(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
   int old_pos = node_set_old->at(0);
@@ -606,7 +746,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   if(old_tag != new_tag) return true;
 
-  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "block" || old_tag == "condition" || old_tag == "init"
+  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "condition" || old_tag == "init"
     || old_tag == "default" || old_tag == "comment"
     || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
     || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
@@ -616,6 +756,19 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
     return false;
 
   if(old_tag == "expr" && similarity > 0) return false;
+
+
+  if(old_tag == "block") {
+
+    bool is_pseudo_old = find_attribute(nodes_old.at(old_pos), "type") != 0;
+    bool is_pseudo_new = find_attribute(nodes_new.at(new_pos), "type") != 0;
+
+    if(is_pseudo_old == is_pseudo_new) return false;
+    /** @todo need to unwrap pseudo block and match internals of both blocks, or have attribute deleted
+        May need to put in interchange or handle as special case. */
+    else return true;
+
+  }
 
   if(is_single_call_expr(nodes_old, old_pos) && is_single_call_expr(nodes_new, new_pos)) {
 
@@ -679,7 +832,7 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   } else if(old_tag == "for" || old_tag == "foreach") {
 
-    if(for_group_matches(nodes_old, node_set_old, nodes_new, node_set_new))
+    if(for_control_matches(nodes_old, node_set_old, nodes_new, node_set_new))
       return false;
     
   } else if(old_tag == "case") { 
@@ -718,17 +871,53 @@ bool reject_match(int similarity, int difference, int text_old_length, int text_
 
   }
 
-  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
-  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
-
-  if(min_size <= 2)
-    return 2 * similarity < min_size || difference > min_size;
-  else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || difference > min_size;
-  else if(min_size <= 30)
-    return 10 * similarity < 7 * min_size || difference > min_size;
-  else
-    return 2 * similarity < min_size || difference > min_size;
+  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
 
 }
 
+bool reject_match_interchangeable(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int old_pos = node_set_old->at(0);
+  int new_pos = node_set_new->at(0);
+
+  std::string old_tag = nodes_old.at(old_pos)->name;
+  std::string new_tag = nodes_new.at(new_pos)->name;
+
+  std::string old_condition = "";
+  if(old_tag == "if" || old_tag == "while" || old_tag == "for" || old_tag == "foreach") {
+
+    old_condition = get_condition(nodes_old, old_pos);
+
+  }
+
+  std::string new_condition = "";
+  if(new_tag == "if" || new_tag == "while" || new_tag == "for" || new_tag == "foreach") {
+
+    new_condition = get_condition(nodes_new, new_pos);
+
+  }
+
+  if(old_condition == new_condition) return false;
+
+  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+
+}
+
+bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+
+  int old_pos = node_set_old->at(0);
+  int new_pos = node_set_new->at(0);
+
+  std::string old_tag = nodes_old.at(old_pos)->name;
+  std::string new_tag = nodes_new.at(new_pos)->name;
+
+  if(old_tag == new_tag)
+    return reject_match_same(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  else if(is_interchangeable_match(old_tag, new_tag)) 
+    return reject_match_interchangeable(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  else
+    return true;
+
+}
