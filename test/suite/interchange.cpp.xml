@@ -165,4 +165,10 @@
 <unit filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:delete type="change"><control>(<init><expr><name>a</name></expr><op:operator>,</op:operator><range> <expr><name>c</name></expr></range></init>)</control></diff:delete><control>(<init><expr><name>a</name> <op:operator>:</op:operator> <name>b</name></expr></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
+<unit filename="interchange|interchange">
+<diff:delete><else><diff:insert><elseif><diff:common>else </diff:common><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></elseif></diff:insert></else></diff:delete></unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><elseif><diff:insert><else><diff:common>else </diff:common><diff:delete><if>if<condition>(<expr><lit:literal type="number">1</lit:literal></expr>)</condition><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></diff:delete></else></diff:insert></elseif></diff:delete></unit>
+
 </unit>
