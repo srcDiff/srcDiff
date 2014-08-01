@@ -343,41 +343,6 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
-std::string get_condition(std::vector<xNodePtr> & nodes, int start_pos) {
-
-  int condition_start_pos = start_pos;
-
-  while(nodes.at(condition_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(condition_start_pos)->name, "condition") != 0)
-    ++condition_start_pos;
-
-  std::string condition = "";
-  int open_condition_count = nodes.at(condition_start_pos)->extra & 0x1 ? 0 : 1;
-  int condition_pos = condition_start_pos + 1;
-
-  while(open_condition_count) {
-
-    if(strcmp((const char *)nodes.at(condition_pos)->name, "condition") == 0) {
-
-      if(nodes.at(condition_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(condition_pos)->extra & 0x1) == 0)
-        ++open_condition_count;
-      else if(nodes.at(condition_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
-        --open_condition_count;
-
-    } else if(is_text(nodes.at(condition_pos)) && !is_white_space(nodes.at(condition_pos))) {
-
-      condition += (const char *)nodes.at(condition_pos)->content;
-
-    }
-
-    ++condition_pos;
-
-  }
-
-  return condition;
-
-}
-
 std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
 
   int control_start_pos = start_pos;
@@ -385,9 +350,9 @@ std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
   while(nodes.at(control_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
    || strcmp((const char *)nodes.at(control_start_pos)->name, "control") != 0)
     ++control_start_pos;
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   if(nodes.at(control_start_pos)->extra & 0x1) return "";
-  
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   int control_end_pos = control_start_pos + 1;
   int open_control_count = 1;
 
@@ -419,6 +384,54 @@ std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
   for(NodeSet::const_iterator node_itr = (*citr)->begin(); node_itr != (*citr)->end(); ++node_itr)
     if(is_text(nodes.at(*node_itr)))
       condition += (const char *)nodes.at(*node_itr)->content;
+
+  if(condition.size() > 0 && *--condition.end() == ';')
+    condition.erase(--condition.end());
+
+  return condition;
+
+}
+
+std::string get_condition(std::vector<xNodePtr> & nodes, int start_pos) {
+
+  if(strcmp((const char *)nodes.at(start_pos)->name, "for") == 0
+    || strcmp((const char *)nodes.at(start_pos)->name, "foreach") == 0)
+    return get_for_condition(nodes, start_pos);
+
+  int condition_start_pos = start_pos;
+
+  while(nodes.at(condition_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+   || strcmp((const char *)nodes.at(condition_start_pos)->name, "condition") != 0)
+    ++condition_start_pos;
+
+  std::string condition = "";
+  int open_condition_count = nodes.at(condition_start_pos)->extra & 0x1 ? 0 : 1;
+  int condition_pos = condition_start_pos + 1;
+
+  while(open_condition_count) {
+
+    if(strcmp((const char *)nodes.at(condition_pos)->name, "condition") == 0) {
+
+      if(nodes.at(condition_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(condition_pos)->extra & 0x1) == 0)
+        ++open_condition_count;
+      else if(nodes.at(condition_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        --open_condition_count;
+
+    } else if(is_text(nodes.at(condition_pos)) && !is_white_space(nodes.at(condition_pos))) {
+
+      condition += (const char *)nodes.at(condition_pos)->content;
+
+    }
+
+    ++condition_pos;
+
+  }
+
+  if(condition.size() > 0 && *condition.begin() == '(')
+    condition.erase(condition.begin());
+
+  if(condition.size() > 0 && *--condition.end() == ')')
+    condition.erase(--condition.end());
 
   return condition;
 
@@ -872,14 +885,14 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
   std::string new_tag = nodes_new.at(new_pos)->name;
 
   std::string old_condition = "";
-  if(old_tag == "if" || old_tag == "while") {
+  if(old_tag == "if" || old_tag == "while" || old_tag == "for" || old_tag == "foreach") {
 
     old_condition = get_condition(nodes_old, old_pos);
 
   }
 
   std::string new_condition = "";
-  if(new_tag == "if" || new_tag == "while") {
+  if(new_tag == "if" || new_tag == "while" || new_tag == "for" || new_tag == "foreach") {
 
     new_condition = get_condition(nodes_new, new_pos);
 
