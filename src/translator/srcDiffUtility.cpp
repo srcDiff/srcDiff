@@ -895,7 +895,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 
   }
 
-  if(old_condition == new_condition) return false;
+  if(old_condition != "" && old_condition == new_condition) return false;
 
   return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
 
