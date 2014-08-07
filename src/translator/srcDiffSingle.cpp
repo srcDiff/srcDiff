@@ -33,7 +33,19 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
+  if(node_compare(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))) == 0) {
+
+    output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
+
+  } else {
+
+
+    xNodePtr merged_node = copyXNode(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)));
+
+
+
+
+  }
 
   ++rbuf_old.last_output;
   ++rbuf_new.last_output;
@@ -157,7 +169,13 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_new
                       , writer_state & wstate) {
 
-  if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->front())->name, (const char *)rbuf_new.nodes.at(node_sets_new->at(start_new)->front())->name) == 0)
+    xNodePtr start_node_old = rbuf_old.nodes.at(node_sets_old->at(start_old)->front());
+    xNodePtr start_node_new = rbuf_new.nodes.at(node_sets_new->at(start_new)->front());
+
+  if(strcmp((const char *)start_node_old->name, (const char *)start_node_new->name) == 0
+    && (start_node_old->ns == start_node_new->ns 
+      || (start_node_old->ns && start_node_old->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix 
+        || (start_node_old->ns->prefix && start_node_new->ns->prefix && strcmp((const char *)start_node_old->ns->prefix, (const char *)start_node_new->ns->prefix) == 0)))))
     output_recursive_same(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
   else
     output_recursive_interchangeable(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
