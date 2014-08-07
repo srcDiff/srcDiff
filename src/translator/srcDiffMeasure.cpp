@@ -82,7 +82,9 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name))) {
+        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
 
     return MAX_INT;
 
@@ -137,7 +139,9 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name))) {
+        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
 
     similarity = MAX_INT;
     difference = MAX_INT;
@@ -239,7 +243,9 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_s
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name))) {
+        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
 
     similarity = 0;
     difference = MAX_INT;
@@ -318,7 +324,9 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name))) {
+        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
 
     return MAX_INT;
 
@@ -351,7 +359,9 @@ double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * n
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name))) {
+        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
 
     return 0;
 
@@ -407,7 +417,9 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set
   if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name))) {
+        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
 
     //return olength + nlength;
 
