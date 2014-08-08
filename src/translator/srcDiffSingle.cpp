@@ -27,38 +27,58 @@ xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 
   std::vector<std::string> attribute_names;
   std::vector<std::string> attribute_values;
- /*
-  for(xAttr * attr = properties_old; attr; attr = attr->next) {
 
-    const char * attribute = find_attribute(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), attr->name);
-    attribute_names.push_back(attr->name);
-    if(attribute == 0) {
+  xAttrPtr oproperties = properties_old;
+  xAttrPtr nproperties = properties_new;
+  while(oproperties && nproperties) {
 
-      attribute_values.push_back(std::string(attr->value) + std::string("|"));
+    if(strcmp(oproperties->name, nproperties->name) == 0) {
 
+      attribute_names.push_back(oproperties->name);
+      if(strcmp(oproperties->value, nproperties->value) == 0) 
+        attribute_values.push_back(oproperties->value);
+      else
+        attribute_values.push_back(std::string(oproperties->value) + std::string("|") + std::string(nproperties->value));
+
+      oproperties = oproperties->next;
+      nproperties = nproperties->next;
+
+    } else if(nproperties->next && strcmp(oproperties->name, nproperties->next->name) == 0) {
+
+      attribute_names.push_back(nproperties->name);
+      attribute_values.push_back(std::string("|") + std::string(nproperties->value));
+
+      nproperties = nproperties->next;
 
     } else {
 
-      attribute_values.push_back(std::string(attr->name) + std::string("|") + std::string(attribute));
+      attribute_names.push_back(oproperties->name);
+      attribute_values.push_back(std::string(oproperties->value) + std::string("|"));
 
-
-    }
-
-  }
-
-  for(xAttr * attr = properties_new; attr; attr = attr->next) {
-
-    const char * attribute = find_attribute(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), attr->name);
-    if(attribute == 0) {
-
-      attribute_names.push_back(attr->name);
-      attribute_values.push_back(std::string("|") + std::string(attr->value));
-
+      oproperties = oproperties->next;
 
     }
 
+
   }
-  */
+
+  while(oproperties) {
+
+      attribute_names.push_back(oproperties->name);
+      attribute_values.push_back(std::string(oproperties->value) + std::string("|"));
+
+      oproperties = oproperties->next;
+
+  }
+
+  while(nproperties) {
+
+      attribute_names.push_back(nproperties->name);
+      attribute_values.push_back(std::string("|") + std::string(nproperties->value));
+
+      nproperties = nproperties->next;
+
+  }
 
   xAttrPtr first = 0;
   xAttrPtr last_attr = 0;
