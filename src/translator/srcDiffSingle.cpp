@@ -34,6 +34,8 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
 
+  xNodePtr merged_node = 0;
+
   if(node_compare(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))) == 0) {
 
     output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
@@ -42,13 +44,13 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
     std::vector<std::string> attribute_names;
     std::vector<std::string> attribute_values;
-    for(xAttr * attr = rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->properties; attr; attr = attr->next) {
+    for(xAttr * attr = rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->properties; attr; attr = attr->next) {
 
       const char * attribute = find_attribute(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), attr->name);
       attribute_names.push_back(attr->name);
       if(attribute == 0) {
 
-        attribute_values.push_back(std::string(attr->name) + std::string("|"));
+        attribute_values.push_back(std::string(attr->value) + std::string("|"));
 
 
       } else {
@@ -66,17 +68,20 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
       if(attribute == 0) {
 
         attribute_names.push_back(attr->name);
-        attribute_values.push_back(std::string("|") + std::string(attr->name));
+        attribute_values.push_back(std::string("|") + std::string(attr->value));
 
 
       }
 
     }
 
-    xNodePtr merged_node = copyXNode(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)));
+    merged_node = copyXNode(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)));
+
     xAttrPtr save_properties = merged_node->properties;
+    merged_node->properties = 0;
     xAttrPtr last_attr = 0;
-    for(std::vector<std::string>::size_type pos; pos < attribute_names.size(); ++pos) {
+
+    for(std::vector<std::string>::size_type pos = 0; pos < attribute_names.size(); ++pos) {
 
       xAttrPtr attr = new xAttr;
       attr->name = attribute_names[pos].c_str(), attr->value = attribute_values[pos].c_str(), attr->next = 0;
@@ -99,7 +104,6 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
     }
 
     merged_node->properties = save_properties;
-    freeXNode(merged_node);
 
   }
 
@@ -148,6 +152,7 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
   output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
+  if(merged_node) freeXNode(merged_node);
 
 }
 
