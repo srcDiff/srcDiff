@@ -11,6 +11,7 @@
 #include <srcDiffUtility.hpp>
 
 #include <string.h>
+#include <map>
 
 // more external variables
 extern xNode diff_common_start;
@@ -21,6 +22,82 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 extern xAttr diff_type;
+
+xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
+
+  std::vector<std::string> attribute_names;
+  std::vector<std::string> attribute_values;
+
+  xAttrPtr oproperties = properties_old;
+  xAttrPtr nproperties = properties_new;
+  while(oproperties && nproperties) {
+
+    if(strcmp(oproperties->name, nproperties->name) == 0) {
+
+      attribute_names.push_back(oproperties->name);
+      if(strcmp(oproperties->value, nproperties->value) == 0) 
+        attribute_values.push_back(oproperties->value);
+      else
+        attribute_values.push_back(std::string(oproperties->value) + std::string("|") + std::string(nproperties->value));
+
+      oproperties = oproperties->next;
+      nproperties = nproperties->next;
+
+    } else if(nproperties->next && strcmp(oproperties->name, nproperties->next->name) == 0) {
+
+      attribute_names.push_back(nproperties->name);
+      attribute_values.push_back(std::string("|") + std::string(nproperties->value));
+
+      nproperties = nproperties->next;
+
+    } else {
+
+      attribute_names.push_back(oproperties->name);
+      attribute_values.push_back(std::string(oproperties->value) + std::string("|"));
+
+      oproperties = oproperties->next;
+
+    }
+
+
+  }
+
+  while(oproperties) {
+
+      attribute_names.push_back(oproperties->name);
+      attribute_values.push_back(std::string(oproperties->value) + std::string("|"));
+
+      oproperties = oproperties->next;
+
+  }
+
+  while(nproperties) {
+
+      attribute_names.push_back(nproperties->name);
+      attribute_values.push_back(std::string("|") + std::string(nproperties->value));
+
+      nproperties = nproperties->next;
+
+  }
+
+  xAttrPtr first = 0;
+  xAttrPtr last_attr = 0;
+
+  for(std::vector<std::string>::size_type pos = 0; pos < attribute_names.size(); ++pos) {
+
+    xAttrPtr attr = new xAttr;
+    attr->name = strdup(attribute_names[pos].c_str()), attr->value = strdup(attribute_values[pos].c_str()), attr->next = 0;
+
+    if(last_attr == 0) first = attr;
+    else last_attr->next = attr;
+
+    last_attr = attr;
+
+  }
+
+  return first;
+
+}
 
 void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_old
@@ -33,7 +110,25 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
   output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
 
-  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
+  xNodePtr merged_node = 0;
+
+  if(node_compare(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))) == 0) {
+
+    output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
+
+  } else {
+
+    merged_node = copyXNode(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)));
+    freeXAttr(merged_node->properties);
+
+    merged_node->properties = merge_properties(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->properties,
+                                              rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->properties);
+
+
+    output_node(rbuf_old, rbuf_new, merged_node, SESCOMMON, wstate);
+
+
+  }
 
   ++rbuf_old.last_output;
   ++rbuf_new.last_output;
@@ -80,6 +175,7 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
   output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
+  if(merged_node) freeXNode(merged_node);
 
 }
 
@@ -157,7 +253,13 @@ void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
                       , unsigned int start_new
                       , writer_state & wstate) {
 
-  if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->front())->name, (const char *)rbuf_new.nodes.at(node_sets_new->at(start_new)->front())->name) == 0)
+    xNodePtr start_node_old = rbuf_old.nodes.at(node_sets_old->at(start_old)->front());
+    xNodePtr start_node_new = rbuf_new.nodes.at(node_sets_new->at(start_new)->front());
+
+  if(strcmp((const char *)start_node_old->name, (const char *)start_node_new->name) == 0
+    && (start_node_old->ns == start_node_new->ns 
+      || (start_node_old->ns && start_node_old->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix 
+        || (start_node_old->ns->prefix && start_node_new->ns->prefix && strcmp((const char *)start_node_old->ns->prefix, (const char *)start_node_new->ns->prefix) == 0)))))
     output_recursive_same(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
   else
     output_recursive_interchangeable(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);

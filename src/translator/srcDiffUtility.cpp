@@ -1,6 +1,7 @@
 #include <srcDiffUtility.hpp>
 #include <srcDiffDiff.hpp>
 #include <srcDiffMeasure.hpp>
+#include <srcDiffNested.hpp>
 #include <string.h>
 #include <vector>
 #include <string>
@@ -713,10 +714,7 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 
   if(min_child_length > 1) { 
 
-    if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
-      return false;
-
-    if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
+    if(2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
       return false;
 
   }
@@ -763,10 +761,50 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
     bool is_pseudo_old = find_attribute(nodes_old.at(old_pos), "type") != 0;
     bool is_pseudo_new = find_attribute(nodes_new.at(new_pos), "type") != 0;
 
-    if(is_pseudo_old == is_pseudo_new) return false;
-    /** @todo need to unwrap pseudo block and match internals of both blocks, or have attribute deleted
-        May need to put in interchange or handle as special case. */
-    else return true;
+    if(is_pseudo_old == is_pseudo_new) {
+
+      return false;
+
+    } else {
+
+      bool is_reject = true;
+
+      if(is_pseudo_old) {
+
+        NodeSets node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
+        NodeSets node_sets_new = create_node_set(nodes_new, node_set_new->at(0), node_set_new->back() + 1);
+
+        int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
+        check_nestable(&node_sets_old, nodes_old, 0, node_sets_old.size(), &node_sets_new, nodes_new, 0, 1,
+                      start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
+
+
+        is_reject = !(operation == SESINSERT);
+
+        free_node_sets(node_sets_old);
+        free_node_sets(node_sets_new);
+
+      } else {
+
+        NodeSets node_sets_old = create_node_set(nodes_old, node_set_old->at(0), node_set_old->back() + 1);
+        NodeSets node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());
+
+        int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
+        check_nestable(&node_sets_old, nodes_old, 0, 1, &node_sets_new, nodes_new, 0, node_sets_new.size(),
+                      start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
+
+
+        is_reject = !(operation == SESDELETE);
+
+        free_node_sets(node_sets_old);
+        free_node_sets(node_sets_new);
+
+      }
+
+
+      return is_reject;
+
+    }
 
   }
 
@@ -898,7 +936,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 
   }
 
-  if(old_condition == new_condition) return false;
+  if(old_condition != "" && old_condition == new_condition) return false;
 
   return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
 
@@ -907,6 +945,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
+  /** if different prefix should not reach here, however, may want to add that here */
   int old_pos = node_set_old->at(0);
   int new_pos = node_set_new->at(0);
 

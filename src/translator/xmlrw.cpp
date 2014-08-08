@@ -164,6 +164,22 @@ xNode * createInternalNode(xmlNode & node, bool is_archive) {
   return xnode;
 }
 
+void freeXAttr(xAttrPtr properties) {
+
+  xAttrPtr attr = properties;
+  while(attr) {
+
+    xAttr * save_attr = attr;
+    attr = attr->next;
+
+    free((void *)save_attr->name);
+    free((void *)save_attr->value);
+    delete save_attr;
+
+  }  
+
+}
+
 void freeXNode(xNode * node) {
 
   if(node->ns) {
@@ -177,15 +193,7 @@ void freeXNode(xNode * node) {
     delete node->ns;
   }
 
-  while(node->properties) {
-
-    xAttr * attr = node->properties;
-    node->properties = node->properties->next;
-
-    free((void *)attr->name);
-    free((void *)attr->value);
-    delete attr;
-  }
+  freeXAttr(node->properties);
 
   if(strcmp(node->name, "text") != 0)
     free((void *)node->name);
