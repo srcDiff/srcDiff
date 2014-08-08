@@ -105,6 +105,9 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
                                               rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->properties);
 
 
+    output_node(rbuf_old, rbuf_new, merged_node, SESCOMMON, wstate);
+
+
   }
 
   ++rbuf_old.last_output;
