@@ -779,7 +779,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
                       start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
 
 
-        is_reject = !(operation == SESDELETE);
+        is_reject = !(operation == SESINSERT);
 
         free_node_sets(node_sets_old);
         free_node_sets(node_sets_new);
@@ -794,7 +794,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
                       start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
 
 
-        is_reject = !(operation == SESINSERT);
+        is_reject = !(operation == SESDELETE);
 
         free_node_sets(node_sets_old);
         free_node_sets(node_sets_new);
