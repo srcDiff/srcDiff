@@ -104,6 +104,7 @@ inline bool isendelement(const xmlTextReaderPtr& reader) {
 
 xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
 
+void freeXAttr(xAttrPtr properties);
 void freeXNode(xNode * node);
 
 void eat_element(xmlTextReaderPtr& reader);
