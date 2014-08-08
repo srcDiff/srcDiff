@@ -11,6 +11,7 @@
 #include <srcDiffUtility.hpp>
 
 #include <string.h>
+#include <map>
 
 // more external variables
 extern xNode diff_common_start;
@@ -39,11 +40,66 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
   } else {
 
+    std::vector<std::string> attribute_names;
+    std::vector<std::string> attribute_values;
+    for(xAttr * attr = rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->properties; attr; attr = attr->next) {
+
+      const char * attribute = find_attribute(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), attr->name);
+      attribute_names.push_back(attr->name);
+      if(attribute == 0) {
+
+        attribute_values.push_back(std::string(attr->name) + std::string("|"));
+
+
+      } else {
+
+        attribute_values.push_back(std::string(attr->name) + std::string("|") + std::string(attribute));
+
+
+      }
+
+    }
+
+    for(xAttr * attr = rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->properties; attr; attr = attr->next) {
+
+      const char * attribute = find_attribute(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), attr->name);
+      if(attribute == 0) {
+
+        attribute_names.push_back(attr->name);
+        attribute_values.push_back(std::string("|") + std::string(attr->name));
+
+
+      }
+
+    }
 
     xNodePtr merged_node = copyXNode(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)));
+    xAttrPtr save_properties = merged_node->properties;
+    xAttrPtr last_attr = 0;
+    for(std::vector<std::string>::size_type pos; pos < attribute_names.size(); ++pos) {
 
+      xAttrPtr attr = new xAttr;
+      attr->name = attribute_names[pos].c_str(), attr->value = attribute_values[pos].c_str(), attr->next = 0;
 
+      if(last_attr == 0) merged_node->properties = attr;
+      else last_attr->next = attr;
 
+      last_attr = attr;
+
+    }
+
+    output_node(rbuf_old, rbuf_new, merged_node, SESCOMMON, wstate);
+
+    for(xAttrPtr attr = merged_node->properties; attr;) {
+
+        xAttrPtr save_attr = attr;
+        attr = attr->next;
+        delete save_attr;
+
+    }
+
+    merged_node->properties = save_properties;
+    freeXNode(merged_node);
 
   }
 

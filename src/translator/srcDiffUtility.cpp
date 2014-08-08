@@ -945,6 +945,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
+  /** if different prefix should not reach here, however, may want to add that here */
   int old_pos = node_set_old->at(0);
   int new_pos = node_set_new->at(0);
 
