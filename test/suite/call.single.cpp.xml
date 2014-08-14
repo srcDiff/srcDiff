@@ -15,6 +15,6 @@
 </unit>
 
 <unit filename="call.single|call.single">
-<expr_stmt><expr><diff:insert><call><name>a</name><argument_list>(<argument><expr><diff:common><call><name>b</name><argument_list>()</argument_list></call></diff:common></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt></unit>
+<expr_stmt><diff:insert><expr><call><name>a</name><argument_list>(<argument><diff:common><expr><call><name>b</name><argument_list>()</argument_list></call></expr></diff:common></argument>)</argument_list></call></expr></diff:insert>;</expr_stmt></unit>
 
 </unit>
