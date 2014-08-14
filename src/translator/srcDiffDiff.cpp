@@ -268,29 +268,6 @@ void output_diffs(reader_state & rbuf_old, NodeSets * node_sets_old, reader_stat
 
       //      fprintf(stderr, "HERE\n");
 
-      // 1-1
-      if(!is_move(node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes)
-         && !is_move(node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)
-         && edits->length == edit_next->length && edits->length == 1
-         && (node_sets_old->at(edits->offset_sequence_one)->size() > 1
-             || node_sets_new->at(edit_next->offset_sequence_two)->size() > 1)) {
-
-        if(is_nestable(node_sets_old->at(edits->offset_sequence_one)
-                         , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two), rbuf_new.nodes)) {
-
-            set_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
-                        , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->offset_sequence_two + edit_next->length);
-
-          } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two)
-                                , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one), rbuf_old.nodes)) {
-
-            set_nestable(node_sets_old, rbuf_old.nodes, edits->offset_sequence_one, edits->offset_sequence_one + edits->length
-                        , node_sets_new, rbuf_new.nodes, edit_next->offset_sequence_two, edit_next->offset_sequence_two + edit_next->length);
-
-          }
-
-      }
-
       // many to many handling
       output_many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
 
