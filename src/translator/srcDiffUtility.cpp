@@ -753,8 +753,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
     || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier")
     return false;
 
-  if(old_tag == "expr" && similarity > 0) return false;
-
+  if((old_tag == "expr" || old_tag == "expr_stmt") && similarity > 0) return false;
 
   if(old_tag == "block") {
 

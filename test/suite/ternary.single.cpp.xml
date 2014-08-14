@@ -5,6 +5,9 @@
 <diff:delete><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></diff:delete></unit>
 
 <unit filename="ternary.single|ternary.single">
+<expr_stmt><diff:delete><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <diff:common><expr><name>c</name></expr></diff:common></else></ternary></expr></diff:delete>;</expr_stmt></unit>
+
+<unit filename="ternary.single|ternary.single">
 <return>return <diff:delete><expr><ternary><condition><expr><call><name><name>changedShapes</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr> <operator>?</operator></condition><then> <expr><literal type="number">0</literal></expr></then><else><operator>:</operator> <diff:common><expr><operator>new</operator> <call><name>KoShapeReorderCommand</name><argument_list>(<argument><expr><name>changedShapes</name></expr></argument>, <argument><expr><name>newIndexes</name></expr></argument>, <argument><expr><name>parent</name></expr></argument>)</argument_list></call></expr></diff:common></else></ternary></expr></diff:delete>;</return></unit>
 
 </unit>
