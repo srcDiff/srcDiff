@@ -5,6 +5,12 @@
 <diff:delete><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></diff:delete></unit>
 
 <unit filename="ternary.single|ternary.single">
+<expr_stmt><diff:delete><expr><ternary><condition><diff:common><expr><name>a</name></expr></diff:common> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <expr><name>c</name></expr></else></ternary></expr></diff:delete>;</expr_stmt></unit>
+
+<unit filename="ternary.single|ternary.single">
+<expr_stmt><diff:delete><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <diff:common><expr><name>b</name></expr></diff:common> </then><else><operator>:</operator> <expr><name>c</name></expr></else></ternary></expr></diff:delete>;</expr_stmt></unit>
+
+<unit filename="ternary.single|ternary.single">
 <expr_stmt><diff:delete><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <diff:common><expr><name>c</name></expr></diff:common></else></ternary></expr></diff:delete>;</expr_stmt></unit>
 
 <unit filename="ternary.single|ternary.single">
