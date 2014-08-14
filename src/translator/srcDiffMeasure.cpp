@@ -162,7 +162,7 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
   int insert_similarity = 0;
   for(; edits; edits = edits->next) {
 
-    difference += edits->length;
+    //difference += edits->length;
 
     switch(edits->operation) {
 
@@ -179,6 +179,8 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
       }
 
   }
+
+  difference = ((double)delete_similarity) / text_old_length > ((double)insert_similarity) / text_new_length ? insert_similarity : delete_similarity;
 
   delete_similarity = text_old_length - delete_similarity;
   insert_similarity = text_new_length - insert_similarity;
@@ -274,7 +276,7 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_s
   int insert_similarity = 0;
   for(; edits; edits = edits->next) {
 
-    difference += edits->length;
+    //difference += edits->length;
 
     switch(edits->operation) {
 
@@ -291,6 +293,8 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_s
       }
 
   }
+
+  difference = ((double)delete_similarity / children_old_length) > ((double)insert_similarity / children_new_length) ? insert_similarity : delete_similarity;
 
   delete_similarity = children_old_length - delete_similarity;
   insert_similarity = children_new_length - insert_similarity;
@@ -338,14 +342,33 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
   compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
-  unsigned int similarity = 0;
+
+  int difference = 0;
+  int delete_similarity = 0;
+  int insert_similarity = 0;
   for(; edits; edits = edits->next) {
 
-      similarity += edits->length;
+    //difference += edits->length;
+
+    switch(edits->operation) {
+
+      case SESDELETE :
+
+        delete_similarity += edits->length;
+        break;
+
+      case SESINSERT :
+
+        insert_similarity += edits->length;
+        break;
+
+      }
 
   }
 
-  return similarity;
+  difference = ((double)delete_similarity) / text_old_length > ((double)insert_similarity) / text_new_length ? insert_similarity : delete_similarity;
+
+  return difference;
 
 }
 
