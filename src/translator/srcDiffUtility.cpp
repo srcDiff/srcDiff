@@ -801,7 +801,6 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
       }
 
-
       return is_reject;
 
     }
