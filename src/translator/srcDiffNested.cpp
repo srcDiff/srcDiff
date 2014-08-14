@@ -278,7 +278,7 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
     return false;
 
   int match_similarity, match_difference, size_one, size_match;
-  compute_measures(nodes_one, structure_one, nodes_two, node_set.at(match), match_difference, match_difference, size_one, size_match);
+  compute_measures(nodes_one, structure_one, nodes_two, node_set.at(match), match_similarity, match_difference, size_one, size_match);
   int similarity, difference, size_two;
   compute_measures(nodes_one, structure_one, nodes_two, structure_two, similarity, difference, size_one, size_two);
 
