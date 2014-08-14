@@ -49,6 +49,7 @@ const char * const struct_nest_types[]               = { "decl_stmt", "function_
 const char * const union_nest_types[]                = { "decl_stmt", "function_decl",                                                         0 };
 const char * const call_nest_types[]                 = {                                                                                       0 };
 const char * const ternary_nest_types[]              = { "expr",                                                                               0 };
+const char * const then_nest_types[]                 = {                                                                                       0 };
 
 const char * const basic_possible_nest_types[]       = {                                                                                       0 };
 const char * const block_possible_nest_types[]       = { "block", "if", "while", "for", "foreach",                                             0 };
@@ -61,8 +62,9 @@ const char * const function_possible_nest_types[]    = {                        
 const char * const class_possible_nest_types[]       = {                                                                                       0 };
 const char * const struct_possible_nest_types[]      = {                                                                                       0 };
 const char * const union_possible_nest_types[]       = {                                                                                       0 };
-const char * const call_possible_nest_types[]        = { "expr",  "call", "operator", "literal",                                               0 };
+const char * const call_possible_nest_types[]        = { "expr", "call", "operator", "literal",                                                0 };
 const char * const ternary_possible_nest_types[]     = { "ternary", "call", "operator", "literal",                                             0 };
+const char * const then_possible_nest_types[]        = { "expr", "call", "operator", "literal",                                                0 };
 
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {   
@@ -85,6 +87,7 @@ const nest_info nesting[] = {
   { "argument",      call_nest_types,        call_possible_nest_types        },
   { "expr",          call_nest_types,        call_possible_nest_types        },
   { "ternary",       ternary_nest_types,     ternary_possible_nest_types     },
+  { "then",          then_nest_types,        then_possible_nest_types        },
 
   { 0, 0, 0 }
 
