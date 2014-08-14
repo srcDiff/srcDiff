@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="if.single">
 
-<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then>
+<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
 <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:delete></unit>
 
 <unit filename="if.single|if.single">
-<diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
 <block type="pseudo"><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></block></then></if></diff:delete>
 </unit>
 
 <unit filename="if.single|if.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
 <block type="pseudo"><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></block></then></if></diff:delete>
 </unit>
 
 <unit filename="if.single|if.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then>
+<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
 <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block></then></if></diff:delete></unit>
 
-<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 }</block></then></if></diff:delete></unit>
 
 <unit filename="if.single|if.single"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></then></if></diff:delete></unit>
 
-<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<unit filename="if.single|if.single"><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></then></if></diff:delete></unit>
 
 <unit filename="if.single|if.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><if>if<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition><then> <block>{
+<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></then></if></diff:delete></unit>
 
 <unit filename="if.single|if.single">
-<diff:delete><if>if <condition>(<expr><operator>!</op:operator><name><name>cmd</name><op:operator>-&gt;</op:operator><name>t_data_nents</name></name></expr>)</condition><then>
+<diff:delete><if>if <condition>(<expr><operator>!</operator><name><name>cmd</name><operator>-&gt;</operator><name>t_data_nents</name></name></expr>)</condition><then>
     <block type="pseudo"><return>return;</return></block></then>
-<elseif>else <if>if <condition>(<expr><name><name>cmd</name><operator>-&gt;</op:operator><name>t_data_nents</name></name> <op:operator>==</op:operator> <literal type="number">1</lit:literal></expr>)</condition><then>
-    <block type="pseudo"><diff:common><expr_stmt><expr><call><name>kunmap</name><argument_list>(<argument><expr><call><name>sg_page</name><argument_list>(<argument><expr><name><name>cmd</name><operator>-&gt;</op:operator><name>t_data_sg</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></block></then></if></elseif></if></diff:delete>
+<elseif>else <if>if <condition>(<expr><name><name>cmd</name><operator>-&gt;</operator><name>t_data_nents</name></name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition><then>
+    <block type="pseudo"><diff:common><expr_stmt><expr><call><name>kunmap</name><argument_list>(<argument><expr><call><name>sg_page</name><argument_list>(<argument><expr><name><name>cmd</name><operator>-&gt;</operator><name>t_data_sg</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></block></then></if></elseif></if></diff:delete>
 </unit>
 
 <unit filename="if.single|if.single">
-<if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition><then>
-    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name> <operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></then></if>
+<if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then>
+    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name> <operator>+</operator> <name>c</name> <operator>+</operator> <name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></then></if>
 </unit>
 
 <unit filename="if.single|if.single">
-<if>if <condition>(<expr><diff:delete type="change"><name>p</name> <operator>&gt;=</op:operator> <call><name>count</name><argument_list>()</argument_list></call></diff:delete><diff:insert type="change"><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>, <argument><expr><name>p</name></expr></argument>)</argument_list></call></diff:insert></expr>)</condition><then> <block type="pseudo"><break>break;</break></block></then></if></unit>
+<if>if <condition>(<expr><diff:delete type="change"><name>p</name> <operator>&gt;=</operator> <call><name>count</name><argument_list>()</argument_list></call></diff:delete><diff:insert type="change"><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>, <argument><expr><name>p</name></expr></argument>)</argument_list></call></diff:insert></expr>)</condition><then> <block type="pseudo"><break>break;</break></block></then></if></unit>
 
 </unit>

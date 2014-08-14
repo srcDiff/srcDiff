@@ -17,9 +17,9 @@
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><diff:delete type="change">int</diff:delete><diff:insert type="change">double</diff:insert></name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl></unit>
 
 <unit filename="param.single|param.single">
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><diff:delete type="change">int</diff:delete><diff:insert type="change">double</diff:insert></name></type> <name>a</name><diff:delete> <init>= <expr><literal type="number">0</lit:literal></expr></init></diff:delete></decl></param>)</parameter_list>;</function_decl></unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><diff:delete type="change">int</diff:delete><diff:insert type="change">double</diff:insert></name></type> <name>a</name><diff:delete> <init>= <expr><literal type="number">0</literal></expr></init></diff:delete></decl></param>)</parameter_list>;</function_decl></unit>
 
 <unit filename="param.single|param.single">
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<diff:delete type="change"><param><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</lit:literal></expr></init></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>int</name></type> <name>b</name></decl></param></diff:insert>)</parameter_list>;</function_decl></unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<diff:delete type="change"><param><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>int</name></type> <name>b</name></decl></param></diff:insert>)</parameter_list>;</function_decl></unit>
 
 </unit>

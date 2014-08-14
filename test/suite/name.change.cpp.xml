@@ -6,11 +6,11 @@
 </unit>
 
 <unit filename="name.change|name.change">
-<expr_stmt><expr><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name> <operator>+</op:operator> <name>c</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
 <unit filename="name.change|name.change">
-<expr_stmt><expr><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name> <operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name> <operator>+</operator> <name>c</name> <operator>+</operator> <name>d</name></expr>;</expr_stmt>
 </unit>
 
 </unit>

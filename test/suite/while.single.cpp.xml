@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="while.single">
 
-<unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition>
+<unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition>
 <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while></diff:delete></unit>
 
 <unit filename="while.single|while.single">
-<diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition>
 <block type="pseudo"><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
 </unit>
 
 <unit filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition>
 <block type="pseudo"><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
 </unit>
 
 <unit filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition>
 <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block></while></diff:delete></unit>
 
-<unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition> <block>{
+<unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 }</block></while></diff:delete></unit>
 
-<unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition> <block>{
+<unit filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common>
 }</block></while></diff:delete></unit>
 
 <unit filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{
 <diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common>
 }</block></while></diff:delete></unit>
 
 <unit filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</lit:literal></expr>)</condition> <block>{
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></while></diff:delete></unit>
 
 <unit filename="while.single|while.single">
-<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</op:operator> <name>b</name></expr>)</condition>
-    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name> <operator>+</op:operator> <name>b</name> <op:operator>+</op:operator> <name>c</name> <op:operator>+</op:operator> <name>d</name> <op:operator>+</op:operator> <name>e</name> <op:operator>+</op:operator> <name>f</name> <op:operator>+</op:operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></while>
+<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition>
+    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name> <operator>+</operator> <name>c</name> <operator>+</operator> <name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></while>
 </unit>
 </unit>

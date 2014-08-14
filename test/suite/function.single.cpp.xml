@@ -8,7 +8,7 @@
 
 <!-- type one part delete -->
 <unit filename="function.single|function.single">
-<function><type><diff:delete><specifier>const</specifier> </diff:delete><name>int</name> <modifier>*</type:modifier></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>n</name></decl></param>, <param><decl><type><specifier>const</specifier> <name>int</name><type:modifier>&amp;</type:modifier></type> <name>m</name></decl></param>, <param><decl><type><name>int</name><type:modifier>*</type:modifier></type> <name>pn</name></decl></param>, <param><decl><type><name>double</name></type> <name>c</name></decl></param>)</parameter_list> <block>{
+<function><type><diff:delete><specifier>const</specifier> </diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>n</name></decl></param>, <param><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></param>, <param><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></param>, <param><decl><type><name>double</name></type> <name>c</name></decl></param>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></function>
@@ -16,7 +16,7 @@
 
 <!-- delete first parameter -->
 <unit filename="function.single|function.single">
-<function><type><diff:delete><specifier>const</specifier> </diff:delete><name>int</name> <modifier>*</type:modifier></type> <name>f</name><parameter_list>(<diff:delete><param><decl><type><name>int</name></type> <name>n</name></decl></param>, </diff:delete><param><decl><type><specifier>const</specifier> <name>int</name><type:modifier>&amp;</type:modifier></type> <name>m</name></decl></param>, <param><decl><type><name>int</name><type:modifier>*</type:modifier></type> <name>pn</name></decl></param>, <param><decl><type><name>double</name></type> <name>c</name></decl></param>)</parameter_list> <block>{
+<function><type><diff:delete><specifier>const</specifier> </diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<diff:delete><param><decl><type><name>int</name></type> <name>n</name></decl></param>, </diff:delete><param><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></param>, <param><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></param>, <param><decl><type><name>double</name></type> <name>c</name></decl></param>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></function>
@@ -24,7 +24,7 @@
 
 <!-- delete second parameter -->
 <unit filename="function.single|function.single">
-<function><type><specifier>const</specifier> <name>int</name> <modifier>*</type:modifier></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>n</name></decl></param>, <diff:delete><param><decl><type><specifier>const</specifier> <name>int</name><type:modifier>&amp;</type:modifier></type> <name>m</name></decl></param>, </diff:delete><param><decl><type><name>int</name><type:modifier>*</type:modifier></type> <name>pn</name></decl></param>, <param><decl><type><name>double</name></type> <name>c</name></decl></param>)</parameter_list> <block>{
+<function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>n</name></decl></param>, <diff:delete><param><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></param>, </diff:delete><param><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></param>, <param><decl><type><name>double</name></type> <name>c</name></decl></param>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></function>

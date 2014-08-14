@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="constructor_decl.single">
 
-<unit filename="constructor_decl.single|constructor_decl.single"><diff:delete><constructor><name><name>Object</name><operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></diff:delete></unit>
+<unit filename="constructor_decl.single|constructor_decl.single"><diff:delete><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></diff:delete></unit>
 
 <unit filename="constructor_decl.single|constructor_decl.single"><diff:delete>
-<constructor><name><name>Object</name><operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></diff:delete></unit>
+<constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></diff:delete></unit>
 
 </unit>

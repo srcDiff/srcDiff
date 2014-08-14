@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="member_list.single">
 
 <unit filename="member_list.single|member_list.single">
-<constructor><name><name>Object</name><operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list>
+<constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
 <diff:delete><member_list>: <call><name>a</name><argument_list>()</argument_list></call></member_list></diff:delete><block>{}</block></constructor>
 </unit>
 
 <unit filename="member_list.single|member_list.single">
-<constructor><name><name>Object</name><operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list>
+<constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
 <diff:delete><member_list>: <call><name>a</name><argument_list>()</argument_list></call>
 </member_list></diff:delete><block>{}</block></constructor>
 </unit>
