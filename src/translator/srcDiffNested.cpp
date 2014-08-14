@@ -62,7 +62,7 @@ const char * const class_possible_nest_types[]       = {                        
 const char * const struct_possible_nest_types[]      = {                                                                                       0 };
 const char * const union_possible_nest_types[]       = {                                                                                       0 };
 const char * const call_possible_nest_types[]        = { "expr",  "call", "operator", "literal",                                               0 };
-const char * const ternary_possible_nest_types[]     = { "ternary", "expr", "call", "operator", "literal",                                     0 };
+const char * const ternary_possible_nest_types[]     = { "ternary", "call", "operator", "literal",                                             0 };
 
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {   
@@ -277,27 +277,10 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
   if(match >= node_set.size())
     return false;
 
-  unsigned int match_similarity = compute_similarity(nodes_one, structure_one, nodes_two, node_set.at(match));
-  unsigned int match_difference = compute_difference(nodes_one, structure_one, nodes_two, node_set.at(match));
-  unsigned int difference = compute_difference(nodes_one, structure_one, nodes_two, structure_two);
-
-  unsigned int size_one = 0;
-
-  for(unsigned int i = 0; i < structure_one->size(); ++i)
-    if(is_text(nodes_one.at(structure_one->at(i))) && !is_white_space(nodes_one.at(structure_one->at(i))))
-      ++size_one;
-
-  unsigned int size_two = 0;
-
-  for(unsigned int i = 0; i < structure_two->size(); ++i)
-    if(is_text(nodes_two.at(structure_two->at(i))) && !is_white_space(nodes_two.at(structure_two->at(i))))
-      ++size_two;
-
-  unsigned int size_match = 0;
-
-  for(unsigned int i = 0; i < node_set.at(match)->size(); ++i)
-    if(is_text(nodes_two.at(node_set.at(match)->at(i))) && !is_white_space(nodes_two.at(node_set.at(match)->at(i))))
-      ++size_match;
+  unsigned int match_similarity, match_difference, size_one, size_match;
+  compute_measures(nodes_one, structure_one, nodes_two, node_set.at(match), match_difference, match_difference, size_one, size_match);
+  unsigned int similarity, difference, size_two;
+  compute_measures(nodes_one, structure_one, nodes_two, structure_two, similarity, difference, size_one, size_two);
 
   unsigned int max_size = size_one;
   if(size_match > max_size)
@@ -307,7 +290,7 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
   if(size_match < min_size)
     min_size = size_match;
 
-  return match_similarity * 10 > max_size * 9 && match_difference * 10 <= min_size && match_difference < difference;
+  return match_similarity * 10 > max_size * 9 && match_difference * 10 <= min_size && match_difference <= difference;
 
 }
 
