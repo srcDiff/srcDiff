@@ -321,7 +321,7 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
         compute_measures(nodes_outer, node_set.at(match), nodes_inner, node_set_inner,
           nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
 
-        if(nest_similarity >= similarity && nest_difference < difference)
+        if(nest_similarity >= similarity && nest_difference <= difference)
          return true;
     
       }
