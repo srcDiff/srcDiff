@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="member_list.single">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="member_list.single">
 
 <unit filename="member_list.single|member_list.single">
-<constructor><name><name>Object</name><op:operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list>
+<constructor><name><name>Object</name><operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list>
 <diff:delete><member_list>: <call><name>a</name><argument_list>()</argument_list></call></member_list></diff:delete><block>{}</block></constructor>
 </unit>
 
 <unit filename="member_list.single|member_list.single">
-<constructor><name><name>Object</name><op:operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list>
+<constructor><name><name>Object</name><operator>::</op:operator><name>Object</name></name><parameter_list>()</parameter_list>
 <diff:delete><member_list>: <call><name>a</name><argument_list>()</argument_list></call>
 </member_list></diff:delete><block>{}</block></constructor>
 </unit>

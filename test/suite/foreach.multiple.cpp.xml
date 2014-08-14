@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="foreach.multiple">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="foreach.multiple">
 
-<unit filename="foreach.multiple|foreach.multiple"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control>
+<unit filename="foreach.multiple|foreach.multiple"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control>
 <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></foreach></diff:delete></unit>
 
 <unit filename="foreach.multiple|foreach.multiple">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
+<diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common>
 }</block></foreach></diff:delete></unit>
 
 <unit filename="foreach.multiple|foreach.multiple">
-<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 
 <diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -31,7 +31,7 @@
 </diff:delete></unit>
 
 <unit filename="foreach.multiple|foreach.multiple">
-<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><op:operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change"> <block>{
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name><operator>,</op:operator><range> <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>

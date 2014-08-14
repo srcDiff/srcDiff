@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="decl_stmt.single">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="decl_stmt.single">
 
 <unit filename="decl_stmt.single|decl_stmt.single"><diff:delete><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt></diff:delete></unit>
 
@@ -7,6 +7,6 @@
 <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt></diff:delete></unit>
 
 <unit filename="decl_stmt.single|decl_stmt.single">
-<decl_stmt><decl><type><name>KisPaintOpPresetSP</name></type> <name>newBrush</name> <init>= <expr><call><name><name>m_paintopBox</name><op:operator>-&gt;</op:operator><name>paintOpPresetSP</name></name><argument_list>(<argument><diff:delete type="change"><expr><op:operator>new</op:operator> <call><name>KoID</name><argument_list>(<argument><expr><name><name>favoriteList</name><index>[<expr><name>pos</name></expr>]</index></name></expr></argument>, <argument><expr><name><name>favoriteList</name><index>[<expr><name>pos</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></diff:delete><diff:insert type="change"><expr><op:operator>&amp;</op:operator><name>id</name></expr></diff:insert></argument>)</argument_list></call></expr></init></decl>;</decl_stmt></unit>
+<decl_stmt><decl><type><name>KisPaintOpPresetSP</name></type> <name>newBrush</name> <init>= <expr><call><name><name>m_paintopBox</name><operator>-&gt;</op:operator><name>paintOpPresetSP</name></name><argument_list>(<argument><diff:delete type="change"><expr><op:operator>new</op:operator> <call><name>KoID</name><argument_list>(<argument><expr><name><name>favoriteList</name><index>[<expr><name>pos</name></expr>]</index></name></expr></argument>, <argument><expr><name><name>favoriteList</name><index>[<expr><name>pos</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></diff:delete><diff:insert type="change"><expr><op:operator>&amp;</op:operator><name>id</name></expr></diff:insert></argument>)</argument_list></call></expr></init></decl>;</decl_stmt></unit>
 
 </unit>
