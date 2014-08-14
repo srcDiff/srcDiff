@@ -62,7 +62,7 @@ const char * const class_possible_nest_types[]       = {                        
 const char * const struct_possible_nest_types[]      = {                                                                                       0 };
 const char * const union_possible_nest_types[]       = {                                                                                       0 };
 const char * const call_possible_nest_types[]        = { "expr",  "call", "operator", "literal",                                               0 };
-const char * const ternary_possible_nest_types[]     = { "ternary", "call", "operator", "literal",                                             0 };
+const char * const ternary_possible_nest_types[]     = { "ternary", "expr", "call", "operator", "literal",                                     0 };
 
 // tags that can have something nested in them (incomplete)
 const nest_info nesting[] = {   
