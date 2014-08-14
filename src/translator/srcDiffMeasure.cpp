@@ -180,6 +180,13 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 
   }
 
+  if(text_old_length > 0 && text_new_length > 0)
+    difference = ((double)delete_similarity) / text_old_length > ((double)insert_similarity) / text_new_length ? insert_similarity : delete_similarity;
+  else if(text_old_length > 0)
+    difference = delete_similarity;
+  else if(text_new_length)
+    difference = insert_similarity;
+
   delete_similarity = text_old_length - delete_similarity;
   insert_similarity = text_new_length - insert_similarity;
 
@@ -292,6 +299,13 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_s
 
   }
 
+  if(children_old_length > 0 && children_new_length > 0)
+    difference = ((double)delete_similarity) / children_old_length > ((double)insert_similarity) / children_new_length ? insert_similarity : delete_similarity;
+  else if(children_old_length > 0)
+    difference = delete_similarity;
+  else if(children_new_length)
+    difference = insert_similarity;
+
   delete_similarity = children_old_length - delete_similarity;
   insert_similarity = children_new_length - insert_similarity;
 
@@ -338,14 +352,38 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
   compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
-  unsigned int similarity = 0;
+
+  int difference = 0;
+  int delete_similarity = 0;
+  int insert_similarity = 0;
   for(; edits; edits = edits->next) {
 
-      similarity += edits->length;
+    difference += edits->length;
+
+    switch(edits->operation) {
+
+      case SESDELETE :
+
+        delete_similarity += edits->length;
+        break;
+
+      case SESINSERT :
+
+        insert_similarity += edits->length;
+        break;
+
+      }
 
   }
 
-  return similarity;
+  if(text_old_length > 0 && text_new_length > 0)
+    difference = ((double)delete_similarity) / text_old_length > ((double)insert_similarity) / text_new_length ? insert_similarity : delete_similarity;
+  else if(text_old_length > 0)
+    difference = delete_similarity;
+  else if(text_new_length)
+    difference = insert_similarity;
+
+  return difference;
 
 }
 
