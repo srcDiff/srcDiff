@@ -140,6 +140,23 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
   return 0;
 }
 
+int string_compare(const void * s1, const void * s2, const void * context) {
+
+  std::string & string1 = *(std::string *)s1;
+  std::string & string2 = *(std::string *)s2;
+
+  return strcmp(string1.c_str(), string2.c_str());
+
+}
+
+std::string * string_index(int idx, const void * s, const void * context) {
+
+  std::vector<std::string> & string_list = *(std::vector<std::string> *)s;
+
+  return &string_list[idx];
+
+}
+
 const char * find_attribute(const xNodePtr node, const char * attr_name) {
 
   xAttr * attr = node->properties;
