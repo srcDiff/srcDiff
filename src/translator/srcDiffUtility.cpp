@@ -2,6 +2,8 @@
 #include <srcDiffDiff.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffNested.hpp>
+#include <ShortestEditScript.hpp>
+
 #include <string.h>
 #include <vector>
 #include <string>
@@ -149,7 +151,7 @@ int string_compare(const void * s1, const void * s2, const void * context) {
 
 }
 
-std::string * string_index(int idx, const void * s, const void * context) {
+const void * string_index(int idx, const void * s, const void * context) {
 
   std::vector<std::string> & string_list = *(std::vector<std::string> *)s;
 
@@ -366,6 +368,45 @@ std::vector<std::string> get_call_name(std::vector<xNodePtr> & nodes, int start_
   }
 
   return name_list;
+
+}
+
+int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std::string> name_list_new) {
+
+  ShortestEditScript ses(string_compare, string_index, 0);
+
+  ses.compute(&name_list_old, name_list_old.size(), &name_list_new, name_list_new.size());
+
+  edit * edits = ses.get_script();
+
+  int similarity = 0;
+
+  int delete_similarity = 0;
+  int insert_similarity = 0;
+  for(; edits; edits = edits->next) {
+
+    switch(edits->operation) {
+
+      case SESDELETE :
+
+        delete_similarity += edits->length;
+        break;
+
+      case SESINSERT :
+
+        insert_similarity += edits->length;
+        break;
+
+      }
+
+  }
+
+  delete_similarity = name_list_old.size() - delete_similarity;
+  insert_similarity = name_list_new.size() - insert_similarity;
+
+  similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+
+  return similarity;
 
 }
 
