@@ -406,6 +406,9 @@ int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std
 
   similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
+  if(similarity < 0)
+    similarity = 0;
+
   return similarity;
 
 }
@@ -908,17 +911,17 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
       || strcmp((const char *)nodes_new.at(new_pos)->name, "call") != 0)
       ++new_pos;
 
-    std::vector<std::string> old_name = get_call_name(nodes_old, old_pos);
-    std::vector<std::string> new_name = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
+    std::vector<std::string> new_names = get_call_name(nodes_new, new_pos);
 
-    //if(old_name == new_name) return false;
+    if(name_list_similarity(old_names, new_names)) return false;
 
   } else if(old_tag == "call") {
 
-    std::vector<std::string> old_name = get_call_name(nodes_old, old_pos);
-    std::vector<std::string> new_name = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
+    std::vector<std::string> new_names = get_call_name(nodes_new, new_pos);
 
-    //if(old_name == new_name) return false;
+    if(name_list_similarity(old_names, new_names)) return false;
 
   } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "param") {
 
