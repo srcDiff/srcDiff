@@ -301,10 +301,10 @@ void skip_specifiers(std::vector<xNodePtr> & nodes, int & start_pos) {
 
 }
 
-std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
+std::vector<std::string> get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return "";
-  if(nodes.at(start_pos)->extra & 0x1) return "";
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return std::vector<std::string>();
+  if(nodes.at(start_pos)->extra & 0x1) return std::vector<std::string>();
 
   int name_start_pos = start_pos + 1;
 
@@ -312,9 +312,43 @@ std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
    || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0 && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0))
     ++name_start_pos;
 
-  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return "";
+  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return std::vector<std::string>();
 
-  return get_name(nodes, name_start_pos);
+  std::vector<std::string> name_list;
+
+  int open_name_count = nodes.at(name_start_pos)->extra & 0x1 ? 0 : 1;
+  int name_pos = name_start_pos + 1;
+  std::string name = "";
+
+  while(open_name_count) {
+
+    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_pos)->name, "argument_list") == 0) return name_list;
+
+    if(strcmp((const char *)nodes.at(name_pos)->name, "name") == 0) {
+
+      if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(name_pos)->extra & 0x1) == 0) {
+
+        ++open_name_count;
+        name = "";
+
+      } else if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+
+        --open_name_count;
+        if(name != "")
+          name_list.push_back(name);
+        name = "";
+
+    } else if(is_text(nodes.at(name_pos)) && !is_white_space(nodes.at(name_pos))) {
+
+      name += (const char *)nodes.at(name_pos)->content;
+
+    }
+
+    ++name_pos;
+
+  }
+
+  return name_list;
 
 }
 
@@ -816,17 +850,17 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
       || strcmp((const char *)nodes_new.at(new_pos)->name, "call") != 0)
       ++new_pos;
 
-    std::string old_name = get_call_name(nodes_old, old_pos);
-    std::string new_name = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_name = get_call_name(nodes_old, old_pos);
+    std::vector<std::string> new_name = get_call_name(nodes_new, new_pos);
 
-    if(old_name == new_name) return false;
+    //if(old_name == new_name) return false;
 
   } else if(old_tag == "call") {
 
-    std::string old_name = get_call_name(nodes_old, old_pos);
-    std::string new_name = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_name = get_call_name(nodes_old, old_pos);
+    std::vector<std::string> new_name = get_call_name(nodes_new, new_pos);
 
-    if(old_name == new_name) return false;
+    //if(old_name == new_name) return false;
 
   } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "param") {
 
