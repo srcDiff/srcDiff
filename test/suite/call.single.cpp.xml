@@ -17,4 +17,7 @@
 <unit filename="call.single|call.single">
 <expr_stmt><diff:insert><expr><call><name>a</name><argument_list>(<argument><diff:common><expr><call><name>b</name><argument_list>()</argument_list></call></expr></diff:common></argument>)</argument_list></call></expr></diff:insert>;</expr_stmt></unit>
 
+<unit filename="call.single|call.single">
+<expr_stmt><expr><diff:delete><call><name><name>m_d</name><operator>-&gt;</operator><name>zoomManager</name><operator>-&gt;</operator><name>zoomController</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator></diff:delete><call><diff:insert><name><name>m_d</name><operator>-&gt;</operator><name>viewConverter</name><operator>-&gt;</operator><diff:common><name>setZoomMode</name></diff:common></name></diff:insert><argument_list>(<argument><expr><name><name>KoZoomMode</name><operator>::</operator><name>ZOOM_PAGE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt></unit>
+
 </unit>

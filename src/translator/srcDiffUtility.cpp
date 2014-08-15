@@ -2,6 +2,8 @@
 #include <srcDiffDiff.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffNested.hpp>
+#include <ShortestEditScript.hpp>
+
 #include <string.h>
 #include <vector>
 #include <string>
@@ -138,6 +140,23 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
   }
 
   return 0;
+}
+
+int string_compare(const void * s1, const void * s2, const void * context) {
+
+  std::string & string1 = *(std::string *)s1;
+  std::string & string2 = *(std::string *)s2;
+
+  return strcmp(string1.c_str(), string2.c_str());
+
+}
+
+const void * string_index(int idx, const void * s, const void * context) {
+
+  std::vector<std::string> & string_list = *(std::vector<std::string> *)s;
+
+  return &string_list[idx];
+
 }
 
 const char * find_attribute(const xNodePtr node, const char * attr_name) {
@@ -301,10 +320,10 @@ void skip_specifiers(std::vector<xNodePtr> & nodes, int & start_pos) {
 
 }
 
-std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
+std::vector<std::string> get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return "";
-  if(nodes.at(start_pos)->extra & 0x1) return "";
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return std::vector<std::string>();
+  if(nodes.at(start_pos)->extra & 0x1) return std::vector<std::string>();
 
   int name_start_pos = start_pos + 1;
 
@@ -312,9 +331,85 @@ std::string get_call_name(std::vector<xNodePtr> & nodes, int start_pos) {
    || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0 && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0))
     ++name_start_pos;
 
-  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return "";
+  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return std::vector<std::string>();
 
-  return get_name(nodes, name_start_pos);
+  std::vector<std::string> name_list;
+
+  int open_name_count = nodes.at(name_start_pos)->extra & 0x1 ? 0 : 1;
+  int name_pos = name_start_pos + 1;
+  std::string name = "";
+
+  while(open_name_count) {
+
+    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_pos)->name, "argument_list") == 0) return name_list;
+
+    if(strcmp((const char *)nodes.at(name_pos)->name, "name") == 0) {
+
+      if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(name_pos)->extra & 0x1) == 0) {
+
+        ++open_name_count;
+        name = "";
+
+      } else if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+
+        --open_name_count;
+        if(name != "")
+          name_list.push_back(name);
+        name = "";
+
+    } else if(is_text(nodes.at(name_pos)) && !is_white_space(nodes.at(name_pos))) {
+
+      name += (const char *)nodes.at(name_pos)->content;
+
+    }
+
+    ++name_pos;
+
+  }
+
+  return name_list;
+
+}
+
+int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std::string> name_list_new) {
+
+  ShortestEditScript ses(string_compare, string_index, 0);
+
+  ses.compute(&name_list_old, name_list_old.size(), &name_list_new, name_list_new.size());
+
+  edit * edits = ses.get_script();
+
+  int similarity = 0;
+
+  int delete_similarity = 0;
+  int insert_similarity = 0;
+  for(; edits; edits = edits->next) {
+
+    switch(edits->operation) {
+
+      case SESDELETE :
+
+        delete_similarity += edits->length;
+        break;
+
+      case SESINSERT :
+
+        insert_similarity += edits->length;
+        break;
+
+      }
+
+  }
+
+  delete_similarity = name_list_old.size() - delete_similarity;
+  insert_similarity = name_list_new.size() - insert_similarity;
+
+  similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+
+  if(similarity < 0)
+    similarity = 0;
+
+  return similarity;
 
 }
 
@@ -764,7 +859,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
       return false;
 
-    } else {
+    } else if(similarity) {
 
       bool is_reject = true;
 
@@ -816,17 +911,17 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
       || strcmp((const char *)nodes_new.at(new_pos)->name, "call") != 0)
       ++new_pos;
 
-    std::string old_name = get_call_name(nodes_old, old_pos);
-    std::string new_name = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
+    std::vector<std::string> new_names = get_call_name(nodes_new, new_pos);
 
-    if(old_name == new_name) return false;
+    if(name_list_similarity(old_names, new_names)) return false;
 
   } else if(old_tag == "call") {
 
-    std::string old_name = get_call_name(nodes_old, old_pos);
-    std::string new_name = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
+    std::vector<std::string> new_names = get_call_name(nodes_new, new_pos);
 
-    if(old_name == new_name) return false;
+    if(name_list_similarity(old_names, new_names)) return false;
 
   } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "param") {
 
