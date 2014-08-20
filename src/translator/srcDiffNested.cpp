@@ -65,7 +65,7 @@ const char * const function_possible_nest_types[]    = {                        
 const char * const class_possible_nest_types[]       = {                                                                                                    0 };
 const char * const struct_possible_nest_types[]      = {                                                                                                    0 };
 const char * const union_possible_nest_types[]       = {                                                                                                    0 };
-const char * const call_possible_nest_types[]        = { "expr", "call", "operator", "literal",                                                             0 };
+const char * const call_possible_nest_types[]        = { "expr", "call", "operator", "literal", "name",                                                     0 };
 const char * const ternary_possible_nest_types[]     = { "ternary", "call", "operator", "literal",                                                          0 };
 const char * const condition_possible_nest_types[]   = { "expr", "call", "operator", "literal",                                                             0 };
 const char * const name_possible_nest_types[]        = { "name",                                                                                            0 };
@@ -340,14 +340,14 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
 
 }
 
-bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
-                    std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new,
+bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old, int start_pos_old,
+                    std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
-    if(is_better_nest(nodes_old, node_set_old, nodes_new, node_set_new, similarity, difference, text_old_length, text_new_length))
+    if(is_better_nest(nodes_old, node_sets_old->at(start_pos_old), nodes_new, node_sets_new->at(start_pos_new), similarity, difference, text_old_length, text_new_length))
       return true;
 
-    if(is_better_nest(nodes_new, node_set_new, nodes_old, node_set_old, similarity, difference, text_old_length, text_new_length))
+    if(is_better_nest(nodes_new, node_sets_new->at(start_pos_new), nodes_old, node_sets_old->at(start_pos_old), similarity, difference, text_old_length, text_new_length))
       return true;
 
     return false;

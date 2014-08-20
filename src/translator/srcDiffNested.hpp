@@ -39,8 +39,8 @@ int is_block_type(NodeSet * structure, std::vector<xNodePtr> & nodes);
 
 bool is_nest_type(NodeSet * structure, std::vector<xNodePtr> & nodes, int type_index);
 
-bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
-                    std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new,
+bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old, int start_pos_old,
+                    std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length);
 
 #endif
