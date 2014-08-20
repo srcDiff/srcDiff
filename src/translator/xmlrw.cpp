@@ -157,6 +157,8 @@ xNode * createInternalNode(xmlNode & node, bool is_archive) {
   xnode->extra = node.extra;
   xnode->is_empty = node.extra;
 
+  xnode->parent = 0;
+
   xnode->free = false;
   xnode->move = 0;
   xnode->nest = 0;
@@ -200,6 +202,9 @@ void freeXNode(xNode * node) {
 
   if(node->content)
     free((void *)node->content);
+
+  if(node->parent)
+    free((void *)node->parent);
 
   delete node;
 
@@ -283,6 +288,11 @@ xNode * copyXNode(xNodePtr node) {
   xnode->extra = node->extra;
   xnode->is_empty = node->extra;
 
+  if(node->parent)
+    xnode->parent = strdup(node->parent);
+  else
+    xnode->parent = 0;
+
   xnode->free = true;
   xnode->move = 0;
   xnode->nest = 0;
@@ -360,6 +370,7 @@ xNode * split_text(const char * characters_start, const char * characters_end) {
   text->ns = 0;
   text->properties = 0;
   text->is_empty = true;
+  text->parent = 0;
   text->free = true;
   text->move = 0;
   text->nest = 0;

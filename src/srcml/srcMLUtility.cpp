@@ -137,6 +137,7 @@ bool is_separate_token(const char character) {
 void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE options, int context, pthread_mutex_t * mutex) {
 
   std::vector<std::string> element_stack;
+  element_stack.push_back("unit");
 
   int not_done = 1;
   while(not_done) {
@@ -214,7 +215,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
       pthread_mutex_unlock(mutex);
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
-        node->parent = element_stack.back();
+        node->parent = strdup(element_stack.back().c_str());
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (node->extra & 0x1) == 0)
         element_stack.push_back(node->name);
