@@ -65,7 +65,7 @@ const char * const function_possible_nest_types[]    = {                        
 const char * const class_possible_nest_types[]       = {                                                                                                    0 };
 const char * const struct_possible_nest_types[]      = {                                                                                                    0 };
 const char * const union_possible_nest_types[]       = {                                                                                                    0 };
-const char * const call_possible_nest_types[]        = { "expr", "call", "operator", "literal",/* "name",     */                                                0 };
+const char * const call_possible_nest_types[]        = { "expr", "call", "operator", "literal", "name",                                                     0 };
 const char * const ternary_possible_nest_types[]     = { "ternary", "call", "operator", "literal",                                                          0 };
 const char * const condition_possible_nest_types[]   = { "expr", "call", "operator", "literal",                                                             0 };
 const char * const name_possible_nest_types[]        = { "name",                                                                                            0 };
@@ -369,7 +369,7 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
   if(old_tag == "then" || old_tag == "block" || old_tag == "comment"
     || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier"
-    || old_tag == "expr") {
+    || old_tag == "expr" || old_tag == "name") {
 
     int syntax_similarity, syntax_difference, children_length_old, children_length_new;
     compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
@@ -445,6 +445,10 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
           continue;
 
+        if(strcmp(nodes_new.at(node_sets_new->at(j)->at(0))->name, "name") == 0
+          && nodes_new.at(node_sets_new->at(j)->at(0))->parent == "expr" && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+          continue;
+
         valid_nests_old.push_back(j);
 
         start_nest_old = i;
@@ -469,6 +473,10 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
           if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
             nodes_old, node_set.at(match), nodes_new, node_sets_new->at(k)))
+            continue;
+
+          if(strcmp(nodes_new.at(node_sets_new->at(k)->at(0))->name, "name") == 0
+            && nodes_new.at(node_sets_new->at(k)->at(0))->parent == "expr" && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
             continue;
 
           valid_nests_old.push_back(k);
@@ -510,6 +518,10 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           nodes_old, node_sets_old->at(j), nodes_new, node_set.at(match)))
           continue;
 
+        if(strcmp(nodes_old.at(node_sets_old->at(j)->at(0))->name, "name") == 0
+          && nodes_old.at(node_sets_new->at(j)->at(0))->parent == "expr" && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+          continue;
+
         valid_nests_new.push_back(j);
 
         start_nest_new = i;
@@ -534,6 +546,10 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
             if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
               nodes_old, node_sets_old->at(k), nodes_new, node_set.at(match)))
+              continue;
+
+            if(strcmp(nodes_old.at(node_sets_old->at(k)->at(0))->name, "name") == 0 
+              && nodes_old.at(node_sets_old->at(k)->at(0))->parent == "expr" && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
               continue;
 
           valid_nests_new.push_back(k);

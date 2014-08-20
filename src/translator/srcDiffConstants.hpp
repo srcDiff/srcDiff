@@ -11,6 +11,6 @@ const char * const change = "change";
 const char * const whitespace = "whitespace";
 
 // special flush node
-const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, true, false };
+const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, std::string(), true, false, 0, 0 };
 
 #endif

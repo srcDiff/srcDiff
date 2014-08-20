@@ -58,6 +58,7 @@ struct xNode {
   const char * content;
   xAttr * properties;
   unsigned short extra;
+  std::string parent;
 
   bool is_empty;
   bool free;
