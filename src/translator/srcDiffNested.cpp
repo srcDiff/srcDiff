@@ -446,7 +446,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           continue;
 
         if(strcmp(nodes_new.at(node_sets_new->at(j)->at(0))->name, "name") == 0
-          && strcmp(nodes_new.at(node_sets_new->at(j)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+          && strcmp(nodes_new.at(node_sets_new->at(j)->at(0))->parent, "expr") == 0
+          && strcmp(nodes_old.at(node_sets_old->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
           continue;
 
         valid_nests_old.push_back(j);
@@ -476,7 +477,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
             continue;
 
           if(strcmp(nodes_new.at(node_sets_new->at(k)->at(0))->name, "name") == 0
-            && strcmp(nodes_new.at(node_sets_new->at(k)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+            && strcmp(nodes_new.at(node_sets_new->at(k)->at(0))->parent, "expr") == 0
+            && strcmp(nodes_old.at(node_sets_old->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
             continue;
 
           valid_nests_old.push_back(k);
@@ -519,7 +521,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           continue;
 
         if(strcmp(nodes_old.at(node_sets_old->at(j)->at(0))->name, "name") == 0
-          && strcmp(nodes_old.at(node_sets_new->at(j)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+          && strcmp(nodes_old.at(node_sets_old->at(j)->at(0))->parent, "expr") == 0
+          && strcmp(nodes_new.at(node_sets_new->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
           continue;
 
         valid_nests_new.push_back(j);
@@ -549,7 +552,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
               continue;
 
             if(strcmp(nodes_old.at(node_sets_old->at(k)->at(0))->name, "name") == 0 
-              && strcmp(nodes_old.at(node_sets_old->at(k)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+              && strcmp(nodes_old.at(node_sets_old->at(k)->at(0))->parent, "expr") == 0
+              && strcmp(nodes_new.at(node_sets_new->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
               continue;
 
           valid_nests_new.push_back(k);
