@@ -344,11 +344,13 @@ bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_ol
                     std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
-    if(is_better_nest(nodes_old, node_sets_old->at(start_pos_old), nodes_new, node_sets_new->at(start_pos_new), similarity, difference, text_old_length, text_new_length))
-      return true;
+    for(int pos = start_pos_old; pos < node_sets_old->size(); ++pos)
+      if(is_better_nest(nodes_old, node_sets_old->at(pos), nodes_new, node_sets_new->at(start_pos_new), similarity, difference, text_old_length, text_new_length))
+        return true;
 
-    if(is_better_nest(nodes_new, node_sets_new->at(start_pos_new), nodes_old, node_sets_old->at(start_pos_old), similarity, difference, text_old_length, text_new_length))
-      return true;
+    for(int pos = start_pos_new; pos < node_sets_new->size(); ++pos)
+      if(is_better_nest(nodes_new, node_sets_new->at(pos), nodes_old, node_sets_old->at(start_pos_old), similarity, difference, text_old_length, text_new_length))
+        return true;
 
     return false;
 
