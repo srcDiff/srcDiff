@@ -31,4 +31,45 @@
 </diff:common>}</block></then></if>
 </diff:delete></unit>
 
+<unit filename="complex.multiple|complex.multiple">
+<function><type><name>bool</name></type> <name><name>AbstractRegionCommand</name><operator>::</operator><name>isApproved</name></name><parameter_list>()</parameter_list> <specifier>const</specifier>
+<block>{
+    <decl_stmt><decl><type><specifier>const</specifier> <name><name>QList</name><argument_list type="template">&lt;<argument><expr><name>Element</name> <modifier>*</modifier></expr></argument>&gt;</argument_list></name></type> <name>elements</name> <init>= <expr><call><name>cells</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>begin</name> <init>= <expr><ternary><condition><expr><name>m_reverse</name></expr> ?</condition><then> <expr><call><name><name>elements</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call> <operator>-</operator> <literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>end</name> <init>= <expr><ternary><condition><expr><name>m_reverse</name></expr> ?</condition><then> <expr><operator>-</operator><literal type="number">1</literal></expr> </then><else>: <expr><call><name><name>elements</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call></expr></else></ternary></expr></init></decl>;</decl_stmt><diff:insert>
+    <if>if <condition>(<expr><name>m_checkLock</name> <operator>&amp;&amp;</operator> <call><name><name>m_sheet</name><operator>-&gt;</operator><name>cellStorage</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>hasLockedCells</name><argument_list>(<argument><expr><operator>*</operator><name>this</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>KPassivePopup</name><operator>::</operator><name>message</name></name><argument_list>(<argument><expr><call><name>i18n</name><argument_list>(<argument><expr><literal type="string">"Processing is not possible, because some "</literal>
+                                    <literal type="string">"cells are locked as elements of a matrix."</literal></expr></argument>)</argument_list></call></expr></argument>,
+                               <argument><expr><call><name><name>QApplication</name><operator>::</operator><name>activeWindow</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+    }</block></then></if></diff:insert>
+<diff:insert>    <if>if <condition>(<expr><call><name><name>m_sheet</name><operator>-&gt;</operator><name>isProtected</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+    <diff:common>    <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><name>begin</name></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>!=</operator> <name>end</name></expr>;</condition> <incr><expr><ternary><condition><expr><name>m_reverse</name></expr> ?</condition><then> <expr><operator>--</operator><name>i</name></expr> </then><else>: <expr><operator>++</operator><name>i</name></expr></else></ternary></expr></incr>)</control> <block>{
+        <diff:insert type="whitespace">    </diff:insert><decl_stmt><decl><type><specifier>const</specifier> <name>QRect</name></type> <name>range</name> <init>= <expr><name><name>elements</name><index>[<expr><name>i</name></expr>]</index></name><operator>-&gt;</operator><call><name>rect</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <diff:insert type="whitespace">    </diff:insert><for>for <control>(<init><decl><type><name>int</name></type> <name>col</name> <init>= <expr><call><name><name>range</name><operator>.</operator><name>left</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>col</name> <operator>&lt;=</operator> <call><name><name>range</name><operator>.</operator><name>right</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>col</name></expr></incr>)</control> <block>{
+            <diff:insert type="whitespace">    </diff:insert><for>for <control>(<init><decl><type><name>int</name></type> <name>row</name> <init>= <expr><call><name><name>range</name><operator>.</operator><name>top</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>row</name> <operator>&lt;=</operator> <call><name><name>range</name><operator>.</operator><name>bottom</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>row</name></expr></incr>)</control> <block>{
+                <diff:insert type="whitespace">    </diff:insert><function_decl><type><name>Cell</name></type> <name>cell</name><parameter_list>(<param><decl><type><name>m_sheet</name></type></decl></param>, <param><decl><type><name>col</name></type></decl></param>, <param><decl><type><name>row</name></type></decl></param>)</parameter_list>;</function_decl>
+                <diff:insert type="whitespace">    </diff:insert><if>if <condition>(<expr><diff:delete><call><name><name>m_sheet</name><operator>-&gt;</operator><name>isProtected</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> </diff:delete><operator>!</operator><call><name><name>cell</name><operator>.</operator><name>style</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>notProtected</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                    <diff:insert type="whitespace">    </diff:insert><expr_stmt><expr><call><name><name>KPassivePopup</name><operator>::</operator><name>message</name></name><argument_list>(<argument><expr><call><name>i18n</name><argument_list>(<argument><expr><literal type="string">"Processing is not possible, "</literal>
+                                                <diff:insert type="whitespace">    </diff:insert><literal type="string">"because some cells are protected."</literal></expr></argument>)</argument_list></call></expr></argument>,
+                                           <diff:insert type="whitespace">    </diff:insert><argument><expr><call><name><name>QApplication</name><operator>::</operator><name>activeWindow</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <diff:insert type="whitespace">    </diff:insert><return>return <expr><literal type="boolean">false</literal></expr>;</return>
+                <diff:insert type="whitespace">    </diff:insert>}</block></then></if>
+<diff:delete>
+                <comment type="line">// check for matrix locks</comment>
+                <if>if <condition>(<expr><name>m_checkLock</name> <operator>&amp;&amp;</operator> <call><name><name>cell</name><operator>.</operator><name>isLocked</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                    <expr_stmt><expr><call><name><name>KPassivePopup</name><operator>::</operator><name>message</name></name><argument_list>(<argument><expr><call><name>i18n</name><argument_list>(<argument><expr><literal type="string">"Processing is not possible, because some "</literal>
+                                                <literal type="string">"cells are locked as elements of a matrix."</literal></expr></argument>)</argument_list></call></expr></argument>,
+                                           <argument><expr><call><name><name>QApplication</name><operator>::</operator><name>activeWindow</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+                }</block></then></if>
+</diff:delete><diff:insert type="whitespace">    </diff:insert>            }</block></for>
+        <diff:insert type="whitespace">    </diff:insert>}</block></for>
+    <diff:insert type="whitespace">    </diff:insert>}</block></for>
+</diff:common>    }</block></then></if>
+</diff:insert>    <return>return <expr><literal type="boolean">true</literal></expr>;</return>
+}</block></function>
+</unit>
+
 </unit>
