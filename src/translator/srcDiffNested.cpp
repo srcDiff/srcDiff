@@ -329,8 +329,13 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
         compute_measures(nodes_outer, node_set.at(match), nodes_inner, node_set_inner,
           nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
 
-        if(nest_similarity >= similarity && nest_difference <= difference)
-         return true;
+        double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
+        double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
+
+        if((nest_similarity >= similarity && nest_difference <= difference)
+          || (nest_min_size / nest_similarity) > (min_size / similarity)
+          || (nest_min_size / nest_difference) < (min_size / difference))
+          return true;
     
       }
 
@@ -443,7 +448,9 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
           nodes_old, node_set.at(match), nodes_new, node_sets_new->at(j))
           || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length)
-          || (i + 1 < end_old && is_better_nest(nodes_old, node_sets_old->at(i + 1), nodes_new, node_sets_new->at(j), similarity, difference, text_old_length, text_new_length)))
+          || (i + 1 < end_old && is_better_nest(nodes_old, node_sets_old->at(i + 1), nodes_new, node_sets_new->at(j), similarity, difference, text_old_length, text_new_length))
+          || (j + 1 < end_new && is_better_nest(nodes_new, node_sets_new->at(j + 1), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
+          )
           continue;
 
         if(strcmp(nodes_new.at(node_sets_new->at(j)->at(0))->name, "name") == 0
