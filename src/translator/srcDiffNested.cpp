@@ -333,7 +333,6 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
         double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
 
         if((nest_similarity >= similarity && nest_difference <= difference)
-//          || nest_similarity >= 0.95 * similarity && nest_difference <= difference && nest_min_size / nest_similarity <= min_size / similarity)
          || ((nest_min_size / nest_similarity) < (min_size / similarity))
          || ((nest_min_size / nest_difference) > (min_size / difference)))
           return true;
