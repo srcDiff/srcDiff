@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="catch">
+
+<unit filename="catch|catch"><diff:delete><catch>catch <block>{ }</block></catch></diff:delete>
+</unit>
+
+<unit filename="catch|catch"><diff:delete><catch>catch <block>{ <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common> }</block></catch></diff:delete>
+</unit>
+
+<unit filename="catch|catch"><diff:delete><catch>catch <block>{ <diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:common> }</block></catch></diff:delete>
+</unit>
+
+</unit>
