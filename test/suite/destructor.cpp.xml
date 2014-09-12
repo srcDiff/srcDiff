@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="destructor.multiple">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="destructor">
 
-<unit filename="destructor.multiple|destructor.multiple">
+<unit filename="destructor|destructor">
 <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <block><diff:delete type="change">{}</diff:delete><diff:insert type="change">{
 
     <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>

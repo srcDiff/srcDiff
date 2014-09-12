@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="case">
+
+<unit filename="case|case">
+<diff:delete><case>case</case></diff:delete></unit>
+
+<unit filename="case|case">
+<diff:delete><case>case:</case></diff:delete></unit>
+
+<unit filename="case|case">
+<diff:delete><case>case :</case></diff:delete></unit>
+
+<unit filename="case|case">
+<diff:delete><case>case <expr><name>bar</name></expr>:</case></diff:delete></unit>
+
+<unit filename="case|case">
+<diff:delete type="change"><case>case:</case></diff:delete><diff:insert type="change"><case>case <expr><name>bar</name></expr>: <break>break;</break></case></diff:insert></unit>
+
+<unit filename="case|case">
+<diff:delete type="change"><case>case <expr><name>foo</name></expr>:</case></diff:delete><diff:insert type="change"><case>case <expr><name>bar</name></expr>: 
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        <break>break;</break></case></diff:insert></unit>
+
+<unit filename="case|case">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<diff:delete>        <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete>
+
+    <break>break;</break>
+
+
+</case>}</block></switch></unit>
+
+<unit filename="case|case">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+<diff:delete>    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+
+    <break>break;</break>
+
+
+</case></diff:delete>}</block></switch></unit>
+
+<unit filename="case|case">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+<diff:delete>    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+
+    <break>break;</break>
+
+    </case><case>case <expr><name>foobar</name></expr>:
+
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+
+    <break>break;</break>
+
+</case></diff:delete>}</block></switch></unit>
+
+<unit filename="case|case">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete type="change">        <expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+
+    <break>break;</break>
+
+    </case><case>case <expr><name>foobar</name></expr>:
+
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+<diff:delete type="change">        <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
+
+    <break>break;</break>
+
+</case>}</block></switch></unit>
+
+<unit filename="case|case">
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+
+    <case>case <expr><name>bar</name></expr>:
+
+        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<diff:delete>        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
+<diff:delete type="whitespace">
+</diff:delete>    <break>break;</break>
+
+    </case><case>case <expr><name>foobar</name></expr>:
+
+        <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
+<diff:delete>        <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>l</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>m</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>n</name></expr>;</expr_stmt></diff:delete>
+<diff:delete type="whitespace">
+</diff:delete>    <break>break;</break>
+
+</case>}</block></switch></unit>
+
+</unit>

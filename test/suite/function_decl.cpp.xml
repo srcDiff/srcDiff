@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="function_decl.multiple">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="function_decl">
 
-<unit filename="function_decl.multiple|function_decl.multiple">
+<unit filename="function_decl|function_decl"><diff:delete><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></diff:delete></unit>
+
+<unit filename="function_decl|function_decl"><diff:delete>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></diff:delete></unit>
+
+<unit filename="function_decl|function_decl">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<diff:delete type="change"><param><decl><type><name>int</name></type> <name>a</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>d</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>b</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>e</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>c</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>f</name></decl></param></diff:insert>)</parameter_list>;</function_decl>
 </unit>
 
-<unit filename="function_decl.multiple|function_decl.multiple">
+<unit filename="function_decl|function_decl">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<diff:delete type="change"><param><decl><type><name>int</name></type> <name>a</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>d</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>b</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>e</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>c</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>f</name></decl></param></diff:insert>)</parameter_list>;</function_decl>
 </unit>
 

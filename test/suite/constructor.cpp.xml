@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="constructor.multiple">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="constructor">
 
-<unit filename="constructor.multiple|constructor.multiple">
+<unit filename="constructor|constructor"><diff:delete><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></diff:delete></unit>
+
+<unit filename="constructor|constructor"><diff:delete>
+<constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+</diff:delete></unit>
+
+<unit filename="constructor|constructor">
 <constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<diff:delete type="change"><param><decl><type><name>int</name></type> <name>a</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>d</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>b</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>e</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>c</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>f</name></decl></param></diff:insert>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
-<unit filename="constructor.multiple|constructor.multiple">
+<unit filename="constructor|constructor">
 <constructor><specifier>static</specifier> <specifier>const</specifier> <name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<diff:delete type="change"><param><decl><type><name>int</name></type> <name>a</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>d</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>b</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>e</name></decl></param></diff:insert>, <diff:delete type="change"><param><decl><type><name>int</name></type> <name>c</name></decl></param></diff:delete><diff:insert type="change"><param><decl><type><name>double</name></type> <name>f</name></decl></param></diff:insert>)</parameter_list> <block>{}</block></constructor>
 </unit>
 

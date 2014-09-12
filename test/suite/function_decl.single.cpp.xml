@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="function_decl.single">
-
-<unit filename="function_decl.single|function_decl.single"><diff:delete><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></diff:delete></unit>
-
-<unit filename="function_decl.single|function_decl.single"><diff:delete>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></diff:delete></unit>
-
-</unit>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="switch.single">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="switch">
 
-<unit filename="switch.single|switch.single">
+<unit filename="switch|switch">
 <diff:delete><switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{}</block></switch></diff:delete></unit>
 
-<unit filename="switch.single|switch.single">
+<unit filename="switch|switch">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
     <case>case <expr><name>bar</name></expr>:
@@ -18,7 +18,7 @@
 
 </case>}</block></switch></unit>
 
-<unit filename="switch.single|switch.single">
+<unit filename="switch|switch">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
 <diff:delete>    <case>case <expr><name>bar</name></expr>:

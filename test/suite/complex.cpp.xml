@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="complex.multiple">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="complex">
 
-<unit filename="complex.multiple|complex.multiple">
+<unit filename="complex|complex">
 <diff:delete><if>if <condition>(<expr><call><name><name>shape</name><operator>-&gt;</operator><name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
     <diff:common><decl_stmt><decl><type><name>QString</name></type> <name>anchorType</name><diff:delete> <init>= <expr><call><name><name>shape</name><operator>-&gt;</operator><name>additionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
 </diff:common><diff:insert><if>if <condition>(<expr><call><name><name>shape</name><operator>-&gt;</operator><name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr>)</condition><then>
@@ -31,7 +31,7 @@
 </diff:common>}</block></then></if>
 </diff:delete></unit>
 
-<unit filename="complex.multiple|complex.multiple">
+<unit filename="complex|complex">
 <function><type><name>bool</name></type> <name><name>AbstractRegionCommand</name><operator>::</operator><name>isApproved</name></name><parameter_list>()</parameter_list> <specifier>const</specifier>
 <block>{
     <decl_stmt><decl><type><specifier>const</specifier> <name><name>QList</name><argument_list type="template">&lt;<argument><expr><name>Element</name> <modifier>*</modifier></expr></argument>&gt;</argument_list></name></type> <name>elements</name> <init>= <expr><call><name>cells</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
