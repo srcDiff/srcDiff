@@ -1,0 +1,18 @@
+* {
+
+	font-weight: bold;
+	font-family: menlo, courier;
+
+}
+
+insert {
+
+	color: blue;
+
+}
+
+delete {
+
+	color: red;
+
+}
