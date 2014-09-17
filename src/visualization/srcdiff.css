@@ -1,4 +1,5 @@
 @namespace cpp url(http://www.sdml.info/srcML/cpp);
+@namespace diff url(http://www.sdml.info/srcDiff);
 
 * {
 
@@ -7,19 +8,19 @@
 
 }
 
-insert {
+diff|insert {
 
 	color: blue;
 
 }
 
-delete {
+diff|delete {
 
 	color: red;
 
 }
 
-common {
+diff|common {
 
 	color: black;
 
@@ -45,7 +46,6 @@ alignas::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<alignas>";
 
 }
@@ -54,7 +54,6 @@ alignas::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</alignas>";
 
 }
@@ -63,7 +62,6 @@ alignof::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<alignof>";
 
 }
@@ -72,7 +70,6 @@ alignof::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</alignof>";
 
 }
@@ -81,7 +78,6 @@ annotation::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<annotation>";
 
 }
@@ -90,7 +86,6 @@ annotation::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</annotation>";
 
 }
@@ -99,7 +94,6 @@ argument::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<argument>";
 
 }
@@ -108,7 +102,6 @@ argument::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</argument>";
 
 }
@@ -117,7 +110,6 @@ argument_list::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<argument_list>";
 
 }
@@ -126,7 +118,6 @@ argument_list::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</argument_list>";
 
 }
@@ -135,7 +126,6 @@ asm::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<asm>";
 
 }
@@ -144,7 +134,6 @@ asm::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</asm>";
 
 }
@@ -153,7 +142,6 @@ assert::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<assert>";
 
 }
@@ -162,7 +150,6 @@ assert::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</assert>";
 
 }
@@ -171,7 +158,6 @@ association::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<association>";
 
 }
@@ -180,7 +166,6 @@ association::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</association>";
 
 }
@@ -189,7 +174,6 @@ association_list::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<association_list>";
 
 }
@@ -198,7 +182,6 @@ association_list::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</association_list>";
 
 }
@@ -207,7 +190,6 @@ atomic::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<atomic>";
 
 }
@@ -216,7 +198,6 @@ atomic::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</atomic>";
 
 }
@@ -225,7 +206,6 @@ attribute::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<attribute>";
 
 }
@@ -234,7 +214,6 @@ attribute::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</attribute>";
 
 }
@@ -243,7 +222,6 @@ attribute_list::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<attribute_list>";
 
 }
@@ -252,7 +230,6 @@ attribute_list::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</attribute_list>";
 
 }
@@ -261,7 +238,6 @@ autoreleasepool::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<autoreleasepool>";
 
 }
@@ -270,7 +246,6 @@ autoreleasepool::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</autoreleasepool>";
 
 }
@@ -279,7 +254,6 @@ block::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<block>";
 
 }
@@ -288,7 +262,6 @@ block::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</block>";
 
 }
@@ -297,7 +270,6 @@ break::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<break>";
 
 }
@@ -306,7 +278,6 @@ break::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</break>";
 
 }
@@ -315,7 +286,6 @@ by::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<by>";
 
 }
@@ -324,7 +294,6 @@ by::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</by>";
 
 }
@@ -333,7 +302,6 @@ call::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<call>";
 
 }
@@ -342,7 +310,6 @@ call::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</call>";
 
 }
@@ -351,7 +318,6 @@ capture::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<capture>";
 
 }
@@ -360,7 +326,6 @@ capture::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</capture>";
 
 }
@@ -369,7 +334,6 @@ case::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<case>";
 
 }
@@ -378,7 +342,6 @@ case::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</case>";
 
 }
@@ -387,7 +350,6 @@ cast::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cast>";
 
 }
@@ -396,7 +358,6 @@ cast::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cast>";
 
 }
@@ -405,7 +366,6 @@ catch::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<catch>";
 
 }
@@ -414,7 +374,6 @@ catch::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</catch>";
 
 }
@@ -423,7 +382,6 @@ category::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<category>";
 
 }
@@ -432,7 +390,6 @@ category::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</category>";
 
 }
@@ -441,7 +398,6 @@ checked::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<checked>";
 
 }
@@ -450,7 +406,6 @@ checked::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</checked>";
 
 }
@@ -459,7 +414,6 @@ class::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<class>";
 
 }
@@ -468,7 +422,6 @@ class::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</class>";
 
 }
@@ -477,7 +430,6 @@ class_decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<class_decl>";
 
 }
@@ -486,7 +438,6 @@ class_decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</class_decl>";
 
 }
@@ -495,7 +446,6 @@ compatibility_alias::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<compatibility_alias>";
 
 }
@@ -504,7 +454,6 @@ compatibility_alias::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</compatibility_alias>";
 
 }
@@ -513,7 +462,6 @@ condition::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<condition>";
 
 }
@@ -522,7 +470,6 @@ condition::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</condition>";
 
 }
@@ -531,7 +478,6 @@ constructor::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<constructor>";
 
 }
@@ -540,7 +486,6 @@ constructor::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</constructor>";
 
 }
@@ -549,7 +494,6 @@ constructor_decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<constructor_decl>";
 
 }
@@ -558,7 +502,6 @@ constructor_decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</constructor_decl>";
 
 }
@@ -567,7 +510,6 @@ continue::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<continue>";
 
 }
@@ -576,7 +518,6 @@ continue::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</continue>";
 
 }
@@ -585,7 +526,6 @@ control::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<control>";
 
 }
@@ -594,7 +534,6 @@ control::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</control>";
 
 }
@@ -603,7 +542,6 @@ decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<decl>";
 
 }
@@ -612,7 +550,6 @@ decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</decl>";
 
 }
@@ -621,7 +558,6 @@ decl_stmt::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<decl_stmt>";
 
 }
@@ -630,7 +566,6 @@ decl_stmt::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</decl_stmt>";
 
 }
@@ -639,7 +574,6 @@ decltype::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<decltype>";
 
 }
@@ -648,7 +582,6 @@ decltype::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</decltype>";
 
 }
@@ -657,7 +590,6 @@ default::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<default>";
 
 }
@@ -666,7 +598,6 @@ default::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</default>";
 
 }
@@ -675,7 +606,6 @@ delegate::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<delegate>";
 
 }
@@ -684,7 +614,6 @@ delegate::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</delegate>";
 
 }
@@ -693,7 +622,6 @@ destructor::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<destructor>";
 
 }
@@ -702,7 +630,6 @@ destructor::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</destructor>";
 
 }
@@ -711,7 +638,6 @@ destructor_decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<destructor_decl>";
 
 }
@@ -720,7 +646,6 @@ destructor_decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</destructor_decl>";
 
 }
@@ -729,7 +654,6 @@ do::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<do>";
 
 }
@@ -738,7 +662,6 @@ do::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</do>";
 
 }
@@ -747,7 +670,6 @@ dynamic::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<dynamic>";
 
 }
@@ -756,7 +678,6 @@ dynamic::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</dynamic>";
 
 }
@@ -765,7 +686,6 @@ else::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<else>";
 
 }
@@ -774,7 +694,6 @@ else::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</else>";
 
 }
@@ -783,7 +702,6 @@ elseif::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<elseif>";
 
 }
@@ -792,7 +710,6 @@ elseif::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</elseif>";
 
 }
@@ -801,7 +718,6 @@ emit::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<emit>";
 
 }
@@ -810,7 +726,6 @@ emit::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</emit>";
 
 }
@@ -819,7 +734,6 @@ empty_stmt::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<empty_stmt>";
 
 }
@@ -828,7 +742,6 @@ empty_stmt::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</empty_stmt>";
 
 }
@@ -837,7 +750,6 @@ encode::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<encode>";
 
 }
@@ -846,7 +758,6 @@ encode::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</encode>";
 
 }
@@ -855,7 +766,6 @@ enum::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<enum>";
 
 }
@@ -864,7 +774,6 @@ enum::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</enum>";
 
 }
@@ -873,7 +782,6 @@ equals::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<equals>";
 
 }
@@ -882,7 +790,6 @@ equals::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</equals>";
 
 }
@@ -891,7 +798,6 @@ event::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<event>";
 
 }
@@ -900,7 +806,6 @@ event::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</event>";
 
 }
@@ -909,7 +814,6 @@ expr::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<expr>";
 
 }
@@ -918,7 +822,6 @@ expr::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</expr>";
 
 }
@@ -927,7 +830,6 @@ expr_stmt::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<expr_stmt>";
 
 }
@@ -936,7 +838,6 @@ expr_stmt::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</expr_stmt>";
 
 }
@@ -945,7 +846,6 @@ extends::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<extends>";
 
 }
@@ -954,7 +854,6 @@ extends::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</extends>";
 
 }
@@ -963,7 +862,6 @@ extern::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<extern>";
 
 }
@@ -972,7 +870,6 @@ extern::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</extern>";
 
 }
@@ -981,7 +878,6 @@ finally::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<finally>";
 
 }
@@ -990,7 +886,6 @@ finally::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</finally>";
 
 }
@@ -999,7 +894,6 @@ fixed::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<fixed>";
 
 }
@@ -1008,7 +902,6 @@ fixed::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</fixed>";
 
 }
@@ -1017,7 +910,6 @@ for::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<for>";
 
 }
@@ -1026,7 +918,6 @@ for::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</for>";
 
 }
@@ -1035,7 +926,6 @@ foreach::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<foreach>";
 
 }
@@ -1044,7 +934,6 @@ foreach::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</foreach>";
 
 }
@@ -1053,7 +942,6 @@ forever::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<forever>";
 
 }
@@ -1062,7 +950,6 @@ forever::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</forever>";
 
 }
@@ -1071,7 +958,6 @@ friend::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<friend>";
 
 }
@@ -1080,7 +966,6 @@ friend::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</friend>";
 
 }
@@ -1089,7 +974,6 @@ from::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<from>";
 
 }
@@ -1098,7 +982,6 @@ from::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</from>";
 
 }
@@ -1107,7 +990,6 @@ function::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<function>";
 
 }
@@ -1116,7 +998,6 @@ function::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</function>";
 
 }
@@ -1125,7 +1006,6 @@ function_decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<function_decl>";
 
 }
@@ -1134,7 +1014,6 @@ function_decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</function_decl>";
 
 }
@@ -1143,7 +1022,6 @@ generic_selection::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<generic_selection>";
 
 }
@@ -1152,7 +1030,6 @@ generic_selection::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</generic_selection>";
 
 }
@@ -1161,7 +1038,6 @@ goto::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<goto>";
 
 }
@@ -1170,7 +1046,6 @@ goto::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</goto>";
 
 }
@@ -1179,7 +1054,6 @@ group::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<group>";
 
 }
@@ -1188,7 +1062,6 @@ group::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</group>";
 
 }
@@ -1197,7 +1070,6 @@ if::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<if>";
 
 }
@@ -1206,7 +1078,6 @@ if::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</if>";
 
 }
@@ -1215,7 +1086,6 @@ implements::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<implements>";
 
 }
@@ -1224,7 +1094,6 @@ implements::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</implements>";
 
 }
@@ -1233,7 +1102,6 @@ import::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<import>";
 
 }
@@ -1242,7 +1110,6 @@ import::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</import>";
 
 }
@@ -1251,7 +1118,6 @@ in::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<in>";
 
 }
@@ -1260,7 +1126,6 @@ in::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</in>";
 
 }
@@ -1269,7 +1134,6 @@ incr::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<incr>";
 
 }
@@ -1278,7 +1142,6 @@ incr::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</incr>";
 
 }
@@ -1287,7 +1150,6 @@ index::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<index>";
 
 }
@@ -1296,7 +1158,6 @@ index::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</index>";
 
 }
@@ -1305,7 +1166,6 @@ init::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<init>";
 
 }
@@ -1314,7 +1174,6 @@ init::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</init>";
 
 }
@@ -1323,7 +1182,6 @@ into::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<into>";
 
 }
@@ -1332,7 +1190,6 @@ into::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</into>";
 
 }
@@ -1341,7 +1198,6 @@ join::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<join>";
 
 }
@@ -1350,7 +1206,6 @@ join::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</join>";
 
 }
@@ -1359,7 +1214,6 @@ krparam::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<krparam>";
 
 }
@@ -1368,7 +1222,6 @@ krparam::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</krparam>";
 
 }
@@ -1377,7 +1230,6 @@ krparameter_list::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<krparameter_list>";
 
 }
@@ -1386,7 +1238,6 @@ krparameter_list::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</krparameter_list>";
 
 }
@@ -1395,7 +1246,6 @@ label::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<label>";
 
 }
@@ -1404,7 +1254,6 @@ label::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</label>";
 
 }
@@ -1413,7 +1262,6 @@ lambda::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<lambda>";
 
 }
@@ -1422,7 +1270,6 @@ lambda::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</lambda>";
 
 }
@@ -1431,7 +1278,6 @@ let::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<let>";
 
 }
@@ -1440,7 +1286,6 @@ let::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</let>";
 
 }
@@ -1449,7 +1294,6 @@ linq::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<linq>";
 
 }
@@ -1458,7 +1302,6 @@ linq::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</linq>";
 
 }
@@ -1467,7 +1310,6 @@ literal::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<literal>";
 
 }
@@ -1476,7 +1318,6 @@ literal::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</literal>";
 
 }
@@ -1485,7 +1326,6 @@ lock::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<lock>";
 
 }
@@ -1494,7 +1334,6 @@ lock::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</lock>";
 
 }
@@ -1503,7 +1342,6 @@ macro::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<macro>";
 
 }
@@ -1512,7 +1350,6 @@ macro::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</macro>";
 
 }
@@ -1521,7 +1358,6 @@ marker::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<marker>";
 
 }
@@ -1530,7 +1366,6 @@ marker::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</marker>";
 
 }
@@ -1539,7 +1374,6 @@ member_list::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<member_list>";
 
 }
@@ -1548,7 +1382,6 @@ member_list::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</member_list>";
 
 }
@@ -1557,7 +1390,6 @@ message::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<message>";
 
 }
@@ -1566,7 +1398,6 @@ message::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</message>";
 
 }
@@ -1575,7 +1406,6 @@ mode::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<mode>";
 
 }
@@ -1584,7 +1414,6 @@ mode::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</mode>";
 
 }
@@ -1593,7 +1422,6 @@ modifier::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<modifier>";
 
 }
@@ -1602,7 +1430,6 @@ modifier::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</modifier>";
 
 }
@@ -1611,7 +1438,6 @@ name::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<name>";
 
 }
@@ -1620,7 +1446,6 @@ name::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</name>";
 
 }
@@ -1629,7 +1454,6 @@ namespace::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<namespace>";
 
 }
@@ -1638,7 +1462,6 @@ namespace::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</namespace>";
 
 }
@@ -1647,7 +1470,6 @@ noexcept::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<noexcept>";
 
 }
@@ -1656,7 +1478,6 @@ noexcept::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</noexcept>";
 
 }
@@ -1665,7 +1486,6 @@ on::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<on>";
 
 }
@@ -1674,7 +1494,6 @@ on::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</on>";
 
 }
@@ -1683,7 +1502,6 @@ operator::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<operator>";
 
 }
@@ -1692,7 +1510,6 @@ operator::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</operator>";
 
 }
@@ -1701,7 +1518,6 @@ optional::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<optional>";
 
 }
@@ -1710,7 +1526,6 @@ optional::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</optional>";
 
 }
@@ -1719,7 +1534,6 @@ orderby::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<orderby>";
 
 }
@@ -1728,7 +1542,6 @@ orderby::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</orderby>";
 
 }
@@ -1737,7 +1550,6 @@ package::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<package>";
 
 }
@@ -1746,7 +1558,6 @@ package::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</package>";
 
 }
@@ -1755,7 +1566,6 @@ param::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<param>";
 
 }
@@ -1764,7 +1574,6 @@ param::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</param>";
 
 }
@@ -1773,7 +1582,6 @@ parameter_list::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<parameter_list>";
 
 }
@@ -1782,7 +1590,6 @@ parameter_list::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</parameter_list>";
 
 }
@@ -1791,7 +1598,6 @@ parse::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<parse>";
 
 }
@@ -1800,7 +1606,6 @@ parse::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</parse>";
 
 }
@@ -1809,7 +1614,6 @@ private::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<private>";
 
 }
@@ -1818,7 +1622,6 @@ private::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</private>";
 
 }
@@ -1827,7 +1630,6 @@ property::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<property>";
 
 }
@@ -1836,7 +1638,6 @@ property::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</property>";
 
 }
@@ -1845,7 +1646,6 @@ protected::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<protected>";
 
 }
@@ -1854,7 +1654,6 @@ protected::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</protected>";
 
 }
@@ -1863,7 +1662,6 @@ protocol::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<protocol>";
 
 }
@@ -1872,7 +1670,6 @@ protocol::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</protocol>";
 
 }
@@ -1881,7 +1678,6 @@ protocol_decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<protocol_decl>";
 
 }
@@ -1890,7 +1686,6 @@ protocol_decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</protocol_decl>";
 
 }
@@ -1899,7 +1694,6 @@ protocol_list::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<protocol_list>";
 
 }
@@ -1908,7 +1702,6 @@ protocol_list::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</protocol_list>";
 
 }
@@ -1917,7 +1710,6 @@ public::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<public>";
 
 }
@@ -1926,7 +1718,6 @@ public::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</public>";
 
 }
@@ -1935,7 +1726,6 @@ range::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<range>";
 
 }
@@ -1944,7 +1734,6 @@ range::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</range>";
 
 }
@@ -1953,7 +1742,6 @@ receiver::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<receiver>";
 
 }
@@ -1962,7 +1750,6 @@ receiver::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</receiver>";
 
 }
@@ -1971,7 +1758,6 @@ ref_qualifier::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<ref_qualifier>";
 
 }
@@ -1980,7 +1766,6 @@ ref_qualifier::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</ref_qualifier>";
 
 }
@@ -1989,7 +1774,6 @@ required::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<required>";
 
 }
@@ -1998,7 +1782,6 @@ required::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</required>";
 
 }
@@ -2007,7 +1790,6 @@ return::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<return>";
 
 }
@@ -2016,7 +1798,6 @@ return::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</return>";
 
 }
@@ -2025,7 +1806,6 @@ select::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<select>";
 
 }
@@ -2034,7 +1814,6 @@ select::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</select>";
 
 }
@@ -2043,7 +1822,6 @@ selector::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<selector>";
 
 }
@@ -2052,7 +1830,6 @@ selector::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</selector>";
 
 }
@@ -2061,7 +1838,6 @@ signals::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<signals>";
 
 }
@@ -2070,7 +1846,6 @@ signals::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</signals>";
 
 }
@@ -2079,7 +1854,6 @@ sizeof::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<sizeof>";
 
 }
@@ -2088,7 +1862,6 @@ sizeof::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</sizeof>";
 
 }
@@ -2097,7 +1870,6 @@ specifier::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<specifier>";
 
 }
@@ -2106,7 +1878,6 @@ specifier::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</specifier>";
 
 }
@@ -2115,7 +1886,6 @@ static::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<static>";
 
 }
@@ -2124,7 +1894,6 @@ static::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</static>";
 
 }
@@ -2133,7 +1902,6 @@ struct::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<struct>";
 
 }
@@ -2142,7 +1910,6 @@ struct::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</struct>";
 
 }
@@ -2151,7 +1918,6 @@ struct_decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<struct_decl>";
 
 }
@@ -2160,7 +1926,6 @@ struct_decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</struct_decl>";
 
 }
@@ -2169,7 +1934,6 @@ super::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<super>";
 
 }
@@ -2178,7 +1942,6 @@ super::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</super>";
 
 }
@@ -2187,7 +1950,6 @@ switch::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<switch>";
 
 }
@@ -2196,7 +1958,6 @@ switch::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</switch>";
 
 }
@@ -2205,7 +1966,6 @@ synchronized::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<synchronized>";
 
 }
@@ -2214,7 +1974,6 @@ synchronized::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</synchronized>";
 
 }
@@ -2223,7 +1982,6 @@ synthesize::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<synthesize>";
 
 }
@@ -2232,7 +1990,6 @@ synthesize::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</synthesize>";
 
 }
@@ -2241,7 +1998,6 @@ target::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<target>";
 
 }
@@ -2250,7 +2006,6 @@ target::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</target>";
 
 }
@@ -2259,7 +2014,6 @@ template::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<template>";
 
 }
@@ -2268,7 +2022,6 @@ template::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</template>";
 
 }
@@ -2277,7 +2030,6 @@ ternary::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<ternary>";
 
 }
@@ -2286,7 +2038,6 @@ ternary::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</ternary>";
 
 }
@@ -2295,7 +2046,6 @@ then::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<then>";
 
 }
@@ -2304,7 +2054,6 @@ then::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</then>";
 
 }
@@ -2313,7 +2062,6 @@ throw::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<throw>";
 
 }
@@ -2322,7 +2070,6 @@ throw::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</throw>";
 
 }
@@ -2331,7 +2078,6 @@ throws::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<throws>";
 
 }
@@ -2340,7 +2086,6 @@ throws::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</throws>";
 
 }
@@ -2349,7 +2094,6 @@ try::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<try>";
 
 }
@@ -2358,7 +2102,6 @@ try::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</try>";
 
 }
@@ -2367,7 +2110,6 @@ type::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<type>";
 
 }
@@ -2376,7 +2118,6 @@ type::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</type>";
 
 }
@@ -2385,7 +2126,6 @@ typedef::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<typedef>";
 
 }
@@ -2394,7 +2134,6 @@ typedef::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</typedef>";
 
 }
@@ -2403,7 +2142,6 @@ typeid::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<typeid>";
 
 }
@@ -2412,7 +2150,6 @@ typeid::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</typeid>";
 
 }
@@ -2421,7 +2158,6 @@ typename::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<typename>";
 
 }
@@ -2430,7 +2166,6 @@ typename::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</typename>";
 
 }
@@ -2439,7 +2174,6 @@ typeof::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<typeof>";
 
 }
@@ -2448,7 +2182,6 @@ typeof::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</typeof>";
 
 }
@@ -2457,7 +2190,6 @@ unchecked::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<unchecked>";
 
 }
@@ -2466,7 +2198,6 @@ unchecked::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</unchecked>";
 
 }
@@ -2475,7 +2206,6 @@ union::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<union>";
 
 }
@@ -2484,7 +2214,6 @@ union::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</union>";
 
 }
@@ -2493,7 +2222,6 @@ union_decl::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<union_decl>";
 
 }
@@ -2502,7 +2230,6 @@ union_decl::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</union_decl>";
 
 }
@@ -2511,7 +2238,6 @@ unit::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<unit>";
 
 }
@@ -2520,7 +2246,6 @@ unit::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</unit>";
 
 }
@@ -2529,7 +2254,6 @@ unsafe::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<unsafe>";
 
 }
@@ -2538,7 +2262,6 @@ unsafe::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</unsafe>";
 
 }
@@ -2547,7 +2270,6 @@ using::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<using>";
 
 }
@@ -2556,7 +2278,6 @@ using::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</using>";
 
 }
@@ -2565,7 +2286,6 @@ using_stmt::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<using_stmt>";
 
 }
@@ -2574,7 +2294,6 @@ using_stmt::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</using_stmt>";
 
 }
@@ -2583,7 +2302,6 @@ where::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<where>";
 
 }
@@ -2592,7 +2310,6 @@ where::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</where>";
 
 }
@@ -2601,7 +2318,6 @@ while::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<while>";
 
 }
@@ -2610,7 +2326,6 @@ while::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</while>";
 
 }
@@ -2619,7 +2334,6 @@ cpp|define::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:define>";
 
 }
@@ -2628,7 +2342,6 @@ cpp|define::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:define>";
 
 }
@@ -2637,7 +2350,6 @@ cpp|directive::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:directive>";
 
 }
@@ -2646,7 +2358,6 @@ cpp|directive::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:directive>";
 
 }
@@ -2655,7 +2366,6 @@ cpp|elif::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:elif>";
 
 }
@@ -2664,7 +2374,6 @@ cpp|elif::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:elif>";
 
 }
@@ -2673,7 +2382,6 @@ cpp|else::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:else>";
 
 }
@@ -2682,7 +2390,6 @@ cpp|else::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:else>";
 
 }
@@ -2691,7 +2398,6 @@ cpp|empty::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:empty>";
 
 }
@@ -2700,7 +2406,6 @@ cpp|empty::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:empty>";
 
 }
@@ -2709,7 +2414,6 @@ cpp|endif::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:endif>";
 
 }
@@ -2718,7 +2422,6 @@ cpp|endif::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:endif>";
 
 }
@@ -2727,7 +2430,6 @@ cpp|endregion::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:endregion>";
 
 }
@@ -2736,7 +2438,6 @@ cpp|endregion::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:endregion>";
 
 }
@@ -2745,7 +2446,6 @@ cpp|error::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:error>";
 
 }
@@ -2754,7 +2454,6 @@ cpp|error::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:error>";
 
 }
@@ -2763,7 +2462,6 @@ cpp|file::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:file>";
 
 }
@@ -2772,7 +2470,6 @@ cpp|file::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:file>";
 
 }
@@ -2781,7 +2478,6 @@ cpp|if::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:if>";
 
 }
@@ -2790,7 +2486,6 @@ cpp|if::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:if>";
 
 }
@@ -2799,7 +2494,6 @@ cpp|ifdef::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:ifdef>";
 
 }
@@ -2808,7 +2502,6 @@ cpp|ifdef::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:ifdef>";
 
 }
@@ -2817,7 +2510,6 @@ cpp|ifndef::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:ifndef>";
 
 }
@@ -2826,7 +2518,6 @@ cpp|ifndef::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:ifndef>";
 
 }
@@ -2835,7 +2526,6 @@ cpp|import::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:import>";
 
 }
@@ -2844,7 +2534,6 @@ cpp|import::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:import>";
 
 }
@@ -2853,7 +2542,6 @@ cpp|include::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:include>";
 
 }
@@ -2862,7 +2550,6 @@ cpp|include::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:include>";
 
 }
@@ -2871,7 +2558,6 @@ cpp|line::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:line>";
 
 }
@@ -2880,7 +2566,6 @@ cpp|line::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:line>";
 
 }
@@ -2889,7 +2574,6 @@ cpp|literal::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:literal>";
 
 }
@@ -2898,7 +2582,6 @@ cpp|literal::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:literal>";
 
 }
@@ -2907,7 +2590,6 @@ cpp|macro::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:macro>";
 
 }
@@ -2916,7 +2598,6 @@ cpp|macro::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:macro>";
 
 }
@@ -2925,7 +2606,6 @@ cpp|number::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:number>";
 
 }
@@ -2934,7 +2614,6 @@ cpp|number::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:number>";
 
 }
@@ -2943,7 +2622,6 @@ cpp|pragma::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:pragma>";
 
 }
@@ -2952,7 +2630,6 @@ cpp|pragma::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:pragma>";
 
 }
@@ -2961,7 +2638,6 @@ cpp|region::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:region>";
 
 }
@@ -2970,7 +2646,6 @@ cpp|region::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:region>";
 
 }
@@ -2979,7 +2654,6 @@ cpp|then::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:then>";
 
 }
@@ -2988,7 +2662,6 @@ cpp|then::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:then>";
 
 }
@@ -2997,7 +2670,6 @@ cpp|undef::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:undef>";
 
 }
@@ -3006,7 +2678,6 @@ cpp|undef::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:undef>";
 
 }
@@ -3015,7 +2686,6 @@ cpp|value::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:value>";
 
 }
@@ -3024,7 +2694,6 @@ cpp|value::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:value>";
 
 }
@@ -3033,7 +2702,6 @@ cpp|warning::before {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "<cpp:warning>";
 
 }
@@ -3042,7 +2710,6 @@ cpp|warning::after {
 
 	font-weight: normal;
 	font-size: 90%;
-	color: #555;
 	content: "</cpp:warning>";
 
 }
