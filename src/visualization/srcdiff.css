@@ -231,6 +231,14 @@ else::before {
     color: #555;
 }
 
+ternary::before {
+
+    font-weight: normal;
+    content: "<ternary>";
+    color: #555;
+
+}
+
 function::before {
     font-weight: normal;
     content: "<function>";
@@ -451,6 +459,14 @@ else::after {
     font-weight: normal;
     content: "</else>";
     color: #555;
+}
+
+ternary::after {
+
+    font-weight: normal;
+    content: "</ternary>";
+    color: #555;
+
 }
 
 function::after {
