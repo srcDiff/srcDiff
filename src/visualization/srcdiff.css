@@ -1,3 +1,5 @@
+@namespace cpp url(http://www.sdml.info/srcML/cpp);
+
 * {
 
 	font-weight: bold;
@@ -2041,336 +2043,336 @@ while::after {
 
 }
 
-cpp\:define::before {
+cpp|define::before {
 
 	font-weight: normal;
 	content: "<cpp:define>";
 
 }
 
-cpp\:define::after {
+cpp|define::after {
 
 	font-weight: normal;
 	content: "</cpp:define>";
 
 }
 
-cpp\:directive::before {
+cpp|directive::before {
 
 	font-weight: normal;
 	content: "<cpp:directive>";
 
 }
 
-cpp\:directive::after {
+cpp|directive::after {
 
 	font-weight: normal;
 	content: "</cpp:directive>";
 
 }
 
-cpp\:elif::before {
+cpp|elif::before {
 
 	font-weight: normal;
 	content: "<cpp:elif>";
 
 }
 
-cpp\:elif::after {
+cpp|elif::after {
 
 	font-weight: normal;
 	content: "</cpp:elif>";
 
 }
 
-cpp\:else::before {
+cpp|else::before {
 
 	font-weight: normal;
 	content: "<cpp:else>";
 
 }
 
-cpp\:else::after {
+cpp|else::after {
 
 	font-weight: normal;
 	content: "</cpp:else>";
 
 }
 
-cpp\:empty::before {
+cpp|empty::before {
 
 	font-weight: normal;
 	content: "<cpp:empty>";
 
 }
 
-cpp\:empty::after {
+cpp|empty::after {
 
 	font-weight: normal;
 	content: "</cpp:empty>";
 
 }
 
-cpp\:endif::before {
+cpp|endif::before {
 
 	font-weight: normal;
 	content: "<cpp:endif>";
 
 }
 
-cpp\:endif::after {
+cpp|endif::after {
 
 	font-weight: normal;
 	content: "</cpp:endif>";
 
 }
 
-cpp\:endregion::before {
+cpp|endregion::before {
 
 	font-weight: normal;
 	content: "<cpp:endregion>";
 
 }
 
-cpp\:endregion::after {
+cpp|endregion::after {
 
 	font-weight: normal;
 	content: "</cpp:endregion>";
 
 }
 
-cpp\:error::before {
+cpp|error::before {
 
 	font-weight: normal;
 	content: "<cpp:error>";
 
 }
 
-cpp\:error::after {
+cpp|error::after {
 
 	font-weight: normal;
 	content: "</cpp:error>";
 
 }
 
-cpp\:file::before {
+cpp|file::before {
 
 	font-weight: normal;
 	content: "<cpp:file>";
 
 }
 
-cpp\:file::after {
+cpp|file::after {
 
 	font-weight: normal;
 	content: "</cpp:file>";
 
 }
 
-cpp\:if::before {
+cpp|if::before {
 
 	font-weight: normal;
 	content: "<cpp:if>";
 
 }
 
-cpp\:if::after {
+cpp|if::after {
 
 	font-weight: normal;
 	content: "</cpp:if>";
 
 }
 
-cpp\:ifdef::before {
+cpp|ifdef::before {
 
 	font-weight: normal;
 	content: "<cpp:ifdef>";
 
 }
 
-cpp\:ifdef::after {
+cpp|ifdef::after {
 
 	font-weight: normal;
 	content: "</cpp:ifdef>";
 
 }
 
-cpp\:ifndef::before {
+cpp|ifndef::before {
 
 	font-weight: normal;
 	content: "<cpp:ifndef>";
 
 }
 
-cpp\:ifndef::after {
+cpp|ifndef::after {
 
 	font-weight: normal;
 	content: "</cpp:ifndef>";
 
 }
 
-cpp\:import::before {
+cpp|import::before {
 
 	font-weight: normal;
 	content: "<cpp:import>";
 
 }
 
-cpp\:import::after {
+cpp|import::after {
 
 	font-weight: normal;
 	content: "</cpp:import>";
 
 }
 
-cpp\:include::before {
+cpp|include::before {
 
 	font-weight: normal;
 	content: "<cpp:include>";
 
 }
 
-cpp\:include::after {
+cpp|include::after {
 
 	font-weight: normal;
 	content: "</cpp:include>";
 
 }
 
-cpp\:line::before {
+cpp|line::before {
 
 	font-weight: normal;
 	content: "<cpp:line>";
 
 }
 
-cpp\:line::after {
+cpp|line::after {
 
 	font-weight: normal;
 	content: "</cpp:line>";
 
 }
 
-cpp\:literal::before {
+cpp|literal::before {
 
 	font-weight: normal;
 	content: "<cpp:literal>";
 
 }
 
-cpp\:literal::after {
+cpp|literal::after {
 
 	font-weight: normal;
 	content: "</cpp:literal>";
 
 }
 
-cpp\:macro::before {
+cpp|macro::before {
 
 	font-weight: normal;
 	content: "<cpp:macro>";
 
 }
 
-cpp\:macro::after {
+cpp|macro::after {
 
 	font-weight: normal;
 	content: "</cpp:macro>";
 
 }
 
-cpp\:number::before {
+cpp|number::before {
 
 	font-weight: normal;
 	content: "<cpp:number>";
 
 }
 
-cpp\:number::after {
+cpp|number::after {
 
 	font-weight: normal;
 	content: "</cpp:number>";
 
 }
 
-cpp\:pragma::before {
+cpp|pragma::before {
 
 	font-weight: normal;
 	content: "<cpp:pragma>";
 
 }
 
-cpp\:pragma::after {
+cpp|pragma::after {
 
 	font-weight: normal;
 	content: "</cpp:pragma>";
 
 }
 
-cpp\:region::before {
+cpp|region::before {
 
 	font-weight: normal;
 	content: "<cpp:region>";
 
 }
 
-cpp\:region::after {
+cpp|region::after {
 
 	font-weight: normal;
 	content: "</cpp:region>";
 
 }
 
-cpp\:then::before {
+cpp|then::before {
 
 	font-weight: normal;
 	content: "<cpp:then>";
 
 }
 
-cpp\:then::after {
+cpp|then::after {
 
 	font-weight: normal;
 	content: "</cpp:then>";
 
 }
 
-cpp\:undef::before {
+cpp|undef::before {
 
 	font-weight: normal;
 	content: "<cpp:undef>";
 
 }
 
-cpp\:undef::after {
+cpp|undef::after {
 
 	font-weight: normal;
 	content: "</cpp:undef>";
 
 }
 
-cpp\:value::before {
+cpp|value::before {
 
 	font-weight: normal;
 	content: "<cpp:value>";
 
 }
 
-cpp\:value::after {
+cpp|value::after {
 
 	font-weight: normal;
 	content: "</cpp:value>";
 
 }
 
-cpp\:warning::before {
+cpp|warning::before {
 
 	font-weight: normal;
 	content: "<cpp:warning>";
 
 }
 
-cpp\:warning::after {
+cpp|warning::after {
 
 	font-weight: normal;
 	content: "</cpp:warning>";
