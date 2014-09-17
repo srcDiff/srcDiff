@@ -45,8 +45,8 @@ tab-size:8;
 alignas::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<alignas>";
 
 }
@@ -54,8 +54,8 @@ alignas::before {
 alignas::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</alignas>";
 
 }
@@ -63,8 +63,8 @@ alignas::after {
 alignof::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<alignof>";
 
 }
@@ -72,8 +72,8 @@ alignof::before {
 alignof::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</alignof>";
 
 }
@@ -81,8 +81,8 @@ alignof::after {
 annotation::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<annotation>";
 
 }
@@ -90,8 +90,8 @@ annotation::before {
 annotation::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</annotation>";
 
 }
@@ -99,8 +99,8 @@ annotation::after {
 argument::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<argument>";
 
 }
@@ -108,8 +108,8 @@ argument::before {
 argument::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</argument>";
 
 }
@@ -117,8 +117,8 @@ argument::after {
 argument_list::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<argument_list>";
 
 }
@@ -126,8 +126,8 @@ argument_list::before {
 argument_list::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</argument_list>";
 
 }
@@ -135,8 +135,8 @@ argument_list::after {
 asm::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<asm>";
 
 }
@@ -144,8 +144,8 @@ asm::before {
 asm::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</asm>";
 
 }
@@ -153,8 +153,8 @@ asm::after {
 assert::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<assert>";
 
 }
@@ -162,8 +162,8 @@ assert::before {
 assert::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</assert>";
 
 }
@@ -171,8 +171,8 @@ assert::after {
 association::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<association>";
 
 }
@@ -180,8 +180,8 @@ association::before {
 association::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</association>";
 
 }
@@ -189,8 +189,8 @@ association::after {
 association_list::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<association_list>";
 
 }
@@ -198,8 +198,8 @@ association_list::before {
 association_list::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</association_list>";
 
 }
@@ -207,8 +207,8 @@ association_list::after {
 atomic::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<atomic>";
 
 }
@@ -216,8 +216,8 @@ atomic::before {
 atomic::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</atomic>";
 
 }
@@ -225,8 +225,8 @@ atomic::after {
 attribute::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<attribute>";
 
 }
@@ -234,8 +234,8 @@ attribute::before {
 attribute::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</attribute>";
 
 }
@@ -243,8 +243,8 @@ attribute::after {
 attribute_list::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<attribute_list>";
 
 }
@@ -252,8 +252,8 @@ attribute_list::before {
 attribute_list::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</attribute_list>";
 
 }
@@ -261,8 +261,8 @@ attribute_list::after {
 autoreleasepool::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<autoreleasepool>";
 
 }
@@ -270,8 +270,8 @@ autoreleasepool::before {
 autoreleasepool::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</autoreleasepool>";
 
 }
@@ -279,8 +279,8 @@ autoreleasepool::after {
 block::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<block>";
 
 }
@@ -288,8 +288,8 @@ block::before {
 block::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</block>";
 
 }
@@ -297,8 +297,8 @@ block::after {
 break::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<break>";
 
 }
@@ -306,8 +306,8 @@ break::before {
 break::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</break>";
 
 }
@@ -315,8 +315,8 @@ break::after {
 by::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<by>";
 
 }
@@ -324,8 +324,8 @@ by::before {
 by::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</by>";
 
 }
@@ -333,8 +333,8 @@ by::after {
 call::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<call>";
 
 }
@@ -342,8 +342,8 @@ call::before {
 call::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</call>";
 
 }
@@ -351,8 +351,8 @@ call::after {
 capture::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<capture>";
 
 }
@@ -360,8 +360,8 @@ capture::before {
 capture::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</capture>";
 
 }
@@ -369,8 +369,8 @@ capture::after {
 case::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<case>";
 
 }
@@ -378,8 +378,8 @@ case::before {
 case::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</case>";
 
 }
@@ -387,8 +387,8 @@ case::after {
 cast::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cast>";
 
 }
@@ -396,8 +396,8 @@ cast::before {
 cast::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cast>";
 
 }
@@ -405,8 +405,8 @@ cast::after {
 catch::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<catch>";
 
 }
@@ -414,8 +414,8 @@ catch::before {
 catch::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</catch>";
 
 }
@@ -423,8 +423,8 @@ catch::after {
 category::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<category>";
 
 }
@@ -432,8 +432,8 @@ category::before {
 category::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</category>";
 
 }
@@ -441,8 +441,8 @@ category::after {
 checked::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<checked>";
 
 }
@@ -450,8 +450,8 @@ checked::before {
 checked::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</checked>";
 
 }
@@ -459,8 +459,8 @@ checked::after {
 class::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<class>";
 
 }
@@ -468,8 +468,8 @@ class::before {
 class::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</class>";
 
 }
@@ -477,8 +477,8 @@ class::after {
 class_decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<class_decl>";
 
 }
@@ -486,8 +486,8 @@ class_decl::before {
 class_decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</class_decl>";
 
 }
@@ -495,8 +495,8 @@ class_decl::after {
 compatibility_alias::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<compatibility_alias>";
 
 }
@@ -504,8 +504,8 @@ compatibility_alias::before {
 compatibility_alias::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</compatibility_alias>";
 
 }
@@ -513,8 +513,8 @@ compatibility_alias::after {
 condition::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<condition>";
 
 }
@@ -522,8 +522,8 @@ condition::before {
 condition::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</condition>";
 
 }
@@ -531,8 +531,8 @@ condition::after {
 constructor::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<constructor>";
 
 }
@@ -540,8 +540,8 @@ constructor::before {
 constructor::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</constructor>";
 
 }
@@ -549,8 +549,8 @@ constructor::after {
 constructor_decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<constructor_decl>";
 
 }
@@ -558,8 +558,8 @@ constructor_decl::before {
 constructor_decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</constructor_decl>";
 
 }
@@ -567,8 +567,8 @@ constructor_decl::after {
 continue::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<continue>";
 
 }
@@ -576,8 +576,8 @@ continue::before {
 continue::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</continue>";
 
 }
@@ -585,8 +585,8 @@ continue::after {
 control::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<control>";
 
 }
@@ -594,8 +594,8 @@ control::before {
 control::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</control>";
 
 }
@@ -603,8 +603,8 @@ control::after {
 decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<decl>";
 
 }
@@ -612,8 +612,8 @@ decl::before {
 decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</decl>";
 
 }
@@ -621,8 +621,8 @@ decl::after {
 decl_stmt::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<decl_stmt>";
 
 }
@@ -630,8 +630,8 @@ decl_stmt::before {
 decl_stmt::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</decl_stmt>";
 
 }
@@ -639,8 +639,8 @@ decl_stmt::after {
 decltype::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<decltype>";
 
 }
@@ -648,8 +648,8 @@ decltype::before {
 decltype::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</decltype>";
 
 }
@@ -657,8 +657,8 @@ decltype::after {
 default::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<default>";
 
 }
@@ -666,8 +666,8 @@ default::before {
 default::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</default>";
 
 }
@@ -675,8 +675,8 @@ default::after {
 delegate::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<delegate>";
 
 }
@@ -684,8 +684,8 @@ delegate::before {
 delegate::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</delegate>";
 
 }
@@ -693,8 +693,8 @@ delegate::after {
 destructor::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<destructor>";
 
 }
@@ -702,8 +702,8 @@ destructor::before {
 destructor::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</destructor>";
 
 }
@@ -711,8 +711,8 @@ destructor::after {
 destructor_decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<destructor_decl>";
 
 }
@@ -720,8 +720,8 @@ destructor_decl::before {
 destructor_decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</destructor_decl>";
 
 }
@@ -729,8 +729,8 @@ destructor_decl::after {
 do::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<do>";
 
 }
@@ -738,8 +738,8 @@ do::before {
 do::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</do>";
 
 }
@@ -747,8 +747,8 @@ do::after {
 dynamic::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<dynamic>";
 
 }
@@ -756,8 +756,8 @@ dynamic::before {
 dynamic::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</dynamic>";
 
 }
@@ -765,8 +765,8 @@ dynamic::after {
 else::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<else>";
 
 }
@@ -774,8 +774,8 @@ else::before {
 else::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</else>";
 
 }
@@ -783,8 +783,8 @@ else::after {
 elseif::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<elseif>";
 
 }
@@ -792,8 +792,8 @@ elseif::before {
 elseif::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</elseif>";
 
 }
@@ -801,8 +801,8 @@ elseif::after {
 emit::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<emit>";
 
 }
@@ -810,8 +810,8 @@ emit::before {
 emit::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</emit>";
 
 }
@@ -819,8 +819,8 @@ emit::after {
 empty_stmt::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<empty_stmt>";
 
 }
@@ -828,8 +828,8 @@ empty_stmt::before {
 empty_stmt::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</empty_stmt>";
 
 }
@@ -837,8 +837,8 @@ empty_stmt::after {
 encode::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<encode>";
 
 }
@@ -846,8 +846,8 @@ encode::before {
 encode::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</encode>";
 
 }
@@ -855,8 +855,8 @@ encode::after {
 enum::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<enum>";
 
 }
@@ -864,8 +864,8 @@ enum::before {
 enum::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</enum>";
 
 }
@@ -873,8 +873,8 @@ enum::after {
 equals::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<equals>";
 
 }
@@ -882,8 +882,8 @@ equals::before {
 equals::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</equals>";
 
 }
@@ -891,8 +891,8 @@ equals::after {
 event::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<event>";
 
 }
@@ -900,8 +900,8 @@ event::before {
 event::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</event>";
 
 }
@@ -909,8 +909,8 @@ event::after {
 expr::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<expr>";
 
 }
@@ -918,8 +918,8 @@ expr::before {
 expr::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</expr>";
 
 }
@@ -927,8 +927,8 @@ expr::after {
 expr_stmt::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<expr_stmt>";
 
 }
@@ -936,8 +936,8 @@ expr_stmt::before {
 expr_stmt::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</expr_stmt>";
 
 }
@@ -945,8 +945,8 @@ expr_stmt::after {
 extends::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<extends>";
 
 }
@@ -954,8 +954,8 @@ extends::before {
 extends::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</extends>";
 
 }
@@ -963,8 +963,8 @@ extends::after {
 extern::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<extern>";
 
 }
@@ -972,8 +972,8 @@ extern::before {
 extern::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</extern>";
 
 }
@@ -981,8 +981,8 @@ extern::after {
 finally::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<finally>";
 
 }
@@ -990,8 +990,8 @@ finally::before {
 finally::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</finally>";
 
 }
@@ -999,8 +999,8 @@ finally::after {
 fixed::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<fixed>";
 
 }
@@ -1008,8 +1008,8 @@ fixed::before {
 fixed::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</fixed>";
 
 }
@@ -1017,8 +1017,8 @@ fixed::after {
 for::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<for>";
 
 }
@@ -1026,8 +1026,8 @@ for::before {
 for::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</for>";
 
 }
@@ -1035,8 +1035,8 @@ for::after {
 foreach::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<foreach>";
 
 }
@@ -1044,8 +1044,8 @@ foreach::before {
 foreach::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</foreach>";
 
 }
@@ -1053,8 +1053,8 @@ foreach::after {
 forever::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<forever>";
 
 }
@@ -1062,8 +1062,8 @@ forever::before {
 forever::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</forever>";
 
 }
@@ -1071,8 +1071,8 @@ forever::after {
 friend::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<friend>";
 
 }
@@ -1080,8 +1080,8 @@ friend::before {
 friend::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</friend>";
 
 }
@@ -1089,8 +1089,8 @@ friend::after {
 from::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<from>";
 
 }
@@ -1098,8 +1098,8 @@ from::before {
 from::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</from>";
 
 }
@@ -1107,8 +1107,8 @@ from::after {
 function::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<function>";
 
 }
@@ -1116,8 +1116,8 @@ function::before {
 function::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</function>";
 
 }
@@ -1125,8 +1125,8 @@ function::after {
 function_decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<function_decl>";
 
 }
@@ -1134,8 +1134,8 @@ function_decl::before {
 function_decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</function_decl>";
 
 }
@@ -1143,8 +1143,8 @@ function_decl::after {
 generic_selection::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<generic_selection>";
 
 }
@@ -1152,8 +1152,8 @@ generic_selection::before {
 generic_selection::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</generic_selection>";
 
 }
@@ -1161,8 +1161,8 @@ generic_selection::after {
 goto::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<goto>";
 
 }
@@ -1170,8 +1170,8 @@ goto::before {
 goto::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</goto>";
 
 }
@@ -1179,8 +1179,8 @@ goto::after {
 group::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<group>";
 
 }
@@ -1188,8 +1188,8 @@ group::before {
 group::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</group>";
 
 }
@@ -1197,8 +1197,8 @@ group::after {
 if::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<if>";
 
 }
@@ -1206,8 +1206,8 @@ if::before {
 if::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</if>";
 
 }
@@ -1215,8 +1215,8 @@ if::after {
 implements::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<implements>";
 
 }
@@ -1224,8 +1224,8 @@ implements::before {
 implements::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</implements>";
 
 }
@@ -1233,8 +1233,8 @@ implements::after {
 import::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<import>";
 
 }
@@ -1242,8 +1242,8 @@ import::before {
 import::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</import>";
 
 }
@@ -1251,8 +1251,8 @@ import::after {
 in::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<in>";
 
 }
@@ -1260,8 +1260,8 @@ in::before {
 in::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</in>";
 
 }
@@ -1269,8 +1269,8 @@ in::after {
 incr::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<incr>";
 
 }
@@ -1278,8 +1278,8 @@ incr::before {
 incr::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</incr>";
 
 }
@@ -1287,8 +1287,8 @@ incr::after {
 index::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<index>";
 
 }
@@ -1296,8 +1296,8 @@ index::before {
 index::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</index>";
 
 }
@@ -1305,8 +1305,8 @@ index::after {
 init::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<init>";
 
 }
@@ -1314,8 +1314,8 @@ init::before {
 init::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</init>";
 
 }
@@ -1323,8 +1323,8 @@ init::after {
 into::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<into>";
 
 }
@@ -1332,8 +1332,8 @@ into::before {
 into::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</into>";
 
 }
@@ -1341,8 +1341,8 @@ into::after {
 join::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<join>";
 
 }
@@ -1350,8 +1350,8 @@ join::before {
 join::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</join>";
 
 }
@@ -1359,8 +1359,8 @@ join::after {
 krparam::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<krparam>";
 
 }
@@ -1368,8 +1368,8 @@ krparam::before {
 krparam::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</krparam>";
 
 }
@@ -1377,8 +1377,8 @@ krparam::after {
 krparameter_list::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<krparameter_list>";
 
 }
@@ -1386,8 +1386,8 @@ krparameter_list::before {
 krparameter_list::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</krparameter_list>";
 
 }
@@ -1395,8 +1395,8 @@ krparameter_list::after {
 label::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<label>";
 
 }
@@ -1404,8 +1404,8 @@ label::before {
 label::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</label>";
 
 }
@@ -1413,8 +1413,8 @@ label::after {
 lambda::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<lambda>";
 
 }
@@ -1422,8 +1422,8 @@ lambda::before {
 lambda::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</lambda>";
 
 }
@@ -1431,8 +1431,8 @@ lambda::after {
 let::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<let>";
 
 }
@@ -1440,8 +1440,8 @@ let::before {
 let::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</let>";
 
 }
@@ -1449,8 +1449,8 @@ let::after {
 linq::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<linq>";
 
 }
@@ -1458,8 +1458,8 @@ linq::before {
 linq::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</linq>";
 
 }
@@ -1467,8 +1467,8 @@ linq::after {
 literal::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<literal>";
 
 }
@@ -1476,8 +1476,8 @@ literal::before {
 literal::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</literal>";
 
 }
@@ -1485,8 +1485,8 @@ literal::after {
 lock::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<lock>";
 
 }
@@ -1494,8 +1494,8 @@ lock::before {
 lock::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</lock>";
 
 }
@@ -1503,8 +1503,8 @@ lock::after {
 macro::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<macro>";
 
 }
@@ -1512,8 +1512,8 @@ macro::before {
 macro::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</macro>";
 
 }
@@ -1521,8 +1521,8 @@ macro::after {
 marker::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<marker>";
 
 }
@@ -1530,8 +1530,8 @@ marker::before {
 marker::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</marker>";
 
 }
@@ -1539,8 +1539,8 @@ marker::after {
 member_list::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<member_list>";
 
 }
@@ -1548,8 +1548,8 @@ member_list::before {
 member_list::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</member_list>";
 
 }
@@ -1557,8 +1557,8 @@ member_list::after {
 message::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<message>";
 
 }
@@ -1566,8 +1566,8 @@ message::before {
 message::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</message>";
 
 }
@@ -1575,8 +1575,8 @@ message::after {
 mode::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<mode>";
 
 }
@@ -1584,8 +1584,8 @@ mode::before {
 mode::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</mode>";
 
 }
@@ -1593,8 +1593,8 @@ mode::after {
 modifier::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<modifier>";
 
 }
@@ -1602,8 +1602,8 @@ modifier::before {
 modifier::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</modifier>";
 
 }
@@ -1611,8 +1611,8 @@ modifier::after {
 name::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<name>";
 
 }
@@ -1620,8 +1620,8 @@ name::before {
 name::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</name>";
 
 }
@@ -1629,8 +1629,8 @@ name::after {
 namespace::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<namespace>";
 
 }
@@ -1638,8 +1638,8 @@ namespace::before {
 namespace::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</namespace>";
 
 }
@@ -1647,8 +1647,8 @@ namespace::after {
 noexcept::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<noexcept>";
 
 }
@@ -1656,8 +1656,8 @@ noexcept::before {
 noexcept::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</noexcept>";
 
 }
@@ -1665,8 +1665,8 @@ noexcept::after {
 on::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<on>";
 
 }
@@ -1674,8 +1674,8 @@ on::before {
 on::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</on>";
 
 }
@@ -1683,8 +1683,8 @@ on::after {
 operator::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<operator>";
 
 }
@@ -1692,8 +1692,8 @@ operator::before {
 operator::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</operator>";
 
 }
@@ -1701,8 +1701,8 @@ operator::after {
 optional::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<optional>";
 
 }
@@ -1710,8 +1710,8 @@ optional::before {
 optional::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</optional>";
 
 }
@@ -1719,8 +1719,8 @@ optional::after {
 orderby::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<orderby>";
 
 }
@@ -1728,8 +1728,8 @@ orderby::before {
 orderby::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</orderby>";
 
 }
@@ -1737,8 +1737,8 @@ orderby::after {
 package::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<package>";
 
 }
@@ -1746,8 +1746,8 @@ package::before {
 package::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</package>";
 
 }
@@ -1755,8 +1755,8 @@ package::after {
 param::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<param>";
 
 }
@@ -1764,8 +1764,8 @@ param::before {
 param::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</param>";
 
 }
@@ -1773,8 +1773,8 @@ param::after {
 parameter_list::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<parameter_list>";
 
 }
@@ -1782,8 +1782,8 @@ parameter_list::before {
 parameter_list::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</parameter_list>";
 
 }
@@ -1791,8 +1791,8 @@ parameter_list::after {
 parse::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<parse>";
 
 }
@@ -1800,8 +1800,8 @@ parse::before {
 parse::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</parse>";
 
 }
@@ -1809,8 +1809,8 @@ parse::after {
 private::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<private>";
 
 }
@@ -1818,8 +1818,8 @@ private::before {
 private::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</private>";
 
 }
@@ -1827,8 +1827,8 @@ private::after {
 property::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<property>";
 
 }
@@ -1836,8 +1836,8 @@ property::before {
 property::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</property>";
 
 }
@@ -1845,8 +1845,8 @@ property::after {
 protected::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<protected>";
 
 }
@@ -1854,8 +1854,8 @@ protected::before {
 protected::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</protected>";
 
 }
@@ -1863,8 +1863,8 @@ protected::after {
 protocol::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<protocol>";
 
 }
@@ -1872,8 +1872,8 @@ protocol::before {
 protocol::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</protocol>";
 
 }
@@ -1881,8 +1881,8 @@ protocol::after {
 protocol_decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<protocol_decl>";
 
 }
@@ -1890,8 +1890,8 @@ protocol_decl::before {
 protocol_decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</protocol_decl>";
 
 }
@@ -1899,8 +1899,8 @@ protocol_decl::after {
 protocol_list::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<protocol_list>";
 
 }
@@ -1908,8 +1908,8 @@ protocol_list::before {
 protocol_list::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</protocol_list>";
 
 }
@@ -1917,8 +1917,8 @@ protocol_list::after {
 public::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<public>";
 
 }
@@ -1926,8 +1926,8 @@ public::before {
 public::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</public>";
 
 }
@@ -1935,8 +1935,8 @@ public::after {
 range::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<range>";
 
 }
@@ -1944,8 +1944,8 @@ range::before {
 range::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</range>";
 
 }
@@ -1953,8 +1953,8 @@ range::after {
 receiver::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<receiver>";
 
 }
@@ -1962,8 +1962,8 @@ receiver::before {
 receiver::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</receiver>";
 
 }
@@ -1971,8 +1971,8 @@ receiver::after {
 ref_qualifier::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<ref_qualifier>";
 
 }
@@ -1980,8 +1980,8 @@ ref_qualifier::before {
 ref_qualifier::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</ref_qualifier>";
 
 }
@@ -1989,8 +1989,8 @@ ref_qualifier::after {
 required::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<required>";
 
 }
@@ -1998,8 +1998,8 @@ required::before {
 required::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</required>";
 
 }
@@ -2007,8 +2007,8 @@ required::after {
 return::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<return>";
 
 }
@@ -2016,8 +2016,8 @@ return::before {
 return::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</return>";
 
 }
@@ -2025,8 +2025,8 @@ return::after {
 select::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<select>";
 
 }
@@ -2034,8 +2034,8 @@ select::before {
 select::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</select>";
 
 }
@@ -2043,8 +2043,8 @@ select::after {
 selector::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<selector>";
 
 }
@@ -2052,8 +2052,8 @@ selector::before {
 selector::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</selector>";
 
 }
@@ -2061,8 +2061,8 @@ selector::after {
 signals::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<signals>";
 
 }
@@ -2070,8 +2070,8 @@ signals::before {
 signals::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</signals>";
 
 }
@@ -2079,8 +2079,8 @@ signals::after {
 sizeof::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<sizeof>";
 
 }
@@ -2088,8 +2088,8 @@ sizeof::before {
 sizeof::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</sizeof>";
 
 }
@@ -2097,8 +2097,8 @@ sizeof::after {
 specifier::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<specifier>";
 
 }
@@ -2106,8 +2106,8 @@ specifier::before {
 specifier::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</specifier>";
 
 }
@@ -2115,8 +2115,8 @@ specifier::after {
 static::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<static>";
 
 }
@@ -2124,8 +2124,8 @@ static::before {
 static::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</static>";
 
 }
@@ -2133,8 +2133,8 @@ static::after {
 struct::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<struct>";
 
 }
@@ -2142,8 +2142,8 @@ struct::before {
 struct::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</struct>";
 
 }
@@ -2151,8 +2151,8 @@ struct::after {
 struct_decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<struct_decl>";
 
 }
@@ -2160,8 +2160,8 @@ struct_decl::before {
 struct_decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</struct_decl>";
 
 }
@@ -2169,8 +2169,8 @@ struct_decl::after {
 super::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<super>";
 
 }
@@ -2178,8 +2178,8 @@ super::before {
 super::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</super>";
 
 }
@@ -2187,8 +2187,8 @@ super::after {
 switch::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<switch>";
 
 }
@@ -2196,8 +2196,8 @@ switch::before {
 switch::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</switch>";
 
 }
@@ -2205,8 +2205,8 @@ switch::after {
 synchronized::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<synchronized>";
 
 }
@@ -2214,8 +2214,8 @@ synchronized::before {
 synchronized::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</synchronized>";
 
 }
@@ -2223,8 +2223,8 @@ synchronized::after {
 synthesize::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<synthesize>";
 
 }
@@ -2232,8 +2232,8 @@ synthesize::before {
 synthesize::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</synthesize>";
 
 }
@@ -2241,8 +2241,8 @@ synthesize::after {
 target::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<target>";
 
 }
@@ -2250,8 +2250,8 @@ target::before {
 target::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</target>";
 
 }
@@ -2259,8 +2259,8 @@ target::after {
 template::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<template>";
 
 }
@@ -2268,8 +2268,8 @@ template::before {
 template::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</template>";
 
 }
@@ -2277,8 +2277,8 @@ template::after {
 ternary::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<ternary>";
 
 }
@@ -2286,8 +2286,8 @@ ternary::before {
 ternary::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</ternary>";
 
 }
@@ -2295,8 +2295,8 @@ ternary::after {
 then::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<then>";
 
 }
@@ -2304,8 +2304,8 @@ then::before {
 then::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</then>";
 
 }
@@ -2313,8 +2313,8 @@ then::after {
 throw::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<throw>";
 
 }
@@ -2322,8 +2322,8 @@ throw::before {
 throw::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</throw>";
 
 }
@@ -2331,8 +2331,8 @@ throw::after {
 throws::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<throws>";
 
 }
@@ -2340,8 +2340,8 @@ throws::before {
 throws::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</throws>";
 
 }
@@ -2349,8 +2349,8 @@ throws::after {
 try::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<try>";
 
 }
@@ -2358,8 +2358,8 @@ try::before {
 try::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</try>";
 
 }
@@ -2367,8 +2367,8 @@ try::after {
 type::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<type>";
 
 }
@@ -2376,8 +2376,8 @@ type::before {
 type::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</type>";
 
 }
@@ -2385,8 +2385,8 @@ type::after {
 typedef::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<typedef>";
 
 }
@@ -2394,8 +2394,8 @@ typedef::before {
 typedef::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</typedef>";
 
 }
@@ -2403,8 +2403,8 @@ typedef::after {
 typeid::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<typeid>";
 
 }
@@ -2412,8 +2412,8 @@ typeid::before {
 typeid::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</typeid>";
 
 }
@@ -2421,8 +2421,8 @@ typeid::after {
 typename::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<typename>";
 
 }
@@ -2430,8 +2430,8 @@ typename::before {
 typename::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</typename>";
 
 }
@@ -2439,8 +2439,8 @@ typename::after {
 typeof::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<typeof>";
 
 }
@@ -2448,8 +2448,8 @@ typeof::before {
 typeof::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</typeof>";
 
 }
@@ -2457,8 +2457,8 @@ typeof::after {
 unchecked::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<unchecked>";
 
 }
@@ -2466,8 +2466,8 @@ unchecked::before {
 unchecked::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</unchecked>";
 
 }
@@ -2475,8 +2475,8 @@ unchecked::after {
 union::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<union>";
 
 }
@@ -2484,8 +2484,8 @@ union::before {
 union::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</union>";
 
 }
@@ -2493,8 +2493,8 @@ union::after {
 union_decl::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<union_decl>";
 
 }
@@ -2502,8 +2502,8 @@ union_decl::before {
 union_decl::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</union_decl>";
 
 }
@@ -2511,8 +2511,8 @@ union_decl::after {
 unit::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<unit>";
 
 }
@@ -2520,8 +2520,8 @@ unit::before {
 unit::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</unit>";
 
 }
@@ -2529,8 +2529,8 @@ unit::after {
 unsafe::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<unsafe>";
 
 }
@@ -2538,8 +2538,8 @@ unsafe::before {
 unsafe::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</unsafe>";
 
 }
@@ -2547,8 +2547,8 @@ unsafe::after {
 using::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<using>";
 
 }
@@ -2556,8 +2556,8 @@ using::before {
 using::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</using>";
 
 }
@@ -2565,8 +2565,8 @@ using::after {
 using_stmt::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<using_stmt>";
 
 }
@@ -2574,8 +2574,8 @@ using_stmt::before {
 using_stmt::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</using_stmt>";
 
 }
@@ -2583,8 +2583,8 @@ using_stmt::after {
 where::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<where>";
 
 }
@@ -2592,8 +2592,8 @@ where::before {
 where::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</where>";
 
 }
@@ -2601,8 +2601,8 @@ where::after {
 while::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<while>";
 
 }
@@ -2610,8 +2610,8 @@ while::before {
 while::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</while>";
 
 }
@@ -2619,8 +2619,8 @@ while::after {
 cpp|define::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:define>";
 
 }
@@ -2628,8 +2628,8 @@ cpp|define::before {
 cpp|define::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:define>";
 
 }
@@ -2637,8 +2637,8 @@ cpp|define::after {
 cpp|directive::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:directive>";
 
 }
@@ -2646,8 +2646,8 @@ cpp|directive::before {
 cpp|directive::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:directive>";
 
 }
@@ -2655,8 +2655,8 @@ cpp|directive::after {
 cpp|elif::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:elif>";
 
 }
@@ -2664,8 +2664,8 @@ cpp|elif::before {
 cpp|elif::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:elif>";
 
 }
@@ -2673,8 +2673,8 @@ cpp|elif::after {
 cpp|else::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:else>";
 
 }
@@ -2682,8 +2682,8 @@ cpp|else::before {
 cpp|else::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:else>";
 
 }
@@ -2691,8 +2691,8 @@ cpp|else::after {
 cpp|empty::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:empty>";
 
 }
@@ -2700,8 +2700,8 @@ cpp|empty::before {
 cpp|empty::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:empty>";
 
 }
@@ -2709,8 +2709,8 @@ cpp|empty::after {
 cpp|endif::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:endif>";
 
 }
@@ -2718,8 +2718,8 @@ cpp|endif::before {
 cpp|endif::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:endif>";
 
 }
@@ -2727,8 +2727,8 @@ cpp|endif::after {
 cpp|endregion::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:endregion>";
 
 }
@@ -2736,8 +2736,8 @@ cpp|endregion::before {
 cpp|endregion::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:endregion>";
 
 }
@@ -2745,8 +2745,8 @@ cpp|endregion::after {
 cpp|error::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:error>";
 
 }
@@ -2754,8 +2754,8 @@ cpp|error::before {
 cpp|error::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:error>";
 
 }
@@ -2763,8 +2763,8 @@ cpp|error::after {
 cpp|file::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:file>";
 
 }
@@ -2772,8 +2772,8 @@ cpp|file::before {
 cpp|file::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:file>";
 
 }
@@ -2781,8 +2781,8 @@ cpp|file::after {
 cpp|if::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:if>";
 
 }
@@ -2790,8 +2790,8 @@ cpp|if::before {
 cpp|if::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:if>";
 
 }
@@ -2799,8 +2799,8 @@ cpp|if::after {
 cpp|ifdef::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:ifdef>";
 
 }
@@ -2808,8 +2808,8 @@ cpp|ifdef::before {
 cpp|ifdef::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:ifdef>";
 
 }
@@ -2817,8 +2817,8 @@ cpp|ifdef::after {
 cpp|ifndef::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:ifndef>";
 
 }
@@ -2826,8 +2826,8 @@ cpp|ifndef::before {
 cpp|ifndef::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:ifndef>";
 
 }
@@ -2835,8 +2835,8 @@ cpp|ifndef::after {
 cpp|import::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:import>";
 
 }
@@ -2844,8 +2844,8 @@ cpp|import::before {
 cpp|import::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:import>";
 
 }
@@ -2853,8 +2853,8 @@ cpp|import::after {
 cpp|include::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:include>";
 
 }
@@ -2862,8 +2862,8 @@ cpp|include::before {
 cpp|include::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:include>";
 
 }
@@ -2871,8 +2871,8 @@ cpp|include::after {
 cpp|line::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:line>";
 
 }
@@ -2880,8 +2880,8 @@ cpp|line::before {
 cpp|line::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:line>";
 
 }
@@ -2889,8 +2889,8 @@ cpp|line::after {
 cpp|literal::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:literal>";
 
 }
@@ -2898,8 +2898,8 @@ cpp|literal::before {
 cpp|literal::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:literal>";
 
 }
@@ -2907,8 +2907,8 @@ cpp|literal::after {
 cpp|macro::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:macro>";
 
 }
@@ -2916,8 +2916,8 @@ cpp|macro::before {
 cpp|macro::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:macro>";
 
 }
@@ -2925,8 +2925,8 @@ cpp|macro::after {
 cpp|number::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:number>";
 
 }
@@ -2934,8 +2934,8 @@ cpp|number::before {
 cpp|number::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:number>";
 
 }
@@ -2943,8 +2943,8 @@ cpp|number::after {
 cpp|pragma::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:pragma>";
 
 }
@@ -2952,8 +2952,8 @@ cpp|pragma::before {
 cpp|pragma::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:pragma>";
 
 }
@@ -2961,8 +2961,8 @@ cpp|pragma::after {
 cpp|region::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:region>";
 
 }
@@ -2970,8 +2970,8 @@ cpp|region::before {
 cpp|region::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:region>";
 
 }
@@ -2979,8 +2979,8 @@ cpp|region::after {
 cpp|then::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:then>";
 
 }
@@ -2988,8 +2988,8 @@ cpp|then::before {
 cpp|then::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:then>";
 
 }
@@ -2997,8 +2997,8 @@ cpp|then::after {
 cpp|undef::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:undef>";
 
 }
@@ -3006,8 +3006,8 @@ cpp|undef::before {
 cpp|undef::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:undef>";
 
 }
@@ -3015,8 +3015,8 @@ cpp|undef::after {
 cpp|value::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:value>";
 
 }
@@ -3024,8 +3024,8 @@ cpp|value::before {
 cpp|value::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:value>";
 
 }
@@ -3033,8 +3033,8 @@ cpp|value::after {
 cpp|warning::before {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "<cpp:warning>";
 
 }
@@ -3042,8 +3042,8 @@ cpp|warning::before {
 cpp|warning::after {
 
 	font-weight: normal;
-	font-size: 90%;opacity: 0.5;
-    filter: alpha(opacity=50);
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
 	content: "</cpp:warning>";
 
 }
