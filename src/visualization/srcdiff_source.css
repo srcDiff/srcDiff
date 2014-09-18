@@ -3,7 +3,6 @@
 
 * {
 
-	font-weight: normal;
 	font-family: menlo, courier;
 
 }
@@ -40,6 +39,7 @@ diff|common {
 
 unit {
 
+font-weight: normal;
 white-space: pre;
 tab-size:8;
 
