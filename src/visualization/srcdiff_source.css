@@ -1,0 +1,46 @@
+@namespace cpp url(http://www.sdml.info/srcML/cpp);
+@namespace diff url(http://www.sdml.info/srcDiff);
+
+* {
+
+	font-weight: normal;
+	font-family: menlo, courier;
+
+}
+
+diff|insert {
+
+	font-weight: bold;
+	color: blue;
+
+}
+
+diff|delete {
+
+	font-weight: bold;
+	color: red;
+
+}
+
+diff|common {
+
+	font-weight: normal;
+	color: black;
+
+}
+
+.content {
+	font-weight: normal;
+    margin: 0;
+    margin-left: 34px;
+    padding: 0;
+    background: #FFF;
+    float: left;
+}
+
+unit {
+
+white-space: pre;
+tab-size:8;
+
+}
