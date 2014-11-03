@@ -72,4 +72,32 @@
 }</block></function>
 </unit>
 
+<unit filename="complex|complex">
+<diff:delete><if>if <condition>(<expr><call><name><name>shape</name><operator>.</operator><name>has</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+    <diff:common><decl_stmt><decl><type><name>string</name></type> <name>type</name><diff:delete> <init>= <expr><call><name><name>shape</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
+</diff:common><diff:insert><if>if <condition>(<expr><call><name><name>shape</name><operator>.</operator><name>has</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+    <expr_stmt><expr><name>type</name> <operator>=</operator> <call><name><name>shape</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+}</block></then> <else>else <block>{
+    <expr_stmt><expr><name>type</name> <operator>=</operator> <literal type="string">"as-char"</literal></expr>;</expr_stmt>
+}</block></else></if>
+
+</diff:insert>    <diff:common><if>if<condition>(<expr><name>type</name> <operator>!=</operator> <literal type="string">"page"</literal></expr>)</condition><then> <block>{
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>h</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>i</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>j</name></expr>;</expr_stmt><diff:delete><empty_stmt>;</empty_stmt></diff:delete>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>k</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>l</name></expr>;</expr_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><name>m</name></expr>;</expr_stmt>
+<diff:delete type="whitespace">    </diff:delete>}</block></then></if>
+</diff:common>}</block></then></if> 
+</diff:delete>
+</unit>
+
 </unit>
