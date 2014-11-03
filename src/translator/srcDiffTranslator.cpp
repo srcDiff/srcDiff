@@ -54,7 +54,7 @@ xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
 // diff attribute
 xAttr diff_type = { 0 };
 
-xNode unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, false, false, 0, 0 };
+xNode unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, 0, 0, false, false, 0, 0 };
 
 // constructor
 srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
