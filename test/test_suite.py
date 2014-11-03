@@ -123,7 +123,7 @@ def srcdiff(source_file_version_one, source_file_version_two, encoding, language
 	temp_file.write(source_file_version_two)
 	temp_file.close()
 
-	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "")
+	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "").replace(" revision=\"0.8.0\"", "")
 
 def get_srcml_attribute(xml_file, command) :
 
