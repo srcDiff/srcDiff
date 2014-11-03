@@ -137,6 +137,7 @@
 </diff:delete>}</block></then></if><diff:delete type="whitespace">
 </diff:delete></unit>
 
+<!--
 <unit filename="if|if">
 <if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then><diff:delete type="change"> <block>{
 
@@ -156,5 +157,5 @@
 }</block></diff:delete><diff:insert type="change">
     <block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></then></if>
 </unit>
-
+-->
 </unit>
