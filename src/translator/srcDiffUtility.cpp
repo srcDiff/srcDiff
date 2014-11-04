@@ -951,7 +951,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
     bool new_has_else = if_has_else(nodes_new, node_set_new);
 
     if(if_then_equal(nodes_old, node_set_old, nodes_new, node_set_new) || (old_condition == new_condition
-      && (old_has_block == new_has_block && old_has_else == new_has_else)))
+      && (old_has_block == new_has_block || ((old_has_block || !old_has_else) && (new_has_block || !new_has_else)))))
      return false;
 
   } else if(old_tag == "while" || old_tag == "switch") {
