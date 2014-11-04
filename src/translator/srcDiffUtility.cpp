@@ -828,23 +828,6 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 
 }
 
-bool reject_similarity_no_syntax(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
-
-  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
-  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
-
-  if(min_size <= 2)
-    return 2 * similarity < min_size || difference > min_size;
-  else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || difference > min_size;
-  else if(min_size <= 30)
-    return 10 * similarity < 7 * min_size || difference > min_size;
-  else
-    return 2 * similarity < min_size || difference > min_size;
-
-}
-
 bool reject_match_same(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
 
@@ -968,7 +951,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
     bool new_has_else = if_has_else(nodes_new, node_set_new);
 
     if(if_then_equal(nodes_old, node_set_old, nodes_new, node_set_new) || (old_condition == new_condition
-      && old_has_block == new_has_block && old_has_else == new_has_else))
+      && (old_has_block == new_has_block && old_has_else == new_has_else)))
      return false;
 
   } else if(old_tag == "while" || old_tag == "switch") {
@@ -1009,14 +992,17 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
   int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
   int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
 
-  if(min_child_length > 1 && (old_tag != "if" || min_child_length > 2)) { 
+  if(min_child_length > 1) { 
 
-    if(2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+    if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+      return false;
+
+    if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
       return false;
 
   }
 
-  return reject_similarity_no_syntax(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
 
 }
 
