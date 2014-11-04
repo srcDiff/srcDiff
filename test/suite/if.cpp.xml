@@ -157,4 +157,13 @@
     <block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></then></if>
 </unit>
 
+<unit filename="if|if"><if>if<condition>(<expr><operator>!</operator><call><name><name>paraStyles</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then><diff:delete type="change">
+    <block type="pseudo"><expr_stmt><expr><name>tree_root</name> <operator>&lt;&lt;</operator> <call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></diff:delete><diff:insert type="change"> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>id</name> <init>= <expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if<condition>(<expr><name>id</name> <operator>!=</operator> <name>tree_rootID</name></expr>)</condition><then>
+        <block type="pseudo"><expr_stmt><expr><call><name><name>tree_root</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if>
+}</block></diff:insert></then></if>
+</unit>
+
+
 </unit>
