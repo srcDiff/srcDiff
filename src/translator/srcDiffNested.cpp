@@ -52,7 +52,7 @@ const char * const call_nest_types[]                 = {                        
 const char * const ternary_nest_types[]              = { "expr",                                                                                                                    0 };
 const char * const condition_nest_types[]            = {                                                                                                                            0 };
 const char * const name_nest_types[]                 = {                                                                                                                            0 };
-const char * const try_nest_types[]                  = {                                                                                                                            0 };
+const char * const try_nest_types[]                  = { "expr_stmt", "decl_stmt", "return", "comment",                                                                             0 };
              
 const char * const basic_possible_nest_types[]       = {                                                                                                                            0 };
 const char * const block_possible_nest_types[]       = { "block", "if", "while", "for", "foreach",                                                                                  0 };
@@ -70,7 +70,7 @@ const char * const call_possible_nest_types[]        = { "expr", "call", "operat
 const char * const ternary_possible_nest_types[]     = { "ternary", "call", "operator", "literal",                                                                                  0 };
 const char * const condition_possible_nest_types[]   = { "expr", "call", "operator", "literal",                                                                                     0 };
 const char * const name_possible_nest_types[]        = { "name",                                                                                                                    0 };
-const char * const try_possible_nest_types[]         = { "expr_stmt", "decl_stmt", "return", "comment", "block", "if", "while", "for", "foreach", "else", "elseif", "try", "catch", 0 };
+const char * const try_possible_nest_types[]         = { "block", "if", "while", "for", "foreach", "else", "elseif", "try", "catch",                                                0 };
   
 // tags that can have something nested in them (incomplete)    
 const nest_info nesting[] = {   
