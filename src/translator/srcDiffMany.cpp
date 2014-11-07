@@ -239,8 +239,10 @@ void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
                                   , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
       }
 
-    } else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
- 
+    }
+    /** @todo this appears to now be dead code */
+     else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
+  
       if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
 
