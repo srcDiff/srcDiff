@@ -453,6 +453,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           nodes_old, node_set.at(match), nodes_new, node_sets_new->at(j))
           || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length)
           || (i + 1 < end_old && is_better_nest(nodes_old, node_sets_old->at(i + 1), nodes_new, node_sets_new->at(j), similarity, difference, text_old_length, text_new_length))
+            // This is not working for certain cases.  Need additional check.
           || (j + 1 < end_new && is_better_nest(nodes_new, node_sets_new->at(j + 1), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
           )
           continue;
