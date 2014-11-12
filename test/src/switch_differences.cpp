@@ -69,8 +69,19 @@ void outputNode(const xmlNode& node, xmlTextWriterPtr writer, bool output_ns) {
     {
       xmlAttr * attribute = node.properties;
       while (attribute) {
+        std::string value = (const char *)attribute->children->content;
+        std::string::size_type pos = value.find('|');
+        if(pos != std::string::npos) {
 
-        xmlTextWriterWriteAttribute(writer, (const xmlChar *)attribute->name, (const xmlChar *)attribute->children->content);
+          std::string temp = value.substr(pos + 1);
+          temp += "|";
+          temp += value.substr(0, pos);
+
+          value = temp;
+
+        }
+
+        xmlTextWriterWriteAttribute(writer, (const xmlChar *)attribute->name, (const xmlChar *)value.c_str());
         attribute = attribute->next;
       }
     }
