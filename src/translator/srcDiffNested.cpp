@@ -302,7 +302,7 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
   if(size_match < min_size)
     min_size = size_match;
 
-  return match_similarity * 10 > max_size * 9 && match_difference * 10 <= min_size && match_difference <= difference;
+  return match_similarity * 10 > max_size * 9 && match_difference * 10 <= min_size * 2 && match_difference <= difference;
 
 }
 
@@ -371,7 +371,8 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
 
         if((nest_similarity >= similarity && nest_difference <= difference)
          || ((nest_min_size / nest_similarity) < (min_size / similarity))
-         || ((nest_min_size / nest_difference) > (min_size / difference)))
+//         || ((nest_min_size / nest_difference) > (min_size / difference))
+         )
           return !is_better_nest_no_recursion(nodes_inner, node_set_inner, nodes_outer, node_set_outer, nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length);
     
       }
