@@ -316,7 +316,7 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
-bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_outer,
+bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_outer,
                     std::vector<xNodePtr> & nodes_inner, NodeSet * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 
@@ -348,6 +348,41 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
     return false;
 
 }
+
+bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_outer,
+                    std::vector<xNodePtr> & nodes_inner, NodeSet * node_set_inner,
+                    int similarity, int difference, int text_outer_length, int text_inner_length) {
+
+    if(is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
+
+      NodeSets node_set = create_node_set(nodes_outer, node_set_outer->at(1), node_set_outer->back()
+                                                             , nodes_inner.at(node_set_inner->at(0)));
+
+      int match = best_match(nodes_outer, node_set, nodes_inner, node_set_inner, SESDELETE);
+
+      if(match < node_set.size()) {
+
+        int nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length;
+        compute_measures(nodes_outer, node_set.at(match), nodes_inner, node_set_inner,
+          nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
+
+        double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
+        double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
+
+        if((nest_similarity >= similarity && nest_difference <= difference)
+         || ((nest_min_size / nest_similarity) < (min_size / similarity))
+         || ((nest_min_size / nest_difference) > (min_size / difference)))
+          return !is_better_nest_no_recursion(nodes_inner, node_set_inner, nodes_outer, node_set_outer, nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length);
+    
+      }
+
+    }
+
+    return false;
+
+}
+
+
 
 bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old, int start_pos_old,
                     std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new, int start_pos_new,
@@ -453,7 +488,6 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
           nodes_old, node_set.at(match), nodes_new, node_sets_new->at(j))
           || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length)
           || (i + 1 < end_old && is_better_nest(nodes_old, node_sets_old->at(i + 1), nodes_new, node_sets_new->at(j), similarity, difference, text_old_length, text_new_length))
-            // This is not working for certain cases.  Need additional check.
           || (j + 1 < end_new && is_better_nest(nodes_new, node_sets_new->at(j + 1), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
           )
           continue;

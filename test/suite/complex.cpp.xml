@@ -72,4 +72,17 @@
 }</block></function>
 </unit>
 
+<unit>
+<diff:delete><if>if <condition>(<expr><call><name><name>shape</name><operator>.</operator><name>has</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+    <diff:common><decl_stmt><decl><type><name>string</name></type> <name>type</name><diff:delete> <init>= <expr><call><name><name>shape</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
+</diff:common>    <diff:common><if>if<condition>(<expr><name>type</name> <operator>!=</operator> <literal type="string">"page"</literal></expr>)</condition><then> <block>{
+    <diff:delete type="whitespace">    </diff:delete><decl_stmt><decl><type><name>Anchor</name> <modifier>*</modifier></type><name>anchor</name> <init>= <expr><operator>new</operator> <diff:delete type="whitespace">   
+    </diff:delete><diff:insert type="whitespace">
+</diff:insert>        <call><name>Anchor</name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <diff:delete type="whitespace">    </diff:delete><expr_stmt><expr><call><name><name>anchor</name><operator>.</operator><name>loadFromShape</name></name><argument_list>(<argument><expr><name>element</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<diff:delete type="whitespace">    </diff:delete>}</block></then></if>
+</diff:common>}</block></then></if>
+</diff:delete>
+</unit>
+
 </unit>
