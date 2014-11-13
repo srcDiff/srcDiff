@@ -295,8 +295,8 @@ bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, NodeSet * 
         double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
 
         if((nest_similarity >= similarity && nest_difference <= difference)
-         || ((nest_min_size / nest_similarity) < (min_size / similarity))
-         || ((nest_min_size / nest_difference) > (min_size / difference)))
+         || ((nest_min_size / nest_similarity) < (min_size / similarity)
+            && !reject_match_nested(nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length, nodes_inner, node_set_inner, nodes_outer, node_set_outer)))
           return true;
     
       }
