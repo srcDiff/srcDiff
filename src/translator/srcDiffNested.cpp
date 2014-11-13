@@ -326,7 +326,7 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
         double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
-
+// add check that children will not be nested directly into other.
         if((nest_similarity >= similarity && nest_difference <= difference)
          || ((nest_min_size / nest_similarity) < (min_size / similarity)
             && !reject_match_nested(nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length, nodes_inner, node_set_inner, nodes_outer, node_set_outer))
