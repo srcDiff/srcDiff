@@ -40,4 +40,6 @@ bool is_interchangeable_match(const std::string & old_tag, const std::string & n
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new);
 
+bool reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
+  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new);
 #endif
