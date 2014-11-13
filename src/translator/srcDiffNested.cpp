@@ -223,6 +223,7 @@ bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes
     return false;
 
   // may want to switch to a list of disallows such as can not nest function block
+  /** should this be here or in is better nest */
   if(strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0
     && strcmp(nodes_two.at(structure_two->at(0))->name, "block") == 0
     && nodes_one.at(structure_one->at(0))->parent && nodes_two.at(structure_two->at(0))->parent
