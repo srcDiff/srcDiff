@@ -222,6 +222,13 @@ bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes
   if(block == -1)
     return false;
 
+  // may want to switch to a list of disallows such as can not nest function block
+  if(strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0
+    && strcmp(nodes_two.at(structure_two->at(0))->name, "block") == 0
+    && nodes_one.at(structure_one->at(0))->parent && nodes_two.at(structure_two->at(0))->parent
+    && strcmp(nodes_one.at(structure_one->at(0))->parent, nodes_two.at(structure_two->at(0))->parent) == 0)
+    return false;
+
   if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
 
     return true;
@@ -310,7 +317,7 @@ bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, NodeSet * 
 bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_outer,
                     std::vector<xNodePtr> & nodes_inner, NodeSet * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
-
+// parents and children same do not nest.
     if(is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
       NodeSets node_set = create_node_set(nodes_outer, node_set_outer->at(1), node_set_outer->back()
