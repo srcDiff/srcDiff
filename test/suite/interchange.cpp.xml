@@ -188,4 +188,27 @@
 }</block></diff:common></for></diff:insert></foreach></diff:delete>
 </unit>
 
+<unit filename="interchange|interchange">
+<if>if <condition>(<expr><name>paragraphStyle</name></expr>)</condition><then> <block>{
+    <expr_stmt><expr><name>paragStyleClone</name> <operator>=</operator> <call><name><name>paragraphStyle</name><operator>-&gt;</operator><name>clone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>ParagraphGeneral</name> <modifier>*</modifier></type><name>p</name> <init>= <expr><operator>new</operator> <name>ParagraphGeneral</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>p</name><operator>-&gt;</operator><name>setParagraphStyles</name></name><argument_list>(<argument><expr><call><name><name>m_styleManager</name><operator>-&gt;</operator><name>paragraphStyles</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>p</name><operator>-&gt;</operator><name>setStyle</name></name><argument_list>(<argument><expr><name>paragraphStyle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>connect</name><argument_list>(<argument><expr><name>p</name></expr></argument>, <argument><expr><call><name>SIGNAL</name><argument_list>(<argument><expr><call><name>styleAltered</name><argument_list>(<argument><expr>const <name>KoParagraphStyle</name><operator>*</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+            <argument><expr><name>m_styleManager</name></expr></argument>, <argument><expr><call><name>SLOT</name><argument_list>(<argument><expr><call><name>alteredStyle</name><argument_list>(<argument><expr>const <name>KoParagraphStyle</name><operator>*</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <comment type="line">// TODO get KoUnit from somewhere and set that on p</comment>
+    <expr_stmt><expr><name>widget</name> <operator>=</operator> <name>p</name></expr>;</expr_stmt>
+}</block></then> <diff:delete><elseif><diff:insert><else><diff:common>else </diff:common><block>{
+    <decl_stmt><decl><type><name>KoCharacterStyle</name> <modifier>*</modifier></type><name>characterStyle</name> <init>= <expr><call><name><name>m_stylesModel</name><operator>-&gt;</operator><name>characterStyleForIndex</name></name><argument_list>(<argument><expr><name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <diff:common><if>if <condition>(<expr><name>characterStyle</name></expr>)</condition><then> <block>{
+<diff:delete>    <expr_stmt><expr><name>characStyleClone</name> <operator>=</operator> <call><name><name>characterStyle</name><operator>-&gt;</operator><name>clone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</diff:delete><diff:insert type="whitespace">    </diff:insert>    <decl_stmt><decl><type><name>CharacterGeneral</name> <modifier>*</modifier></type><name>c</name> <init>= <expr><operator>new</operator> <name>CharacterGeneral</name></expr></init></decl>;</decl_stmt>
+    <diff:insert type="whitespace">    </diff:insert><expr_stmt><expr><call><name><name>c</name><operator>-&gt;</operator><name>setStyle</name></name><argument_list>(<argument><expr><name>characterStyle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<diff:insert>        <expr_stmt><expr><call><name>connect</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><call><name>SIGNAL</name><argument_list>(<argument><expr><call><name>styleAltered</name><argument_list>(<argument><expr>const <name>KoCharacterStyle</name><operator>*</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,
+                <argument><expr><name>m_styleManager</name></expr></argument>, <argument><expr><call><name>SLOT</name><argument_list>(<argument><expr><call><name>alteredStyle</name><argument_list>(<argument><expr>const <name>KoCharacterStyle</name><operator>*</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    </diff:insert>    <expr_stmt><expr><name>widget</name> <operator>=</operator> <name>c</name></expr>;</expr_stmt>
+<diff:insert type="whitespace">    </diff:insert>}</block></then></if></diff:common>
+}</block></else></diff:insert></elseif></diff:delete></if>
+</unit>
+
 </unit>
