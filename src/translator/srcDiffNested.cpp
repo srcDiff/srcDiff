@@ -237,6 +237,16 @@ bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes
    && strcmp(nodes_one.at(structure_one->at(0))->parent, "block") == 0;
   if(is_block && !parent_is_block) return false;
 
+  /** @todo This is a more general version.  Need to see if better. */
+  // bool is_block = strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0;
+  // bool is_then = strcmp(nodes_two.at(structure_two->at(0))->name, "then") == 0;
+  // bool parent_is_block = nodes_one.at(structure_one->at(0))->parent
+  //  && strcmp(nodes_one.at(structure_one->at(0))->parent, "block") == 0;
+  // bool is_else_to_elseif = nodes_one.at(structure_one->at(0))->parent
+  //  && strcmp(nodes_one.at(structure_one->at(0))->parent, "else") == 0
+  //  && strcmp(nodes_two.at(structure_two->at(0))->name, "if") == 0;
+  // if(is_block && !parent_is_block && !is_then && !is_else_to_elseif) return false;
+
   if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
 
     return true;
