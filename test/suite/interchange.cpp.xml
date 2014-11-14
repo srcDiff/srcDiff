@@ -171,4 +171,21 @@
 <unit filename="interchange|interchange">
 <diff:delete><elseif><diff:insert><else><diff:common>else </diff:common><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></diff:delete></else></diff:insert></elseif></diff:delete></unit>
 
+
+<!-- Specific examples -->
+
+<unit filename="interchange|interchange">
+<diff:delete><foreach>foreach<diff:insert><for>for<diff:delete type="change"><control>(<init><decl><type><name><name>KoViewPrivate</name><operator>::</operator><name>StatusBarItem</name></name></type> <name>sbItem</name>,<range> <expr><name><name>d</name><operator>-&gt;</operator><name>statusBarItems</name></name></expr></range></decl></init>)</control></diff:delete> <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>itemCount</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><diff:common> <block>{
+<diff:insert>    <decl_stmt><decl><type><name><name>KoViewPrivate</name><operator>::</operator><name>StatusBarItem</name></name> <modifier>&amp;</modifier></type><name>sbItem</name> <init>= <expr><name><name>d</name><operator>-&gt;</operator><name>statusBarItems</name><index>[<expr><name>i</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+</diff:insert>    <if>if <condition>(<expr><name>show</name></expr>)</condition><then><diff:delete type="whitespace">
+       </diff:delete> <block type="pseudo|"><diff:insert>{
+        </diff:insert><expr_stmt><expr><call><name><name>sbItem</name><operator>.</operator><name>ensureItemShown</name></name><argument_list>(<argument><expr><name>sb</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:insert>
+    }</diff:insert></block></then><diff:delete type="whitespace">
+</diff:delete><diff:insert type="whitespace"> </diff:insert><diff:delete type="whitespace">    </diff:delete><else>else<diff:delete type="whitespace">
+       </diff:delete> <block type="pseudo|"><diff:insert>{
+        </diff:insert><expr_stmt><expr><call><name><name>sbItem</name><operator>.</operator><name>ensureItemHidden</name></name><argument_list>(<argument><expr><name>sb</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:insert>
+    }</diff:insert></block></else></if>
+}</block></diff:common></for></diff:insert></foreach></diff:delete>
+</unit>
+
 </unit>

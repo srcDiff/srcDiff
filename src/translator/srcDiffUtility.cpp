@@ -818,13 +818,13 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
 
   if(min_size <= 2)
-    return 2 * similarity < min_size || difference > min_size;
+    return 2 * similarity < min_size || (difference > 1.1 * min_size) || difference > max_size;
   else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || difference > min_size;
+    return 3 * similarity < 2 * min_size || (difference > 1.1 * min_size) || difference > max_size;
   else if(min_size <= 30)
-    return 10 * similarity < 7 * min_size || difference > min_size;
+    return 10 * similarity < 7 * min_size || (difference > 1.1 * min_size) || difference > max_size;
   else
-    return 2 * similarity < min_size || difference > min_size;
+    return 2 * similarity < min_size || (difference > 1.1 * min_size) || difference > max_size;
 
 }
 
@@ -1002,7 +1002,8 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
   }
 
-  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  bool is_reject = reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  return is_reject;
 
 }
 
@@ -1031,7 +1032,8 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 
   if(old_condition != "" && old_condition == new_condition) return false;
 
-  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  bool is_reject = reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  return is_reject;
 
 }
 
