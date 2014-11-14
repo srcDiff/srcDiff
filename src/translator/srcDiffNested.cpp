@@ -224,11 +224,11 @@ bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes
 
   // may want to switch to a list of disallows such as can not nest function block
   /** should this be here or in is better nest */
-  if(strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0
-    && strcmp(nodes_two.at(structure_two->at(0))->name, "block") == 0
-    && nodes_one.at(structure_one->at(0))->parent && nodes_two.at(structure_two->at(0))->parent
-    && strcmp(nodes_one.at(structure_one->at(0))->parent, nodes_two.at(structure_two->at(0))->parent) == 0)
-    return false;
+  // if(strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0
+  //   && strcmp(nodes_two.at(structure_two->at(0))->name, "block") == 0
+  //   && nodes_one.at(structure_one->at(0))->parent && nodes_two.at(structure_two->at(0))->parent
+  //   && strcmp(nodes_one.at(structure_one->at(0))->parent, nodes_two.at(structure_two->at(0))->parent) == 0)
+  //   return false;
 
   if(is_possible_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
 
@@ -239,7 +239,7 @@ bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes
   return false;
 }
 
-bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_one
+bool is_same_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
                       , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
@@ -254,6 +254,12 @@ bool is_same_nestable(NodeSet *  structure_one, std::vector<xNodePtr> & nodes_on
 
   if(match >= node_set.size())
     return false;
+
+  /** Only can nest a block if it's parent is a block */
+  bool is_block = strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0
+   && strcmp(nodes_two.at(node_set.at(match)->at(0))->name, "block") == 0;
+  bool parent_is_block = strcmp(nodes_two.at(node_set.at(match)->at(0))->parent, "block") == 0;
+  if(is_block && !parent_is_block) return false;
 
   int match_similarity, match_difference, size_one, size_match;
   compute_measures(nodes_one, structure_one, nodes_two, node_set.at(match), match_similarity, match_difference, size_one, size_match);
@@ -334,7 +340,7 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
         double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
-// add check that children will not be nested directly into other.
+
         if((nest_similarity >= similarity && nest_difference <= difference)
          || ((nest_min_size / nest_similarity) < (min_size / similarity)
             && !reject_match_nested(nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length, nodes_inner, node_set_inner, nodes_outer, node_set_outer))
