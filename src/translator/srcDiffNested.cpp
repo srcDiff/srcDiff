@@ -282,6 +282,7 @@ bool is_same_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
   return (match_similarity >= similarity && match_difference <= difference) 
   || ((match_min_size / match_similarity) < (0.9 * (min_size / similarity))
+    && match_difference < 1.5 * difference
     && !reject_match_nested(match_similarity, match_difference, size_match, size_one, nodes_two, node_set.at(match), nodes_one, structure_one));
 
 }
@@ -370,15 +371,21 @@ bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_ol
                     std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
-    for(int pos = start_pos_old; pos < node_sets_old->size(); ++pos)
-      if(is_better_nest(nodes_old, node_sets_old->at(pos), nodes_new, node_sets_new->at(start_pos_new), similarity, difference, text_old_length, text_new_length))
-        return true;
+  for(int pos = start_pos_old; pos < node_sets_old->size(); ++pos) {
 
-    for(int pos = start_pos_new; pos < node_sets_new->size(); ++pos)
-      if(is_better_nest(nodes_new, node_sets_new->at(pos), nodes_old, node_sets_old->at(start_pos_old), similarity, difference, text_old_length, text_new_length))
-        return true;
+    if(is_better_nest(nodes_old, node_sets_old->at(pos), nodes_new, node_sets_new->at(start_pos_new), similarity, difference, text_old_length, text_new_length))
+      return true;
 
-    return false;
+  }
+
+  for(int pos = start_pos_new; pos < node_sets_new->size(); ++pos) {
+
+    if(is_better_nest(nodes_new, node_sets_new->at(pos), nodes_old, node_sets_old->at(start_pos_old), similarity, difference, text_old_length, text_new_length))
+      return true;
+
+  }
+
+  return false;
 
 }
 

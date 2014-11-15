@@ -846,12 +846,11 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
         return false;
 
     }
-    
+
   }
 
   free_node_sets(child_node_sets_old);
   free_node_sets(child_node_sets_new);
-
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;

@@ -178,4 +178,21 @@
 }</block></function>
 </unit>
 
+<unit filename="complex|complex">
+   <diff:delete type="whitespace"> </diff:delete><if>if <condition>(<expr><call><name>read_icc_profile</name><argument_list>(<argument><expr><operator>&amp;</operator><name>cinfo</name></expr></argument>, <argument><expr><operator>&amp;</operator><name>profile_data</name></expr></argument>, <argument><expr><operator>&amp;</operator><name>profile_len</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+        <expr_stmt><expr><call><name><name>profile_rawdata</name><operator>.</operator><name>resize</name></name><argument_list>(<argument><expr><name>profile_len</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>memcpy</name><argument_list>(<argument><expr><call><name><name>profile_rawdata</name><operator>.</operator><name>data</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>profile_data</name></expr></argument>, <argument><expr><name>profile_len</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name>cmsHPROFILE</name></type> <name>hProfile</name> <init>= <expr><call><name>cmsOpenProfileFromMem</name><argument_list>(<argument><expr><name>profile_data</name></expr></argument>, <argument><expr><operator>(</operator><name>DWORD</name><operator>)</operator><name>profile_len</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+        <if>if <condition>(<expr><name>hProfile</name> <operator>!=</operator> <operator>(</operator><name>cmsHPROFILE</name><operator>)</operator> <name>NULL</name></expr>)</condition><then> <block>{
+            <expr_stmt><expr><name>profile</name> <operator>=</operator> <call><name><name>KoColorSpaceRegistry</name><operator>::</operator><name>instance</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>createColorProfile</name><argument_list>(<argument><expr><name>modelId</name></expr></argument>, <argument><expr><call><name><name>Integer8BitsColorDepthID</name><operator>.</operator><name>id</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>profile_rawdata</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name>Q_CHECK_PTR</name><argument_list>(<argument><expr><name>profile</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<diff:delete type="change"><comment type="line">//             dbgFile &lt;&lt;"profile name:" &lt;&lt; profile-&gt;productName() &lt;&lt;" profile description:" &lt;&lt; profile-&gt;productDescription() &lt;&lt;" information sur le produit:" &lt;&lt; profile-&gt;productInfo();</comment></diff:delete><diff:insert type="change">            <expr_stmt><expr><name>dbgFile</name> <operator>&lt;&lt;</operator><literal type="string">"profile name:"</literal> <operator>&lt;&lt;</operator> <call><name><name>profile</name><operator>-&gt;</operator><name>name</name></name><argument_list>()</argument_list></call> <operator>&lt;&lt;</operator><literal type="string">" product information:"</literal> <operator>&lt;&lt;</operator> <call><name><name>profile</name><operator>-&gt;</operator><name>info</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:insert>
+            <if>if <condition>(<expr><operator>!</operator><call><name><name>profile</name><operator>-&gt;</operator><name>isSuitableForOutput</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+                <expr_stmt><expr><name>dbgFile</name> <operator>&lt;&lt;</operator> <literal type="string">"the profile is not suitable for output and therefore cannot be used in krita, we need to convert the image to a standard profile"</literal></expr>;</expr_stmt> <comment type="line">// TODO: in ko2 popup a selection menu to inform the user</comment>
+            }</block></then></if>
+        }</block></then></if>
+    }</block></then></if>
+</unit>
+
 </unit>
