@@ -281,8 +281,8 @@ bool is_same_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
   double match_min_size = size_one < size_match ? size_one : size_match;
 
   return (match_similarity >= similarity && match_difference <= difference) 
-  || ((match_min_size / match_similarity) < (0.9 * (min_size / similarity))
-    && match_difference < 1.5 * difference
+  || (match_min_size > 50 && min_size > 50 && (match_min_size / match_similarity) < (0.9 * (min_size / similarity))
+//   && match_difference < 1.5 * difference
     && !reject_match_nested(match_similarity, match_difference, size_match, size_one, nodes_two, node_set.at(match), nodes_one, structure_one));
 
 }

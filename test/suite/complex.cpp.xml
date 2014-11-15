@@ -195,4 +195,15 @@
     }</block></then></if>
 </unit>
 
+<unit filename="complex|complex">
+<if>if<condition>( <expr><name>path</name> <operator>&amp;&amp;</operator> <call><name><name>shape</name><operator>-&gt;</operator><name>background</name></name><argument_list>()</argument_list></call></expr> )</condition><then> <block>{
+<diff:insert>    <comment type="line">// non-zero is default, so only write fillrule if evenodd is set</comment></diff:insert>
+    <if>if<condition>( <expr><call><name><name>path</name><operator>-&gt;</operator><name>fillRule</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>Qt</name><operator>::</operator><name>OddEvenFill</name></name></expr> )</condition><then>
+        <block type="pseudo"><expr_stmt><expr><operator>*</operator><name>stream</name> <operator>&lt;&lt;</operator> <literal type="string">" fill-rule=\"evenodd\""</literal></expr>;</expr_stmt></block></then><diff:delete>
+    <else>else
+        <block type="pseudo"><expr_stmt><expr><operator>*</operator><name>stream</name> <operator>&lt;&lt;</operator> <literal type="string">" fill-rule=\"nonzero\""</literal></expr>;</expr_stmt></block></else></diff:delete></if>
+}</block></then></if>
+</unit>
+
+
 </unit>
