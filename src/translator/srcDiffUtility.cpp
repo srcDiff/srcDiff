@@ -806,29 +806,52 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
   int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
   int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
 
-  if(min_child_length == 1) {
-
-    NodeSets child_node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
-    NodeSets child_node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());    
-
-    if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "block") == 0
-      && strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "block") == 0) {
-
-      compute_syntax_measures(nodes_old, child_node_sets_old.back(), nodes_new, child_node_sets_new.back(), syntax_similarity, syntax_difference, children_length_old, children_length_new);
-
-      min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
-      max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;      
-
-    }
-
-  }
-
   if(min_child_length > 1) { 
 
     if(2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
       return false;
 
   }
+
+  NodeSets child_node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
+  NodeSets child_node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());    
+
+  if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "then") == 0) {
+
+    NodeSets temp = create_node_set(nodes_old, child_node_sets_old.back()->at(1), child_node_sets_old.back()->back());
+    free_node_sets(child_node_sets_old);
+    child_node_sets_old = temp;
+
+  }
+
+  if(strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "then") == 0) {
+
+    NodeSets temp = create_node_set(nodes_new, child_node_sets_new.back()->at(1), child_node_sets_new.back()->back());
+    free_node_sets(child_node_sets_new);
+    child_node_sets_new = temp;
+
+  }
+
+  if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "block") == 0
+    && strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "block") == 0) {
+
+    compute_syntax_measures(nodes_old, child_node_sets_old.back(), nodes_new, child_node_sets_new.back(), syntax_similarity, syntax_difference, children_length_old, children_length_new);
+
+    min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
+    max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;      
+
+    if(min_child_length > 1) { 
+
+      if(2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+        return false;
+
+    }
+    
+  }
+
+  free_node_sets(child_node_sets_old);
+  free_node_sets(child_node_sets_new);
+
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
