@@ -686,14 +686,13 @@ bool for_control_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_o
     if(strcmp((const char *)nodes_old.at(node_sets_old.at(control_pos_old)->front())->name, "control") == 0)
       break;
 
-
   NodeSets::size_type control_pos_new;
   for(control_pos_new = 0; control_pos_new < node_sets_new.size(); ++control_pos_new)
     if(strcmp((const char *)nodes_new.at(node_sets_new.at(control_pos_new)->front())->name, "control") == 0)
       break;
 
   bool matches = control_pos_old != node_sets_old.size() && control_pos_new != node_sets_new.size() 
-    && node_set_syntax_compare((void *)node_sets_old.at(control_pos_old), (void *)node_sets_new.at(control_pos_new), (void *)&dnodes);
+    && node_set_syntax_compare((void *)node_sets_old.at(control_pos_old), (void *)node_sets_new.at(control_pos_new), (void *)&dnodes) == 0;
 
   free_node_sets(node_sets_old);
   free_node_sets(node_sets_new);
@@ -982,7 +981,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
     if(for_control_matches(nodes_old, node_set_old, nodes_new, node_set_new))
       return false;
-    
+
   } else if(old_tag == "case") { 
 
     std::string old_expr = get_case_expr(nodes_old, old_pos);
