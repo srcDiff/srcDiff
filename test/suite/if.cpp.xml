@@ -52,7 +52,7 @@
 </unit>
 
 <unit filename="if|if">
-<if>if <condition>(<expr><diff:delete type="change"><name>p</name> <operator>&gt;=</operator> <call><name>count</name><argument_list>()</argument_list></call></diff:delete><diff:insert type="change"><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>, <argument><expr><name>p</name></expr></argument>)</argument_list></call></diff:insert></expr>)</condition><then> <block type="pseudo"><break>break;</break></block></then></if></unit>
+<if>if <condition>(<diff:delete type="change"><expr><name>p</name> <operator>&gt;=</operator> <call><name>count</name><argument_list>()</argument_list></call></expr></diff:delete><diff:insert type="change"><expr><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>, <argument><expr><name>p</name></expr></argument>)</argument_list></call></expr></diff:insert>)</condition><then> <block type="pseudo"><break>break;</break></block></then></if></unit>
 
 <unit filename="if|if">
 <diff:insert><if>if<condition>( <expr><operator>*</operator><call><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name><operator>-&gt;</operator><name>colorSpace</name></name><argument_list>()</argument_list></call> <operator>==</operator> <operator>*</operator><call><name>image</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>colorSpace</name><argument_list>()</argument_list></call></expr>)</condition><then>
@@ -165,8 +165,5 @@
         <block type="pseudo"><diff:common><expr_stmt><expr><diff:delete type="change"><name>tree_root</name> <operator>&lt;&lt;</operator> <call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></diff:delete><diff:insert type="change"><call><name><name>tree_root</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt></diff:common></block></then></if>
 }</diff:insert></block></then></if>
 </unit>
-
-</unit>
-
 
 </unit>
