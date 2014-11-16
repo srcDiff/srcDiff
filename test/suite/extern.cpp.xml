@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="extern">
+
+<unit filename="extern|extern">
+<diff:insert><extern>extern <literal type="string">"C"</literal> <block>{
+  <diff:common><cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;jpeglib.h&gt;</cpp:file></cpp:include>
+</diff:common>}</block></extern></diff:insert>
+</unit>
+
+</unit>
