@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="default">
 
 <unit filename="default|default">
-<default>default:
+<default>default:</default>
 <diff:delete>  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
-</diff:delete>  <break>break;</break></default> 
+</diff:delete>  <break>break;</break>
 </unit>
 
 </unit>

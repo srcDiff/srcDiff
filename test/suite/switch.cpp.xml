@@ -7,7 +7,7 @@
 <unit filename="switch|switch">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-    <case>case <expr><name>bar</name></expr>:
+    <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -16,12 +16,12 @@
     <break>break;</break>
 
 
-</case>}</block></switch></unit>
+}</block></switch></unit>
 
 <unit filename="switch|switch">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-<diff:delete>    <case>case <expr><name>bar</name></expr>:
+<diff:delete>    <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -30,6 +30,6 @@
     <break>break;</break>
 
 
-</case></diff:delete>}</block></switch></unit>
+</diff:delete>}</block></switch></unit>
 
 </unit>

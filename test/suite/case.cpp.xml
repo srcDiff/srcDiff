@@ -14,20 +14,20 @@
 <diff:delete><case>case <expr><name>bar</name></expr>:</case></diff:delete></unit>
 
 <unit filename="case|case">
-<diff:delete type="change"><case>case:</case></diff:delete><diff:insert type="change"><case>case <expr><name>bar</name></expr>: <break>break;</break></case></diff:insert></unit>
+<diff:delete type="change"><case>case:</case></diff:delete><diff:insert type="change"><case>case <expr><name>bar</name></expr>:</case> <break>break;</break></diff:insert></unit>
 
 <unit filename="case|case">
-<diff:delete type="change"><case>case <expr><name>foo</name></expr>:</case></diff:delete><diff:insert type="change"><case>case <expr><name>bar</name></expr>: 
+<case>case <diff:delete type="change"><expr><name>foo</name></expr></diff:delete><diff:insert type="change"><expr><name>bar</name></expr></diff:insert>:</case> <diff:insert type="whitespace">
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        <break>break;</break></case></diff:insert></unit>
+        <break>break;</break></diff:insert></unit>
 
 <unit filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-    <case>case <expr><name>bar</name></expr>:
+    <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -36,12 +36,12 @@
     <break>break;</break>
 
 
-</case>}</block></switch></unit>
+}</block></switch></unit>
 
 <unit filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-<diff:delete>    <case>case <expr><name>bar</name></expr>:
+<diff:delete>    <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -50,50 +50,50 @@
     <break>break;</break>
 
 
-</case></diff:delete>}</block></switch></unit>
+</diff:delete>}</block></switch></unit>
 
 <unit filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-<diff:delete>    <case>case <expr><name>bar</name></expr>:
+<diff:delete>    <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 
     <break>break;</break>
 
-    </case><case>case <expr><name>foobar</name></expr>:
+    <case>case <expr><name>foobar</name></expr>:</case>
 
         <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
 
     <break>break;</break>
 
-</case></diff:delete>}</block></switch></unit>
+</diff:delete>}</block></switch></unit>
 
 <unit filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-    <case>case <expr><name>bar</name></expr>:
+    <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete type="change">        <expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
 
     <break>break;</break>
 
-    </case><case>case <expr><name>foobar</name></expr>:
+    <case>case <expr><name>foobar</name></expr>:</case>
 
         <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 <diff:delete type="change">        <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
 
     <break>break;</break>
 
-</case>}</block></switch></unit>
+}</block></switch></unit>
 
 <unit filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-    <case>case <expr><name>bar</name></expr>:
+    <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete>        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -105,7 +105,7 @@
 <diff:delete type="whitespace">
 </diff:delete>    <break>break;</break>
 
-    </case><case>case <expr><name>foobar</name></expr>:
+    <case>case <expr><name>foobar</name></expr>:</case>
 
         <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
 <diff:delete>        <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
@@ -117,6 +117,6 @@
 <diff:delete type="whitespace">
 </diff:delete>    <break>break;</break>
 
-</case>}</block></switch></unit>
+}</block></switch></unit>
 
 </unit>
