@@ -691,14 +691,13 @@ bool for_control_matches(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_o
     if(strcmp((const char *)nodes_old.at(node_sets_old.at(control_pos_old)->front())->name, "control") == 0)
       break;
 
-
   NodeSets::size_type control_pos_new;
   for(control_pos_new = 0; control_pos_new < node_sets_new.size(); ++control_pos_new)
     if(strcmp((const char *)nodes_new.at(node_sets_new.at(control_pos_new)->front())->name, "control") == 0)
       break;
 
   bool matches = control_pos_old != node_sets_old.size() && control_pos_new != node_sets_new.size() 
-    && node_set_syntax_compare((void *)node_sets_old.at(control_pos_old), (void *)node_sets_new.at(control_pos_new), (void *)&dnodes);
+    && node_set_syntax_compare((void *)node_sets_old.at(control_pos_old), (void *)node_sets_new.at(control_pos_new), (void *)&dnodes) == 0;
 
   free_node_sets(node_sets_old);
   free_node_sets(node_sets_new);
@@ -819,17 +818,56 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 
   }
 
+  NodeSets child_node_sets_old = create_node_set(nodes_old, node_set_old->at(1), node_set_old->back());
+  NodeSets child_node_sets_new = create_node_set(nodes_new, node_set_new->at(1), node_set_new->back());    
+
+  if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "then") == 0) {
+
+    NodeSets temp = create_node_set(nodes_old, child_node_sets_old.back()->at(1), child_node_sets_old.back()->back());
+    free_node_sets(child_node_sets_old);
+    child_node_sets_old = temp;
+
+  }
+
+  if(strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "then") == 0) {
+
+    NodeSets temp = create_node_set(nodes_new, child_node_sets_new.back()->at(1), child_node_sets_new.back()->back());
+    free_node_sets(child_node_sets_new);
+    child_node_sets_new = temp;
+
+  }
+
+  if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "block") == 0
+    && strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "block") == 0) {
+
+    compute_syntax_measures(nodes_old, child_node_sets_old.back(), nodes_new, child_node_sets_new.back(), syntax_similarity, syntax_difference, children_length_old, children_length_new);
+
+    min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
+    max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;      
+
+    if(min_child_length > 1) { 
+
+      if(2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+        return false;
+
+    }
+
+  }
+
+  free_node_sets(child_node_sets_old);
+  free_node_sets(child_node_sets_new);
+
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
 
   if(min_size <= 2)
-    return 2 * similarity < min_size || difference > min_size;
+    return 2 * similarity < min_size || (difference > 1.25 * min_size) || difference > max_size;
   else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || difference > min_size;
+    return 3 * similarity < 2 * min_size || (difference > 1.25 * min_size) || difference > max_size;
   else if(min_size <= 30)
-    return 10 * similarity < 7 * min_size || difference > min_size;
+    return 10 * similarity < 7 * min_size || (difference > 1.25 * min_size) || difference > max_size;
   else
-    return 2 * similarity < min_size || difference > min_size;
+    return 2 * similarity < min_size || (difference > 1.25 * min_size) || difference > max_size;
 
 }
 
@@ -970,7 +1008,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
     if(for_control_matches(nodes_old, node_set_old, nodes_new, node_set_new))
       return false;
-    
+
   } else if(old_tag == "case") { 
 
     std::string old_expr = get_case_expr(nodes_old, old_pos);
@@ -991,23 +1029,24 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
   }
 
-  int syntax_similarity, syntax_difference, children_length_old, children_length_new;
-  compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
+  // int syntax_similarity, syntax_difference, children_length_old, children_length_new;
+  // compute_syntax_measures(nodes_old, node_set_old, nodes_new, node_set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
 
-  int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
-  int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
+  // int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
+  // int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
 
-  if(min_child_length > 1) { 
+  // if(min_child_length > 1) { 
 
-    if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
-      return false;
+  //   if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+  //     return false;
 
-    if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
-      return false;
+  //   if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
+  //     return false;
 
-  }
+  // }
 
-  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  bool is_reject = reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  return is_reject;
 
 }
 
@@ -1036,7 +1075,8 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 
   if(old_condition != "" && old_condition == new_condition) return false;
 
-  return reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  bool is_reject = reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+  return is_reject;
 
 }
 
