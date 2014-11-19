@@ -10,7 +10,7 @@
 <unit filename="try|try"><diff:delete><try>try <block>{ <diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:common> }</block></try></diff:delete>
 </unit>
 
-<unit filename="try|try"><diff:delete><try>try <block>{ <expr_stmt><expr><name>a</name></expr>;</expr_stmt> }</block> <diff:common><catch>catch<parameter_list>(<param><decl><type><name><name>std</name><operator>::</operator><name>exception</name></name></type> <name>e</name></decl></param>)</parameter_list> <block>{ <expr_stmt><expr><name>e</name></expr>;</expr_stmt> }</block></catch></diff:common></try></diff:delete>
+<unit filename="try|try"><diff:delete><try>try <block>{ <expr_stmt><expr><name>a</name></expr>;</expr_stmt> }</block> <diff:common><catch>catch<parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>exception</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{ <expr_stmt><expr><name>e</name></expr>;</expr_stmt> }</block></catch></diff:common></try></diff:delete>
 </unit>
 
 </unit>

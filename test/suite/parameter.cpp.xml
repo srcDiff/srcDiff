@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="parameter">
+
+<unit filename="parameter|parameter">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<diff:delete><parameter><decl><type><name>int</name></type></decl></parameter></diff:delete>)</parameter_list>;</function_decl></unit>
+
+<unit filename="parameter|parameter">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<diff:delete><parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter></diff:delete>)</parameter_list>;</function_decl></unit>
+
+<unit filename="parameter|parameter">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name></decl></parameter>)</parameter_list>;</function_decl></unit>
+
+<unit filename="parameter|parameter">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name></decl></parameter>)</parameter_list>;</function_decl></unit>
+
+<unit filename="parameter|parameter">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><diff:delete type="change">int</diff:delete><diff:insert type="change">double</diff:insert></name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl></unit>
+
+<unit filename="parameter|parameter">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><diff:delete type="change">int</diff:delete><diff:insert type="change">double</diff:insert></name></type> <name>a</name><diff:delete> <init>= <expr><literal type="number">0</literal></expr></init></diff:delete></decl></parameter>)</parameter_list>;</function_decl></unit>
+
+<unit filename="parameter|parameter">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<diff:delete type="change"><parameter><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></parameter></diff:delete><diff:insert type="change"><parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter></diff:insert>)</parameter_list>;</function_decl></unit>
+
+</unit>

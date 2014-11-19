@@ -258,6 +258,10 @@ void skip_type(std::vector<xNodePtr> & nodes, int & start_pos) {
     ++start_pos;
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+   && strcmp((const char *)nodes.at(start_pos)->name, "parameter") == 0)
+    ++start_pos;
+
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
    && strcmp((const char *)nodes.at(start_pos)->name, "param") == 0)
     ++start_pos;
 
@@ -417,6 +421,7 @@ std::string get_decl_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") != 0
+      && strcmp((const char *)nodes.at(start_pos)->name, "parameter") != 0
       && strcmp((const char *)nodes.at(start_pos)->name, "param") != 0
       && strcmp((const char *)nodes.at(start_pos)->name, "decl") != 0)) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
@@ -923,7 +928,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
     if(name_list_similarity(old_names, new_names)) return false;
 
-  } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "param") {
+  } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "parameter" || old_tag == "param") {
 
     std::string old_name = get_decl_name(nodes_old, old_pos);
     std::string new_name = get_decl_name(nodes_new, new_pos);
