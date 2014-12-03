@@ -1,12 +1,94 @@
 /*
-  SAX2ColorDiff.cpp
+  SAX2BashView.cpp
 
-  Michael J. Decker
-  mjd52@zips.uakron.edu
+  Michael John Decker
+  mdecker6@kent.edu
 */
 
 #include <SAX2BashView.hpp>
 #include <ShortestEditScript.hpp>
+
+#include <libxml/parserInternals.h>
+
+// forward declarations
+static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
+static void parseDocument(xmlParserCtxtPtr ctxt);
+
+int bash_view::transform(const char * srcdiff) {
+
+  // create the ctxt
+  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
+
+  // setup sax handler
+  xmlSAXHandler sax = bash_view::factory();
+  ctxt->sax = &sax;
+
+  ctxt->_private = this;
+
+  parseDocument(ctxt);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  return 0;
+}
+
+// create the ctxt
+static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
+
+  xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(srcdiff, strlen(srcdiff));
+  //xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
+
+  if (ctxt == NULL) {
+
+    // report error
+    xmlErrorPtr ep = xmlGetLastError();
+    fprintf(stderr, "%s: %s", "ExtractsrcML", ep->message);
+    exit(1);
+  }
+
+  return ctxt;
+}
+
+// parse the document
+static void parseDocument(xmlParserCtxtPtr ctxt) {
+
+  // process the document
+  int status;
+  if ((status = xmlParseDocument(ctxt)) == -1) {
+
+    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+
+    // report error
+    char* partmsg = strdup(ep->message);
+    partmsg[strlen(partmsg) - 1] = '\0';
+
+    fprintf(stderr, "%s: %s in '%s'\n", "ExtractsrcML", partmsg, ep->file);
+    exit(1);
+  }
+
+}
+
+xmlSAXHandler bash_view::factory() {
+
+  xmlSAXHandler sax = { 0 };
+
+  sax.initialized    = XML_SAX2_MAGIC;
+
+  sax.startDocument = &bash_view::startDocument;
+  sax.endDocument = &bash_view::endDocument;
+
+  sax.startElementNs = &bash_view::startElementNs;
+  sax.endElementNs = &bash_view::endElementNs;
+
+  sax.characters = &bash_view::characters;
+  sax.comment = &bash_view::comment;
+
+  return sax;
+}
 
 void bash_view::startDocument(void* ctx) {
 
@@ -74,13 +156,13 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
       return;
 
   if(data->diff_stack.back() == SESDELETE)
-    data->output << delete_code;
+    (*data->output) << delete_code;
   else
-    data->output << insert_code;
+    (*data->output) << insert_code;
 
-  data->output.write((const char *)ch, len);
+  data->output->write((const char *)ch, len);
 
-  data->output << common_code;
+  (*data->output) << common_code;
 
 }
 

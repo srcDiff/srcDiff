@@ -1,16 +1,17 @@
 /*
-  SAX2ColorDiff.hpp
+  SAX2BashView.cpp
 
-  Michael J. Decker
-  mjd52@zips.uakron.edu
+  Michael John Decker
+  mdecker6@kent.edu
 */
 
 #ifndef INCLUDED_SAX2BASHVIEW_HPP
 #define INCLUDED_SAX2BASHVIEW_HPP
 
 #include <vector>
-#include <fstream>
 #include <string>
+#include <fstream>
+#include <iostream>
 
 #include <libxml/parser.h>
 
@@ -20,11 +21,30 @@ private:
 
   std::vector<int> diff_stack;
 
-  std::ostream & output;
+  std::ostream * output;
 
 public:
 
-  bash_view(std::ostream & output) : output(output) {}
+  bash_view(const std::string & output_filename) {
+
+    if(output_filename != "-")
+      output = new std::ofstream(output_filename.c_str());
+    else
+      output = &std::cout;
+
+  }
+
+  ~bash_view() {
+
+    if(output != &std::cout) {
+
+      ((std::ofstream *)output)->close();
+      delete output;
+
+    }
+  }
+
+  int transform(const char * srcdiff);
 
   static xmlSAXHandler factory();
 
