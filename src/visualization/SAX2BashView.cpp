@@ -142,27 +142,25 @@ void bash_view::endElementNs(void *ctx, const xmlChar *localname, const xmlChar 
 
 }
 
-const char * delete_code = "\x1b[101;1m;";
-const char * insert_code = "\x1b[102;1m;";
+const char * delete_code = "\x1b[101;1m";
+const char * insert_code = "\x1b[102;1m";
 
-const char * common_code = "\x1b[0m;";
+const char * common_code = "\x1b[0m";
 
 void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   bash_view * data = (bash_view *)ctxt->_private;
 
-  if(data->diff_stack.back() == SESCOMMON)
-      return;
-
   if(data->diff_stack.back() == SESDELETE)
     (*data->output) << delete_code;
-  else
+  else if(data->diff_stack.back() == SESINSERT)
     (*data->output) << insert_code;
 
   data->output->write((const char *)ch, len);
 
-  (*data->output) << common_code;
+  if(data->diff_stack.back() != SESCOMMON)
+    (*data->output) << common_code;
 
 }
 
