@@ -1,11 +1,11 @@
 /*
-  SAX2BashView.cpp
+  bash_view.cpp
 
   Michael John Decker
   mdecker6@kent.edu
 */
 
-#include <SAX2BashView.hpp>
+#include <bash_view.hpp>
 #include <ShortestEditScript.hpp>
 
 #include <libxml/parserInternals.h>

@@ -34,7 +34,7 @@
 #include <srcDiffTypes.hpp>
 #include <Methods.hpp>
 #include <ColorDiff.hpp>
-#include <SAX2BashView.hpp>
+#include <bash_view.hpp>
 
 #include <pthread.h>
 #include <srcml.h>

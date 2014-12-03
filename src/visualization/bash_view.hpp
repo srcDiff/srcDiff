@@ -1,5 +1,5 @@
 /*
-  SAX2BashView.cpp
+  bash_view.cpp
 
   Michael John Decker
   mdecker6@kent.edu
