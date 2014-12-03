@@ -98,6 +98,9 @@ const int SVN_FLAG_CODE = 256 + 21;
 const char * const SVN_CONTINUOUS_FLAG = "svn-continuous";
 const int SVN_CONTINUOUS_FLAG_CODE = 256 + 22;
 
+const char * const BASH_VIEW_FLAG = "bash";
+const int BASH_VIEW_FLAG_CODE = 256 + 23;
+
 struct process_options
 {
 

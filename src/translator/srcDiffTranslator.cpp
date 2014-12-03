@@ -63,11 +63,11 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      srcml_archive * archive,
                                      const char * url,
                                      OPTION_TYPE & options)
-  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL), url(url), options(options)
+  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL), bashview(NULL), url(url), options(options)
 {
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
-  if(!isoption(options, OPTION_VISUALIZE))
+  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename);
 
   // diff tags
@@ -124,7 +124,8 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
 
     colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, options);
 
-  }
+  } else if(isoption(options, OPTION_BASH_VIEW))
+      bashview = new bash_view(srcdiff_filename);
 
   wstate.method = method;
 
@@ -374,6 +375,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     if(is_old || is_new)
       colordiff->colorize(srcml_unit_get_xml(srcdiff_unit), line_diff_range);
 
+  } else if(isoption(options, OPTION_BASH_VIEW)) {
+
+    bashview->transform(srcml_unit_get_xml(srcdiff_unit));
   }
 
   srcml_free_unit(srcdiff_unit);
@@ -389,13 +393,15 @@ srcml_archive * srcDiffTranslator::get_archive() {
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
-  if(!isoption(options, OPTION_VISUALIZE)) {
+  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW)) {
 
     srcml_close_archive(archive);
 
   } else {
 
-    delete colordiff;
+    if(colordiff) delete colordiff;
+
+    if(bashview) delete bashview;
 
   }
 

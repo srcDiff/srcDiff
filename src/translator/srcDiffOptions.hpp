@@ -30,5 +30,8 @@ const OPTION_TYPE OPTION_SVN_CONTINUOUS = ull(1) << __COUNTER__;
 // @src2srcml
 const OPTION_TYPE OPTION_SVN            = ull(1) << __COUNTER__;
 
+// @src2srcml
+const OPTION_TYPE OPTION_BASH_VIEW      = ull(1) << __COUNTER__;
+
 #endif
 
