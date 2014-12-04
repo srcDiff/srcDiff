@@ -14,7 +14,10 @@
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
-int bash_view::transform(const char * srcdiff) {
+int bash_view::transform(const char * old_filename, const char * new_filename, const char * srcdiff) {
+
+  (*output) << "--- " << old_filename << '\n';
+  (*output) << "+++ " << new_filename << '\n';
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
