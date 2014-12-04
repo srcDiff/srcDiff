@@ -24,7 +24,8 @@ private:
 
   std::ostream * output;
 
-  unsigned long line_number;
+  unsigned long line_number_delete;
+  unsigned long line_number_insert;
 
   std::string context;
 
@@ -41,7 +42,7 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number(0), is_line_output(false), is_after_change(false), wait_change(true),
+  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number_delete(0), line_number_insert(0), is_line_output(false), is_after_change(false), wait_change(true),
     num_context_lines(num_context_lines), length(0), is_after_additional(false), after_edit_count(0) {
 
     if(output_filename != "-")

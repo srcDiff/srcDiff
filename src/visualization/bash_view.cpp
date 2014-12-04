@@ -152,7 +152,7 @@ void bash_view::output_additional_context() {
   if(additional_context.empty()) return;
 
 
-  unsigned long line = line_number + 1 - additional_context.size();
+  unsigned long line = line_number_delete + 1 - additional_context.size();
 
   for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
 
@@ -186,7 +186,10 @@ void bash_view::characters(const char * ch, int len) {
 
       if(code != common_code && ch[i] == '\n') (*output) << common_code;
       (*output) << ch[i];
-      if(ch[i] == '\n' && (!is_after_additional || (after_edit_count + 1) != num_context_lines)) (*output) << line_number + 2 << ":\t";
+
+      int line_delete = line_number_delete + ((code == common_code || code == delete_code) ? 2 : 1);
+      int line_insert = line_number_insert + ((code == common_code || code == insert_code) ? 2 : 1);
+      if(ch[i] == '\n' && (!is_after_additional || (after_edit_count + 1) != num_context_lines)) (*output) << line_delete << '-' << line_insert << ":\t";
       if(code != common_code && ch[i] == '\n') (*output) << code;
 
     }
@@ -222,7 +225,9 @@ void bash_view::characters(const char * ch, int len) {
 
       if(wait_change) is_line_output = false;
 
-      ++line_number;
+      if(code == common_code || code == delete_code) ++line_number_delete;
+      if(code == common_code || code == insert_code) ++line_number_insert;
+
       context = "";
 
     }
@@ -243,7 +248,7 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
     data->output_additional_context();
 
     if(!data->is_line_output)
-      (*data->output) << data->line_number + 1 << ":\t";
+      (*data->output) << data->line_number_delete + 1 << '-' << data->line_number_insert + 1 << ":\t";
 
     data->is_line_output = true;
     data->is_after_additional = false;
