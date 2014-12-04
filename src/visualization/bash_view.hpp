@@ -34,10 +34,12 @@ private:
   unsigned long num_context_lines;
   std::list<std::string> additional_context;
 
+  bool is_after_additional;
+
 public:
 
   bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number(0), is_line_output(false), is_after_change(false),
-    num_context_lines(num_context_lines) {
+    num_context_lines(num_context_lines), is_after_additional(false) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());

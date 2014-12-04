@@ -174,22 +174,35 @@ void bash_view::process_characters(const char * ch, int len) {
       if(is_after_change) {
 
         output->write(context.c_str(), context.size());
+  
+        is_after_change = false;
+        additional_context.clear();
+        is_after_additional = true;
 
       } else {
 
-        if((num_context_lines - 1) != 0) {
+        if(num_context_lines != 0) {
 
-          if(additional_context.size() >= (num_context_lines - 1))
+          std::list<std::string>::size_type length = additional_context.size();
+          if(is_after_additional && length == num_context_lines) {
+
+            output_additional_context();
+            is_after_additional = false;
+
+          } else {
+
+          if(length >= num_context_lines)
             additional_context.pop_front();
 
           additional_context.push_back(context);
 
         }
 
-    }
+        }
+
+      }
 
       is_line_output = false;
-      is_after_change = false;
 
       ++line_number;
       context = "";
@@ -221,6 +234,7 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
       (*data->output) << data->line_number + 1 << ":\t";
 
     data->is_line_output = true;
+    data->is_after_additional = false;
 
     data->output->write(data->context.c_str(), data->context.size());
     data->context = "";
