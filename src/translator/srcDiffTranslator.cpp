@@ -62,7 +62,8 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      std::string css,
                                      srcml_archive * archive,
                                      const char * url,
-                                     OPTION_TYPE & options)
+                                     OPTION_TYPE & options,
+                                     unsigned long number_context_lines)
   : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL), bashview(NULL), url(url), options(options)
 {
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
@@ -125,7 +126,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
     colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, options);
 
   } else if(isoption(options, OPTION_BASH_VIEW))
-      bashview = new bash_view(srcdiff_filename);
+      bashview = new bash_view(srcdiff_filename, number_context_lines);
 
   wstate.method = method;
 

@@ -116,6 +116,7 @@ struct process_options
   const char * svn_url;
   int revision_one;
   int revision_two;
+  unsigned long number_context_lines;
   
 };
 

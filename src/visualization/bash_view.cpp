@@ -10,6 +10,11 @@
 
 #include <libxml/parserInternals.h>
 
+const char * delete_code = "\x1b[101;1m";
+const char * insert_code = "\x1b[102;1m";
+
+const char * common_code = "\x1b[0m";
+
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
@@ -142,25 +147,123 @@ void bash_view::endElementNs(void *ctx, const xmlChar *localname, const xmlChar 
 
 }
 
-const char * delete_code = "\x1b[101;1m";
-const char * insert_code = "\x1b[102;1m";
+void bash_view::output_additional_context() {
 
-const char * common_code = "\x1b[0m";
+  if(additional_context.empty()) return;
+
+
+  unsigned long line_delete = line_number_delete + 1 - additional_context.size();
+  unsigned long line_insert = line_number_insert + 1 - additional_context.size();
+
+  for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
+
+    (*output) << line_delete << '-' << line_insert << ":\t";
+    (*output) << *citr;
+
+    ++line_delete, ++line_insert;
+
+  }
+
+  additional_context.clear();
+  length = 0;
+
+}
+
+void bash_view::characters(const char * ch, int len) {
+
+  const char * code = common_code;
+  if(diff_stack.back() == SESDELETE) code = delete_code;
+  else if(diff_stack.back() == SESINSERT) code = insert_code;
+
+  if(code != common_code) (*output) << code;
+
+  for(int i = 0; i < len; ++i) {
+
+    if(wait_change) {
+
+      context.append(&ch[i], 1);
+
+    } else {
+
+      if(code != common_code && ch[i] == '\n') (*output) << common_code;
+      (*output) << ch[i];
+
+      int line_delete = line_number_delete + ((code == common_code || code == delete_code) ? 2 : 1);
+      int line_insert = line_number_insert + ((code == common_code || code == insert_code) ? 2 : 1);
+      if(ch[i] == '\n' && (!is_after_additional || (after_edit_count + 1) != num_context_lines)) (*output) << line_delete << '-' << line_insert << ":\t";
+      if(code != common_code && ch[i] == '\n') (*output) << code;
+
+    }
+
+    if(ch[i] == '\n') {
+
+      if(is_after_change) {
+
+        is_after_change = false;
+        is_after_additional = true;
+
+      } else if(is_after_additional) {
+
+        ++after_edit_count;
+
+        if(after_edit_count == num_context_lines) {
+
+          is_after_additional = false;
+          after_edit_count = 0;
+          wait_change = true;
+
+        }
+
+      } else if(wait_change && num_context_lines != 0) {
+
+        if(length >= num_context_lines)
+          additional_context.pop_front(), --length;
+
+        additional_context.push_back(context);
+        ++length;
+
+      }
+
+      if(wait_change) is_line_output = false;
+
+      if(code == common_code || code == delete_code) ++line_number_delete;
+      if(code == common_code || code == insert_code) ++line_number_insert;
+
+      context = "";
+
+    }
+
+  }
+
+  if(code != common_code) (*output) << common_code;
+
+}
 
 void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   bash_view * data = (bash_view *)ctxt->_private;
 
-  if(data->diff_stack.back() == SESDELETE)
-    (*data->output) << delete_code;
-  else if(data->diff_stack.back() == SESINSERT)
-    (*data->output) << insert_code;
+  if(data->diff_stack.back() != SESCOMMON) {
 
-  data->output->write((const char *)ch, len);
+    data->output_additional_context();
 
-  if(data->diff_stack.back() != SESCOMMON)
-    (*data->output) << common_code;
+    if(!data->is_line_output)
+      (*data->output) << data->line_number_delete + 1 << '-' << data->line_number_insert + 1 << ":\t";
+
+    data->is_line_output = true;
+    data->is_after_additional = false;
+    data->is_after_change = false;
+    data->wait_change = false;
+
+    data->output->write(data->context.c_str(), data->context.size());
+    data->context = "";
+
+  }
+
+  data->characters((const char *)ch, len);
+
+  if(data->diff_stack.back() != SESCOMMON) data->is_after_change  = true;
 
 }
 
