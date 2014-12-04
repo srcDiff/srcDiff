@@ -164,6 +164,7 @@ void bash_view::output_additional_context() {
   }
 
   additional_context.clear();
+  length = 0;
 
 }
 
@@ -185,7 +186,7 @@ void bash_view::characters(const char * ch, int len) {
 
       if(code != common_code && ch[i] == '\n') (*output) << common_code;
       (*output) << ch[i];
-      if(ch[i] == '\n') (*output) << line_number + 2 << ":\t";
+      if(ch[i] == '\n' && (!is_after_additional || (after_edit_count + 1) != num_context_lines)) (*output) << line_number + 2 << ":\t";
       if(code != common_code && ch[i] == '\n') (*output) << code;
 
     }
@@ -211,11 +212,11 @@ void bash_view::characters(const char * ch, int len) {
 
       } else if(wait_change && num_context_lines != 0) {
 
-        std::list<std::string>::size_type length = additional_context.size();
         if(length >= num_context_lines)
-          additional_context.pop_front();
+          additional_context.pop_front(), --length;
 
         additional_context.push_back(context);
+        ++length;
 
       }
 
