@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <list>
 #include <fstream>
 #include <iostream>
 
@@ -25,16 +26,18 @@ private:
 
   unsigned long line_number;
 
-  unsigned long num_context_lines;
   std::string context;
 
   bool is_line_output;
   bool is_after_change;
 
+  unsigned long num_context_lines;
+  std::list<std::string> additional_context;
+
 public:
 
-  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number(0), num_context_lines(num_context_lines),
-    is_line_output(false), is_after_change(false) {
+  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number(0), is_line_output(false), is_after_change(false),
+    num_context_lines(num_context_lines) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());
@@ -69,6 +72,7 @@ public:
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
   void process_characters(const char * ch, int len);
+  void output_additional_context();
 
   static void characters(void* ctx, const xmlChar* ch, int len);
 

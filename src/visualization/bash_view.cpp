@@ -142,6 +142,26 @@ void bash_view::endElementNs(void *ctx, const xmlChar *localname, const xmlChar 
 
 }
 
+void bash_view::output_additional_context() {
+
+  if(additional_context.empty()) return;
+
+
+  unsigned long line = line_number + 1 - additional_context.size();
+
+  for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
+
+    (*output) << line << ":\t";
+    (*output) << *citr;
+
+    ++line;
+
+  }
+
+  additional_context.clear();
+
+}
+
 void bash_view::process_characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
@@ -151,8 +171,22 @@ void bash_view::process_characters(const char * ch, int len) {
 
     if(ch[i] == '\n') {
 
-      if(is_after_change)
+      if(is_after_change) {
+
         output->write(context.c_str(), context.size());
+
+      } else {
+
+        if((num_context_lines - 1) != 0) {
+
+          if(additional_context.size() >= (num_context_lines - 1))
+            additional_context.pop_front();
+
+          additional_context.push_back(context);
+
+        }
+
+    }
 
       is_line_output = false;
       is_after_change = false;
@@ -180,6 +214,8 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
   bash_view * data = (bash_view *)ctxt->_private;
 
   if(data->diff_stack.back() != SESCOMMON) {
+
+    data->output_additional_context();
 
     if(!data->is_line_output)
       (*data->output) << data->line_number + 1 << ":\t";
