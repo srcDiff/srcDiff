@@ -10,6 +10,11 @@
 
 #include <libxml/parserInternals.h>
 
+const char * delete_code = "\x1b[101;1m";
+const char * insert_code = "\x1b[102;1m";
+
+const char * common_code = "\x1b[0m";
+
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
@@ -206,20 +211,13 @@ void bash_view::process_characters(const char * ch, int len) {
 
       ++line_number;
       context = "";
-      continue;
 
     }
 
 
   }
 
-
 }
-
-const char * delete_code = "\x1b[101;1m";
-const char * insert_code = "\x1b[102;1m";
-
-const char * common_code = "\x1b[0m";
 
 void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
 
