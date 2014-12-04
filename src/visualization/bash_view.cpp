@@ -167,86 +167,68 @@ void bash_view::output_additional_context() {
 
 }
 
-void bash_view::process_characters(const char * ch, int len) {
+void bash_view::characters(const char * ch, int len) {
+
+  const char * code = common_code;
+  if(diff_stack.back() == SESDELETE) code = delete_code;
+  else if(diff_stack.back() == SESINSERT) code = insert_code;
+
+  if(code != common_code) (*output) << code;
 
   for(int i = 0; i < len; ++i) {
 
-    if(diff_stack.back() == SESCOMMON)
+    if(wait_change) {
+
       context.append(&ch[i], 1);
+
+    } else {
+
+      if(code != common_code && ch[i] == '\n') (*output) << common_code;
+      (*output) << ch[i];
+      if(ch[i] == '\n') (*output) << line_number + 2 << ":\t";
+      if(code != common_code && ch[i] == '\n') (*output) << code;
+
+    }
 
     if(ch[i] == '\n') {
 
       if(is_after_change) {
 
-        output->write(context.c_str(), context.size());
-  
         is_after_change = false;
-        additional_context.clear();
         is_after_additional = true;
 
-      } else {
+      } else if(is_after_additional) {
 
-        if(num_context_lines != 0) {
+        ++after_edit_count;
 
-          std::list<std::string>::size_type length = additional_context.size();
-          if(is_after_additional && length == num_context_lines) {
+        if(after_edit_count == num_context_lines) {
 
-            output_additional_context();
-            is_after_additional = false;
-
-          } else {
-
-          if(length >= num_context_lines)
-            additional_context.pop_front();
-
-          additional_context.push_back(context);
+          is_after_additional = false;
+          after_edit_count = 0;
+          wait_change = true;
 
         }
 
-        }
+      } else if(wait_change && num_context_lines != 0) {
+
+        std::list<std::string>::size_type length = additional_context.size();
+        if(length >= num_context_lines)
+          additional_context.pop_front();
+
+        additional_context.push_back(context);
 
       }
 
-      is_line_output = false;
+      if(wait_change) is_line_output = false;
 
       ++line_number;
       context = "";
 
     }
 
-
   }
 
-}
-
-void bash_view::output_change_characters(const char * ch, int len) {
-
-  const char * change_code = delete_code;;
-  if(diff_stack.back() == SESINSERT)
-    change_code = insert_code;
-
-  (*output) << change_code;
-
-  int start = 0;
-  int end = 0;
-  for(; end < len; ++end) {
-
-
-    if(ch[end] == '\n') {
-
-      output->write(ch, end - start);
-      (*output) << common_code;
-      (*output) << '\n';
-      (*output) << change_code;
-      start = end + 1;
-
-    }
-
-
-  }
-
-  output->write(ch, end - start);
-
+  if(code != common_code) (*output) << common_code;
 
 }
 
@@ -264,21 +246,17 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
 
     data->is_line_output = true;
     data->is_after_additional = false;
+    data->is_after_change = false;
+    data->wait_change = false;
 
     data->output->write(data->context.c_str(), data->context.size());
     data->context = "";
 
   }
 
-  data->process_characters((const char *)ch, len);
+  data->characters((const char *)ch, len);
 
-  if(data->diff_stack.back() != SESCOMMON) {
-
-    data->output_change_characters((const char *)ch, len);
-    (*data->output) << common_code;
-    data->is_after_change = true;
-
-  }
+  if(data->diff_stack.back() != SESCOMMON) data->is_after_change  = true;
 
 }
 

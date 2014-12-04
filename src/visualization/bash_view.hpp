@@ -30,16 +30,18 @@ private:
 
   bool is_line_output;
   bool is_after_change;
+  bool wait_change;
 
   unsigned long num_context_lines;
   std::list<std::string> additional_context;
 
   bool is_after_additional;
+  unsigned long after_edit_count;
 
 public:
 
-  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number(0), is_line_output(false), is_after_change(false),
-    num_context_lines(num_context_lines), is_after_additional(false) {
+  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number(0), is_line_output(false), is_after_change(false), wait_change(true),
+    num_context_lines(num_context_lines), is_after_additional(false), after_edit_count(0) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());
@@ -73,10 +75,8 @@ public:
 
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
-  void process_characters(const char * ch, int len);
   void output_additional_context();
-  void output_change_characters(const char * ch, int len);
-
+  void characters(const char * ch, int len);
 
   static void characters(void* ctx, const xmlChar* ch, int len);
 
