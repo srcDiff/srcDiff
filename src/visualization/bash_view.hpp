@@ -58,7 +58,7 @@ public:
     }
   }
 
-  int transform(const char * old_filename, const char * new_filename, const char * srcdiff);
+  int transform(const char * srcdiff);
 
   static xmlSAXHandler factory();
 

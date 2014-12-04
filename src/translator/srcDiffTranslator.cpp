@@ -378,7 +378,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   } else if(isoption(options, OPTION_BASH_VIEW)) {
 
-    bashview->transform(path_one, path_two, srcml_unit_get_xml(srcdiff_unit));
+    bashview->transform(srcml_unit_get_xml(srcdiff_unit));
   }
 
   srcml_free_unit(srcdiff_unit);
