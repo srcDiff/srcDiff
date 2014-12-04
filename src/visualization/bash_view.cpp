@@ -219,6 +219,37 @@ void bash_view::process_characters(const char * ch, int len) {
 
 }
 
+void bash_view::output_change_characters(const char * ch, int len) {
+
+  const char * change_code = delete_code;;
+  if(diff_stack.back() == SESINSERT)
+    change_code = insert_code;
+
+  (*output) << change_code;
+
+  int start = 0;
+  int end = 0;
+  for(; end < len; ++end) {
+
+
+    if(ch[end] == '\n') {
+
+      output->write(ch, end - start);
+      (*output) << common_code;
+      (*output) << '\n';
+      (*output) << change_code;
+      start = end + 1;
+
+    }
+
+
+  }
+
+  output->write(ch, end - start);
+
+
+}
+
 void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
@@ -239,16 +270,11 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
 
   }
 
-  if(data->diff_stack.back() == SESDELETE)
-    (*data->output) << delete_code;
-  else if(data->diff_stack.back() == SESINSERT)
-    (*data->output) << insert_code;
-
   data->process_characters((const char *)ch, len);
 
   if(data->diff_stack.back() != SESCOMMON) {
 
-    data->output->write((const char *)ch, len);
+    data->output_change_characters((const char *)ch, len);
     (*data->output) << common_code;
     data->is_after_change = true;
 

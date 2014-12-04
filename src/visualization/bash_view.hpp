@@ -75,6 +75,8 @@ public:
 
   void process_characters(const char * ch, int len);
   void output_additional_context();
+  void output_change_characters(const char * ch, int len);
+
 
   static void characters(void* ctx, const xmlChar* ch, int len);
 
