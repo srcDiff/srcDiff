@@ -25,6 +25,7 @@ private:
 
   unsigned long line_number;
 
+  unsigned long num_context_lines;
   std::string context;
 
   bool is_line_output;
@@ -32,7 +33,8 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename) : line_number(0), is_line_output(false), is_after_change(false) {
+  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number(0), num_context_lines(num_context_lines),
+    is_line_output(false), is_after_change(false) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());

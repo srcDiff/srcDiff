@@ -125,7 +125,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
     colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, options);
 
   } else if(isoption(options, OPTION_BASH_VIEW))
-      bashview = new bash_view(srcdiff_filename);
+      bashview = new bash_view(srcdiff_filename, 1);
 
   wstate.method = method;
 
