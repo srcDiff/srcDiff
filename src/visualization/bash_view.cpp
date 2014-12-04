@@ -152,14 +152,15 @@ void bash_view::output_additional_context() {
   if(additional_context.empty()) return;
 
 
-  unsigned long line = line_number_delete + 1 - additional_context.size();
+  unsigned long line_delete = line_number_delete + 1 - additional_context.size();
+  unsigned long line_insert = line_number_insert + 1 - additional_context.size();
 
   for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
 
-    (*output) << line << ":\t";
+    (*output) << line_delete << '-' << line_insert << ":\t";
     (*output) << *citr;
 
-    ++line;
+    ++line_delete, ++line_insert;
 
   }
 
