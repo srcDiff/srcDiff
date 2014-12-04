@@ -142,6 +142,25 @@ void bash_view::endElementNs(void *ctx, const xmlChar *localname, const xmlChar 
 
 }
 
+void bash_view::process_characters(const char * ch, int len) {
+
+  for(int i = 0; i < len; ++i) {
+
+    if(ch[i] == '\n') {
+
+      ++line_number;
+      context = "";
+      continue;
+
+    }
+
+    context.append(&ch[i], 1);
+
+  }
+
+
+}
+
 const char * delete_code = "\x1b[101;1m";
 const char * insert_code = "\x1b[102;1m";
 
@@ -157,10 +176,16 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
   else if(data->diff_stack.back() == SESINSERT)
     (*data->output) << insert_code;
 
-  data->output->write((const char *)ch, len);
+  data->process_characters((const char *)ch, len);
 
-  if(data->diff_stack.back() != SESCOMMON)
+  if(data->diff_stack.back() != SESCOMMON) {
+
+    data->output->write(data->context.c_str(), data->context.size());
+    data->context = "";
+    data->output->write((const char *)ch, len);
     (*data->output) << common_code;
+
+  }
 
 }
 

@@ -23,9 +23,13 @@ private:
 
   std::ostream * output;
 
+  unsigned long line_number;
+
+  std::string context;
+
 public:
 
-  bash_view(const std::string & output_filename) {
+  bash_view(const std::string & output_filename) : line_number(0) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());
@@ -58,6 +62,8 @@ public:
                       const xmlChar** attributes);
 
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+
+  void process_characters(const char * ch, int len);
 
   static void characters(void* ctx, const xmlChar* ch, int len);
 
