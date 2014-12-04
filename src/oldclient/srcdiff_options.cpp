@@ -67,7 +67,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
     { SVN_CONTINUOUS_FLAG, no_argument, NULL, SVN_CONTINUOUS_FLAG_CODE },
 #endif
-    { BASH_VIEW_FLAG, no_argument, NULL, BASH_VIEW_FLAG_CODE },
+    { BASH_VIEW_FLAG, optional_argument, NULL, BASH_VIEW_FLAG_CODE },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
@@ -203,6 +203,9 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
     case BASH_VIEW_FLAG_CODE:
 
       options |= OPTION_BASH_VIEW;
+
+      if(optarg)
+        poptions.number_context_lines = atoi(optarg);
 
       break;
 

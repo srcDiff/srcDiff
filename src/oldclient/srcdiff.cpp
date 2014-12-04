@@ -157,8 +157,9 @@ int main(int argc, char* argv[]) {
       0,
 #ifdef SVN
       SVN_INVALID_REVNUM,
-      SVN_INVALID_REVNUM
+      SVN_INVALID_REVNUM,
 #endif
+      0
     };
 
   gpoptions = &poptions;
@@ -352,7 +353,8 @@ int main(int argc, char* argv[]) {
                                  poptions.css_url,
                                  poptions.archive,
                                  poptions.svn_url,
-                                 options);
+                                 options,
+                                 poptions.number_context_lines);
 
 
 
