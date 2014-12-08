@@ -10,12 +10,12 @@
 
 #include <libxml/parserInternals.h>
 
-const char * delete_code = "\x1b[48;5;(210);1m";
-const char * insert_code = "\x1b[48;5;(120);1m";
+const char * const DELETE_CODE = "\x1b[48;5;(210);1m";
+const char * const INSERT_CODE = "\x1b[48;5;(120);1m";
 
-const char * common_code = "\x1b[0m";
+const char * const COMMON_CODE = "\x1b[0m";
 
-const char * line_code = "\x1b[36m";
+const char * const LINE_CODE = "\x1b[36m";
 
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
@@ -156,7 +156,7 @@ void bash_view::output_additional_context() {
   unsigned long line_insert = line_number_insert + 1 - additional_context.size();
 
   if(wait_change && last_context_line != (line_number_delete - 1))
-    (*output) << common_code << line_code << "@@ -" << line_delete << " +" << line_insert << " @@" << common_code;
+    (*output) << COMMON_CODE << LINE_CODE << "@@ -" << line_delete << " +" << line_insert << " @@" << COMMON_CODE;
 
   if(additional_context.empty()) return;
 
@@ -175,11 +175,11 @@ void bash_view::output_additional_context() {
 
 void bash_view::characters(const char * ch, int len) {
 
-  const char * code = common_code;
-  if(diff_stack.back() == SESDELETE) code = delete_code;
-  else if(diff_stack.back() == SESINSERT) code = insert_code;
+  const char * code = COMMON_CODE;
+  if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
+  else if(diff_stack.back() == SESINSERT) code = INSERT_CODE;
 
-  if(code != common_code) (*output) << code;
+  if(code != COMMON_CODE) (*output) << code;
 
   for(int i = 0; i < len; ++i) {
 
@@ -189,10 +189,10 @@ void bash_view::characters(const char * ch, int len) {
 
     } else {
 
-      if(code != common_code && ch[i] == '\n') (*output) << common_code;
+      if(code != COMMON_CODE && ch[i] == '\n') (*output) << COMMON_CODE;
       (*output) << ch[i];
 
-      if(code != common_code && ch[i] == '\n') (*output) << code;
+      if(code != COMMON_CODE && ch[i] == '\n') (*output) << code;
 
     }
 
@@ -226,8 +226,8 @@ void bash_view::characters(const char * ch, int len) {
 
       }
 
-      if(code == common_code || code == delete_code) ++line_number_delete;
-      if(code == common_code || code == insert_code) ++line_number_insert;
+      if(code == COMMON_CODE || code == DELETE_CODE) ++line_number_delete;
+      if(code == COMMON_CODE || code == INSERT_CODE) ++line_number_insert;
 
       context = "";
 
@@ -235,7 +235,7 @@ void bash_view::characters(const char * ch, int len) {
 
   }
 
-  if(code != common_code) (*output) << common_code;
+  if(code != COMMON_CODE) (*output) << COMMON_CODE;
 
 }
 
