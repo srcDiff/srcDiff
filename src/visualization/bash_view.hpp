@@ -38,11 +38,12 @@ private:
 
   bool is_after_additional;
   unsigned long after_edit_count;
+  unsigned long last_context_line;
 
 public:
 
   bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
-    num_context_lines(num_context_lines), length(0), is_after_additional(false), after_edit_count(0) {
+    num_context_lines(num_context_lines), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());

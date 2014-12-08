@@ -155,7 +155,7 @@ void bash_view::output_additional_context() {
   unsigned long line_delete = line_number_delete + 1 - additional_context.size();
   unsigned long line_insert = line_number_insert + 1 - additional_context.size();
 
-  if(wait_change)
+  if(wait_change && last_context_line != (line_number_delete - 1))
     (*output) << common_code << line_code << "@@ -" << line_delete << " +" << line_insert << " @@" << common_code;
 
   if(additional_context.empty()) return;
@@ -212,6 +212,7 @@ void bash_view::characters(const char * ch, int len) {
           is_after_additional = false;
           after_edit_count = 0;
           wait_change = true;
+          last_context_line = line_number_delete;
 
         }
 
