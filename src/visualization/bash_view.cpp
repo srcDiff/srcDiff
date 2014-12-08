@@ -15,6 +15,8 @@ const char * insert_code = "\x1b[102;1m";
 
 const char * common_code = "\x1b[0m";
 
+const char * line_code = "\x1b[36m";
+
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
@@ -149,15 +151,17 @@ void bash_view::endElementNs(void *ctx, const xmlChar *localname, const xmlChar 
 
 void bash_view::output_additional_context() {
 
-  if(additional_context.empty()) return;
-
 
   unsigned long line_delete = line_number_delete + 1 - additional_context.size();
   unsigned long line_insert = line_number_insert + 1 - additional_context.size();
 
+  if(wait_change)
+    (*output) << common_code << line_code << "@@ -" << line_delete << " +" << line_insert << " @@" << common_code;
+
+  if(additional_context.empty()) return;
+
   for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
 
-    (*output) << line_delete << '-' << line_insert << ":\t";
     (*output) << *citr;
 
     ++line_delete, ++line_insert;
@@ -188,9 +192,6 @@ void bash_view::characters(const char * ch, int len) {
       if(code != common_code && ch[i] == '\n') (*output) << common_code;
       (*output) << ch[i];
 
-      int line_delete = line_number_delete + ((code == common_code || code == delete_code) ? 2 : 1);
-      int line_insert = line_number_insert + ((code == common_code || code == insert_code) ? 2 : 1);
-      if(ch[i] == '\n' && (!is_after_additional || (after_edit_count + 1) != num_context_lines)) (*output) << line_delete << '-' << line_insert << ":\t";
       if(code != common_code && ch[i] == '\n') (*output) << code;
 
     }
@@ -224,8 +225,6 @@ void bash_view::characters(const char * ch, int len) {
 
       }
 
-      if(wait_change) is_line_output = false;
-
       if(code == common_code || code == delete_code) ++line_number_delete;
       if(code == common_code || code == insert_code) ++line_number_insert;
 
@@ -248,10 +247,6 @@ void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
 
     data->output_additional_context();
 
-    if(!data->is_line_output)
-      (*data->output) << data->line_number_delete + 1 << '-' << data->line_number_insert + 1 << ":\t";
-
-    data->is_line_output = true;
     data->is_after_additional = false;
     data->is_after_change = false;
     data->wait_change = false;
