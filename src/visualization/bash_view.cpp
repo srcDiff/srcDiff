@@ -10,8 +10,8 @@
 
 #include <libxml/parserInternals.h>
 
-const char * delete_code = "\x1b[101;1m";
-const char * insert_code = "\x1b[102;1m";
+const char * delete_code = "\x1b[48;5;(210);1m";//255,197,197m";
+const char * insert_code = "\x1b[48;5;(120);1m";
 
 const char * common_code = "\x1b[0m";
 
