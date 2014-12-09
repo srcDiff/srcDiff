@@ -469,7 +469,8 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
                                  css,
                                  archive,
                                  url,
-                                 options);
+                                 options,
+                                 3);
 
     apr_allocator_t * allocator;
     apr_allocator_create(&allocator);
