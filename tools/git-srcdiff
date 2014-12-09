@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "---" $1
+echo "+++" $1
+[ $# -eq 7 ] && srcdiff --bash=3 "$2" "$5"
