@@ -520,7 +520,8 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                                css,
                                archive,
                                url,
-                               options);
+                               options,
+                               3);
 
 
   try {
