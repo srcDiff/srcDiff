@@ -10,6 +10,8 @@
 
 #include <libxml/parserInternals.h>
 
+#include <cstring>
+
 const char * const DELETE_CODE = "\x1b[48;5;(210);1m";
 const char * const INSERT_CODE = "\x1b[48;5;(120);1m";
 
