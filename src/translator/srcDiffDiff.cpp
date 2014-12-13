@@ -25,6 +25,16 @@ extern xNode diff_old_end;
 extern xNode diff_new_start;
 extern xNode diff_new_end;
 
+
+srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, NodeSets * node_sets_old, NodeSets * node_sets_new) 
+  : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
+
+void srcdiff_diff::output() {
+
+  output_diffs(rbuf_old, node_sets_old, rbuf_new, node_sets_new, wstate);
+
+}
+
 // collect an entire tag from open tag to closing tag
 void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & node_set, int & start) {
 

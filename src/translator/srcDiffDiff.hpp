@@ -1,10 +1,27 @@
-#ifndef INCLUDED_SRCDIFFDIFF_HPP
-#define INCLUDED_SRCDIFFDIFF_HPP
+#ifndef INCLUDED_SRCDIFF_DIFF_HPP
+#define INCLUDED_SRCDIFF_DIFF_HPP
 
 #include <srcDiffTypes.hpp>
 #include <shortest_edit_script.h>
 
 #include <vector>
+
+class srcdiff_diff {
+
+private:
+  reader_state & rbuf_old;
+  reader_state & rbuf_new;
+  writer_state & wstate;
+
+  NodeSets * node_sets_old;
+  NodeSets * node_sets_new;
+
+public:
+  srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, NodeSets * node_sets_old, NodeSets * node_sets_new);
+  void output();
+
+
+};
 
 // create sets of nodes
 NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
