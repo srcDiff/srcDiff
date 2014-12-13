@@ -4,7 +4,7 @@
 #include <srcDiffUtility.hpp>
 #include <srcDiffCommon.hpp>
 #include <srcDiffChange.hpp>
-#include <srcDiffDiff.hpp>
+#include <srcdiff_diff.hpp>
 
 /*
   Collect paragraphs

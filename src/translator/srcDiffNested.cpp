@@ -3,7 +3,7 @@
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffChange.hpp>
 #include <srcDiffOutput.hpp>
-#include <srcDiffDiff.hpp>
+#include <srcdiff_diff.hpp>
 #include <srcDiffUtility.hpp>
 #include <srcDiffMeasure.hpp>
 

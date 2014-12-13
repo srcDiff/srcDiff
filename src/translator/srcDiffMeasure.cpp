@@ -2,7 +2,7 @@
 
 #include <srcDiffTypes.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffDiff.hpp>
+#include <srcdiff_diff.hpp>
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 #include <cstring>

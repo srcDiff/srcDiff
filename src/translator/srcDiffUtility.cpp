@@ -1,5 +1,5 @@
 #include <srcDiffUtility.hpp>
-#include <srcDiffDiff.hpp>
+#include <srcdiff_diff.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffNested.hpp>
 #include <ShortestEditScript.hpp>

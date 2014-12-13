@@ -32,7 +32,7 @@
 #include <srcDiffCommon.hpp>
 #include <srcDiffChange.hpp>
 #include <srcDiffOutput.hpp>
-#include <srcDiffDiff.hpp>
+#include <srcdiff_diff.hpp>
 #include <srcMLUtility.hpp>
 #include <LineDiffRange.hpp>
 

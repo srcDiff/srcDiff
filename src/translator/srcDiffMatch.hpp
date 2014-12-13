@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <xmlrw.hpp>
-#include <srcDiffDiff.hpp>
+#include <srcdiff_diff.hpp>
 #include <shortest_edit_script.h>
 
 struct offset_pair {
