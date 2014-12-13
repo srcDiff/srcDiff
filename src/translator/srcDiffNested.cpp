@@ -744,7 +744,8 @@ void output_nested_recursive(reader_state & rbuf_old,
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
-      output_diffs(rbuf_old, &node_set, rbuf_new, &nest_set, wstate);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &node_set, &nest_set);
+      diff.output();
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
@@ -793,7 +794,8 @@ void output_nested_recursive(reader_state & rbuf_old,
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 
-      output_diffs(rbuf_old, &nest_set, rbuf_new, &node_set, wstate);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &node_set);
+      diff.output();
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 
@@ -844,7 +846,8 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       NodeSets next_node_set_old
         = create_node_set(rbuf_old.nodes, end_pos, node_set.back()->back() + 1);
 
-      output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &nest_set, wstate);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_node_set_old, &nest_set);
+      diff.output();
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
@@ -882,7 +885,8 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       NodeSets next_node_set_new
         = create_node_set(rbuf_new.nodes, end_pos, node_set.back()->back() + 1);
 
-      output_diffs(rbuf_old, &nest_set, rbuf_new, &next_node_set_new, wstate);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &next_node_set_new);
+      diff.output();
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 

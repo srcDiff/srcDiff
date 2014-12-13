@@ -162,7 +162,8 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
         = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                           , node_sets_new->at(start_new)->back());
 
-      output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_node_set_old, &next_node_set_new);
+      diff.output();
 
       free_node_sets(next_node_set_old);
       free_node_sets(next_node_set_new);
@@ -229,7 +230,8 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
     = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
                       , node_sets_new->at(start_new)->back());
 
-  output_diffs(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+  srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_node_set_old, &next_node_set_new);
+  diff.output();
 
   free_node_sets(next_node_set_old);
   free_node_sets(next_node_set_new);
