@@ -76,7 +76,7 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
     // skip whitespace
     if(!is_white_space(nodes.at(i))) {
 
-      std::vector <int> * node_set = new std::vector <int>;
+      NodeSet * node_set = new NodeSet();
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {

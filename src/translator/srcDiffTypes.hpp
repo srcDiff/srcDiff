@@ -79,7 +79,8 @@ public:
 
 const int MAX_INT = (unsigned)-1 >> 1;
 
-typedef std::vector<int> NodeSet;
+//typedef std::vector<int> NodeSet;
+#include <node_set.hpp>
 typedef std::vector<NodeSet *> NodeSets;
 
 typedef std::pair<int, int> IntPair;

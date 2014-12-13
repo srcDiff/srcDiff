@@ -204,7 +204,7 @@ NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, 
     if(!is_text(nodes.at(i)) && strcmp(nodes.at(i)->name, "operator") != 0 
       && strcmp(nodes.at(i)->name, "literal") != 0 && strcmp(nodes.at(i)->name, "modifier") != 0) {
 
-      std::vector <int> * node_set = new std::vector <int>;
+      NodeSet * node_set = new NodeSet;
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {

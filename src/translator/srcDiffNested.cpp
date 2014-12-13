@@ -155,7 +155,7 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNod
       // save position to collect internal of same type on all levels
       int save_start = i;
 
-      std::vector <int> * node_set = new std::vector <int>;
+      NodeSet * node_set = new NodeSet;
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 

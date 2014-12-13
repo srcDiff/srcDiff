@@ -20,7 +20,7 @@ NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, 
       ;
 
     // collect the nodes in the paragraph
-    std::vector <int> * node_set = new std::vector <int>;
+    NodeSet * node_set = new NodeSet;
 
     int newlines = 0;
     for(; i < end; ++i) {
@@ -50,7 +50,7 @@ NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int e
 
   for(int i = start; i < end; ++i) {
 
-    NodeSet * node_set = new std::vector <int>;
+    NodeSet * node_set = new NodeSet();
 
     for(; i < end; ++i) {
 
