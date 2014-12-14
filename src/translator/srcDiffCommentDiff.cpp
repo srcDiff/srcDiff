@@ -12,7 +12,7 @@
 NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
-  NodeSets node_sets;
+  NodeSets sets;
   for(int i = start; i < end; ++i) {
 
     // move past any starting newlines
@@ -20,7 +20,7 @@ NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, 
       ;
 
     // collect the nodes in the paragraph
-    NodeSet * node_set = new NodeSet;
+    NodeSet * set = new NodeSet;
 
     int newlines = 0;
     for(; i < end; ++i) {
@@ -32,25 +32,25 @@ NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, 
         break;
 
       if(!is_white_space(nodes.at(i)))
-        node_set->push_back(i);
+        set->push_back(i);
     }
 
-    node_sets.push_back(node_set);
+    sets.push_back(set);
 
   }
 
-  return node_sets;
+  return sets;
 
 }
 
 // collect lines
 NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  NodeSets node_sets;
+  NodeSets sets;
 
   for(int i = start; i < end; ++i) {
 
-    NodeSet * node_set = new NodeSet();
+    NodeSet * set = new NodeSet();
 
     for(; i < end; ++i) {
 
@@ -60,14 +60,14 @@ NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int e
 
       // only collect non-whitespace nodes
       if(!is_white_space(nodes.at(i)))
-        node_set->push_back(i);
+        set->push_back(i);
     }
 
-    node_sets.push_back(node_set);
+    sets.push_back(set);
 
   }
 
-  return node_sets;
+  return sets;
 
 }
 

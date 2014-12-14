@@ -4,7 +4,7 @@
 #include <srcDiffTypes.hpp>
 #include <shortest_edit_script.h>
 
-bool is_move(NodeSet * node_set, std::vector<xNodePtr> nodes);
+bool is_move(NodeSet * set, std::vector<xNodePtr> nodes);
 
 void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
                 , reader_state & rbuf_new, NodeSets * node_sets_new

@@ -30,11 +30,11 @@ srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, wri
   : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
 // collect an entire tag from open tag to closing tag
-void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & node_set, int & start) {
+void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & set, int & start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
 
-  node_set.push_back(start);
+  set.push_back(start);
 
   if(nodes.at(start)->is_empty)
     return;
@@ -49,7 +49,7 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & node_set, int &
     if(is_white_space(nodes.at(start)))
       continue;
 
-    node_set.push_back(start);
+    set.push_back(start);
 
     // opening tags
     if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_ELEMENT
@@ -68,7 +68,7 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & node_set, int &
 // create the node sets for shortest edit script
 NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  NodeSets node_sets;
+  NodeSets sets;
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -76,34 +76,34 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
     // skip whitespace
     if(!is_white_space(nodes.at(i))) {
 
-      NodeSet * node_set = new NodeSet();
+      NodeSet * set = new NodeSet();
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-        node_set->push_back(i);
+        set->push_back(i);
 
       } else if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
 
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
-        collect_entire_tag(nodes, *node_set, i);
+        collect_entire_tag(nodes, *set, i);
 
       } else {
 
         // could be a closing tag, but then something should be wrong.
         // TODO: remove this and make sure it works
       break;
-        node_set->push_back(i);
+        set->push_back(i);
       }
 
-      node_sets.push_back(node_set);
+      sets.push_back(set);
 
     }
 
   }
 
-  return node_sets;
+  return sets;
 
 }
 
@@ -111,7 +111,7 @@ void * create_node_set_thread(void * arguments) {
 
   create_node_set_args & args = *(create_node_set_args *)arguments;
 
-  args.node_sets = create_node_set(args.nodes, args.start, args.end);
+  args.sets = create_node_set(args.nodes, args.start, args.end);
 
   return NULL;
 
@@ -331,11 +331,11 @@ void srcdiff_diff::output() {
 
 }
 
-void free_node_sets(NodeSets & node_sets) {
+void free_node_sets(NodeSets & sets) {
 
-  for(unsigned int i = 0; i < node_sets.size(); ++i) {
+  for(unsigned int i = 0; i < sets.size(); ++i) {
 
-    delete node_sets.at(i);
+    delete sets.at(i);
   }
 
 }

@@ -33,14 +33,14 @@ struct create_node_set_args {
   std::vector<xNodePtr> & nodes;
   int start;
   int end;
-  NodeSets & node_sets;
+  NodeSets & sets;
 
 };
 
 void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, NodeSets & set_old
                       , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, NodeSets & set_new);
 
-void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & node_set, int & start);
+void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & set, int & start);
 
 bool go_down_a_level(reader_state & rbuf_old, NodeSets * node_sets_old
                      , unsigned int start_old
@@ -54,6 +54,6 @@ bool group_sub_elements(reader_state & rbuf_old, NodeSets * node_sets_old
                         , unsigned int start_new
                         , writer_state & wstate);
 
-void free_node_sets(NodeSets & node_sets);
+void free_node_sets(NodeSets & sets);
 
 #endif

@@ -18,13 +18,13 @@ bool is_change(edit * edit_script) {
 
 // diff node accessor function
 const void * node_set_index(int idx, const void *s, const void * context) {
-  NodeSets & node_sets = *(NodeSets *)s;
-  return node_sets[idx];
+  NodeSets & sets = *(NodeSets *)s;
+  return sets[idx];
 }
 
 const void * node_index(int idx, const void *s, const void * context) {
-  NodeSet & node_set = *(NodeSet *)s;
-  return &node_set[idx];
+  NodeSet & set = *(NodeSet *)s;
+  return &set[idx];
 }
 
 int node_index_compare(const void * node1, const void * node2, const void * context) {
@@ -472,14 +472,14 @@ std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
 
   }
 
-  NodeSets control_node_sets = create_node_set(nodes, control_start_pos + 1, control_end_pos);
+  NodeSets control_sets = create_node_set(nodes, control_start_pos + 1, control_end_pos);
 
   NodeSets::const_iterator citr;
-  for(citr = control_node_sets.begin(); citr != control_node_sets.end(); ++citr)
+  for(citr = control_sets.begin(); citr != control_sets.end(); ++citr)
     if(strcmp((const char *)nodes.at((*citr)->front())->name, "condition") == 0)
       break;
 
-  if(citr == control_node_sets.end()) return "";
+  if(citr == control_sets.end()) return "";
 
   std::string condition = "";
   for(NodeSet::const_iterator node_itr = (*citr)->begin(); node_itr != (*citr)->end(); ++node_itr)
@@ -582,15 +582,15 @@ std::string get_class_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
-bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
+bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * set) {
 
-  NodeSets node_sets = create_node_set(nodes, node_set->at(1), node_set->back());
+  NodeSets sets = create_node_set(nodes, set->at(1), set->back());
 
-  for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
+  for(NodeSets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
     if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0 && find_attribute(nodes.at((*itr)->at(0)), "type") == 0) {
 
-      free_node_sets(node_sets);
+      free_node_sets(sets);
 
       return true;
 
@@ -600,7 +600,7 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
       while(nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         ++next_element_pos;
 
-      free_node_sets(node_sets);
+      free_node_sets(sets);
 
       if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
         && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0
@@ -613,21 +613,21 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
   }
 
-  free_node_sets(node_sets);
+  free_node_sets(sets);
 
   return false;
 
 }
 
-bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
+bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * set) {
 
-  NodeSets node_sets = create_node_set(nodes, node_set->at(1), node_set->back());
+  NodeSets sets = create_node_set(nodes, set->at(1), set->back());
 
-  for(NodeSets::iterator itr = node_sets.begin(); itr != node_sets.end(); ++itr) {
+  for(NodeSets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
     if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "else") == 0 || strcmp((const char *)nodes.at((*itr)->at(0))->name, "elseif") == 0) {
 
-      free_node_sets(node_sets);
+      free_node_sets(sets);
 
       return true;
 
@@ -635,7 +635,7 @@ bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * node_set) {
 
   }
 
-  free_node_sets(node_sets);
+  free_node_sets(sets);
 
   return false;
 

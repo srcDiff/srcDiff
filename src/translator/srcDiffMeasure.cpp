@@ -195,7 +195,7 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std:
 // create the node sets for shortest edit script
 NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  NodeSets node_sets;
+  NodeSets sets;
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -204,34 +204,34 @@ NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, 
     if(!is_text(nodes.at(i)) && strcmp(nodes.at(i)->name, "operator") != 0 
       && strcmp(nodes.at(i)->name, "literal") != 0 && strcmp(nodes.at(i)->name, "modifier") != 0) {
 
-      NodeSet * node_set = new NodeSet;
+      NodeSet * set = new NodeSet;
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-        node_set->push_back(i);
+        set->push_back(i);
 
       } else if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
 
         //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
-        collect_entire_tag(nodes, *node_set, i);
+        collect_entire_tag(nodes, *set, i);
 
       } else {
 
         // could be a closing tag, but then something should be wrong.
         // TODO: remove this and make sure it works
       break;
-        node_set->push_back(i);
+        set->push_back(i);
       }
 
-      node_sets.push_back(node_set);
+      sets.push_back(set);
 
     }
 
   }
 
-  return node_sets;
+  return sets;
 
 }
 void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,

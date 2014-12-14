@@ -18,10 +18,10 @@ extern xNode diff_new_end;
 xAttr move_attribute = { 0, "move", 0 };
 
 void add_construct(std::map<std::string, IntPairs > & constructs
-                   , NodeSets & node_sets, std::vector<xNodePtr> & nodes
+                   , NodeSets & sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
-  std::string tag = nodes.at(node_sets.at(offset)->at(0))->name;
+  std::string tag = nodes.at(sets.at(offset)->at(0))->name;
 
   if(constructs.find(tag) == constructs.end()) {
 
@@ -33,9 +33,9 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
-bool is_move(NodeSet * node_set, std::vector<xNodePtr> nodes) {
+bool is_move(NodeSet * set, std::vector<xNodePtr> nodes) {
 
-  return nodes.at(node_set->at(0))->move;
+  return nodes.at(set->at(0))->move;
 
 }
 
