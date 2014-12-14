@@ -192,7 +192,7 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std
 
 }
 
-bool is_significant(xNodePtr node) {
+bool is_significant(xNodePtr node, const void * context) {
 
   return !is_text(node) && strcmp(node->name, "operator") != 0 
       && strcmp(node->name, "literal") != 0 && strcmp(node->name, "modifier") != 0;
