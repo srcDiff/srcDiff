@@ -6,6 +6,8 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 #include <Options.hpp>
+#include <node_set.hpp>
+#include <node_sets.hpp>
 
 #include <Methods.hpp>
 
@@ -78,9 +80,6 @@ public:
 };
 
 const int MAX_INT = (unsigned)-1 >> 1;
-
-typedef std::vector<int> NodeSet;
-typedef std::vector<NodeSet *> NodeSets;
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;

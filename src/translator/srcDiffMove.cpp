@@ -18,10 +18,10 @@ extern xNode diff_new_end;
 xAttr move_attribute = { 0, "move", 0 };
 
 void add_construct(std::map<std::string, IntPairs > & constructs
-                   , NodeSets & node_sets, std::vector<xNodePtr> & nodes
+                   , node_sets & sets, std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
-  std::string tag = nodes.at(node_sets.at(offset)->at(0))->name;
+  std::string tag = nodes.at(sets.at(offset)->at(0))->name;
 
   if(constructs.find(tag) == constructs.end()) {
 
@@ -33,14 +33,14 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
-bool is_move(NodeSet * node_set, std::vector<xNodePtr> nodes) {
+bool is_move(node_set * set, std::vector<xNodePtr> nodes) {
 
-  return nodes.at(node_set->at(0))->move;
+  return nodes.at(set->at(0))->move;
 
 }
 
-void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
-                , reader_state & rbuf_new, NodeSets * node_sets_new
+void mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
+                , reader_state & rbuf_new, node_sets * node_sets_new
                 , edit * edit_script, writer_state & wstate) {
 
   std::map<std::string, IntPairs > constructs;
@@ -85,8 +85,8 @@ void mark_moves(reader_state & rbuf_old, NodeSets * node_sets_old
       reader_state * rbuf_one = &rbuf_old;
       reader_state * rbuf_two = &rbuf_new;
 
-      NodeSets * node_sets_one = node_sets_old;
-      NodeSets * node_sets_two = node_sets_new;
+      node_sets * node_sets_one = node_sets_old;
+      node_sets * node_sets_two = node_sets_new;
 
       if(elements.at(i).second == SESINSERT) {
 

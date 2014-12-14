@@ -1,5 +1,4 @@
 #include <srcMLUtility.hpp>
-#include <srcDiffDiff.hpp>
 #include <srcml.h>
 #ifdef SVN
 #include <svn_io.hpp>

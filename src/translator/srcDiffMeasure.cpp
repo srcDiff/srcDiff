@@ -2,91 +2,91 @@
 
 #include <srcDiffTypes.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffDiff.hpp>
+#include <srcdiff_diff.hpp>
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 #include <cstring>
 
-void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                NodeSet * node_set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
+void compute_ses(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                node_set * set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
 
-  unsigned int olength = node_set_old->size();
-  unsigned int nlength = node_set_new->size();
+  unsigned int olength = set_old->size();
+  unsigned int nlength = set_new->size();
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  NodeSet node_set_old_text;
+  node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
-      node_set_old_text.push_back(node_set_old->at(i));
+    if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i))))
+      set_old_text.push_back(set_old->at(i));
 
-  NodeSet node_set_new_text;
+  node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
-      node_set_new_text.push_back(node_set_new->at(i));
+    if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i))))
+      set_new_text.push_back(set_new->at(i));
 
-  text_old_length = node_set_old_text.size();
-  text_new_length = node_set_new_text.size();
+  text_old_length = set_old_text.size();
+  text_new_length = set_new_text.size();
 
-  ses.compute((const void *)&node_set_old_text, node_set_old_text.size(), (const void *)&node_set_new_text, node_set_new_text.size());
+  ses.compute((const void *)&set_old_text, set_old_text.size(), (const void *)&set_new_text, set_new_text.size());
 
 }
 
-void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                NodeSet * node_set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
+void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                node_set * set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
 
-  unsigned int olength = node_set_old->size();
-  unsigned int nlength = node_set_new->size();
+  unsigned int olength = set_old->size();
+  unsigned int nlength = set_new->size();
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  NodeSet node_set_old_text;
+  node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i)))
-      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, "(") != 0
-      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, ")") != 0
-      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, ";") != 0
-      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->content, ",") != 0
-      && strcmp((const char *)nodes_old.at(node_set_old->at(i))->name, "operator") != 0)
-      node_set_old_text.push_back(node_set_old->at(i));
+    if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i)))
+      && strcmp((const char *)nodes_old.at(set_old->at(i))->content, "(") != 0
+      && strcmp((const char *)nodes_old.at(set_old->at(i))->content, ")") != 0
+      && strcmp((const char *)nodes_old.at(set_old->at(i))->content, ";") != 0
+      && strcmp((const char *)nodes_old.at(set_old->at(i))->content, ",") != 0
+      && strcmp((const char *)nodes_old.at(set_old->at(i))->name, "operator") != 0)
+      set_old_text.push_back(set_old->at(i));
 
-  NodeSet node_set_new_text;
+  node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i)))
-      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, "(") != 0
-      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, ")") != 0
-      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, ";") != 0
-      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->content, ",") != 0
-      && strcmp((const char *)nodes_new.at(node_set_new->at(i))->name, "operator") != 0)
-      node_set_new_text.push_back(node_set_new->at(i));
+    if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i)))
+      && strcmp((const char *)nodes_new.at(set_new->at(i))->content, "(") != 0
+      && strcmp((const char *)nodes_new.at(set_new->at(i))->content, ")") != 0
+      && strcmp((const char *)nodes_new.at(set_new->at(i))->content, ";") != 0
+      && strcmp((const char *)nodes_new.at(set_new->at(i))->content, ",") != 0
+      && strcmp((const char *)nodes_new.at(set_new->at(i))->name, "operator") != 0)
+      set_new_text.push_back(set_new->at(i));
 
-  text_old_length = node_set_old_text.size();
-  text_new_length = node_set_new_text.size();
+  text_old_length = set_old_text.size();
+  text_new_length = set_new_text.size();
 
-  ses.compute((const void *)&node_set_old_text, node_set_old_text.size(), (const void *)&node_set_new_text, node_set_new_text.size());
+  ses.compute((const void *)&set_old_text, set_old_text.size(), (const void *)&set_new_text, set_new_text.size());
 
 }
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new, int & text_old_length, int & text_new_length) {
+int compute_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new, int & text_old_length, int & text_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
-        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
+  if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
     return MAX_INT;
 
@@ -94,7 +94,7 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
 
-  compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
+  compute_ses(nodes_old, set_old, nodes_new, set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
 
@@ -130,20 +130,20 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 
 }
 
-void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new, int & similarity, int & difference, int & text_old_length, int & text_new_length) {
+void compute_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new, int & similarity, int & difference, int & text_old_length, int & text_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
-        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
+  if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
     similarity = MAX_INT;
     difference = MAX_INT;
@@ -154,7 +154,7 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
 
-  compute_ses_important_text(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
+  compute_ses_important_text(nodes_old, set_old, nodes_new, set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
 
@@ -192,62 +192,35 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old,
 
 }
 
-// create the node sets for shortest edit script
-NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
+bool is_significant(xNodePtr node, const void * context) {
 
-  NodeSets node_sets;
-
-  // runs on a subset of base array
-  for(int i = start; i < end; ++i) {
-
-    // skip whitespace
-    if(!is_text(nodes.at(i)) && strcmp(nodes.at(i)->name, "operator") != 0 
-      && strcmp(nodes.at(i)->name, "literal") != 0 && strcmp(nodes.at(i)->name, "modifier") != 0) {
-
-      std::vector <int> * node_set = new std::vector <int>;
-
-      // text is separate node if not surrounded by a tag in range
-      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
-        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-        node_set->push_back(i);
-
-      } else if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
-
-        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
-
-        collect_entire_tag(nodes, *node_set, i);
-
-      } else {
-
-        // could be a closing tag, but then something should be wrong.
-        // TODO: remove this and make sure it works
-      break;
-        node_set->push_back(i);
-      }
-
-      node_sets.push_back(node_set);
-
-    }
-
-  }
-
-  return node_sets;
+  return !is_text(node) && strcmp(node->name, "operator") != 0 
+      && strcmp(node->name, "literal") != 0 && strcmp(node->name, "modifier") != 0;
 
 }
-void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length) {
+
+// create the node sets for shortest edit script
+node_sets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
+
+  node_sets sets(nodes, start, end, is_significant);
+
+  return sets;
+
+}
+void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
-        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
+  if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
     similarity = 0;
     difference = MAX_INT;
@@ -259,8 +232,8 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_s
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
   // collect subset of nodes
-  NodeSets next_node_sets_old = create_significant_node_sets(nodes_old, node_set_old->at(1), node_set_old->back());
-  NodeSets next_node_sets_new = create_significant_node_sets(nodes_new, node_set_new->at(1), node_set_new->back());
+  node_sets next_node_sets_old = create_significant_node_sets(nodes_old, set_old->at(1), set_old->back());
+  node_sets next_node_sets_new = create_significant_node_sets(nodes_new, set_new->at(1), set_new->back());
   children_old_length = next_node_sets_old.size();
   children_new_length = next_node_sets_new.size();
   int distance = ses.compute((const void *)&next_node_sets_old, children_old_length, (const void *)&next_node_sets_new, children_new_length);
@@ -304,31 +277,31 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * node_s
 
 }
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new) {
+int compute_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new) {
 
   int text_old_length;
   int text_new_length;
 
-  return compute_similarity(nodes_old, node_set_old, nodes_new, node_set_new, text_old_length, text_new_length);
+  return compute_similarity(nodes_old, set_old, nodes_new, set_new, text_old_length, text_new_length);
 
 }
 
-int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * node_set_new) {
+int compute_difference(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new) {
 
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
-        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
+  if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
     return MAX_INT;
 
@@ -337,7 +310,7 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
   int text_old_length;
   int text_new_length;
-  compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
+  compute_ses(nodes_old, set_old, nodes_new, set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
   unsigned int similarity = 0;
@@ -351,19 +324,19 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old
 
 }
 
-double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(node_set_old->at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_set_new->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
-        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
+  if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
     return 0;
 
@@ -372,7 +345,7 @@ double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * n
   ShortestEditScript ses(node_index_compare, node_index, &dnodes);
   int text_old_length;
   int text_new_length;
-  compute_ses(nodes_old, node_set_old, nodes_new, node_set_new, ses, text_old_length, text_new_length);
+  compute_ses(nodes_old, set_old, nodes_new, set_new, ses, text_old_length, text_new_length);
 
   edit * edits = ses.get_script();
   
@@ -408,39 +381,39 @@ double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * n
 
 }
 
-int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new,
-                           NodeSet * node_set_new) {
+int compute_similarity_old(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                           node_set * set_new) {
 
-  unsigned int olength = node_set_old->size();
-  unsigned int nlength = node_set_new->size();
+  unsigned int olength = set_old->size();
+  unsigned int nlength = set_new->size();
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  if((xmlReaderTypes)nodes_old.at(node_set_old->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(node_set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(node_set_old->at(0)), nodes_new.at(node_set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(node_set_old->at(0))->name, (const char *)nodes_new.at(node_set_new->at(0))->name)
-        && (strcmp((const char *)nodes_old.at(node_set_old->at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(node_set_new->at(0))->name, "block") != 0))) {
+  if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
+     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
+            || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
     //return olength + nlength;
 
-    //if(node_set_syntax_compare(node_set_old, node_set_new) == 0)
+    //if(node_set_syntax_compare(set_old, set_new) == 0)
     //return MIN;
 
     unsigned int leftptr;
-    for(leftptr = 0; leftptr < node_set_old->size() && leftptr < node_set_new->size()
-          && node_compare(nodes_old.at(node_set_old->at(leftptr)), nodes_new.at(node_set_new->at(leftptr))) == 0; ++leftptr)
+    for(leftptr = 0; leftptr < set_old->size() && leftptr < set_new->size()
+          && node_compare(nodes_old.at(set_old->at(leftptr)), nodes_new.at(set_new->at(leftptr))) == 0; ++leftptr)
       ;
 
     unsigned int rightptr;
-    for(rightptr = 1; rightptr <= node_set_old->size() && rightptr <= node_set_new->size()
-          && node_compare(nodes_old.at(node_set_old->at(node_set_old->size() - rightptr)),
-                          nodes_new.at(node_set_new->at(node_set_new->size() - rightptr))) == 0; ++rightptr)
+    for(rightptr = 1; rightptr <= set_old->size() && rightptr <= set_new->size()
+          && node_compare(nodes_old.at(set_old->at(set_old->size() - rightptr)),
+                          nodes_new.at(set_new->at(set_new->size() - rightptr))) == 0; ++rightptr)
       ;
 
-    int old_diff = ((int)node_set_old->size() - rightptr) - leftptr;
-    int new_diff = ((int)node_set_new->size() - rightptr) - leftptr;
+    int old_diff = ((int)set_old->size() - rightptr) - leftptr;
+    int new_diff = ((int)set_new->size() - rightptr) - leftptr;
 
     int value = ((old_diff > new_diff) ? old_diff : new_diff);
 
@@ -451,21 +424,21 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * node_set
 
   }
 
-  NodeSet node_set_old_text;
+  node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_set_old->at(i))) && !is_white_space(nodes_old.at(node_set_old->at(i))))
-      node_set_old_text.push_back(node_set_old->at(i));
+    if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i))))
+      set_old_text.push_back(set_old->at(i));
 
-  NodeSet node_set_new_text;
+  node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_set_new->at(i))) && !is_white_space(nodes_new.at(node_set_new->at(i))))
-      node_set_new_text.push_back(node_set_new->at(i));
+    if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i))))
+      set_new_text.push_back(set_new->at(i));
 
   edit * edit_script;
-  shortest_edit_script((void *)&node_set_old_text, node_set_old_text.size(),
-                       (void *)&node_set_new_text, node_set_new_text.size(), &edit_script, node_index_compare, node_index, &dnodes);
+  shortest_edit_script((void *)&set_old_text, set_old_text.size(),
+                       (void *)&set_new_text, set_new_text.size(), &edit_script, node_index_compare, node_index, &dnodes);
 
   edit * edits = edit_script;
   unsigned int similarity = 0;

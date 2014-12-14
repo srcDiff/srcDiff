@@ -4,72 +4,7 @@
 #include <srcDiffUtility.hpp>
 #include <srcDiffCommon.hpp>
 #include <srcDiffChange.hpp>
-#include <srcDiffDiff.hpp>
-
-/*
-  Collect paragraphs
-*/
-NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
-
-  // collect all the paragraphs separated by double newlines
-  NodeSets node_sets;
-  for(int i = start; i < end; ++i) {
-
-    // move past any starting newlines
-    for(; is_new_line(nodes.at(i)); ++i)
-      ;
-
-    // collect the nodes in the paragraph
-    std::vector <int> * node_set = new std::vector <int>;
-
-    int newlines = 0;
-    for(; i < end; ++i) {
-
-      if(is_new_line(nodes.at(i)))
-        ++newlines;
-
-      if(newlines > 1)
-        break;
-
-      if(!is_white_space(nodes.at(i)))
-        node_set->push_back(i);
-    }
-
-    node_sets.push_back(node_set);
-
-  }
-
-  return node_sets;
-
-}
-
-// collect lines
-NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
-
-  NodeSets node_sets;
-
-  for(int i = start; i < end; ++i) {
-
-    NodeSet * node_set = new std::vector <int>;
-
-    for(; i < end; ++i) {
-
-      // stop the node set at the newline
-      if(is_new_line(nodes.at(i)))
-        break;
-
-      // only collect non-whitespace nodes
-      if(!is_white_space(nodes.at(i)))
-        node_set->push_back(i);
-    }
-
-    node_sets.push_back(node_set);
-
-  }
-
-  return node_sets;
-
-}
+#include <srcdiff_diff.hpp>
 
 /*
 
@@ -78,7 +13,7 @@ NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int e
   , and then by word using shortest edit script. Whitespace is included after/before changes
 
 */
-void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
+void output_comment_paragraph(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate) {
 
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
@@ -128,19 +63,19 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        NodeSets next_node_set_old
-          = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
+        node_sets next_set_old
+          = node_sets(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        NodeSets next_node_set_new
-          = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+        node_sets next_set_new
+          = node_sets(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare as lines
-        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+        output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
 
-        free_node_sets(next_node_set_old);
-        free_node_sets(next_node_set_new);
+        free_node_sets(next_set_old);
+        free_node_sets(next_set_new);
 
       } else {
 
@@ -208,7 +143,7 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
   Whitespace is included after/before changes
 
 */
-void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
+void output_comment_line(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate) {
 
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
@@ -261,19 +196,19 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        NodeSets next_node_set_old
-          = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
+        node_sets next_set_old
+          = node_sets(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        NodeSets next_node_set_new
-          = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+        node_sets next_set_new
+          = node_sets(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare on word basis
-        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+        output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
 
-        free_node_sets(next_node_set_old);
-        free_node_sets(next_node_set_new);
+        free_node_sets(next_set_old);
+        free_node_sets(next_set_new);
 
       } else
 
@@ -343,7 +278,7 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
   where in common.
 
 */
-void output_comment_word(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
+void output_comment_word(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
