@@ -16,13 +16,13 @@ void compute_ses(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vec
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  node_set set_old_text;
+  node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i))))
       set_old_text.push_back(set_old->at(i));
 
-  node_set set_new_text;
+  node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i))))
@@ -44,7 +44,7 @@ void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, node_set * se
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  node_set set_old_text;
+  node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i)))
@@ -55,7 +55,7 @@ void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, node_set * se
       && strcmp((const char *)nodes_old.at(set_old->at(i))->name, "operator") != 0)
       set_old_text.push_back(set_old->at(i));
 
-  node_set set_new_text;
+  node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i)))
@@ -195,7 +195,7 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std
 // create the node sets for shortest edit script
 node_sets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  node_sets sets;
+  node_sets sets(nodes);
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -204,7 +204,7 @@ node_sets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start,
     if(!is_text(nodes.at(i)) && strcmp(nodes.at(i)->name, "operator") != 0 
       && strcmp(nodes.at(i)->name, "literal") != 0 && strcmp(nodes.at(i)->name, "modifier") != 0) {
 
-      node_set * set = new node_set;
+      node_set * set = new node_set(nodes);
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
@@ -451,13 +451,13 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, node_set * set_old
 
   }
 
-  node_set set_old_text;
+  node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i))))
       set_old_text.push_back(set_old->at(i));
 
-  node_set set_new_text;
+  node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i))))

@@ -99,7 +99,7 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
   IntPairs old_moved;
   std::vector<int> pos_old;
-  node_sets old_sets;
+  node_sets old_sets(rbuf_old.nodes);
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
@@ -125,7 +125,7 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
   IntPairs new_moved;
   std::vector<int> pos_new;
-  node_sets new_sets;
+  node_sets new_sets(rbuf_new.nodes);
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 

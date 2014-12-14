@@ -146,7 +146,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
 
   // create the reader for the old file
-  node_sets set_old;
+  node_sets set_old(rbuf_old.nodes);
 
   int is_old = 0;
   create_nodes_args args_old = { path_one, archive
@@ -178,7 +178,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   */
 
-  node_sets set_new;
+  node_sets set_new(rbuf_new.nodes);
 
   int is_new = 0;
   create_nodes_args args_new = { path_two, archive

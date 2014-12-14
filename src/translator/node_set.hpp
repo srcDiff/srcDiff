@@ -12,8 +12,7 @@ class node_set : public std::vector<int> {
 
 private:
 
-	//std::vector<xNodePtr> & nodes;
-	std::vector<xNodePtr> nodes;
+	std::vector<xNodePtr> & nodes;
 
 	static bool is_white_space(const xNodePtr node) {
 
@@ -24,9 +23,19 @@ private:
 
 public:
 
-	node_set() {}
+	node_set(std::vector<xNodePtr> & nodes) : nodes(nodes) {}
 
-	node_set(std::vector<xNodePtr> & nodes, int & start) {
+	node_set(const node_set & set) : nodes(set.nodes) {}
+
+	node_set & operator=(const node_set & set) {
+
+		std::vector<int>::operator=(set);
+
+		return *this;
+
+	}
+
+	node_set(std::vector<xNodePtr> & nodes, int & start) : nodes(nodes) {
 
 	if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 

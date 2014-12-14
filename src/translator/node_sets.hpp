@@ -8,9 +8,7 @@ class node_sets : public std::vector<node_set *> {
 
 private:
 
-	//std::vector<xNodePtr> & nodes;
-	std::vector<xNodePtr> nodes;
-
+	std::vector<xNodePtr> & nodes;
 
 	static bool is_white_space(const xNodePtr node) {
 
@@ -20,11 +18,22 @@ private:
 	}
 
 public:
+
+	node_sets(std::vector<xNodePtr> & nodes) : nodes(nodes) {}
+	node_sets(const node_sets & sets) : nodes(sets.nodes) {}
+
+	node_sets & operator=(const node_sets & sets) {
+
+		std::vector<node_set *>::operator=(sets);
+
+		return *this;
+
+	}
 		
 	// create the node sets for shortest edit script
 	node_sets sub_node_sets(int start, int end) {
 
-	  node_sets sets;
+	  node_sets sets(nodes);
 
 	  // runs on a subset of base array
 	  for(int i = start; i < end; ++i) {

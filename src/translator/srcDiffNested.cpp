@@ -145,7 +145,7 @@ bool complete_nestable(node_sets & structure_one, std::vector<xNodePtr> & nodes_
 // create the node sets for shortest edit script
 node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNode * type) {
 
-  node_sets sets;
+  node_sets sets(nodes);
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -155,7 +155,7 @@ node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNo
       // save position to collect internal of same type on all levels
       int save_start = i;
 
-      node_set * set = new node_set;
+      node_set * set = new node_set(nodes);
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
@@ -735,7 +735,7 @@ void output_nested_recursive(reader_state & rbuf_old,
       end_pos,
       nodes_sets_old->at(end_old - 1)->back());
 
-    node_sets nest_set;
+    node_sets nest_set(rbuf_new.nodes);
 
     for(int i = start_new; i < end_new; ++i)
         nest_set.push_back(nodes_sets_new->at(i));
@@ -785,7 +785,7 @@ void output_nested_recursive(reader_state & rbuf_old,
       end_pos,
       nodes_sets_new->at(end_new - 1)->back());
 
-    node_sets nest_set;
+    node_sets nest_set(rbuf_old.nodes);
 
     for(int i = start_old; i < end_old; ++i)
         nest_set.push_back(nodes_sets_old->at(i));

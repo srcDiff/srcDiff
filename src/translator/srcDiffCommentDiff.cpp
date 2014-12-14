@@ -12,7 +12,7 @@
 node_sets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
-  node_sets sets;
+  node_sets sets(nodes);
   for(int i = start; i < end; ++i) {
 
     // move past any starting newlines
@@ -20,7 +20,7 @@ node_sets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start,
       ;
 
     // collect the nodes in the paragraph
-    node_set * set = new node_set;
+    node_set * set = new node_set(nodes);
 
     int newlines = 0;
     for(; i < end; ++i) {
@@ -46,11 +46,11 @@ node_sets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start,
 // collect lines
 node_sets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  node_sets sets;
+  node_sets sets(nodes);
 
   for(int i = start; i < end; ++i) {
 
-    node_set * set = new node_set();
+    node_set * set = new node_set(nodes);
 
     for(; i < end; ++i) {
 

@@ -68,7 +68,7 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, node_set & set, int & sta
 // create the node sets for shortest edit script
 node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  node_sets sets;
+  node_sets sets(nodes);
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -76,7 +76,7 @@ node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
     // skip whitespace
     if(!is_white_space(nodes.at(i))) {
 
-      node_set * set = new node_set();
+      node_set * set = new node_set(nodes);
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
