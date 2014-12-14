@@ -26,11 +26,11 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 
-srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, NodeSets * node_sets_old, NodeSets * node_sets_new) 
+srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
   : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
 // collect an entire tag from open tag to closing tag
-void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & set, int & start) {
+void collect_entire_tag(std::vector<xNodePtr> & nodes, node_set & set, int & start) {
 
   //const char * open_node = (const char *)nodes->at(*start)->name;
 
@@ -66,9 +66,9 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, NodeSet & set, int & star
 }
 
 // create the node sets for shortest edit script
-NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
+node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  NodeSets sets;
+  node_sets sets;
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -76,7 +76,7 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
     // skip whitespace
     if(!is_white_space(nodes.at(i))) {
 
-      NodeSet * set = new NodeSet();
+      node_set * set = new node_set();
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
@@ -117,8 +117,8 @@ void * create_node_set_thread(void * arguments) {
 
 }
 
-void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, NodeSets & set_old
-                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, NodeSets & set_new) {
+void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, node_sets & set_old
+                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, node_sets & set_new) {
 
   create_node_set_args args_old = { nodes_delete, start_old, end_old, set_old };
 
@@ -152,9 +152,9 @@ void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int e
 
 }
 
-bool go_down_a_level(reader_state & rbuf_old, NodeSets * node_sets_old
+bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
                      , unsigned int start_old
-                     , reader_state & rbuf_new, NodeSets * node_sets_new
+                     , reader_state & rbuf_new, node_sets * node_sets_new
                      , unsigned int start_new
                      , writer_state & wstate) {
 
@@ -173,9 +173,9 @@ bool go_down_a_level(reader_state & rbuf_old, NodeSets * node_sets_old
 
 }
 
-bool group_sub_elements(reader_state & rbuf_old, NodeSets * node_sets_old
+bool group_sub_elements(reader_state & rbuf_old, node_sets * node_sets_old
                         , unsigned int start_old
-                        , reader_state & rbuf_new, NodeSets * node_sets_new
+                        , reader_state & rbuf_new, node_sets * node_sets_new
                         , unsigned int start_new
                         , writer_state & wstate) {
 
@@ -331,7 +331,7 @@ void srcdiff_diff::output() {
 
 }
 
-void free_node_sets(NodeSets & sets) {
+void free_node_sets(node_sets & sets) {
 
   for(unsigned int i = 0; i < sets.size(); ++i) {
 

@@ -8,18 +8,18 @@
 
 typedef std::vector<IntPairs> Moves;
 
-void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
+void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
                       , int start_old, int end_old
-                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , reader_state & rbuf_new, node_sets * node_sets_new
                       , int start_new, int end_new
                       , writer_state & wstate);
 
-Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
-                           , reader_state & rbuf_new, NodeSets * node_sets_new
+Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
+                           , reader_state & rbuf_new, node_sets * node_sets_new
                            , edit * edit_script, writer_state & wstate);
 
-void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
-                       , reader_state & rbuf_new, NodeSets * node_sets_new
+void output_many(reader_state & rbuf_old, node_sets * node_sets_old
+                       , reader_state & rbuf_new, node_sets * node_sets_new
                        , edit * edit_script, writer_state & wstate);
 
 #endif

@@ -99,9 +99,9 @@ xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 
 }
 
-void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
+void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
                       , unsigned int start_old
-                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , reader_state & rbuf_new, node_sets * node_sets_new
                       , unsigned int start_new
                       , writer_state & wstate) {
 
@@ -137,11 +137,11 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
   if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
-    NodeSets next_set_old
+    node_sets next_set_old
       = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
-    NodeSets next_set_new
+    node_sets next_set_new
       = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
@@ -154,11 +154,11 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
   else {
 
       // collect subset of nodes
-      NodeSets next_set_old
+      node_sets next_set_old
         = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                           , node_sets_old->at(start_old)->back());
 
-      NodeSets next_set_new
+      node_sets next_set_new
         = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                           , node_sets_new->at(start_new)->back());
 
@@ -180,9 +180,9 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
 
 }
 
-void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_sets_old
+void output_recursive_interchangeable(reader_state & rbuf_old, node_sets * node_sets_old
                       , unsigned int start_old
-                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , reader_state & rbuf_new, node_sets * node_sets_new
                       , unsigned int start_new
                       , writer_state & wstate) {
 
@@ -222,11 +222,11 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
   ++rbuf_new.last_output;
 
   // collect subset of nodes
-  NodeSets next_set_old
+  node_sets next_set_old
     = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(old_collect_start_pos)
                       , node_sets_old->at(start_old)->back());
 
-  NodeSets next_set_new
+  node_sets next_set_new
     = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
                       , node_sets_new->at(start_new)->back());
 
@@ -249,9 +249,9 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
 
 }
 
-void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
+void output_recursive(reader_state & rbuf_old, node_sets * node_sets_old
                       , unsigned int start_old
-                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , reader_state & rbuf_new, node_sets * node_sets_new
                       , unsigned int start_new
                       , writer_state & wstate) {
 

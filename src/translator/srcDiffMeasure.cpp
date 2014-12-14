@@ -7,8 +7,8 @@
 #include <ShortestEditScript.hpp>
 #include <cstring>
 
-void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                NodeSet * set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
+void compute_ses(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                node_set * set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
 
   unsigned int olength = set_old->size();
   unsigned int nlength = set_new->size();
@@ -16,13 +16,13 @@ void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vect
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  NodeSet set_old_text;
+  node_set set_old_text;
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i))))
       set_old_text.push_back(set_old->at(i));
 
-  NodeSet set_new_text;
+  node_set set_new_text;
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i))))
@@ -35,8 +35,8 @@ void compute_ses(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vect
 
 }
 
-void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                NodeSet * set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
+void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                node_set * set_new, ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
 
   unsigned int olength = set_old->size();
   unsigned int nlength = set_new->size();
@@ -44,7 +44,7 @@ void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, NodeSet * set
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old->at(0))->name);
   //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new->at(0))->name);
 
-  NodeSet set_old_text;
+  node_set set_old_text;
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i)))
@@ -55,7 +55,7 @@ void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, NodeSet * set
       && strcmp((const char *)nodes_old.at(set_old->at(i))->name, "operator") != 0)
       set_old_text.push_back(set_old->at(i));
 
-  NodeSet set_new_text;
+  node_set set_new_text;
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i)))
@@ -73,8 +73,8 @@ void compute_ses_important_text(std::vector<xNodePtr> & nodes_old, NodeSet * set
 
 }
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * set_new, int & text_old_length, int & text_new_length) {
+int compute_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new, int & text_old_length, int & text_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -130,8 +130,8 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std
 
 }
 
-void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * set_new, int & similarity, int & difference, int & text_old_length, int & text_new_length) {
+void compute_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new, int & similarity, int & difference, int & text_old_length, int & text_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -193,9 +193,9 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std:
 }
 
 // create the node sets for shortest edit script
-NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
+node_sets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  NodeSets sets;
+  node_sets sets;
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -204,7 +204,7 @@ NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, 
     if(!is_text(nodes.at(i)) && strcmp(nodes.at(i)->name, "operator") != 0 
       && strcmp(nodes.at(i)->name, "literal") != 0 && strcmp(nodes.at(i)->name, "modifier") != 0) {
 
-      NodeSet * set = new NodeSet;
+      node_set * set = new node_set;
 
       // text is separate node if not surrounded by a tag in range
       if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
@@ -234,8 +234,8 @@ NodeSets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, 
   return sets;
 
 }
-void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length) {
+void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -259,8 +259,8 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * set_ol
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
   // collect subset of nodes
-  NodeSets next_node_sets_old = create_significant_node_sets(nodes_old, set_old->at(1), set_old->back());
-  NodeSets next_node_sets_new = create_significant_node_sets(nodes_new, set_new->at(1), set_new->back());
+  node_sets next_node_sets_old = create_significant_node_sets(nodes_old, set_old->at(1), set_old->back());
+  node_sets next_node_sets_new = create_significant_node_sets(nodes_new, set_new->at(1), set_new->back());
   children_old_length = next_node_sets_old.size();
   children_new_length = next_node_sets_new.size();
   int distance = ses.compute((const void *)&next_node_sets_old, children_old_length, (const void *)&next_node_sets_new, children_new_length);
@@ -304,8 +304,8 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, NodeSet * set_ol
 
 }
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * set_new) {
+int compute_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new) {
 
   int text_old_length;
   int text_new_length;
@@ -314,8 +314,8 @@ int compute_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std
 
 }
 
-int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                       NodeSet * set_new) {
+int compute_difference(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                       node_set * set_new) {
 
 
   diff_nodes dnodes = { nodes_old, nodes_new };
@@ -351,7 +351,7 @@ int compute_difference(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std
 
 }
 
-double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -408,8 +408,8 @@ double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, NodeSet * s
 
 }
 
-int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new,
-                           NodeSet * set_new) {
+int compute_similarity_old(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
+                           node_set * set_new) {
 
   unsigned int olength = set_old->size();
   unsigned int nlength = set_new->size();
@@ -451,13 +451,13 @@ int compute_similarity_old(std::vector<xNodePtr> & nodes_old, NodeSet * set_old,
 
   }
 
-  NodeSet set_old_text;
+  node_set set_old_text;
 
   for(unsigned int i = 0; i < olength; ++i)
     if(is_text(nodes_old.at(set_old->at(i))) && !is_white_space(nodes_old.at(set_old->at(i))))
       set_old_text.push_back(set_old->at(i));
 
-  NodeSet set_new_text;
+  node_set set_new_text;
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(is_text(nodes_new.at(set_new->at(i))) && !is_white_space(nodes_new.at(set_new->at(i))))

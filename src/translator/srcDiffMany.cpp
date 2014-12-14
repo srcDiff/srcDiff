@@ -8,9 +8,9 @@
 #include <srcDiffSingle.hpp>
 #include <srcDiffUtility.hpp>
 
-void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
+void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
                       , int start_old, int end_old
-                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , reader_state & rbuf_new, node_sets * node_sets_new
                       , int start_new, int end_new
                       , writer_state & wstate) {
 
@@ -88,8 +88,8 @@ void output_unmatched(reader_state & rbuf_old, NodeSets * node_sets_old
 
 }
 
-Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
-                           , reader_state & rbuf_new, NodeSets * node_sets_new
+Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
+                           , reader_state & rbuf_new, node_sets * node_sets_new
                            , edit * edit_script, writer_state & wstate) {
 
   edit * edits = edit_script;
@@ -99,7 +99,7 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 
   IntPairs old_moved;
   std::vector<int> pos_old;
-  NodeSets old_sets;
+  node_sets old_sets;
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
@@ -125,7 +125,7 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 
   IntPairs new_moved;
   std::vector<int> pos_new;
-  NodeSets new_sets;
+  node_sets new_sets;
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
@@ -180,8 +180,8 @@ Moves determine_operations(reader_state & rbuf_old, NodeSets * node_sets_old
 
 }
 
-void output_many(reader_state & rbuf_old, NodeSets * node_sets_old
-                 , reader_state & rbuf_new, NodeSets * node_sets_new
+void output_many(reader_state & rbuf_old, node_sets * node_sets_old
+                 , reader_state & rbuf_new, node_sets * node_sets_new
                  , edit * edit_script, writer_state & wstate) {
 
   edit * edits = edit_script;

@@ -18,12 +18,12 @@ bool is_change(edit * edit_script) {
 
 // diff node accessor function
 const void * node_set_index(int idx, const void *s, const void * context) {
-  NodeSets & sets = *(NodeSets *)s;
+  node_sets & sets = *(node_sets *)s;
   return sets[idx];
 }
 
 const void * node_index(int idx, const void *s, const void * context) {
-  NodeSet & set = *(NodeSet *)s;
+  node_set & set = *(node_set *)s;
   return &set[idx];
 }
 
@@ -109,8 +109,8 @@ int node_set_syntax_compare(const void * e1, const void * e2, const void * conte
 
   diff_nodes & dnodes = *(diff_nodes *)context;
 
-  NodeSet * node_set1 = (NodeSet *)e1;
-  NodeSet * node_set2 = (NodeSet *)e2;
+  node_set * node_set1 = (node_set *)e1;
+  node_set * node_set2 = (node_set *)e2;
 
   for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size();) {
 
@@ -472,9 +472,9 @@ std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
 
   }
 
-  NodeSets control_sets = create_node_set(nodes, control_start_pos + 1, control_end_pos);
+  node_sets control_sets = create_node_set(nodes, control_start_pos + 1, control_end_pos);
 
-  NodeSets::const_iterator citr;
+  node_sets::const_iterator citr;
   for(citr = control_sets.begin(); citr != control_sets.end(); ++citr)
     if(strcmp((const char *)nodes.at((*citr)->front())->name, "condition") == 0)
       break;
@@ -482,7 +482,7 @@ std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
   if(citr == control_sets.end()) return "";
 
   std::string condition = "";
-  for(NodeSet::const_iterator node_itr = (*citr)->begin(); node_itr != (*citr)->end(); ++node_itr)
+  for(node_set::const_iterator node_itr = (*citr)->begin(); node_itr != (*citr)->end(); ++node_itr)
     if(is_text(nodes.at(*node_itr)))
       condition += (const char *)nodes.at(*node_itr)->content;
 
@@ -582,11 +582,11 @@ std::string get_class_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 }
 
-bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * set) {
+bool conditional_has_block(std::vector<xNodePtr> & nodes, node_set * set) {
 
-  NodeSets sets = create_node_set(nodes, set->at(1), set->back());
+  node_sets sets = create_node_set(nodes, set->at(1), set->back());
 
-  for(NodeSets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
+  for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
     if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0 && find_attribute(nodes.at((*itr)->at(0)), "type") == 0) {
 
@@ -619,11 +619,11 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, NodeSet * set) {
 
 }
 
-bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * set) {
+bool if_has_else(std::vector<xNodePtr> & nodes, node_set * set) {
 
-  NodeSets sets = create_node_set(nodes, set->at(1), set->back());
+  node_sets sets = create_node_set(nodes, set->at(1), set->back());
 
-  for(NodeSets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
+  for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
     if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "else") == 0 || strcmp((const char *)nodes.at((*itr)->at(0))->name, "elseif") == 0) {
 
@@ -641,14 +641,14 @@ bool if_has_else(std::vector<xNodePtr> & nodes, NodeSet * set) {
 
 }
 
-bool if_then_equal(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+bool if_then_equal(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  NodeSets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-  NodeSets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
+  node_sets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
+  node_sets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
 
-  NodeSets::iterator then_old;
+  node_sets::iterator then_old;
   for(then_old = node_sets_old.begin(); then_old != node_sets_old.end(); ++then_old) {
 
     if(strcmp((const char *)nodes_old.at((*then_old)->at(0))->name, "then") == 0) {
@@ -659,7 +659,7 @@ bool if_then_equal(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::ve
 
   }
 
-  NodeSets::iterator then_new;
+  node_sets::iterator then_new;
   for(then_new = node_sets_new.begin(); then_new != node_sets_new.end(); ++then_new) {
 
     if(strcmp((const char *)nodes_new.at((*then_new)->at(0))->name, "then") == 0) {
@@ -679,19 +679,19 @@ bool if_then_equal(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::ve
 
 }
 
-bool for_control_matches(std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+bool for_control_matches(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  NodeSets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-  NodeSets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
+  node_sets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
+  node_sets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
 
-  NodeSets::size_type control_pos_old;
+  node_sets::size_type control_pos_old;
   for(control_pos_old = 0; control_pos_old < node_sets_old.size(); ++control_pos_old)
     if(strcmp((const char *)nodes_old.at(node_sets_old.at(control_pos_old)->front())->name, "control") == 0)
       break;
 
-  NodeSets::size_type control_pos_new;
+  node_sets::size_type control_pos_new;
   for(control_pos_new = 0; control_pos_new < node_sets_new.size(); ++control_pos_new)
     if(strcmp((const char *)nodes_new.at(node_sets_new.at(control_pos_new)->front())->name, "control") == 0)
       break;
@@ -803,7 +803,7 @@ bool is_interchangeable_match(const std::string & old_tag, const std::string & n
 }
 
 bool reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+  std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   int syntax_similarity, syntax_difference, children_length_old, children_length_new;
   compute_syntax_measures(nodes_old, set_old, nodes_new, set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
@@ -818,12 +818,12 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 
   }
 
-  NodeSets child_node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-  NodeSets child_node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());    
+  node_sets child_node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
+  node_sets child_node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());    
 
   if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "then") == 0) {
 
-    NodeSets temp = create_node_set(nodes_old, child_node_sets_old.back()->at(1), child_node_sets_old.back()->back());
+    node_sets temp = create_node_set(nodes_old, child_node_sets_old.back()->at(1), child_node_sets_old.back()->back());
     free_node_sets(child_node_sets_old);
     child_node_sets_old = temp;
 
@@ -831,7 +831,7 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 
   if(strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "then") == 0) {
 
-    NodeSets temp = create_node_set(nodes_new, child_node_sets_new.back()->at(1), child_node_sets_new.back()->back());
+    node_sets temp = create_node_set(nodes_new, child_node_sets_new.back()->at(1), child_node_sets_new.back()->back());
     free_node_sets(child_node_sets_new);
     child_node_sets_new = temp;
 
@@ -872,7 +872,7 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 }
 
 bool reject_match_same(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+  std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   int old_pos = set_old->at(0);
   int new_pos = set_new->at(0);
@@ -908,8 +908,8 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
       if(is_pseudo_old) {
 
-        NodeSets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-        NodeSets node_sets_new = create_node_set(nodes_new, set_new->at(0), set_new->back() + 1);
+        node_sets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
+        node_sets node_sets_new = create_node_set(nodes_new, set_new->at(0), set_new->back() + 1);
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
         check_nestable(&node_sets_old, nodes_old, 0, node_sets_old.size(), &node_sets_new, nodes_new, 0, 1,
@@ -923,8 +923,8 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
       } else {
 
-        NodeSets node_sets_old = create_node_set(nodes_old, set_old->at(0), set_old->back() + 1);
-        NodeSets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
+        node_sets node_sets_old = create_node_set(nodes_old, set_old->at(0), set_old->back() + 1);
+        node_sets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
         check_nestable(&node_sets_old, nodes_old, 0, 1, &node_sets_new, nodes_new, 0, node_sets_new.size(),
@@ -1051,7 +1051,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 }
 
 bool reject_match_interchangeable(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+  std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   int old_pos = set_old->at(0);
   int new_pos = set_new->at(0);
@@ -1081,7 +1081,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 }
 
 bool reject_match(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+  std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   /** if different prefix should not reach here, however, may want to add that here */
   int old_pos = set_old->at(0);

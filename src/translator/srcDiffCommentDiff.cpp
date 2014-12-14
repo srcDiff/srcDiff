@@ -9,10 +9,10 @@
 /*
   Collect paragraphs
 */
-NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
+node_sets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
   // collect all the paragraphs separated by double newlines
-  NodeSets sets;
+  node_sets sets;
   for(int i = start; i < end; ++i) {
 
     // move past any starting newlines
@@ -20,7 +20,7 @@ NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, 
       ;
 
     // collect the nodes in the paragraph
-    NodeSet * set = new NodeSet;
+    node_set * set = new node_set;
 
     int newlines = 0;
     for(; i < end; ++i) {
@@ -44,13 +44,13 @@ NodeSets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, 
 }
 
 // collect lines
-NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
+node_sets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  NodeSets sets;
+  node_sets sets;
 
   for(int i = start; i < end; ++i) {
 
-    NodeSet * set = new NodeSet();
+    node_set * set = new node_set();
 
     for(; i < end; ++i) {
 
@@ -78,7 +78,7 @@ NodeSets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int e
   , and then by word using shortest edit script. Whitespace is included after/before changes
 
 */
-void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
+void output_comment_paragraph(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate) {
 
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
@@ -128,11 +128,11 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        NodeSets next_set_old
+        node_sets next_set_old
           = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        NodeSets next_set_new
+        node_sets next_set_new
           = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
@@ -208,7 +208,7 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
   Whitespace is included after/before changes
 
 */
-void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
+void output_comment_line(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate) {
 
   diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
 
@@ -261,11 +261,11 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        NodeSets next_set_old
+        node_sets next_set_old
           = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        NodeSets next_set_new
+        node_sets next_set_new
           = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
@@ -343,7 +343,7 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
   where in common.
 
 */
-void output_comment_word(reader_state & rbuf_old, NodeSets * node_sets_old, reader_state & rbuf_new, NodeSets * node_sets_new, writer_state & wstate) {
+void output_comment_word(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate) {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 

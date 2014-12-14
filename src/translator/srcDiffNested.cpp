@@ -82,7 +82,7 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(NodeSet * structure, std::vector<xNodePtr> & nodes) {
+int is_block_type(node_set * structure, std::vector<xNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
@@ -97,8 +97,8 @@ int is_block_type(NodeSet * structure, std::vector<xNodePtr> & nodes) {
   return -1;
 }
 
-bool is_nest_type(NodeSet * structure, std::vector<xNodePtr> & nodes
-                           , NodeSet * structure_other, std::vector<xNodePtr> & nodes_other, int type_index) {
+bool is_nest_type(node_set * structure, std::vector<xNodePtr> & nodes
+                           , node_set * structure_other, std::vector<xNodePtr> & nodes_other, int type_index) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
@@ -116,7 +116,7 @@ bool is_nest_type(NodeSet * structure, std::vector<xNodePtr> & nodes
 
 
 
-bool has_internal_structure(NodeSet * structure, std::vector<xNodePtr> & nodes, const char * type) {
+bool has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes, const char * type) {
 
   for(unsigned int i = 1; i < structure->size(); ++i)
     if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
@@ -126,8 +126,8 @@ bool has_internal_structure(NodeSet * structure, std::vector<xNodePtr> & nodes, 
   return false;
 }
 
-bool complete_nestable(NodeSets & structure_one, std::vector<xNodePtr> & nodes_one
-                  , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool complete_nestable(node_sets & structure_one, std::vector<xNodePtr> & nodes_one
+                  , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   unsigned int num_nest = 0;
 
@@ -143,9 +143,9 @@ bool complete_nestable(NodeSets & structure_one, std::vector<xNodePtr> & nodes_o
 }
 
 // create the node sets for shortest edit script
-NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNode * type) {
+node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNode * type) {
 
-  NodeSets sets;
+  node_sets sets;
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -155,7 +155,7 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNod
       // save position to collect internal of same type on all levels
       int save_start = i;
 
-      NodeSet * set = new NodeSet;
+      node_set * set = new node_set;
 
       //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
 
@@ -174,8 +174,8 @@ NodeSets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNod
 
 }
 
-int best_match(std::vector<xNodePtr> & nodes, NodeSets & set
-               , std::vector<xNodePtr> & nodes_match, NodeSet * match, int operation) {
+int best_match(std::vector<xNodePtr> & nodes, node_sets & set
+               , std::vector<xNodePtr> & nodes_match, node_set * match, int operation) {
 
   int match_pos = set.size();
   int match_similarity = 0;
@@ -215,8 +215,8 @@ int best_match(std::vector<xNodePtr> & nodes, NodeSets & set
 
 }
 
-bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
-                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool is_nestable_internal(node_set * structure_one, std::vector<xNodePtr> & nodes_one
+                 , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   int block = is_block_type(structure_two, nodes_two);
 
@@ -257,15 +257,15 @@ bool is_nestable_internal(NodeSet * structure_one, std::vector<xNodePtr> & nodes
   return false;
 }
 
-bool is_same_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
-                      , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool is_same_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
+                      , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
     return false;
 
   //unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
 
-  NodeSets set = create_node_set(nodes_two, structure_two->at(1), structure_two->back()
+  node_sets set = create_node_set(nodes_two, structure_two->at(1), structure_two->back()
                                                              , nodes_one.at(structure_one->at(0)));
 
   unsigned int match = best_match(nodes_two, set, nodes_one, structure_one, SESDELETE);
@@ -288,8 +288,8 @@ bool is_same_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
-bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
-                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool is_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
+                 , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   if(node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
     return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
@@ -298,13 +298,13 @@ bool is_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
-bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_outer,
-                    std::vector<xNodePtr> & nodes_inner, NodeSet * node_set_inner,
+bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
+                    std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 
     if(is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
-      NodeSets set = create_node_set(nodes_outer, node_set_outer->at(1), node_set_outer->back()
+      node_sets set = create_node_set(nodes_outer, node_set_outer->at(1), node_set_outer->back()
                                                              , nodes_inner.at(node_set_inner->at(0)));
 
       int match = best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
@@ -331,13 +331,13 @@ bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, NodeSet * 
 
 }
 
-bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_outer,
-                    std::vector<xNodePtr> & nodes_inner, NodeSet * node_set_inner,
+bool is_better_nest(std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
+                    std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 // parents and children same do not nest.
     if(is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
-      NodeSets set = create_node_set(nodes_outer, node_set_outer->at(1), node_set_outer->back()
+      node_sets set = create_node_set(nodes_outer, node_set_outer->at(1), node_set_outer->back()
                                                              , nodes_inner.at(node_set_inner->at(0)));
 
       int match = best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
@@ -368,8 +368,8 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, NodeSet * node_set_oute
 
 
 
-bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old, int start_pos_old,
-                    std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new, int start_pos_new,
+bool is_better_nested(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old, int start_pos_old,
+                    std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
   for(int pos = start_pos_old; pos < node_sets_old->size(); ++pos) {
@@ -391,7 +391,7 @@ bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_ol
 }
 
 bool reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
+  std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   int old_pos = set_old->at(0);
   int new_pos = set_new->at(0);
@@ -440,8 +440,8 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
 }
 
-void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
+void check_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
                  , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
                  , int & operation) {
 
@@ -464,7 +464,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
       if(is_nestable(node_sets_new->at(j), nodes_new, node_sets_old->at(i), nodes_old)) {
 
-        NodeSets set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
+        node_sets set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
                                                              , nodes_new.at(node_sets_new->at(j)->at(0)));
 
         int match = best_match(nodes_old, set, nodes_new, node_sets_new->at(j), SESDELETE);
@@ -499,7 +499,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
           if(!is_nestable(node_sets_new->at(k), nodes_new, node_sets_old->at(i), nodes_old)) continue;
 
-          NodeSets set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
+          node_sets set = create_node_set(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back()
                                                                , nodes_new.at(node_sets_new->at(k)->at(0)));
 
           int match = best_match(nodes_old, set, nodes_new, node_sets_new->at(k), SESDELETE);
@@ -543,7 +543,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
       if(is_nestable(node_sets_old->at(j), nodes_old, node_sets_new->at(i), nodes_new)) {
 
-        NodeSets set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
+        node_sets set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
                                                              , nodes_old.at(node_sets_old->at(j)->at(0)));
 
         int match = best_match(nodes_new, set, nodes_old, node_sets_old->at(j), SESINSERT);
@@ -575,7 +575,7 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
         
           if(!is_nestable(node_sets_old->at(k), nodes_old, node_sets_new->at(i), nodes_new)) continue;
 
-            NodeSets set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
+            node_sets set = create_node_set(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back()
                                                              , nodes_old.at(node_sets_old->at(k)->at(0)));
 
             int match = best_match(nodes_new, set, nodes_old, node_sets_old->at(k), SESINSERT);
@@ -638,8 +638,8 @@ void check_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 
 }
 
-void set_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
+void set_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
 
   ++nest_id;
 
@@ -659,8 +659,8 @@ void set_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, i
 
 }
 
-void clear_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
-                 , NodeSet * structure_two, std::vector<xNodePtr> & nodes_two) {
+void clear_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
+                 , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   nodes_one.at(structure_one->at(0))->nest = 0;
   nodes_one.at(structure_one->back())->nest = 0;
@@ -669,8 +669,8 @@ void clear_nestable(NodeSet * structure_one, std::vector<xNodePtr> & nodes_one
 
 }
 
-void clear_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , NodeSets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
+void clear_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
 
   for(int i = start_old; i < end_old; ++i) {
 
@@ -689,10 +689,10 @@ void clear_nestable(NodeSets * node_sets_old, std::vector<xNodePtr> & nodes_old,
 }
 
 void output_nested_recursive(reader_state & rbuf_old,
-                  NodeSets * nodes_sets_old,
+                  node_sets * nodes_sets_old,
                   int start_old, int end_old,
                   reader_state & rbuf_new,
-                  NodeSets * nodes_sets_new,
+                  node_sets * nodes_sets_new,
                   int start_new, int end_new,
                   int operation, writer_state & wstate) {
 
@@ -730,12 +730,12 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     }
 
-    NodeSets set = create_node_set(rbuf_old.nodes,
+    node_sets set = create_node_set(rbuf_old.nodes,
       //nodes_sets_old->at(start_old)->at(1),
       end_pos,
       nodes_sets_old->at(end_old - 1)->back());
 
-    NodeSets nest_set;
+    node_sets nest_set;
 
     for(int i = start_new; i < end_new; ++i)
         nest_set.push_back(nodes_sets_new->at(i));
@@ -780,12 +780,12 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     }
 
-    NodeSets set = create_node_set(rbuf_new.nodes,
+    node_sets set = create_node_set(rbuf_new.nodes,
       //nodes_sets_old->at(start_old)->at(1),
       end_pos,
       nodes_sets_new->at(end_new - 1)->back());
 
-    NodeSets nest_set;
+    node_sets nest_set;
 
     for(int i = start_old; i < end_old; ++i)
         nest_set.push_back(nodes_sets_old->at(i));
@@ -809,8 +809,8 @@ void output_nested_recursive(reader_state & rbuf_old,
 
 }
 
-void output_nested(reader_state & rbuf_old, NodeSet * structure_old
-                   , reader_state & rbuf_new, NodeSet * structure_new
+void output_nested(reader_state & rbuf_old, node_set * structure_old
+                   , reader_state & rbuf_new, node_set * structure_new
                    , int operation, writer_state & wstate) {
 
   clear_nestable(structure_old, rbuf_old.nodes, structure_new, rbuf_new.nodes);
@@ -822,10 +822,10 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
   // idea best match first of multi then pass all on to algorithm or set ending pos to recurse down
   if(operation == SESDELETE) {
 
-    NodeSets set = create_node_set(rbuf_old.nodes, structure_old->at(1), structure_old->back()
+    node_sets set = create_node_set(rbuf_old.nodes, structure_old->at(1), structure_old->back()
                                                                , rbuf_new.nodes.at(structure_new->at(0)));
 
-    NodeSets nest_set = create_node_set(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
+    node_sets nest_set = create_node_set(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
 
     unsigned int match = best_match(rbuf_old.nodes, set, rbuf_new.nodes, nest_set.at(0), SESDELETE);
 
@@ -843,7 +843,7 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
       // collect subset of nodes
-      NodeSets next_set_old
+      node_sets next_set_old
         = create_node_set(rbuf_old.nodes, end_pos, set.back()->back() + 1);
 
       srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &nest_set);
@@ -861,10 +861,10 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
 
   } else {
 
-    NodeSets set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
+    node_sets set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
                                                                , rbuf_old.nodes.at(structure_old->at(0)));
 
-    NodeSets nest_set = create_node_set(rbuf_old.nodes, structure_old->at(0), structure_old->back() + 1);
+    node_sets nest_set = create_node_set(rbuf_old.nodes, structure_old->at(0), structure_old->back() + 1);
 
     unsigned int match = best_match(rbuf_new.nodes, set, rbuf_old.nodes, nest_set.at(0), SESINSERT);
 
@@ -882,7 +882,7 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
       // collect subset of nodes
-      NodeSets next_set_new
+      node_sets next_set_new
         = create_node_set(rbuf_new.nodes, end_pos, set.back()->back() + 1);
 
       srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &next_set_new);

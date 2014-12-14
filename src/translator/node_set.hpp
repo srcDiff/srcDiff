@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class NodeSet : public std::vector<int> {
+class node_set : public std::vector<int> {
 	
 
 };

@@ -4,9 +4,9 @@
 #include <srcDiffTypes.hpp>
 #include <vector>
 
-void output_recursive(reader_state & rbuf_old, NodeSets * node_sets_old
+void output_recursive(reader_state & rbuf_old, node_sets * node_sets_old
                       , unsigned int start_old
-                      , reader_state & rbuf_new, NodeSets * node_sets_new
+                      , reader_state & rbuf_new, node_sets * node_sets_new
                       , unsigned int start_new
                       , writer_state & wstate);
 

@@ -78,8 +78,8 @@ void create_linked_list(int olength, int nlength, difference * differences, offs
 
 }
 
-void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
+void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
+                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
                                , offset_pair ** matches) {
 
   /*
@@ -313,8 +313,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
 
 }
 
-void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
+void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
+                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
                                , edit * edit_script, offset_pair ** matches) {
 
   /*
@@ -617,8 +617,8 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, NodeSets * nod
 
 }
 
-void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
+void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
+                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
                                , edit * edit_script, offset_pair ** matches) {
 
   /*
@@ -747,8 +747,8 @@ void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, Node
 
 }
 
-void match_differences(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, NodeSets * node_sets_new
+void match_differences(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
+                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
                        , edit * edit_script, offset_pair ** matches) {
 
 
