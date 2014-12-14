@@ -31,9 +31,7 @@ public:
 	}
 		
 	// create the node sets for shortest edit script
-	node_sets sub_node_sets(int start, int end) {
-
-	  node_sets sets(nodes);
+	node_sets(std::vector<xNodePtr> & nodes, int start, int end) : nodes(nodes) {
 
 	  // runs on a subset of base array
 	  for(int i = start; i < end; ++i) {
@@ -45,19 +43,17 @@ public:
 	      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
 
 		      node_set * set = new node_set(nodes, i);
-		      sets.push_back(set);
+		      push_back(set);
 
 	      } else {
 
-		      break;
+		      return;
 
 	      }
 
 	    }
 
 	  }
-
-	  return sets;
 
 	}
 

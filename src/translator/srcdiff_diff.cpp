@@ -68,7 +68,8 @@ void collect_entire_tag(std::vector<xNodePtr> & nodes, node_set & set, int & sta
 // create the node sets for shortest edit script
 node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  node_sets sets(nodes);
+  node_sets sets(nodes, start, end);
+  return sets;
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
