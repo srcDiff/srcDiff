@@ -391,10 +391,10 @@ bool is_better_nested(std::vector<xNodePtr> & nodes_old, NodeSets * node_sets_ol
 }
 
 bool reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, NodeSet * node_set_old, std::vector<xNodePtr> & nodes_new, NodeSet * node_set_new) {
+  std::vector<xNodePtr> & nodes_old, NodeSet * set_old, std::vector<xNodePtr> & nodes_new, NodeSet * set_new) {
 
-  int old_pos = node_set_old->at(0);
-  int new_pos = node_set_new->at(0);
+  int old_pos = set_old->at(0);
+  int new_pos = set_new->at(0);
 
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
@@ -407,7 +407,7 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
 
     return reject_similarity(similarity, difference, text_old_length, text_new_length,
-      nodes_old, node_set_old, nodes_new, node_set_new);
+      nodes_old, set_old, nodes_new, set_new);
 
     // int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
     // int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
@@ -434,7 +434,7 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
   } else {
 
-    return reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, node_set_old, nodes_new, node_set_new);
+    return reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
 
   }
 
@@ -843,10 +843,10 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
       // collect subset of nodes
-      NodeSets next_node_set_old
+      NodeSets next_set_old
         = create_node_set(rbuf_old.nodes, end_pos, node_set.back()->back() + 1);
 
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_node_set_old, &nest_set);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &nest_set);
       diff.output();
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
@@ -882,10 +882,10 @@ void output_nested(reader_state & rbuf_old, NodeSet * structure_old
       output_white_space_suffix(rbuf_old, rbuf_new, wstate);
 
       // collect subset of nodes
-      NodeSets next_node_set_new
+      NodeSets next_set_new
         = create_node_set(rbuf_new.nodes, end_pos, node_set.back()->back() + 1);
 
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &next_node_set_new);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &next_set_new);
       diff.output();
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);

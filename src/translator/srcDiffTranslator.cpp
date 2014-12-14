@@ -146,7 +146,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
 
   // create the reader for the old file
-  NodeSets node_set_old;
+  NodeSets set_old;
 
   int is_old = 0;
   create_nodes_args args_old = { path_one, archive
@@ -178,7 +178,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   */
 
-  NodeSets node_set_new;
+  NodeSets set_new;
 
   int is_new = 0;
   create_nodes_args args_new = { path_two, archive
@@ -213,11 +213,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   }
 
   if(is_old && is_old > -1)
-    node_set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
+    set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
 
 
   if(is_new && is_new > -1)
-    node_set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
+    set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
 
   /*
 
@@ -328,7 +328,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
       However this is correct when output is to archive */
     srcml_write_start_unit(srcdiff_unit);
 
-    srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &node_set_old, &node_set_new);
+    srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &set_old, &set_new);
     diff.output();
 
     // output remaining whitespace
@@ -346,8 +346,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  free_node_sets(node_set_old);
-  free_node_sets(node_set_new);
+  free_node_sets(set_old);
+  free_node_sets(set_new);
 
   // Because of grouping need to output a common to end grouping need to deallocate as well
   for(unsigned int i = 0; i < rbuf_old.nodes.size(); ++i) {

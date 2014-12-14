@@ -128,19 +128,19 @@ void output_comment_paragraph(reader_state & rbuf_old, NodeSets * node_sets_old,
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        NodeSets next_node_set_old
+        NodeSets next_set_old
           = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        NodeSets next_node_set_new
+        NodeSets next_set_new
           = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare as lines
-        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+        output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
 
-        free_node_sets(next_node_set_old);
-        free_node_sets(next_node_set_new);
+        free_node_sets(next_set_old);
+        free_node_sets(next_set_new);
 
       } else {
 
@@ -261,19 +261,19 @@ void output_comment_line(reader_state & rbuf_old, NodeSets * node_sets_old, read
       if(edits->length == 1 && edit_next->length == 1) {
 
         // collect subset of nodes
-        NodeSets next_node_set_old
+        NodeSets next_set_old
           = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
-        NodeSets next_node_set_new
+        NodeSets next_set_new
           = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare on word basis
-        output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+        output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
 
-        free_node_sets(next_node_set_old);
-        free_node_sets(next_node_set_new);
+        free_node_sets(next_set_old);
+        free_node_sets(next_set_new);
 
       } else
 

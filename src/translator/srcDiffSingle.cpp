@@ -137,36 +137,36 @@ void output_recursive_same(reader_state & rbuf_old, NodeSets * node_sets_old
   if(strcmp((const char *)rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
-    NodeSets next_node_set_old
+    NodeSets next_set_old
       = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
-    NodeSets next_node_set_new
+    NodeSets next_set_new
       = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
-    output_comment_word(rbuf_old, &next_node_set_old, rbuf_new, &next_node_set_new, wstate);
+    output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
 
-    free_node_sets(next_node_set_old);
-    free_node_sets(next_node_set_new);
+    free_node_sets(next_set_old);
+    free_node_sets(next_set_new);
 
   }
   else {
 
       // collect subset of nodes
-      NodeSets next_node_set_old
+      NodeSets next_set_old
         = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                           , node_sets_old->at(start_old)->back());
 
-      NodeSets next_node_set_new
+      NodeSets next_set_new
         = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                           , node_sets_new->at(start_new)->back());
 
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_node_set_old, &next_node_set_new);
+      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
       diff.output();
 
-      free_node_sets(next_node_set_old);
-      free_node_sets(next_node_set_new);
+      free_node_sets(next_set_old);
+      free_node_sets(next_set_new);
 
   }
 
@@ -222,19 +222,19 @@ void output_recursive_interchangeable(reader_state & rbuf_old, NodeSets * node_s
   ++rbuf_new.last_output;
 
   // collect subset of nodes
-  NodeSets next_node_set_old
+  NodeSets next_set_old
     = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(old_collect_start_pos)
                       , node_sets_old->at(start_old)->back());
 
-  NodeSets next_node_set_new
+  NodeSets next_set_new
     = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
                       , node_sets_new->at(start_new)->back());
 
-  srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_node_set_old, &next_node_set_new);
+  srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
   diff.output();
 
-  free_node_sets(next_node_set_old);
-  free_node_sets(next_node_set_new);
+  free_node_sets(next_set_old);
+  free_node_sets(next_set_new);
 
   output_change(rbuf_old, rbuf_old.last_output, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
 
