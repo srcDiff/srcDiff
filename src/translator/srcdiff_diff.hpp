@@ -23,8 +23,6 @@ public:
 
 };
 
-// create sets of nodes
-node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end);
 
 void * create_node_set_thread(void * arguments);
 
@@ -39,8 +37,6 @@ struct create_node_set_args {
 
 void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, node_sets & set_old
                       , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, node_sets & set_new);
-
-void collect_entire_tag(std::vector<xNodePtr> & nodes, node_set & set, int & start);
 
 bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
                      , unsigned int start_old

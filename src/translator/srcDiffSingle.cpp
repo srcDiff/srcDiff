@@ -138,11 +138,11 @@ void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
 
     // collect subset of nodes
     node_sets next_set_old
-      = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
+      = node_sets(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                         , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
 
     node_sets next_set_new
-      = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
+      = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
     output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
@@ -155,11 +155,11 @@ void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
 
       // collect subset of nodes
       node_sets next_set_old
-        = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
+        = node_sets(rbuf_old.nodes, node_sets_old->at(start_old)->at(1)
                           , node_sets_old->at(start_old)->back());
 
       node_sets next_set_new
-        = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
+        = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                           , node_sets_new->at(start_new)->back());
 
       srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
@@ -223,11 +223,11 @@ void output_recursive_interchangeable(reader_state & rbuf_old, node_sets * node_
 
   // collect subset of nodes
   node_sets next_set_old
-    = create_node_set(rbuf_old.nodes, node_sets_old->at(start_old)->at(old_collect_start_pos)
+    = node_sets(rbuf_old.nodes, node_sets_old->at(start_old)->at(old_collect_start_pos)
                       , node_sets_old->at(start_old)->back());
 
   node_sets next_set_new
-    = create_node_set(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
+    = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
                       , node_sets_new->at(start_new)->back());
 
   srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);

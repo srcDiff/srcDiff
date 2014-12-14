@@ -29,90 +29,11 @@ extern xNode diff_new_end;
 srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
   : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
-// collect an entire tag from open tag to closing tag
-void collect_entire_tag(std::vector<xNodePtr> & nodes, node_set & set, int & start) {
-
-  //const char * open_node = (const char *)nodes->at(*start)->name;
-
-  set.push_back(start);
-
-  if(nodes.at(start)->is_empty)
-    return;
-
-  ++start;
-
-  // track open tags because could have same type nested
-  int is_open = 1;
-  for(; is_open; ++start) {
-
-    // skip whitespace
-    if(is_white_space(nodes.at(start)))
-      continue;
-
-    set.push_back(start);
-
-    // opening tags
-    if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_ELEMENT
-       && !(nodes.at(start)->is_empty))
-      ++is_open;
-
-    // closing tags
-    else if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_END_ELEMENT)
-      --is_open;
-
-  }
-
-  --start;
-}
-
-// create the node sets for shortest edit script
-node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end) {
-
-  node_sets sets(nodes, start, end);
-  return sets;
-
-  // runs on a subset of base array
-  for(int i = start; i < end; ++i) {
-
-    // skip whitespace
-    if(!is_white_space(nodes.at(i))) {
-
-      node_set * set = new node_set(nodes);
-
-      // text is separate node if not surrounded by a tag in range
-      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
-        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-        set->push_back(i);
-
-      } else if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
-
-        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
-
-        collect_entire_tag(nodes, *set, i);
-
-      } else {
-
-        // could be a closing tag, but then something should be wrong.
-        // TODO: remove this and make sure it works
-      break;
-        set->push_back(i);
-      }
-
-      sets.push_back(set);
-
-    }
-
-  }
-
-  return sets;
-
-}
-
 void * create_node_set_thread(void * arguments) {
 
   create_node_set_args & args = *(create_node_set_args *)arguments;
 
-  args.sets = create_node_set(args.nodes, args.start, args.end);
+  args.sets = node_sets(args.nodes, args.start, args.end);
 
   return NULL;
 

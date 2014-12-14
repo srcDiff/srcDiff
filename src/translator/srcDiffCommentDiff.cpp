@@ -7,71 +7,6 @@
 #include <srcdiff_diff.hpp>
 
 /*
-  Collect paragraphs
-*/
-node_sets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end) {
-
-  // collect all the paragraphs separated by double newlines
-  node_sets sets(nodes);
-  for(int i = start; i < end; ++i) {
-
-    // move past any starting newlines
-    for(; is_new_line(nodes.at(i)); ++i)
-      ;
-
-    // collect the nodes in the paragraph
-    node_set * set = new node_set(nodes);
-
-    int newlines = 0;
-    for(; i < end; ++i) {
-
-      if(is_new_line(nodes.at(i)))
-        ++newlines;
-
-      if(newlines > 1)
-        break;
-
-      if(!is_white_space(nodes.at(i)))
-        set->push_back(i);
-    }
-
-    sets.push_back(set);
-
-  }
-
-  return sets;
-
-}
-
-// collect lines
-node_sets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end) {
-
-  node_sets sets(nodes);
-
-  for(int i = start; i < end; ++i) {
-
-    node_set * set = new node_set(nodes);
-
-    for(; i < end; ++i) {
-
-      // stop the node set at the newline
-      if(is_new_line(nodes.at(i)))
-        break;
-
-      // only collect non-whitespace nodes
-      if(!is_white_space(nodes.at(i)))
-        set->push_back(i);
-    }
-
-    sets.push_back(set);
-
-  }
-
-  return sets;
-
-}
-
-/*
 
   Once a comment change is encountered, they are first matched based
   on paragraphs (separated by two new lines), then as needed, they are processes by line
@@ -129,11 +64,11 @@ void output_comment_paragraph(reader_state & rbuf_old, node_sets * node_sets_old
 
         // collect subset of nodes
         node_sets next_set_old
-          = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
+          = node_sets(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                                     , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         node_sets next_set_new
-          = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+          = node_sets(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                                     , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare as lines
@@ -262,11 +197,11 @@ void output_comment_line(reader_state & rbuf_old, node_sets * node_sets_old, rea
 
         // collect subset of nodes
         node_sets next_set_old
-          = create_node_set(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
+          = node_sets(rbuf_old.nodes, node_sets_old->at(edits->offset_sequence_one)->at(0)
                             , node_sets_old->at(edits->offset_sequence_one)->at(node_sets_old->at(edits->offset_sequence_one)->size() - 1) + 1);
 
         node_sets next_set_new
-          = create_node_set(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
+          = node_sets(rbuf_new.nodes, node_sets_new->at(edit_next->offset_sequence_two)->at(0)
                             , node_sets_new->at(edit_next->offset_sequence_two)->at(node_sets_new->at(edit_next->offset_sequence_two)->size() - 1) + 1);
 
         // compare on word basis

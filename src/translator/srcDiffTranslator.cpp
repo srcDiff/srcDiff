@@ -213,11 +213,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   }
 
   if(is_old && is_old > -1)
-    set_old = create_node_set(rbuf_old.nodes, 0, rbuf_old.nodes.size());
+    set_old = node_sets(rbuf_old.nodes, 0, rbuf_old.nodes.size());
 
 
   if(is_new && is_new > -1)
-    set_new = create_node_set(rbuf_new.nodes, 0, rbuf_new.nodes.size());
+    set_new = node_sets(rbuf_new.nodes, 0, rbuf_new.nodes.size());
 
   /*
 

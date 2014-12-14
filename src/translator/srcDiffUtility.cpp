@@ -472,7 +472,7 @@ std::string get_for_condition(std::vector<xNodePtr> & nodes, int start_pos) {
 
   }
 
-  node_sets control_sets = create_node_set(nodes, control_start_pos + 1, control_end_pos);
+  node_sets control_sets = node_sets(nodes, control_start_pos + 1, control_end_pos);
 
   node_sets::const_iterator citr;
   for(citr = control_sets.begin(); citr != control_sets.end(); ++citr)
@@ -584,7 +584,7 @@ std::string get_class_type_name(std::vector<xNodePtr> & nodes, int start_pos) {
 
 bool conditional_has_block(std::vector<xNodePtr> & nodes, node_set * set) {
 
-  node_sets sets = create_node_set(nodes, set->at(1), set->back());
+  node_sets sets = node_sets(nodes, set->at(1), set->back());
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
@@ -621,7 +621,7 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, node_set * set) {
 
 bool if_has_else(std::vector<xNodePtr> & nodes, node_set * set) {
 
-  node_sets sets = create_node_set(nodes, set->at(1), set->back());
+  node_sets sets = node_sets(nodes, set->at(1), set->back());
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
@@ -645,8 +645,8 @@ bool if_then_equal(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::v
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  node_sets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-  node_sets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
+  node_sets node_sets_old = node_sets(nodes_old, set_old->at(1), set_old->back());
+  node_sets node_sets_new = node_sets(nodes_new, set_new->at(1), set_new->back());
 
   node_sets::iterator then_old;
   for(then_old = node_sets_old.begin(); then_old != node_sets_old.end(); ++then_old) {
@@ -683,8 +683,8 @@ bool for_control_matches(std::vector<xNodePtr> & nodes_old, node_set * set_old, 
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  node_sets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-  node_sets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
+  node_sets node_sets_old = node_sets(nodes_old, set_old->at(1), set_old->back());
+  node_sets node_sets_new = node_sets(nodes_new, set_new->at(1), set_new->back());
 
   node_sets::size_type control_pos_old;
   for(control_pos_old = 0; control_pos_old < node_sets_old.size(); ++control_pos_old)
@@ -818,12 +818,12 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 
   }
 
-  node_sets child_node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-  node_sets child_node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());    
+  node_sets child_node_sets_old = node_sets(nodes_old, set_old->at(1), set_old->back());
+  node_sets child_node_sets_new = node_sets(nodes_new, set_new->at(1), set_new->back());    
 
   if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "then") == 0) {
 
-    node_sets temp = create_node_set(nodes_old, child_node_sets_old.back()->at(1), child_node_sets_old.back()->back());
+    node_sets temp = node_sets(nodes_old, child_node_sets_old.back()->at(1), child_node_sets_old.back()->back());
     free_node_sets(child_node_sets_old);
     child_node_sets_old = temp;
 
@@ -831,7 +831,7 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
 
   if(strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "then") == 0) {
 
-    node_sets temp = create_node_set(nodes_new, child_node_sets_new.back()->at(1), child_node_sets_new.back()->back());
+    node_sets temp = node_sets(nodes_new, child_node_sets_new.back()->at(1), child_node_sets_new.back()->back());
     free_node_sets(child_node_sets_new);
     child_node_sets_new = temp;
 
@@ -908,8 +908,8 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
       if(is_pseudo_old) {
 
-        node_sets node_sets_old = create_node_set(nodes_old, set_old->at(1), set_old->back());
-        node_sets node_sets_new = create_node_set(nodes_new, set_new->at(0), set_new->back() + 1);
+        node_sets node_sets_old = node_sets(nodes_old, set_old->at(1), set_old->back());
+        node_sets node_sets_new = node_sets(nodes_new, set_new->at(0), set_new->back() + 1);
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
         check_nestable(&node_sets_old, nodes_old, 0, node_sets_old.size(), &node_sets_new, nodes_new, 0, 1,
@@ -923,8 +923,8 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
       } else {
 
-        node_sets node_sets_old = create_node_set(nodes_old, set_old->at(0), set_old->back() + 1);
-        node_sets node_sets_new = create_node_set(nodes_new, set_new->at(1), set_new->back());
+        node_sets node_sets_old = node_sets(nodes_old, set_old->at(0), set_old->back() + 1);
+        node_sets node_sets_new = node_sets(nodes_new, set_new->at(1), set_new->back());
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
         check_nestable(&node_sets_old, nodes_old, 0, 1, &node_sets_new, nodes_new, 0, node_sets_new.size(),

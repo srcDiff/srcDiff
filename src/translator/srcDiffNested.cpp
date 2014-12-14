@@ -155,11 +155,7 @@ node_sets create_node_set(std::vector<xNodePtr> & nodes, int start, int end, xNo
       // save position to collect internal of same type on all levels
       int save_start = i;
 
-      node_set * set = new node_set(nodes);
-
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
-
-      collect_entire_tag(nodes, *set, i);
+      node_set * set = new node_set(nodes, i);
 
       sets.push_back(set);
 
@@ -730,7 +726,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     }
 
-    node_sets set = create_node_set(rbuf_old.nodes,
+    node_sets set = node_sets(rbuf_old.nodes,
       //nodes_sets_old->at(start_old)->at(1),
       end_pos,
       nodes_sets_old->at(end_old - 1)->back());
@@ -780,7 +776,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
     }
 
-    node_sets set = create_node_set(rbuf_new.nodes,
+    node_sets set = node_sets(rbuf_new.nodes,
       //nodes_sets_old->at(start_old)->at(1),
       end_pos,
       nodes_sets_new->at(end_new - 1)->back());
@@ -825,7 +821,7 @@ void output_nested(reader_state & rbuf_old, node_set * structure_old
     node_sets set = create_node_set(rbuf_old.nodes, structure_old->at(1), structure_old->back()
                                                                , rbuf_new.nodes.at(structure_new->at(0)));
 
-    node_sets nest_set = create_node_set(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
+    node_sets nest_set = node_sets(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
 
     unsigned int match = best_match(rbuf_old.nodes, set, rbuf_new.nodes, nest_set.at(0), SESDELETE);
 
@@ -844,7 +840,7 @@ void output_nested(reader_state & rbuf_old, node_set * structure_old
 
       // collect subset of nodes
       node_sets next_set_old
-        = create_node_set(rbuf_old.nodes, end_pos, set.back()->back() + 1);
+        = node_sets(rbuf_old.nodes, end_pos, set.back()->back() + 1);
 
       srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &nest_set);
       diff.output();
@@ -864,7 +860,7 @@ void output_nested(reader_state & rbuf_old, node_set * structure_old
     node_sets set = create_node_set(rbuf_new.nodes, structure_new->at(1), structure_new->back()
                                                                , rbuf_old.nodes.at(structure_old->at(0)));
 
-    node_sets nest_set = create_node_set(rbuf_old.nodes, structure_old->at(0), structure_old->back() + 1);
+    node_sets nest_set = node_sets(rbuf_old.nodes, structure_old->at(0), structure_old->back() + 1);
 
     unsigned int match = best_match(rbuf_new.nodes, set, rbuf_old.nodes, nest_set.at(0), SESINSERT);
 
@@ -883,7 +879,7 @@ void output_nested(reader_state & rbuf_old, node_set * structure_old
 
       // collect subset of nodes
       node_sets next_set_new
-        = create_node_set(rbuf_new.nodes, end_pos, set.back()->back() + 1);
+        = node_sets(rbuf_new.nodes, end_pos, set.back()->back() + 1);
 
       srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &next_set_new);
       diff.output();

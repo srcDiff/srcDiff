@@ -192,44 +192,17 @@ void compute_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std
 
 }
 
+bool is_significant(xNodePtr node) {
+
+  return !is_text(node) && strcmp(node->name, "operator") != 0 
+      && strcmp(node->name, "literal") != 0 && strcmp(node->name, "modifier") != 0;
+
+}
+
 // create the node sets for shortest edit script
 node_sets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
 
-  node_sets sets(nodes);
-
-  // runs on a subset of base array
-  for(int i = start; i < end; ++i) {
-
-    // skip whitespace
-    if(!is_text(nodes.at(i)) && strcmp(nodes.at(i)->name, "operator") != 0 
-      && strcmp(nodes.at(i)->name, "literal") != 0 && strcmp(nodes.at(i)->name, "modifier") != 0) {
-
-      node_set * set = new node_set(nodes);
-
-      // text is separate node if not surrounded by a tag in range
-      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT) {
-        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->content);
-        set->push_back(i);
-
-      } else if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
-
-        //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)nodes->at(i)->name);
-
-        collect_entire_tag(nodes, *set, i);
-
-      } else {
-
-        // could be a closing tag, but then something should be wrong.
-        // TODO: remove this and make sure it works
-      break;
-        set->push_back(i);
-      }
-
-      sets.push_back(set);
-
-    }
-
-  }
+  node_sets sets(nodes, start, end, is_significant);
 
   return sets;
 
