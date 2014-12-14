@@ -5,9 +5,6 @@
 
 #include <xmlrw.hpp>
 
-
-
-
 class node_set : public std::vector<int> {
 
 private:
