@@ -5,7 +5,7 @@
 #include <srcDiffMatch.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffNested.hpp>
-#include <srcDiffSingle.hpp>
+#include <srcdiff_single.hpp>
 #include <srcDiffUtility.hpp>
 
 void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
