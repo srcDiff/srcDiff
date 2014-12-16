@@ -9,6 +9,7 @@
 class srcdiff_diff {
 
 protected:
+  srcdiff_output & output;
   reader_state & rbuf_old;
   reader_state & rbuf_new;
   writer_state & wstate;

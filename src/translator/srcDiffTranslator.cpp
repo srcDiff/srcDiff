@@ -330,7 +330,8 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
       However this is correct when output is to archive */
     srcml_write_start_unit(srcdiff_unit);
 
-    srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &set_old, &set_new);
+    srcdiff_output output(rbuf_old, rbuf_new, wstate);
+    srcdiff_diff diff(output, rbuf_old, rbuf_new, wstate, &set_old, &set_new);
     diff.output();
 
     // output remaining whitespace

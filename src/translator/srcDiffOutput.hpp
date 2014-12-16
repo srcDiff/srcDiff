@@ -4,12 +4,14 @@
 #include <srcDiffTypes.hpp>
 #include <vector>
 
+// const nodes here? or xmlrw
+
 class srcdiff_output {
 
 protected:
-	reader_state rbuf_old;
-	reader_state rbuf_new;
-	writer_state wstate;
+	reader_state & rbuf_old;
+	reader_state & rbuf_new;
+	writer_state & wstate;
 
 private:
 
@@ -20,9 +22,9 @@ public:
 
     srcdiff_output(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate);
 
-	virtual output_node(const xNodePtr node, int operation);
-	virtual output_text_as_node(const char * text, int operation);
-	virtual output_char(char character, int operation);
+	virtual void output_node(const xNodePtr node, int operation);
+	virtual void output_text_as_node(const char * text, int operation);
+	virtual void output_char(char character, int operation);
 
 
 };

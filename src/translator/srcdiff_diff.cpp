@@ -24,8 +24,8 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 
-srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
-  : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
+srcdiff_diff::srcdiff_diff(srcdiff_output & output, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
+  : output(output), rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
 
 bool srcdiff_diff::go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
