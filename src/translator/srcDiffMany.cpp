@@ -226,7 +226,7 @@ void output_many(reader_state & rbuf_old, node_sets * node_sets_old
     if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
  
       if((xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT
-         && (ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
+         && (ismethod(wstate.method, METHOD_RAW) || srcdiff_diff::go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
                                                                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate))) {
 
         output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i

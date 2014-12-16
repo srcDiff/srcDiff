@@ -29,7 +29,8 @@ extern xNode diff_new_end;
 srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
   : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
-bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
+
+bool srcdiff_diff::go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
                      , unsigned int start_old
                      , reader_state & rbuf_new, node_sets * node_sets_new
                      , unsigned int start_new
@@ -50,7 +51,7 @@ bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-bool group_sub_elements(reader_state & rbuf_old, node_sets * node_sets_old
+bool srcdiff_diff::group_sub_elements(reader_state & rbuf_old, node_sets * node_sets_old
                         , unsigned int start_old
                         , reader_state & rbuf_new, node_sets * node_sets_new
                         , unsigned int start_new
