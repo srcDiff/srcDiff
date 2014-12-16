@@ -257,7 +257,7 @@ int main(int argc, char* argv[]) {
     if (presult != (urisprefix + num_prefixes)) {
 
       fprintf(stderr, "%s: Namespace conflict for ", PROGRAM_NAME);
-      if (urisprefix[i] == '\0') {
+      if (urisprefix[i][0] == '\0') {
         fprintf(stderr, "default prefix\n");
       } else {
         fprintf(stderr, "prefix \'%s\'\n", urisprefix[i]);
