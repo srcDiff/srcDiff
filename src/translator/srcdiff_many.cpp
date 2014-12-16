@@ -236,7 +236,7 @@ void srcdiff_many::output() {
     /** @todo this appears to now be dead code */
      else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
   
-      if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
+      if(srcdiff_nested::is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
 
           int nest_length = 1;
@@ -247,7 +247,7 @@ void srcdiff_many::output() {
                               edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1, SESINSERT);
           diff.output();
 
-      } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
+      } else if(srcdiff_nested::is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
                             , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
 
           int nest_length = 1;

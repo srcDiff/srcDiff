@@ -111,7 +111,7 @@ bool is_nest_type(node_set * structure, std::vector<xNodePtr> & nodes
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
     if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].possible_nest_items[i]) == 0
-       && has_internal_structure(structure_other, nodes_other, (const char *)nodes.at(structure->at(0))->name))
+       && srcdiff_nested::has_internal_structure(structure_other, nodes_other, (const char *)nodes.at(structure->at(0))->name))
       return true;
 
   return false;
@@ -119,7 +119,7 @@ bool is_nest_type(node_set * structure, std::vector<xNodePtr> & nodes
 
 
 
-bool has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes, const char * type) {
+bool srcdiff_nested::has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes, const char * type) {
 
   for(unsigned int i = 1; i < structure->size(); ++i)
     if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
@@ -136,7 +136,7 @@ bool complete_nestable(node_sets & structure_one, std::vector<xNodePtr> & nodes_
 
   for(unsigned int i = 0; i < structure_one.size(); ++i) {
 
-    if(is_nestable(structure_one.at(i), nodes_one, structure_two, nodes_two))
+    if(srcdiff_nested::is_nestable(structure_one.at(i), nodes_one, structure_two, nodes_two))
        ++num_nest;
 
   }
@@ -234,7 +234,7 @@ bool is_nestable_internal(node_set * structure_one, std::vector<xNodePtr> & node
   return false;
 }
 
-bool is_same_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
+bool srcdiff_nested::is_same_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
                       , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
@@ -261,11 +261,11 @@ bool is_same_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_on
   return (match_similarity >= similarity && match_difference <= difference) 
   || (match_min_size > 50 && min_size > 50 && (match_min_size / match_similarity) < (0.9 * (min_size / similarity))
 //   && match_difference < 1.5 * difference
-    && !reject_match_nested(match_similarity, match_difference, size_match, size_one, nodes_two, set.at(match), nodes_one, structure_one));
+    && !srcdiff_nested::reject_match_nested(match_similarity, match_difference, size_match, size_one, nodes_two, set.at(match), nodes_one, structure_one));
 
 }
 
-bool is_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
+bool srcdiff_nested::is_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
                  , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
   if(node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
@@ -279,7 +279,7 @@ bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, node_set *
                     std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 
-    if(is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
+    if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
       node_sets set = node_sets(nodes_outer, node_set_outer->at(1), node_set_outer->back(), is_match
                                                              , nodes_inner.at(node_set_inner->at(0)));
@@ -297,7 +297,7 @@ bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, node_set *
 
         if((nest_similarity >= similarity && nest_difference <= difference)
          || ((nest_min_size / nest_similarity) < (min_size / similarity)
-            && !reject_match_nested(nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length, nodes_inner, node_set_inner, nodes_outer, node_set_outer)))
+            && !srcdiff_nested::reject_match_nested(nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length, nodes_inner, node_set_inner, nodes_outer, node_set_outer)))
           return true;
     
       }
@@ -312,7 +312,7 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, node_set * node_set_out
                     std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 // parents and children same do not nest.
-    if(is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
+    if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
       node_sets set = node_sets(nodes_outer, node_set_outer->at(1), node_set_outer->back(), is_match
                                                              , nodes_inner.at(node_set_inner->at(0)));
@@ -330,7 +330,7 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, node_set * node_set_out
 
         if((nest_similarity >= similarity && nest_difference <= difference)
          || ((nest_min_size / nest_similarity) < (min_size / similarity)
-            && !reject_match_nested(nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length, nodes_inner, node_set_inner, nodes_outer, node_set_outer))
+            && !srcdiff_nested::reject_match_nested(nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length, nodes_inner, node_set_inner, nodes_outer, node_set_outer))
 //         || ((nest_min_size / nest_difference) > (min_size / difference))
          )
           return !is_better_nest_no_recursion(nodes_inner, node_set_inner, nodes_outer, node_set_outer, nest_similarity, nest_difference, nest_text_inner_length, nest_text_outer_length);
@@ -343,9 +343,7 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, node_set * node_set_out
 
 }
 
-
-
-bool is_better_nested(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old, int start_pos_old,
+bool srcdiff_nested::is_better_nested(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old, int start_pos_old,
                     std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
@@ -367,7 +365,7 @@ bool is_better_nested(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_o
 
 }
 
-bool reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
+bool srcdiff_nested::reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   int old_pos = set_old->at(0);
@@ -774,104 +772,6 @@ void srcdiff_nested::output() {
   }
 
   //output_white_space_all(rbuf_old, rbuf_new, wstate);
-
-  //diff_old_start.properties = 0;
-  //diff_new_start.properties = 0;
-
-}
-
-void output_nested(reader_state & rbuf_old, node_set * structure_old
-                   , reader_state & rbuf_new, node_set * structure_new
-                   , int operation, writer_state & wstate) {
-
-  clear_nestable(structure_old, rbuf_old.nodes, structure_new, rbuf_new.nodes);
-
-  output_white_space_prefix(rbuf_old, rbuf_new, wstate);
-
-  unsigned int end_pos;
-
-  // idea best match first of multi then pass all on to algorithm or set ending pos to recurse down
-  if(operation == SESDELETE) {
-
-    node_sets set = node_sets(rbuf_old.nodes, structure_old->at(1), structure_old->back(), is_match
-                                                               , rbuf_new.nodes.at(structure_new->at(0)));
-
-    node_sets nest_set = node_sets(rbuf_new.nodes, structure_new->at(0), structure_new->back() + 1);
-
-    unsigned int match = best_match(rbuf_old.nodes, set, rbuf_new.nodes, nest_set.at(0), SESDELETE);
-
-    if(match < set.size()) {
-
-      end_pos = set.at(match)->at(0) - 1;
-
-      for(; (signed)end_pos > structure_old->at(0) && is_white_space(rbuf_old.nodes.at(end_pos)); --end_pos)
-        ;
-
-      ++end_pos;
-
-      output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
-
-      output_white_space_suffix(rbuf_old, rbuf_new, wstate);
-
-      // collect subset of nodes
-      node_sets next_set_old
-        = node_sets(rbuf_old.nodes, end_pos, set.back()->back() + 1);
-
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &nest_set);
-      diff.output();
-
-      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
-
-      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
-
-    } else {
-
-      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
-
-    }
-
-  } else {
-
-    node_sets set = node_sets(rbuf_new.nodes, structure_new->at(1), structure_new->back(), is_match
-                                                               , rbuf_old.nodes.at(structure_old->at(0)));
-
-    node_sets nest_set = node_sets(rbuf_old.nodes, structure_old->at(0), structure_old->back() + 1);
-
-    unsigned int match = best_match(rbuf_new.nodes, set, rbuf_old.nodes, nest_set.at(0), SESINSERT);
-
-    if(match < set.size()) {
-
-      end_pos = set.at(match)->at(0) - 1;
-
-      for(; (signed)end_pos > structure_new->at(0) && is_white_space(rbuf_new.nodes.at(end_pos)); --end_pos)
-        ;
-
-      ++end_pos;
-
-      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
-
-      output_white_space_suffix(rbuf_old, rbuf_new, wstate);
-
-      // collect subset of nodes
-      node_sets next_set_new
-        = node_sets(rbuf_new.nodes, end_pos, set.back()->back() + 1);
-
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &next_set_new);
-      diff.output();
-
-      output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
-
-      output_change(rbuf_old,  rbuf_old.last_output, rbuf_new, structure_new->back() + 1, wstate);
-
-    } else {
-
-      output_change(rbuf_old, structure_old->back() + 1, rbuf_new, structure_new->back() + 1, wstate);
-
-    }
-
-  }
-
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
 
   //diff_old_start.properties = 0;
   //diff_new_start.properties = 0;
