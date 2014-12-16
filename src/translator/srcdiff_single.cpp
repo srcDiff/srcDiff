@@ -1,9 +1,9 @@
 #include <srcdiff_single.hpp>
+#include <srcdiff_change.hpp>
 
 #include <shortest_edit_script.h>
 #include <srcDiffCommentDiff.hpp>
 #include <srcDiffCommon.hpp>
-#include <srcDiffChange.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffUtility.hpp>

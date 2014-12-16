@@ -23,6 +23,10 @@
 */
 
 #include <srcDiffTranslator.hpp>
+
+#include <srcdiff_diff.hpp>
+#include <srcdiff_change.hpp>
+
 #include <srcmlns.hpp>
 #include <srcmlapps.hpp>
 #include <shortest_edit_script.h>
@@ -30,9 +34,7 @@
 #include <srcDiffUtility.hpp>
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffCommon.hpp>
-#include <srcDiffChange.hpp>
 #include <srcDiffOutput.hpp>
-#include <srcdiff_diff.hpp>
 #include <srcMLUtility.hpp>
 #include <LineDiffRange.hpp>
 

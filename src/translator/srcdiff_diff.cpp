@@ -1,6 +1,6 @@
 #include <srcdiff_diff.hpp>
 #include <srcdiff_many.hpp>
-#include <srcDiffChange.hpp>
+#include <srcdiff_change.hpp>
 
 #include <srcDiffUtility.hpp>
 #include <srcDiffOutput.hpp>

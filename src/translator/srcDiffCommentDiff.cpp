@@ -1,12 +1,12 @@
 #include <srcDiffCommentDiff.hpp>
 
 #include <srcdiff_diff.hpp>
+#include <srcdiff_change.hpp>
 
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 #include <srcDiffUtility.hpp>
 #include <srcDiffCommon.hpp>
-#include <srcDiffChange.hpp>
 #include <srcdiff_diff.hpp>
 
 void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
