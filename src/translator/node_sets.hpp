@@ -1,10 +1,10 @@
 #ifndef INCLUDED_NODE_SETS_HPP
 #define INCLUDED_NODE_SETS_HPP
 
-#include <vector>
+#include <srcdiff_vector.hpp>
 #include <node_set.hpp>
 
-class node_sets : public std::vector<node_set *> {
+class node_sets : public srcdiff_vector<node_set *> {
 
 private:
 
@@ -22,13 +22,29 @@ private:
 public:
 
 	node_sets(std::vector<xNodePtr> & nodes) : nodes(nodes) {}
-	node_sets(const node_sets & sets) : nodes(sets.nodes) {}
+	node_sets(const node_sets & sets) : nodes(sets.nodes) {
 
-	node_sets & operator=(const node_sets & sets) {
 
-		std::vector<node_set *>::operator=(sets);
+		for(size_type pos = 0; pos < sets.size(); ++pos) {
 
+			push_back(new node_set(*sets[pos]));
+
+		}
+
+	}
+
+	node_sets & operator=(node_sets sets) {
+
+        std::swap(data, sets.data);
+        
 		return *this;
+
+	}
+
+	~node_sets() {
+
+		for(size_type pos = 0; pos < size(); ++pos)
+			delete operator[](pos);
 
 	}
 		

@@ -1,16 +1,15 @@
 #include <srcdiff_diff.hpp>
+#include <srcdiff_many.hpp>
+
 #include <srcDiffUtility.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffCommon.hpp>
 #include <srcDiffChange.hpp>
 #include <srcDiffCommentDiff.hpp>
 #include <srcDiffWhiteSpace.hpp>
-#include <srcDiffNested.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffMatch.hpp>
 #include <srcDiffMove.hpp>
-#include <srcDiffMany.hpp>
-#include <srcDiffSingle.hpp>
 #include <pthread.h>
 #include <ShortestEditScript.hpp>
 
@@ -29,52 +28,8 @@ extern xNode diff_new_end;
 srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
   : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
-void * create_node_set_thread(void * arguments) {
 
-  create_node_set_args & args = *(create_node_set_args *)arguments;
-
-  args.sets = node_sets(args.nodes, args.start, args.end);
-
-  return NULL;
-
-}
-
-void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, node_sets & set_old
-                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, node_sets & set_new) {
-
-  create_node_set_args args_old = { nodes_delete, start_old, end_old, set_old };
-
-  pthread_t thread_old;
-  if(pthread_create(&thread_old, NULL, create_node_set_thread, (void *)&args_old)) {
-
-    exit(1);
-
-  }
-
-  create_node_set_args args_new = { nodes_insert, start_new, end_new, set_new };
-
-  pthread_t thread_new;
-  if(pthread_create(&thread_new, NULL, create_node_set_thread, (void *)&args_new)) {
-
-    exit(1);
-
-  }
-
-  if(pthread_join(thread_old, NULL)) {
-
-    exit(1);
-
-  }
-
-  if(pthread_join(thread_new, NULL)) {
-
-    exit(1);
-
-  }
-
-}
-
-bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
+bool srcdiff_diff::go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
                      , unsigned int start_old
                      , reader_state & rbuf_new, node_sets * node_sets_new
                      , unsigned int start_new
@@ -95,7 +50,7 @@ bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-bool group_sub_elements(reader_state & rbuf_old, node_sets * node_sets_old
+bool srcdiff_diff::group_sub_elements(reader_state & rbuf_old, node_sets * node_sets_old
                         , unsigned int start_old
                         , reader_state & rbuf_new, node_sets * node_sets_new
                         , unsigned int start_new
@@ -195,7 +150,8 @@ void srcdiff_diff::output() {
       //      fprintf(stderr, "HERE\n");
 
       // many to many handling
-      output_many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
+      srcdiff_many diff(*this, edits);
+      diff.output();
 
       // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;
@@ -250,14 +206,5 @@ void srcdiff_diff::output() {
 
   // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
-
-}
-
-void free_node_sets(node_sets & sets) {
-
-  for(unsigned int i = 0; i < sets.size(); ++i) {
-
-    delete sets.at(i);
-  }
 
 }

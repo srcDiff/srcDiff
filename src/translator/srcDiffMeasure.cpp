@@ -238,9 +238,6 @@ void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, node_set * set_o
   children_new_length = next_node_sets_new.size();
   int distance = ses.compute((const void *)&next_node_sets_old, children_old_length, (const void *)&next_node_sets_new, children_new_length);
 
-  free_node_sets(next_node_sets_old);
-  free_node_sets(next_node_sets_new);
-
   edit * edits = ses.get_script();
 
   similarity = 0, difference = 0;

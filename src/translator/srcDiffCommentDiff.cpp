@@ -74,9 +74,6 @@ void output_comment_paragraph(reader_state & rbuf_old, node_sets * node_sets_old
         // compare as lines
         output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
 
-        free_node_sets(next_set_old);
-        free_node_sets(next_set_new);
-
       } else {
 
         // many to many
@@ -206,9 +203,6 @@ void output_comment_line(reader_state & rbuf_old, node_sets * node_sets_old, rea
 
         // compare on word basis
         output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
-
-        free_node_sets(next_set_old);
-        free_node_sets(next_set_new);
 
       } else
 

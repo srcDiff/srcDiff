@@ -1,18 +1,16 @@
-#include <srcDiffMany.hpp>
+#include <srcdiff_many.hpp>
+
+#include <srcdiff_single.hpp>
+#include <srcdiff_nested.hpp>
 
 #include <srcDiffChange.hpp>
-#include <srcdiff_diff.hpp>
 #include <srcDiffMatch.hpp>
 #include <srcDiffMeasure.hpp>
-#include <srcDiffNested.hpp>
-#include <srcDiffSingle.hpp>
 #include <srcDiffUtility.hpp>
 
-void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
-                      , int start_old, int end_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , int start_new, int end_new
-                      , writer_state & wstate) {
+srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
+
+void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, int end_new) {
 
   unsigned int finish_old = rbuf_old.last_output;
   unsigned int finish_new = rbuf_new.last_output;
@@ -27,7 +25,7 @@ void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
 
       do {
 
-        check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
+        srcdiff_nested::check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
                         , node_sets_new, rbuf_new.nodes, start_new, end_new + 1
                         , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
@@ -50,10 +48,12 @@ void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
 
         output_change(rbuf_old, pre_nest_end_old, rbuf_new, pre_nest_end_new, wstate);
 
-        if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
-          output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,
-                                    rbuf_new, node_sets_new, start_nest_new, end_nest_new,
-                                    operation, wstate);
+        if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0) {
+
+          srcdiff_nested diff(*this, start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
+          diff.output();
+
+        }
 
         start_old = end_nest_old;
         start_new = end_nest_new;
@@ -88,9 +88,7 @@ void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
-                           , reader_state & rbuf_new, node_sets * node_sets_new
-                           , edit * edit_script, writer_state & wstate) {
+srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
@@ -117,7 +115,7 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
       old_moved.push_back(IntPair(SESDELETE, 0));
       pos_old.push_back(i);
-      old_sets.push_back(node_sets_old->at(index));
+      old_sets.push_back(new node_set(*node_sets_old->at(index)));
 
     }
 
@@ -143,7 +141,7 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
       new_moved.push_back(IntPair(SESINSERT, 0));
       pos_new.push_back(i);
-      new_sets.push_back(node_sets_new->at(index));
+      new_sets.push_back(new node_set(*node_sets_new->at(index)));
 
     }
 
@@ -172,7 +170,7 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
   }
 
-  Moves moves;
+  srcdiff_many::Moves moves;
   moves.push_back(old_moved);
   moves.push_back(new_moved);
 
@@ -180,14 +178,12 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-void output_many(reader_state & rbuf_old, node_sets * node_sets_old
-                 , reader_state & rbuf_new, node_sets * node_sets_new
-                 , edit * edit_script, writer_state & wstate) {
+void srcdiff_many::output() {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
-  Moves moves = determine_operations(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
+  srcdiff_many::Moves moves = determine_operations();
   IntPairs old_moved = moves.at(0);
   IntPairs new_moved = moves.at(1);
 
@@ -211,11 +207,8 @@ void output_many(reader_state & rbuf_old, node_sets * node_sets_old
       ;
 
     // output diffs until match
-    output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
-                     edits->offset_sequence_one + end_old - 1
-                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
-                     , edit_next->offset_sequence_two + end_new - 1
-                     , wstate);
+    output_unmatched(edits->offset_sequence_one + start_old, edits->offset_sequence_one + end_old - 1, 
+                      edit_next->offset_sequence_two + start_new, edit_next->offset_sequence_two + end_new - 1);
 
     i = end_old;
     j = end_new;
@@ -226,11 +219,11 @@ void output_many(reader_state & rbuf_old, node_sets * node_sets_old
     if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
  
       if((xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT
-         && (ismethod(wstate.method, METHOD_RAW) || go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
+         && (ismethod(wstate.method, METHOD_RAW) || srcdiff_diff::go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
                                                                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate))) {
 
-        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate);
+        srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
+        diff.output();
 
       } else {
 
@@ -243,27 +236,27 @@ void output_many(reader_state & rbuf_old, node_sets * node_sets_old
     /** @todo this appears to now be dead code */
      else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
   
-      if(is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
+      if(srcdiff_nested::is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
                      , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
 
           int nest_length = 1;
           while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
             ++nest_length;
 
-          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
-                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1,
-                                SESINSERT, wstate);
+          srcdiff_nested diff(*this, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
+                              edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1, SESINSERT);
+          diff.output();
 
-      } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
+      } else if(srcdiff_nested::is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
                             , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
 
           int nest_length = 1;
           while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)
             ++nest_length;
 
-          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
-                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length,
-                                SESDELETE, wstate);
+          srcdiff_nested diff(*this, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
+                              edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length, SESDELETE);
+          diff.output();
 
       } else {
 
@@ -281,10 +274,7 @@ void output_many(reader_state & rbuf_old, node_sets * node_sets_old
 
   }
 
-  output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + i,
-                   edits->offset_sequence_one + old_moved.size() - 1
-                   , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j
-                   , edit_next->offset_sequence_two + new_moved.size() - 1
-                   , wstate);
+  output_unmatched(edits->offset_sequence_one + i, edits->offset_sequence_one + old_moved.size() - 1
+                   , edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + new_moved.size() - 1);
 
 }

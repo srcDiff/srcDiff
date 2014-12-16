@@ -1,11 +1,9 @@
-#include <srcDiffSingle.hpp>
+#include <srcdiff_single.hpp>
 
 #include <shortest_edit_script.h>
 #include <srcDiffCommentDiff.hpp>
 #include <srcDiffCommon.hpp>
 #include <srcDiffChange.hpp>
-#include <srcdiff_diff.hpp>
-#include <srcDiffNested.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffUtility.hpp>
@@ -23,7 +21,9 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
-xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
+srcdiff_single::srcdiff_single(const srcdiff_diff & diff, unsigned int start_old, unsigned int start_new) : srcdiff_diff(diff), start_old(start_old), start_new(start_new) {}
+
+static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 
   std::vector<std::string> attribute_names;
   std::vector<std::string> attribute_values;
@@ -99,11 +99,7 @@ xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 
 }
 
-void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate) {
+void srcdiff_single::output_recursive_same() {
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
@@ -147,11 +143,8 @@ void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
 
     output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
 
-    free_node_sets(next_set_old);
-    free_node_sets(next_set_new);
 
-  }
-  else {
+  } else {
 
       // collect subset of nodes
       node_sets next_set_old
@@ -165,9 +158,6 @@ void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
       srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
       diff.output();
 
-      free_node_sets(next_set_old);
-      free_node_sets(next_set_new);
-
   }
 
   output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
@@ -180,11 +170,7 @@ void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-void output_recursive_interchangeable(reader_state & rbuf_old, node_sets * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate) {
+void srcdiff_single::output_recursive_interchangeable() {
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
@@ -233,9 +219,6 @@ void output_recursive_interchangeable(reader_state & rbuf_old, node_sets * node_
   srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
   diff.output();
 
-  free_node_sets(next_set_old);
-  free_node_sets(next_set_new);
-
   output_change(rbuf_old, rbuf_old.last_output, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
 
   output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
@@ -249,11 +232,7 @@ void output_recursive_interchangeable(reader_state & rbuf_old, node_sets * node_
 
 }
 
-void output_recursive(reader_state & rbuf_old, node_sets * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate) {
+void srcdiff_single::output() {
 
     xNodePtr start_node_old = rbuf_old.nodes.at(node_sets_old->at(start_old)->front());
     xNodePtr start_node_new = rbuf_new.nodes.at(node_sets_new->at(start_new)->front());
@@ -262,8 +241,8 @@ void output_recursive(reader_state & rbuf_old, node_sets * node_sets_old
     && (start_node_old->ns == start_node_new->ns 
       || (start_node_old->ns && start_node_old->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix 
         || (start_node_old->ns->prefix && start_node_new->ns->prefix && strcmp((const char *)start_node_old->ns->prefix, (const char *)start_node_new->ns->prefix) == 0)))))
-    output_recursive_same(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
+    output_recursive_same();
   else
-    output_recursive_interchangeable(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
+    output_recursive_interchangeable();
 
 }

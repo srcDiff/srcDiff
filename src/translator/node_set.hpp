@@ -1,11 +1,11 @@
 #ifndef INCLUDED_NODE_SET_HPP
 #define INCLUDED_NODE_SET_HPP
 
-#include <vector>
+#include <srcdiff_vector.hpp>
 
 #include <xmlrw.hpp>
 
-class node_set : public std::vector<int> {
+class node_set : public srcdiff_vector<int> {
 
 private:
 
@@ -22,11 +22,19 @@ public:
 
 	node_set(std::vector<xNodePtr> & nodes) : nodes(nodes) {}
 
-	node_set(const node_set & set) : nodes(set.nodes) {}
+	node_set(const node_set & set) : nodes(set.nodes) {
 
-	node_set & operator=(const node_set & set) {
+		for(size_type pos = 0; pos < set.size(); ++pos) {
 
-		std::vector<int>::operator=(set);
+			push_back(set.data[pos]);
+
+		}
+
+	}
+
+	node_set & operator=(node_set set) {
+
+		std::swap(data, set.data);
 
 		return *this;
 
