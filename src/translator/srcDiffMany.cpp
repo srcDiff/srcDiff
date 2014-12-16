@@ -229,8 +229,8 @@ void output_many(reader_state & rbuf_old, node_sets * node_sets_old
          && (ismethod(wstate.method, METHOD_RAW) || srcdiff_diff::go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
                                                                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate))) {
 
-        output_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                         , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate);
+        srcdiff_single diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
+        diff.output();
 
       } else {
 

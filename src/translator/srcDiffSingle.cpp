@@ -23,7 +23,10 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
-xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
+srcdiff_single::srcdiff_single(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new,
+                                unsigned int start_old, unsigned int start_new) : srcdiff_diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new), start_old(start_old), start_new(start_new) {}
+
+static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 
   std::vector<std::string> attribute_names;
   std::vector<std::string> attribute_values;
@@ -99,11 +102,7 @@ xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 
 }
 
-void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate) {
+void srcdiff_single::output_recursive_same() {
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
@@ -174,11 +173,7 @@ void output_recursive_same(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-void output_recursive_interchangeable(reader_state & rbuf_old, node_sets * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate) {
+void srcdiff_single::output_recursive_interchangeable() {
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
@@ -240,11 +235,7 @@ void output_recursive_interchangeable(reader_state & rbuf_old, node_sets * node_
 
 }
 
-void output_recursive(reader_state & rbuf_old, node_sets * node_sets_old
-                      , unsigned int start_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , unsigned int start_new
-                      , writer_state & wstate) {
+void srcdiff_single::output() {
 
     xNodePtr start_node_old = rbuf_old.nodes.at(node_sets_old->at(start_old)->front());
     xNodePtr start_node_new = rbuf_new.nodes.at(node_sets_new->at(start_new)->front());
@@ -253,8 +244,8 @@ void output_recursive(reader_state & rbuf_old, node_sets * node_sets_old
     && (start_node_old->ns == start_node_new->ns 
       || (start_node_old->ns && start_node_old->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix 
         || (start_node_old->ns->prefix && start_node_new->ns->prefix && strcmp((const char *)start_node_old->ns->prefix, (const char *)start_node_new->ns->prefix) == 0)))))
-    output_recursive_same(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
+    output_recursive_same();
   else
-    output_recursive_interchangeable(rbuf_old, node_sets_old, start_old, rbuf_new, node_sets_new, start_new, wstate);
+    output_recursive_interchangeable();
 
 }

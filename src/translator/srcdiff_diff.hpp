@@ -8,7 +8,7 @@
 
 class srcdiff_diff {
 
-private:
+protected:
   reader_state & rbuf_old;
   reader_state & rbuf_new;
   writer_state & wstate;
