@@ -21,7 +21,7 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
-srcdiff_single::srcdiff_single(const srcdiff_diff & diff, unsigned int start_old, unsigned int start_new) : srcdiff_diff(diff), start_old(start_old), start_new(start_new) {}
+srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_old, unsigned int start_new) : srcdiff_many(diff), start_old(start_old), start_new(start_new) {}
 
 static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 

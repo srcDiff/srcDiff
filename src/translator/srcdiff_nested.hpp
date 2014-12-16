@@ -1,12 +1,12 @@
 #ifndef INCLUDED_SRCDIFFNESTED_HPP
 #define INCLUDED_SRCDIFFNESTED_HPP
 
-#include <srcdiff_diff.hpp>
+#include <srcdiff_many.hpp>
 
 #include <srcDiffTypes.hpp>
 #include <vector>
 
-class srcdiff_nested : srcdiff_diff {
+class srcdiff_nested : srcdiff_many {
 
 protected:
 
@@ -20,7 +20,7 @@ private:
 
 public:
 
-  srcdiff_nested(const srcdiff_diff & diff, int start_old, int end_old, int start_new, int end_new, int operation);
+  srcdiff_nested(const srcdiff_many & diff, int start_old, int end_old, int start_new, int end_new, int operation);
 
   virtual void output();
 

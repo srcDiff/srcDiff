@@ -23,7 +23,7 @@ extern xAttr diff_type;
 extern const char * change;
 extern const char * whitespace;
 
-srcdiff_nested::srcdiff_nested(const srcdiff_diff & diff, int start_old, int end_old, int start_new, int end_new, int operation) : srcdiff_diff(diff), start_old(start_old), end_old(end_old), start_new(start_new), end_new(end_new), operation(operation) {}
+srcdiff_nested::srcdiff_nested(const srcdiff_many & diff, int start_old, int end_old, int start_new, int end_new, int operation) : srcdiff_many(diff), start_old(start_old), end_old(end_old), start_new(start_new), end_new(end_new), operation(operation) {}
 
 int nest_id = 0;
 
