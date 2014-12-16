@@ -4,8 +4,6 @@
 #include <srcDiffCommentDiff.hpp>
 #include <srcDiffCommon.hpp>
 #include <srcDiffChange.hpp>
-#include <srcdiff_diff.hpp>
-#include <srcDiffNested.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffUtility.hpp>

@@ -7,7 +7,6 @@
 #include <srcDiffChange.hpp>
 #include <srcDiffCommentDiff.hpp>
 #include <srcDiffWhiteSpace.hpp>
-#include <srcDiffNested.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffMatch.hpp>
 #include <srcDiffMove.hpp>

@@ -1,7 +1,9 @@
 #include <srcDiffMatch.hpp>
+
+#include <srcdiff_nested.hpp>
+
 #include <srcDiffMeasure.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffNested.hpp>
 #include <string.h>
 
 

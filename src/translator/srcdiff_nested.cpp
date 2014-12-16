@@ -1,4 +1,5 @@
-#include <srcDiffNested.hpp>
+#include <srcdiff_nested.hpp>
+
 #include <shortest_edit_script.h>
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffChange.hpp>
