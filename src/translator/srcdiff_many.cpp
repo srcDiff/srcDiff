@@ -115,7 +115,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
       old_moved.push_back(IntPair(SESDELETE, 0));
       pos_old.push_back(i);
-      old_sets.push_back(node_sets_old->at(index));
+      old_sets.push_back(new node_set(*node_sets_old->at(index)));
 
     }
 
@@ -141,7 +141,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
       new_moved.push_back(IntPair(SESINSERT, 0));
       pos_new.push_back(i);
-      new_sets.push_back(node_sets_new->at(index));
+      new_sets.push_back(new node_set(*node_sets_new->at(index)));
 
     }
 

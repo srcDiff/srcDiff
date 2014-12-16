@@ -707,7 +707,7 @@ void srcdiff_nested::output() {
     node_sets nest_set(rbuf_new.nodes);
 
     for(int i = start_new; i < end_new; ++i)
-        nest_set.push_back(node_sets_new->at(i));
+        nest_set.push_back(new node_set(*node_sets_new->at(i)));
 
       output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
@@ -757,7 +757,7 @@ void srcdiff_nested::output() {
     node_sets nest_set(rbuf_old.nodes);
 
     for(int i = start_old; i < end_old; ++i)
-        nest_set.push_back(node_sets_old->at(i));
+        nest_set.push_back(new node_set(*node_sets_old->at(i)));
 
       output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
 
