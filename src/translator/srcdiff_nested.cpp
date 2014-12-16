@@ -613,59 +613,7 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNode
 
 }
 
-void set_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
-
-  ++nest_id;
-
-  for(int i = start_old; i < end_old; ++i) {
-
-    nodes_old.at(node_sets_old->at(i)->at(0))->nest = nest_id;
-    nodes_old.at(node_sets_old->at(i)->back())->nest = nest_id;
-
-  }
-
-  for(int i = start_new; i < end_new; ++i) {
-
-    nodes_new.at(node_sets_new->at(i)->at(0))->nest = nest_id;
-    nodes_new.at(node_sets_new->at(i)->back())->nest = nest_id;
-
-  }
-
-}
-
-void clear_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
-                 , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
-
-  nodes_one.at(structure_one->at(0))->nest = 0;
-  nodes_one.at(structure_one->back())->nest = 0;
-  nodes_two.at(structure_two->at(0))->nest = 0;
-  nodes_two.at(structure_two->back())->nest = 0;
-
-}
-
-void clear_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new) {
-
-  for(int i = start_old; i < end_old; ++i) {
-
-    nodes_old.at(node_sets_old->at(i)->at(0))->nest = 0;
-    nodes_old.at(node_sets_old->at(i)->back())->nest = 0;
-
-  }
-
-  for(int i = start_new; i < end_new; ++i) {
-
-    nodes_new.at(node_sets_new->at(i)->at(0))->nest = 0;
-    nodes_new.at(node_sets_new->at(i)->back())->nest = 0;
-
-  }
-
-}
-
 void srcdiff_nested::output() {
-
-  clear_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old, node_sets_new, rbuf_new.nodes, start_new, end_new);
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 

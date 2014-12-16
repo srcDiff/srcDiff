@@ -36,8 +36,6 @@ public:
                  , node_set * structure_two, std::vector<xNodePtr> & nodes_two);
 
 
-  static void set_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new);
 
   static bool is_same_nestable(node_set *  structure_one, std::vector<xNodePtr> & nodes_one
                       , node_set * structure_two, std::vector<xNodePtr> & nodes_two);
