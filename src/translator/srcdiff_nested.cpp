@@ -100,6 +100,16 @@ int is_block_type(node_set * structure, std::vector<xNodePtr> & nodes) {
   return -1;
 }
 
+bool has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes, const char * type) {
+
+  for(unsigned int i = 1; i < structure->size(); ++i)
+    if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
+              && strcmp((const char *)nodes.at(structure->at(i))->name, type) == 0)
+      return true;
+
+  return false;
+}
+
 bool is_nest_type(node_set * structure, std::vector<xNodePtr> & nodes
                            , node_set * structure_other, std::vector<xNodePtr> & nodes_other, int type_index) {
 
@@ -111,38 +121,10 @@ bool is_nest_type(node_set * structure, std::vector<xNodePtr> & nodes
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
     if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].possible_nest_items[i]) == 0
-       && srcdiff_nested::has_internal_structure(structure_other, nodes_other, (const char *)nodes.at(structure->at(0))->name))
+       && has_internal_structure(structure_other, nodes_other, (const char *)nodes.at(structure->at(0))->name))
       return true;
 
   return false;
-}
-
-
-
-bool srcdiff_nested::has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes, const char * type) {
-
-  for(unsigned int i = 1; i < structure->size(); ++i)
-    if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
-              && strcmp((const char *)nodes.at(structure->at(i))->name, type) == 0)
-      return true;
-
-  return false;
-}
-
-bool complete_nestable(node_sets & structure_one, std::vector<xNodePtr> & nodes_one
-                  , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
-
-  unsigned int num_nest = 0;
-
-  for(unsigned int i = 0; i < structure_one.size(); ++i) {
-
-    if(srcdiff_nested::is_nestable(structure_one.at(i), nodes_one, structure_two, nodes_two))
-       ++num_nest;
-
-  }
-
-  return num_nest == structure_one.size();
-
 }
 
 bool is_match(const xNodePtr node, const void * context) {

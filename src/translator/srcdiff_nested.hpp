@@ -29,20 +29,12 @@ public:
                  , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
                  , int & operation);
 
-  static bool complete_nestable(node_sets & structure_one, std::vector<xNodePtr> & nodes_one
-                       , node_set * structure_two, std::vector<xNodePtr> & nodes_two);
-
   static bool is_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
                  , node_set * structure_two, std::vector<xNodePtr> & nodes_two);
 
 
-
   static bool is_same_nestable(node_set *  structure_one, std::vector<xNodePtr> & nodes_one
                       , node_set * structure_two, std::vector<xNodePtr> & nodes_two);
-
-  static bool has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes, const char * type);
-
-  static int is_block_type(node_set * structure, std::vector<xNodePtr> & nodes);
 
   static bool is_better_nested(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old, int start_pos_old,
                     std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new, int start_pos_new,
