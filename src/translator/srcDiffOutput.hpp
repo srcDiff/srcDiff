@@ -4,14 +4,27 @@
 #include <srcDiffTypes.hpp>
 #include <vector>
 
-void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNodePtr node, int operation, writer_state & wstate);
+class srcdiff_output {
 
-void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation);
+protected:
+	reader_state rbuf_old;
+	reader_state rbuf_new;
+	writer_state wstate;
 
-void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, char * text, int operation
-                         , writer_state & wstate);
+private:
 
-void output_char(reader_state & rbuf_old, reader_state & rbuf_new, char character, int operation
-                 , writer_state & wstate);
+	static void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation);
+
+
+public:
+
+    srcdiff_output(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate);
+
+	virtual output_node(const xNodePtr node, int operation);
+	virtual output_text_as_node(const char * text, int operation);
+	virtual output_char(char character, int operation);
+
+
+};
 
 #endif

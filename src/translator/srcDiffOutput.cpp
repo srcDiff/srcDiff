@@ -7,6 +7,8 @@
 
 #include <string.h>
 
+srcdiff_output::srcdiff_output(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate) rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate) {}
+
 // more external variables
 extern xNode diff_common_start;
 extern xNode diff_common_end;
@@ -17,7 +19,7 @@ extern xNode diff_new_end;
 
 int move_operation = SESCOMMON;
 
-void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNodePtr node, int operation, writer_state & wstate) {
+void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -204,7 +206,7 @@ void output_node(reader_state & rbuf_old, reader_state & rbuf_new, const xNodePt
 
 }
 
-void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation) {
+void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation) {
 
   // Skip empty node
   if(node->is_empty || is_text(node))
@@ -246,8 +248,7 @@ void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node
 
 }
 
-void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, char * text, int operation
-                         , writer_state & wstate) {
+void srcdiff_output::output_text_as_node(const char * text, int operation) {
 
   if(strlen((char *)text) == 0)
     return;
@@ -262,8 +263,7 @@ void output_text_as_node(reader_state & rbuf_old, reader_state & rbuf_new, char 
 }
 
 
-void output_char(reader_state & rbuf_old, reader_state & rbuf_new, char character, int operation
-                         , writer_state & wstate) {
+void srcdiff_output::output_char(char character, int operation) {
 
   static char buf[2] = { 0 };
   buf[0] = character;
