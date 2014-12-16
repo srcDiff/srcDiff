@@ -1,4 +1,6 @@
 #include <srcdiff_diff.hpp>
+#include <srcdiff_many.hpp>
+
 #include <srcDiffUtility.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffCommon.hpp>
@@ -9,7 +11,6 @@
 #include <srcDiffMeasure.hpp>
 #include <srcDiffMatch.hpp>
 #include <srcDiffMove.hpp>
-#include <srcDiffMany.hpp>
 #include <pthread.h>
 #include <ShortestEditScript.hpp>
 
@@ -150,7 +151,8 @@ void srcdiff_diff::output() {
       //      fprintf(stderr, "HERE\n");
 
       // many to many handling
-      output_many(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edits, wstate);
+      srcdiff_many diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new, edits);
+      diff.output();
 
       // update for common
       last_diff_old = edits->offset_sequence_one + edits->length;

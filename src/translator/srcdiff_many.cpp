@@ -1,4 +1,4 @@
-#include <srcDiffMany.hpp>
+#include <srcdiff_many.hpp>
 
 #include <srcDiffChange.hpp>
 #include <srcdiff_diff.hpp>
@@ -7,6 +7,9 @@
 #include <srcDiffNested.hpp>
 #include <srcdiff_single.hpp>
 #include <srcDiffUtility.hpp>
+
+srcdiff_many::srcdiff_many(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new,
+                                edit * edit_script) : srcdiff_diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new), edit_script(edit_script) {}
 
 void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
                       , int start_old, int end_old
@@ -180,9 +183,7 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-void output_many(reader_state & rbuf_old, node_sets * node_sets_old
-                 , reader_state & rbuf_new, node_sets * node_sets_new
-                 , edit * edit_script, writer_state & wstate) {
+void srcdiff_many::output() {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;

@@ -6,6 +6,20 @@
 #include <xmlrw.hpp>
 #include <vector>
 
+#include <srcdiff_diff.hpp>
+
+class srcdiff_many : public srcdiff_diff {
+
+protected:
+  edit * edit_script;
+
+public:
+  srcdiff_many(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new, edit * edit_script);
+
+  virtual void output();
+
+};
+
 typedef std::vector<IntPairs> Moves;
 
 void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
@@ -18,8 +32,5 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
                            , reader_state & rbuf_new, node_sets * node_sets_new
                            , edit * edit_script, writer_state & wstate);
 
-void output_many(reader_state & rbuf_old, node_sets * node_sets_old
-                       , reader_state & rbuf_new, node_sets * node_sets_new
-                       , edit * edit_script, writer_state & wstate);
 
 #endif
