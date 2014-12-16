@@ -5,7 +5,6 @@
 #include <srcDiffUtility.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffCommon.hpp>
-#include <srcDiffCommentDiff.hpp>
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffMatch.hpp>
