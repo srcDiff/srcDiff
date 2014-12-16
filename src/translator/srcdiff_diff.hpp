@@ -50,6 +50,4 @@ bool group_sub_elements(reader_state & rbuf_old, node_sets * node_sets_old
                         , unsigned int start_new
                         , writer_state & wstate);
 
-void free_node_sets(node_sets & sets);
-
 #endif

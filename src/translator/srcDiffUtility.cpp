@@ -590,8 +590,6 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, node_set * set) {
 
     if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "block") == 0 && find_attribute(nodes.at((*itr)->at(0)), "type") == 0) {
 
-      free_node_sets(sets);
-
       return true;
 
     } else if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "then") == 0) {
@@ -599,8 +597,6 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, node_set * set) {
       int next_element_pos = (*itr)->at(0) + 1;
       while(nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         ++next_element_pos;
-
-      free_node_sets(sets);
 
       if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
         && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0
@@ -612,8 +608,6 @@ bool conditional_has_block(std::vector<xNodePtr> & nodes, node_set * set) {
     }
 
   }
-
-  free_node_sets(sets);
 
   return false;
 
@@ -627,15 +621,11 @@ bool if_has_else(std::vector<xNodePtr> & nodes, node_set * set) {
 
     if(strcmp((const char *)nodes.at((*itr)->at(0))->name, "else") == 0 || strcmp((const char *)nodes.at((*itr)->at(0))->name, "elseif") == 0) {
 
-      free_node_sets(sets);
-
       return true;
 
     }
 
   }
-
-  free_node_sets(sets);
 
   return false;
 
@@ -672,9 +662,6 @@ bool if_then_equal(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::v
 
   bool then_is_equal = node_set_syntax_compare((void *)*then_old, (void *)*then_new, (void *)&dnodes) == 0;
 
-  free_node_sets(node_sets_old);
-  free_node_sets(node_sets_new);
-
   return then_is_equal;
 
 }
@@ -698,9 +685,6 @@ bool for_control_matches(std::vector<xNodePtr> & nodes_old, node_set * set_old, 
 
   bool matches = control_pos_old != node_sets_old.size() && control_pos_new != node_sets_new.size() 
     && node_set_syntax_compare((void *)node_sets_old.at(control_pos_old), (void *)node_sets_new.at(control_pos_new), (void *)&dnodes) == 0;
-
-  free_node_sets(node_sets_old);
-  free_node_sets(node_sets_new);
 
   return matches;
 
@@ -824,7 +808,6 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
   if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "then") == 0) {
 
     node_sets temp = node_sets(nodes_old, child_node_sets_old.back()->at(1), child_node_sets_old.back()->back());
-    free_node_sets(child_node_sets_old);
     child_node_sets_old = temp;
 
   }
@@ -832,7 +815,6 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
   if(strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "then") == 0) {
 
     node_sets temp = node_sets(nodes_new, child_node_sets_new.back()->at(1), child_node_sets_new.back()->back());
-    free_node_sets(child_node_sets_new);
     child_node_sets_new = temp;
 
   }
@@ -853,9 +835,6 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
     }
 
   }
-
-  free_node_sets(child_node_sets_old);
-  free_node_sets(child_node_sets_new);
 
   int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
   int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
@@ -918,9 +897,6 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
         is_reject = !(operation == SESINSERT);
 
-        free_node_sets(node_sets_old);
-        free_node_sets(node_sets_new);
-
       } else {
 
         node_sets node_sets_old = node_sets(nodes_old, set_old->at(0), set_old->back() + 1);
@@ -932,9 +908,6 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
 
         is_reject = !(operation == SESDELETE);
-
-        free_node_sets(node_sets_old);
-        free_node_sets(node_sets_new);
 
       }
 

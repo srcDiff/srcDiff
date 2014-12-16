@@ -252,12 +252,3 @@ void srcdiff_diff::output() {
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
 
 }
-
-void free_node_sets(node_sets & sets) {
-
-  for(unsigned int i = 0; i < sets.size(); ++i) {
-
-    delete sets.at(i);
-  }
-
-}

@@ -22,7 +22,16 @@ private:
 public:
 
 	node_sets(std::vector<xNodePtr> & nodes) : nodes(nodes) {}
-	node_sets(const node_sets & sets) : nodes(sets.nodes) {}
+	node_sets(const node_sets & sets) : nodes(sets.nodes) {
+
+
+		for(size_type pos = 0; pos < sets.size(); ++pos) {
+
+			push_back(new node_set(*sets[pos]));
+
+		}
+
+	}
 
 	node_sets & operator=(const node_sets & sets) {
 

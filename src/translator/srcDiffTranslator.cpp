@@ -346,9 +346,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  free_node_sets(set_old);
-  free_node_sets(set_new);
-
   // Because of grouping need to output a common to end grouping need to deallocate as well
   for(unsigned int i = 0; i < rbuf_old.nodes.size(); ++i) {
 
