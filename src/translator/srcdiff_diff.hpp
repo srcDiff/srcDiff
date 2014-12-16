@@ -20,7 +20,9 @@ public:
   srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new);
 
   virtual void output();
-
+  virtual void output_pure(int end_old, int end_new);
+  virtual void output_change(int end_old, int end_new);
+  virtual void output_change_whitespace(int end_old, int end_new);
 
   static bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
                      , unsigned int start_old

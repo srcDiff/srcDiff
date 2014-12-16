@@ -1,10 +1,32 @@
 #include <srcDiffCommentDiff.hpp>
+
+#include <srcdiff_diff.hpp>
+
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 #include <srcDiffUtility.hpp>
 #include <srcDiffCommon.hpp>
 #include <srcDiffChange.hpp>
 #include <srcdiff_diff.hpp>
+
+void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
+                               , reader_state & rbuf_new, unsigned int end_new
+                               , writer_state & wstate) {
+
+  srcdiff_diff diff(rbuf_old, rbuf_new, wstate, 0, 0);
+  diff.output_change_whitespace(end_old, end_new);
+
+
+}
+
+void output_pure_operation_white_space(reader_state & rbuf_old, unsigned int end_old
+                                       , reader_state & rbuf_new, unsigned int end_new
+                                       , int operation, writer_state & wstate) {
+
+  srcdiff_diff diff(rbuf_old, rbuf_new, wstate, 0, 0);
+  diff.output_pure(end_old, end_new);
+
+}
 
 /*
 

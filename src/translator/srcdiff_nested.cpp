@@ -639,7 +639,7 @@ void srcdiff_nested::output() {
     for(int i = start_new; i < end_new; ++i)
         nest_set.push_back(new node_set(*node_sets_new->at(i)));
 
-      output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
+      output_change(end_pos, rbuf_new.last_output);
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
@@ -648,7 +648,7 @@ void srcdiff_nested::output() {
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
-      output_change(rbuf_old, node_sets_old->at(end_old - 1)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+      output_change(node_sets_old->at(end_old - 1)->back() + 1, rbuf_new.last_output);
 
   } else {
 
@@ -689,7 +689,7 @@ void srcdiff_nested::output() {
     for(int i = start_old; i < end_old; ++i)
         nest_set.push_back(new node_set(*node_sets_old->at(i)));
 
-      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
+      output_change(rbuf_old.last_output, end_pos);
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 
@@ -698,7 +698,7 @@ void srcdiff_nested::output() {
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 
-      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, node_sets_new->at(end_new - 1)->back() + 1, wstate);
+      output_change(rbuf_old.last_output, node_sets_new->at(end_new - 1)->back() + 1);
   }
 
   //output_white_space_all(rbuf_old, rbuf_new, wstate);

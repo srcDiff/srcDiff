@@ -1,10 +1,10 @@
 #include <srcdiff_diff.hpp>
 #include <srcdiff_many.hpp>
+#include <srcDiffChange.hpp>
 
 #include <srcDiffUtility.hpp>
 #include <srcDiffOutput.hpp>
 #include <srcDiffCommon.hpp>
-#include <srcDiffChange.hpp>
 #include <srcDiffCommentDiff.hpp>
 #include <srcDiffWhiteSpace.hpp>
 #include <srcDiffMeasure.hpp>
@@ -166,9 +166,7 @@ void srcdiff_diff::output() {
       case SESINSERT:
 
         //fprintf(stderr, "HERE\n");
-        output_pure_operation_white_space(rbuf_old, 0
-                                          , rbuf_new, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1,
-                                          SESINSERT, wstate);
+        output_pure(0, node_sets_new->at(edits->offset_sequence_two + edits->length - 1)->back() + 1);
 
 
         // update for common
@@ -180,8 +178,7 @@ void srcdiff_diff::output() {
       case SESDELETE:
 
         //fprintf(stderr, "HERE\n");
-        output_pure_operation_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1
-                                          , rbuf_new, 0, SESDELETE, wstate);
+        output_pure(node_sets_old->at(edits->offset_sequence_one + edits->length - 1)->back() + 1, 0);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
@@ -206,5 +203,28 @@ void srcdiff_diff::output() {
 
   // output area in common
   output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
+
+}
+
+void srcdiff_diff::output_pure(int end_old, int end_new) {
+
+  srcdiff_change diff(*this, end_old, end_new);
+  diff.output_whitespace();
+  diff.output();
+
+}
+
+void srcdiff_diff::output_change(int end_old, int end_new) {
+
+  srcdiff_change diff(*this, end_old, end_new);
+  diff.output();
+
+}
+
+void srcdiff_diff::output_change_whitespace(int end_old, int end_new) {
+
+  srcdiff_change diff(*this, end_old, end_new);
+  diff.output_whitespace();
+  diff.output();
 
 }

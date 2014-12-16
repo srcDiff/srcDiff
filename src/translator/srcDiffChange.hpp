@@ -1,18 +1,24 @@
-#ifndef INCLUDED_SRCDIFFCHANGE_HPP
-#define  INCLUDED_SRCDIFFCHANGE_HPP
+#ifndef INCLUDED_SRCDIFF_CHANGE_HPP
+#define  INCLUDED_SRCDIFF_CHANGE_HPP
 
-#include <srcDiffTypes.hpp>
+#include <srcdiff_diff.hpp>
 
-void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
-                               , reader_state & rbuf_new, unsigned int end_new
-                               , writer_state & wstate);
+class srcdiff_change : public srcdiff_diff {
 
-void output_change(reader_state & rbuf_old, unsigned int end_old
-                   , reader_state & rbuf_new, unsigned int end_new
-                   , writer_state & wstate);
+protected:
 
-void output_pure_operation_white_space(reader_state & rbuf_old, unsigned int end_old
-                                       , reader_state & rbuf_new, unsigned int end_new
-                                       , int operation, writer_state & wstate);
+	int end_old;
+	int end_new;
+
+private:
+
+public:
+
+	srcdiff_change(const srcdiff_diff & diff, unsigned int end_old, unsigned int end_new);
+
+	virtual void output_whitespace();
+	virtual void output();
+
+};
 
 #endif

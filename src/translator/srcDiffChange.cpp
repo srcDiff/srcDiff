@@ -24,6 +24,8 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
+srcdiff_change::srcdiff_change(const srcdiff_diff & diff, unsigned int end_old, unsigned int end_new) : srcdiff_diff(diff), end_old(end_old), end_new(end_new) {}
+
 /*
 
   Adds whitespace to a change. Then outputs the change.
@@ -33,20 +35,12 @@ extern xAttr diff_type;
   it is included and the following nodes are included if they have a new line.
 
 */
-void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
-                               , reader_state & rbuf_new, unsigned int end_new
-                               , writer_state & wstate) {
+void srcdiff_change::output_whitespace() {
 
   int oend = end_old;
   int nend = end_new;
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
-
-  //advance_white_space_suffix(rbuf_old, oend, rbuf_new, nend);
-  output_change(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  // need to make function that sets end and pass modified end to change then call to output rest
-  //output_white_space_all(rbuf_old, rbuf_new, wstate);
 
 }
 
@@ -56,9 +50,7 @@ void output_change_white_space(reader_state & rbuf_old, unsigned int end_old
   whitespace even if it could be matches is treated as different.
 
 */
-void output_change(reader_state & rbuf_old, unsigned int end_old
-                   , reader_state & rbuf_new, unsigned int end_new
-                   , writer_state & wstate) {
+void srcdiff_change::output() {
 
   unsigned int begin_old = rbuf_old.last_output;
   unsigned int begin_new = rbuf_new.last_output;
@@ -179,23 +171,3 @@ void output_change(reader_state & rbuf_old, unsigned int end_old
   diff_new_start.properties = 0;
 
 }
-
-void output_pure_operation_white_space(reader_state & rbuf_old, unsigned int end_old
-                                       , reader_state & rbuf_new, unsigned int end_new
-                                       , int operation, writer_state & wstate) {
-
-  unsigned int oend = end_old;
-  unsigned int nend = end_new;
-
-  output_white_space_prefix(rbuf_old, rbuf_new, wstate);
-
-  output_change(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  //output_white_space_suffix(rbuf_old, rbuf_new, wstate);
-
-  //  output_white_space_pure_statement_end(rbuf_old, rbuf_new, operation, wstate);
-
-  //output_white_space_all(rbuf_old, rbuf_new, wstate);
-
-}
-

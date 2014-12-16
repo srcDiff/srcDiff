@@ -219,11 +219,11 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
   diff.output();
 
-  output_change(rbuf_old, rbuf_old.last_output, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+  output_change(rbuf_old.last_output, node_sets_new->at(start_new)->back() + 1);
 
   output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
 
-  output_change(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+  output_change(node_sets_old->at(start_old)->back() + 1, rbuf_new.last_output);
 
   output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
 

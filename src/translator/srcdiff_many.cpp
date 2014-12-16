@@ -46,7 +46,7 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
 
         }
 
-        output_change(rbuf_old, pre_nest_end_old, rbuf_new, pre_nest_end_new, wstate);
+        output_change(pre_nest_end_old, pre_nest_end_new);
 
         if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0) {
 
@@ -63,7 +63,7 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
       /** @todo may only need to do this if not at end */
       if(end_nest_old > end_old && end_nest_new > end_new) {
 
-        output_change(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
+        output_change(finish_old, finish_new);
         return;
 
       }
@@ -82,7 +82,7 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
 
     }
 
-    output_change_white_space(rbuf_old, finish_old, rbuf_new, finish_new, wstate);
+    output_change_whitespace(finish_old, finish_new);
               
   }
 
@@ -228,8 +228,8 @@ void srcdiff_many::output() {
       } else {
 
         // syntax mismatch
-        output_change_white_space(rbuf_old, node_sets_old->at(edits->offset_sequence_one + i)->back() + 1
-                                  , rbuf_new, node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1, wstate);
+        output_change_whitespace(node_sets_old->at(edits->offset_sequence_one + i)->back() + 1,
+          node_sets_new->at(edit_next->offset_sequence_two + j)->back() + 1);
       }
 
     }
