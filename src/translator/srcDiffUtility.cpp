@@ -891,7 +891,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
         node_sets node_sets_new = node_sets(nodes_new, set_new->at(0), set_new->back() + 1);
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
-        check_nestable(&node_sets_old, nodes_old, 0, node_sets_old.size(), &node_sets_new, nodes_new, 0, 1,
+        srcdiff_nested::check_nestable(&node_sets_old, nodes_old, 0, node_sets_old.size(), &node_sets_new, nodes_new, 0, 1,
                       start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
 
 
@@ -903,7 +903,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
         node_sets node_sets_new = node_sets(nodes_new, set_new->at(1), set_new->back());
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
-        check_nestable(&node_sets_old, nodes_old, 0, 1, &node_sets_new, nodes_new, 0, node_sets_new.size(),
+        srcdiff_nested::check_nestable(&node_sets_old, nodes_old, 0, 1, &node_sets_new, nodes_new, 0, node_sets_new.size(),
                       start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
 
 

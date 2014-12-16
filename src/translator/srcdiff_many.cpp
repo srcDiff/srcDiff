@@ -25,7 +25,7 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
 
       do {
 
-        check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
+        srcdiff_nested::check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
                         , node_sets_new, rbuf_new.nodes, start_new, end_new + 1
                         , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
@@ -48,10 +48,12 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
 
         output_change(rbuf_old, pre_nest_end_old, rbuf_new, pre_nest_end_new, wstate);
 
-        if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0)
-          output_nested_recursive(rbuf_old, node_sets_old, start_nest_old, end_nest_old,
-                                    rbuf_new, node_sets_new, start_nest_new, end_nest_new,
-                                    operation, wstate);
+        if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0) {
+
+          srcdiff_nested diff(*this, start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
+          diff.output();
+
+        }
 
         start_old = end_nest_old;
         start_new = end_nest_new;
@@ -241,9 +243,9 @@ void srcdiff_many::output() {
           while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
             ++nest_length;
 
-          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
-                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1,
-                                SESINSERT, wstate);
+          srcdiff_nested diff(*this, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
+                              edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1, SESINSERT);
+          diff.output();
 
       } else if(is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
                             , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
@@ -252,9 +254,9 @@ void srcdiff_many::output() {
           while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)
             ++nest_length;
 
-          output_nested_recursive(rbuf_old, node_sets_old, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
-                                rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length,
-                                SESDELETE, wstate);
+          srcdiff_nested diff(*this, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
+                              edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length, SESDELETE);
+          diff.output();
 
       } else {
 

@@ -22,6 +22,8 @@ extern xAttr diff_type;
 extern const char * change;
 extern const char * whitespace;
 
+srcdiff_nested::srcdiff_nested(const srcdiff_diff & diff, int start_old, int end_old, int start_new, int end_new, int operation) : srcdiff_diff(diff), start_old(start_old), end_old(end_old), start_new(start_new), end_new(end_new), operation(operation) {}
+
 int nest_id = 0;
 
 struct nest_info {
@@ -414,7 +416,7 @@ bool reject_match_nested(int similarity, int difference, int text_old_length, in
 
 }
 
-void check_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
                  , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
                  , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
                  , int & operation) {
@@ -662,30 +664,24 @@ void clear_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old
 
 }
 
-void output_nested_recursive(reader_state & rbuf_old,
-                  node_sets * nodes_sets_old,
-                  int start_old, int end_old,
-                  reader_state & rbuf_new,
-                  node_sets * nodes_sets_new,
-                  int start_new, int end_new,
-                  int operation, writer_state & wstate) {
+void srcdiff_nested::output() {
 
-  clear_nestable(nodes_sets_old, rbuf_old.nodes, start_old, end_old, nodes_sets_new, rbuf_new.nodes, start_new, end_new);
+  clear_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old, node_sets_new, rbuf_new.nodes, start_new, end_new);
 
   output_white_space_prefix(rbuf_old, rbuf_new, wstate);
 
   if(operation == SESDELETE) {
 
-    unsigned int end_pos = nodes_sets_old->at(start_old)->at(1);
+    unsigned int end_pos = node_sets_old->at(start_old)->at(1);
 
-    if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
+    if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
 
         while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
           && strcmp(rbuf_old.nodes.at(end_pos)->name, "then") == 0))
 
           ++end_pos;
 
-    } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "while") == 0) {
+    } else if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "while") == 0) {
 
         while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(rbuf_old.nodes.at(end_pos)->name, "condition") == 0))
@@ -693,7 +689,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
         ++end_pos;
 
-    } else if(strcmp(rbuf_old.nodes.at(nodes_sets_old->at(start_old)->at(0))->name, "for") == 0) {
+    } else if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "for") == 0) {
 
         while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(rbuf_old.nodes.at(end_pos)->name, "control") == 0))
@@ -705,14 +701,14 @@ void output_nested_recursive(reader_state & rbuf_old,
     }
 
     node_sets set = node_sets(rbuf_old.nodes,
-      //nodes_sets_old->at(start_old)->at(1),
+      //node_sets_old->at(start_old)->at(1),
       end_pos,
-      nodes_sets_old->at(end_old - 1)->back());
+      node_sets_old->at(end_old - 1)->back());
 
     node_sets nest_set(rbuf_new.nodes);
 
     for(int i = start_new; i < end_new; ++i)
-        nest_set.push_back(nodes_sets_new->at(i));
+        nest_set.push_back(node_sets_new->at(i));
 
       output_change(rbuf_old, end_pos, rbuf_new, rbuf_new.last_output, wstate);
 
@@ -723,19 +719,19 @@ void output_nested_recursive(reader_state & rbuf_old,
 
       output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
 
-      output_change(rbuf_old, nodes_sets_old->at(end_old - 1)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
+      output_change(rbuf_old, node_sets_old->at(end_old - 1)->back() + 1, rbuf_new, rbuf_new.last_output, wstate);
 
   } else {
 
-    unsigned int end_pos = nodes_sets_new->at(start_new)->at(1);
+    unsigned int end_pos = node_sets_new->at(start_new)->at(1);
 
-    if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
+    if(strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
 
         while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
           && strcmp(rbuf_new.nodes.at(end_pos)->name, "then") == 0))
           ++end_pos;
 
-    } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "while") == 0) {
+    } else if(strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "while") == 0) {
 
         while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(rbuf_new.nodes.at(end_pos)->name, "condition") == 0))
@@ -743,7 +739,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
         ++end_pos;
 
-    } else if(strcmp(rbuf_new.nodes.at(nodes_sets_new->at(start_new)->at(0))->name, "for") == 0) {
+    } else if(strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "for") == 0) {
 
         while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(rbuf_new.nodes.at(end_pos)->name, "control") == 0))
@@ -755,14 +751,14 @@ void output_nested_recursive(reader_state & rbuf_old,
     }
 
     node_sets set = node_sets(rbuf_new.nodes,
-      //nodes_sets_old->at(start_old)->at(1),
+      //node_sets_old->at(start_old)->at(1),
       end_pos,
-      nodes_sets_new->at(end_new - 1)->back());
+      node_sets_new->at(end_new - 1)->back());
 
     node_sets nest_set(rbuf_old.nodes);
 
     for(int i = start_old; i < end_old; ++i)
-        nest_set.push_back(nodes_sets_old->at(i));
+        nest_set.push_back(node_sets_old->at(i));
 
       output_change(rbuf_old, rbuf_old.last_output, rbuf_new, end_pos, wstate);
 
@@ -773,7 +769,7 @@ void output_nested_recursive(reader_state & rbuf_old,
 
       output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
 
-      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, nodes_sets_new->at(end_new - 1)->back() + 1, wstate);
+      output_change(rbuf_old, rbuf_old.last_output, rbuf_new, node_sets_new->at(end_new - 1)->back() + 1, wstate);
   }
 
   //output_white_space_all(rbuf_old, rbuf_new, wstate);
