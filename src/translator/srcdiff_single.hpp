@@ -18,8 +18,7 @@ protected:
 
 public:
 
-	srcdiff_single(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new, unsigned int start_old, unsigned int start_new);
-
+	srcdiff_single(const srcdiff_diff & diff, unsigned int start_old, unsigned int start_new);
 
 	virtual void output();
 

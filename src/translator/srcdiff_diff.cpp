@@ -151,7 +151,7 @@ void srcdiff_diff::output() {
       //      fprintf(stderr, "HERE\n");
 
       // many to many handling
-      srcdiff_many diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new, edits);
+      srcdiff_many diff(*this, edits);
       diff.output();
 
       // update for common

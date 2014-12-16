@@ -23,8 +23,7 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
-srcdiff_single::srcdiff_single(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new,
-                                unsigned int start_old, unsigned int start_new) : srcdiff_diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new), start_old(start_old), start_new(start_new) {}
+srcdiff_single::srcdiff_single(const srcdiff_diff & diff, unsigned int start_old, unsigned int start_new) : srcdiff_diff(diff), start_old(start_old), start_new(start_new) {}
 
 static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
 

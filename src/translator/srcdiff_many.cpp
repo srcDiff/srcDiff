@@ -8,8 +8,7 @@
 #include <srcdiff_single.hpp>
 #include <srcDiffUtility.hpp>
 
-srcdiff_many::srcdiff_many(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new,
-                                edit * edit_script) : srcdiff_diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new), edit_script(edit_script) {}
+srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
 
 void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
                       , int start_old, int end_old
@@ -230,7 +229,7 @@ void srcdiff_many::output() {
          && (ismethod(wstate.method, METHOD_RAW) || srcdiff_diff::go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
                                                                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate))) {
 
-        srcdiff_single diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
+        srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
         diff.output();
 
       } else {

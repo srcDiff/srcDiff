@@ -14,7 +14,7 @@ protected:
   edit * edit_script;
 
 public:
-  srcdiff_many(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new, edit * edit_script);
+  srcdiff_many(const srcdiff_diff & diff, edit * edit_script);
 
   virtual void output();
 
