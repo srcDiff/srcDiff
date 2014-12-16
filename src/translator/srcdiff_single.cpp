@@ -141,8 +141,8 @@ void srcdiff_single::output_recursive_same() {
       = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
-    output_comment_word(rbuf_old, &next_set_old, rbuf_new, &next_set_new, wstate);
-
+    srcdiff_comment diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
+    diff.output();
 
   } else {
 

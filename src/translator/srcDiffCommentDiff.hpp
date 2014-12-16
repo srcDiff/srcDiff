@@ -1,18 +1,20 @@
-#ifndef INCLUDED_SRCDIFFCOMMENTDIFF_HPP
-#define INCLUDED_SRCDIFFCOMMENTDIFF_HPP
+#ifndef INCLUDED_SRCDIFF_COMMENT_HPP
+#define INCLUDED_SRCDIFF_COMMENT_HPP
 
-#include <srcDiffTypes.hpp>
-#include <vector>
+#include <srcdiff_diff.hpp>
 
-node_sets create_comment_paragraph_set(std::vector<xNodePtr> & nodes, int start, int end);
+class srcdiff_comment : public srcdiff_diff {
 
-node_sets create_comment_line_set(std::vector<xNodePtr> & nodes, int start, int end);
+protected:
 
-void output_comment_paragraph(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate);
+private:
 
-void output_comment_line(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate);
+public:
 
-void output_comment_word(reader_state & rbuf_old, node_sets * node_sets_old, reader_state & rbuf_new, node_sets * node_sets_new, writer_state & wstate);
+	srcdiff_comment(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new);
+	virtual void output();
+
+};
 
 #endif
 
