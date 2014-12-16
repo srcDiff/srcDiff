@@ -10,11 +10,7 @@
 
 srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
 
-void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
-                      , int start_old, int end_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , int start_new, int end_new
-                      , writer_state & wstate) {
+void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, int end_new) {
 
   unsigned int finish_old = rbuf_old.last_output;
   unsigned int finish_new = rbuf_new.last_output;
@@ -90,9 +86,7 @@ void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
-                           , reader_state & rbuf_new, node_sets * node_sets_new
-                           , edit * edit_script, writer_state & wstate) {
+srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
@@ -174,7 +168,7 @@ Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
 
   }
 
-  Moves moves;
+  srcdiff_many::Moves moves;
   moves.push_back(old_moved);
   moves.push_back(new_moved);
 
@@ -187,7 +181,7 @@ void srcdiff_many::output() {
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
-  Moves moves = determine_operations(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
+  srcdiff_many::Moves moves = determine_operations();
   IntPairs old_moved = moves.at(0);
   IntPairs new_moved = moves.at(1);
 
@@ -211,11 +205,8 @@ void srcdiff_many::output() {
       ;
 
     // output diffs until match
-    output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + start_old,
-                     edits->offset_sequence_one + end_old - 1
-                     , rbuf_new, node_sets_new, edit_next->offset_sequence_two + start_new
-                     , edit_next->offset_sequence_two + end_new - 1
-                     , wstate);
+    output_unmatched(edits->offset_sequence_one + start_old, edits->offset_sequence_one + end_old - 1, 
+                      edit_next->offset_sequence_two + start_new, edit_next->offset_sequence_two + end_new - 1);
 
     i = end_old;
     j = end_new;
@@ -281,10 +272,7 @@ void srcdiff_many::output() {
 
   }
 
-  output_unmatched(rbuf_old, node_sets_old, edits->offset_sequence_one + i,
-                   edits->offset_sequence_one + old_moved.size() - 1
-                   , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j
-                   , edit_next->offset_sequence_two + new_moved.size() - 1
-                   , wstate);
+  output_unmatched(edits->offset_sequence_one + i, edits->offset_sequence_one + old_moved.size() - 1
+                   , edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + new_moved.size() - 1);
 
 }

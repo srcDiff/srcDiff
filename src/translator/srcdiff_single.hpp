@@ -13,6 +13,8 @@ protected:
 	unsigned int start_old;
 	unsigned int start_new;
 
+private:
+	
 	void output_recursive_same();
 	void output_recursive_interchangeable();
 

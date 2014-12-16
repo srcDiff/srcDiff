@@ -13,24 +13,19 @@ class srcdiff_many : public srcdiff_diff {
 protected:
   edit * edit_script;
 
+private:
+
+  typedef std::vector<IntPairs> Moves;
+
+  void output_unmatched(int start_old, int end_old, int start_new, int end_new);
+
+  Moves determine_operations();
+  
 public:
   srcdiff_many(const srcdiff_diff & diff, edit * edit_script);
 
   virtual void output();
 
 };
-
-typedef std::vector<IntPairs> Moves;
-
-void output_unmatched(reader_state & rbuf_old, node_sets * node_sets_old
-                      , int start_old, int end_old
-                      , reader_state & rbuf_new, node_sets * node_sets_new
-                      , int start_new, int end_new
-                      , writer_state & wstate);
-
-Moves determine_operations(reader_state & rbuf_old, node_sets * node_sets_old
-                           , reader_state & rbuf_new, node_sets * node_sets_new
-                           , edit * edit_script, writer_state & wstate);
-
 
 #endif
