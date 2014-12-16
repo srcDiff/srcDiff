@@ -29,51 +29,6 @@ extern xNode diff_new_end;
 srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
   : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
-void * create_node_set_thread(void * arguments) {
-
-  create_node_set_args & args = *(create_node_set_args *)arguments;
-
-  args.sets = node_sets(args.nodes, args.start, args.end);
-
-  return NULL;
-
-}
-
-void create_node_sets(std::vector<xNodePtr> & nodes_delete, int start_old, int end_old, node_sets & set_old
-                      , std::vector<xNodePtr> & nodes_insert, int start_new, int end_new, node_sets & set_new) {
-
-  create_node_set_args args_old = { nodes_delete, start_old, end_old, set_old };
-
-  pthread_t thread_old;
-  if(pthread_create(&thread_old, NULL, create_node_set_thread, (void *)&args_old)) {
-
-    exit(1);
-
-  }
-
-  create_node_set_args args_new = { nodes_insert, start_new, end_new, set_new };
-
-  pthread_t thread_new;
-  if(pthread_create(&thread_new, NULL, create_node_set_thread, (void *)&args_new)) {
-
-    exit(1);
-
-  }
-
-  if(pthread_join(thread_old, NULL)) {
-
-    exit(1);
-
-  }
-
-  if(pthread_join(thread_new, NULL)) {
-
-    exit(1);
-
-  }
-
-}
-
 bool go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
                      , unsigned int start_old
                      , reader_state & rbuf_new, node_sets * node_sets_new
