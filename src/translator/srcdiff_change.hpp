@@ -1,11 +1,15 @@
 #ifndef INCLUDED_SRCDIFF_CHANGE_HPP
-#define  INCLUDED_SRCDIFF_CHANGE_HPP
+#define INCLUDED_SRCDIFF_CHANGE_HPP
 
-#include <srcdiff_diff.hpp>
+#include <srcDiffTypes.hpp>
 
-class srcdiff_change : public srcdiff_diff {
+class srcdiff_change {
 
 protected:
+ 
+	reader_state & rbuf_old;
+  	reader_state & rbuf_new;
+  	writer_state & wstate;
 
 	int end_old;
 	int end_new;
@@ -14,7 +18,7 @@ private:
 
 public:
 
-	srcdiff_change(const srcdiff_diff & diff, unsigned int end_old, unsigned int end_new);
+	srcdiff_change(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, unsigned int end_old, unsigned int end_new);
 
 	virtual void output_whitespace();
 	virtual void output();

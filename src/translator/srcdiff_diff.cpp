@@ -208,7 +208,7 @@ void srcdiff_diff::output() {
 
 void srcdiff_diff::output_pure(int end_old, int end_new) {
 
-  srcdiff_change diff(*this, end_old, end_new);
+  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
   diff.output_whitespace();
   diff.output();
 
@@ -216,14 +216,14 @@ void srcdiff_diff::output_pure(int end_old, int end_new) {
 
 void srcdiff_diff::output_change(int end_old, int end_new) {
 
-  srcdiff_change diff(*this, end_old, end_new);
+  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
   diff.output();
 
 }
 
 void srcdiff_diff::output_change_whitespace(int end_old, int end_new) {
 
-  srcdiff_change diff(*this, end_old, end_new);
+  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
   diff.output_whitespace();
   diff.output();
 

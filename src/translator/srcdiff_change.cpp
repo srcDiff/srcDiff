@@ -24,7 +24,8 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
-srcdiff_change::srcdiff_change(const srcdiff_diff & diff, unsigned int end_old, unsigned int end_new) : srcdiff_diff(diff), end_old(end_old), end_new(end_new) {}
+srcdiff_change::srcdiff_change(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate,
+  unsigned int end_old, unsigned int end_new) : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), end_old(end_old), end_new(end_new) {}
 
 /*
 
