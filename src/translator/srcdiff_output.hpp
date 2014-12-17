@@ -4,15 +4,16 @@
 #include <srcDiffTypes.hpp>
 #include <vector>
 #include <pthread.h>
+#include <memory>
 
 // const nodes here? or xmlrw
 
 class srcdiff_output {
 
 protected:
-	reader_state rbuf_old;
-	reader_state rbuf_new;
-	writer_state wstate;
+	std::shared_ptr<reader_state> rbuf_old;
+	std::shared_ptr<reader_state> rbuf_new;
+	std::shared_ptr<writer_state> wstate;
 
 	pthread_mutex_t mutex;
 

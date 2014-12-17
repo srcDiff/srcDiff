@@ -19,15 +19,15 @@ extern xNode diff_new_end;
 int move_operation = SESCOMMON;
 
 srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method)
- : rbuf_old(SESDELETE), rbuf_new(SESINSERT), wstate() {
+ : rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()) {
 
   pthread_mutex_init(&mutex, 0);
 
-  rbuf_old.mutex = &mutex;
-  rbuf_new.mutex = &mutex;
+  rbuf_old->mutex = &mutex;
+  rbuf_new->mutex = &mutex;
 
-  wstate.filename = srcdiff_filename;
-  wstate.method = method;
+  wstate->filename = srcdiff_filename;
+  wstate->method = method;
 
  }
 
@@ -39,19 +39,19 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
 reader_state & srcdiff_output::get_rbuf_old() {
 
-  return rbuf_old;
+  return *rbuf_old;
 
 }
 
 reader_state & srcdiff_output::get_rbuf_new() {
 
-  return rbuf_new;
+  return *rbuf_new;
 
 }
 
 writer_state & srcdiff_output::get_wstate() {
 
-  return wstate;
+  return *wstate;
 
 }
 
@@ -73,36 +73,36 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
   // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SESDELETE 
-          && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_old_end.name) == 0)
+          && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_old_end.name) == 0)
          || (delay_operation == SESINSERT 
-             && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_new_end.name) == 0)
+             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_new_end.name) == 0)
          || (delay_operation == SESCOMMON 
-             && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)diff_common_end.name) == 0))) {
+             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_common_end.name) == 0))) {
 
     if(delay_operation == SESDELETE) {
 
-      outputNode(diff_old_end, wstate.unit);
+      outputNode(diff_old_end, wstate->unit);
 
-      update_diff_stack(rbuf_old.open_diff, &diff_old_end, SESDELETE);
+      update_diff_stack(rbuf_old->open_diff, &diff_old_end, SESDELETE);
 
-      update_diff_stack(wstate.output_diff, &diff_old_end, SESDELETE);
+      update_diff_stack(wstate->output_diff, &diff_old_end, SESDELETE);
 
     } else if(delay_operation == SESINSERT) {
 
-      outputNode(diff_new_end, wstate.unit);
+      outputNode(diff_new_end, wstate->unit);
 
-      update_diff_stack(rbuf_new.open_diff, &diff_new_end, SESINSERT);
+      update_diff_stack(rbuf_new->open_diff, &diff_new_end, SESINSERT);
 
-      update_diff_stack(wstate.output_diff, &diff_new_end, SESINSERT);
+      update_diff_stack(wstate->output_diff, &diff_new_end, SESINSERT);
 
     } else if(delay_operation == SESCOMMON)  {
 
-      outputNode(diff_common_end, wstate.unit);
+      outputNode(diff_common_end, wstate->unit);
 
-      update_diff_stack(rbuf_old.open_diff, &diff_common_end, SESCOMMON);
-      update_diff_stack(rbuf_new.open_diff, &diff_common_end, SESCOMMON);
+      update_diff_stack(rbuf_old->open_diff, &diff_common_end, SESCOMMON);
+      update_diff_stack(rbuf_new->open_diff, &diff_common_end, SESCOMMON);
 
-      update_diff_stack(wstate.output_diff, &diff_common_end, SESCOMMON);
+      update_diff_stack(wstate->output_diff, &diff_common_end, SESCOMMON);
 
     }
 
@@ -119,58 +119,58 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)wstate.output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
+       && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
-    if(ismethod(wstate.method, METHOD_GROUP) && operation != SESMOVE && (*node == diff_old_end || *node == diff_new_end || *node == diff_common_end)) {
+    if(ismethod(wstate->method, METHOD_GROUP) && operation != SESMOVE && (*node == diff_old_end || *node == diff_new_end || *node == diff_common_end)) {
 
 
       delay = true;
-      delay_operation = wstate.output_diff.back()->operation;
+      delay_operation = wstate->output_diff.back()->operation;
       return;
 
     } else {
 
-      outputNode(*node, wstate.unit);
+      outputNode(*node, wstate->unit);
 
     }
 
-    if(wstate.output_diff.back()->operation == SESCOMMON) {
+    if(wstate->output_diff.back()->operation == SESCOMMON) {
 
       //fprintf(stderr, "HERE OUTPUT SESCOMMON\n");
 
-      update_diff_stack(rbuf_old.open_diff, node, SESCOMMON);
-      update_diff_stack(rbuf_new.open_diff, node, SESCOMMON);
+      update_diff_stack(rbuf_old->open_diff, node, SESCOMMON);
+      update_diff_stack(rbuf_new->open_diff, node, SESCOMMON);
 
-      update_diff_stack(wstate.output_diff, node, SESCOMMON);
+      update_diff_stack(wstate->output_diff, node, SESCOMMON);
 
-    } else if(wstate.output_diff.back()->operation == SESDELETE) {
+    } else if(wstate->output_diff.back()->operation == SESDELETE) {
 
       //fprintf(stderr, "HERE OUTPUT SESDELETE\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-      update_diff_stack(rbuf_old.open_diff, node, SESDELETE);
+      update_diff_stack(rbuf_old->open_diff, node, SESDELETE);
 
-      update_diff_stack(wstate.output_diff, node, SESDELETE);
+      update_diff_stack(wstate->output_diff, node, SESDELETE);
 
-    } else if(wstate.output_diff.back()->operation == SESINSERT) {
+    } else if(wstate->output_diff.back()->operation == SESINSERT) {
 
       //fprintf(stderr, "HERE OUTPUT SESINSERT\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-      update_diff_stack(rbuf_new.open_diff, node, SESINSERT);
+      update_diff_stack(rbuf_new->open_diff, node, SESINSERT);
 
-      update_diff_stack(wstate.output_diff, node, SESINSERT);
+      update_diff_stack(wstate->output_diff, node, SESINSERT);
 
-    } else if(wstate.output_diff.back()->operation == SESMOVE) {
+    } else if(wstate->output_diff.back()->operation == SESMOVE) {
 
       if(move_operation == SESDELETE)
-        update_diff_stack(rbuf_old.open_diff, node, SESMOVE);
+        update_diff_stack(rbuf_old->open_diff, node, SESMOVE);
       else if(move_operation == SESINSERT)
-        update_diff_stack(rbuf_new.open_diff, node, SESMOVE);
+        update_diff_stack(rbuf_new->open_diff, node, SESMOVE);
 
-      update_diff_stack(wstate.output_diff, node, SESMOVE);
+      update_diff_stack(wstate->output_diff, node, SESMOVE);
 
     }
 
@@ -179,8 +179,8 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
-    int current_operation = wstate.output_diff.back()->operation;
-    int size = wstate.output_diff.back()->open_tags.size();
+    int current_operation = wstate->output_diff.back()->operation;
+    int size = wstate->output_diff.back()->open_tags.size();
 
     if(size > 0 && operation != SESMOVE &&
        ((*node == diff_old_start && current_operation == SESDELETE)
@@ -193,17 +193,17 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
   }
 
   // output non-text node and get next node
-  outputNode(*node, wstate.unit);
+  outputNode(*node, wstate->unit);
 
   if(operation == SESCOMMON) {
 
     //fprintf(stderr, "HERE OUTPUT SESCOMMON\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-    update_diff_stack(rbuf_old.open_diff, node, operation);
-    update_diff_stack(rbuf_new.open_diff, node, operation);
+    update_diff_stack(rbuf_old->open_diff, node, operation);
+    update_diff_stack(rbuf_new->open_diff, node, operation);
 
-    update_diff_stack(wstate.output_diff, node, operation);
+    update_diff_stack(wstate->output_diff, node, operation);
 
   }
   else if(operation == SESDELETE) {
@@ -211,18 +211,18 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
     //fprintf(stderr, "HERE OUTPUT SESDELETE\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-    update_diff_stack(rbuf_old.open_diff, node, operation);
+    update_diff_stack(rbuf_old->open_diff, node, operation);
 
-    update_diff_stack(wstate.output_diff, node, operation);
+    update_diff_stack(wstate->output_diff, node, operation);
 
   } else if(operation == SESINSERT) {
 
     //fprintf(stderr, "HERE OUTPUT SESINSERT\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-    update_diff_stack(rbuf_new.open_diff, node, operation);
+    update_diff_stack(rbuf_new->open_diff, node, operation);
 
-    update_diff_stack(wstate.output_diff, node, operation);
+    update_diff_stack(wstate->output_diff, node, operation);
 
   } else if(operation == SESMOVE) {
 
@@ -232,11 +232,11 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
       move_operation = SESINSERT;
 
     if(move_operation == SESDELETE)
-      update_diff_stack(rbuf_old.open_diff, node, operation);
+      update_diff_stack(rbuf_old->open_diff, node, operation);
     else
-      update_diff_stack(rbuf_new.open_diff, node, operation);
+      update_diff_stack(rbuf_new->open_diff, node, operation);
 
-    update_diff_stack(wstate.output_diff, node, operation);
+    update_diff_stack(wstate->output_diff, node, operation);
 
   }
 
