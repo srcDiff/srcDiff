@@ -276,7 +276,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     // output remaining whitespace
     srcdiff_whitespace whitespace(output);
-    whitespace.output_white_space_all();
+    whitespace.output_all();
 
     output.output_node((xNodePtr)&flush, SESCOMMON);
 

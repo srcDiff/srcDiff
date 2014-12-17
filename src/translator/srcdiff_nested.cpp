@@ -8,17 +8,6 @@
 #include <srcDiffMeasure.hpp>
 
 #include <string.h>
-
-// more external variables
-extern xNode diff_common_start;
-extern xNode diff_common_end;
-extern xNode diff_old_start;
-extern xNode diff_old_end;
-extern xNode diff_new_start;
-extern xNode diff_new_end;
-
-// diff attribute
-extern xAttr diff_type;
 extern const char * change;
 extern const char * whitespace;
 
@@ -598,7 +587,7 @@ void srcdiff_nested::output() {
 
   srcdiff_whitespace whitespace(out);
 
-  whitespace.output_white_space_prefix();
+  whitespace.output_prefix();
 
   if(operation == SESDELETE) {
 
@@ -642,12 +631,12 @@ void srcdiff_nested::output() {
 
       output_change(end_pos, rbuf_new.last_output);
 
-      whitespace.output_white_space_nested(SESDELETE);
+      whitespace.output_nested(SESDELETE);
 
       srcdiff_diff diff(out, &set, &nest_set);
       diff.output();
 
-      whitespace.output_white_space_nested(SESDELETE);
+      whitespace.output_nested(SESDELETE);
 
       output_change(node_sets_old->at(end_old - 1)->back() + 1, rbuf_new.last_output);
 
@@ -692,17 +681,17 @@ void srcdiff_nested::output() {
 
       output_change(rbuf_old.last_output, end_pos);
 
-      whitespace.output_white_space_nested(SESINSERT);
+      whitespace.output_nested(SESINSERT);
 
       srcdiff_diff diff(out, &nest_set, &set);
       diff.output();
 
-      whitespace.output_white_space_nested(SESINSERT);
+      whitespace.output_nested(SESINSERT);
 
       output_change(rbuf_old.last_output, node_sets_new->at(end_new - 1)->back() + 1);
   }
 
-  //output_white_space_all(rbuf_old, rbuf_new, wstate);
+  //output_all(rbuf_old, rbuf_new, wstate);
 
   //diff_old_start.properties = 0;
   //diff_new_start.properties = 0;

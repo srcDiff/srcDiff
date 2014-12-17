@@ -133,7 +133,7 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
 
 }
 
-void srcdiff_whitespace::output_white_space_nested(int operation) {
+void srcdiff_whitespace::output_nested(int operation) {
 
   unsigned int oend = rbuf_old->last_output;
   unsigned int nend = rbuf_new->last_output;
@@ -156,7 +156,7 @@ void srcdiff_whitespace::output_white_space_nested(int operation) {
 }
 
 
-void srcdiff_whitespace::output_white_space_statement() {
+void srcdiff_whitespace::output_statement() {
 
   unsigned int oend = rbuf_old->last_output;
   unsigned int nend = rbuf_new->last_output;
@@ -178,7 +178,7 @@ void srcdiff_whitespace::output_white_space_statement() {
 
 }
 
-void srcdiff_whitespace::output_white_space_all() {
+void srcdiff_whitespace::output_all() {
 
   unsigned int oend = rbuf_old->last_output;
   unsigned int nend = rbuf_new->last_output;
@@ -194,7 +194,7 @@ void srcdiff_whitespace::output_white_space_all() {
 
 }
 
-void srcdiff_whitespace::output_white_space_prefix() {
+void srcdiff_whitespace::output_prefix() {
 
   unsigned int ostart = rbuf_old->last_output;
   unsigned int nstart = rbuf_new->last_output;
@@ -243,7 +243,7 @@ void srcdiff_whitespace::output_white_space_prefix() {
 
 }
 
-void srcdiff_whitespace::output_white_space_suffix() {
+void srcdiff_whitespace::output_suffix() {
 
   int ostart = rbuf_old->last_output;
   int nstart = rbuf_new->last_output;

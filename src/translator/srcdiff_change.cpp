@@ -33,7 +33,7 @@ void srcdiff_change::output_whitespace() {
   int nend = end_new;
 
   srcdiff_whitespace whitespace(*this);
-  whitespace.output_white_space_prefix();
+  whitespace.output_prefix();
 
 }
 

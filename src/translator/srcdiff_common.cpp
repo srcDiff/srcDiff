@@ -301,7 +301,7 @@ void srcdiff_common::output() {
     return;
 
   srcdiff_whitespace whitespace(*this);
-  whitespace.output_white_space_all();
+  whitespace.output_all();
 
   if(rbuf_old->last_output >= oend && rbuf_new->last_output >= nend)
     return;
@@ -313,7 +313,7 @@ void srcdiff_common::output() {
   markup_common();
 
   // may need to take out all occurences afterwards except on pure deletes of this after something
-  //output_white_space_statement(rbuf_old, rbuf_new, wstate);
+  //output_statement(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
   output_node(diff_common_end.get(), SESCOMMON);

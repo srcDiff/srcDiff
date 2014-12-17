@@ -91,7 +91,7 @@ static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_ne
 void srcdiff_single::output_recursive_same() {
 
   srcdiff_whitespace whitespace(out);
-  whitespace.output_white_space_all();
+  whitespace.output_all();
 
   out.output_node(out.diff_common_start.get(), SESCOMMON);
 
@@ -153,7 +153,7 @@ void srcdiff_single::output_recursive_same() {
 
   out.output_node(out.diff_common_end.get(), SESCOMMON);
 
-  whitespace.output_white_space_statement();
+  whitespace.output_statement();
 
   if(merged_node) freeXNode(merged_node);
 
@@ -162,7 +162,7 @@ void srcdiff_single::output_recursive_same() {
 void srcdiff_single::output_recursive_interchangeable() {
 
   srcdiff_whitespace whitespace(out);
-  whitespace.output_white_space_all();
+  whitespace.output_all();
 
   out.output_node(out.diff_old_start.get(), SESDELETE);
 
@@ -217,7 +217,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   out.output_node(out.diff_old_end.get(), SESDELETE);
 
-  whitespace.output_white_space_statement();
+  whitespace.output_statement();
 
 
 }
