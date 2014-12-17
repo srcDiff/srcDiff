@@ -159,13 +159,13 @@ void srcdiff_move::mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
 void srcdiff_move::output() {
 
   // store current diff if is any
-  reader_state * rbuf = &rbuf_old;
+  std::shared_ptr<reader_state> rbuf = rbuf_old;
   xNodePtr start_node = &diff_old_start;
   xNodePtr end_node = &diff_old_end;
 
   if(operation == SESINSERT) {
 
-    rbuf = &rbuf_new;
+    rbuf = rbuf_new;
     start_node = &diff_new_start;
     end_node = &diff_new_end;
 

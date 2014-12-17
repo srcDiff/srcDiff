@@ -27,16 +27,16 @@
 #ifndef INCLUDED_SRCDIFFTRANSLATOR_HPP
 #define INCLUDED_SRCDIFFTRANSLATOR_HPP
 
+#include <srcdiff_output.hpp>
+
 #include <Options.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include <srcDiffTypes.hpp>
 #include <Methods.hpp>
 #include <ColorDiff.hpp>
 #include <bash_view.hpp>
 
-#include <pthread.h>
 #include <srcml.h>
 
 class srcDiffTranslator {
@@ -65,11 +65,7 @@ class srcDiffTranslator {
   METHOD_TYPE method;
   srcml_archive * archive;
 
-  pthread_mutex_t mutex;
-  reader_state rbuf_old;
-  reader_state rbuf_new;
-
-  writer_state wstate;
+  srcdiff_output output;
 
   ColorDiff * colordiff;
   bash_view * bashview;

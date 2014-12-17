@@ -6,9 +6,8 @@
 #include <ShortestEditScript.hpp>
 #include <srcDiffUtility.hpp>
 
-srcdiff_comment::srcdiff_comment(srcdiff_output & out, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate,
-  node_sets * node_sets_old, node_sets * node_sets_new) 
-  : srcdiff_diff(out, rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new) {}
+srcdiff_comment::srcdiff_comment(srcdiff_output & out, node_sets * node_sets_old, node_sets * node_sets_new) 
+  : srcdiff_diff(out, node_sets_old, node_sets_new) {}
 
 /*
 

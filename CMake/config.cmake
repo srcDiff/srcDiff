@@ -35,8 +35,9 @@ add_definitions(-DSVN)
 
 endif()
 
-# find needed libraries
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
+# find needed libraries
 find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.a PATHS /usr/local/lib)
 set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 

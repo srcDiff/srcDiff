@@ -644,7 +644,7 @@ void srcdiff_nested::output() {
 
       whitespace.output_white_space_nested(SESDELETE);
 
-      srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &set, &nest_set);
+      srcdiff_diff diff(out, &set, &nest_set);
       diff.output();
 
       whitespace.output_white_space_nested(SESDELETE);
@@ -694,7 +694,7 @@ void srcdiff_nested::output() {
 
       whitespace.output_white_space_nested(SESINSERT);
 
-      srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &nest_set, &set);
+      srcdiff_diff diff(out, &nest_set, &set);
       diff.output();
 
       whitespace.output_white_space_nested(SESINSERT);
