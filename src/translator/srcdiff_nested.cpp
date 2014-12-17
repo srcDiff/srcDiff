@@ -1,10 +1,9 @@
 #include <srcdiff_nested.hpp>
+
 #include <srcdiff_change.hpp>
+#include <srcdiff_whitespace.hpp>
 
 #include <shortest_edit_script.h>
-#include <srcDiffWhiteSpace.hpp>
-#include <srcDiffOutput.hpp>
-#include <srcdiff_diff.hpp>
 #include <srcDiffUtility.hpp>
 #include <srcDiffMeasure.hpp>
 

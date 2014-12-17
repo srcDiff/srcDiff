@@ -1,4 +1,5 @@
-#include <srcDiffOutput.hpp>
+#include <srcdiff_output.hpp>
+
 #include <srcDiffUtility.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>

@@ -1,7 +1,8 @@
 #ifndef INCLUDED_SRCDIFF_WHITESPACE_HPP
 #define INCLUDED_SRCDIFF_WHITESPACE_HPP
 
-#include <srcDiffOutput.hpp>
+#include <srcdiff_output.hpp>
+
 class srcdiff_whitespace : public srcdiff_output {
 
 protected:

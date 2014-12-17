@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFFMOVE_HPP
 #define INCLUDED_SRCDIFFMOVE_HPP
 
-#include <srcDiffOutput.hpp>
+#include <srcdiff_output.hpp>
 
 #include <shortest_edit_script.h>
 

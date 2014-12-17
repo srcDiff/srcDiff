@@ -1,8 +1,9 @@
-#include <srcDiffCommon.hpp>
+#include <srcdiff_common.hpp>
+
+#include <srcdiff_whitespace.hpp>
+
 #include <srcDiffConstants.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffOutput.hpp>
-#include <srcDiffWhiteSpace.hpp>
 
 #include <string>
 

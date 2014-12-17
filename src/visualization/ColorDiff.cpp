@@ -16,8 +16,6 @@
 #include <shortest_edit_script.h>
 #include <SAX2ColorDiff.hpp>
 
-#include <srcDiffOutput.hpp>
-
 #include <ColorDiff.hpp>
 
 // forward declarations

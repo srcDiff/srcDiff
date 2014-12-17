@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_COMMON_HPP
 #define INCLUDED_SRCDIFF_COMMON_HPP
 
-#include <srcDiffOutput.hpp>
+#include <srcdiff_output.hpp>
 
 class srcdiff_common : public srcdiff_output {
 

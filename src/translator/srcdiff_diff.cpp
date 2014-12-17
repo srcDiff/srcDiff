@@ -1,15 +1,13 @@
 #include <srcdiff_diff.hpp>
+
 #include <srcdiff_many.hpp>
 #include <srcdiff_change.hpp>
-#include <srcDiffCommon.hpp>
+#include <srcdiff_common.hpp>
+#include <srcdiff_move.hpp>
 
 #include <srcDiffUtility.hpp>
-#include <srcDiffOutput.hpp>
-#include <srcDiffCommon.hpp>
-#include <srcDiffWhiteSpace.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffMatch.hpp>
-#include <srcDiffMove.hpp>
 #include <pthread.h>
 #include <ShortestEditScript.hpp>
 

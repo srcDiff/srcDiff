@@ -1,11 +1,10 @@
 #include <srcdiff_single.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_comment.hpp>
+#include <srcdiff_common.hpp>
+#include <srcdiff_whitespace.hpp>
 
 #include <shortest_edit_script.h>
-#include <srcDiffCommon.hpp>
-#include <srcDiffOutput.hpp>
-#include <srcDiffWhiteSpace.hpp>
 #include <srcDiffUtility.hpp>
 
 #include <string.h>

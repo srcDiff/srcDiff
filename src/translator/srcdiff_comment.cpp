@@ -1,9 +1,10 @@
 #include <srcdiff_comment.hpp>
 
+#include <srcdiff_common.hpp>
+
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffCommon.hpp>
 
 srcdiff_comment::srcdiff_comment(srcdiff_output & out, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate,
   node_sets * node_sets_old, node_sets * node_sets_new) 

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_CHANGE_HPP
 #define INCLUDED_SRCDIFF_CHANGE_HPP
 
-#include <srcDiffOutput.hpp>
+#include <srcdiff_output.hpp>
 
 class srcdiff_change : public srcdiff_output {
 

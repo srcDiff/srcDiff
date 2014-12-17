@@ -24,17 +24,17 @@
 
 #include <srcDiffTranslator.hpp>
 
+#include <srcdiff_output.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_change.hpp>
+#include <srcdiff_whitespace.hpp>
+
 
 #include <srcmlns.hpp>
 #include <srcmlapps.hpp>
 #include <shortest_edit_script.h>
 #include <srcDiffConstants.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffWhiteSpace.hpp>
-#include <srcDiffCommon.hpp>
-#include <srcDiffOutput.hpp>
 #include <srcMLUtility.hpp>
 #include <LineDiffRange.hpp>
 

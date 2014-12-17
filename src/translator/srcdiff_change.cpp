@@ -1,11 +1,12 @@
 #include <srcdiff_change.hpp>
+
+#include <srcdiff_whiteSpace.hpp>
+#include <srcdiff_move.hpp>
+
 #include <srcDiffConstants.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffOutput.hpp>
-#include <srcDiffWhiteSpace.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>
-#include <srcDiffMove.hpp>
 
 #ifdef __MINGW32__
 #include <mingw32.hpp>
