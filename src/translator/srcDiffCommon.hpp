@@ -1,12 +1,26 @@
-#ifndef INCLUDED_SRCDIFFSESCOMMON_HPP
-#define INCLUDED_SRCDIFFSESCOMMON_HPP
+#ifndef INCLUDED_SRCDIFF_COMMON_HPP
+#define INCLUDED_SRCDIFF_COMMON_HPP
 
-#include <srcDiffTypes.hpp>
+#include <srcDiffOutput.hpp>
 
-void output_common(reader_state & rbuf_old, unsigned int end_old
-                   , reader_state & rbuf_new, unsigned int end_new
-                   , writer_state & wstate);
+class srcdiff_common : public srcdiff_output {
 
-void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate);
+protected:
+
+	unsigned int end_old;
+	unsigned int end_new;
+
+private:
+
+	virtual void markup_common();
+
+public:
+
+	srcdiff_common(const srcdiff_output & out, unsigned int end_old, unsigned int end_new);
+
+	virtual void output();
+
+};
+
 
 #endif

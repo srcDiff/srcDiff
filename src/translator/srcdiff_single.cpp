@@ -160,7 +160,7 @@ void srcdiff_single::output_recursive_same() {
 
   }
 
-  output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
+  output_common(node_sets_old->at(start_old)->back() + 1, node_sets_new->at(start_new)->back() + 1);
 
   out.output_node(&diff_common_end, SESCOMMON);
 

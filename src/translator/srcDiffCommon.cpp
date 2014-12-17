@@ -16,51 +16,15 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
-/*
-
-  Output common elements.
-
-  All preceeding unused whitespace must be included, and all whitespace
-  with a newline afterwards.  Currently, if the first after has no newline,
-  it is included and the following nodes are included if they have a new line.
-
-*/
-
-void output_common(reader_state & rbuf_old, unsigned int end_old
-                   , reader_state & rbuf_new, unsigned int end_new
-                   , writer_state & wstate) {
-
-  unsigned int oend = end_old;
-  unsigned int nend = end_new;
-
-  if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
-    return;
-
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
-
-  if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
-    return;
-
-  // output common tag if needed
-  output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
-
-  // output common nodes
-  markup_common(rbuf_old, oend, rbuf_new, nend, wstate);
-
-  // may need to take out all occurences afterwards except on pure deletes of this after something
-  //output_white_space_statement(rbuf_old, rbuf_new, wstate);
-
-  // output common tag if needed
-  output_node(rbuf_old, rbuf_new, &diff_common_end, SESCOMMON, wstate);
-
-}
+srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
+: srcdiff_output(out), end_old(end_old), end_new(end_new) {}
 
 /*
 
   Output of same syntactical entities, but possible whitespace differences.
 
 */
-void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate) {
+void srcdiff_common::markup_common() {
 
   int begin_old = rbuf_old.last_output;
   int begin_new = rbuf_new.last_output;
@@ -78,7 +42,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
 
     if(node_compare(rbuf_old.nodes.at(i), rbuf_new.nodes.at(j)) == 0) {
 
-      output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESCOMMON, wstate);
+      output_node(rbuf_old.nodes.at(i), SESCOMMON);
         
     } else if(is_white_space(rbuf_old.nodes.at(i)) && is_white_space(rbuf_new.nodes.at(j))) {
       
@@ -112,37 +76,37 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
 
         if(i < opivot) {
 
-        output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+        output_node(&diff_old_start, SESDELETE);
 
         for(int k = i; k < opivot; ++k)
-          output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(k), SESDELETE, wstate);
+          output_node(rbuf_old.nodes.at(k), SESDELETE);
 
         // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+        output_node(&diff_old_end, SESDELETE);
 
         }
 
         if(j < npivot) {
 
-        output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+        output_node(&diff_new_start, SESINSERT);
 
         for(int k = j; k < npivot; ++k)
-          output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(k), SESINSERT, wstate);
+          output_node(rbuf_new.nodes.at(k), SESINSERT);
 
         // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+        output_node(&diff_new_end, SESINSERT);
 
         }
 
         if(opivot < olength) {
 
-          //output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
+          //output_node(&diff_common_start, SESCOMMON);
 
         for(int k = opivot; k < olength; ++k)
-          output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(k), SESCOMMON, wstate);
+          output_node(rbuf_old.nodes.at(k), SESCOMMON);
 
         // output diff tag
-        //output_node(rbuf_old, rbuf_new, &diff_common_end, SESCOMMON, wstate);
+        //output_node(&diff_common_end, SESCOMMON);
 
         }
 
@@ -152,30 +116,30 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
 
     } else if(is_white_space(rbuf_old.nodes.at(i))) {
 
-      output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+      output_node(&diff_old_start, SESDELETE);
       // whitespace delete
       // output diff tag
 
       for(; i < oend && is_white_space(rbuf_old.nodes.at(i)); ++i)
-        output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESDELETE, wstate);
+        output_node(rbuf_old.nodes.at(i), SESDELETE);
 
       // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+      output_node(&diff_old_end, SESDELETE);
 
       --i;
       --j;
 
     } else if(is_white_space(rbuf_new.nodes.at(j))) {
 
-      output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+      output_node(&diff_new_start, SESINSERT);
       //whitespace insert
       // output diff tag
 
       for(; j < nend && is_white_space(rbuf_new.nodes.at(j)); ++j)
-        output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(j), SESINSERT, wstate);
+        output_node(rbuf_new.nodes.at(j), SESINSERT);
 
       // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+      output_node(&diff_new_end, SESINSERT);
 
       --i;
       --j;
@@ -204,7 +168,7 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
         if(text_old[opos] == text_new[npos]) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          output_char(rbuf_old, rbuf_new, (xmlChar)text_old[opos], SESCOMMON, wstate);
+          output_char((xmlChar)text_old[opos], SESCOMMON);
 
           ++opos;
           ++npos;
@@ -215,31 +179,31 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
 
             if(isspace(text_old[opos])) {
 
-              output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+              output_node(&diff_old_start, SESDELETE);
 
               for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-                output_char(rbuf_old, rbuf_new, (xmlChar)text_old[opos], SESDELETE, wstate);
+                output_char((xmlChar)text_old[opos], SESDELETE);
               }
 
               // output diff tag
-              output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+              output_node(&diff_old_end, SESDELETE);
 
             }
 
             if(isspace(text_new[npos])) {
 
-              output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+              output_node(&diff_new_start, SESINSERT);
 
               for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
 
                 //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-                output_char(rbuf_old, rbuf_new, (xmlChar)text_new[npos], SESINSERT, wstate);
+                output_char((xmlChar)text_new[npos], SESINSERT);
               }
 
               // output diff tag
-              output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+              output_node(&diff_new_end, SESINSERT);
 
             }
 
@@ -251,31 +215,31 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
 
       if(opos < (signed)text_old.size()) {
 
-        output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+        output_node(&diff_old_start, SESDELETE);
 
         for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          output_char(rbuf_old, rbuf_new, (xmlChar)text_old[opos], SESDELETE, wstate);
+          output_char((xmlChar)text_old[opos], SESDELETE);
         }
 
         // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+        output_node(&diff_old_end, SESDELETE);
 
       }
 
       if(npos < (signed)text_new.size()) {
         
-        output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+        output_node(&diff_new_start, SESINSERT);
 
         for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
 
           //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-          output_char(rbuf_old, rbuf_new, (xmlChar)text_new[npos], SESINSERT, wstate);
+          output_char((xmlChar)text_new[npos], SESINSERT);
         }
 
         // output diff tag
-        output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+        output_node(&diff_new_end, SESINSERT);
 
       }
 
@@ -295,27 +259,27 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
   // output leftover nodes
   if(i < oend) {
 
-    output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+    output_node(&diff_old_start, SESDELETE);
     // whitespace delete
     // output diff tag
 
     for( ; i < oend; ++i)
-      output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESDELETE, wstate);
+      output_node(rbuf_old.nodes.at(i), SESDELETE);
 
     // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+    output_node(&diff_old_end, SESDELETE);
 
   } else if(j < nend) {
 
-    output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+    output_node(&diff_new_start, SESINSERT);
     // whitespace delete
     // output diff tag
 
     for( ; j < nend; ++j)
-      output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(j), SESINSERT, wstate);
+      output_node(rbuf_new.nodes.at(j), SESINSERT);
 
     // output diff tag
-    output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+    output_node(&diff_new_end, SESINSERT);
 
   }
 
@@ -327,3 +291,39 @@ void markup_common(reader_state & rbuf_old, unsigned int end_old, reader_state &
 
 }
 
+/*
+
+  Output common elements.
+
+  All preceeding unused whitespace must be included, and all whitespace
+  with a newline afterwards.  Currently, if the first after has no newline,
+  it is included and the following nodes are included if they have a new line.
+
+*/
+
+void srcdiff_common::output() {
+
+  unsigned int oend = end_old;
+  unsigned int nend = end_new;
+
+  if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
+    return;
+
+  output_white_space_all(rbuf_old, rbuf_new, wstate);
+
+  if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
+    return;
+
+  // output common tag if needed
+  output_node(&diff_common_start, SESCOMMON);
+
+  // output common nodes
+  markup_common();
+
+  // may need to take out all occurences afterwards except on pure deletes of this after something
+  //output_white_space_statement(rbuf_old, rbuf_new, wstate);
+
+  // output common tag if needed
+  output_node(&diff_common_end, SESCOMMON);
+
+}

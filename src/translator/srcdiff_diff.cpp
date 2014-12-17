@@ -1,6 +1,7 @@
 #include <srcdiff_diff.hpp>
 #include <srcdiff_many.hpp>
 #include <srcdiff_change.hpp>
+#include <srcDiffCommon.hpp>
 
 #include <srcDiffUtility.hpp>
 #include <srcDiffOutput.hpp>
@@ -140,7 +141,7 @@ void srcdiff_diff::output() {
     }
 
     // output area in common
-    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
+    output_common(diff_end_old, diff_end_new);
     // detect and change
     edit * edit_next = edits->next;
 
@@ -201,29 +202,36 @@ void srcdiff_diff::output() {
   }
 
   // output area in common
-  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
+  output_common(diff_end_old, diff_end_new);
+
+}
+
+void srcdiff_diff::output_common(int end_old, int end_new) {
+
+  srcdiff_common common(out, end_old, end_new);
+  common.output();
 
 }
 
 void srcdiff_diff::output_pure(int end_old, int end_new) {
 
-  srcdiff_change diff(out, end_old, end_new);
-  diff.output_whitespace();
-  diff.output();
+  srcdiff_change pure(out, end_old, end_new);
+  pure.output_whitespace();
+  pure.output();
 
 }
 
 void srcdiff_diff::output_change(int end_old, int end_new) {
 
-  srcdiff_change diff(out, end_old, end_new);
-  diff.output();
+  srcdiff_change change(out, end_old, end_new);
+  change.output();
 
 }
 
 void srcdiff_diff::output_change_whitespace(int end_old, int end_new) {
 
-  srcdiff_change diff(out, end_old, end_new);
-  diff.output_whitespace();
-  diff.output();
+  srcdiff_change change(out, end_old, end_new);
+  change.output_whitespace();
+  change.output();
 
 }
