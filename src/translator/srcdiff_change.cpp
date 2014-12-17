@@ -41,7 +41,8 @@ void srcdiff_change::output_whitespace() {
   int oend = end_old;
   int nend = end_new;
 
-  output_white_space_prefix(rbuf_old, rbuf_new, wstate);
+  srcdiff_whitespace whitespace(*this);
+  whitespace.output_white_space_prefix();
 
 }
 

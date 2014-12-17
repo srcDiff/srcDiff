@@ -1,52 +1,29 @@
 #ifndef INCLUDED_SRCDIFF_WHITESPACE_HPP
 #define INCLUDED_SRCDIFF_WHITESPACE_HPP
 
-#include <srcDiffTypes.hpp>
+#include <srcDiffOutput.hpp>
+class srcdiff_whitespace : public srcdiff_output {
 
-void output_white_space_all(reader_state & rbuf_old
-                            , reader_state & rbuf_new
-                            , writer_state & wstate);
+protected:
 
-void output_white_space_prefix(reader_state & rbuf_old
-                               , reader_state & rbuf_new
-                               , writer_state & wstate);
+private:
 
-void output_white_space_most(reader_state & rbuf_old
-                             , reader_state & rbuf_new
-                             , writer_state & wstate);
+  void markup_whitespace(unsigned int end_old, unsigned int end_new);
 
-void output_white_space_nested(reader_state & rbuf_old
-                               , reader_state & rbuf_new
-                               , int operation, writer_state & wstate);
+public:
 
-void output_white_space_statement(reader_state & rbuf_old
-                                  , reader_state & rbuf_new
-                                  , writer_state & wstate);
+  srcdiff_whitespace(const srcdiff_output & out);
 
-void output_white_space_pure_statement_end(reader_state & rbuf_old
-                                           , reader_state & rbuf_new
-                                           , int operation
-                                           , writer_state & wstate);
+  virtual void output_white_space_all();
+  virtual void output_white_space_prefix();
+  virtual void output_white_space_most();
+  virtual void output_white_space_nested(int operation);
+  virtual void output_white_space_statement();
+  virtual void output_white_space_pure_statement_end(int operation);
+  virtual void output_white_space_match_most(int operation);
+  virtual void output_white_space_suffix();
+  virtual void advance_white_space_suffix(int & end_old, int & end_new);
 
-
-void output_white_space_match_most(reader_state & rbuf_old
-                                   , reader_state & rbuf_new
-                                   , int operation
-                                   , writer_state & wstate);
-
-void output_white_space_prefix(reader_state & rbuf_old
-                               , reader_state & rbuf_new
-                               , writer_state & wstate);
-
-void output_white_space_suffix(reader_state & rbuf_old
-                               , reader_state & rbuf_new
-                               , writer_state & wstate);
-
-void advance_white_space_suffix(reader_state & rbuf_old
-                                , int & end_old
-                                , reader_state & rbuf_new
-                                , int & end_new);
-
-void markup_whitespace(reader_state & rbuf_old, unsigned int end_old, reader_state & rbuf_new, unsigned int end_new, writer_state & wstate);
+};
 
 #endif

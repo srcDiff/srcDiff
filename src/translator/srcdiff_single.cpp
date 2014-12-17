@@ -101,8 +101,8 @@ static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_ne
 
 void srcdiff_single::output_recursive_same() {
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
-  //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
+  srcdiff_whitespace whitespace(out);
+  whitespace.output_white_space_all();
 
   out.output_node(&diff_common_start, SESCOMMON);
 
@@ -164,7 +164,7 @@ void srcdiff_single::output_recursive_same() {
 
   out.output_node(&diff_common_end, SESCOMMON);
 
-  output_white_space_statement(rbuf_old, rbuf_new, wstate);
+  whitespace.output_white_space_statement();
 
   if(merged_node) freeXNode(merged_node);
 
@@ -172,7 +172,8 @@ void srcdiff_single::output_recursive_same() {
 
 void srcdiff_single::output_recursive_interchangeable() {
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
+  srcdiff_whitespace whitespace(out);
+  whitespace.output_white_space_all();
 
   out.output_node(&diff_old_start, SESDELETE);
 
@@ -227,7 +228,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   out.output_node(&diff_old_end, SESDELETE);
 
-  output_white_space_statement(rbuf_old, rbuf_new, wstate);
+  whitespace.output_white_space_statement();
 
 
 }

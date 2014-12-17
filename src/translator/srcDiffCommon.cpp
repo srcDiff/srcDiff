@@ -309,7 +309,8 @@ void srcdiff_common::output() {
   if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
     return;
 
-  output_white_space_all(rbuf_old, rbuf_new, wstate);
+  srcdiff_whitespace whitespace(*this);
+  whitespace.output_white_space_all();
 
   if(rbuf_old.last_output >= oend && rbuf_new.last_output >= nend)
     return;
