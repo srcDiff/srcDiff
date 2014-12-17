@@ -16,13 +16,11 @@ public:
 
   virtual void output_white_space_all();
   virtual void output_white_space_prefix();
-  virtual void output_white_space_most();
   virtual void output_white_space_nested(int operation);
   virtual void output_white_space_statement();
-  virtual void output_white_space_pure_statement_end(int operation);
-  virtual void output_white_space_match_most(int operation);
+
   virtual void output_white_space_suffix();
-  virtual void advance_white_space_suffix(int & end_old, int & end_new);
+
 
 };
 
