@@ -66,7 +66,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      const char * url,
                                      OPTION_TYPE & options,
                                      unsigned long number_context_lines)
-  : method(method), archive(archive), rbuf_old(SESDELETE), rbuf_new(SESINSERT), colordiff(NULL), bashview(NULL), url(url), options(options)
+  : method(method), archive(archive), output(srcdiff_filename, method), colordiff(NULL), bashview(NULL), url(url), options(options)
 {
   diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
@@ -107,13 +107,6 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
   diff_type.name = DIFF_TYPE;
   //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
-  pthread_mutex_init(&mutex, 0);
-
-  rbuf_old.mutex = &mutex;
-  rbuf_new.mutex = &mutex;
-
-  wstate.filename = srcdiff_filename;
-
   // writer state
   if(isoption(options, OPTION_VISUALIZE)) {
 
@@ -129,9 +122,6 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
 
   } else if(isoption(options, OPTION_BASH_VIEW))
       bashview = new bash_view(srcdiff_filename, number_context_lines);
-
-  wstate.method = method;
-
 
 }
 
@@ -407,8 +397,6 @@ srcDiffTranslator::~srcDiffTranslator() {
     if(bashview) delete bashview;
 
   }
-
-  pthread_mutex_destroy(&mutex);
 
 }
 

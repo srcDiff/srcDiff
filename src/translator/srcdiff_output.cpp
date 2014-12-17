@@ -18,8 +18,24 @@ extern xNode diff_new_end;
 
 int move_operation = SESCOMMON;
 
-srcdiff_output::srcdiff_output(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate)
- : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate) {}
+srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method)
+ : rbuf_old(SESDELETE), rbuf_new(SESINSERT), wstate() {
+
+  pthread_mutex_init(&mutex, 0);
+
+  rbuf_old.mutex = &mutex;
+  rbuf_new.mutex = &mutex;
+
+  wstate.filename = srcdiff_filename;
+  wstate.method = method;
+
+ }
+
+ srcdiff_output::~srcdiff_output() {
+
+  pthread_mutex_destroy(&mutex);
+
+ }
 
 void srcdiff_output::output_node(const xNodePtr node, int operation) {
 

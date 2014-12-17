@@ -3,21 +3,25 @@
 
 #include <srcDiffTypes.hpp>
 #include <vector>
+#include <pthread.h>
 
 // const nodes here? or xmlrw
 
 class srcdiff_output {
 
 protected:
-	reader_state & rbuf_old;
-	reader_state & rbuf_new;
-	writer_state & wstate;
+	reader_state rbuf_old;
+	reader_state rbuf_new;
+	writer_state wstate;
+
+	pthread_mutex_t mutex;
 
 private:
 
 public:
 
-    srcdiff_output(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate);
+    srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method);
+    virtual ~srcdiff_output();
 
 	virtual void output_node(const xNodePtr node, int operation);
 	virtual void output_text_as_node(const char * text, int operation);
