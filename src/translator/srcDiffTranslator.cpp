@@ -138,7 +138,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
 
   // create the reader for the old file
-  node_sets set_old(rbuf_old.nodes);
+  node_sets set_old(output.get_rbuf_old().nodes);
 
   int is_old = 0;
   create_nodes_args args_old = { path_one, archive
@@ -146,10 +146,10 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                 , unit_filename
                                 , unit_directory
                                 , unit_version
-                                , rbuf_old.mutex
-                                , rbuf_old.nodes
+                                , output.get_rbuf_old().mutex
+                                , output.get_rbuf_old().nodes
                                 , is_old
-                                , rbuf_old.stream_source
+                                , output.get_rbuf_old().stream_source
                                 , options };
   pthread_t thread_old;
   if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
@@ -170,7 +170,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   */
 
-  node_sets set_new(rbuf_new.nodes);
+  node_sets set_new(output.get_rbuf_new().nodes);
 
   int is_new = 0;
   create_nodes_args args_new = { path_two, archive
@@ -178,10 +178,10 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
                                 , unit_filename
                                 , unit_directory
                                 , unit_version
-                                , rbuf_new.mutex
-                                , rbuf_new.nodes
+                                , output.get_rbuf_new().mutex
+                                , output.get_rbuf_new().nodes
                                 , is_new
-                                , rbuf_new.stream_source
+                                , output.get_rbuf_new().stream_source
                                 , options };
 
 
@@ -205,11 +205,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   }
 
   if(is_old && is_old > -1)
-    set_old = node_sets(rbuf_old.nodes, 0, rbuf_old.nodes.size());
+    set_old = node_sets(output.get_rbuf_old().nodes, 0, output.get_rbuf_old().nodes.size());
 
 
   if(is_new && is_new > -1)
-    set_new = node_sets(rbuf_new.nodes, 0, rbuf_new.nodes.size());
+    set_new = node_sets(output.get_rbuf_new().nodes, 0, output.get_rbuf_new().nodes.size());
 
   /*
 
@@ -219,15 +219,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   diff_set old_diff;
   old_diff.operation = SESCOMMON;
-  rbuf_old.open_diff.push_back(&old_diff);
+  output.get_rbuf_old().open_diff.push_back(&old_diff);
 
   diff_set new_diff;
   new_diff.operation = SESCOMMON;
-  rbuf_new.open_diff.push_back(&new_diff);
+  output.get_rbuf_new().open_diff.push_back(&new_diff);
 
   diff_set output_diff;
   output_diff.operation = SESCOMMON;
-  wstate.output_diff.push_back(&output_diff);
+  output.get_wstate().output_diff.push_back(&output_diff);
 
   /*
 
@@ -236,17 +236,17 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   */
 
   // output srcdiff unit
-  if(!rbuf_old.nodes.empty() && !rbuf_new.nodes.empty()) {
+  if(!output.get_rbuf_old().nodes.empty() && !output.get_rbuf_new().nodes.empty()) {
 
-    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &unit_tag, SESCOMMON);
 
-  } else if(rbuf_old.nodes.empty() && rbuf_new.nodes.empty()) {
+  } else if(output.get_rbuf_old().nodes.empty() && output.get_rbuf_new().nodes.empty()) {
 
-    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(wstate.output_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &diff_common_start, SESCOMMON);
 
     if(is_old <= -1 && is_new <= -1) {
 
@@ -256,7 +256,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-  } else if(rbuf_old.nodes.empty()) {
+  } else if(output.get_rbuf_old().nodes.empty()) {
 
     if(!isoption(options, OPTION_OUTPUTPURE)) {
 
@@ -265,9 +265,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &unit_tag, SESCOMMON);
 
   } else {
 
@@ -278,9 +278,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &unit_tag, SESCOMMON);
 
   }
 
@@ -314,14 +314,13 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   // run on file level
   if(is_old || is_new) {
 
-    wstate.unit = srcdiff_unit;
+    output.get_wstate().unit = srcdiff_unit;
 
     /** @todo when output non-archive additional namespaces not appended, because not collected 
       However this is correct when output is to archive */
     srcml_write_start_unit(srcdiff_unit);
 
-    srcdiff_output output(rbuf_old, rbuf_new, wstate);
-    srcdiff_diff diff(output, rbuf_old, rbuf_new, wstate, &set_old, &set_new);
+    srcdiff_diff diff(output, &set_old, &set_new);
     diff.output();
 
     // output remaining whitespace
@@ -341,27 +340,27 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   }
 
   // Because of grouping need to output a common to end grouping need to deallocate as well
-  for(unsigned int i = 0; i < rbuf_old.nodes.size(); ++i) {
+  for(unsigned int i = 0; i < output.get_rbuf_old().nodes.size(); ++i) {
 
-    if(rbuf_old.nodes.at(i)->free) {
+    if(output.get_rbuf_old().nodes.at(i)->free) {
 
-      freeXNode(rbuf_old.nodes.at(i));
-
-    }
-  }
-
-  for(unsigned int i = 0; i < rbuf_new.nodes.size(); ++i) {
-
-    if(rbuf_new.nodes.at(i)->free) {
-
-      freeXNode(rbuf_new.nodes.at(i));
+      freeXNode(output.get_rbuf_old().nodes.at(i));
 
     }
   }
 
-  rbuf_old.clear();
-  rbuf_new.clear();
-  wstate.clear();
+  for(unsigned int i = 0; i < output.get_rbuf_new().nodes.size(); ++i) {
+
+    if(output.get_rbuf_new().nodes.at(i)->free) {
+
+      freeXNode(output.get_rbuf_new().nodes.at(i));
+
+    }
+  }
+
+  output.get_rbuf_old().clear();
+  output.get_rbuf_new().clear();
+  output.get_wstate().clear();
 
   if(isoption(options, OPTION_VISUALIZE)) {
 

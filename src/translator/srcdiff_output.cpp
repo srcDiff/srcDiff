@@ -37,6 +37,24 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  }
 
+reader_state & srcdiff_output::get_rbuf_old() {
+
+  return rbuf_old;
+
+}
+
+reader_state & srcdiff_output::get_rbuf_new() {
+
+  return rbuf_new;
+
+}
+
+writer_state & srcdiff_output::get_wstate() {
+
+  return wstate;
+
+}
+
 void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
   /*
