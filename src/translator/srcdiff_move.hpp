@@ -3,6 +3,7 @@
 
 #include <srcdiff_output.hpp>
 
+#include <node_sets.hpp>
 #include <shortest_edit_script.h>
 
 class srcdiff_move : public srcdiff_output {

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <xmlrw.hpp>
-#include <srcDiffTypes.hpp>
+#include <node_set.hpp>
 
 int compute_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
                        node_set * set_new);

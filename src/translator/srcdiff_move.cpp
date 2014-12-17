@@ -3,13 +3,15 @@
 #include <vector>
 #include <map>
 
-#include <xmlrw.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffUtility.hpp>
 
 int move_id = 0;
 
 static xAttr move_attribute = { 0, "move", 0 };
+
+typedef std::pair<int, int> IntPair;
+typedef std::vector<IntPair> IntPairs;
 
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}

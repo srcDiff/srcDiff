@@ -4,7 +4,7 @@
 #include <shortest_edit_script.h>
 
 #include <srcDiffOptions.hpp>
-#include <srcDiffTypes.hpp>
+#include <node_sets.hpp>
 #include <xmlrw.hpp>
 
 #include <libxml/xmlreader.h>

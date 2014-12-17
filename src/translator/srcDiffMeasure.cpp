@@ -1,6 +1,6 @@
 #include <srcDiffMeasure.hpp>
 
-#include <srcDiffTypes.hpp>
+#include <srcDiffConstants.hpp>
 #include <srcDiffUtility.hpp>
 #include <srcdiff_diff.hpp>
 #include <shortest_edit_script.h>

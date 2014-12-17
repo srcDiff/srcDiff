@@ -3,9 +3,6 @@
 
 #include <srcdiff_many.hpp>
 
-#include <srcDiffTypes.hpp>
-#include <vector>
-
 class srcdiff_single : public srcdiff_many {
 
 protected:
