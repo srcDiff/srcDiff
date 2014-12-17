@@ -64,49 +64,6 @@ void srcdiff_change::output() {
     diff_old_start.properties = &diff_type;
     diff_new_start.properties = &diff_type;
 
-    if(0 && is_white_space(rbuf_old.nodes.at(begin_old)) && is_white_space(rbuf_new.nodes.at(begin_new))) {
-
-      const char * content_old = rbuf_old.nodes.at(begin_old)->content;
-      const char * content_new = rbuf_new.nodes.at(begin_new)->content;
-
-      int size_old = strlen((const char *)content_old);
-      int size_new = strlen((const char *)content_new);
-
-      int offset_old = 0;
-      int offset_new = 0;
-
-      for(; offset_old < size_old && offset_new < size_new && content_old[offset_old] == content_new[offset_new]; ++offset_old, ++offset_new)
-        ;
-
-      char * content = strndup((const char *)content_old, offset_old);
-      
-      output_text_as_node(content, SESCOMMON);
-
-      free(content);
-
-      if(offset_old < size_old) {
-
-        // shrink
-        rbuf_old.nodes.at(begin_old)->content = content_old + offset_old;
-        //node_sets_old->at(begin_old)->at(0)->content = (xmlChar *)strndup((const char *)(content_old + offset_old), size_old - offset_old);
-
-      } else {
-
-        rbuf_old.nodes.at(begin_old)->content = "";
-      }
-
-      if(offset_new < size_new) {
-
-        rbuf_new.nodes.at(begin_new)->content = content_new + offset_new;
-
-      } else {
-
-        rbuf_new.nodes.at(begin_new)->content = "";
-      }
-
-
-    }
-
   }
 
   if(end_old > begin_old) {
