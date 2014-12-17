@@ -2,7 +2,7 @@
 
 #include <srcdiff_nested.hpp>
 
-#include <srcDiffConstants.hpp>
+#include <srcdiff_constants.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffUtility.hpp>
 #include <string.h>

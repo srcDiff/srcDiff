@@ -2,7 +2,7 @@
 
 #include <srcdiff_whitespace.hpp>
 
-#include <srcDiffConstants.hpp>
+#include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
 
 #include <string>

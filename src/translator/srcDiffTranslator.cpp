@@ -33,7 +33,7 @@
 #include <srcmlns.hpp>
 #include <srcmlapps.hpp>
 #include <shortest_edit_script.h>
-#include <srcDiffConstants.hpp>
+#include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
 #include <srcMLUtility.hpp>
 #include <LineDiffRange.hpp>

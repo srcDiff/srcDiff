@@ -3,7 +3,7 @@
 #include <srcdiff_whiteSpace.hpp>
 #include <srcdiff_move.hpp>
 
-#include <srcDiffConstants.hpp>
+#include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>

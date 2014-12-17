@@ -3,7 +3,7 @@
 #include <srcdiff_common.hpp>
 
 #include <shortest_edit_script.h>
-#include <srcDiffConstants.hpp>
+#include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
 
 srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {}
