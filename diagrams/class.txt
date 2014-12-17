@@ -1,0 +1,2 @@
+[srcdiff_diff|out:srcdiff_output;rbuf_old:reader_state;rbuf_new:reader_state;wstate:writer_state;node_sets_old:node_sets;node_sets_new:node_sets;|srcdiff_diff(out:srcdiff_output);output():void;output_common(end_old:int end_new:int):void;output_pure(end_old:int end_new:int):void;output_change(end_old:int end_new:int):void;output_change_whitespace(end_old:int end_new:int):void;]
+[srcdiff_diff]^-[srcdiff_single]
