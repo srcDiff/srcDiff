@@ -43,21 +43,6 @@
 #include <strings.h>
 #include <cstring>
 
-// diff nodes
-xNode diff_common_start;
-xNode diff_common_end;
-xNode diff_old_start;
-xNode diff_old_end;
-xNode diff_new_start;
-xNode diff_new_end;
-
-xNs diff = {"http://www.sdml.info/srcDiff", "diff"};
-
-// diff attribute
-xAttr diff_type = { 0 };
-
-xNode unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, 0, 0, false, false, 0, 0 };
-
 // constructor
 srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      METHOD_TYPE method,
@@ -66,46 +51,12 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      const char * url,
                                      OPTION_TYPE & options,
                                      unsigned long number_context_lines)
-  : method(method), archive(archive), output(srcdiff_filename, method), colordiff(NULL), bashview(NULL), url(url), options(options)
+  : method(method), archive(archive), output(srcdiff_filename, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF)),
+    colordiff(NULL), bashview(NULL), url(url), options(options)
 {
-  diff.prefix = srcml_archive_get_prefix_from_uri(archive, diff.href);
 
   if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename);
-
-  // diff tags
-  diff_common_start.name = DIFF_SESCOMMON;
-  diff_common_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_common_start.ns = &diff;
-  diff_common_start.extra = 0;
-
-  diff_common_end.name = DIFF_SESCOMMON;
-  diff_common_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_common_end.ns = &diff;
-  diff_common_end.extra = 0;
-
-  diff_old_start.name = DIFF_OLD;
-  diff_old_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_old_start.ns = &diff;
-  diff_old_start.extra = 0;
-
-  diff_old_end.name = DIFF_OLD;
-  diff_old_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_old_end.ns = &diff;
-  diff_old_end.extra = 0;
-
-  diff_new_start.name = DIFF_NEW;
-  diff_new_start.type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_new_start.ns = &diff;
-  diff_new_start.extra = 0;
-
-  diff_new_end.name = DIFF_NEW;
-  diff_new_end.type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_new_end.ns = &diff;
-  diff_new_end.extra = 0;
-
-  diff_type.name = DIFF_TYPE;
-  //diff_type.type = (xmlElementType)XML_ATTRIBUTE_NODE;
 
   // writer state
   if(isoption(options, OPTION_VISUALIZE)) {
@@ -238,15 +189,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   // output srcdiff unit
   if(!output.get_rbuf_old().nodes.empty() && !output.get_rbuf_new().nodes.empty()) {
 
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.unit_tag.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.unit_tag.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
 
   } else if(output.get_rbuf_old().nodes.empty() && output.get_rbuf_new().nodes.empty()) {
 
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.diff_common_start.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.diff_common_start.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.diff_common_start.get(), SESCOMMON);
 
     if(is_old <= -1 && is_new <= -1) {
 
@@ -265,9 +216,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.diff_common_start.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.unit_tag.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
 
   } else {
 
@@ -278,9 +229,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, &unit_tag, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, &diff_common_start, SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.unit_tag.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.diff_common_start.get(), SESCOMMON);
+    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
 
   }
 

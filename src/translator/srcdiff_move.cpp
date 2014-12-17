@@ -9,12 +9,7 @@
 
 int move_id = 0;
 
-extern xNode diff_old_start;
-extern xNode diff_old_end;
-extern xNode diff_new_start;
-extern xNode diff_new_end;
-
-xAttr move_attribute = { 0, "move", 0 };
+static xAttr move_attribute = { 0, "move", 0 };
 
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
@@ -160,14 +155,14 @@ void srcdiff_move::output() {
 
   // store current diff if is any
   std::shared_ptr<reader_state> rbuf = rbuf_old;
-  xNodePtr start_node = &diff_old_start;
-  xNodePtr end_node = &diff_old_end;
+  std::shared_ptr<xNode> start_node = diff_old_start;
+  std::shared_ptr<xNode> end_node = diff_old_end;
 
   if(operation == SESINSERT) {
 
     rbuf = rbuf_new;
-    start_node = &diff_new_start;
-    end_node = &diff_new_end;
+    start_node = diff_new_start;
+    end_node = diff_new_end;
 
   }
 
@@ -192,7 +187,7 @@ void srcdiff_move::output() {
   xAttr * save_attributes = start_node->properties;
   start_node->properties = &move_attribute;
 
-  output_node(start_node, SESMOVE);
+  output_node(start_node.get(), SESMOVE);
 
   output_node(rbuf->nodes.at(position), SESMOVE);
 
@@ -210,7 +205,7 @@ void srcdiff_move::output() {
 
   }
 
-  output_node(end_node, SESMOVE);
+  output_node(end_node.get(), SESMOVE);
 
   start_node->properties = save_attributes;
   free(buffer);

@@ -10,6 +10,9 @@ const char * const DIFF_TYPE = "type";
 const char * const change = "change";
 const char * const whitespace = "whitespace";
 
+const char * const SRCDIFF_DEFAULT_NAMESPACE_HREF = "http://www.sdml.info/srcDiff";
+const char * const SRCDIFF_DEFAULT_NAMESPACE_PREFIX =  "diff";
+
 // special flush node
 const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, 0, true, false, 0, 0 };
 

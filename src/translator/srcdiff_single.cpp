@@ -10,16 +10,6 @@
 #include <string.h>
 #include <map>
 
-// more external variables
-extern xNode diff_common_start;
-extern xNode diff_common_end;
-extern xNode diff_old_start;
-extern xNode diff_old_end;
-extern xNode diff_new_start;
-extern xNode diff_new_end;
-
-extern xAttr diff_type;
-
 srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_old, unsigned int start_new) : srcdiff_many(diff), start_old(start_old), start_new(start_new) {}
 
 static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
@@ -103,7 +93,7 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_white_space_all();
 
-  out.output_node(&diff_common_start, SESCOMMON);
+  out.output_node(out.diff_common_start.get(), SESCOMMON);
 
   xNodePtr merged_node = 0;
 
@@ -161,7 +151,7 @@ void srcdiff_single::output_recursive_same() {
 
   output_common(node_sets_old->at(start_old)->back() + 1, node_sets_new->at(start_new)->back() + 1);
 
-  out.output_node(&diff_common_end, SESCOMMON);
+  out.output_node(out.diff_common_end.get(), SESCOMMON);
 
   whitespace.output_white_space_statement();
 
@@ -174,7 +164,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_white_space_all();
 
-  out.output_node(&diff_old_start, SESDELETE);
+  out.output_node(out.diff_old_start.get(), SESDELETE);
 
   out.output_node(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESDELETE);
 
@@ -192,7 +182,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   ++rbuf_old.last_output;
 
-  out.output_node(&diff_new_start, SESINSERT);
+  out.output_node(out.diff_new_start.get(), SESINSERT);
 
   out.output_node(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), SESINSERT);
 
@@ -221,11 +211,11 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   output_change(rbuf_old.last_output, node_sets_new->at(start_new)->back() + 1);
 
-  out.output_node(&diff_new_end, SESINSERT);
+  out.output_node(out.diff_new_end.get(), SESINSERT);
 
   output_change(node_sets_old->at(start_old)->back() + 1, rbuf_new.last_output);
 
-  out.output_node(&diff_old_end, SESDELETE);
+  out.output_node(out.diff_old_end.get(), SESDELETE);
 
   whitespace.output_white_space_statement();
 

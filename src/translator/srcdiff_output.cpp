@@ -1,5 +1,6 @@
 #include <srcdiff_output.hpp>
 
+#include <srcDiffConstants.hpp>
 #include <srcDiffUtility.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>
@@ -8,18 +9,15 @@
 
 #include <string.h>
 
-// more external variables
-extern xNode diff_common_start;
-extern xNode diff_common_end;
-extern xNode diff_old_start;
-extern xNode diff_old_end;
-extern xNode diff_new_start;
-extern xNode diff_new_end;
-
 int move_operation = SESCOMMON;
 
-srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method)
- : rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()) {
+srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method, const char * prefix)
+ : rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
+  diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
+  diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
+  diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
+  diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
+  unit_tag(std::make_shared<xNode>()) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -28,6 +26,42 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
   wstate->filename = srcdiff_filename;
   wstate->method = method;
+
+  diff->prefix = prefix;
+  diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
+
+  diff_type->name = DIFF_TYPE;
+
+  // diff tags
+  diff_common_start->name = DIFF_SESCOMMON;
+  diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_common_start->ns = diff.get();
+  diff_common_start->extra = 0;
+
+  diff_common_end->name = DIFF_SESCOMMON;
+  diff_common_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_common_end->ns = diff.get();
+  diff_common_end->extra = 0;
+
+  diff_old_start->name = DIFF_OLD;
+  diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_old_start->ns = diff.get();
+  diff_old_start->extra = 0;
+
+  diff_old_end->name = DIFF_OLD;
+  diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_old_end->ns = diff.get();
+  diff_old_end->extra = 0;
+
+  diff_new_start->name = DIFF_NEW;
+  diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
+  diff_new_start->ns = diff.get();
+  diff_new_start->extra = 0;
+
+  diff_new_end->name = DIFF_NEW;
+  diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+  diff_new_end->ns = diff.get();
+  diff_new_end->extra = 0;
 
  }
 
@@ -73,36 +107,36 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
   // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SESDELETE 
-          && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_old_end.name) == 0)
+          && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_old_end->name) == 0)
          || (delay_operation == SESINSERT 
-             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_new_end.name) == 0)
+             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_new_end->name) == 0)
          || (delay_operation == SESCOMMON 
-             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_common_end.name) == 0))) {
+             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_common_end->name) == 0))) {
 
     if(delay_operation == SESDELETE) {
 
-      outputNode(diff_old_end, wstate->unit);
+      outputNode(*diff_old_end, wstate->unit);
 
-      update_diff_stack(rbuf_old->open_diff, &diff_old_end, SESDELETE);
+      update_diff_stack(rbuf_old->open_diff, diff_old_end.get(), SESDELETE);
 
-      update_diff_stack(wstate->output_diff, &diff_old_end, SESDELETE);
+      update_diff_stack(wstate->output_diff, diff_old_end.get(), SESDELETE);
 
     } else if(delay_operation == SESINSERT) {
 
-      outputNode(diff_new_end, wstate->unit);
+      outputNode(*diff_new_end, wstate->unit);
 
-      update_diff_stack(rbuf_new->open_diff, &diff_new_end, SESINSERT);
+      update_diff_stack(rbuf_new->open_diff, diff_new_end.get(), SESINSERT);
 
-      update_diff_stack(wstate->output_diff, &diff_new_end, SESINSERT);
+      update_diff_stack(wstate->output_diff, diff_new_end.get(), SESINSERT);
 
     } else if(delay_operation == SESCOMMON)  {
 
-      outputNode(diff_common_end, wstate->unit);
+      outputNode(*diff_common_end, wstate->unit);
 
-      update_diff_stack(rbuf_old->open_diff, &diff_common_end, SESCOMMON);
-      update_diff_stack(rbuf_new->open_diff, &diff_common_end, SESCOMMON);
+      update_diff_stack(rbuf_old->open_diff, diff_common_end.get(), SESCOMMON);
+      update_diff_stack(rbuf_new->open_diff, diff_common_end.get(), SESCOMMON);
 
-      update_diff_stack(wstate->output_diff, &diff_common_end, SESCOMMON);
+      update_diff_stack(wstate->output_diff, diff_common_end.get(), SESCOMMON);
 
     }
 
@@ -123,7 +157,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
-    if(ismethod(wstate->method, METHOD_GROUP) && operation != SESMOVE && (*node == diff_old_end || *node == diff_new_end || *node == diff_common_end)) {
+    if(ismethod(wstate->method, METHOD_GROUP) && operation != SESMOVE && (*node == *diff_old_end || *node == *diff_new_end || *node == *diff_common_end)) {
 
 
       delay = true;
@@ -183,9 +217,9 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
     int size = wstate->output_diff.back()->open_tags.size();
 
     if(size > 0 && operation != SESMOVE &&
-       ((*node == diff_old_start && current_operation == SESDELETE)
-                    || (*node == diff_new_start && current_operation == SESINSERT)
-                    || (*node == diff_common_start && current_operation == SESCOMMON))) {
+       ((*node == *diff_old_start && current_operation == SESDELETE)
+                    || (*node == *diff_new_start && current_operation == SESINSERT)
+                    || (*node == *diff_common_start && current_operation == SESCOMMON))) {
 
       return;
     }
@@ -226,9 +260,9 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
   } else if(operation == SESMOVE) {
 
-    if(*node == diff_old_start)
+    if(*node == *diff_old_start)
       move_operation = SESDELETE;
-    else if(*node == diff_new_start)
+    else if(*node == *diff_new_start)
       move_operation = SESINSERT;
 
     if(move_operation == SESDELETE)

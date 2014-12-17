@@ -15,16 +15,6 @@
 #include <string.h>
 #include <string>
 
-// more external variables
-extern xNode diff_common_start;
-extern xNode diff_common_end;
-extern xNode diff_old_start;
-extern xNode diff_old_end;
-extern xNode diff_new_start;
-extern xNode diff_new_end;
-
-extern xAttr diff_type;
-
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
 : srcdiff_output(out), end_old(end_old), end_new(end_new) {}
 
@@ -61,9 +51,9 @@ void srcdiff_change::output() {
   if(end_old > begin_old && end_new > begin_new) {
 
     // set attribute to change
-    diff_type.value = change;
-    diff_old_start.properties = &diff_type;
-    diff_new_start.properties = &diff_type;
+    diff_type->value = change;
+    diff_old_start->properties = diff_type.get();
+    diff_new_start->properties = diff_type.get();
 
   }
 
@@ -82,17 +72,17 @@ void srcdiff_change::output() {
       }
 
       // output diff tag begin
-      output_node(&diff_old_start, SESDELETE);
+      output_node(diff_old_start.get(), SESDELETE);
 
       output_node(rbuf_old->nodes.at(i), SESDELETE);
 
       // output diff tag begin
-      output_node(&diff_old_end, SESDELETE);
+      output_node(diff_old_end.get(), SESDELETE);
 
     }
 
     // output diff tag begin
-    output_node(&diff_old_end, SESDELETE);
+    output_node(diff_old_end.get(), SESDELETE);
 
     rbuf_old->last_output = end_old;
 
@@ -112,24 +102,24 @@ void srcdiff_change::output() {
       }
 
       // output diff tag
-      output_node(&diff_new_start, SESINSERT);
+      output_node(diff_new_start.get(), SESINSERT);
 
       output_node(rbuf_new->nodes.at(i), SESINSERT);
 
     // output diff tag begin
-    output_node(&diff_new_end, SESINSERT);
+    output_node(diff_new_end.get(), SESINSERT);
 
 
     }
 
     // output diff tag begin
-    output_node(&diff_new_end, SESINSERT);
+    output_node(diff_new_end.get(), SESINSERT);
 
     rbuf_new->last_output = end_new;
 
   }
 
-  diff_old_start.properties = 0;
-  diff_new_start.properties = 0;
+  diff_old_start->properties = 0;
+  diff_new_start->properties = 0;
 
 }

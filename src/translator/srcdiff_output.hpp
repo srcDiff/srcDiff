@@ -17,11 +17,28 @@ protected:
 
 	pthread_mutex_t mutex;
 
+public:
+
+	// diff nodes
+	std::shared_ptr<xNode> diff_common_start;
+	std::shared_ptr<xNode> diff_common_end;
+	std::shared_ptr<xNode> diff_old_start;
+	std::shared_ptr<xNode> diff_old_end;
+	std::shared_ptr<xNode> diff_new_start;
+	std::shared_ptr<xNode> diff_new_end;
+
+	std::shared_ptr<xNs> diff;
+
+	// diff attribute
+	std::shared_ptr<xAttr> diff_type;
+
+	std::shared_ptr<xNode> unit_tag;
+
 private:
 
 public:
 
-    srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method);
+    srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method, const char * prefix);
     virtual ~srcdiff_output();
 
     virtual reader_state & get_rbuf_old();
