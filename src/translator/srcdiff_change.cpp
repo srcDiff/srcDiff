@@ -55,8 +55,8 @@ void srcdiff_change::output_whitespace() {
 */
 void srcdiff_change::output() {
 
-  unsigned int begin_old = rbuf_old.last_output;
-  unsigned int begin_new = rbuf_new.last_output;
+  unsigned int begin_old = rbuf_old->last_output;
+  unsigned int begin_new = rbuf_new->last_output;
 
   if(end_old > begin_old && end_new > begin_new) {
 
@@ -72,7 +72,7 @@ void srcdiff_change::output() {
 
     for(unsigned int i = begin_old; i < end_old; ++i) {
 
-      if(rbuf_old.nodes.at(i)->move) {
+      if(rbuf_old->nodes.at(i)->move) {
 
         srcdiff_move move(*this, i, SESDELETE);
         move.output();
@@ -84,7 +84,7 @@ void srcdiff_change::output() {
       // output diff tag begin
       output_node(&diff_old_start, SESDELETE);
 
-      output_node(rbuf_old.nodes.at(i), SESDELETE);
+      output_node(rbuf_old->nodes.at(i), SESDELETE);
 
       // output diff tag begin
       output_node(&diff_old_end, SESDELETE);
@@ -94,7 +94,7 @@ void srcdiff_change::output() {
     // output diff tag begin
     output_node(&diff_old_end, SESDELETE);
 
-    rbuf_old.last_output = end_old;
+    rbuf_old->last_output = end_old;
 
   }
 
@@ -102,7 +102,7 @@ void srcdiff_change::output() {
 
     for(unsigned int i = begin_new; i < end_new; ++i) {
 
-      if(rbuf_new.nodes.at(i)->move) {
+      if(rbuf_new->nodes.at(i)->move) {
 
         srcdiff_move move(*this, i, SESINSERT);
         move.output();
@@ -114,7 +114,7 @@ void srcdiff_change::output() {
       // output diff tag
       output_node(&diff_new_start, SESINSERT);
 
-      output_node(rbuf_new.nodes.at(i), SESINSERT);
+      output_node(rbuf_new->nodes.at(i), SESINSERT);
 
     // output diff tag begin
     output_node(&diff_new_end, SESINSERT);
@@ -125,7 +125,7 @@ void srcdiff_change::output() {
     // output diff tag begin
     output_node(&diff_new_end, SESINSERT);
 
-    rbuf_new.last_output = end_new;
+    rbuf_new->last_output = end_new;
 
   }
 

@@ -140,7 +140,7 @@ void srcdiff_single::output_recursive_same() {
       = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
-    srcdiff_comment diff(out, rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
+    srcdiff_comment diff(out, &next_set_old, &next_set_new);
     diff.output();
 
   } else {
@@ -154,7 +154,7 @@ void srcdiff_single::output_recursive_same() {
         = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                           , node_sets_new->at(start_new)->back());
 
-      srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
+      srcdiff_diff diff(out, &next_set_old, &next_set_new);
       diff.output();
 
   }
@@ -216,7 +216,7 @@ void srcdiff_single::output_recursive_interchangeable() {
     = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
                       , node_sets_new->at(start_new)->back());
 
-  srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
+  srcdiff_diff diff(out, &next_set_old, &next_set_new);
   diff.output();
 
   output_change(rbuf_old.last_output, node_sets_new->at(start_new)->back() + 1);
