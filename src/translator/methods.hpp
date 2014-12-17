@@ -25,7 +25,7 @@
 #ifndef INCLUDED_METHOD_HPP
 #define INCLUDED_METHOD_HPP
 
-#include <srcDiffOptions.hpp>
+#include <srcdiff_options.hpp>
 
 #ifdef __GNUC__
   typedef unsigned long long METHOD_TYPE;

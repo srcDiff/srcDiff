@@ -31,7 +31,7 @@
 #include <libxml/xmlwriter.h>
 
 #include <Options.hpp>
-#include <srcDiffOptions.hpp>
+#include <srcdiff_options.hpp>
 
 #include <srcml.h>
 

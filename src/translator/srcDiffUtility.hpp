@@ -3,7 +3,7 @@
 
 #include <shortest_edit_script.h>
 
-#include <srcDiffOptions.hpp>
+#include <srcdiff_options.hpp>
 #include <node_sets.hpp>
 #include <xmlrw.hpp>
 

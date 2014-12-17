@@ -3,7 +3,7 @@
 
 #include <srcml.h>
 
-#include <srcdiff_options.hpp>
+#include <client_options.hpp>
 #include <srcmlapps.hpp>
 #include <srcmlns.hpp>
 #include <Options.hpp>
@@ -16,7 +16,7 @@
 //#include <libxml_archive_read.hpp>
 //#include <libxml_archive_write.hpp>
 
-#include <srcDiffOptions.hpp>
+#include <srcdiff_options.hpp>
 
 #define PROGRAM_NAME "srcdiff"
 

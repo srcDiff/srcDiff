@@ -56,7 +56,7 @@
 #include <svn_io.hpp>
 #endif
 
-#include <srcdiff_options.hpp>
+#include <client_options.hpp>
 #include <srcdiff_uri.hpp>
 
 #define PROGRAM_NAME "srcdiff"
