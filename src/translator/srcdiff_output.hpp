@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFFOUTPUT_HPP
 #define INCLUDED_SRCDIFFOUTPUT_HPP
 
-#include <Methods.hpp>
+#include <methods.hpp>
 #include <xmlrw.hpp>
 #include <vector>
 #include <pthread.h>

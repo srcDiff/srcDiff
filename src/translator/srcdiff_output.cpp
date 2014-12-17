@@ -5,7 +5,7 @@
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>
 
-#include <Methods.hpp>
+#include <methods.hpp>
 
 #include <string.h>
 

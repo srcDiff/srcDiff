@@ -31,7 +31,7 @@
 #include <srcmlapps.hpp>
 #include <srcmlns.hpp>
 #include <Options.hpp>
-#include <Methods.hpp>
+#include <methods.hpp>
 #include <URIStream.hpp>
 #include <getopt.h>
 #include <dirent.h>

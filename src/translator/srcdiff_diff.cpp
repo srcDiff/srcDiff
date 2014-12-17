@@ -12,7 +12,7 @@
 #include <ShortestEditScript.hpp>
 
 #include <string.h>
-#include <Methods.hpp>
+#include <methods.hpp>
 
 // more external variables
 extern xNode diff_common_start;

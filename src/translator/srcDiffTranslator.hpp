@@ -33,7 +33,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include <Methods.hpp>
+#include <methods.hpp>
 #include <ColorDiff.hpp>
 #include <bash_view.hpp>
 

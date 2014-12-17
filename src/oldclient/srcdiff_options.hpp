@@ -2,7 +2,7 @@
 #define INCLUDED_SRCDIFF_OPTIONS_HPP
 
 #include <srcdiff_uri.hpp>
-#include <Methods.hpp>
+#include <methods.hpp>
 #include <srcml.h>
 
 const char* const DEBUG_FLAG = "debug";
