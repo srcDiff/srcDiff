@@ -104,13 +104,13 @@ void srcdiff_single::output_recursive_same() {
   output_white_space_all(rbuf_old, rbuf_new, wstate);
   //markup_common(rbuf_old, node_sets_old->at(start_old)->at(0), rbuf_new, node_sets_new->at(start_new)->at(0), wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_start, SESCOMMON, wstate);
+  out.output_node(&diff_common_start, SESCOMMON);
 
   xNodePtr merged_node = 0;
 
   if(node_compare(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))) == 0) {
 
-    output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON, wstate);
+    out.output_node(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESCOMMON);
 
   } else {
 
@@ -121,7 +121,7 @@ void srcdiff_single::output_recursive_same() {
                                               rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->properties);
 
 
-    output_node(rbuf_old, rbuf_new, merged_node, SESCOMMON, wstate);
+    out.output_node(merged_node, SESCOMMON);
 
 
   }
@@ -141,7 +141,7 @@ void srcdiff_single::output_recursive_same() {
       = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                         , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
 
-    srcdiff_comment diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
+    srcdiff_comment diff(out, rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
     diff.output();
 
   } else {
@@ -155,14 +155,14 @@ void srcdiff_single::output_recursive_same() {
         = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(1)
                           , node_sets_new->at(start_new)->back());
 
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
+      srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
       diff.output();
 
   }
 
   output_common(rbuf_old, node_sets_old->at(start_old)->back() + 1, rbuf_new, node_sets_new->at(start_new)->back() + 1, wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_common_end, SESCOMMON, wstate);
+  out.output_node(&diff_common_end, SESCOMMON);
 
   output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
@@ -174,9 +174,9 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   output_white_space_all(rbuf_old, rbuf_new, wstate);
 
-  output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+  out.output_node(&diff_old_start, SESDELETE);
 
-  output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESDELETE, wstate);
+  out.output_node(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0)), SESDELETE);
 
   bool is_same_keyword = node_compare(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)),
                   rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1))) == 0;
@@ -184,7 +184,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   int old_collect_start_pos = 1;
   if(!is_same_keyword) {
 
-    output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)), SESDELETE, wstate);
+    out.output_node(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(1)), SESDELETE);
     ++rbuf_old.last_output;
     old_collect_start_pos = 2;
 
@@ -192,14 +192,14 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   ++rbuf_old.last_output;
 
-  output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+  out.output_node(&diff_new_start, SESINSERT);
 
-  output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), SESINSERT, wstate);
+  out.output_node(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0)), SESINSERT);
 
   int new_collect_start_pos = 1;
   if(!is_same_keyword){
 
-    output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1)), SESINSERT, wstate);
+    out.output_node(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(1)), SESINSERT);
     ++rbuf_new.last_output;
     new_collect_start_pos = 2;
 
@@ -216,16 +216,16 @@ void srcdiff_single::output_recursive_interchangeable() {
     = node_sets(rbuf_new.nodes, node_sets_new->at(start_new)->at(new_collect_start_pos)
                       , node_sets_new->at(start_new)->back());
 
-  srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
+  srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &next_set_old, &next_set_new);
   diff.output();
 
   output_change(rbuf_old.last_output, node_sets_new->at(start_new)->back() + 1);
 
-  output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+  out.output_node(&diff_new_end, SESINSERT);
 
   output_change(node_sets_old->at(start_old)->back() + 1, rbuf_new.last_output);
 
-  output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+  out.output_node(&diff_old_end, SESDELETE);
 
   output_white_space_statement(rbuf_old, rbuf_new, wstate);
 
