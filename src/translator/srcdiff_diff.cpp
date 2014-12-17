@@ -24,8 +24,8 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 
-srcdiff_diff::srcdiff_diff(srcdiff_output & output, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
-  : output(output), rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
+srcdiff_diff::srcdiff_diff(srcdiff_output & out, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
+  : out(out), rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
 
 bool srcdiff_diff::go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
@@ -207,7 +207,7 @@ void srcdiff_diff::output() {
 
 void srcdiff_diff::output_pure(int end_old, int end_new) {
 
-  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
+  srcdiff_change diff(out, end_old, end_new);
   diff.output_whitespace();
   diff.output();
 
@@ -215,14 +215,14 @@ void srcdiff_diff::output_pure(int end_old, int end_new) {
 
 void srcdiff_diff::output_change(int end_old, int end_new) {
 
-  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
+  srcdiff_change diff(out, end_old, end_new);
   diff.output();
 
 }
 
 void srcdiff_diff::output_change_whitespace(int end_old, int end_new) {
 
-  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
+  srcdiff_change diff(out, end_old, end_new);
   diff.output_whitespace();
   diff.output();
 

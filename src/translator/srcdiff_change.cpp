@@ -24,8 +24,8 @@ extern xNode diff_new_end;
 
 extern xAttr diff_type;
 
-srcdiff_change::srcdiff_change(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate,
-  unsigned int end_old, unsigned int end_new) : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), end_old(end_old), end_new(end_new) {}
+srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
+: srcdiff_output(out), end_old(end_old), end_new(end_new) {}
 
 /*
 
@@ -79,7 +79,7 @@ void srcdiff_change::output() {
 
       char * content = strndup((const char *)content_old, offset_old);
       
-      output_text_as_node(rbuf_old, rbuf_new, content, SESCOMMON, wstate);
+      output_text_as_node(content, SESCOMMON);
 
       free(content);
 
@@ -122,17 +122,17 @@ void srcdiff_change::output() {
       }
 
       // output diff tag begin
-      output_node(rbuf_old, rbuf_new, &diff_old_start, SESDELETE, wstate);
+      output_node(&diff_old_start, SESDELETE);
 
-      output_node(rbuf_old, rbuf_new, rbuf_old.nodes.at(i), SESDELETE, wstate);
+      output_node(rbuf_old.nodes.at(i), SESDELETE);
 
       // output diff tag begin
-      output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+      output_node(&diff_old_end, SESDELETE);
 
     }
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_old_end, SESDELETE, wstate);
+    output_node(&diff_old_end, SESDELETE);
 
     rbuf_old.last_output = end_old;
 
@@ -151,18 +151,18 @@ void srcdiff_change::output() {
       }
 
       // output diff tag
-      output_node(rbuf_old, rbuf_new, &diff_new_start, SESINSERT, wstate);
+      output_node(&diff_new_start, SESINSERT);
 
-      output_node(rbuf_old, rbuf_new, rbuf_new.nodes.at(i), SESINSERT, wstate);
+      output_node(rbuf_new.nodes.at(i), SESINSERT);
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+    output_node(&diff_new_end, SESINSERT);
 
 
     }
 
     // output diff tag begin
-    output_node(rbuf_old, rbuf_new, &diff_new_end, SESINSERT, wstate);
+    output_node(&diff_new_end, SESINSERT);
 
     rbuf_new.last_output = end_new;
 
