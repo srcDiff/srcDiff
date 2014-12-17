@@ -115,7 +115,8 @@ void srcdiff_change::output() {
 
       if(rbuf_old.nodes.at(i)->move) {
 
-        output_move(rbuf_old, rbuf_new, i, SESDELETE, wstate);
+        srcdiff_move move(*this, i, SESDELETE);
+        move.output();
 
         continue;
 
@@ -144,7 +145,8 @@ void srcdiff_change::output() {
 
       if(rbuf_new.nodes.at(i)->move) {
 
-        output_move(rbuf_old, rbuf_new, i, SESINSERT, wstate);
+        srcdiff_move move(*this, i, SESINSERT);
+        move.output();
 
         continue;
 
