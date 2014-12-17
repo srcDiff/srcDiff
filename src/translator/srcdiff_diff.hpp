@@ -1,7 +1,8 @@
 #ifndef INCLUDED_SRCDIFF_DIFF_HPP
 #define INCLUDED_SRCDIFF_DIFF_HPP
 
-#include <srcDiffTypes.hpp>
+#include <srcdiff_output.hpp>
+
 #include <shortest_edit_script.h>
 
 #include <vector>
@@ -9,6 +10,7 @@
 class srcdiff_diff {
 
 protected:
+  srcdiff_output & out;
   reader_state & rbuf_old;
   reader_state & rbuf_new;
   writer_state & wstate;
@@ -17,9 +19,10 @@ protected:
   node_sets * node_sets_new;
 
 public:
-  srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new);
+  srcdiff_diff(srcdiff_output & out, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new);
 
   virtual void output();
+  virtual void output_common(int end_old, int end_new);
   virtual void output_pure(int end_old, int end_new);
   virtual void output_change(int end_old, int end_new);
   virtual void output_change_whitespace(int end_old, int end_new);

@@ -1,11 +1,10 @@
-#include <srcDiffMove.hpp>
+#include <srcdiff_move.hpp>
 
 #include <vector>
 #include <map>
 
 #include <xmlrw.hpp>
 #include <srcDiffMeasure.hpp>
-#include <srcDiffOutput.hpp>
 #include <srcDiffUtility.hpp>
 
 int move_id = 0;
@@ -16,6 +15,10 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 xAttr move_attribute = { 0, "move", 0 };
+
+srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
+  : srcdiff_output(out), position(position), operation(operation) {}
+
 
 void add_construct(std::map<std::string, IntPairs > & constructs
                    , node_sets & sets, std::vector<xNodePtr> & nodes
@@ -33,13 +36,13 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
-bool is_move(node_set * set, std::vector<xNodePtr> nodes) {
+bool srcdiff_move::is_move(node_set * set, std::vector<xNodePtr> nodes) {
 
   return nodes.at(set->at(0))->move;
 
 }
 
-void mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
+void srcdiff_move::mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
                 , reader_state & rbuf_new, node_sets * node_sets_new
                 , edit * edit_script, writer_state & wstate) {
 
@@ -153,7 +156,7 @@ void mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
 
 }
 
-void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int & position, int operation, writer_state & wstate) {
+void srcdiff_move::output() {
 
   // store current diff if is any
   reader_state * rbuf = &rbuf_old;
@@ -189,9 +192,9 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
   xAttr * save_attributes = start_node->properties;
   start_node->properties = &move_attribute;
 
-  output_node(rbuf_old, rbuf_new, start_node, SESMOVE, wstate);
+  output_node(start_node, SESMOVE);
 
-  output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
+  output_node(rbuf->nodes.at(position), SESMOVE);
 
   if(!rbuf->nodes.at(position)->is_empty) {
 
@@ -199,15 +202,15 @@ void output_move(reader_state & rbuf_old, reader_state & rbuf_new, unsigned int 
 
     for(; rbuf->nodes.at(position)->move != id; ++position) {
 
-      output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
+      output_node(rbuf->nodes.at(position), SESMOVE);
 
     }
 
-    output_node(rbuf_old, rbuf_new, rbuf->nodes.at(position), SESMOVE, wstate);
+    output_node(rbuf->nodes.at(position), SESMOVE);
 
   }
 
-  output_node(rbuf_old, rbuf_new, end_node, SESMOVE, wstate);
+  output_node(end_node, SESMOVE);
 
   start_node->properties = save_attributes;
   free(buffer);

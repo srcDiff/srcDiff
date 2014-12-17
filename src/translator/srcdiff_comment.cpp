@@ -1,12 +1,14 @@
 #include <srcdiff_comment.hpp>
 
+#include <srcdiff_common.hpp>
+
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffCommon.hpp>
 
-srcdiff_comment::srcdiff_comment(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
-  : srcdiff_diff(rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new) {}
+srcdiff_comment::srcdiff_comment(srcdiff_output & out, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate,
+  node_sets * node_sets_old, node_sets * node_sets_new) 
+  : srcdiff_diff(out, rbuf_old, rbuf_new, wstate, node_sets_old, node_sets_new) {}
 
 /*
 
@@ -57,7 +59,7 @@ void srcdiff_comment::output() {
     }
 
     // output area in common
-    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
+    output_common(diff_end_old, diff_end_new);
 
     // detect and change
     edit * edit_next = edits->next;
@@ -127,7 +129,7 @@ void srcdiff_comment::output() {
   }
 
   // output area in common
-  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
+  output_common(diff_end_old, diff_end_new);
 
 }
 

@@ -1,10 +1,9 @@
 #include <srcdiff_nested.hpp>
+
 #include <srcdiff_change.hpp>
+#include <srcdiff_whitespace.hpp>
 
 #include <shortest_edit_script.h>
-#include <srcDiffWhiteSpace.hpp>
-#include <srcDiffOutput.hpp>
-#include <srcdiff_diff.hpp>
 #include <srcDiffUtility.hpp>
 #include <srcDiffMeasure.hpp>
 
@@ -597,7 +596,9 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNode
 
 void srcdiff_nested::output() {
 
-  output_white_space_prefix(rbuf_old, rbuf_new, wstate);
+  srcdiff_whitespace whitespace(out);
+
+  whitespace.output_white_space_prefix();
 
   if(operation == SESDELETE) {
 
@@ -641,12 +642,12 @@ void srcdiff_nested::output() {
 
       output_change(end_pos, rbuf_new.last_output);
 
-      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
+      whitespace.output_white_space_nested(SESDELETE);
 
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &set, &nest_set);
+      srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &set, &nest_set);
       diff.output();
 
-      output_white_space_nested(rbuf_old, rbuf_new, SESDELETE, wstate);
+      whitespace.output_white_space_nested(SESDELETE);
 
       output_change(node_sets_old->at(end_old - 1)->back() + 1, rbuf_new.last_output);
 
@@ -691,12 +692,12 @@ void srcdiff_nested::output() {
 
       output_change(rbuf_old.last_output, end_pos);
 
-      output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
+      whitespace.output_white_space_nested(SESINSERT);
 
-      srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &nest_set, &set);
+      srcdiff_diff diff(out, rbuf_old, rbuf_new, wstate, &nest_set, &set);
       diff.output();
 
-      output_white_space_nested(rbuf_old, rbuf_new, SESINSERT, wstate);
+      whitespace.output_white_space_nested(SESINSERT);
 
       output_change(rbuf_old.last_output, node_sets_new->at(end_new - 1)->back() + 1);
   }

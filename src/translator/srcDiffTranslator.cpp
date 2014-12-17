@@ -24,17 +24,17 @@
 
 #include <srcDiffTranslator.hpp>
 
+#include <srcdiff_output.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_change.hpp>
+#include <srcdiff_whitespace.hpp>
+
 
 #include <srcmlns.hpp>
 #include <srcmlapps.hpp>
 #include <shortest_edit_script.h>
 #include <srcDiffConstants.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcDiffWhiteSpace.hpp>
-#include <srcDiffCommon.hpp>
-#include <srcDiffOutput.hpp>
 #include <srcMLUtility.hpp>
 #include <LineDiffRange.hpp>
 
@@ -248,15 +248,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   // output srcdiff unit
   if(!rbuf_old.nodes.empty() && !rbuf_new.nodes.empty()) {
 
-    update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
-    update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
-    update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
 
   } else if(rbuf_old.nodes.empty() && rbuf_new.nodes.empty()) {
 
-    update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
-    update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
-    update_diff_stack(wstate.output_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(wstate.output_diff, &diff_common_start, SESCOMMON);
 
     if(is_old <= -1 && is_new <= -1) {
 
@@ -275,9 +275,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-    update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
-    update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
-    update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
 
   } else {
 
@@ -288,9 +288,9 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
     }
 
-    update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
-    update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
-    update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_old.open_diff, &unit_tag, SESCOMMON);
+    srcdiff_output::update_diff_stack(rbuf_new.open_diff, &diff_common_start, SESCOMMON);
+    srcdiff_output::update_diff_stack(wstate.output_diff, &unit_tag, SESCOMMON);
 
   }
 
@@ -330,13 +330,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
       However this is correct when output is to archive */
     srcml_write_start_unit(srcdiff_unit);
 
-    srcdiff_diff diff(rbuf_old, rbuf_new, wstate, &set_old, &set_new);
+    srcdiff_output output(rbuf_old, rbuf_new, wstate);
+    srcdiff_diff diff(output, rbuf_old, rbuf_new, wstate, &set_old, &set_new);
     diff.output();
 
     // output remaining whitespace
-    output_white_space_all(rbuf_old, rbuf_new, wstate);
+    srcdiff_whitespace whitespace(output);
+    whitespace.output_white_space_all();
 
-    output_node(rbuf_old, rbuf_new, (xNodePtr)&flush, SESCOMMON, wstate);
+    output.output_node((xNodePtr)&flush, SESCOMMON);
 
     srcml_write_end_unit(srcdiff_unit);
 

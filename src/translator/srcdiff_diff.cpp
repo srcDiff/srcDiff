@@ -1,14 +1,13 @@
 #include <srcdiff_diff.hpp>
+
 #include <srcdiff_many.hpp>
 #include <srcdiff_change.hpp>
+#include <srcdiff_common.hpp>
+#include <srcdiff_move.hpp>
 
 #include <srcDiffUtility.hpp>
-#include <srcDiffOutput.hpp>
-#include <srcDiffCommon.hpp>
-#include <srcDiffWhiteSpace.hpp>
 #include <srcDiffMeasure.hpp>
 #include <srcDiffMatch.hpp>
-#include <srcDiffMove.hpp>
 #include <pthread.h>
 #include <ShortestEditScript.hpp>
 
@@ -24,8 +23,8 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 
-srcdiff_diff::srcdiff_diff(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
-  : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
+srcdiff_diff::srcdiff_diff(srcdiff_output & out, reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate, node_sets * node_sets_old, node_sets * node_sets_new) 
+  : out(out), rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
 
 bool srcdiff_diff::go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
@@ -113,7 +112,7 @@ void srcdiff_diff::output() {
     exit(distance);
   }
 
-  mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
+  srcdiff_move::mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
 
   int last_diff_old = 0;
   int last_diff_new = 0;
@@ -140,7 +139,7 @@ void srcdiff_diff::output() {
     }
 
     // output area in common
-    output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
+    output_common(diff_end_old, diff_end_new);
     // detect and change
     edit * edit_next = edits->next;
 
@@ -201,29 +200,36 @@ void srcdiff_diff::output() {
   }
 
   // output area in common
-  output_common(rbuf_old, diff_end_old, rbuf_new, diff_end_new, wstate);
+  output_common(diff_end_old, diff_end_new);
+
+}
+
+void srcdiff_diff::output_common(int end_old, int end_new) {
+
+  srcdiff_common common(out, end_old, end_new);
+  common.output();
 
 }
 
 void srcdiff_diff::output_pure(int end_old, int end_new) {
 
-  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
-  diff.output_whitespace();
-  diff.output();
+  srcdiff_change pure(out, end_old, end_new);
+  pure.output_whitespace();
+  pure.output();
 
 }
 
 void srcdiff_diff::output_change(int end_old, int end_new) {
 
-  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
-  diff.output();
+  srcdiff_change change(out, end_old, end_new);
+  change.output();
 
 }
 
 void srcdiff_diff::output_change_whitespace(int end_old, int end_new) {
 
-  srcdiff_change diff(rbuf_old, rbuf_new, wstate, end_old, end_new);
-  diff.output_whitespace();
-  diff.output();
+  srcdiff_change change(out, end_old, end_new);
+  change.output_whitespace();
+  change.output();
 
 }
