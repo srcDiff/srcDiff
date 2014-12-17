@@ -30,7 +30,11 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
   diff->prefix = prefix;
   diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
 
+  // diff attribute
+  *diff_type = { 0 };
   diff_type->name = DIFF_TYPE;
+
+  *unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, 0, 0, false, false, 0, 0 };
 
   // diff tags
   diff_common_start->name = DIFF_SESCOMMON;
