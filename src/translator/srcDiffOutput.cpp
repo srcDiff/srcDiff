@@ -7,8 +7,6 @@
 
 #include <string.h>
 
-srcdiff_output::srcdiff_output(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate) rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate) {}
-
 // more external variables
 extern xNode diff_common_start;
 extern xNode diff_common_end;
@@ -18,6 +16,9 @@ extern xNode diff_new_start;
 extern xNode diff_new_end;
 
 int move_operation = SESCOMMON;
+
+srcdiff_output::srcdiff_output(reader_state & rbuf_old, reader_state & rbuf_new, writer_state & wstate)
+ : rbuf_old(rbuf_old), rbuf_new(rbuf_new), wstate(wstate) {}
 
 void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
@@ -258,7 +259,7 @@ void srcdiff_output::output_text_as_node(const char * text, int operation) {
   node.name = "text";
   node.content = text;
 
-  output_node(rbuf_old, rbuf_new, &node, operation, wstate);
+  output_node(&node, operation);
 
 }
 
@@ -268,6 +269,6 @@ void srcdiff_output::output_char(char character, int operation) {
   static char buf[2] = { 0 };
   buf[0] = character;
 
-  output_text_as_node(rbuf_old, rbuf_new, buf, operation, wstate);
+  output_text_as_node(buf, operation);
 }
 
