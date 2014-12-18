@@ -1,8 +1,12 @@
 #include <srcdiff_input.hpp>
 
 srcdiff_input::srcdiff_input() {}
-// create the reader for the old file
-  node_sets set_old(output.get_rbuf_old().nodes);
+
+srcdiff_input~srcdiff_input() {}
+
+std::vector<xNodePtr> srcdiff_input::input_nodes(const char * input_filename) {
+
+  std::vector<xNodePtr> nodes;
 
   int is_old = 0;
   create_nodes_args args_old = { path_one, archive
@@ -10,7 +14,7 @@ srcdiff_input::srcdiff_input() {}
                                 , unit_filename
                                 , unit_directory
                                 , unit_version
-                                , output.get_rbuf_old().mutex
+                                , mutex
                                 , output.get_rbuf_old().nodes
                                 , is_old
                                 , output.get_rbuf_old().stream_source
@@ -28,13 +32,13 @@ srcdiff_input::srcdiff_input() {}
 
   }
 
+#if 0
   /*
 
     Input for file two
 
   */
 
-  node_sets set_new(output.get_rbuf_new().nodes);
 
   int is_new = 0;
   create_nodes_args args_new = { path_two, archive
@@ -42,7 +46,7 @@ srcdiff_input::srcdiff_input() {}
                                 , unit_filename
                                 , unit_directory
                                 , unit_version
-                                , output.get_rbuf_new().mutex
+                                , mutex
                                 , output.get_rbuf_new().nodes
                                 , is_new
                                 , output.get_rbuf_new().stream_source
@@ -68,9 +72,14 @@ srcdiff_input::srcdiff_input() {}
 
   }
 
+  node_sets set_old(output.get_rbuf_old().nodes);
+  node_sets set_new(output.get_rbuf_new().nodes);
+
   if(is_old && is_old > -1)
     set_old = node_sets(output.get_rbuf_old().nodes, 0, output.get_rbuf_old().nodes.size());
 
 
   if(is_new && is_new > -1)
     set_new = node_sets(output.get_rbuf_new().nodes, 0, output.get_rbuf_new().nodes.size());
+#endif
+}

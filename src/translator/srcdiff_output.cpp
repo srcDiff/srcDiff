@@ -19,8 +19,6 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
   diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
   unit_tag(std::make_shared<xNode>()) {
 
-  pthread_mutex_init(&mutex, 0);
-
   rbuf_old->mutex = &mutex;
   rbuf_new->mutex = &mutex;
 
@@ -69,11 +67,7 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  }
 
- srcdiff_output::~srcdiff_output() {
-
-  pthread_mutex_destroy(&mutex);
-
- }
+ srcdiff_output::~srcdiff_output() {}
 
  void srcdiff_output::flush() {
 

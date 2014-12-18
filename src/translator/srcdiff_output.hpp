@@ -52,8 +52,6 @@ public:
   int stream_source;
   unsigned int last_output;
 
-  pthread_mutex_t * mutex;
-
   std::vector<xNode *> nodes;
 
   std::vector<diff_set *> open_diff;
