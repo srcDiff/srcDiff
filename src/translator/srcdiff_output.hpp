@@ -128,8 +128,6 @@ public:
 
   static void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation);
 
-
-
 };
 
 #endif
