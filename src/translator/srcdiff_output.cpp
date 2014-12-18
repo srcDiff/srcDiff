@@ -75,6 +75,14 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  }
 
+ void srcdiff_output::reset() {
+
+  rbuf_old->clear();
+  rbuf_new->clear();
+  wstate->clear();
+
+ }
+
 reader_state & srcdiff_output::get_rbuf_old() {
 
   return *rbuf_old;

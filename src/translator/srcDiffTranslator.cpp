@@ -290,28 +290,7 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  // Because of grouping need to output a common to end grouping need to deallocate as well
-  for(unsigned int i = 0; i < output.get_rbuf_old().nodes.size(); ++i) {
-
-    if(output.get_rbuf_old().nodes.at(i)->free) {
-
-      freeXNode(output.get_rbuf_old().nodes.at(i));
-
-    }
-  }
-
-  for(unsigned int i = 0; i < output.get_rbuf_new().nodes.size(); ++i) {
-
-    if(output.get_rbuf_new().nodes.at(i)->free) {
-
-      freeXNode(output.get_rbuf_new().nodes.at(i));
-
-    }
-  }
-
-  output.get_rbuf_old().clear();
-  output.get_rbuf_new().clear();
-  output.get_wstate().clear();
+  output.reset();
 
   if(isoption(options, OPTION_VISUALIZE)) {
 
