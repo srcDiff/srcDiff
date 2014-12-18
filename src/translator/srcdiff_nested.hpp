@@ -3,7 +3,7 @@
 
 #include <srcdiff_many.hpp>
 
-class srcdiff_nested : srcdiff_many {
+class srcdiff_nested : public srcdiff_many {
 
 protected:
 
