@@ -75,6 +75,13 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  }
 
+ void srcdiff_output::flush() {
+
+  static const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, 0, true, false, 0, 0 };
+  output_node((xNodePtr)&flush, SESCOMMON);
+
+ }
+
  void srcdiff_output::reset() {
 
   rbuf_old->clear();

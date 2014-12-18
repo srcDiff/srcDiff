@@ -115,6 +115,7 @@ public:
 
   srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method, const char * prefix);
   virtual ~srcdiff_output();
+  virtual void flush();
   virtual void reset();
 
   virtual reader_state & get_rbuf_old();
