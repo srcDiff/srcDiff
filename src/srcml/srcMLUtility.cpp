@@ -9,12 +9,13 @@
 extern xmlNs diff;
 
 
-// converts source code to srcML
-void translate_to_srcML(const char * path, srcml_archive * main_archive,
-      const char * language, const char * filename, const char * directory, const char * version,
-			char ** output_buffer, int * output_size, OPTION_TYPE options) {
 
-  srcml_archive * unit_archive = srcml_clone_archive(main_archive);
+// converts source code to srcML
+void srcml_translator::translate(const char * path, const char * language, const char * filename, const char * directory, const char * version) {
+
+  if(path == 0 || path[0] == 0 || path[0] == '@') throw no_file_exception();
+
+  srcml_archive * unit_archive = srcml_clone_archive(archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
 
   srcml_write_open_memory(unit_archive, output_buffer, output_size);
@@ -51,48 +52,20 @@ void translate_to_srcML(const char * path, srcml_archive * main_archive,
 
 }
 
-void * create_nodes_from_srcML_thread(void * arguments) {
-
-    create_nodes_args & args = *(create_nodes_args *)arguments;
-
-    create_nodes_from_srcML(args.path, args.main_archive,
-                            args.language, args.filename, args.directory, args.version,
-                            args.mutex,
-                            args.nodes, args.no_error, args.context,
-                            args.options);
-
-    return NULL;
-
-}
-
-
-void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
-                             const char * language, const char * filename, const char * directory, const char * version,
-                             pthread_mutex_t * mutex,
-                             std::vector<xNode *> & nodes, int & no_error, int context, OPTION_TYPE options) {
+void srcml_translator::create_nodes_from_srcml(pthread_mutex_t * mutex, std::vector<xNode *> & nodes) {
   
-  if(path == 0 || path[0] == 0 || path[0] == '@') {
-
-    no_error = 0;
-    return;
-
-  }
-
   char * output_buffer;
   int output_size;
 
   xmlTextReaderPtr reader = NULL;
 
-  // translate file one
-  try {
-
-  translate_to_srcML(path, main_archive, language, filename, directory, version, &output_buffer, &output_size, options);
+  translate(path, archive, language, filename, directory, version, &output_buffer, &output_size, options);
 
   reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
   if (reader == NULL) {
 
-    if(!isoption(srcml_archive_get_options(main_archive), OPTION_QUIET))
+    if(!isoption(srcml_archive_get_options(archive), OPTION_QUIET))
        fprintf(stderr, "Unable to open file '%s' as XML\n", "output_buffer");
 
     exit(1);
@@ -102,29 +75,18 @@ void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
   xmlTextReaderRead(reader);
 
   // Read past unit tag open
-  no_error = xmlTextReaderRead(reader);
+  if(xmlTextReaderRead(reader) == 0) throw std::string("Error reading srcML.");
 
   // collect if non empty files
-  if(no_error) {
-
-    collect_nodes(&nodes, reader, srcml_archive_get_options(main_archive), context, mutex);
-
-  }
+  collect_nodes(&nodes, reader, srcml_archive_get_options(archive), context, mutex);
 
   xmlFreeTextReader(reader);
-
-  } catch(...) {
-
-    no_error = -1;
-
-    
-  }
 
   free(output_buffer);
 
 }
 
-bool is_separate_token(const char character) {
+bool srcml_translator::is_separate_token(const char character) {
 
 
   return character == '(' || character ==')' || character == '[' || character == ']' || character == ',';
@@ -133,7 +95,7 @@ bool is_separate_token(const char character) {
 
 
 // collect the differnces
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE options, int context, pthread_mutex_t * mutex) {
+void srcml_translator::collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE options, int context, pthread_mutex_t * mutex) {
 
   std::vector<std::string> element_stack;
   element_stack.push_back("unit");
@@ -236,7 +198,7 @@ void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION
 }
 
 // check if node is a indivisable group of three (atomic)
-bool is_atomic_srcml(std::vector<xNodePtr> * nodes, unsigned start) {
+bool srcml_translator::is_atomic_srcml(std::vector<xNodePtr> * nodes, unsigned start) {
 
   static const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
 
