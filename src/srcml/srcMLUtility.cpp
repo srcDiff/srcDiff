@@ -18,7 +18,7 @@ srcml_translator::~srcml_translator() {
 }
 
 // converts source code to srcML
-void srcml_translator::translate(const char * path, const char * language, const char * filename, const char * directory, const char * version, OPTION_TYPE options) {
+void srcml_translator::translate(const char * path, OPTION_TYPE options) {
 
   if(path == 0 || path[0] == 0 || path[0] == '@') throw no_file_exception();
 
@@ -59,7 +59,7 @@ void srcml_translator::translate(const char * path, const char * language, const
 
 }
 
-std::vector<xNode *> srcml_translator::create_nodes_from_srcml(pthread_mutex_t * mutex) {
+std::vector<xNodePtr> srcml_translator::create_nodes() {
   
   xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
@@ -72,7 +72,7 @@ std::vector<xNode *> srcml_translator::create_nodes_from_srcml(pthread_mutex_t *
   if(xmlTextReaderRead(reader) == 0) throw std::string("Error reading srcML.");
 
   // collect if non empty files
-  std::vector<xNode *> nodes = collect_nodes(reader, mutex);
+  std::vector<xNodePtr> nodes = collect_nodes(reader);
 
   xmlFreeTextReader(reader);
 
@@ -113,9 +113,9 @@ static bool is_atomic_srcml(std::vector<xNodePtr> & nodes, unsigned start) {
 
 
 // collect the differnces
-std::vector<xNode *> srcml_translator::collect_nodes(xmlTextReaderPtr reader, pthread_mutex_t * mutex) {
+std::vector<xNodePtr> srcml_translator::collect_nodes(xmlTextReaderPtr reader) {
 
-  std::vector<xNode *> nodes;
+  std::vector<xNodePtr> nodes;
 
   std::vector<std::string> element_stack;
   element_stack.push_back("unit");
@@ -133,7 +133,7 @@ std::vector<xNode *> srcml_translator::collect_nodes(xmlTextReaderPtr reader, pt
 
         const char * characters_start = characters;
 
-        xNode * text;
+        xNodePtr text;
 
         // separate new line
         if(*characters == '\n') {
@@ -177,9 +177,9 @@ std::vector<xNode *> srcml_translator::collect_nodes(xmlTextReaderPtr reader, pt
     else {
 
       // text node does not need to be copied.
-      pthread_mutex_lock(mutex);
+      mutex.lock();
       xNodePtr node = getRealCurrentNode(reader, srcml_archive_get_options(archive), stream_source);
-      pthread_mutex_unlock(mutex);
+      mutex.unlock();
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
         node->parent = strdup(element_stack.back().c_str());

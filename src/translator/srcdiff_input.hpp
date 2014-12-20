@@ -1,20 +1,23 @@
 #ifndef INCLUDED_SRCDIFF_INPUT_HPP
 #define INCLUDED_SRCDIFF_INPUT_HPP
 
-#include <thread>
+#include <srcml.h>
 
 class srcdiff_input {
 
 protected:
 
-  std::mutext mutex;
+	srcml_archive * archive;
+	OPTION_TYPE options;
 
 private:
 
 public:
 
-	srcdiff_input();
+	srcdiff_input(srcml_archive * archive, OPTION_TYPE options);
 	~srcdiff_input();
+
+	std::vector<xmlNodePtr> input_nodes(const char * input_path, int stream_source);
 
 };
 

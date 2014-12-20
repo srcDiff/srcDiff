@@ -5,11 +5,11 @@
 #include <srcml.h>
 
 #include <vector>
-#include <Options.hpp>
+#include <thread>
 
+#include <Options.hpp>
 #include <xmlrw.hpp>
 
-#include <pthread.h>
 
 
 class no_file_exception {};
@@ -26,17 +26,19 @@ protected:
   char * output_buffer;
   int output_size;
 
+  std::mutex mutex;
+
 private:
 
-std::vector<xNode *> collect_nodes(xmlTextReaderPtr reader, pthread_mutex_t * mutex);
+std::vector<xNodePtr> collect_nodes(xmlTextReaderPtr reader);
 
 public:
 
   srcml_translator(srcml_archive * archive, int stream_source);
   ~srcml_translator();
 
-  void translate(const char* path, const char * language, const char * filename, const char * directory, const char * version, OPTION_TYPE options); 
-  std::vector<xNode *> create_nodes_from_srcml(pthread_mutex_t * mutex);
+  void translate(const char* path, OPTION_TYPE options); 
+  std::vector<xNodePtr> create_nodes();
 
 };
 

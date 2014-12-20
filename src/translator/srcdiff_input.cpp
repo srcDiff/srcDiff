@@ -1,36 +1,18 @@
 #include <srcdiff_input.hpp>
 
-srcdiff_input::srcdiff_input() {}
+srcdiff_input::srcdiff_input(srcml_archive * archive) {}
 
 srcdiff_input~srcdiff_input() {}
 
-std::vector<xNodePtr> srcdiff_input::input_nodes(const char * input_filename) {
+std::vector<xNodePtr> srcdiff_input::input_nodes(const char * input_path, int stream_source) {
 
-  std::vector<xNodePtr> nodes;
+  srcml_translator translator(archive, stream_source);
 
-  int is_old = 0;
-  create_nodes_args args_old = { path_one, archive
-                                , srcml_archive_check_extension(archive, path_one ? path_one : path_two)
-                                , unit_filename
-                                , unit_directory
-                                , unit_version
-                                , mutex
-                                , output.get_rbuf_old().nodes
-                                , is_old
-                                , output.get_rbuf_old().stream_source
-                                , options };
-  pthread_t thread_old;
-  if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
+  translator.translate(input_path, options);
 
-    is_old = -2;
+  return translator.create_nodes();
 
-  }
 
-  if(!isoption(options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
-
-    is_old = -2;
-
-  }
 
 #if 0
   /*

@@ -19,9 +19,6 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
   diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
   unit_tag(std::make_shared<xNode>()) {
 
-  rbuf_old->mutex = &mutex;
-  rbuf_new->mutex = &mutex;
-
   wstate->filename = srcdiff_filename;
   wstate->method = method;
 
