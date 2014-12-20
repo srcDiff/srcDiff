@@ -24,6 +24,7 @@
 
 #include <srcDiffTranslator.hpp>
 
+#include <srcdiff_input.hpp>
 #include <srcdiff_output.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_change.hpp>
@@ -87,6 +88,33 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   if(!isoption(options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
+
+
+  int is_old = 0;
+  srcdiff_input input_one(archive, options);
+  try {
+
+    std::vector<xNodePtr> nodes = input_one.input_nodes(path_one, SESDELETE);
+
+  } catch(no_file_exception) {}
+  catch(...) {
+
+    is_old = -2;
+
+  }
+
+  int is_new = 0;
+  srcdiff_input input_two(archive, options);
+
+  try {
+
+    std::vector<xNodePtr> nodes = input_two.input_nodes(path_one, SESINSERT);
+
+  } catch (no_file_exception) {
+
+    is_new = -2;
+
+  }
 
   /*
 

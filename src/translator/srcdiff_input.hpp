@@ -17,7 +17,7 @@ public:
 	srcdiff_input(srcml_archive * archive, OPTION_TYPE options);
 	~srcdiff_input();
 
-	std::vector<xmlNodePtr> input_nodes(const char * input_path, int stream_source);
+	std::vector<xNodePtr> input_nodes(const char * input_path, int stream_source);
 
 };
 
