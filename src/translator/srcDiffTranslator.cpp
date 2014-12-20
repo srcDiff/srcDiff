@@ -88,33 +88,15 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   if(!isoption(options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
-
-
   int is_old = 0;
-  srcdiff_input input_one(archive, options);
-  try {
-
-    std::vector<xNodePtr> nodes = input_one.input_nodes(path_one, SESDELETE);
-
-  } catch(no_file_exception) {}
-  catch(...) {
-
-    is_old = -2;
-
-  }
+  std::vector<xNodePtr> nodes_old;
+  srcdiff_input input_old(archive, options);
+  std::thread thread_old(input_old, path_one, SESDELETE, nodes_old, is_old);
 
   int is_new = 0;
-  srcdiff_input input_two(archive, options);
-
-  try {
-
-    std::vector<xNodePtr> nodes = input_two.input_nodes(path_one, SESINSERT);
-
-  } catch (no_file_exception) {
-
-    is_new = -2;
-
-  }
+  std::vector<xNodePtr> nodes_new;
+  srcdiff_input input_new(archive, options);
+  std::thread thread_new(input_nodes, path_one, SESINSERT, nodes_new, is_new);
 
   /*
 
