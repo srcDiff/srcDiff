@@ -1,5 +1,9 @@
-#ifndef INCLUDED_SRCDIFFOUTPUT_HPP
-#define INCLUDED_SRCDIFFOUTPUT_HPP
+#ifndef INCLUDED_SRCDIFF_OUTPUT_HPP
+#define INCLUDED_SRCDIFF_OUTPUT_HPP
+
+
+#include <ColorDiff.hpp>
+#include <bash_view.hpp>
 
 #include <methods.hpp>
 #include <xmlrw.hpp>
@@ -45,14 +49,18 @@ public:
 
     last_output = 0;
     nodes.clear();
-    open_diff.clear();
+
+    while(!open_diff.empty()) {
+
+      delete open_diff.back();
+      open_diff.pop_back();
+
+    }
 
   }
 
   int stream_source;
   unsigned int last_output;
-
-  pthread_mutex_t * mutex;
 
   std::vector<xNode *> nodes;
 
@@ -67,7 +75,12 @@ public:
 
   void clear() {
 
-    output_diff.clear();
+    while(!output_diff.empty()) {
+
+      delete output_diff.back();
+      output_diff.pop_back();
+
+    }
 
   }
 
@@ -86,11 +99,14 @@ class srcdiff_output {
 
 protected:
 
+  srcml_archive * archive;
+  std::shared_ptr<ColorDiff> colordiff;
+  std::shared_ptr<bash_view> bashview;
+  OPTION_TYPE options;
+
   std::shared_ptr<reader_state> rbuf_old;
   std::shared_ptr<reader_state> rbuf_new;
   std::shared_ptr<writer_state> wstate;
-
-  pthread_mutex_t mutex;
 
 public:
 
@@ -113,13 +129,19 @@ private:
 
 public:
 
-  srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method, const char * prefix);
+  srcdiff_output(srcml_archive * archive, const char * srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method, const char * prefix,
+    std::string css, unsigned long number_context_lines);
   virtual ~srcdiff_output();
-  virtual void flush();
-  virtual void reset();
 
+  virtual void initialize(int is_old, int is_new, const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version);
+  virtual void finish(int is_old, int is_new, LineDiffRange & line_diff_range);
+  virtual void reset();
+  virtual void close();
+
+  virtual std::vector<xNodePtr> & get_nodes_old();
+  virtual std::vector<xNodePtr> & get_nodes_new();
   virtual reader_state & get_rbuf_old();
-  virtual reader_state & get_rbuf_new();
+  virtual reader_state & get_rbuf_new(); 
   virtual writer_state & get_wstate();
 
   virtual void output_node(const xNodePtr node, int operation);
@@ -127,8 +149,6 @@ public:
   virtual void output_char(char character, int operation);
 
   static void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation);
-
-
 
 };
 

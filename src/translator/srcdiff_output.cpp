@@ -11,18 +11,33 @@
 
 int move_operation = SESCOMMON;
 
-srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method, const char * prefix)
- : rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
+srcdiff_output::srcdiff_output(srcml_archive * archive, const char * srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method, const char * prefix,
+  std::string css, unsigned long number_context_lines)
+ : archive(archive), colordiff(NULL), bashview(NULL), options(options), rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
   diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
   diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
   diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
   diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
   unit_tag(std::make_shared<xNode>()) {
 
-  pthread_mutex_init(&mutex, 0);
+if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
+    srcml_write_open_filename(archive, srcdiff_filename);
 
-  rbuf_old->mutex = &mutex;
-  rbuf_new->mutex = &mutex;
+  // writer state
+  if(isoption(options, OPTION_VISUALIZE)) {
+
+    std::string dir = "";
+    if(srcml_archive_get_directory(archive) != NULL)
+      dir = srcml_archive_get_directory(archive);
+
+    std::string ver = "";
+    if(srcml_archive_get_version(archive) != NULL)
+      ver = srcml_archive_get_version(archive);
+
+    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, css, options);
+
+  } else if(isoption(options, OPTION_BASH_VIEW))
+    bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);
 
   wstate->filename = srcdiff_filename;
   wstate->method = method;
@@ -69,16 +84,114 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  }
 
- srcdiff_output::~srcdiff_output() {
+ srcdiff_output::~srcdiff_output() {}
 
-  pthread_mutex_destroy(&mutex);
+ void srcdiff_output::initialize(int is_old, int is_new, const char * language_string,
+  const char * unit_directory, const char * unit_filename, const char * unit_version) {
+
+  diff_set * old_diff = new diff_set();
+  old_diff->operation = SESCOMMON;
+  rbuf_old->open_diff.push_back(old_diff);
+
+  diff_set * new_diff = new diff_set();
+  new_diff->operation = SESCOMMON;
+  rbuf_new->open_diff.push_back(new_diff);
+
+  diff_set * output_diff = new diff_set();
+  output_diff->operation = SESCOMMON;
+  wstate->output_diff.push_back(output_diff);
+
+  // output srcdiff unit
+  if(!rbuf_old->nodes.empty() && !rbuf_new->nodes.empty()) {
+
+    update_diff_stack(rbuf_old->open_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+
+  } else if(rbuf_old->nodes.empty() && rbuf_new->nodes.empty()) {
+
+    update_diff_stack(rbuf_old->open_diff, diff_common_start.get(), SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, diff_common_start.get(), SESCOMMON);
+    update_diff_stack(wstate->output_diff, diff_common_start.get(), SESCOMMON);
+
+    if(is_old <= -1 && is_new <= -1) {
+
+      fprintf(stderr, "Error with files\n");
+
+      exit(1);
+
+    }
+
+  } else if(rbuf_old->nodes.empty()) {
+
+    if(!isoption(options, OPTION_OUTPUTPURE)) {
+
+      is_old = 0;
+      is_new = 0;
+
+    }
+
+    update_diff_stack(rbuf_old->open_diff, diff_common_start.get(), SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+
+  } else {
+
+    if(!isoption(options, OPTION_OUTPUTPURE)) {
+
+      is_old = 0;
+      is_new = 0;
+
+    }
+
+    update_diff_stack(rbuf_old->open_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, diff_common_start.get(), SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+
+  }
+
+  wstate->unit = srcml_create_unit(archive);
+
+  srcml_unit_set_language(wstate->unit, language_string);
+
+  srcml_archive_get_filename(archive) ? srcml_unit_set_filename(wstate->unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(wstate->unit, unit_filename);
+  srcml_unit_set_directory(wstate->unit, unit_directory);
+  srcml_unit_set_version(wstate->unit, unit_version);
+
+  if(is_old || is_new) {
+
+    /** @todo when output non-archive additional namespaces not appended, because not collected 
+      However this is correct when output is to archive */
+    srcml_write_start_unit(wstate->unit);
+
+  }
 
  }
 
- void srcdiff_output::flush() {
+ void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
   static const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, 0, true, false, 0, 0 };
   output_node((xNodePtr)&flush, SESCOMMON);
+
+  srcml_write_end_unit(wstate->unit);
+
+  if(!isoption(options, OPTION_VISUALIZE)) {
+
+    srcml_write_unit(archive, wstate->unit);
+
+  }
+
+  if(isoption(options, OPTION_VISUALIZE)) {
+
+    if(is_old || is_new)
+      colordiff->colorize(srcml_unit_get_xml(wstate->unit), line_diff_range);
+
+  } else if(isoption(options, OPTION_BASH_VIEW)) {
+
+    bashview->transform(srcml_unit_get_xml(wstate->unit));
+  }
+
+  srcml_free_unit(wstate->unit);
 
  }
 
@@ -90,6 +203,28 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  }
 
+void srcdiff_output::close() {
+
+  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW)) {
+
+    srcml_close_archive(archive);
+
+  }
+
+}
+
+std::vector<xNodePtr> & srcdiff_output::get_nodes_old() {
+
+  return rbuf_old->nodes;
+
+}
+
+std::vector<xNodePtr> & srcdiff_output::get_nodes_new() {
+
+  return rbuf_new->nodes;
+
+}
+
 reader_state & srcdiff_output::get_rbuf_old() {
 
   return *rbuf_old;
@@ -97,15 +232,15 @@ reader_state & srcdiff_output::get_rbuf_old() {
 }
 
 reader_state & srcdiff_output::get_rbuf_new() {
-
+ 
   return *rbuf_new;
-
+ 
 }
-
+ 
 writer_state & srcdiff_output::get_wstate() {
-
+ 
   return *wstate;
-
+ 
 }
 
 void srcdiff_output::output_node(const xNodePtr node, int operation) {

@@ -1,56 +1,43 @@
-#ifndef INCLUDED_SRCMLUTILITY_HPP
-#define INCLUDED_SRCMLUTILITY_HPP
+#ifndef INCLUDED_SRCML_UTILITY_HPP
+#define INCLUDED_SRCML_UTILITY_HPP
 
-#include <srcDiffUtility.hpp>
-#include <Options.hpp>
-#include <vector>
-
-#include <xmlrw.hpp>
-
-#include <pthread.h>
 
 #include <srcml.h>
 
-struct create_nodes_args {
+#include <vector>
+#include <thread>
 
-  // args
-  const char* path;
-  srcml_archive * main_archive;
-  const char * language;
-  const char * filename;
-  const char * directory;
-  const char * version;
+#include <Options.hpp>
+#include <xmlrw.hpp>
 
-  // pthreads
-  pthread_mutex_t * mutex;
 
-  // returns
-  std::vector<xNode *> & nodes;
-  int & no_error;
-  int context;
+
+class no_file_exception {};
+
+class srcml_converter {
+
+protected:
+
+  srcml_archive * archive;
   OPTION_TYPE options;
 
+  int stream_source;
+
+  char * output_buffer;
+  int output_size;
+
+private:
+
+std::vector<xNodePtr> collect_nodes(xmlTextReaderPtr reader);
+
+public:
+
+  srcml_converter(srcml_archive * archive, int stream_source);
+  ~srcml_converter();
+
+  void convert(const char* path, OPTION_TYPE options); 
+  std::vector<xNodePtr> create_nodes();
+
 };
-
-// converts source code to srcML
-void translate_to_srcML(const char * path, srcml_archive * main_archive,
-                        const char * language, const char * filename, const char * directory, const char * version,
-                   			char ** output_buffer, int * output_size, OPTION_TYPE options); 
-
-void * create_nodes_from_srcML_thread(void * arguments);
-
-void create_nodes_from_srcML(const char * path, srcml_archive * main_archive,
-                             const char * language, const char * filename, const char * directory, const char * version,
-                             pthread_mutex_t * mutex,
-                             std::vector<xNode *> & node, int & no_error, int context, OPTION_TYPE options);
-
-// create srcdiff unit
-xNodePtr create_srcdiff_unit(xNodePtr unit_old, xNodePtr unit_new);
-
-void addNamespace(xmlNsPtr * nsDef, xmlNsPtr ns);
-void merge_filename(xNodePtr unit_old, xNodePtr unit_new);
-
-bool is_atomic_srcml(std::vector<xNodePtr> * nodes, unsigned start);
-void collect_nodes(std::vector<xNode *> * nodes, xmlTextReaderPtr reader, OPTION_TYPE options, int context, pthread_mutex_t * mutex);
 
 #endif

@@ -24,6 +24,7 @@
 
 #include <srcDiffTranslator.hpp>
 
+#include <srcdiff_input.hpp>
 #include <srcdiff_output.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_change.hpp>
@@ -51,34 +52,12 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      const char * url,
                                      OPTION_TYPE & options,
                                      unsigned long number_context_lines)
-  : method(method), archive(archive), output(srcdiff_filename, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF)),
-    colordiff(NULL), bashview(NULL), url(url), options(options)
-{
-
-  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
-    srcml_write_open_filename(archive, srcdiff_filename);
-
-  // writer state
-  if(isoption(options, OPTION_VISUALIZE)) {
-
-    std::string dir = "";
-    if(srcml_archive_get_directory(archive) != NULL)
-      dir = srcml_archive_get_directory(archive);
-
-    std::string ver = "";
-    if(srcml_archive_get_version(archive) != NULL)
-      ver = srcml_archive_get_version(archive);
-
-    colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, options);
-
-  } else if(isoption(options, OPTION_BASH_VIEW))
-      bashview = new bash_view(srcdiff_filename, number_context_lines);
-
-}
+  : archive(archive), method(method), output(archive, srcdiff_filename, options, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF), css, number_context_lines),
+    url(url), options(options) {}
 
 // Translate from input stream to output stream
-void srcDiffTranslator::translate(const char* path_one, const char* path_two,
-                                  const char* unit_directory, const char* unit_filename, const char* unit_version) {
+void srcDiffTranslator::translate(const char * path_one, const char * path_two,
+                                  const char * unit_directory, const char * unit_filename, const char * unit_version) {
 
   LineDiffRange line_diff_range(path_one, path_two, url, options);
 
@@ -87,155 +66,17 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   if(!isoption(options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
-
-  // create the reader for the old file
-  node_sets set_old(output.get_rbuf_old().nodes);
-
   int is_old = 0;
-  create_nodes_args args_old = { path_one, archive
-                                , srcml_archive_check_extension(archive, path_one ? path_one : path_two)
-                                , unit_filename
-                                , unit_directory
-                                , unit_version
-                                , output.get_rbuf_old().mutex
-                                , output.get_rbuf_old().nodes
-                                , is_old
-                                , output.get_rbuf_old().stream_source
-                                , options };
-  pthread_t thread_old;
-  if(pthread_create(&thread_old, NULL, create_nodes_from_srcML_thread, (void *)&args_old)) {
-
-    is_old = -2;
-
-  }
-
-  if(!isoption(options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
-
-    is_old = -2;
-
-  }
-
-  /*
-
-    Input for file two
-
-  */
-
-  node_sets set_new(output.get_rbuf_new().nodes);
+  srcdiff_input input_old(archive, options);
+  std::thread thread_old(input_old, path_one, SESDELETE, std::ref(output.get_nodes_old()), std::ref(is_old));
 
   int is_new = 0;
-  create_nodes_args args_new = { path_two, archive
-                                , srcml_archive_check_extension(archive, path_one ? path_one : path_two)
-                                , unit_filename
-                                , unit_directory
-                                , unit_version
-                                , output.get_rbuf_new().mutex
-                                , output.get_rbuf_new().nodes
-                                , is_new
-                                , output.get_rbuf_new().stream_source
-                                , options };
+  srcdiff_input input_new(archive, options);
+  std::thread thread_new(input_new, path_two, SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
 
 
-  pthread_t thread_new;
-  if(pthread_create(&thread_new, NULL, create_nodes_from_srcML_thread, (void *)&args_new)) {
-
-    is_new = -2;
-
-  }
-
-  if(isoption(options, OPTION_THREAD) && is_old != -2 && pthread_join(thread_old, NULL)) {
-
-    is_old = -2;
-
-  }
-
-  if(is_new != -2 && pthread_join(thread_new, NULL)) {
-
-    is_new = -2;
-
-  }
-
-  if(is_old && is_old > -1)
-    set_old = node_sets(output.get_rbuf_old().nodes, 0, output.get_rbuf_old().nodes.size());
-
-
-  if(is_new && is_new > -1)
-    set_new = node_sets(output.get_rbuf_new().nodes, 0, output.get_rbuf_new().nodes.size());
-
-  /*
-
-    Setup readers and writer.
-
-  */
-
-  diff_set old_diff;
-  old_diff.operation = SESCOMMON;
-  output.get_rbuf_old().open_diff.push_back(&old_diff);
-
-  diff_set new_diff;
-  new_diff.operation = SESCOMMON;
-  output.get_rbuf_new().open_diff.push_back(&new_diff);
-
-  diff_set output_diff;
-  output_diff.operation = SESCOMMON;
-  output.get_wstate().output_diff.push_back(&output_diff);
-
-  /*
-
-    Output srcDiff
-
-  */
-
-  // output srcdiff unit
-  if(!output.get_rbuf_old().nodes.empty() && !output.get_rbuf_new().nodes.empty()) {
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
-
-  } else if(output.get_rbuf_old().nodes.empty() && output.get_rbuf_new().nodes.empty()) {
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.diff_common_start.get(), SESCOMMON);
-
-    if(is_old <= -1 && is_new <= -1) {
-
-      fprintf(stderr, "Error with file '%s' and file '%s'\n", path_one, path_two);
-
-      exit(STATUS_INPUTFILE_PROBLEM);
-
-    }
-
-  } else if(output.get_rbuf_old().nodes.empty()) {
-
-    if(!isoption(options, OPTION_OUTPUTPURE)) {
-
-      is_old = 0;
-      is_new = 0;
-
-    }
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
-
-  } else {
-
-    if(!isoption(options, OPTION_OUTPUTPURE)) {
-
-      is_old = 0;
-      is_new = 0;
-
-    }
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
-
-  }
-
-  srcml_unit * srcdiff_unit = srcml_create_unit(archive);
+  thread_old.join();
+  thread_new.join();
 
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
@@ -255,21 +96,13 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  srcml_unit_set_language(srcdiff_unit, language_string);
+  node_sets set_old(output.get_nodes_old(), 0, output.get_nodes_old().size());
+  node_sets set_new(output.get_nodes_new(), 0, output.get_nodes_new().size());
 
-
-  srcml_archive_get_filename(archive) ? srcml_unit_set_filename(srcdiff_unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(srcdiff_unit, unit_filename);
-  srcml_unit_set_directory(srcdiff_unit, unit_directory);
-  srcml_unit_set_version(srcdiff_unit, unit_version);
+  output.initialize(is_old, is_new, language_string, unit_directory, unit_filename, unit_version);
 
   // run on file level
   if(is_old || is_new) {
-
-    output.get_wstate().unit = srcdiff_unit;
-
-    /** @todo when output non-archive additional namespaces not appended, because not collected 
-      However this is correct when output is to archive */
-    srcml_write_start_unit(srcdiff_unit);
 
     srcdiff_diff diff(output, &set_old, &set_new);
     diff.output();
@@ -278,31 +111,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     srcdiff_whitespace whitespace(output);
     whitespace.output_all();
 
-    output.flush();
-
-    srcml_write_end_unit(srcdiff_unit);
-
-    if(!isoption(options, OPTION_VISUALIZE)) {
-
-      srcml_write_unit(archive, srcdiff_unit);
-
-    }
-
   }
+
+  output.finish(is_old, is_new, line_diff_range);
 
   output.reset();
-
-  if(isoption(options, OPTION_VISUALIZE)) {
-
-    if(is_old || is_new)
-      colordiff->colorize(srcml_unit_get_xml(srcdiff_unit), line_diff_range);
-
-  } else if(isoption(options, OPTION_BASH_VIEW)) {
-
-    bashview->transform(srcml_unit_get_xml(srcdiff_unit));
-  }
-
-  srcml_free_unit(srcdiff_unit);
 
 }
 
@@ -315,17 +128,7 @@ srcml_archive * srcDiffTranslator::get_archive() {
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
-  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW)) {
-
-    srcml_close_archive(archive);
-
-  } else {
-
-    if(colordiff) delete colordiff;
-
-    if(bashview) delete bashview;
-
-  }
+  output.close();
 
 }
 
