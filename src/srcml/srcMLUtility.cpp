@@ -8,6 +8,8 @@
 
 #include <libxml/xmlreader.h>
 
+static std::mutex mutex;
+
 srcml_converter::srcml_converter(srcml_archive * archive, int stream_source) 
   : archive(archive), stream_source(stream_source), output_buffer(0) {}
 

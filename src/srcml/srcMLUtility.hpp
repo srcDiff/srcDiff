@@ -26,8 +26,6 @@ protected:
   char * output_buffer;
   int output_size;
 
-  std::mutex mutex;
-
 private:
 
 std::vector<xNodePtr> collect_nodes(xmlTextReaderPtr reader);
