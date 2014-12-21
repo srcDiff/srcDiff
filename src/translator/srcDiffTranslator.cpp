@@ -52,7 +52,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      const char * url,
                                      OPTION_TYPE & options,
                                      unsigned long number_context_lines)
-  : method(method), output(archive, srcdiff_filename, options, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF), css, number_context_lines),
+  : archive(archive), method(method), output(archive, srcdiff_filename, options, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF), css, number_context_lines),
     url(url), options(options) {}
 
 // Translate from input stream to output stream
@@ -128,6 +128,7 @@ srcml_archive * srcDiffTranslator::get_archive() {
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
+  output.close();
 
 }
 

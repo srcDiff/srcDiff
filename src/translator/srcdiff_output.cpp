@@ -34,10 +34,10 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, options);
+    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, css, options);
 
   } else if(isoption(options, OPTION_BASH_VIEW))
-      bashview = new bash_view(srcdiff_filename, number_context_lines);
+    bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);
 
   wstate->filename = srcdiff_filename;
   wstate->method = method;
@@ -84,21 +84,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
  }
 
- srcdiff_output::~srcdiff_output() {
-
-  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW)) {
-
-    srcml_close_archive(archive);
-
-  } else {
-
-    if(colordiff) delete colordiff;
-
-    if(bashview) delete bashview;
-
-  }
-
- }
+ srcdiff_output::~srcdiff_output() {}
 
  void srcdiff_output::initialize(int is_old, int is_new, const char * language_string,
   const char * unit_directory, const char * unit_filename, const char * unit_version) {
@@ -215,6 +201,16 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
   wstate->clear();
 
  }
+
+void srcdiff_output::close() {
+
+  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW)) {
+
+    srcml_close_archive(archive);
+
+  }
+
+}
 
 std::vector<xNodePtr> & srcdiff_output::get_nodes_old() {
 

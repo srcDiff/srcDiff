@@ -89,8 +89,8 @@ class srcdiff_output {
 protected:
 
   srcml_archive * archive;
-  ColorDiff * colordiff;
-  bash_view * bashview;
+  std::shared_ptr<ColorDiff> colordiff;
+  std::shared_ptr<bash_view> bashview;
   OPTION_TYPE options;
 
   std::shared_ptr<reader_state> rbuf_old;
@@ -125,6 +125,7 @@ public:
   virtual void initialize(int is_old, int is_new, const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version);
   virtual void finish(int is_old, int is_new, LineDiffRange & line_diff_range);
   virtual void reset();
+  virtual void close();
 
   virtual std::vector<xNodePtr> & get_nodes_old();
   virtual std::vector<xNodePtr> & get_nodes_new();
