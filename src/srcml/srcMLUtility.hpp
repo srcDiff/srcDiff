@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SRCMLUTILITY_HPP
-#define INCLUDED_SRCMLUTILITY_HPP
+#ifndef INCLUDED_SRCML_UTILITY_HPP
+#define INCLUDED_SRCML_UTILITY_HPP
 
 
 #include <srcml.h>
@@ -14,7 +14,7 @@
 
 class no_file_exception {};
 
-class srcml_translator {
+class srcml_converter {
 
 protected:
 
@@ -34,10 +34,10 @@ std::vector<xNodePtr> collect_nodes(xmlTextReaderPtr reader);
 
 public:
 
-  srcml_translator(srcml_archive * archive, int stream_source);
-  ~srcml_translator();
+  srcml_converter(srcml_archive * archive, int stream_source);
+  ~srcml_converter();
 
-  void translate(const char* path, OPTION_TYPE options); 
+  void convert(const char* path, OPTION_TYPE options); 
   std::vector<xNodePtr> create_nodes();
 
 };

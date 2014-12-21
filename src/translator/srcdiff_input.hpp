@@ -2,6 +2,10 @@
 #define INCLUDED_SRCDIFF_INPUT_HPP
 
 #include <srcml.h>
+#include <Options.hpp>
+#include <xmlrw.hpp>
+
+#include <vector>
 
 class srcdiff_input {
 

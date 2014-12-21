@@ -1,15 +1,17 @@
 #include <srcdiff_input.hpp>
 
-srcdiff_input::srcdiff_input(srcml_archive * archive) {}
+#include <srcMLUtility.hpp>
 
-srcdiff_input~srcdiff_input() {}
+srcdiff_input::srcdiff_input(srcml_archive * archive, OPTION_TYPE options) : archive(archive), options(options) {}
 
-void operator()(const char * input_path, int stream_source, std::vector<xNodePtr> & nodes, int & is_input) {
+srcdiff_input::~srcdiff_input() {}
+
+void srcdiff_input::operator()(const char * input_path, int stream_source, std::vector<xNodePtr> & nodes, int & is_input) {
 
   is_input = 0;
   try {
 
-    nodes = input_one.input_nodes(path_one, SESDELETE);
+    nodes = input_nodes(input_path, stream_source);
     is_input = 1;
 
   } catch(no_file_exception) {}
@@ -24,10 +26,10 @@ void operator()(const char * input_path, int stream_source, std::vector<xNodePtr
 
 std::vector<xNodePtr> srcdiff_input::input_nodes(const char * input_path, int stream_source) {
 
-  srcml_translator translator(archive, stream_source);
+  srcml_converter converter(archive, stream_source);
 
-  translator.translate(input_path, options);
+  converter.convert(input_path, options);
 
-  return translator.create_nodes();
+  return converter.create_nodes();
 
 }

@@ -8,17 +8,17 @@
 
 #include <libxml/xmlreader.h>
 
-srcml_translator::srcml_translator(srcml_archive * archive, int stream_source) 
+srcml_converter::srcml_converter(srcml_archive * archive, int stream_source) 
   : archive(archive), stream_source(stream_source), output_buffer(0) {}
 
-srcml_translator::~srcml_translator() {
+srcml_converter::~srcml_converter() {
 
   if(output_buffer) free(output_buffer);
 
 }
 
 // converts source code to srcML
-void srcml_translator::translate(const char * path, OPTION_TYPE options) {
+void srcml_converter::convert(const char * path, OPTION_TYPE options) {
 
   if(path == 0 || path[0] == 0 || path[0] == '@') throw no_file_exception();
 
@@ -59,7 +59,7 @@ void srcml_translator::translate(const char * path, OPTION_TYPE options) {
 
 }
 
-std::vector<xNodePtr> srcml_translator::create_nodes() {
+std::vector<xNodePtr> srcml_converter::create_nodes() {
   
   xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
@@ -113,7 +113,7 @@ static bool is_atomic_srcml(std::vector<xNodePtr> & nodes, unsigned start) {
 
 
 // collect the differnces
-std::vector<xNodePtr> srcml_translator::collect_nodes(xmlTextReaderPtr reader) {
+std::vector<xNodePtr> srcml_converter::collect_nodes(xmlTextReaderPtr reader) {
 
   std::vector<xNodePtr> nodes;
 
