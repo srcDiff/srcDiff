@@ -66,6 +66,69 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  srcdiff_output::~srcdiff_output() {}
 
+ void srcdiff_output::initialize(int is_old, int is_new) {
+
+  diff_set old_diff;
+  old_diff.operation = SESCOMMON;
+  rbuf_old->open_diff.push_back(&old_diff);
+
+  diff_set new_diff;
+  new_diff.operation = SESCOMMON;
+  rbuf_new->open_diff.push_back(&new_diff);
+
+  diff_set output_diff;
+  output_diff.operation = SESCOMMON;
+  wstate->output_diff.push_back(&output_diff);
+  // output srcdiff unit
+  if(!rbuf_old.nodes.empty() && !rbuf_new.nodes.empty()) {
+
+    update_diff_stack(rbuf_old.open_diff, output.unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, output.unit_tag.get(), SESCOMMON);
+    update_diff_stack(wstate.output_diff, output.unit_tag.get(), SESCOMMON);
+
+  } else if(rbuf_old.nodes.empty() && rbuf_new.nodes.empty()) {
+
+    update_diff_stack(rbuf_old.open_diff, output.diff_common_start.get(), SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, output.diff_common_start.get(), SESCOMMON);
+    update_diff_stack(wstate.output_diff, output.diff_common_start.get(), SESCOMMON);
+
+    if(is_old <= -1 && is_new <= -1) {
+
+      fprintf(stderr, "Error with file '%s' and file '%s'\n", path_one, path_two);
+
+      exit(STATUS_INPUTFILE_PROBLEM);
+
+    }
+
+  } else if(rbuf_old.nodes.empty()) {
+
+    if(!isoption(options, OPTION_OUTPUTPURE)) {
+
+      is_old = 0;
+      is_new = 0;
+
+    }
+
+    update_diff_stack(rbuf_old.open_diff, output.diff_common_start.get(), SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, output.unit_tag.get(), SESCOMMON);
+    update_diff_stack(wstate.output_diff, output.unit_tag.get(), SESCOMMON);
+
+  } else {
+
+    if(!isoption(options, OPTION_OUTPUTPURE)) {
+
+      is_old = 0;
+      is_new = 0;
+
+    }
+
+    update_diff_stack(rbuf_old.open_diff, output.unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_new.open_diff, output.diff_common_start.get(), SESCOMMON);
+    update_diff_stack(wstate.output_diff, output.unit_tag.get(), SESCOMMON);
+
+  }
+ }
+
  void srcdiff_output::flush() {
 
   static const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, 0, true, false, 0, 0 };
@@ -81,21 +144,15 @@ srcdiff_output::srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method
 
  }
 
-reader_state & srcdiff_output::get_rbuf_old() {
+std::vector<xNodePtr> & srcdiff_output::get_nodes_old() {
 
-  return *rbuf_old;
-
-}
-
-reader_state & srcdiff_output::get_rbuf_new() {
-
-  return *rbuf_new;
+  return rbuf_old.nodes;
 
 }
 
-writer_state & srcdiff_output::get_wstate() {
+std::vector<xNodePtr> & srcdiff_output::get_nodes_new() {
 
-  return *wstate;
+  return rbuf_new.nodes;
 
 }
 

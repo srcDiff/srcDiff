@@ -113,12 +113,13 @@ public:
 
   srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method, const char * prefix);
   virtual ~srcdiff_output();
+
+  virtual void initialize(int is_old, int is_new);
   virtual void flush();
   virtual void reset();
 
-  virtual reader_state & get_rbuf_old();
-  virtual reader_state & get_rbuf_new();
-  virtual writer_state & get_wstate();
+  virtual std::vector<xNodePtr> & get_nodes_old();
+  virtual std::vector<xNodePtr> & get_nodes_new();
 
   virtual void output_node(const xNodePtr node, int operation);
   virtual void output_text_as_node(const char * text, int operation);

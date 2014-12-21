@@ -89,87 +89,16 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     return;
 
   int is_old = 0;
-  std::vector<xNodePtr> nodes_old;
   srcdiff_input input_old(archive, options);
-  std::thread thread_old(input_old, path_one, SESDELETE, std::ref(nodes_old), std::ref(is_old));
+  std::thread thread_old(input_old, path_one, SESDELETE, std::ref(output.get_nodes_old()), std::ref(is_old));
 
   int is_new = 0;
-  std::vector<xNodePtr> nodes_new;
   srcdiff_input input_new(archive, options);
-  std::thread thread_new(input_new, path_one, SESINSERT, std::ref(nodes_new), std::ref(is_new));
+  std::thread thread_new(input_new, path_one, SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
 
-  /*
 
-    Setup readers and writer.
-
-  */
-
-  diff_set old_diff;
-  old_diff.operation = SESCOMMON;
-  output.get_rbuf_old().open_diff.push_back(&old_diff);
-
-  diff_set new_diff;
-  new_diff.operation = SESCOMMON;
-  output.get_rbuf_new().open_diff.push_back(&new_diff);
-
-  diff_set output_diff;
-  output_diff.operation = SESCOMMON;
-  output.get_wstate().output_diff.push_back(&output_diff);
-
-  /*
-
-    Output srcDiff
-
-  */
-
-  // output srcdiff unit
-  if(!output.get_rbuf_old().nodes.empty() && !output.get_rbuf_new().nodes.empty()) {
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
-
-  } else if(output.get_rbuf_old().nodes.empty() && output.get_rbuf_new().nodes.empty()) {
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.diff_common_start.get(), SESCOMMON);
-
-    if(is_old <= -1 && is_new <= -1) {
-
-      fprintf(stderr, "Error with file '%s' and file '%s'\n", path_one, path_two);
-
-      exit(STATUS_INPUTFILE_PROBLEM);
-
-    }
-
-  } else if(output.get_rbuf_old().nodes.empty()) {
-
-    if(!isoption(options, OPTION_OUTPUTPURE)) {
-
-      is_old = 0;
-      is_new = 0;
-
-    }
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
-
-  } else {
-
-    if(!isoption(options, OPTION_OUTPUTPURE)) {
-
-      is_old = 0;
-      is_new = 0;
-
-    }
-
-    srcdiff_output::update_diff_stack(output.get_rbuf_old().open_diff, output.unit_tag.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_rbuf_new().open_diff, output.diff_common_start.get(), SESCOMMON);
-    srcdiff_output::update_diff_stack(output.get_wstate().output_diff, output.unit_tag.get(), SESCOMMON);
-
-  }
+  thread_old.join();
+  thread_new.join();
 
   srcml_unit * srcdiff_unit = srcml_create_unit(archive);
 
