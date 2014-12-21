@@ -91,12 +91,12 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   int is_old = 0;
   std::vector<xNodePtr> nodes_old;
   srcdiff_input input_old(archive, options);
-  std::thread thread_old(input_old, path_one, SESDELETE, &nodes_old, &is_old);
+  std::thread thread_old(input_old, path_one, SESDELETE, std::ref(nodes_old), std::ref(is_old));
 
   int is_new = 0;
   std::vector<xNodePtr> nodes_new;
   srcdiff_input input_new(archive, options);
-  std::thread thread_new(input_new, path_one, SESINSERT, &nodes_new, &is_new);
+  std::thread thread_new(input_new, path_one, SESINSERT, std::ref(nodes_new), std::ref(is_new));
 
   /*
 
