@@ -52,34 +52,12 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
                                      const char * url,
                                      OPTION_TYPE & options,
                                      unsigned long number_context_lines)
-  : method(method), archive(archive), output(srcdiff_filename, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF)),
-    colordiff(NULL), bashview(NULL), url(url), options(options)
-{
-
-  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
-    srcml_write_open_filename(archive, srcdiff_filename);
-
-  // writer state
-  if(isoption(options, OPTION_VISUALIZE)) {
-
-    std::string dir = "";
-    if(srcml_archive_get_directory(archive) != NULL)
-      dir = srcml_archive_get_directory(archive);
-
-    std::string ver = "";
-    if(srcml_archive_get_version(archive) != NULL)
-      ver = srcml_archive_get_version(archive);
-
-    colordiff = new ColorDiff(srcdiff_filename, dir, ver, css, options);
-
-  } else if(isoption(options, OPTION_BASH_VIEW))
-      bashview = new bash_view(srcdiff_filename, number_context_lines);
-
-}
+  : method(method), output(archive, srcdiff_filename, options, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF), css, number_context_lines),
+    url(url), options(options) {}
 
 // Translate from input stream to output stream
-void srcDiffTranslator::translate(const char* path_one, const char* path_two,
-                                  const char* unit_directory, const char* unit_filename, const char* unit_version) {
+void srcDiffTranslator::translate(const char * path_one, const char * path_two,
+                                  const char * unit_directory, const char * unit_filename, const char * unit_version) {
 
   LineDiffRange line_diff_range(path_one, path_two, url, options);
 
@@ -100,8 +78,6 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
   thread_old.join();
   thread_new.join();
 
-  srcml_unit * srcdiff_unit = srcml_create_unit(archive);
-
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;
@@ -120,21 +96,13 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
 
   }
 
-  srcml_unit_set_language(srcdiff_unit, language_string);
+  node_sets set_old(output.get_nodes_old(), 0, output.get_nodes_old().size());
+  node_sets set_new(output.get_nodes_new(), 0, output.get_nodes_new().size());
 
-
-  srcml_archive_get_filename(archive) ? srcml_unit_set_filename(srcdiff_unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(srcdiff_unit, unit_filename);
-  srcml_unit_set_directory(srcdiff_unit, unit_directory);
-  srcml_unit_set_version(srcdiff_unit, unit_version);
+  output.initialize(is_old, is_new, language_string, unit_directory, unit_filename, unit_version);
 
   // run on file level
   if(is_old || is_new) {
-
-    output.get_wstate().unit = srcdiff_unit;
-
-    /** @todo when output non-archive additional namespaces not appended, because not collected 
-      However this is correct when output is to archive */
-    srcml_write_start_unit(srcdiff_unit);
 
     srcdiff_diff diff(output, &set_old, &set_new);
     diff.output();
@@ -143,31 +111,11 @@ void srcDiffTranslator::translate(const char* path_one, const char* path_two,
     srcdiff_whitespace whitespace(output);
     whitespace.output_all();
 
-    output.flush();
-
-    srcml_write_end_unit(srcdiff_unit);
-
-    if(!isoption(options, OPTION_VISUALIZE)) {
-
-      srcml_write_unit(archive, srcdiff_unit);
-
-    }
-
   }
+
+  output.finish(is_old, is_new, line_diff_range);
 
   output.reset();
-
-  if(isoption(options, OPTION_VISUALIZE)) {
-
-    if(is_old || is_new)
-      colordiff->colorize(srcml_unit_get_xml(srcdiff_unit), line_diff_range);
-
-  } else if(isoption(options, OPTION_BASH_VIEW)) {
-
-    bashview->transform(srcml_unit_get_xml(srcdiff_unit));
-  }
-
-  srcml_free_unit(srcdiff_unit);
 
 }
 
@@ -180,17 +128,6 @@ srcml_archive * srcDiffTranslator::get_archive() {
 // destructor
 srcDiffTranslator::~srcDiffTranslator() {
 
-  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW)) {
-
-    srcml_close_archive(archive);
-
-  } else {
-
-    if(colordiff) delete colordiff;
-
-    if(bashview) delete bashview;
-
-  }
 
 }
 

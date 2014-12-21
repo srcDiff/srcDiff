@@ -1,5 +1,9 @@
-#ifndef INCLUDED_SRCDIFFOUTPUT_HPP
-#define INCLUDED_SRCDIFFOUTPUT_HPP
+#ifndef INCLUDED_SRCDIFF_OUTPUT_HPP
+#define INCLUDED_SRCDIFF_OUTPUT_HPP
+
+
+#include <ColorDiff.hpp>
+#include <bash_view.hpp>
 
 #include <methods.hpp>
 #include <xmlrw.hpp>
@@ -84,11 +88,14 @@ class srcdiff_output {
 
 protected:
 
+  srcml_archive * archive;
+  ColorDiff * colordiff;
+  bash_view * bashview;
+  OPTION_TYPE options;
+
   std::shared_ptr<reader_state> rbuf_old;
   std::shared_ptr<reader_state> rbuf_new;
   std::shared_ptr<writer_state> wstate;
-
-  pthread_mutex_t mutex;
 
 public:
 
@@ -111,15 +118,19 @@ private:
 
 public:
 
-  srcdiff_output(const char * srcdiff_filename, METHOD_TYPE method, const char * prefix);
+  srcdiff_output(srcml_archive * archive, const char * srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method, const char * prefix,
+    std::string css, unsigned long number_context_lines);
   virtual ~srcdiff_output();
 
-  virtual void initialize(int is_old, int is_new);
-  virtual void flush();
+  virtual void initialize(int is_old, int is_new, const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version);
+  virtual void finish(int is_old, int is_new, LineDiffRange & line_diff_range);
   virtual void reset();
 
   virtual std::vector<xNodePtr> & get_nodes_old();
   virtual std::vector<xNodePtr> & get_nodes_new();
+  virtual reader_state & get_rbuf_old();
+  virtual reader_state & get_rbuf_new(); 
+  virtual writer_state & get_wstate();
 
   virtual void output_node(const xNodePtr node, int operation);
   virtual void output_text_as_node(const char * text, int operation);

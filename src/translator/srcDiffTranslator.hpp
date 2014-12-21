@@ -34,8 +34,6 @@
 #include <libxml/xmlwriter.h>
 
 #include <methods.hpp>
-#include <ColorDiff.hpp>
-#include <bash_view.hpp>
 
 #include <srcml.h>
 
@@ -53,7 +51,7 @@ class srcDiffTranslator {
 
   void close();
 
-  void translate(const char* path_one, const char* path_two, const char* unit_directory = 0, const char* unit_filename = 0, const char* unit_version = 0);
+  void translate(const char * path_one, const char * path_two, const char * unit_directory = 0, const char * unit_filename = 0, const char * unit_version = 0);
 
   srcml_archive * get_archive();
 
@@ -62,13 +60,11 @@ class srcDiffTranslator {
 
  private:
 
-  METHOD_TYPE method;
   srcml_archive * archive;
 
-  srcdiff_output output;
+  METHOD_TYPE method;
 
-  ColorDiff * colordiff;
-  bash_view * bashview;
+  srcdiff_output output;
 
   const char * url;
 
