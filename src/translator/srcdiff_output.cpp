@@ -89,17 +89,18 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
  void srcdiff_output::initialize(int is_old, int is_new, const char * language_string,
   const char * unit_directory, const char * unit_filename, const char * unit_version) {
 
-  diff_set old_diff;
-  old_diff.operation = SESCOMMON;
-  rbuf_old->open_diff.push_back(&old_diff);
+  diff_set * old_diff = new diff_set();
+  old_diff->operation = SESCOMMON;
+  rbuf_old->open_diff.push_back(old_diff);
 
-  diff_set new_diff;
-  new_diff.operation = SESCOMMON;
-  rbuf_new->open_diff.push_back(&new_diff);
+  diff_set * new_diff = new diff_set();
+  new_diff->operation = SESCOMMON;
+  rbuf_new->open_diff.push_back(new_diff);
 
-  diff_set output_diff;
-  output_diff.operation = SESCOMMON;
-  wstate->output_diff.push_back(&output_diff);
+  diff_set * output_diff = new diff_set();
+  output_diff->operation = SESCOMMON;
+  wstate->output_diff.push_back(output_diff);
+
   // output srcdiff unit
   if(!rbuf_old->nodes.empty() && !rbuf_new->nodes.empty()) {
 

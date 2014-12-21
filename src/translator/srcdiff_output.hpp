@@ -49,7 +49,13 @@ public:
 
     last_output = 0;
     nodes.clear();
-    open_diff.clear();
+
+    while(!open_diff.empty()) {
+
+      delete open_diff.back();
+      open_diff.pop_back();
+
+    }
 
   }
 
@@ -69,7 +75,12 @@ public:
 
   void clear() {
 
-    output_diff.clear();
+    while(!output_diff.empty()) {
+
+      delete output_diff.back();
+      output_diff.pop_back();
+
+    }
 
   }
 
