@@ -72,7 +72,7 @@ void srcDiffTranslator::translate(const char * path_one, const char * path_two,
 
   int is_new = 0;
   srcdiff_input input_new(archive, options);
-  std::thread thread_new(input_new, path_one, SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
+  std::thread thread_new(input_new, path_two, SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
 
 
   thread_old.join();
