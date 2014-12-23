@@ -98,10 +98,12 @@ void srcdiff_translator::translate(const char * path_one, const char * path_two,
   node_sets set_old(output.get_nodes_old(), 0, output.get_nodes_old().size());
   node_sets set_new(output.get_nodes_new(), 0, output.get_nodes_new().size());
 
-  output.initialize(is_old, is_new, language_string, unit_directory, unit_filename, unit_version);
+  output.initialize(is_old, is_new);
 
   // run on file level
   if(is_old || is_new) {
+
+    output.start_unit(language_string, unit_directory, unit_filename, unit_version);
 
     srcdiff_diff diff(output, &set_old, &set_new);
     diff.output();

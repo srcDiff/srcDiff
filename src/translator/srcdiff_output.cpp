@@ -86,8 +86,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
  srcdiff_output::~srcdiff_output() {}
 
- void srcdiff_output::initialize(int is_old, int is_new, const char * language_string,
-  const char * unit_directory, const char * unit_filename, const char * unit_version) {
+ void srcdiff_output::initialize(int is_old, int is_new) {
 
   diff_set * old_diff = new diff_set();
   old_diff->operation = SESCOMMON;
@@ -101,7 +100,6 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
   output_diff->operation = SESCOMMON;
   wstate->output_diff.push_back(output_diff);
 
-  // output srcdiff unit
   if(!rbuf_old->nodes.empty() && !rbuf_new->nodes.empty()) {
 
     update_diff_stack(rbuf_old->open_diff, unit_tag.get(), SESCOMMON);
@@ -150,6 +148,11 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
   }
 
+
+ }
+
+ void srcdiff_output::start_unit(const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version) {
+
   wstate->unit = srcml_create_unit(archive);
 
   srcml_unit_set_language(wstate->unit, language_string);
@@ -157,14 +160,9 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
   srcml_archive_get_filename(archive) ? srcml_unit_set_filename(wstate->unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(wstate->unit, unit_filename);
   srcml_unit_set_directory(wstate->unit, unit_directory);
   srcml_unit_set_version(wstate->unit, unit_version);
-
-  if(is_old || is_new) {
-
-    /** @todo when output non-archive additional namespaces not appended, because not collected 
-      However this is correct when output is to archive */
-    srcml_write_start_unit(wstate->unit);
-
-  }
+  /** @todo when output non-archive additional namespaces not appended, because not collected 
+    However this is correct when output is to archive */
+  srcml_write_start_unit(wstate->unit);
 
  }
 

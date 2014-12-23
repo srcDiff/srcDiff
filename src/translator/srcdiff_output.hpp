@@ -133,7 +133,8 @@ public:
     std::string css, unsigned long number_context_lines);
   virtual ~srcdiff_output();
 
-  virtual void initialize(int is_old, int is_new, const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version);
+  virtual void initialize(int is_old, int is_new);
+  virtual void start_unit(const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version);
   virtual void finish(int is_old, int is_new, LineDiffRange & line_diff_range);
   virtual void reset();
   virtual void close();
