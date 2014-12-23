@@ -11,86 +11,85 @@
 #include <pthread.h>
 #include <memory>
 
-// const nodes here? or xmlrw
-struct diff_set {
+class srcdiff_output {
 
-  int operation;
+protected:
 
-  std::vector<const xNode *> open_tags;
+  struct diff_set {
 
-};
+    int operation;
 
-// stores information on state of a single file
-class reader_state {
+    std::vector<const xNode *> open_tags;
 
-public:
+  };
 
-  reader_state(int source) 
-    : stream_source(source), last_output(0) { }
+  // stores information on state of a single file
+  class reader_state {
 
-  void clear() {
+  public:
 
-    for(unsigned int i = 0; i < nodes.size(); ++i) {
+    reader_state(int source) 
+      : stream_source(source), last_output(0) { }
 
-      if(nodes.at(i)->free) {
+    void clear() {
 
-        freeXNode(nodes[i]);
+      for(unsigned int i = 0; i < nodes.size(); ++i) {
+
+        if(nodes.at(i)->free) {
+
+          freeXNode(nodes[i]);
+
+        }
+
+      }
+
+      last_output = 0;
+      nodes.clear();
+
+      while(!open_diff.empty()) {
+
+        delete open_diff.back();
+        open_diff.pop_back();
 
       }
 
     }
 
-    last_output = 0;
-    nodes.clear();
+    int stream_source;
+    unsigned int last_output;
 
-    while(!open_diff.empty()) {
+    std::vector<xNode *> nodes;
 
-      delete open_diff.back();
-      open_diff.pop_back();
+    std::vector<diff_set *> open_diff;
 
-    }
+  };
 
-  }
+  // stores information during xml Text Writer processing
+  class writer_state {
 
-  int stream_source;
-  unsigned int last_output;
+  public:
 
-  std::vector<xNode *> nodes;
+    void clear() {
 
-  std::vector<diff_set *> open_diff;
+      while(!output_diff.empty()) {
 
-};
+        delete output_diff.back();
+        output_diff.pop_back();
 
-// stores information during xml Text Writer processing
-class writer_state {
-
-public:
-
-  void clear() {
-
-    while(!output_diff.empty()) {
-
-      delete output_diff.back();
-      output_diff.pop_back();
+      }
 
     }
 
-  }
+    std::string filename;
+    xmlBufferPtr buffer;
+    xmlTextWriterPtr writer;
+    srcml_unit * unit;
 
-  std::string filename;
-  xmlBufferPtr buffer;
-  xmlTextWriterPtr writer;
-  srcml_unit * unit;
+    METHOD_TYPE method;
 
-  METHOD_TYPE method;
+    std::vector<diff_set *> output_diff;
 
-  std::vector<diff_set *> output_diff;
-
-};
-
-class srcdiff_output {
-
-protected:
+  };
 
   srcml_archive * archive;
   std::shared_ptr<ColorDiff> colordiff;
