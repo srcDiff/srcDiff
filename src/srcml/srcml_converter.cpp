@@ -20,7 +20,7 @@ srcml_converter::~srcml_converter() {
 }
 
 // converts source code to srcML
-void srcml_converter::convert(const char * path, OPTION_TYPE options) {
+void srcml_converter::convert(const char * path, const char * filename, OPTION_TYPE options) {
 
   if(path == 0 || path[0] == 0 || path[0] == '@') throw no_file_exception();
 

@@ -28,7 +28,7 @@ std::vector<xNodePtr> srcdiff_input::input_nodes(const char * input_path, int st
 
   srcml_converter converter(archive, stream_source);
 
-  converter.convert(input_path, options);
+  converter.convert(input_path, input_path, options);
 
   return converter.create_nodes();
 

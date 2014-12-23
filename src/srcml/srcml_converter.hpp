@@ -35,7 +35,7 @@ public:
   srcml_converter(srcml_archive * archive, int stream_source);
   ~srcml_converter();
 
-  void convert(const char* path, OPTION_TYPE options); 
+  void convert(const char * path, const char * filename, OPTION_TYPE options); 
   std::vector<xNodePtr> create_nodes();
 
 };
