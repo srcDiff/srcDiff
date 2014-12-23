@@ -1,4 +1,4 @@
-#include <srcDiffMeasure.hpp>
+#include <srcdiff_measure.hpp>
 
 #include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>

@@ -2,10 +2,10 @@
 
 #include <srcdiff_change.hpp>
 #include <srcdiff_whitespace.hpp>
+#include <srcdiff_measure.hpp>
 
 #include <shortest_edit_script.h>
 #include <srcDiffUtility.hpp>
-#include <srcDiffMeasure.hpp>
 
 #include <string.h>
 extern const char * change;

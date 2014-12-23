@@ -2,8 +2,8 @@
 
 #include <srcdiff_diff.hpp>
 #include <srcdiff_nested.hpp>
+#include <srcdiff_measure.hpp>
 
-#include <srcDiffMeasure.hpp>
 #include <ShortestEditScript.hpp>
 
 #include <string.h>

@@ -1,11 +1,11 @@
 #include <srcdiff_move.hpp>
 
 #include <srcdiff_diff.hpp>
+#include <srcdiff_measure.hpp>
 
 #include <vector>
 #include <map>
 
-#include <srcDiffMeasure.hpp>
 #include <srcDiffUtility.hpp>
 
 int move_id = 0;

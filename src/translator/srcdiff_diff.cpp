@@ -4,10 +4,9 @@
 #include <srcdiff_change.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
-#include <srcDiffMeasure.hpp>
+#include <srcdiff_measure.hpp>
 
 #include <srcDiffUtility.hpp>
-#include <srcDiffMeasure.hpp>
 #include <srcDiffMatch.hpp>
 #include <pthread.h>
 #include <ShortestEditScript.hpp>

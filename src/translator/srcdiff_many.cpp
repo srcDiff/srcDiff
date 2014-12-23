@@ -3,9 +3,9 @@
 #include <srcdiff_single.hpp>
 #include <srcdiff_nested.hpp>
 #include <srcdiff_change.hpp>
+#include <srcdiff_measure.hpp>
 
 #include <srcDiffMatch.hpp>
-#include <srcDiffMeasure.hpp>
 #include <srcDiffUtility.hpp>
 
 srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
