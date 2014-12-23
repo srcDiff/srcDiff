@@ -1,6 +1,10 @@
+#ifdef SVN
+
 #include <srcdiff_input_svn.hpp>
 
 #include <srcml_converter.hpp>
+
+#include <svn_io.hpp>
 
 #include <functional>
 #include <cstdio>
@@ -29,10 +33,17 @@ std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const char * input_path, in
 
   srcml_converter converter(archive, stream_source);
 
-  FILE * context = fopen(input_path, "r");
+  void * context = svnReadOpen(path);
 
-  converter.convert(input_path, (void *)context, file_read, file_close, options);
+  const char * end = index(path, '@');
+  const char * filename = strndup(path, end - path);
+  srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, filename));
+
+  converter.convert(filename, (void *)context, svnRead, svnReadClose, options);
+  free((void *)filename);
 
   return converter.create_nodes();
 
 }
+
+#endif
