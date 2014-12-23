@@ -31,7 +31,7 @@ void srcml_converter::convert(const char * filename, void * context, std::functi
 
   srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, filename));
 
-  int ret = srcml_parse_unit_io(unit, context, *read.target<int (*) (void *, char *, int)>(), *close.target<int (*) (void *)>());
+  srcml_parse_unit_io(unit, context, *read.target<int (*) (void *, char *, int)>(), *close.target<int (*) (void *)>());
 
   srcml_write_unit(unit_archive, unit);
 

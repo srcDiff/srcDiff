@@ -25,6 +25,7 @@
 #include <srcdiff_translator.hpp>
 
 #include <srcdiff_input.hpp>
+#include <srcdiff_input_filename.hpp>
 #include <srcdiff_output.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_change.hpp>
@@ -66,11 +67,11 @@ void srcdiff_translator::translate(const char * path_one, const char * path_two,
     return;
 
   int is_old = 0;
-  srcdiff_input input_old(archive, options);
+  srcdiff_input_filename input_old(archive, options);
   std::thread thread_old(input_old, path_one, SESDELETE, std::ref(output.get_nodes_old()), std::ref(is_old));
 
   int is_new = 0;
-  srcdiff_input input_new(archive, options);
+  srcdiff_input_filename input_new(archive, options);
   std::thread thread_new(input_new, path_two, SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
 
 

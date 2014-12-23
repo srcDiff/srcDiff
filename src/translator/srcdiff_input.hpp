@@ -23,7 +23,7 @@ public:
 
 	void operator()(const char * input_path, int stream_source, std::vector<xNodePtr> & nodes, int & is_input);
 
-	std::vector<xNodePtr> input_nodes(const char * input_path, int stream_source);
+	virtual std::vector<xNodePtr> input_nodes(const char * input_path, int stream_source) = 0;
 
 };
 
