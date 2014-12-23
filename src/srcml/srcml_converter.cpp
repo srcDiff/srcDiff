@@ -20,9 +20,7 @@ srcml_converter::~srcml_converter() {
 }
 
 // converts source code to srcML
-void srcml_converter::convert(const char * path, const char * filename, OPTION_TYPE options) {
-
-  if(path == 0 || path[0] == 0 || path[0] == '@') throw no_file_exception();
+void srcml_converter::convert(const char * filename, void * context, std::function<int(void *, char *, int)> read, std::function<int(void *)> close, OPTION_TYPE options) {
 
   srcml_archive * unit_archive = srcml_clone_archive(archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
@@ -31,26 +29,9 @@ void srcml_converter::convert(const char * path, const char * filename, OPTION_T
 
   srcml_unit * unit = srcml_create_unit(unit_archive);
 
-#ifdef SVN
-  if(!isoption(options, OPTION_SVN)) {
-#endif
+  srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, filename));
 
-    srcml_parse_unit_filename(unit, path);
-
-#ifdef SVN
-  } else {
-
-    void * context = svnReadOpen(path);
-
-    const char * end = index(path, '@');
-    const char * filename = strndup(path, end - path);
-    srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, filename));
-    free((void *)filename);
-
-    srcml_parse_unit_io(unit, context, svnRead, svnReadClose);
-
-}
-#endif
+  int ret = srcml_parse_unit_io(unit, context, *read.target<int (*) (void *, char *, int)>(), *close.target<int (*) (void *)>());
 
   srcml_write_unit(unit_archive, unit);
 
