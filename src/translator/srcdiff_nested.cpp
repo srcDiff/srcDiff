@@ -133,7 +133,8 @@ int best_match(std::vector<xNodePtr> & nodes, node_sets & set
       || (match->size() > set.at(0)->size() && (match->size()) > (4 * set.at(0)->size())))) {
 
       match_pos = 0;
-      match_similarity = compute_similarity(nodes, set.at(0), nodes_match, match);
+      srcdiff_measure measure(nodes, nodes_match, set.at(0), match);
+      match_similarity = measure.compute_similarity();
 
     }
 
@@ -148,7 +149,8 @@ int best_match(std::vector<xNodePtr> & nodes, node_sets & set
     if(match->size() > set.at(i)->size() && (match->size()) > (4 * set.at(i)->size()))
       continue;
 
-    int similarity = compute_similarity(nodes, set.at(i), nodes_match, match);
+    srcdiff_measure measure(nodes, nodes_match, set.at(i), match);
+    int similarity = measure.compute_similarity();
     if(similarity > match_similarity) {
 
       match_pos = i;
@@ -220,10 +222,13 @@ bool srcdiff_nested::is_same_nestable(node_set * structure_one, std::vector<xNod
   if(match >= set.size())
     return false;
 
+  srcdiff_measure match_measure(nodes_one, nodes_two, structure_one, set.at(match));
   int match_similarity, match_difference, size_one, size_match;
-  compute_measures(nodes_one, structure_one, nodes_two, set.at(match), match_similarity, match_difference, size_one, size_match);
+  match_measure.compute_measures(match_similarity, match_difference, size_one, size_match);
+
+  srcdiff_measure measure(nodes_one, nodes_two, structure_one, structure_two);
   int similarity, difference, size_two;
-  compute_measures(nodes_one, structure_one, nodes_two, structure_two, similarity, difference, size_one, size_two);
+  measure.compute_measures(similarity, difference, size_one, size_two);
 
   double min_size = size_one < size_two ? size_one : size_two;
   double match_min_size = size_one < size_match ? size_one : size_match;
@@ -258,9 +263,9 @@ bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, node_set *
 
       if(match < set.size()) {
 
+        srcdiff_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
         int nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length;
-        compute_measures(nodes_outer, set.at(match), nodes_inner, node_set_inner,
-          nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
+        measure.compute_measures(nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
         double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
@@ -291,9 +296,9 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, node_set * node_set_out
 
       if(match < set.size()) {
 
+        srcdiff_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
         int nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length;
-        compute_measures(nodes_outer, set.at(match), nodes_inner, node_set_inner,
-          nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
+        measure.compute_measures(nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
         double nest_min_size = nest_text_outer_length < nest_text_inner_length ? nest_text_outer_length : nest_text_inner_length;
@@ -416,9 +421,9 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNode
 
         if(match >= set.size()) continue;
 
+        srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new->at(j));
         int similarity, difference, text_old_length, text_new_length;
-        compute_measures(nodes_old, set.at(match), nodes_new, node_sets_new->at(j),
-          similarity, difference, text_old_length, text_new_length);
+        measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
           nodes_old, set.at(match), nodes_new, node_sets_new->at(j))
@@ -451,9 +456,9 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNode
 
           if(match >= set.size()) continue;
 
+          srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new->at(k));
           int similarity, difference, text_old_length, text_new_length;
-          compute_measures(nodes_old, set.at(match), nodes_new, node_sets_new->at(k),
-            similarity, difference, text_old_length, text_new_length);
+          measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
           if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
             nodes_old, set.at(match), nodes_new, node_sets_new->at(k)))
@@ -495,9 +500,9 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNode
 
         if(match >= set.size()) continue;
 
+        srcdiff_measure measure(nodes_old, nodes_new, node_sets_old->at(j), set.at(match));
         int similarity, difference, text_old_length, text_new_length;
-        compute_measures(nodes_old, node_sets_old->at(j), nodes_new, set.at(match),
-          similarity, difference, text_old_length, text_new_length);
+        measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
           nodes_old, node_sets_old->at(j), nodes_new, set.at(match))
@@ -527,9 +532,9 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNode
 
             if(match >= set.size()) continue;
 
+            srcdiff_measure measure(nodes_old, nodes_new, node_sets_old->at(k), set.at(match));
             int similarity, difference, text_old_length, text_new_length;
-            compute_measures(nodes_old, node_sets_old->at(k), nodes_new, set.at(match),
-              similarity, difference, text_old_length, text_new_length);
+            measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
             if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
               nodes_old, node_sets_old->at(k), nodes_new, set.at(match)))

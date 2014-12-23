@@ -32,16 +32,5 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * no
                                , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
                                , offset_pair ** matches);
 
-void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
-                               , edit * edit_script, offset_pair ** matches);
-
-void match_differences_dynamic_unordered(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
-                               , edit * edit_script, offset_pair ** matches);
-
-void match_differences(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
-                               , edit * edit_script, offset_pair ** matches);
 
 #endif

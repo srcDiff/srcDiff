@@ -1,28 +1,37 @@
-#ifndef INCLUDED_SRCDIFFMEASURE_HPP
-#define INCLUDED_SRCDIFFMEASURE_HPP
+#ifndef INCLUDED_SRCDIFF_MEASURE_HPP
+#define INCLUDED_SRCDIFF_MEASURE_HPP
 
-#include <vector>
-#include <xmlrw.hpp>
 #include <node_set.hpp>
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
-                       node_set * set_new);
+#include <ShortestEditScript.hpp>
 
-int compute_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
-                       node_set * set_new, int & text_old_length, int & text_new_length);
+#include <vector>
 
-double compute_percent_similarity(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new);
+class srcdiff_measure {
 
-int compute_difference(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
-                       node_set * set_new);
+protected:
+	std::vector<xNodePtr> & nodes_old;
+	std::vector<xNodePtr> & nodes_new;
+	node_set * set_old;
+	node_set * set_new;
 
-int compute_similarity_old(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
-                       node_set * set_new);
+private:
+	void compute_ses(ShortestEditScript & ses, int & text_old_length, int & text_new_length);
+	void compute_ses_important_text(ShortestEditScript & ses, int & text_old_length, int & text_new_length);
 
-void compute_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
-                       node_set * set_new, int & similarity, int & difference, int & text_old_length, int & text_new_length);
+public:
 
-void compute_syntax_measures(std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new,
-                       node_set * set_new, int & similarity, int & difference, int & children_old_length, int & children_new_length);
+	srcdiff_measure(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_set * set_old, node_set * set_new);
+
+	int compute_similarity();
+	int compute_similarity(int & text_old_length, int & text_new_length);
+	void compute_measures(int & similarity, int & difference, int & text_old_length, int & text_new_length);
+	void compute_syntax_measures(int & similarity, int & difference, int & children_old_length, int & children_new_length);
+
+};
+
+
+
+
 
 #endif

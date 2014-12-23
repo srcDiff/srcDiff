@@ -791,8 +791,9 @@ bool is_interchangeable_match(const std::string & old_tag, const std::string & n
 bool reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
   std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
+  srcdiff_measure measure(nodes_old, nodes_new, set_old, set_new);
   int syntax_similarity, syntax_difference, children_length_old, children_length_new;
-  compute_syntax_measures(nodes_old, set_old, nodes_new, set_new, syntax_similarity, syntax_difference, children_length_old, children_length_new);
+  measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_old, children_length_new);
 
   int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
   int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
@@ -824,7 +825,8 @@ bool reject_similarity(int similarity, int difference, int text_old_length, int 
   if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "block") == 0
     && strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "block") == 0) {
 
-    compute_syntax_measures(nodes_old, child_node_sets_old.back(), nodes_new, child_node_sets_new.back(), syntax_similarity, syntax_difference, children_length_old, children_length_new);
+    srcdiff_measure measure(nodes_old, nodes_new, child_node_sets_old.back(), child_node_sets_new.back());
+    measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_old, children_length_new);
 
     min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
     max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;      
