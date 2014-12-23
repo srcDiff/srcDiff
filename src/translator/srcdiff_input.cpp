@@ -2,11 +2,11 @@
 
 class no_file_exception {};
 
-srcdiff_input::srcdiff_input(srcml_archive * archive, OPTION_TYPE options) : archive(archive), options(options) {}
+srcdiff_input::srcdiff_input(srcml_archive * archive, const char * input_path, OPTION_TYPE options) : archive(archive), input_path(input_path), options(options) {}
 
 srcdiff_input::~srcdiff_input() {}
 
-void srcdiff_input::operator()(const char * input_path, int stream_source, std::vector<xNodePtr> & nodes, int & is_input) {
+void srcdiff_input::operator()(int stream_source, std::vector<xNodePtr> & nodes, int & is_input) {
 
   is_input = 0;
   try {
@@ -20,5 +20,11 @@ void srcdiff_input::operator()(const char * input_path, int stream_source, std::
     is_input = -2;
 
   }
+
+}
+
+std::vector<xNodePtr> srcdiff_input::input_nodes(const char * input_path, int stream_source) {
+
+	return std::vector<xNodePtr>();
 
 }

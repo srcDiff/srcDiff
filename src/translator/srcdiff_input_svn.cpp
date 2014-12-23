@@ -11,7 +11,7 @@
 
 class no_file_exception {};
 
-srcdiff_input_svn::srcdiff_input_svn(srcml_archive * archive, OPTION_TYPE options) : srcdiff_input(archive, options) {}
+srcdiff_input_svn::srcdiff_input_svn(srcml_archive * archive, const char * input_path, OPTION_TYPE options) : srcdiff_input(archive, input_path, options) {}
 
 srcdiff_input_svn::~srcdiff_input_svn() {}
 

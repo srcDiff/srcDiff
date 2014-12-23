@@ -17,7 +17,7 @@ private:
 
 public:
 
-	srcdiff_input_svn(srcml_archive * archive, OPTION_TYPE options);
+	srcdiff_input_svn(srcml_archive * archive, const char * input_path, OPTION_TYPE options);
 	~srcdiff_input_svn();
 
 	virtual std::vector<xNodePtr> input_nodes(const char * input_path, int stream_source);
