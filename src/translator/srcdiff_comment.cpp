@@ -21,7 +21,7 @@ void srcdiff_comment::output() {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
+  diff_nodes dnodes = { out.get_nodes_old(), out.get_nodes_new() };
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
   int distance = ses.compute((const void *)node_sets_old, node_sets_old->size(), (const void *)node_sets_new, node_sets_new->size());
@@ -36,15 +36,15 @@ void srcdiff_comment::output() {
 
   int last_diff_old = 0;
   int last_diff_new = 0;
-  int diff_end_old = rbuf_old.last_output;
-  int diff_end_new = rbuf_new.last_output;
+  int diff_end_old = out.last_output_old();
+  int diff_end_new = out.last_output_new();
 
   edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
-    diff_end_old = rbuf_old.last_output;
-    diff_end_new = rbuf_new.last_output;
+    diff_end_old = out.last_output_old();
+    diff_end_new = out.last_output_new();
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
       diff_end_old = node_sets_old->at(edits->offset_sequence_one - 1)->back() + 1;
@@ -118,8 +118,8 @@ void srcdiff_comment::output() {
   }
 
   // determine ending position to output
-  diff_end_old = rbuf_old.last_output;
-  diff_end_new = rbuf_new.last_output;
+  diff_end_old = out.last_output_old();
+  diff_end_new = out.last_output_new();
   if(last_diff_old < (signed)node_sets_old->size()) {
 
     diff_end_old = node_sets_old->back()->back() + 1;

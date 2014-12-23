@@ -225,22 +225,22 @@ std::vector<xNodePtr> & srcdiff_output::get_nodes_new() {
 
 }
 
-reader_state & srcdiff_output::get_rbuf_old() {
+unsigned int & srcdiff_output::last_output_old() {
 
-  return *rbuf_old;
+  return rbuf_old->last_output;
 
 }
 
-reader_state & srcdiff_output::get_rbuf_new() {
- 
-  return *rbuf_new;
- 
+unsigned int & srcdiff_output::last_output_new() {
+
+return rbuf_new->last_output;
+
 }
- 
-writer_state & srcdiff_output::get_wstate() {
- 
-  return *wstate;
- 
+
+METHOD_TYPE srcdiff_output::method() const {
+
+  return wstate->method;
+
 }
 
 void srcdiff_output::output_node(const xNodePtr node, int operation) {

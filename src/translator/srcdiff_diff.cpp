@@ -24,41 +24,40 @@ extern xNode diff_new_end;
 
 
 srcdiff_diff::srcdiff_diff(srcdiff_output & out, node_sets * node_sets_old, node_sets * node_sets_new) 
-  : out(out), rbuf_old(out.get_rbuf_old()), rbuf_new(out.get_rbuf_new()), wstate(out.get_wstate()), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
+  : out(out), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
 
-bool srcdiff_diff::go_down_a_level(reader_state & rbuf_old, node_sets * node_sets_old
+bool srcdiff_diff::go_down_a_level(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
                      , unsigned int start_old
-                     , reader_state & rbuf_new, node_sets * node_sets_new
-                     , unsigned int start_new
-                     , writer_state & wstate) {
+                     , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
+                     , unsigned int start_new) {
 
 
-  if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "expr_stmt") != 0
-     && strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "decl_stmt") != 0
-     && strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
+  if(strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr_stmt") != 0
+     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "decl_stmt") != 0
+     && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
     return true;
 
   int similarity, difference, text_old_length, text_new_length;
-  compute_measures(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new),
+  compute_measures(nodes_old, node_sets_old->at(start_old), nodes_new, node_sets_new->at(start_new),
     similarity, difference, text_old_length, text_new_length);
 
   return !reject_match(similarity, difference, text_old_length, text_new_length,
-          rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
+          nodes_old, node_sets_old->at(start_old), nodes_new, node_sets_new->at(start_new));
 
 }
 
-bool srcdiff_diff::group_sub_elements(reader_state & rbuf_old, node_sets * node_sets_old
+bool srcdiff_diff::group_sub_elements(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
                         , unsigned int start_old
-                        , reader_state & rbuf_new, node_sets * node_sets_new
+                        , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
                         , unsigned int start_new
-                        , writer_state & wstate) {
+) {
 
 
-  if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "type") != 0)
+  if(strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "type") != 0)
     return false;
 
-  unsigned int similarity = compute_similarity(rbuf_old.nodes, node_sets_old->at(start_old), rbuf_new.nodes, node_sets_new->at(start_new));
+  unsigned int similarity = compute_similarity(nodes_old, node_sets_old->at(start_old), nodes_new, node_sets_new->at(start_new));
 
   unsigned int olength = node_sets_old->at(start_old)->size();
   unsigned int nlength = node_sets_new->at(start_new)->size();
@@ -66,13 +65,13 @@ bool srcdiff_diff::group_sub_elements(reader_state & rbuf_old, node_sets * node_
   unsigned int size_old = 0;
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(i))))
+    if(is_text(nodes_old.at(node_sets_old->at(start_old)->at(i))) && !is_white_space(nodes_old.at(node_sets_old->at(start_old)->at(i))))
       ++size_old;
 
   unsigned int size_new = 0;
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(i))))
+    if(is_text(nodes_new.at(node_sets_new->at(start_new)->at(i))) && !is_white_space(nodes_new.at(node_sets_new->at(start_new)->at(i))))
       ++size_new;
 
   unsigned int min_length = size_old;
@@ -98,7 +97,7 @@ void srcdiff_diff::output() {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  diff_nodes dnodes = { rbuf_old.nodes, rbuf_new.nodes };
+  diff_nodes dnodes = { out.get_nodes_old(), out.get_nodes_new() };
 
   ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
 
@@ -112,19 +111,19 @@ void srcdiff_diff::output() {
     exit(distance);
   }
 
-  srcdiff_move::mark_moves(rbuf_old, node_sets_old, rbuf_new, node_sets_new, edit_script, wstate);
+  srcdiff_move::mark_moves(out.get_nodes_old(), node_sets_old, out.get_nodes_new(), node_sets_new, edit_script);
 
   int last_diff_old = 0;
   int last_diff_new = 0;
-  int diff_end_old = rbuf_old.last_output;
-  int diff_end_new = rbuf_new.last_output;
+  int diff_end_old = out.last_output_old();
+  int diff_end_new = out.last_output_new();
 
   edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
-    diff_end_old = rbuf_old.last_output;
-    diff_end_new = rbuf_new.last_output;
+    diff_end_old = out.last_output_old();
+    diff_end_new = out.last_output_new();
 
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
@@ -190,8 +189,8 @@ void srcdiff_diff::output() {
   }
 
   // determine ending position to output
-  diff_end_old = rbuf_old.last_output;
-  diff_end_new = rbuf_new.last_output;
+  diff_end_old = out.last_output_old();
+  diff_end_new = out.last_output_new();
   if(last_diff_old < (signed)node_sets_old->size()) {
 
     diff_end_old = node_sets_old->back()->back() + 1;

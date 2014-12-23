@@ -12,8 +12,8 @@ srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcd
 
 void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, int end_new) {
 
-  unsigned int finish_old = rbuf_old.last_output;
-  unsigned int finish_new = rbuf_new.last_output;
+  unsigned int finish_old = out.last_output_old();
+  unsigned int finish_new = out.last_output_new();
 
   if((start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old->size())
       || (start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new->size())) {
@@ -25,8 +25,8 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
 
       do {
 
-        srcdiff_nested::check_nestable(node_sets_old, rbuf_old.nodes, start_old, end_old + 1
-                        , node_sets_new, rbuf_new.nodes, start_new, end_new + 1
+        srcdiff_nested::check_nestable(node_sets_old, out.get_nodes_old(), start_old, end_old + 1
+                        , node_sets_new, out.get_nodes_new(), start_new, end_new + 1
                         , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
         finish_old = node_sets_old->at(end_old)->back() + 1;
@@ -97,17 +97,17 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   IntPairs old_moved;
   std::vector<int> pos_old;
-  node_sets old_sets(rbuf_old.nodes);
+  node_sets old_sets(out.get_nodes_old());
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
     unsigned int index = edits->offset_sequence_one + i;
 
-    if(rbuf_old.nodes.at(node_sets_old->at(index)->at(0))->move) {
+    if(out.get_nodes_old().at(node_sets_old->at(index)->at(0))->move) {
 
       old_moved.push_back(IntPair(SESMOVE, 0));
 
-    } else if(rbuf_old.nodes.at(node_sets_old->at(index)->at(0))->nest) {
+    } else if(out.get_nodes_old().at(node_sets_old->at(index)->at(0))->nest) {
 
       old_moved.push_back(IntPair(SESNEST, 0));
 
@@ -123,17 +123,17 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   IntPairs new_moved;
   std::vector<int> pos_new;
-  node_sets new_sets(rbuf_new.nodes);
+  node_sets new_sets(out.get_nodes_new());
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 
-    if(rbuf_new.nodes.at(node_sets_new->at(index)->at(0))->move) {
+    if(out.get_nodes_new().at(node_sets_new->at(index)->at(0))->move) {
 
       new_moved.push_back(IntPair(SESMOVE, 0));
 
-    } else if(rbuf_new.nodes.at(node_sets_new->at(index)->at(0))->nest) {
+    } else if(out.get_nodes_new().at(node_sets_new->at(index)->at(0))->nest) {
 
       new_moved.push_back(IntPair(SESNEST, 0));
 
@@ -148,7 +148,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
   }
 
   if(pos_old.size() != 0 && pos_new.size())
-    match_differences_dynamic(rbuf_old.nodes, &old_sets, rbuf_new.nodes, &new_sets, &matches);
+    match_differences_dynamic(out.get_nodes_old(), &old_sets, out.get_nodes_new(), &new_sets, &matches);
 
   offset_pair * matches_save = matches;
 
@@ -218,9 +218,9 @@ void srcdiff_many::output() {
 
     if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
  
-      if((xmlReaderTypes)rbuf_old.nodes.at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT
-         && (ismethod(wstate.method, METHOD_RAW) || srcdiff_diff::go_down_a_level(rbuf_old, node_sets_old, edits->offset_sequence_one + i
-                                                                    , rbuf_new, node_sets_new, edit_next->offset_sequence_two + j, wstate))) {
+      if((xmlReaderTypes)out.get_nodes_old().at(node_sets_old->at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT
+         && (ismethod(out.method(), METHOD_RAW) || srcdiff_diff::go_down_a_level(out.get_nodes_old(), node_sets_old, edits->offset_sequence_one + i
+                                                                    , out.get_nodes_new(), node_sets_new, edit_next->offset_sequence_two + j))) {
 
         srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
         diff.output();
@@ -237,7 +237,7 @@ void srcdiff_many::output() {
      else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
   
       if(srcdiff_nested::is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
-                     , rbuf_old.nodes, node_sets_new->at(edit_next->offset_sequence_two + j), rbuf_new.nodes)) {
+                     , out.get_nodes_old(), node_sets_new->at(edit_next->offset_sequence_two + j), out.get_nodes_new())) {
 
           int nest_length = 1;
           while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
@@ -248,7 +248,7 @@ void srcdiff_many::output() {
           diff.output();
 
       } else if(srcdiff_nested::is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
-                            , rbuf_new.nodes, node_sets_old->at(edits->offset_sequence_one + i), rbuf_old.nodes)) {
+                            , out.get_nodes_new(), node_sets_old->at(edits->offset_sequence_one + i), out.get_nodes_old())) {
 
           int nest_length = 1;
           while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)

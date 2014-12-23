@@ -593,25 +593,25 @@ void srcdiff_nested::output() {
 
     unsigned int end_pos = node_sets_old->at(start_old)->at(1);
 
-    if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
+    if(strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
 
-        while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && strcmp(rbuf_old.nodes.at(end_pos)->name, "then") == 0))
+        while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+          && strcmp(out.get_nodes_old().at(end_pos)->name, "then") == 0))
 
           ++end_pos;
 
-    } else if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "while") == 0) {
+    } else if(strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "while") == 0) {
 
-        while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && strcmp(rbuf_old.nodes.at(end_pos)->name, "condition") == 0))
+        while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && strcmp(out.get_nodes_old().at(end_pos)->name, "condition") == 0))
           ++end_pos;
 
         ++end_pos;
 
-    } else if(strcmp(rbuf_old.nodes.at(node_sets_old->at(start_old)->at(0))->name, "for") == 0) {
+    } else if(strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "for") == 0) {
 
-        while(!(rbuf_old.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && strcmp(rbuf_old.nodes.at(end_pos)->name, "control") == 0))
+        while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && strcmp(out.get_nodes_old().at(end_pos)->name, "control") == 0))
           ++end_pos;
 
         ++end_pos;
@@ -619,17 +619,17 @@ void srcdiff_nested::output() {
 
     }
 
-    node_sets set = node_sets(rbuf_old.nodes,
+    node_sets set = node_sets(out.get_nodes_old(),
       //node_sets_old->at(start_old)->at(1),
       end_pos,
       node_sets_old->at(end_old - 1)->back());
 
-    node_sets nest_set(rbuf_new.nodes);
+    node_sets nest_set(out.get_nodes_new());
 
     for(int i = start_new; i < end_new; ++i)
         nest_set.push_back(new node_set(*node_sets_new->at(i)));
 
-      output_change(end_pos, rbuf_new.last_output);
+      output_change(end_pos, out.last_output_new());
 
       whitespace.output_nested(SESDELETE);
 
@@ -638,30 +638,30 @@ void srcdiff_nested::output() {
 
       whitespace.output_nested(SESDELETE);
 
-      output_change(node_sets_old->at(end_old - 1)->back() + 1, rbuf_new.last_output);
+      output_change(node_sets_old->at(end_old - 1)->back() + 1, out.last_output_new());
 
   } else {
 
     unsigned int end_pos = node_sets_new->at(start_new)->at(1);
 
-    if(strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
+    if(strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
 
-        while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && strcmp(rbuf_new.nodes.at(end_pos)->name, "then") == 0))
+        while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+          && strcmp(out.get_nodes_new().at(end_pos)->name, "then") == 0))
           ++end_pos;
 
-    } else if(strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "while") == 0) {
+    } else if(strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "while") == 0) {
 
-        while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && strcmp(rbuf_new.nodes.at(end_pos)->name, "condition") == 0))
+        while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && strcmp(out.get_nodes_new().at(end_pos)->name, "condition") == 0))
           ++end_pos;
 
         ++end_pos;
 
-    } else if(strcmp(rbuf_new.nodes.at(node_sets_new->at(start_new)->at(0))->name, "for") == 0) {
+    } else if(strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "for") == 0) {
 
-        while(!(rbuf_new.nodes.at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && strcmp(rbuf_new.nodes.at(end_pos)->name, "control") == 0))
+        while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && strcmp(out.get_nodes_new().at(end_pos)->name, "control") == 0))
           ++end_pos;
 
         ++end_pos;
@@ -669,17 +669,17 @@ void srcdiff_nested::output() {
 
     }
 
-    node_sets set = node_sets(rbuf_new.nodes,
+    node_sets set = node_sets(out.get_nodes_new(),
       //node_sets_old->at(start_old)->at(1),
       end_pos,
       node_sets_new->at(end_new - 1)->back());
 
-    node_sets nest_set(rbuf_old.nodes);
+    node_sets nest_set(out.get_nodes_old());
 
     for(int i = start_old; i < end_old; ++i)
         nest_set.push_back(new node_set(*node_sets_old->at(i)));
 
-      output_change(rbuf_old.last_output, end_pos);
+      output_change(out.last_output_old(), end_pos);
 
       whitespace.output_nested(SESINSERT);
 
@@ -688,7 +688,7 @@ void srcdiff_nested::output() {
 
       whitespace.output_nested(SESINSERT);
 
-      output_change(rbuf_old.last_output, node_sets_new->at(end_new - 1)->back() + 1);
+      output_change(out.last_output_old(), node_sets_new->at(end_new - 1)->back() + 1);
   }
 
   //output_all(rbuf_old, rbuf_new, wstate);

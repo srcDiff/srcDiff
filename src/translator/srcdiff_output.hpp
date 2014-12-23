@@ -140,9 +140,9 @@ public:
 
   virtual std::vector<xNodePtr> & get_nodes_old();
   virtual std::vector<xNodePtr> & get_nodes_new();
-  virtual reader_state & get_rbuf_old();
-  virtual reader_state & get_rbuf_new(); 
-  virtual writer_state & get_wstate();
+  virtual unsigned int & last_output_old();
+  virtual unsigned int & last_output_new();
+  METHOD_TYPE method() const;
 
   virtual void output_node(const xNodePtr node, int operation);
   virtual void output_text_as_node(const char * text, int operation);

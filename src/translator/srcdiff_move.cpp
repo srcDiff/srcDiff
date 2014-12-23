@@ -33,15 +33,15 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
-bool srcdiff_move::is_move(node_set * set, std::vector<xNodePtr> nodes) {
+bool srcdiff_move::is_move(node_set * set, std::vector<xNodePtr> & nodes) {
 
   return nodes.at(set->at(0))->move;
 
 }
 
-void srcdiff_move::mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
-                , reader_state & rbuf_new, node_sets * node_sets_new
-                , edit * edit_script, writer_state & wstate) {
+void srcdiff_move::mark_moves(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
+                , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
+                , edit * edit_script) {
 
   std::map<std::string, IntPairs > constructs;
 
@@ -53,7 +53,7 @@ void srcdiff_move::mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, *node_sets_new, rbuf_new.nodes, edits->offset_sequence_two + i, SESINSERT);
+        add_construct(constructs, *node_sets_new, nodes_new, edits->offset_sequence_two + i, SESINSERT);
 
       }
 
@@ -63,7 +63,7 @@ void srcdiff_move::mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, *node_sets_old, rbuf_old.nodes, edits->offset_sequence_one + i, SESDELETE);
+        add_construct(constructs, *node_sets_old, nodes_old, edits->offset_sequence_one + i, SESDELETE);
 
       }
 
@@ -82,23 +82,23 @@ void srcdiff_move::mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
 
     for(unsigned int i = 0; i < elements.size(); ++i) {
 
-      reader_state * rbuf_one = &rbuf_old;
-      reader_state * rbuf_two = &rbuf_new;
+      std::vector<xNodePtr> * nodes_one = &nodes_old;
+      std::vector<xNodePtr> * nodes_two = &nodes_new;
 
       node_sets * node_sets_one = node_sets_old;
       node_sets * node_sets_two = node_sets_new;
 
       if(elements.at(i).second == SESINSERT) {
 
-        rbuf_one = &rbuf_new;
-        rbuf_two = &rbuf_old;
+       nodes_one = &nodes_new;
+       nodes_two = &nodes_old;
 
         node_sets_one = node_sets_new;
         node_sets_two = node_sets_old;
 
       }
 
-      if(rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->at(0))->move)
+      if(nodes_one->at(node_sets_one->at(elements.at(i).first)->at(0))->move)
         continue;
 
       for(unsigned int j = i + 1; j < elements.size(); ++j) {
@@ -106,40 +106,40 @@ void srcdiff_move::mark_moves(reader_state & rbuf_old, node_sets * node_sets_old
         if(elements.at(i).second == elements.at(j).second)
           continue;
 
-        diff_nodes diff_set = { rbuf_one->nodes, rbuf_two->nodes };
+        diff_nodes diff_set = { *nodes_one, *nodes_two };
 
         if(node_set_syntax_compare(node_sets_one->at(elements.at(i).first)
                                    , node_sets_two->at(elements.at(j).first), &diff_set) != 0)
           continue;
         /*
-          if(compute_difference(rbuf_one->nodes, node_sets_one->at(elements.at(i).first)
-          , rbuf_two->nodes, node_sets_two->at(elements.at(j).first)) != 0)
+          if(compute_difference(nodes_one, node_sets_one->at(elements.at(i).first)
+          , nodes_two, node_sets_two->at(elements.at(j).first)) != 0)
           continue;
         */
 
-	if(is_move(node_sets_one->at(elements.at(i).first), rbuf_one->nodes) || is_move(node_sets_two->at(elements.at(j).first), rbuf_two->nodes))
+	if(is_move(node_sets_one->at(elements.at(i).first), *nodes_one) || is_move(node_sets_two->at(elements.at(j).first), *nodes_two))
 		   continue;
 
         ++move_id;
-        xNode * start_node_one = copyXNode(rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->at(0)));
+        xNode * start_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first)->at(0)));
         start_node_one->move = move_id;
 
-        xNode * start_node_two = copyXNode(rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->at(0)));
+        xNode * start_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first)->at(0)));
         start_node_two->move = move_id;
 
-        rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->at(0)) = start_node_one;
-        rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->at(0)) = start_node_two;
+        nodes_one->at(node_sets_one->at(elements.at(i).first)->at(0)) = start_node_one;
+        nodes_two->at(node_sets_two->at(elements.at(j).first)->at(0)) = start_node_two;
 
         if(!start_node_one->is_empty) {
 
-          xNode * end_node_one = copyXNode(rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->back()));
+          xNode * end_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first)->back()));
           end_node_one->move = move_id;
 
-          xNode * end_node_two = copyXNode(rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->back()));
+          xNode * end_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first)->back()));
           end_node_two->move = move_id;
 
-          rbuf_one->nodes.at(node_sets_one->at(elements.at(i).first)->back()) = end_node_one;
-          rbuf_two->nodes.at(node_sets_two->at(elements.at(j).first)->back()) = end_node_two;
+          nodes_one->at(node_sets_one->at(elements.at(i).first)->back()) = end_node_one;
+          nodes_two->at(node_sets_two->at(elements.at(j).first)->back()) = end_node_two;
 
         }
 
