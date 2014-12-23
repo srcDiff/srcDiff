@@ -8,6 +8,13 @@
 
 #include <vector>
 
+struct diff_nodes {
+
+  std::vector<xNode *> & nodes_old;
+  std::vector<xNode *> & nodes_new;
+
+};
+
 class srcdiff_diff {
 
 protected:

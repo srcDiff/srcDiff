@@ -1,5 +1,7 @@
 #include <srcdiff_move.hpp>
 
+#include <srcdiff_diff.hpp>
+
 #include <vector>
 #include <map>
 
