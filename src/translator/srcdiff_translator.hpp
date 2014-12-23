@@ -1,5 +1,5 @@
 /*
-  srcDiffTool.hpp
+  srcdiff_translator.hpp
 
   Copyright (C) 2011  SDML (www.sdml.info)
 
@@ -24,8 +24,8 @@
   Class for straightforward source code to srcDiff translation
 */
 
-#ifndef INCLUDED_SRCDIFFTRANSLATOR_HPP
-#define INCLUDED_SRCDIFFTRANSLATOR_HPP
+#ifndef INCLUDED_SRCDIFF_TRANSLATOR_HPP
+#define INCLUDED_SRCDIFF_TRANSLATOR_HPP
 
 #include <srcdiff_output.hpp>
 
@@ -37,11 +37,11 @@
 
 #include <srcml.h>
 
-class srcDiffTranslator {
+class srcdiff_translator {
  public:
 
   // constructor
-  srcDiffTranslator(const char* srcml_filename,
+  srcdiff_translator(const char* srcml_filename,
                     METHOD_TYPE method,
                     std::string css,
                     srcml_archive * archive,
@@ -56,7 +56,7 @@ class srcDiffTranslator {
   srcml_archive * get_archive();
 
   // destructor
-  ~srcDiffTranslator();
+  ~srcdiff_translator();
 
  private:
 

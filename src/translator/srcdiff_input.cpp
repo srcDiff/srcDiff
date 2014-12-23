@@ -1,6 +1,6 @@
 #include <srcdiff_input.hpp>
 
-#include <srcMLUtility.hpp>
+#include <srcml_converter.hpp>
 
 srcdiff_input::srcdiff_input(srcml_archive * archive, OPTION_TYPE options) : archive(archive), options(options) {}
 

@@ -1,5 +1,5 @@
 /*
-  srcDiffTranslator.cpp
+  srcdiff_translator.cpp
 
   Copyright (C) 2011  SDML (www.sdml.info)
 
@@ -22,21 +22,20 @@
   Class for straightforward translation from source code to srcDiff
 */
 
-#include <srcDiffTranslator.hpp>
+#include <srcdiff_translator.hpp>
 
 #include <srcdiff_input.hpp>
 #include <srcdiff_output.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_whitespace.hpp>
-
+#include <srcml_converter.hpp>
 
 #include <srcmlns.hpp>
 #include <srcmlapps.hpp>
 #include <shortest_edit_script.h>
 #include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcMLUtility.hpp>
 #include <LineDiffRange.hpp>
 
 #include <xmlrw.hpp>
@@ -45,7 +44,7 @@
 #include <cstring>
 
 // constructor
-srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
+srcdiff_translator::srcdiff_translator(const char* srcdiff_filename,
                                      METHOD_TYPE method,
                                      std::string css,
                                      srcml_archive * archive,
@@ -56,7 +55,7 @@ srcDiffTranslator::srcDiffTranslator(const char* srcdiff_filename,
     url(url), options(options) {}
 
 // Translate from input stream to output stream
-void srcDiffTranslator::translate(const char * path_one, const char * path_two,
+void srcdiff_translator::translate(const char * path_one, const char * path_two,
                                   const char * unit_directory, const char * unit_filename, const char * unit_version) {
 
   LineDiffRange line_diff_range(path_one, path_two, url, options);
@@ -119,14 +118,14 @@ void srcDiffTranslator::translate(const char * path_one, const char * path_two,
 
 }
 
-srcml_archive * srcDiffTranslator::get_archive() {
+srcml_archive * srcdiff_translator::get_archive() {
 
   return archive;
 
 }
 
 // destructor
-srcDiffTranslator::~srcDiffTranslator() {
+srcdiff_translator::~srcdiff_translator() {
 
   output.close();
 
