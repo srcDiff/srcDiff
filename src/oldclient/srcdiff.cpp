@@ -514,19 +514,7 @@ void srcdiff_text(srcdiff_translator& translator, const char* path_one, const ch
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;
 
-  const char * language_string = "";
-  if(isoption(options, OPTION_SVN)) {
-
-    const char * end = index(path, '@');
-    const char * filename = strndup(path, end - path);
-    language_string = srcml_archive_check_extension(gpoptions->archive, filename);
-    free((void *)filename);
-
-  } else {
-
-    language_string = srcml_archive_check_extension(gpoptions->archive, path);
-
-  }
+  const char * language_string = srcml_archive_check_extension(gpoptions->archive, path);
 
   translator.translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(gpoptions->archive), filename.c_str(), 0);
 
