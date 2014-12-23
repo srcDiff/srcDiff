@@ -95,7 +95,7 @@ static bool is_atomic_srcml(std::vector<xNodePtr> & nodes, unsigned start) {
 }
 
 
-// collect the differnces
+// collect the differences
 std::vector<xNodePtr> srcml_converter::collect_nodes(xmlTextReaderPtr reader) {
 
   std::vector<xNodePtr> nodes;
