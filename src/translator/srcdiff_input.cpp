@@ -22,9 +22,3 @@ void srcdiff_input::operator()(int stream_source, std::vector<xNodePtr> & nodes,
   }
 
 }
-
-std::vector<xNodePtr> srcdiff_input::input_nodes(const char * input_path, int stream_source) {
-
-	return std::vector<xNodePtr>();
-
-}
