@@ -112,9 +112,9 @@ void srcdiff_translator::translate(const char * path_one, const char * path_two,
     srcdiff_whitespace whitespace(output);
     whitespace.output_all();
 
-  }
+    output.finish(is_old, is_new, line_diff_range);
 
-  output.finish(is_old, is_new, line_diff_range);
+  }
 
   output.reset();
 
