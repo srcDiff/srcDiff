@@ -71,24 +71,6 @@ void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & in
   thread_old.join();
   thread_new.join();
 
-  // const char * path = path_one;
-  // if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
-  //   path = path_two;
-
-  // const char * language_string = "";
-  // if(isoption(options, OPTION_SVN)) {
-
-  //   const char * end = index(path, '@');
-  //   const char * filename = strndup(path, end - path);
-  //   language_string = srcml_archive_check_extension(archive, filename);
-  //   free((void *)filename);
-
-  // } else {
-
-  //   language_string = srcml_archive_check_extension(archive, path);
-
-  // }
-
   node_sets set_old(output.get_nodes_old(), 0, output.get_nodes_old().size());
   node_sets set_new(output.get_nodes_new(), 0, output.get_nodes_new().size());
 

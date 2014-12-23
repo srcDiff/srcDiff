@@ -509,7 +509,26 @@ void srcdiff_text(srcdiff_translator& translator, const char* path_one, const ch
   srcdiff_input_filename input_old(gpoptions->archive, path_one, options);
   srcdiff_input_filename input_new(gpoptions->archive, path_two, options);
   LineDiffRange line_diff_range(path_one, path_two, gpoptions->svn_url, options);
-  translator.translate(input_old, input_new, line_diff_range, "C++", srcml_archive_get_directory(gpoptions->archive), filename.c_str(), 0);
+
+  const char * path = path_one;
+  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
+    path = path_two;
+
+  const char * language_string = "";
+  if(isoption(options, OPTION_SVN)) {
+
+    const char * end = index(path, '@');
+    const char * filename = strndup(path, end - path);
+    language_string = srcml_archive_check_extension(gpoptions->archive, filename);
+    free((void *)filename);
+
+  } else {
+
+    language_string = srcml_archive_check_extension(gpoptions->archive, path);
+
+  }
+
+  translator.translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(gpoptions->archive), filename.c_str(), 0);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
