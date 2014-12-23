@@ -152,6 +152,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                      comparison >= 0 ? (++j, filename_new.c_str()) : "",
                      directory_length_old,
                      directory_length_new,
+                     svn_url,
+                     archive,
                      options,
                      count, skipped, error, showinput, shownumber);
 
@@ -345,6 +347,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                     directory_length_old,
                     filename_new.c_str(),
                     directory_length_new,
+                    svn_url,
+                    archive,
                     options,
                     count, skipped, error, showinput, shownumber);
 
@@ -361,17 +365,13 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   // Do not nest individual files
   OPTION_TYPE local_options = options & ~SRCML_OPTION_ARCHIVE;
 
-  std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
+  std::string unit_filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
 
-    filename += "|";
-    filename += path_two[0] ? path_two + directory_length_new : path_two;
+    unit_filename += "|";
+    unit_filename += path_two[0] ? path_two + directory_length_new : path_two;
 
   }
-
-  // Remove eventually
-
-  srcml_archive * archive = translator.get_archive();
 
   if(srcml_archive_check_extension(archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(archive, path_two) == SRCML_LANGUAGE_NONE)
     return;
@@ -390,10 +390,13 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   file_two << '@';
   file_two << revision_two;
 
-  srcdiff_input_svn input_old(file_one.c_str(), local_options);
-  srcdiff_input_svn input_new(file_two.c_str(), local_options);
+  std::string file_old = file_one.str();
+  std::string file_new = file_two.str();
 
-  LineDiffRange line_diff_range(file_one.c_str(), file_two.c_str(), svn_url, local_options);
+  srcdiff_input_svn input_old(archive, file_old.c_str(), local_options);
+  srcdiff_input_svn input_new(archive, file_new.c_str(), local_options);
+
+  LineDiffRange line_diff_range(file_old.c_str(), file_new.c_str(), svn_url, local_options);
 
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
@@ -405,7 +408,7 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   free((void *)filename);
 
   translator.translate(input_old, input_new, line_diff_range,
-                       language_string, NULL, filename.c_str(), 0);
+                       language_string, NULL, unit_filename.c_str(), 0);
 
 }
 
@@ -529,7 +532,6 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                             const char* srcdiff_filename,  // filename of result srcDiff file
                             METHOD_TYPE method,
                             std::string css,
-                            const char * svn_url, 
                             srcml_archive * archive,
                             OPTION_TYPE options) {
 
@@ -544,7 +546,6 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                                method,
                                css,
                                archive,
-                               url,
                                options,
                                3);
 

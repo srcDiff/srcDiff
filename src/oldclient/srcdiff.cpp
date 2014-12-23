@@ -386,7 +386,7 @@ int main(int argc, char* argv[]) {
         exit(1);
       }
 
-      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, count, skipped, error, showinput,shownumber);
+      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, archive,options, count, skipped, error, showinput,shownumber);
 #endif
     } else if (input_arg_count == 0) {
 
