@@ -205,15 +205,6 @@ static bool is_significant(xNodePtr node, const void * context) {
 
 }
 
-// create the node sets for shortest edit script
-node_sets create_significant_node_sets(std::vector<xNodePtr> & nodes, int start, int end) {
-
-  node_sets sets(nodes, start, end, is_significant);
-
-  return sets;
-
-}
-
 void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference, int & children_old_length, int & children_new_length) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
