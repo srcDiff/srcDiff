@@ -24,7 +24,6 @@
 
 #include <srcdiff_translator.hpp>
 
-#include <srcdiff_input.hpp>
 #include <srcdiff_output.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_change.hpp>
@@ -48,17 +47,14 @@ srcdiff_translator::srcdiff_translator(const char* srcdiff_filename,
                                      METHOD_TYPE method,
                                      std::string css,
                                      srcml_archive * archive,
-                                     const char * url,
                                      OPTION_TYPE & options,
                                      unsigned long number_context_lines)
   : archive(archive), method(method), output(archive, srcdiff_filename, options, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF), css, number_context_lines),
-    url(url), options(options) {}
+    options(options) {}
 
 // Translate from input stream to output stream
-void srcdiff_translator::translate(const char * path_one, const char * path_two,
-                                  const char * unit_directory, const char * unit_filename, const char * unit_version) {
-
-  LineDiffRange line_diff_range(path_one, path_two, url, options);
+void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & input_new, LineDiffRange line_diff_range,
+                                  const char * language, const char * unit_directory, const char * unit_filename, const char * unit_version) {
 
   line_diff_range.create_line_diff();
 
@@ -66,42 +62,24 @@ void srcdiff_translator::translate(const char * path_one, const char * path_two,
     return;
 
   int is_old = 0;
-  srcdiff_input input_old(archive, options);
-  std::thread thread_old(input_old, path_one, SESDELETE, std::ref(output.get_nodes_old()), std::ref(is_old));
+  std::thread thread_old(std::ref(input_old), SESDELETE, std::ref(output.get_nodes_old()), std::ref(is_old));
 
   int is_new = 0;
-  srcdiff_input input_new(archive, options);
-  std::thread thread_new(input_new, path_two, SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
+  std::thread thread_new(std::ref(input_new), SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
 
 
   thread_old.join();
   thread_new.join();
 
-  const char * path = path_one;
-  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
-    path = path_two;
-
-  const char * language_string = "";
-  if(isoption(options, OPTION_SVN)) {
-
-    const char * end = index(path, '@');
-    const char * filename = strndup(path, end - path);
-    language_string = srcml_archive_check_extension(archive, filename);
-    free((void *)filename);
-
-  } else {
-
-    language_string = srcml_archive_check_extension(archive, path);
-
-  }
-
   node_sets set_old(output.get_nodes_old(), 0, output.get_nodes_old().size());
   node_sets set_new(output.get_nodes_new(), 0, output.get_nodes_new().size());
 
-  output.initialize(is_old, is_new, language_string, unit_directory, unit_filename, unit_version);
+  output.initialize(is_old, is_new);
 
   // run on file level
   if(is_old || is_new) {
+
+    output.start_unit(language, unit_directory, unit_filename, unit_version);
 
     srcdiff_diff diff(output, &set_old, &set_new);
     diff.output();
@@ -110,9 +88,9 @@ void srcdiff_translator::translate(const char * path_one, const char * path_two,
     srcdiff_whitespace whitespace(output);
     whitespace.output_all();
 
-  }
+    output.finish(is_old, is_new, line_diff_range);
 
-  output.finish(is_old, is_new, line_diff_range);
+  }
 
   output.reset();
 

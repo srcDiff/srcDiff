@@ -25,10 +25,13 @@
 # LIBAPR_INCLUDE_DIR libsvn include directory
 # LIBAPR_LIBRARIES   libsvn libraries
 
-find_path(LIBAPR_INCLUDE_DIR NAMES apr.h HINTS /usr/local/include/apr-1 /usr/include/apr-1)
+find_path(LIBAPR_INCLUDE_DIR NAMES apr.h HINTS /usr/local/include/apr-1 /usr/include/apr-1
+	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/apr-1/)
 
-find_library(LIBAPR_APR     NAMES apr-1     HINTS /usr/local/lib /usr/lib)
-find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib)
+find_library(LIBAPR_APR     NAMES apr-1     HINTS /usr/local/lib /usr/lib
+	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/)
+find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib 
+	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/)
 
 set(LIBAPR_LIBRARIES "")
 

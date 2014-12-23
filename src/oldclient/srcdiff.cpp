@@ -22,6 +22,9 @@
   Main program to run the srcDiff translator.
 */
 
+#include <srcdiff_input_filename.hpp>
+#include <srcdiff_translator.hpp>
+
 #include <cstring>
 #ifdef __GNUG__
 #include <sys/stat.h>
@@ -37,9 +40,7 @@
 #include <dirent.h>
 #include <algorithm>
 #include <archive.h>
-//#include <libxml_archive_read.hpp>
-//#include <libxml_archive_write.hpp>
-#include <srcdiff_translator.hpp>
+#include <LineDiffRange.hpp>
 
 #include <srcml.h>
 
@@ -352,7 +353,6 @@ int main(int argc, char* argv[]) {
                                  poptions.method,
                                  poptions.css_url,
                                  poptions.archive,
-                                 poptions.svn_url,
                                  options,
                                  poptions.number_context_lines);
 
@@ -386,7 +386,7 @@ int main(int argc, char* argv[]) {
         exit(1);
       }
 
-      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, options, count, skipped, error, showinput,shownumber);
+      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, archive,options, count, skipped, error, showinput,shownumber);
 #endif
     } else if (input_arg_count == 0) {
 
@@ -506,7 +506,17 @@ void srcdiff_text(srcdiff_translator& translator, const char* path_one, const ch
   if(showinput && !isoption(srcml_archive_get_options(gpoptions->archive), OPTION_QUIET))
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
-  translator.translate(path_one, path_two, srcml_archive_get_directory(gpoptions->archive), filename.c_str(), 0);
+  srcdiff_input_filename input_old(gpoptions->archive, path_one, options);
+  srcdiff_input_filename input_new(gpoptions->archive, path_two, options);
+  LineDiffRange line_diff_range(path_one, path_two, gpoptions->svn_url, options);
+
+  const char * path = path_one;
+  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
+    path = path_two;
+
+  const char * language_string = srcml_archive_check_extension(gpoptions->archive, path);
+
+  translator.translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(gpoptions->archive), filename.c_str(), 0);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file

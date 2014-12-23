@@ -27,6 +27,7 @@
 #ifndef INCLUDED_SRCDIFF_TRANSLATOR_HPP
 #define INCLUDED_SRCDIFF_TRANSLATOR_HPP
 
+#include <srcdiff_input.hpp>
 #include <srcdiff_output.hpp>
 
 #include <Options.hpp>
@@ -45,13 +46,13 @@ class srcdiff_translator {
                     METHOD_TYPE method,
                     std::string css,
                     srcml_archive * archive,
-                    const char * url,
                     OPTION_TYPE & options,
                     unsigned long number_context_lines);
 
   void close();
 
-  void translate(const char * path_one, const char * path_two, const char * unit_directory = 0, const char * unit_filename = 0, const char * unit_version = 0);
+  void translate(srcdiff_input & input_old, srcdiff_input & input_new, LineDiffRange line_diff_range, 
+                 const char * language, const char * unit_directory = 0, const char * unit_filename = 0, const char * unit_version = 0);
 
   srcml_archive * get_archive();
 
@@ -65,8 +66,6 @@ class srcdiff_translator {
   METHOD_TYPE method;
 
   srcdiff_output output;
-
-  const char * url;
 
   OPTION_TYPE & options;
 

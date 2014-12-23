@@ -7,6 +7,8 @@
   mdecker6@kent.edu
 */
 
+#include <srcdiff_input_svn.hpp>
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -32,7 +34,9 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
-void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator,
+  const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, const char * svn_url, srcml_archive * archive, OPTION_TYPE options,
+  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_hash_t * dirents_one;
   svn_revnum_t fetched_rev_one;
@@ -148,6 +152,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                      comparison >= 0 ? (++j, filename_new.c_str()) : "",
                      directory_length_old,
                      directory_length_new,
+                     svn_url,
+                     archive,
                      options,
                      count, skipped, error, showinput, shownumber);
 
@@ -182,6 +188,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                      "",
                      directory_length_old,
                      directory_length_new,
+                     svn_url,
+                     archive,
                      options,
                      count, skipped, error, showinput, shownumber);
 
@@ -216,6 +224,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                      filename_new.c_str(),
                      directory_length_old,
                      directory_length_new,
+                     svn_url,
+                     archive,
                      options,
                      count, skipped, error, showinput, shownumber);
 
@@ -268,6 +278,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                     directory_length_old,
                     comparison >= 0 ? (++j, filename_new.c_str()) : NULL,
                     directory_length_new,
+                    svn_url,
+                    archive,
                     options,
                     count, skipped, error, showinput, shownumber);
 
@@ -301,6 +313,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                     directory_length_old,
                     NULL,
                     directory_length_new,
+                    svn_url,
+                    archive,
                     options,
                     count, skipped, error, showinput, shownumber);
 
@@ -333,6 +347,8 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
                     directory_length_old,
                     filename_new.c_str(),
                     directory_length_new,
+                    svn_url,
+                    archive,
                     options,
                     count, skipped, error, showinput, shownumber);
 
@@ -342,22 +358,20 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
 }
 
-void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator,
+  const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, const char * svn_url, srcml_archive * archive, OPTION_TYPE options,
+  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // Do not nest individual files
   OPTION_TYPE local_options = options & ~SRCML_OPTION_ARCHIVE;
 
-  std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
+  std::string unit_filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
 
-    filename += "|";
-    filename += path_two[0] ? path_two + directory_length_new : path_two;
+    unit_filename += "|";
+    unit_filename += path_two[0] ? path_two + directory_length_new : path_two;
 
   }
-
-  // Remove eventually
-
-  srcml_archive * archive = translator.get_archive();
 
   if(srcml_archive_check_extension(archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(archive, path_two) == SRCML_LANGUAGE_NONE)
     return;
@@ -376,16 +390,30 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
   file_two << '@';
   file_two << revision_two;
 
+  std::string file_old = file_one.str();
+  std::string file_new = file_two.str();
 
-  translator.translate(file_one.str().c_str(), file_two.str().c_str(),
-                       NULL,
-                       filename.c_str(),
-                       0);
+  srcdiff_input_svn input_old(archive, file_old.c_str(), local_options);
+  srcdiff_input_svn input_new(archive, file_new.c_str(), local_options);
 
+  LineDiffRange line_diff_range(file_old.c_str(), file_new.c_str(), svn_url, local_options);
+
+  const char * path = path_one;
+  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
+    path = path_two;
+
+  const char * end = index(path, '@');
+  const char * filename = strndup(path, end - path);
+  const char * language_string = srcml_archive_check_extension(archive, filename);
+  free((void *)filename);
+
+  translator.translate(input_old, input_new, line_diff_range,
+                       language_string, NULL, unit_filename.c_str(), 0);
 
 }
 
-void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcdiff_translator& translator, const char * url, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcdiff_translator& translator,
+  const char * url, srcml_archive * archive, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -406,9 +434,9 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
   svn_ra_stat(session, path, revision_one, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, options, count, skipped, error, showinput, shownumber);
+    svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_dir)
-    svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
+    svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
     fprintf(stderr, "%s\n", "Path does not exist");
   else if(dirent->kind == svn_node_unknown)
@@ -468,7 +496,6 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
                                  method,
                                  css,
                                  archive,
-                                 url,
                                  options,
                                  3);
 
@@ -483,9 +510,9 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
     svn_ra_stat(session, path, revision_one, &dirent, path_pool);
 
     if(dirent->kind == svn_node_file)
-      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0, 0, options, count, skipped, error, showinput, shownumber);
+      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0, 0, url, archive, options, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
+      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
@@ -519,7 +546,6 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
                                method,
                                css,
                                archive,
-                               url,
                                options,
                                3);
 
@@ -576,7 +602,7 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
       svn_ra_stat(session, path, revision, &dirent, path_pool);
 
       if(dirent->kind == svn_node_file)
-        svn_process_file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, options, count, skipped, error, showinput, shownumber);
+        svn_process_file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
       else if(dirent->kind == svn_node_dir)
         fprintf(stderr, "Skipping directory: %s", path);
       //svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
