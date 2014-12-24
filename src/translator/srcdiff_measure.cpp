@@ -1,8 +1,10 @@
 #include <srcdiff_measure.hpp>
 
+#include <srcdiff_diff.hpp>
+#include <srcdiff_compare.hpp>
+
 #include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
-#include <srcdiff_diff.hpp>
 #include <cstring>
 
 srcdiff_measure::srcdiff_measure(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_set * set_old, node_set * set_new) 
@@ -90,7 +92,7 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
 
   if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+     || (srcdiff_compare::node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
         && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
         && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
             || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
@@ -99,7 +101,7 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
 
   }
 
-  ShortestEditScript ses(node_index_compare, node_index, &dnodes);
+  ShortestEditScript ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
   compute_ses(ses, text_old_length, text_new_length);
 
@@ -146,7 +148,7 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
   if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+     || (srcdiff_compare::node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
         && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
         && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
             || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
@@ -158,7 +160,7 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
   }
 
-  ShortestEditScript ses(node_index_compare, node_index, &dnodes);
+  ShortestEditScript ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
   compute_ses_important_text(ses, text_old_length, text_new_length);
 
@@ -214,7 +216,7 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
   if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
-     || (node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
+     || (srcdiff_compare::node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
         && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
         && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
             || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
@@ -226,7 +228,7 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
   }
 
-  ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
+  ShortestEditScript ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   // collect subset of nodes
   node_sets next_node_sets_old(nodes_old, set_old->at(1), set_old->back(), is_significant);

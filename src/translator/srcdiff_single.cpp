@@ -3,6 +3,7 @@
 #include <srcdiff_comment.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_whitespace.hpp>
+#include <srcdiff_compare.hpp>
 
 #include <shortest_edit_script.h>
 #include <srcDiffUtility.hpp>
@@ -97,7 +98,7 @@ void srcdiff_single::output_recursive_same() {
 
   xNodePtr merged_node = 0;
 
-  if(node_compare(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)), out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))) == 0) {
+  if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)), out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))) == 0) {
 
     out.output_node(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)), SESCOMMON);
 
@@ -168,7 +169,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   out.output_node(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)), SESDELETE);
 
-  bool is_same_keyword = node_compare(out.get_nodes_old().at(node_sets_old->at(start_old)->at(1)),
+  bool is_same_keyword = srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old->at(start_old)->at(1)),
                   out.get_nodes_new().at(node_sets_new->at(start_new)->at(1))) == 0;
 
   int old_collect_start_pos = 1;

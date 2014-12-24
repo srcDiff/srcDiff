@@ -2,8 +2,11 @@
 
 #include <srcdiff_common.hpp>
 
+#include <srcdiff_compare.hpp>
+
 #include <shortest_edit_script.h>
 #include <ShortestEditScript.hpp>
+
 #include <srcDiffUtility.hpp>
 
 srcdiff_comment::srcdiff_comment(srcdiff_output & out, node_sets * node_sets_old, node_sets * node_sets_new) 
@@ -22,7 +25,7 @@ void srcdiff_comment::output() {
   //fprintf(stderr, "HERE_DOUBLE\n");
 
   diff_nodes dnodes = { out.get_nodes_old(), out.get_nodes_new() };
-  ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
+  ShortestEditScript ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   int distance = ses.compute((const void *)node_sets_old, node_sets_old->size(), (const void *)node_sets_new, node_sets_new->size());
 

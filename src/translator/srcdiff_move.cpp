@@ -2,6 +2,7 @@
 
 #include <srcdiff_diff.hpp>
 #include <srcdiff_measure.hpp>
+#include <srcdiff_compare.hpp>
 
 #include <vector>
 #include <map>
@@ -110,7 +111,7 @@ void srcdiff_move::mark_moves(std::vector<xNodePtr> & nodes_old, node_sets * nod
 
         diff_nodes diff_set = { *nodes_one, *nodes_two };
 
-        if(node_set_syntax_compare(node_sets_one->at(elements.at(i).first)
+        if(srcdiff_compare::node_set_syntax_compare(node_sets_one->at(elements.at(i).first)
                                    , node_sets_two->at(elements.at(j).first), &diff_set) != 0)
           continue;
         /*

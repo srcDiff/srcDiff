@@ -1,6 +1,7 @@
 #include <srcdiff_whiteSpace.hpp>
 
 #include <srcdiff_common.hpp>
+#include <srcdiff_compare.hpp>
 
 #include <shortest_edit_script.h>
 #include <srcdiff_constants.hpp>
@@ -27,7 +28,7 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
   // advance whitespace while matches
   for(; ostart < oend && nstart < nend
         && is_white_space(rbuf_old->nodes.at(ostart)) && is_white_space(rbuf_new->nodes.at(nstart))
-        && node_compare(rbuf_old->nodes.at(ostart), rbuf_new->nodes.at(nstart)) == 0; ++ostart, ++nstart)
+        && srcdiff_compare::node_compare(rbuf_old->nodes.at(ostart), rbuf_new->nodes.at(nstart)) == 0; ++ostart, ++nstart)
     ;
 
   if(begin_old < ostart) {
@@ -44,7 +45,7 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
   int opivot = oend - 1;
   int npivot = nend - 1;
 
-  for(; opivot > ostart && npivot > nstart && node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) == 0; --opivot, --npivot)
+  for(; opivot > ostart && npivot > nstart && srcdiff_compare::node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) == 0; --opivot, --npivot)
     ;
 
   if(opivot < ostart || npivot < nstart) {
@@ -52,7 +53,7 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
     opivot = oend;
     npivot = nend;
 
-  } else if(node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) != 0) {
+  } else if(srcdiff_compare::node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) != 0) {
 
     ++opivot;
     ++npivot;
@@ -204,7 +205,7 @@ void srcdiff_whitespace::output_prefix() {
   // advance whitespace while matches
   for(; oend < rbuf_old->nodes.size() && nend < rbuf_new->nodes.size()
         && is_white_space(rbuf_old->nodes.at(oend)) && is_white_space(rbuf_new->nodes.at(nend))
-        && node_compare(rbuf_old->nodes.at(oend), rbuf_new->nodes.at(nend)) == 0; ++oend, ++nend)
+        && srcdiff_compare::node_compare(rbuf_old->nodes.at(oend), rbuf_new->nodes.at(nend)) == 0; ++oend, ++nend)
     ;
   /*
 
@@ -261,7 +262,7 @@ void srcdiff_whitespace::output_suffix() {
   int npivot = nend - 1;
 
   for(; opivot > ostart && npivot > nstart
-        && node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) == 0; --opivot, --npivot)
+        && srcdiff_compare::node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) == 0; --opivot, --npivot)
     ;
 
 
@@ -270,7 +271,7 @@ void srcdiff_whitespace::output_suffix() {
     opivot = oend;
     npivot = nend;
 
-  } else if(node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) != 0) {
+  } else if(srcdiff_compare::node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) != 0) {
     ++opivot;
     ++npivot;
   }

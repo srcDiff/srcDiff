@@ -5,6 +5,7 @@
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
 #include <srcdiff_measure.hpp>
+#include <srcdiff_compare.hpp>
 
 #include <srcDiffUtility.hpp>
 #include <pthread.h>
@@ -99,7 +100,7 @@ void srcdiff_diff::output() {
 
   diff_nodes dnodes = { out.get_nodes_old(), out.get_nodes_new() };
 
-  ShortestEditScript ses(node_set_syntax_compare, node_set_index, &dnodes);
+  ShortestEditScript ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   int distance = ses.compute((const void *)node_sets_old, node_sets_old->size(), (const void *)node_sets_new, node_sets_new->size());
 

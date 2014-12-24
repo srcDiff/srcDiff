@@ -3,6 +3,7 @@
 #include <srcdiff_change.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_measure.hpp>
+#include <srcdiff_compare.hpp>
 
 #include <shortest_edit_script.h>
 #include <srcDiffUtility.hpp>
@@ -117,7 +118,7 @@ bool is_nest_type(node_set * structure, std::vector<xNodePtr> & nodes
 
 bool is_match(const xNodePtr node, const void * context) {
 
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && node_compare(node, (xNodePtr)context) == 0;
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && srcdiff_compare::node_compare(node, (xNodePtr)context) == 0;
 
 }
 
@@ -243,7 +244,7 @@ bool srcdiff_nested::is_same_nestable(node_set * structure_one, std::vector<xNod
 bool srcdiff_nested::is_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
                  , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
 
-  if(node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
+  if(srcdiff_compare::node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
     return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
   else
     return is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two);
