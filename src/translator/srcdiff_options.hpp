@@ -4,16 +4,13 @@
 #include <Options.hpp>
 
 // @srcdiff
-const OPTION_TYPE OPTION_THREAD         = ull(1) << __COUNTER__;
-
-// @srcdiff
 const OPTION_TYPE OPTION_VISUALIZE      = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_OUTPUTSAME     = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_SAME     = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_OUTPUTPURE     = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_PURE     = ull(1) << __COUNTER__;
 
 // @srcdiff
 const OPTION_TYPE OPTION_CHANGE         = ull(1) << __COUNTER__;

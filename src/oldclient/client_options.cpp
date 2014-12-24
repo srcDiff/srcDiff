@@ -101,7 +101,14 @@ void option_srcml_field<SRC_VERSION>(const std::string & arg) {
 }
 
 template<OPTION_TYPE flag>
-void option_flag(bool on) {
+void option_flag_enable(bool on) {
+
+  if(on) options.flags |= flag;
+
+}
+
+template<OPTION_TYPE flag>
+void option_flag_disable(bool on) {
 
   if(on) options.flags |= flag;
 
@@ -146,14 +153,14 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
     ("version,V", "Output srcdiff version")
     ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
     ("compress,z", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_COMPRESS>), "Compress the output")
-    ("verbose,v", boost::program_options::bool_switch()->notifier(option_flag<OPTION_VERBOSE>), "Verbose messaging")
-    ("quiet,q", boost::program_options::bool_switch()->notifier(option_flag<OPTION_QUIET>), "Silence messaging")
+    ("verbose,v", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VERBOSE>), "Verbose messaging")
+    ("quiet,q", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_QUIET>), "Silence messaging")
   ;
 
   input_ops.add_options()
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file")
     ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository")
-    ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag<OPTION_SVN_CONTINUOUS>), "Continue from base revision") // this may have been where needed revision
+    ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision") // this may have been where needed revision
   ;
 
   srcml_ops.add_options()
@@ -179,15 +186,15 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
 
   srcdiff_ops.add_options()
     ("method,m",  boost::program_options::value<std::string>()->notifier(option_method), "Set srcdiff parsing method")
-    ("recursive", "I need to double check this one, but maybe recursive svn read")
-    ("visualization", "Output a visualization instead of xml")
-    ("same", "Output files that are the same")
-    ("pure", "Output files that are the purely added/deleted")
-    ("change", "Output files that where changed")
-    ("no-same", "Do not output files that are the same")
-    ("no-pure", "Do not ouptut files that are purely added/deleted")
-    ("srcdiff-only", "Output files that only srcdiff, but not diff says are changed")
-    ("diff-only", "Output files that only diff, but not srcdiff says are changed")
+    ("recursive", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_RECURSIVE>), "I need to double check this one, but maybe recursive svn read")
+    ("visualization", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VISUALIZE>), "Output a visualization instead of xml")
+    ("same", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SAME>), "Output files that are the same")
+    ("pure", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_PURE>), "Output files that are the purely added/deleted")
+    ("change", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_CHANGE>), "Output files that where changed")
+    ("no-same", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SAME>), "Do not output files that are the same")
+    ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are purely added/deleted")
+    ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
+    ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
     ("bash", boost::program_options::value<int>()->notifier(option_field<&srcdiff_options::number_context_lines>)->default_value(3), "Output as colorized bash text")
   ;
 

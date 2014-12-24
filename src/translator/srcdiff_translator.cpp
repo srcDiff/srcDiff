@@ -56,7 +56,7 @@ void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & in
 
   line_diff_range.create_line_diff();
 
-  if(!isoption(options, OPTION_OUTPUTSAME) && line_diff_range.get_line_diff() == NULL)
+  if(!isoption(options, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
   int is_old = 0;

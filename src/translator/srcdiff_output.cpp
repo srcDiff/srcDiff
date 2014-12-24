@@ -120,7 +120,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
   } else if(rbuf_old->nodes.empty()) {
 
-    if(!isoption(options, OPTION_OUTPUTPURE)) {
+    if(!isoption(options, OPTION_PURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -133,7 +133,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
   } else {
 
-    if(!isoption(options, OPTION_OUTPUTPURE)) {
+    if(!isoption(options, OPTION_PURE)) {
 
       is_old = 0;
       is_new = 0;
