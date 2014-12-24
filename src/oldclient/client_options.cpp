@@ -23,7 +23,9 @@ boost::program_options::options_description general("General options");
 boost::program_options::options_description input_ops("Input options");
 boost::program_options::options_description srcml_ops("srcML options");
 boost::program_options::options_description srcdiff_ops("srcDiff options");
+boost::program_options::positional_options_description input_file;
 boost::program_options::options_description all("All options");
+
 
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
@@ -167,7 +169,6 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
 
   options.archive = srcml_create_archive();
 
-  boost::program_options::options_description cmdline("srcdiff command-line options");
   general.add_options()
     ("help,h", "Output srcdiff help message")
     ("version,V", "Output srcdiff version")
@@ -178,6 +179,7 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
   ;
 
   input_ops.add_options()
+    ("input", "Set the input to be a list of file pairs from the provided file")
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file")
     ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository")
     ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision") // this may have been where needed revision
@@ -217,6 +219,9 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
     ("bash", boost::program_options::value<int>()->notifier(option_field<&srcdiff_options::number_context_lines>)->default_value(3), "Output as colorized bash text")
   ;
+
+  input_file.add("input", -1);
+  all.add(general).add(input_ops).add(srcml_ops).add(srcdiff_ops);
 
   return options;
 
