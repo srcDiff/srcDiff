@@ -53,7 +53,7 @@ void option_srcml_field<TABSTOP>(const int & arg) {
 
 }
 
-enum srcml_string_field { SRC_ENCODING, XML_ENCODING };
+enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, DIRECTORY, FILENAME, SRC_VERSION };
 
 template<srcml_string_field field>
 void option_srcml_field(const std::string & arg) {}
@@ -69,6 +69,34 @@ template<>
 void option_srcml_field<XML_ENCODING>(const std::string & arg) {
 
   srcml_archive_set_encoding(options.archive, arg.c_str());
+
+}
+
+template<>
+void option_srcml_field<LANGUAGE>(const std::string & arg) {
+
+  srcml_archive_set_language(options.archive, arg.c_str());
+
+}
+
+template<>
+void option_srcml_field<DIRECTORY>(const std::string & arg) {
+
+  srcml_archive_set_directory(options.archive, arg.c_str());
+
+}
+
+template<>
+void option_srcml_field<FILENAME>(const std::string & arg) {
+
+  srcml_archive_set_filename(options.archive, arg.c_str());
+
+}
+
+template<>
+void option_srcml_field<SRC_VERSION>(const std::string & arg) {
+
+  srcml_archive_set_version(options.archive, arg.c_str());
 
 }
 
@@ -125,11 +153,11 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
     ("archive,n", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_ARCHIVE>), "Output srcDiff as an archive")
     ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
     ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
-    ("language,l", "Set the input programming source language")
+    ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input programming source language")
     ("register-ext", "Register an extension to language pair to be used during parsing")
-    ("directory,d", "Set the root directory attribute")
-    ("filename,f", "Set the root filename attribute")
-    ("src-version,s", "Set the root version attribute")
+    ("directory,d", boost::program_options::value<std::string>()->notifier(option_srcml_field<DIRECTORY>), "Set the root directory attribute")
+    ("filename,f", boost::program_options::value<std::string>()->notifier(option_srcml_field<FILENAME>), "Set the root filename attribute")
+    ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
     ("xmlns", "Set default namespace")
     ("xmlns:", "Set namesapce for given prefix or create a new one")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
