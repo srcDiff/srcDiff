@@ -53,7 +53,7 @@ void option_srcml_field<TABSTOP>(const int & arg) {
 
 }
 
-enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, DIRECTORY, FILENAME, SRC_VERSION };
+enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, DIRECTORY, FILENAME, SRC_VERSION, REGISTER_EXT };
 
 template<srcml_string_field field>
 void option_srcml_field(const std::string & arg) {}
@@ -97,6 +97,14 @@ template<>
 void option_srcml_field<SRC_VERSION>(const std::string & arg) {
 
   srcml_archive_set_version(options.archive, arg.c_str());
+
+}
+
+template<>
+void option_srcml_field<REGISTER_EXT>(const std::string & arg) {
+
+  std::string::size_type pos = arg.find('=');
+  srcml_archive_register_file_extension(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1, std::string::npos).c_str());
 
 }
 
@@ -168,7 +176,7 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
     ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
     ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
     ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input programming source language")
-    ("register-ext", "Register an extension to language pair to be used during parsing")
+    ("register-ext", boost::program_options::value<std::string>()->notifier(option_srcml_field<REGISTER_EXT>), "Register an extension to language pair to be used during parsing")
     ("directory,d", boost::program_options::value<std::string>()->notifier(option_srcml_field<DIRECTORY>), "Set the root directory attribute")
     ("filename,f", boost::program_options::value<std::string>()->notifier(option_srcml_field<FILENAME>), "Set the root filename attribute")
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
