@@ -147,8 +147,12 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   }
 
-  if(pos_old.size() != 0 && pos_new.size())
-    match_differences_dynamic(out.get_nodes_old(), &old_sets, out.get_nodes_new(), &new_sets, &matches);
+  if(pos_old.size() != 0 && pos_new.size()) {
+
+    srcdiff_match match(out.get_nodes_old(), out.get_nodes_new(), &old_sets, &new_sets);
+    matches = match.match_differences();
+
+  }
 
   offset_pair * matches_save = matches;
 

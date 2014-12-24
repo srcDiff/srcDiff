@@ -1,4 +1,4 @@
-#include <srcdiffMatch.hpp>
+#include <srcDiffMatch.hpp>
 
 #include <srcdiff_nested.hpp>
 #include <srcdiff_measure.hpp>
@@ -7,8 +7,10 @@
 #include <srcDiffUtility.hpp>
 #include <string.h>
 
+srcdiff_match::srcdiff_match(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_sets *  node_sets_old, node_sets * node_sets_new)
+  : nodes_old(nodes_old), nodes_new(nodes_new), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
-void create_linked_list(int olength, int nlength, difference * differences, offset_pair ** matches) {
+static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
 
   // create match linked list
   offset_pair * last_match = NULL;
@@ -74,16 +76,14 @@ void create_linked_list(int olength, int nlength, difference * differences, offs
 
   }
 
-  *matches = last_match;
-
   free(olist);
   free(nlist);
 
+  return last_match;
+
 }
 
-void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
-                               , offset_pair ** matches) {
+offset_pair * srcdiff_match::match_differences() {
 
   /*
 
@@ -119,8 +119,6 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * no
 */
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
-  *matches = 0;
 
   int olength = node_sets_old->size();
   int nlength = node_sets_new->size();
@@ -309,9 +307,11 @@ void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * no
   }
 
   // create match linked list
-  create_linked_list(olength, nlength, differences, matches);
+  offset_pair * matches = create_linked_list(olength, nlength, differences);
 
   // free memory
   free(differences);
+
+  return matches;
 
 }

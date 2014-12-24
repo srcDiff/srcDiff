@@ -1,10 +1,8 @@
 #ifndef INCLUDED_SRCDIFFMATCH_HPP
 #define INCLUDED_SRCDIFFMATCH_HPP
 
-#include <vector>
+#include <node_sets.hpp>
 #include <xmlrw.hpp>
-#include <srcdiff_diff.hpp>
-#include <shortest_edit_script.h>
 
 struct offset_pair {
 
@@ -28,9 +26,24 @@ struct difference {
 
 };
 
-void match_differences_dynamic(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
-                               , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
-                               , offset_pair ** matches);
+class srcdiff_match {
+
+protected:
+
+  std::vector<xNodePtr> & nodes_old;
+  std::vector<xNodePtr> & nodes_new;
+  node_sets * node_sets_old;
+  node_sets * node_sets_new;
+
+private:
+
+public:
+
+  srcdiff_match(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_sets * node_sets_old, node_sets * node_sets_new);
+  offset_pair * match_differences();
+
+};
+
 
 
 #endif
