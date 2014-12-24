@@ -2,6 +2,7 @@
 
 #include <srcdiff_diff.hpp>
 #include <srcdiff_compare.hpp>
+#include <srcdiff_match.hpp>
 
 #include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
@@ -93,7 +94,7 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
   if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && !srcdiff_match::is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
         && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
             || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
@@ -149,7 +150,7 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
   if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && !srcdiff_match::is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
         && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
             || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 
@@ -217,7 +218,7 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
   if((xmlReaderTypes)nodes_old.at(set_old->at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new->at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old->at(0)), nodes_new.at(set_new->at(0))) != 0
-        && !is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
+        && !srcdiff_match::is_interchangeable_match((const char *)nodes_old.at(set_old->at(0))->name, (const char *)nodes_new.at(set_new->at(0))->name)
         && (strcmp((const char *)nodes_old.at(set_old->at(0))->name, "block") != 0
             || strcmp((const char *)nodes_new.at(set_new->at(0))->name, "block") != 0))) {
 

@@ -18,8 +18,4 @@ bool is_new_line(const xNodePtr node);
 
 bool is_text(const xNodePtr node);
 
-const char * find_attribute(const xNodePtr node, const char * attr_name);
-
-bool is_interchangeable_match(const std::string & old_tag, const std::string & new_tag);
-
 #endif

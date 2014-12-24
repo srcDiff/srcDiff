@@ -12,7 +12,7 @@ struct offset_pair {
   int new_length;
   int similarity;
   offset_pair * next;
-  
+
 };
 
 class srcdiff_match {
@@ -35,6 +35,11 @@ public:
     std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new);
   static bool reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
     std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new);
+
+
+  static const char * find_attribute(const xNodePtr node, const char * attr_name);
+
+  static bool is_interchangeable_match(const std::string & old_tag, const std::string & new_tag);
 
 };
 

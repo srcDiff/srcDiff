@@ -351,7 +351,7 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
 
-  if(old_tag != new_tag && !is_interchangeable_match(old_tag, new_tag)) return true;
+  if(old_tag != new_tag && !srcdiff_match::is_interchangeable_match(old_tag, new_tag)) return true;
 
   if(old_tag == "then" || old_tag == "block" || old_tag == "comment"
     || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier"

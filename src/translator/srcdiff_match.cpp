@@ -935,7 +935,7 @@ static const interchange_list interchange_lists[] = {
 
 };
 
-bool is_interchangeable_match(const std::string & old_tag, const std::string & new_tag) {
+bool srcdiff_match::is_interchangeable_match(const std::string & old_tag, const std::string & new_tag) {
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
