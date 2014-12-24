@@ -6,8 +6,6 @@
 #include <srcdiff_measure.hpp>
 #include <srcdiff_match.hpp>
 
-#include <srcDiffUtility.hpp>
-
 srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
 
 void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, int end_new) {

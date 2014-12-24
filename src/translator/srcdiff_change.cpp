@@ -4,7 +4,6 @@
 #include <srcdiff_move.hpp>
 
 #include <srcdiff_constants.hpp>
-#include <srcDiffUtility.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>
 

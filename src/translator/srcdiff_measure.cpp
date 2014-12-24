@@ -3,9 +3,8 @@
 #include <srcdiff_diff.hpp>
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
-
 #include <srcdiff_constants.hpp>
-#include <srcDiffUtility.hpp>
+
 #include <cstring>
 
 srcdiff_measure::srcdiff_measure(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_set * set_old, node_set * set_new) 

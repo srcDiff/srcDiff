@@ -7,8 +7,6 @@
 #include <vector>
 #include <map>
 
-#include <srcDiffUtility.hpp>
-
 int move_id = 0;
 
 static xAttr move_attribute = { 0, "move", 0 };

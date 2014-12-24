@@ -8,10 +8,9 @@
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
 
-#include <srcDiffUtility.hpp>
-#include <pthread.h>
 #include <ShortestEditScript.hpp>
 
+#include <pthread.h>
 #include <string.h>
 #include <methods.hpp>
 

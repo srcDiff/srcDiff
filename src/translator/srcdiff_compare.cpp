@@ -2,8 +2,6 @@
 
 #include <srcdiff_diff.hpp>
 
-#include <srcDiffUtility.hpp>
-
 namespace srcdiff_compare {
 
   // diff node accessor function

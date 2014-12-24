@@ -5,7 +5,6 @@
 
 #include <shortest_edit_script.h>
 #include <srcdiff_constants.hpp>
-#include <srcDiffUtility.hpp>
 
 srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {}
 

@@ -1,10 +1,8 @@
 #include <srcdiff_output.hpp>
 
 #include <srcdiff_constants.hpp>
-#include <srcDiffUtility.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>
-
 #include <methods.hpp>
 
 #include <string.h>

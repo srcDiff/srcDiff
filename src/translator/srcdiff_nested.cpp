@@ -5,11 +5,10 @@
 #include <srcdiff_measure.hpp>
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
-
 #include <shortest_edit_script.h>
-#include <srcDiffUtility.hpp>
 
 #include <string.h>
+
 extern const char * change;
 extern const char * whitespace;
 
