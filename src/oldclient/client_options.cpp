@@ -41,34 +41,36 @@ void option_field<&srcdiff_options::number_context_lines>(const int & arg) {
 
 }
 
-enum srcml_field { SRC_ENCODING, XML_ENCODING, TABSTOP };
+enum srcml_int_field { TABSTOP };
 
-// template<srcml_field field>
-// void option_srcml_field(const int & arg) {}
+template<srcml_int_field field>
+void option_srcml_field(const int & arg) {}
 
-template<srcml_field field>
+template<>
+void option_srcml_field<TABSTOP>(const int & arg) {
+
+  srcml_archive_set_tabstop(options.archive, arg);
+
+}
+
+enum srcml_string_field { SRC_ENCODING, XML_ENCODING };
+
+template<srcml_string_field field>
 void option_srcml_field(const std::string & arg) {}
 
-// template<>
-// void option_srcml_field<SRC_ENCODING>(const std::string & arg) {
+template<>
+void option_srcml_field<SRC_ENCODING>(const std::string & arg) {
 
-//   srcml_archive_set_src_encoding(options.archive, arg.c_str());
+  srcml_archive_set_src_encoding(options.archive, arg.c_str());
 
-// }
+}
 
-// template<>
-// // void option_srcml_field<XML_ENCODING>(const std::string & arg) {
+template<>
+void option_srcml_field<XML_ENCODING>(const std::string & arg) {
 
-// //   srcml_archive_set_encoding(options.archive, arg.c_str());
+  srcml_archive_set_encoding(options.archive, arg.c_str());
 
-// // }
-
-// template<>
-// void option_srcml_field<TABSTOP>(const int & arg) {
-
-//   srcml_archive_set_tabstop(options.archive, arg);
-
-// }
+}
 
 template<OPTION_TYPE flag>
 void option_flag(bool on) {
@@ -102,6 +104,7 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
 
   options.archive = srcml_create_archive();
 
+
   boost::program_options::options_description cmdline("srcdiff command-line options");
   general.add_options()
     ("help,h", "Output srcdiff help message")
@@ -130,7 +133,7 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
     ("xmlns", "Set default namespace")
     ("xmlns:", "Set namesapce for given prefix or create a new one")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
-    // ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(3), "Tabstop size")
+    ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(3), "Tabstop size")
     ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_NAMESPACE_DECL>), "Do not output the xml declaration")
     ("no-namespace-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output any namespace declarations")
     ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents")
