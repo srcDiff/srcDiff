@@ -20,13 +20,19 @@
 
 #include <boost/program_options.hpp>
 
-int process_cmdline(int argc, char* argv[], srcdiff_options & soptions) {
+template<boost::optional<std::string> * field>
+void option_field(const std::string & arg) {  *field = arg; }
+
+template<>
+void option_field<&srcdiff_options::srcdiff_filename>(const std::string & arg) {}
+
+int process_cmdline(int argc, char* argv[]) {
 
   boost::program_options::options_description cmdline("srcdiff command-line options");
   cmdline.add_options()
     ("help,h", "Output srcdiff help message")
     ("version,v", "Output srcdiff version")
-    ("output,o", boost::program_options::value<std::string>(&soptions.srcdiff_filename), "Specify output filename")
+    ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
     ("archive,n", "Output srcDiff as an archive")
     ("src-encoding,t", "Set the input source encoding")
     ("xml-encoding,x", "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
@@ -34,7 +40,7 @@ int process_cmdline(int argc, char* argv[], srcdiff_options & soptions) {
     ("directory,d", "Set the root directory attribute")
     ("filename,f", "Set the root filename attribute")
     ("src-version,s", "Set the root version attribute")
-    ("files-from", boost::program_options::value<std::string>(&soptions.files_from_name), "Set the input to be a list of file pairs from the provided file")
+    ("files-from", boost::program_options::value<std::string>(), "Set the input to be a list of file pairs from the provided file")
     ("register-ext", "Register an extension to language pair to be used during parsing")
     ("recursive", "I need to double check this one, but maybe recursive svn read")
     ("method,m", "Set srcdiff parsing method")
@@ -43,7 +49,7 @@ int process_cmdline(int argc, char* argv[], srcdiff_options & soptions) {
     // missing many in between visualization and bash-view
 
     ("visualization", "Output a visualization instead of xml")
-    ("bash-view", boost::program_options::value<int>(&soptions.number_context_lines), "Output as colorized bash text")
+    ("bash-view", boost::program_options::value<int>(), "Output as colorized bash text")
   ;
 
   return 0;

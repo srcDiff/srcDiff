@@ -5,6 +5,8 @@
 #include <methods.hpp>
 #include <srcml.h>
 
+#include <boost/optional.hpp>
+
 const char* const DEBUG_FLAG = "debug";
 const char DEBUG_FLAG_SHORT = 'g';
 
@@ -104,25 +106,25 @@ const int BASH_VIEW_FLAG_CODE = 256 + 23;
 struct srcdiff_options
 {
 
-  srcml_archive * archive;
+  static srcml_archive * archive;
 
-  std::string srcdiff_filename;
-  std::string files_from_name;
-  std::string input_format;
-  std::string output_format;
-  int language;
-  METHOD_TYPE method;
-  std::string css_url;
+  static boost::optional<std::string> srcdiff_filename;
+  static boost::optional<std::string> files_from_name;
+  static boost::optional<std::string> input_format;
+  static boost::optional<std::string> output_format;
+  static int language;
+  static METHOD_TYPE method;
+  static boost::optional<std::string> css_url;
 
-  std::string svn_url;
-  int revision_one;
-  int revision_two;
+  static boost::optional<std::string> svn_url;
+  static int revision_one;
+  static int revision_two;
 
-  unsigned long number_context_lines;
+  static unsigned long number_context_lines;
   
 };
 
-int process_cmdline(int argc, char* argv[], srcdiff_options & soptions);
+int process_cmdline(int argc, char* argv[]);
 void process_method(char * optarg, srcdiff_options & soptions);
 
 int option_error_status(int optopt);
