@@ -1,4 +1,4 @@
-#include <srcDiffMatch.hpp>
+#include <srcdiff_match.hpp>
 
 #include <srcdiff_nested.hpp>
 #include <srcdiff_measure.hpp>
@@ -6,6 +6,18 @@
 #include <srcdiff_constants.hpp>
 #include <srcDiffUtility.hpp>
 #include <string.h>
+
+struct difference {
+
+  //unsigned long long similarity;
+  int similarity;
+  int num_unmatched;
+  bool marked;
+  int direction;
+  unsigned int opos;
+  unsigned int npos;
+
+};
 
 srcdiff_match::srcdiff_match(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_sets *  node_sets_old, node_sets * node_sets_new)
   : nodes_old(nodes_old), nodes_new(nodes_new), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}

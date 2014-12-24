@@ -14,18 +14,6 @@ struct offset_pair {
   offset_pair * next;
 };
 
-struct difference {
-
-  //unsigned long long similarity;
-  int similarity;
-  int num_unmatched;
-  bool marked;
-  int direction;
-  unsigned int opos;
-  unsigned int npos;
-
-};
-
 class srcdiff_match {
 
 protected:
