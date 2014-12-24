@@ -5,7 +5,7 @@
 #include <srcdiff_compare.hpp>
 #include <srcdiff_constants.hpp>
 
-#include <string.h>
+#include <cstring>
 
 struct difference {
 

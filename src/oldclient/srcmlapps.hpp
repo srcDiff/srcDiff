@@ -27,7 +27,7 @@
 
 #ifdef __MINGW32__
 #include <io.h>
-#include <string.h>
+#include <cstring>
 #endif
 
 #ifdef __MINGW32__

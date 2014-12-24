@@ -10,7 +10,7 @@
 #include <mingw32.hpp>
 #endif
 
-#include <string.h>
+#include <cstring>
 #include <string>
 
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)

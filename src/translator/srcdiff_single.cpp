@@ -6,7 +6,7 @@
 #include <srcdiff_compare.hpp>
 #include <shortest_edit_script.h>
 
-#include <string.h>
+#include <cstring>
 #include <map>
 
 srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_old, unsigned int start_new) : srcdiff_many(diff), start_old(start_old), start_new(start_new) {}

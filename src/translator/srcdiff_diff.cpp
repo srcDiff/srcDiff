@@ -10,7 +10,7 @@
 #include <shortest_edit_script.hpp>
 
 #include <pthread.h>
-#include <string.h>
+#include <cstring>
 #include <methods.hpp>
 
 // more external variables

@@ -9,7 +9,7 @@
 #include <Options.hpp>
 //#include <archive.h>
 
-#include <string.h>
+#include <cstring>
 
 #include <cstdlib>
 #include <libxml/parser.h>
