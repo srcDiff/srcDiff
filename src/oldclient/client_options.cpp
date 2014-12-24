@@ -27,12 +27,10 @@ boost::program_options::options_description input_ops("Input options");
 boost::program_options::options_description srcml_ops("srcML options");
 boost::program_options::options_description srcdiff_ops("srcDiff options");
 
-
-
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) {  options.*field = arg; }
 
-template<int flag>
+template<OPTION_TYPE flag>
 void option_flag(bool on) {
 
   if(on) options.flags |= flag;
@@ -63,14 +61,14 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
     ("version,V", "Output srcdiff version")
     ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
     ("compress,z", boost::program_options::bool_switch()->notifier(option_srcml_flag<SRCML_OPTION_COMPRESS>), "Compress the output")
-    ("verbose,v", "Verbose messaging")
-    ("quiet,q", "Silence messaging")
+    ("verbose,v", boost::program_options::bool_switch()->notifier(option_flag<OPTION_VERBOSE>), "Verbose messaging")
+    ("quiet,q", boost::program_options::bool_switch()->notifier(option_flag<OPTION_QUIET>), "Silence messaging")
   ;
 
   input_ops.add_options()
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file")
-    ("svn", "Input from a Subversion repository")
-    ("continuous", "Continue from base revision") // this may have been where needed revision
+    ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository")
+    ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag<OPTION_SVN_CONTINUOUS>), "Continue from base revision") // this may have been where needed revision
   ;
 
   srcml_ops.add_options()
