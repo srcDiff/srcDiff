@@ -121,10 +121,17 @@ void option_srcml_flag_disable(bool on) {
 
 }
 
-template<int method>
-void option_method(bool on) {
+void option_method(const std::string & arg) {
 
-  if(on) options.methods |= method;
+  if(arg == COLLECT_METHOD) options.methods &= ~METHOD_RAW;
+  else if(arg == RAW_METHOD) options.methods |= METHOD_RAW;
+  else if(arg == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
+  else if(arg == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
+  else {
+
+      fprintf(stderr, "Invalid argument to --method: '%s'\n", arg.c_str());
+      exit(STATUS_INVALID_ARGUMENT);    
+  }
 
 }
 
@@ -171,7 +178,7 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
   ;
 
   srcdiff_ops.add_options()
-    ("method,m", "Set srcdiff parsing method")
+    ("method,m",  boost::program_options::value<std::string>()->notifier(option_method), "Set srcdiff parsing method")
     ("recursive", "I need to double check this one, but maybe recursive svn read")
     ("visualization", "Output a visualization instead of xml")
     ("same", "Output files that are the same")
@@ -620,37 +627,6 @@ int process_args(int argc, char* argv[], srcdiff_options & soptions, OPTION_TYPE
   }
 
   return optind;
-}
-
-void process_method(char * optarg, srcdiff_options & soptions) {
-
-  char * methods = strdup(optarg);
-  char * method;
-  while((method = strsep(&methods, ",")) != NULL) {
-
-    if(strcmp(method, COLLECT_METHOD) == 0)
-      soptions.method &= ~METHOD_RAW;
-
-    else if(strcmp(method, RAW_METHOD) == 0)
-      soptions.method |= METHOD_RAW;
-
-    else if(strcmp(method, NO_GROUP_DIFF_METHOD) == 0)
-      soptions.method &= ~METHOD_GROUP;
-
-    else if(strcmp(method, GROUP_DIFF_METHOD) == 0)
-      soptions.method |= METHOD_GROUP;
-
-    else {
-
-      fprintf(stderr, "Invalid argument to --method: '%s'\n", optarg);
-      exit(STATUS_INVALID_ARGUMENT);
-
-    }
-
-  }
-
-  free(methods);
-
 }
 
 int option_error_status(int optopt) {

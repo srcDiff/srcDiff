@@ -43,14 +43,14 @@ inline bool ismethod(METHOD_TYPE options, METHOD_TYPE flag) {
   return (flag & options) > 0;
 }
 
-const char * const COLLECT_METHOD = "collect";
-const char * const RAW_METHOD = "raw";
+const std::string COLLECT_METHOD = "collect";
+const std::string RAW_METHOD = "raw";
 
 // @srcdiff
 const OPTION_TYPE METHOD_RAW       = ull(1) << 0;
 
-const char * const GROUP_DIFF_METHOD = "group-diff";
-const char * const NO_GROUP_DIFF_METHOD = "no-group-diff";
+const std::string GROUP_DIFF_METHOD = "group-diff";
+const std::string NO_GROUP_DIFF_METHOD = "no-group-diff";
 
 // @srcdiff
 const OPTION_TYPE METHOD_GROUP       = ull(1) << 1;
