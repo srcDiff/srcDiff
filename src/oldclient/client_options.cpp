@@ -18,6 +18,19 @@
 
 #include <srcdiff_options.hpp>
 
+#include <boost/program_options.hpp>
+
+int process_args() {
+
+  boost::program_options::options_description cmdline("srcdiff command-line options");
+  cmdline.add_options()
+    ("help,h", "Output srcdiff help message")
+    ("version,v", "Output srcdiff version")
+    ("output,o", "Specify output filename")
+  ;
+
+}
+
 #define PROGRAM_NAME "srcdiff"
 
 using namespace LanguageName;
