@@ -120,8 +120,8 @@ struct srcdiff_options
   
 };
 
-int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE & options, const char * urisprefix[]);
-void process_method(char * optarg, srcdiff_options & poptions);
+int process_args(int argc, char* argv[], srcdiff_options & soptions, OPTION_TYPE & options, const char * urisprefix[]);
+void process_method(char * optarg, srcdiff_options & soptions);
 
 int option_error_status(int optopt);
 

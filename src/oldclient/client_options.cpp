@@ -37,7 +37,7 @@ int process_args() {
 using namespace LanguageName;
 
 // setup options and collect info from arguments
-int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE & options, const char * urisprefix[]) {
+int process_args(int argc, char* argv[], srcdiff_options & soptions, OPTION_TYPE & options, const char * urisprefix[]) {
 
   bool cpp_if0 = false;
   bool cpp_else = false;
@@ -112,7 +112,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
     if (curoption) {
 
       if(curoption & (SRCML_OPTION_POSITION | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER))
-        srcml_archive_enable_option(poptions.archive, curoption);
+        srcml_archive_enable_option(soptions.archive, curoption);
       else
         options |= curoption;
 
@@ -149,7 +149,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      poptions.srcdiff_filename = optarg;
+      soptions.srcdiff_filename = optarg;
       break;
 
     case FILELIST_FLAG_CODE:
@@ -161,9 +161,9 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
 
       // filelist mode is default nested mode
       if(!isoption(options, OPTION_VISUALIZE))
-        srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_option(soptions.archive,SRCML_OPTION_ARCHIVE);
 
-      poptions.file_list_name = optarg;
+      soptions.file_list_name = optarg;
   
       break;
 
@@ -184,22 +184,22 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
 
         // filelist mode is default nested mode
         if(!isoption(options, OPTION_VISUALIZE))
-          srcml_archive_enable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
+          srcml_archive_enable_option(soptions.archive,SRCML_OPTION_ARCHIVE);
   
-        poptions.svn_url = optarg;
+        soptions.svn_url = optarg;
 
         const char * end = index(optarg, '@');
         if(end) {
 
-          poptions.svn_url = strndup(optarg, end - optarg);
+          soptions.svn_url = strndup(optarg, end - optarg);
 
           const char * first = index(end + 1, '-');
           const char * temp_revision = strndup(end + 1, first - (end + 1));
-          poptions.revision_one = atoi(temp_revision);
+          soptions.revision_one = atoi(temp_revision);
           free((void *)temp_revision);
 
           if(first)
-            poptions.revision_two = atoi(first + 1);
+            soptions.revision_two = atoi(first + 1);
 
         }
 
@@ -219,7 +219,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       options |= OPTION_BASH_VIEW;
 
       if(optarg)
-        poptions.number_context_lines = atoi(optarg);
+        soptions.number_context_lines = atoi(optarg);
 
       break;
 
@@ -240,7 +240,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
           exit(STATUS_ERROR);
         }
 
-        srcml_archive_register_file_extension(poptions.archive, extension, language);
+        srcml_archive_register_file_extension(soptions.archive, extension, language);
 /*
         if (!Language::registerUserExt(extension, language)) {
 
@@ -266,7 +266,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      srcml_archive_set_encoding(poptions.archive, optarg);
+      srcml_archive_set_encoding(soptions.archive, optarg);
 
       break;
 
@@ -275,7 +275,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      srcml_archive_set_src_encoding(poptions.archive, optarg);
+      srcml_archive_set_src_encoding(soptions.archive, optarg);
 
       // validate source encoding
 
@@ -308,7 +308,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
           ns_uri = argv[optind++];
         }
 
-        srcml_archive_register_namespace(poptions.archive, ns_prefix, ns_uri);
+        srcml_archive_register_namespace(soptions.archive, ns_prefix, ns_uri);
 
       }
       break;
@@ -326,19 +326,19 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      process_method(optarg, poptions);
+      process_method(optarg, soptions);
 
       break;
 
     case VISUALIZE_FLAG_CODE:
 
-      poptions.css_url = "";
+      soptions.css_url = "";
       if(optarg != NULL)
-        poptions.css_url = optarg;
+        soptions.css_url = optarg;
 
       options |= OPTION_VISUALIZE;
 
-      srcml_archive_disable_option(poptions.archive,SRCML_OPTION_ARCHIVE);
+      srcml_archive_disable_option(soptions.archive,SRCML_OPTION_ARCHIVE);
 
       break;
 
@@ -396,7 +396,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      srcml_archive_set_language(poptions.archive, optarg);
+      srcml_archive_set_language(soptions.archive, optarg);
 
       break;
 
@@ -406,7 +406,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
 
-      srcml_archive_set_directory(poptions.archive, optarg);
+      srcml_archive_set_directory(soptions.archive, optarg);
 
       break;
 
@@ -415,7 +415,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      srcml_archive_set_filename(poptions.archive, optarg);
+      srcml_archive_set_filename(soptions.archive, optarg);
       
       break;
 
@@ -424,7 +424,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      srcml_archive_set_version(poptions.archive, optarg);
+      srcml_archive_set_version(soptions.archive, optarg);
 
       break;
 
@@ -436,7 +436,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
 
         options |= OPTION_INPUT_FORMAT;
 
-        poptions.input_format = optarg;
+        soptions.input_format = optarg;
         break;
       */
       /*
@@ -447,7 +447,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
 
         options |= OPTION_OUTPUT_FORMAT;
 
-        poptions.output_format = optarg;
+        soptions.output_format = optarg;
         break;
       */
 
@@ -460,7 +460,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
       options |= SRCML_OPTION_POSITION;
 
       char * end;
-      srcml_archive_set_tabstop(poptions.archive, strtol(optarg, &end, 10));
+      srcml_archive_set_tabstop(soptions.archive, strtol(optarg, &end, 10));
 
       break;
 
@@ -471,7 +471,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_CPP_TEXT_ELSE);
+      srcml_archive_enable_option(soptions.archive, SRCML_OPTION_CPP_TEXT_ELSE);
       cpp_else = true;
 
       break;
@@ -483,7 +483,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_disable_option(poptions.archive, SRCML_OPTION_CPP_TEXT_ELSE);
+      srcml_archive_disable_option(soptions.archive, SRCML_OPTION_CPP_TEXT_ELSE);
       cpp_else = true;
 
       break;
@@ -495,7 +495,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_enable_option(poptions.archive, SRCML_OPTION_CPP_MARKUP_IF0);
+      srcml_archive_enable_option(soptions.archive, SRCML_OPTION_CPP_MARKUP_IF0);
       cpp_if0 = true;
 
       break;
@@ -507,7 +507,7 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      srcml_archive_disable_option(poptions.archive, SRCML_OPTION_CPP_MARKUP_IF0);
+      srcml_archive_disable_option(soptions.archive, SRCML_OPTION_CPP_MARKUP_IF0);
       cpp_if0 = true;
 
       break;
@@ -521,23 +521,23 @@ int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE
   return optind;
 }
 
-void process_method(char * optarg, srcdiff_options & poptions) {
+void process_method(char * optarg, srcdiff_options & soptions) {
 
   char * methods = strdup(optarg);
   char * method;
   while((method = strsep(&methods, ",")) != NULL) {
 
     if(strcmp(method, COLLECT_METHOD) == 0)
-      poptions.method &= ~METHOD_RAW;
+      soptions.method &= ~METHOD_RAW;
 
     else if(strcmp(method, RAW_METHOD) == 0)
-      poptions.method |= METHOD_RAW;
+      soptions.method |= METHOD_RAW;
 
     else if(strcmp(method, NO_GROUP_DIFF_METHOD) == 0)
-      poptions.method &= ~METHOD_GROUP;
+      soptions.method &= ~METHOD_GROUP;
 
     else if(strcmp(method, GROUP_DIFF_METHOD) == 0)
-      poptions.method |= METHOD_GROUP;
+      soptions.method |= METHOD_GROUP;
 
     else {
 

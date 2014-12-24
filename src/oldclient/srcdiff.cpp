@@ -103,12 +103,12 @@ extern "C" void verbose_handler(int);
 extern "C" void terminate_handler(int);
 #endif
 
-srcdiff_options* gpoptions = 0;
+srcdiff_options* gsoptions = 0;
 
 void srcdiff_archive(srcdiff_translator& translator, const char* path, const char* dir, const char* root_filename, const char* version, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
+void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
 
 // translate a file, maybe an archive
 void srcdiff_file(srcdiff_translator& translator, const char* path_one, const char* path_two,
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
   srcml_archive_enable_option(archive, SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_TERNARY);
   srcml_archive_register_namespace(archive, "diff", "http://www.sdml.info/srcDiff");
   
-  srcdiff_options poptions =
+  srcdiff_options soptions =
     {
       0,
       0,
@@ -163,10 +163,10 @@ int main(int argc, char* argv[]) {
       0
     };
 
-  gpoptions = &poptions;
+  gsoptions = &soptions;
 
   // process command-line arguments
-  int curarg = process_args(argc, argv, poptions, options, urisprefix);
+  int curarg = process_args(argc, argv, soptions, options, urisprefix);
 
   /* Special checks for illegal combinations */
 
@@ -176,13 +176,13 @@ int main(int argc, char* argv[]) {
   int input_arg_count = input_arg_end - input_arg_start + 1;
 
   // no output specified, so use stdout
-  if (!poptions.srcdiff_filename)
-    poptions.srcdiff_filename = "-";
+  if (!soptions.srcdiff_filename)
+    soptions.srcdiff_filename = "-";
 
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
   if (input_arg_count / 2 > 1)
-    srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
+    srcml_archive_enable_option(soptions.archive, SRCML_OPTION_ARCHIVE);
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
   /*
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
 
   // verify that the output filename is not the same as any of the input filenames
   struct stat outstat = { 0 };
-  stat(poptions.srcdiff_filename, &outstat);
+  stat(soptions.srcdiff_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
     if (strcmp(argv[i], "-") == 0)
@@ -246,7 +246,7 @@ int main(int argc, char* argv[]) {
 
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-              PROGRAM_NAME, argv[i], poptions.srcdiff_filename);
+              PROGRAM_NAME, argv[i], soptions.srcdiff_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
@@ -291,8 +291,8 @@ int main(int argc, char* argv[]) {
   bool shownumber = false;
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
-    fprintf(stderr, "Source encoding:  %s\n", srcml_archive_get_src_encoding(poptions.archive));
-    fprintf(stderr, "XML encoding:  %s\n", srcml_archive_get_encoding(poptions.archive));
+    fprintf(stderr, "Source encoding:  %s\n", srcml_archive_get_src_encoding(soptions.archive));
+    fprintf(stderr, "XML encoding:  %s\n", srcml_archive_get_encoding(soptions.archive));
     showinput = false;
     shownumber = true;
   }
@@ -316,11 +316,11 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_all(poptions.revision_one, poptions.revision_two, poptions.svn_url, count, skipped, error, showinput,shownumber,
-                            poptions.srcdiff_filename,
-                            poptions.method,
-                            poptions.css_url,
-                            poptions.archive,
+    svn_process_session_all(soptions.revision_one, soptions.revision_two, soptions.svn_url, count, skipped, error, showinput,shownumber,
+                            soptions.srcdiff_filename,
+                            soptions.method,
+                            soptions.css_url,
+                            soptions.archive,
                             options);
 
     exit(0);
@@ -335,11 +335,11 @@ int main(int argc, char* argv[]) {
     }
 
 
-    svn_process_session_file(poptions.file_list_name, poptions.revision_one, poptions.revision_two, poptions.svn_url, count, skipped, error, showinput,shownumber,
-                            poptions.srcdiff_filename,
-                            poptions.method,
-                            poptions.css_url,
-                            poptions.archive,
+    svn_process_session_file(soptions.file_list_name, soptions.revision_one, soptions.revision_two, soptions.svn_url, count, skipped, error, showinput,shownumber,
+                            soptions.srcdiff_filename,
+                            soptions.method,
+                            soptions.css_url,
+                            soptions.archive,
                             options);
 
     exit(0);
@@ -349,12 +349,12 @@ int main(int argc, char* argv[]) {
   try {
 
     // translator from input to output using determined language
-    srcdiff_translator translator(poptions.srcdiff_filename,
-                                 poptions.method,
-                                 poptions.css_url,
-                                 poptions.archive,
+    srcdiff_translator translator(soptions.srcdiff_filename,
+                                 soptions.method,
+                                 soptions.css_url,
+                                 soptions.archive,
                                  options,
-                                 poptions.number_context_lines);
+                                 soptions.number_context_lines);
 
 
 
@@ -367,15 +367,15 @@ int main(int argc, char* argv[]) {
     if (isoption(options, OPTION_FILELIST)) {
 
       // if we don't have a filelist yet, get it from the first argument
-      if (!poptions.file_list_name && input_arg_count > 0)
-        poptions.file_list_name = argv[input_arg_start];
+      if (!soptions.file_list_name && input_arg_count > 0)
+        soptions.file_list_name = argv[input_arg_start];
 
       // still no filelist? use stdin
-      if (!poptions.file_list_name)
-        poptions.file_list_name = STDIN;
+      if (!soptions.file_list_name)
+        soptions.file_list_name = STDIN;
 
       // so process the filelist
-      srcdiff_filelist(translator, poptions, count, skipped, error, showinput, shownumber);
+      srcdiff_filelist(translator, soptions, count, skipped, error, showinput, shownumber);
 
 #ifdef SVN
       // translate from standard input
@@ -386,7 +386,7 @@ int main(int argc, char* argv[]) {
         exit(1);
       }
 
-      svn_process_session(poptions.revision_one, poptions.revision_two, translator, poptions.svn_url, archive,options, count, skipped, error, showinput,shownumber);
+      svn_process_session(soptions.revision_one, soptions.revision_two, translator, soptions.svn_url, archive,options, count, skipped, error, showinput,shownumber);
 #endif
     } else if (input_arg_count == 0) {
 
@@ -406,9 +406,9 @@ int main(int argc, char* argv[]) {
         /*
         // process this command line argument
         srcdiff_file(translator, argv[i], options,
-        input_arg_count == 1 ? poptions.given_directory : 0,
-        poptions.language,
-        poptions.tabsize,
+        input_arg_count == 1 ? soptions.given_directory : 0,
+        soptions.language,
+        soptions.tabsize,
         count, skipped, error, showinput, shownumber);
         */
       }
@@ -433,7 +433,7 @@ int main(int argc, char* argv[]) {
 
   }
 
-  srcml_free_archive(poptions.archive);
+  srcml_free_archive(soptions.archive);
   
   return exit_status;
 
@@ -462,7 +462,7 @@ void srcdiff_file(srcdiff_translator& translator, const char* path_one, const ch
   struct stat instat = { 0 };
   int stat_status = stat(path_one, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    srcdiff_dir_top(translator, path_one, path_two, *gpoptions, count, skipped, error, showinput, shownumber);
+    srcdiff_dir_top(translator, path_one, path_two, *gsoptions, count, skipped, error, showinput, shownumber);
     return;
   }
 
@@ -503,20 +503,20 @@ void srcdiff_text(srcdiff_translator& translator, const char* path_one, const ch
 */
   ++count;
 
-  if(showinput && !isoption(srcml_archive_get_options(gpoptions->archive), OPTION_QUIET))
+  if(showinput && !isoption(srcml_archive_get_options(gsoptions->archive), OPTION_QUIET))
     fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
-  srcdiff_input_filename input_old(gpoptions->archive, path_one, options);
-  srcdiff_input_filename input_new(gpoptions->archive, path_two, options);
-  LineDiffRange line_diff_range(path_one, path_two, gpoptions->svn_url, options);
+  srcdiff_input_filename input_old(gsoptions->archive, path_one, options);
+  srcdiff_input_filename input_new(gsoptions->archive, path_two, options);
+  LineDiffRange line_diff_range(path_one, path_two, gsoptions->svn_url, options);
 
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;
 
-  const char * language_string = srcml_archive_check_extension(gpoptions->archive, path);
+  const char * language_string = srcml_archive_check_extension(gsoptions->archive, path);
 
-  translator.translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(gpoptions->archive), filename.c_str(), 0);
+  translator.translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(gsoptions->archive), filename.c_str(), 0);
 
   /*
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
@@ -790,15 +790,15 @@ void srcdiff_archive(srcdiff_translator& translator, const char* path, OPTION_TY
   } while (isarchive && isAnythingOpen(context));
 }
 #endif
-void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
-  srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
+  srcml_archive_enable_option(soptions.archive, SRCML_OPTION_ARCHIVE);
 
   // record the stat info on the output file
 
   struct stat outstat = { 0 };
-  stat(gpoptions->srcdiff_filename, &outstat);
+  stat(gsoptions->srcdiff_filename, &outstat);
 
   showinput = true;
 
@@ -839,9 +839,9 @@ void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old,
 
   }
 
- if(!srcml_archive_get_directory(gpoptions->archive)) srcml_archive_set_directory(gpoptions->archive, directory.c_str());
+ if(!srcml_archive_get_directory(gsoptions->archive)) srcml_archive_set_directory(gsoptions->archive, directory.c_str());
 
-  srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *gpoptions, count, skipped, error, showinput, shownumber, outstat);
+  srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *gsoptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
 // file/directory names to ignore when processing a directory
@@ -904,7 +904,7 @@ void noteSkipped(bool shownumber, const srcdiff_options& options) {
 }
 
 void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
-                 srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+                 srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
@@ -951,13 +951,13 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, poptions);
+      noteSkipped(shownumber, soptions);
       ++i;
       ++skipped;
       continue;
     }
     if (is_output_file(filename_new.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, poptions);
+      noteSkipped(shownumber, soptions);
       ++j;
       ++skipped;
       continue;
@@ -987,7 +987,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, poptions);
+      noteSkipped(shownumber, soptions);
       ++skipped;
       continue;
     }
@@ -1013,7 +1013,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_new.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, poptions);
+      noteSkipped(shownumber, soptions);
       ++skipped;
       continue;
     }
@@ -1059,7 +1059,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
                 directory_length_old,
                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
                 directory_length_new,
-                poptions,
+                soptions,
                 count, skipped, error, showinput, shownumber, outstat);
   }
 
@@ -1075,7 +1075,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, poptions);
+      noteSkipped(shownumber, soptions);
       ++skipped;
       continue;
     }
@@ -1086,7 +1086,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
                 directory_length_old,
                 "",
                 directory_length_new,
-                poptions,
+                soptions,
                 count, skipped, error, showinput, shownumber, outstat);
   }
 
@@ -1102,7 +1102,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_new.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, poptions);
+      noteSkipped(shownumber, soptions);
       ++skipped;
       continue;
     }
@@ -1113,7 +1113,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
                 directory_length_old,
                 filename_new.c_str(),
                 directory_length_new,
-                poptions,
+                soptions,
                 count, skipped, error, showinput, shownumber, outstat);
   }
 
@@ -1135,12 +1135,12 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 #endif
 }
 
-void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
+void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
   try {
 
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(poptions.file_list_name);
+    URIStream uriinput(soptions.file_list_name);
     char* file_one;
     /*
       if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
@@ -1200,18 +1200,18 @@ void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& poptions,
       /*
       // process this command line argument
       srcdiff_file(translator, argv[i], options,
-      input_arg_count == 1 ? poptions.given_directory : 0,
-      input_arg_count == 1 ? poptions.given_filename : 0,
-      input_arg_count == 1 ? poptions.given_version : 0,
-      poptions.language,
-      poptions.tabsize,
+      input_arg_count == 1 ? soptions.given_directory : 0,
+      input_arg_count == 1 ? soptions.given_filename : 0,
+      input_arg_count == 1 ? soptions.given_version : 0,
+      soptions.language,
+      soptions.tabsize,
       count, skipped, error, showinput, shownumber);
       */
 
     }
 
   } catch (URIStreamFileError) {
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.file_list_name);
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, soptions.file_list_name);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
