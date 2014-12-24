@@ -7,14 +7,11 @@
 #include <srcmlapps.hpp>
 #include <srcmlns.hpp>
 #include <Options.hpp>
-//#include <archive.h>
 
 #include <cstring>
 
 #include <cstdlib>
 #include <libxml/parser.h>
-//#include <libxml_archive_read.hpp>
-//#include <libxml_archive_write.hpp>
 
 #include <srcdiff_options.hpp>
 
@@ -26,6 +23,7 @@ boost::program_options::options_description general("General options");
 boost::program_options::options_description input_ops("Input options");
 boost::program_options::options_description srcml_ops("srcML options");
 boost::program_options::options_description srcdiff_ops("srcDiff options");
+boost::program_options::options_description all("All options");
 
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
@@ -168,7 +166,6 @@ void option_method(const std::string & arg) {
 srcdiff_options process_cmdline(int argc, char* argv[]) {
 
   options.archive = srcml_create_archive();
-
 
   boost::program_options::options_description cmdline("srcdiff command-line options");
   general.add_options()
