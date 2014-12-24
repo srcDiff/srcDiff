@@ -34,6 +34,16 @@ int process_cmdline(int argc, char* argv[], srcdiff_options & soptions) {
     ("directory,d", "Set the root directory attribute")
     ("filename,f", "Set the root filename attribute")
     ("src-version,s", "Set the root version attribute")
+    ("files-from", boost::program_options::value<std::string>(&soptions.files_from_name), "Set the input to be a list of file pairs from the provided file")
+    ("register-ext", "Register an extension to language pair to be used during parsing")
+    ("recursive", "I need to double check this one, but maybe recursive svn read")
+    ("method,m", "Set srcdiff parsing method")
+    ("position", "Output additional position information on the srcML elements")
+
+    // missing many in between visualization and bash-view
+
+    ("visualization", "Output a visualization instead of xml")
+    ("bash-view", boost::program_options::value<int>(&soptions.number_context_lines), "Output as colorized bash text")
   ;
 
   return 0;

@@ -107,7 +107,7 @@ struct srcdiff_options
   srcml_archive * archive;
 
   std::string srcdiff_filename;
-  std::string file_list_name;
+  std::string files_from_name;
   std::string input_format;
   std::string output_format;
   int language;
