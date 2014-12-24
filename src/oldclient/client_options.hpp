@@ -104,23 +104,25 @@ const int BASH_VIEW_FLAG_CODE = 256 + 23;
 struct srcdiff_options
 {
 
-  const char* srcdiff_filename;
-  const char* file_list_name;
-  const char* input_format;
-  const char* output_format;
+  srcml_archive * archive;
+
+  std::string srcdiff_filename;
+  std::string file_list_name;
+  std::string input_format;
+  std::string output_format;
   int language;
   METHOD_TYPE method;
   std::string css_url;
-  srcml_archive * archive;
 
-  const char * svn_url;
+  std::string svn_url;
   int revision_one;
   int revision_two;
+
   unsigned long number_context_lines;
   
 };
 
-int process_args(int argc, char* argv[], srcdiff_options & soptions, OPTION_TYPE & options, const char * urisprefix[]);
+int process_cmdline(int argc, char* argv[], srcdiff_options & soptions);
 void process_method(char * optarg, srcdiff_options & soptions);
 
 int option_error_status(int optopt);

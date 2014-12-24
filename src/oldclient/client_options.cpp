@@ -20,20 +20,28 @@
 
 #include <boost/program_options.hpp>
 
-int process_args() {
+int process_cmdline(int argc, char* argv[], srcdiff_options & soptions) {
 
   boost::program_options::options_description cmdline("srcdiff command-line options");
   cmdline.add_options()
     ("help,h", "Output srcdiff help message")
     ("version,v", "Output srcdiff version")
-    ("output,o", "Specify output filename")
+    ("output,o", boost::program_options::value<std::string>(&soptions.srcdiff_filename), "Specify output filename")
     ("archive,n", "Output srcDiff as an archive")
+    ("src-encoding,t", "Set the input source encoding")
+    ("xml-encoding,x", "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
+    ("language,l", "Set the input programming source language")
+    ("directory,d", "Set the root directory attribute")
+    ("filename,f", "Set the root filename attribute")
+    ("src-version,s", "Set the root version attribute")
   ;
+
+  return 0;
 
 }
 
 #define PROGRAM_NAME "srcdiff"
-
+#if 0
 using namespace LanguageName;
 
 // setup options and collect info from arguments
@@ -782,10 +790,4 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 */
 }
-
-void output_settings(const char * name)
-{}
-
-void output_features(const char * name)
-{}
-
+#endif
