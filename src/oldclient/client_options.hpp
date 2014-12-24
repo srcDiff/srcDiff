@@ -106,25 +106,25 @@ const int BASH_VIEW_FLAG_CODE = 256 + 23;
 struct srcdiff_options
 {
 
-  static srcml_archive * archive;
+  srcml_archive * archive;
 
-  static boost::optional<std::string> srcdiff_filename;
-  static boost::optional<std::string> files_from_name;
-  static boost::optional<std::string> input_format;
-  static boost::optional<std::string> output_format;
-  static int language;
-  static METHOD_TYPE method;
-  static boost::optional<std::string> css_url;
+  boost::optional<std::string> srcdiff_filename;
+  boost::optional<std::string> files_from_name;
+  boost::optional<std::string> input_format;
+  boost::optional<std::string> output_format;
+  int language;
+  METHOD_TYPE method;
+  boost::optional<std::string> css_url;
 
-  static boost::optional<std::string> svn_url;
-  static int revision_one;
-  static int revision_two;
+  boost::optional<std::string> svn_url;
+  int revision_one;
+  int revision_two;
 
-  static unsigned long number_context_lines;
+  unsigned long number_context_lines;
   
 };
 
-int process_cmdline(int argc, char* argv[]);
+srcdiff_options process_cmdline(int argc, char* argv[]);
 void process_method(char * optarg, srcdiff_options & soptions);
 
 int option_error_status(int optopt);

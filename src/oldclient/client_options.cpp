@@ -20,39 +20,75 @@
 
 #include <boost/program_options.hpp>
 
-template<boost::optional<std::string> * field>
-void option_field(const std::string & arg) {  *field = arg; }
+srcdiff_options options;
+
+boost::program_options::options_description general("General options");
+boost::program_options::options_description input_ops("Input options");
+boost::program_options::options_description srcml_ops("srcML options");
+boost::program_options::options_description srcdiff_ops("srcDiff options");
+
+
+
+template<boost::optional<std::string> srcdiff_options::*field>
+void option_field(const std::string & arg) {  options.*field = arg; }
 
 template<>
 void option_field<&srcdiff_options::srcdiff_filename>(const std::string & arg) {}
 
-int process_cmdline(int argc, char* argv[]) {
+srcdiff_options process_cmdline(int argc, char* argv[]) {
 
   boost::program_options::options_description cmdline("srcdiff command-line options");
-  cmdline.add_options()
+  general.add_options()
     ("help,h", "Output srcdiff help message")
-    ("version,v", "Output srcdiff version")
+    ("version,V", "Output srcdiff version")
     ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
+    ("compress,z", "Compress the output")
+    ("verbose,v", "Verbose messaging")
+    ("quiet,q", "Silence messaging")
+  ;
+
+  input_ops.add_options()
+    ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file")
+    ("svn", "Input from a Subversion repository")
+    ("continuous", "Continue from base revision") // this may have been where needed revision
+  ;
+
+  srcml_ops.add_options()
     ("archive,n", "Output srcDiff as an archive")
     ("src-encoding,t", "Set the input source encoding")
     ("xml-encoding,x", "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
     ("language,l", "Set the input programming source language")
+    ("register-ext", "Register an extension to language pair to be used during parsing")
     ("directory,d", "Set the root directory attribute")
     ("filename,f", "Set the root filename attribute")
     ("src-version,s", "Set the root version attribute")
-    ("files-from", boost::program_options::value<std::string>(), "Set the input to be a list of file pairs from the provided file")
-    ("register-ext", "Register an extension to language pair to be used during parsing")
-    ("recursive", "I need to double check this one, but maybe recursive svn read")
-    ("method,m", "Set srcdiff parsing method")
+    ("xmlns", "Set default namespace")
+    ("xmlns:", "Set namesapce for given prefix or create a new one")
     ("position", "Output additional position information on the srcML elements")
+    ("tabs", "Tabstop size")
+    ("no-xml-decl", "Do not output the xml declaration")
+    ("no-namespace-decl", "Do not output any namespace declarations")
+    ("cpp-markup-else", "Markup up #else contents")
+    ("cpp-text-else", "Do not markup #else contents")
+    ("cpp-markup-if0", "Markup up #if 0 contents")
+    ("cpp-text-if0", "Do not markup #if 0 contents")
+  ;
 
-    // missing many in between visualization and bash-view
-
+  srcdiff_ops.add_options()
+    ("method,m", "Set srcdiff parsing method")
+    ("recursive", "I need to double check this one, but maybe recursive svn read")
     ("visualization", "Output a visualization instead of xml")
+    ("same", "Output files that are the same")
+    ("pure", "Output files that are the purely added/deleted")
+    ("change", "Output files that where changed")
+    ("no-same", "Do not output files that are the same")
+    ("no-pure", "Do not ouptut files that are purely added/deleted")
+    ("--srcdiff-only", "Output files that only srcdiff, but not diff says are changed")
+    ("--diff-only", "Output files that only diff, but not srcdiff says are changed")
     ("bash-view", boost::program_options::value<int>(), "Output as colorized bash text")
   ;
 
-  return 0;
+  return options;
 
 }
 
@@ -65,61 +101,6 @@ int process_args(int argc, char* argv[], srcdiff_options & soptions, OPTION_TYPE
 
   bool cpp_if0 = false;
   bool cpp_else = false;
-
-  int curoption = 0;
-  struct option cliargs[] = {
-    { HELP_FLAG, no_argument, NULL, HELP_FLAG_SHORT },
-    { VERSION_FLAG, no_argument, NULL, VERSION_FLAG_SHORT },
-    { OUTPUT_FLAG, required_argument, NULL, OUTPUT_FLAG_SHORT },
-    { COMPOUND_FLAG, no_argument, NULL, COMPOUND_FLAG_SHORT },
-    { EXPRESSION_MODE_FLAG, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT },
-    { ENCODING_FLAG, required_argument, NULL, ENCODING_FLAG_SHORT },
-    { SRC_ENCODING_FLAG, required_argument, NULL, SRC_ENCODING_FLAG_SHORT },
-    { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
-    { INTERACTIVE_FLAG, no_argument, NULL, INTERACTIVE_FLAG_SHORT },
-    { DEBUG_FLAG, no_argument, NULL, DEBUG_FLAG_SHORT },
-    { VERBOSE_FLAG, no_argument, NULL, VERBOSE_FLAG_SHORT },
-    { LANGUAGE_FLAG, required_argument, NULL, LANGUAGE_FLAG_SHORT },
-    { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
-    { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
-    { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
-    //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
-    { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
-    { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
-    { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
-    { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
-    { REVISION_FLAG, no_argument, NULL, REVISION_FLAG_CODE },
-    { METHOD_FLAG, required_argument, NULL, METHOD_FLAG_CODE },
-    { NO_THREAD_FLAG, no_argument, NULL, NO_THREAD_FLAG_CODE },
-    { VISUALIZE_FLAG, optional_argument, NULL, VISUALIZE_FLAG_CODE },
-    { SAME_FLAG, no_argument, NULL, SAME_FLAG_CODE },
-    { PURE_FLAG, no_argument, NULL, PURE_FLAG_CODE },
-    { CHANGE_FLAG, no_argument, NULL, CHANGE_FLAG_CODE },
-    { SRCDIFFONLY_FLAG, no_argument, NULL, SRCDIFFONLY_FLAG_CODE },
-    { DIFFONLY_FLAG, no_argument, NULL, DIFFONLY_FLAG_CODE },
-    { NO_SAME_FLAG, no_argument, NULL, NO_SAME_FLAG_CODE },
-    { NO_PURE_FLAG, no_argument, NULL, NO_PURE_FLAG_CODE },
-    { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
-#ifdef SVN
-    { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
-    { SVN_CONTINUOUS_FLAG, no_argument, NULL, SVN_CONTINUOUS_FLAG_CODE },
-#endif
-    { BASH_VIEW_FLAG, optional_argument, NULL, BASH_VIEW_FLAG_CODE },
-    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
-    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
-    { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
-    { TABS_FLAG, required_argument, NULL, TABS_FLAG_CODE },
-    { POSITION_FLAG, no_argument, &curoption, SRCML_OPTION_POSITION },
-    { LITERAL_FLAG, no_argument, &curoption, SRCML_OPTION_LITERAL },
-    { OPERATOR_FLAG, no_argument, &curoption, SRCML_OPTION_OPERATOR },
-    { MODIFIER_FLAG, no_argument, &curoption, SRCML_OPTION_MODIFIER },
-    { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, CPP_MARKUP_ELSE_FLAG_CODE },
-    { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, CPP_TEXTONLY_ELSE_FLAG_CODE },
-    { CPP_MARKUP_IF0_FLAG, no_argument, NULL, CPP_MARKUP_IF0_FLAG_CODE },
-    { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, CPP_TEXTONLY_IF0_FLAG_CODE },
-    { 0, 0, 0, 0 }
-  };
 
   // process all command line options
   while (1) {
