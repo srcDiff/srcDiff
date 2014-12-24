@@ -4,6 +4,7 @@
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_measure.hpp>
 #include <srcdiff_compare.hpp>
+#include <srcdiff_match.hpp>
 
 #include <shortest_edit_script.h>
 #include <srcDiffUtility.hpp>
@@ -357,7 +358,7 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
     || old_tag == "expr" || old_tag == "name") {
 
 
-    return reject_similarity(similarity, difference, text_old_length, text_new_length,
+    return srcdiff_match::reject_similarity(similarity, difference, text_old_length, text_new_length,
       nodes_old, set_old, nodes_new, set_new);
 
     // int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
@@ -385,7 +386,7 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
 
   } else {
 
-    return reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
+    return srcdiff_match::reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
 
   }
 

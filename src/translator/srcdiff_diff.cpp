@@ -6,6 +6,7 @@
 #include <srcdiff_move.hpp>
 #include <srcdiff_measure.hpp>
 #include <srcdiff_compare.hpp>
+#include <srcdiff_match.hpp>
 
 #include <srcDiffUtility.hpp>
 #include <pthread.h>
@@ -42,7 +43,7 @@ bool srcdiff_diff::go_down_a_level(std::vector<xNodePtr> & nodes_old, node_sets 
   int similarity, difference, text_old_length, text_new_length;
   measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
-  return !reject_match(similarity, difference, text_old_length, text_new_length,
+  return !srcdiff_match::reject_match(similarity, difference, text_old_length, text_new_length,
           nodes_old, node_sets_old->at(start_old), nodes_new, node_sets_new->at(start_new));
 
 }
