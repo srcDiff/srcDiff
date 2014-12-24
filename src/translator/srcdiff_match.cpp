@@ -547,7 +547,7 @@ std::vector<std::string> get_call_name(std::vector<xNodePtr> & nodes, int start_
 
 int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std::string> name_list_new) {
 
-  ShortestEditScript ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);
+  class shortest_edit_script ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);
 
   ses.compute(&name_list_old, name_list_old.size(), &name_list_new, name_list_new.size());
 

@@ -1,9 +1,10 @@
-#ifndef INCLUDED_SHORTESTEDITSCRIPT_HPP
-#define INCLUDED_SHORTESTEDITSCRIPT_HPP
+#ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
+#define INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
 
 #include <shortest_edit_script.h>
 
-class ShortestEditScript {
+class shortest_edit_script {
+  
 private:
 
   edit * edit_script;
@@ -14,11 +15,11 @@ private:
 
 public:
 
-  ShortestEditScript(int (*compare)(const void * item_one, const void * item_two, const void * context),
+  shortest_edit_script(int (*compare)(const void * item_one, const void * item_two, const void * context),
                      const void * (*accessor)(int index, const void * structure, const void * context),
                                         const void * context, int threshold = 1000);
 
-  ~ShortestEditScript();
+  ~shortest_edit_script();
 
   edit * get_script();
 

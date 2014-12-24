@@ -10,7 +10,7 @@
 srcdiff_measure::srcdiff_measure(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_set * set_old, node_set * set_new) 
   : nodes_old(nodes_old), nodes_new(nodes_new), set_old(set_old), set_new(set_new) {}
 
-void srcdiff_measure::compute_ses(ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
+void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {
 
   unsigned int olength = set_old->size();
   unsigned int nlength = set_new->size();
@@ -37,7 +37,7 @@ void srcdiff_measure::compute_ses(ShortestEditScript & ses, int & text_old_lengt
 
 }
 
-void srcdiff_measure::compute_ses_important_text(ShortestEditScript & ses, int & text_old_length, int & text_new_length) {
+void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {
 
   unsigned int olength = set_old->size();
   unsigned int nlength = set_new->size();
@@ -101,7 +101,7 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
 
   }
 
-  ShortestEditScript ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
+  class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
   compute_ses(ses, text_old_length, text_new_length);
 
@@ -160,7 +160,7 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
   }
 
-  ShortestEditScript ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
+  class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
   compute_ses_important_text(ses, text_old_length, text_new_length);
 
@@ -228,7 +228,7 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
   }
 
-  ShortestEditScript ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
+  class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   // collect subset of nodes
   node_sets next_node_sets_old(nodes_old, set_old->at(1), set_old->back(), is_significant);

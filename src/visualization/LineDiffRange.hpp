@@ -8,7 +8,7 @@
 */
 
 #include <shortest_edit_script.h>
-#include <ShortestEditScript.hpp>
+#include <shortest_edit_script.hpp>
 
 #include <Options.hpp>
 
@@ -25,7 +25,7 @@ private:
 
   std::string file_one;
   std::string file_two;
-  ShortestEditScript ses;
+  class shortest_edit_script ses;
 
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;

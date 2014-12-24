@@ -8,7 +8,7 @@
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
 
-#include <ShortestEditScript.hpp>
+#include <shortest_edit_script.hpp>
 
 #include <pthread.h>
 #include <string.h>
@@ -100,7 +100,7 @@ void srcdiff_diff::output() {
 
   diff_nodes dnodes = { out.get_nodes_old(), out.get_nodes_new() };
 
-  ShortestEditScript ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
+  class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   int distance = ses.compute((const void *)node_sets_old, node_sets_old->size(), (const void *)node_sets_new, node_sets_new->size());
 

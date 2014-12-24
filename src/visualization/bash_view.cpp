@@ -6,7 +6,7 @@
 */
 
 #include <bash_view.hpp>
-#include <ShortestEditScript.hpp>
+#include <shortest_edit_script.hpp>
 
 #include <libxml/parserInternals.h>
 
