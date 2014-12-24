@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SRCDIFF_OPTIONS_HPP
-#define INCLUDED_SRCDIFF_OPTIONS_HPP
+#ifndef INCLUDED_CLIENT_OPTIONS_HPP
+#define INCLUDED_CLIENT_OPTIONS_HPP
 
 #include <srcdiff_uri.hpp>
 #include <methods.hpp>
