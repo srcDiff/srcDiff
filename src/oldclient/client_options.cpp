@@ -41,15 +41,34 @@ void option_field<&srcdiff_options::number_context_lines>(const int & arg) {
 
 }
 
-template<int flag>
-void option_srcml_field(const int & arg) {}
+enum srcml_field { SRC_ENCODING, XML_ENCODING, TABSTOP };
 
-template<>
-void option_srcml_field<SRCML_OPTION_POSITION>(const int & arg) {
+// template<srcml_field field>
+// void option_srcml_field(const int & arg) {}
 
-  srcml_archive_set_tabstop(options.archive, arg);
+template<srcml_field field>
+void option_srcml_field(const std::string & arg) {}
 
-}
+// template<>
+// void option_srcml_field<SRC_ENCODING>(const std::string & arg) {
+
+//   srcml_archive_set_src_encoding(options.archive, arg.c_str());
+
+// }
+
+// template<>
+// // void option_srcml_field<XML_ENCODING>(const std::string & arg) {
+
+// //   srcml_archive_set_encoding(options.archive, arg.c_str());
+
+// // }
+
+// template<>
+// void option_srcml_field<TABSTOP>(const int & arg) {
+
+//   srcml_archive_set_tabstop(options.archive, arg);
+
+// }
 
 template<OPTION_TYPE flag>
 void option_flag(bool on) {
@@ -101,8 +120,8 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
 
   srcml_ops.add_options()
     ("archive,n", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_ARCHIVE>), "Output srcDiff as an archive")
-    ("src-encoding,t", "Set the input source encoding")
-    ("xml-encoding,x", "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
+    ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
+    ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
     ("language,l", "Set the input programming source language")
     ("register-ext", "Register an extension to language pair to be used during parsing")
     ("directory,d", "Set the root directory attribute")
@@ -111,7 +130,7 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
     ("xmlns", "Set default namespace")
     ("xmlns:", "Set namesapce for given prefix or create a new one")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
-    ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<SRCML_OPTION_POSITION>)->default_value(3), "Tabstop size")
+    // ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(3), "Tabstop size")
     ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_NAMESPACE_DECL>), "Do not output the xml declaration")
     ("no-namespace-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output any namespace declarations")
     ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents")
