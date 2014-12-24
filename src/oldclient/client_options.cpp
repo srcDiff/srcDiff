@@ -32,17 +32,37 @@ boost::program_options::options_description srcdiff_ops("srcDiff options");
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) {  options.*field = arg; }
 
-template<>
-void option_field<&srcdiff_options::srcdiff_filename>(const std::string & arg) {}
+template<int flag>
+void option_flag(bool on) {
+
+  if(on) options.flags |= flag;
+
+}
+
+template<int op>
+void option_srcml_flag(bool on) {
+
+  if(on) srcml_archive_enable_option(options.archive, op);
+
+}
+
+template<int method>
+void option_method(bool on) {
+
+  if(on) options.methods |= method;
+
+}
 
 srcdiff_options process_cmdline(int argc, char* argv[]) {
+
+  options.archive = srcml_create_archive();
 
   boost::program_options::options_description cmdline("srcdiff command-line options");
   general.add_options()
     ("help,h", "Output srcdiff help message")
     ("version,V", "Output srcdiff version")
     ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
-    ("compress,z", "Compress the output")
+    ("compress,z", boost::program_options::bool_switch()->notifier(option_srcml_flag<SRCML_OPTION_COMPRESS>), "Compress the output")
     ("verbose,v", "Verbose messaging")
     ("quiet,q", "Silence messaging")
   ;

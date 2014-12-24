@@ -108,15 +108,16 @@ struct srcdiff_options
 
   srcml_archive * archive;
 
+  int language;
+
   boost::optional<std::string> srcdiff_filename;
   boost::optional<std::string> files_from_name;
-  boost::optional<std::string> input_format;
-  boost::optional<std::string> output_format;
-  int language;
-  METHOD_TYPE method;
   boost::optional<std::string> css_url;
-
   boost::optional<std::string> svn_url;
+
+  OPTION_TYPE flags;
+  METHOD_TYPE methods;
+
   int revision_one;
   int revision_two;
 
