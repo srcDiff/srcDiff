@@ -3,7 +3,6 @@
 
 #include <srcdiff_output.hpp>
 #include <node_sets.hpp>
-
 #include <shortest_edit_script.h>
 
 #include <vector>

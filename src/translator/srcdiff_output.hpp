@@ -4,12 +4,12 @@
 
 #include <ColorDiff.hpp>
 #include <bash_view.hpp>
-
 #include <methods.hpp>
 #include <xmlrw.hpp>
+
 #include <vector>
-#include <pthread.h>
 #include <memory>
+#include <pthread.h>
 
 class srcdiff_output {
 

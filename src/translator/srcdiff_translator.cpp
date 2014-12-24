@@ -29,13 +29,12 @@
 #include <srcdiff_change.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <srcml_converter.hpp>
+#include <shortest_edit_script.h>
+#include <srcdiff_constants.hpp>
 
 #include <srcmlns.hpp>
 #include <srcmlapps.hpp>
-#include <shortest_edit_script.h>
-#include <srcdiff_constants.hpp>
 #include <LineDiffRange.hpp>
-
 #include <xmlrw.hpp>
 
 #include <strings.h>

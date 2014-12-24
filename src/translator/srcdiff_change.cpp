@@ -2,7 +2,6 @@
 
 #include <srcdiff_whiteSpace.hpp>
 #include <srcdiff_move.hpp>
-
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 #include <xmlrw.hpp>

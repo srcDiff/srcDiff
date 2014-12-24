@@ -1,10 +1,7 @@
 #include <srcdiff_comment.hpp>
 
 #include <srcdiff_common.hpp>
-
 #include <srcdiff_compare.hpp>
-
-#include <shortest_edit_script.h>
 #include <shortest_edit_script.hpp>
 
 srcdiff_comment::srcdiff_comment(srcdiff_output & out, node_sets * node_sets_old, node_sets * node_sets_new) 

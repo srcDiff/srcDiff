@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SRCDIFFMOVE_HPP
-#define INCLUDED_SRCDIFFMOVE_HPP
+#ifndef INCLUDED_SRCDIFF_MOVE_HPP
+#define INCLUDED_SRCDIFF_MOVE_HPP
 
 #include <srcdiff_output.hpp>
 

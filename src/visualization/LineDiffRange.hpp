@@ -7,7 +7,6 @@
   mjd52@zips.uakron.edu
 */
 
-#include <shortest_edit_script.h>
 #include <shortest_edit_script.hpp>
 
 #include <Options.hpp>

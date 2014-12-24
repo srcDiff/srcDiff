@@ -9,8 +9,6 @@
 
 #include <LineDiffRange.hpp>
 
-#include <shortest_edit_script.h>
-
 #include <string>
 #include <vector>
 #include <fstream>

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SRCDIFFCONSTANTS_HPP
-#define INCLUDED_SRCDIFFCONSTANTS_HPP
+#ifndef INCLUDED_SRCDIFF_CONSTANTS_HPP
+#define INCLUDED_SRCDIFF_CONSTANTS_HPP
 
 const char * const DIFF_PREFIX = "diff:";
 const char * const DIFF_OLD = "delete";

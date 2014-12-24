@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SRCDIFFMATCH_HPP
-#define INCLUDED_SRCDIFFMATCH_HPP
+#ifndef INCLUDED_SRCDIFF_MATCH_HPP
+#define INCLUDED_SRCDIFF_MATCH_HPP
 
 #include <node_sets.hpp>
 #include <xmlrw.hpp>

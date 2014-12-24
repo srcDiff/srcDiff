@@ -7,7 +7,6 @@
 #include <srcdiff_measure.hpp>
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
-
 #include <shortest_edit_script.hpp>
 
 #include <pthread.h>

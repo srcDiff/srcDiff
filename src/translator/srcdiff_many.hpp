@@ -2,9 +2,9 @@
 #define INCLUDED_SRCDIFFMANY_HPP
 
 #include <shortest_edit_script.h>
-#include <vector>
-
 #include <srcdiff_diff.hpp>
+
+#include <vector>
 
 class srcdiff_many : public srcdiff_diff {
 

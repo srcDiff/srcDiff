@@ -29,12 +29,12 @@
 
 #include <srcdiff_input.hpp>
 #include <srcdiff_output.hpp>
+#include <methods.hpp>
 
 #include <Options.hpp>
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include <methods.hpp>
 
 #include <srcml.h>
 

@@ -7,7 +7,7 @@
 #include <srcdiff_match.hpp>
 #include <shortest_edit_script.h>
 
-#include <string.h>
+#include <cstring>
 
 extern const char * change;
 extern const char * whitespace;

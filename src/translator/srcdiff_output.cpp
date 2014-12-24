@@ -2,10 +2,10 @@
 
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
-#include <xmlrw.hpp>
 #include <methods.hpp>
+#include <xmlrw.hpp>
 
-#include <string.h>
+#include <cstring>
 
 int move_operation = SESCOMMON;
 

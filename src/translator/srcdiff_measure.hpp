@@ -2,7 +2,6 @@
 #define INCLUDED_SRCDIFF_MEASURE_HPP
 
 #include <node_set.hpp>
-
 #include <shortest_edit_script.hpp>
 
 #include <vector>
