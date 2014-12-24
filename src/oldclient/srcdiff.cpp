@@ -103,12 +103,12 @@ extern "C" void verbose_handler(int);
 extern "C" void terminate_handler(int);
 #endif
 
-process_options* gpoptions = 0;
+srcdiff_options* gpoptions = 0;
 
 void srcdiff_archive(srcdiff_translator& translator, const char* path, const char* dir, const char* root_filename, const char* version, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void srcdiff_filelist(srcdiff_translator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
+void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
 
 // translate a file, maybe an archive
 void srcdiff_file(srcdiff_translator& translator, const char* path_one, const char* path_two,
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
   srcml_archive_enable_option(archive, SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_TERNARY);
   srcml_archive_register_namespace(archive, "diff", "http://www.sdml.info/srcDiff");
   
-  process_options poptions =
+  srcdiff_options poptions =
     {
       0,
       0,
@@ -790,7 +790,7 @@ void srcdiff_archive(srcdiff_translator& translator, const char* path, OPTION_TY
   } while (isarchive && isAnythingOpen(context));
 }
 #endif
-void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   srcml_archive_enable_option(poptions.archive, SRCML_OPTION_ARCHIVE);
@@ -897,14 +897,14 @@ int is_output_file(const char * filename, const struct stat & outstat) {
 
 }
 
-void noteSkipped(bool shownumber, const process_options& options) {
+void noteSkipped(bool shownumber, const srcdiff_options& options) {
 
   fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
           "    - %s\tSkipped: Output file.\n", options.srcdiff_filename);
 }
 
 void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
-                 process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+                 srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
@@ -1135,7 +1135,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 #endif
 }
 
-void srcdiff_filelist(srcdiff_translator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
+void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
   try {
 
     // translate all the filenames listed in the named file

@@ -101,7 +101,7 @@ const int SVN_CONTINUOUS_FLAG_CODE = 256 + 22;
 const char * const BASH_VIEW_FLAG = "bash";
 const int BASH_VIEW_FLAG_CODE = 256 + 23;
 
-struct process_options
+struct srcdiff_options
 {
 
   const char* srcdiff_filename;
@@ -120,8 +120,8 @@ struct process_options
   
 };
 
-int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE & options, const char * urisprefix[]);
-void process_method(char * optarg, process_options & poptions);
+int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE & options, const char * urisprefix[]);
+void process_method(char * optarg, srcdiff_options & poptions);
 
 int option_error_status(int optopt);
 

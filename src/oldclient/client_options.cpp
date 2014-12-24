@@ -27,6 +27,7 @@ int process_args() {
     ("help,h", "Output srcdiff help message")
     ("version,v", "Output srcdiff version")
     ("output,o", "Specify output filename")
+    ("archive,n", "Output srcDiff as an archive")
   ;
 
 }
@@ -36,7 +37,7 @@ int process_args() {
 using namespace LanguageName;
 
 // setup options and collect info from arguments
-int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE & options, const char * urisprefix[]) {
+int process_args(int argc, char* argv[], srcdiff_options & poptions, OPTION_TYPE & options, const char * urisprefix[]) {
 
   bool cpp_if0 = false;
   bool cpp_else = false;
@@ -520,7 +521,7 @@ int process_args(int argc, char* argv[], process_options & poptions, OPTION_TYPE
   return optind;
 }
 
-void process_method(char * optarg, process_options & poptions) {
+void process_method(char * optarg, srcdiff_options & poptions) {
 
   char * methods = strdup(optarg);
   char * method;
