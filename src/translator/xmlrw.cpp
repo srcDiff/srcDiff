@@ -630,4 +630,23 @@ void outputNode(const xNode& node, srcml_unit * unit) {
   default:
     break;
   }
+
+}
+
+bool is_white_space(const xNodePtr node) {
+
+  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
+
+}
+
+bool is_new_line(const xNodePtr node) {
+
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content[0] == '\n';
+
+}
+
+bool is_text(const xNodePtr node) {
+
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
 }

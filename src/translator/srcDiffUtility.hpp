@@ -10,12 +10,6 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-bool is_change(edit * edit_script);
 
-bool is_white_space(const xNodePtr node);
-
-bool is_new_line(const xNodePtr node);
-
-bool is_text(const xNodePtr node);
 
 #endif

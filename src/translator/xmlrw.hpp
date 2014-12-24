@@ -103,6 +103,12 @@ inline bool isendelement(const xmlTextReaderPtr& reader) {
   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
 }
 
+bool is_white_space(const xNodePtr node);
+
+bool is_new_line(const xNodePtr node);
+
+bool is_text(const xNodePtr node);
+
 xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
 
 void freeXAttr(xAttrPtr properties);

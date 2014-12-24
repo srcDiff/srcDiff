@@ -65,6 +65,12 @@ int shortest_edit_script_hybrid(const void * sequence_one, int sequence_one_end,
 */
 void free_shortest_edit_script(struct edit * edit_script);
 
+
+/*
+  Check if next edit is a change.
+*/
+int is_change(struct edit * edit_script);
+
 #ifdef __cplusplus
 }
 #endif

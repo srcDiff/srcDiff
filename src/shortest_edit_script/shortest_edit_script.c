@@ -366,6 +366,13 @@ struct edit * copy_edit(struct edit * edit) {
   return new_edit;
 }
 
+int is_change(struct edit * edit_script) {
+
+  return edit_script->operation == SESDELETE && edit_script->next != NULL && edit_script->next->operation == SESINSERT
+    && (edit_script->offset_sequence_one + edit_script->length) == edit_script->next->offset_sequence_one;
+
+}
+
 #if 0
 int str_compare(const void * str_one, const void * str_two, const void * context) {
 
