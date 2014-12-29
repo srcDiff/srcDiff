@@ -89,20 +89,17 @@ extern "C" void verbose_handler(int);
 extern "C" void terminate_handler(int);
 #endif
 
-srcdiff_options* gsoptions = 0;
+srcdiff_options* goptions = 0;
 
-void srcdiff_archive(srcdiff_translator& translator, const char* path, const char* dir, const char* root_filename, const char* version, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber);
+void srcdiff_archive(srcdiff_translator & translator, const char* path, const char* dir, const char* root_filename, const char* version, int tabsize);
+void srcdiff_dir_top(srcdiff_translator & translator, const char * directory_old, const char * directory_new, srcdiff_options& options);
+void srcdiff_dir(srcdiff_translator & translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& options, const struct stat& outstat);
+void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options& options);
 
 // translate a file, maybe an archive
-void srcdiff_file(srcdiff_translator& translator, const char* path_one, const char* path_two,
-                  int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void srcdiff_file(srcdiff_translator & translator, srcdiff_options & options, const char * path_one, const char * path_two);
 
-void srcdiff_text(srcdiff_translator& translator, const char* path_one, const char* path_two,
-                  int directory_length_old, int directory_length_new,
-                  int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void srcdiff_text(srcdiff_translator & translator, srcdiff_options & options, const char * path_one, const char * path_two, int directory_length_old, int directory_length_new);
 
 // setup options and collect info from arguments
 
@@ -122,176 +119,19 @@ int main(int argc, char* argv[]) {
   // signal to toggle verbose flag
   signal(SIGUSR1, verbose_handler);
 #endif
-  
-#if 0
-  srcdiff_options soptions =
-    {
-      0,
-      0,
-      0,
-      0,
-      0, //DEFAULT_TEXT_ENCODING,
-
-      METHOD_GROUP,
-      std::string(),
-      archive, 
-      0,
-#ifdef SVN
-      SVN_INVALID_REVNUM,
-      SVN_INVALID_REVNUM,
-#endif
-      0
-    };
-#endif
 
   // process command-line arguments
-  srcdiff_options soptions = process_command_line(argc, argv);
+  srcdiff_options options = process_command_line(argc, argv);
 
-  // if more than one input filename assume nested
-  // a single input filename which is an archive is detected during archive processing
-#if 0
-  if (input_arg_count / 2 > 1)
-    srcml_archive_enable_option(soptions.archive, SRCML_OPTION_ARCHIVE);
-
-
-#if defined(__GNUC__) && !defined(__MINGW32__)
-
-  // verify that only one input pipe is STDIN
-  struct stat stdiostat = { 0 };
-  if (fstat(STDIN_FILENO, &stdiostat) == -1) {
-    fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), "stdin");
-    exit(STATUS_INPUTFILE_PROBLEM);
-  }
-
-  int stdiocount = 0;
-  for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
-    if (strcmp(argv[i], "-") == 0) {
-      ++stdiocount;
-      continue;
-    }
-
-    // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
-    if (stat(argv[i], &instat) == -1)
-      continue;
-
-    if(instat.st_ino == stdiostat.st_ino)
-      ++stdiocount;
-
-    if (stdiocount > 1) {
-      fprintf(stderr, "%s: Multiple input files are from standard input.\n", PROGRAM_NAME);
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-  }
-
-  // verify that the output filename is not the same as any of the input filenames
-  struct stat outstat = { 0 };
-  stat(soptions.srcdiff_filename, &outstat);
-  for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
-    if (strcmp(argv[i], "-") == 0)
-      continue;
-
-    // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
-    if (stat(argv[i], &instat) == -1)
-      continue;
-
-    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-      fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-              PROGRAM_NAME, argv[i], soptions.srcdiff_filename);
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-  }
-#endif
-
-
-#if defined(__GNUG__) && !defined(__MINGW32__)
-  // automatic interactive use from stdin (not on redirect or pipe)
-  if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
-
-  }
-#endif
-#endif
-  /*
-  // all input is through libarchive
-  if (!isoption(soptions.flags, OPTION_FILELIST)) {
-  if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
-  fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-  exit(1);
-  }
-  }
-  */
-
-  bool showinput = false;
-  bool shownumber = false;
-  // output source encoding
-  if (isoption(soptions.flags, OPTION_VERBOSE)) {
-    fprintf(stderr, "Source encoding:  %s\n", srcml_archive_get_src_encoding(soptions.archive));
-    fprintf(stderr, "XML encoding:  %s\n", srcml_archive_get_encoding(soptions.archive));
-    showinput = false;
-    shownumber = true;
-  }
-
-  // filecount
-  int count = 0;
-
-  // files skipped
-  int skipped = 0;
-
-  // file errors
-  int error = 0;
-
-#ifdef SVN
-
-  if(isoption(options.flags, OPTION_SVN) && isoption(soptions.flags, OPTION_SVN_CONTINUOUS)) {
-
-    if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-      exit(1);
-    }
-
-
-    svn_process_session_all(soptions.revision_one, soptions.revision_two, soptions.svn_url, count, skipped, error, showinput,shownumber,
-                            soptions.srcdiff_filename,
-                            soptions.methods,
-                            soptions.css_url,
-                            soptions.archive,
-                            soptions.flags);
-
-    exit(0);
-
-  }
-
-  if(isoption(soptions.flags, OPTION_SVN) && isoption(soptions.flags, OPTION_FILELIST)) {
-
-    if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-      exit(1);
-    }
-
-
-    svn_process_session_file(soptions.file_list_name, soptions.revision_one, soptions.revision_two, soptions.svn_url, count, skipped, error, showinput,shownumber,
-                            soptions.srcdiff_filename,
-                            soptions.methods,
-                            soptions.css_url,
-                            soptions.archive,
-                            soptions.flags);
-
-    exit(0);
-
-  }
-#endif
   try {
 
     // translator from input to output using determined language
-    srcdiff_translator translator(soptions.srcdiff_filename.c_str(),
-                                 soptions.methods,
-                                 soptions.css_url,
-                                 soptions.archive,
-                                 soptions.flags,
-                                 soptions.number_context_lines);
+    srcdiff_translator translator(options.srcdiff_filename->c_str(),
+                                 options.methods,
+                                 options.css_url->c_str(),
+                                 options.archive,
+                                 options.flags,
+                                 options.number_context_lines);
 
 
 
@@ -300,69 +140,8 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, terminate_handler);
 #endif
 
-    // translate input filenames from list in file
-    if (isoption(soptions.flags, OPTION_FILELIST)) {
 
-      // if we don't have a filelist yet, get it from the first argument
-      if (!soptions.file_list_name && input_arg_count > 0)
-        soptions.file_list_name = argv[input_arg_start];
-
-      // still no filelist? use stdin
-      if (!soptions.file_list_name)
-        soptions.file_list_name = STDIN;
-
-      // so process the filelist
-      srcdiff_filelist(translator, soptions, count, skipped, error, showinput, shownumber);
-
-#ifdef SVN
-      // translate from standard input
-    } else if(isoption(soptions.flags, OPTION_SVN)) {
-
-      if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
-        fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-        exit(1);
-      }
-
-      svn_process_session(soptions.revision_one, soptions.revision_two, translator, soptions.svn_url, archive,soptions.flags, count, skipped, error, showinput,shownumber);
-#endif
-    } else if (input_arg_count == 0) {
-
-      // translate from standard input using any directory, filename and version given on the command line
-      srcdiff_file(translator, STDIN, STDIN,
-                   count, skipped, error, showinput, shownumber);
-
-      // translate filenames from the command line
-    } else {
-
-      // translate in batch the input files on the command line extracting the directory and filename attributes
-      // from the full path
-      for (int i = input_arg_start; (i  + 1) <= input_arg_end; i += 2) {
-
-        srcdiff_file(translator, argv[i], argv[i + 1], count, skipped, error, showinput, shownumber);
-
-        /*
-        // process this command line argument
-        srcdiff_file(translator, argv[i], soptions.flags,
-        input_arg_count == 1 ? soptions.given_directory : 0,
-        soptions.language,
-        soptions.tabsize,
-        count, skipped, error, showinput, shownumber);
-        */
-      }
-
-    }
-
-    if (count == 0)
-      exit(STATUS_INPUTFILE_PROBLEM);
-
-    else if (showinput && isoption(soptions.flags, SRCML_OPTION_ARCHIVE) && !isoption(soptions.flags, OPTION_QUIET)) {
-      fprintf(stderr, "\n"
-              "Translated: %d\t"
-              "Skipped: %d\t"
-              "Error: %d\t"
-              "Total: %d\n", count, skipped, error, count + skipped + error);
-
-    }
+    //  srcdiff_file(translator, path_one, path_two);
 
   } catch (const std::exception & e) {
 
@@ -370,7 +149,7 @@ int main(int argc, char* argv[]) {
 
   }
 
-  srcml_free_archive(soptions.archive);
+  srcml_free_archive(options.archive);
   
   return exit_status;
 
@@ -379,38 +158,31 @@ int main(int argc, char* argv[]) {
 
 
 #ifdef __GNUG__
-extern "C" void verbose_handler(int) {
-
-
-}
+extern "C" void verbose_handler(int) {}
 
 extern "C" void terminate_handler(int) {
 
-
   // turn off handler for this signal
   signal(SIGINT, SIG_DFL);
+
 }
 #endif
 
-void srcdiff_file(srcdiff_translator& translator, const char* path_one, const char* path_two,
-                  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_file(srcdiff_translator& translator, srcdiff_options & options, const char* path_one, const char* path_two) {
 
   // handle local directories specially
   struct stat instat = { 0 };
   int stat_status = stat(path_one, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    srcdiff_dir_top(translator, path_one, path_two, *gsoptions, count, skipped, error, showinput, shownumber);
+    //srcdiff_dir_top(translator, path_one, path_two, *goptions);
     return;
   }
 
-  srcdiff_text(translator, path_one, path_two, 0, 0, count, skipped,
-               error, showinput, shownumber);
+  srcdiff_text(translator, options, path_one, path_two, 0, 0);
 
 }
 
-void srcdiff_text(srcdiff_translator& translator, const char* path_one, const char* path_two,
-                  int directory_length_old, int directory_length_new,
-                  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_text(srcdiff_translator& translator, srcdiff_options & options, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new) {
 
   std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
@@ -420,322 +192,30 @@ void srcdiff_text(srcdiff_translator& translator, const char* path_one, const ch
 
   }
 
-  // Remove eventually
-/*  int real_language = language ? language : Language::getLanguageFromFilename(path_one);
-
-  real_language = real_language ? real_language : Language::getLanguageFromFilename(path_two);
-
-  if (!(real_language == Language::LANGUAGE_JAVA || real_language == Language::LANGUAGE_ASPECTJ))
-    local_options |= OPTION_CPP;
-
-  if (!real_language && !isoption(soptions.flags, OPTION_QUIET)) {
-    fprintf(stderr, !shownumber ? "Skipped '%s|%s':  Unregistered extension\n" :
-            "    - '%s|%s'\tSkipped: Unregistered extension\n",
-            path_one, path_two);
-
-    ++skipped;
-
-    return;
-  }
-*/
-  ++count;
-
-  if(showinput && !isoption(srcml_archive_get_options(gsoptions->archive), OPTION_QUIET))
-    fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
-
-  srcdiff_input_filename input_old(gsoptions->archive, path_one, options);
-  srcdiff_input_filename input_new(gsoptions->archive, path_two, options);
-  LineDiffRange line_diff_range(path_one, path_two, gsoptions->svn_url, options);
+  srcdiff_input_filename input_old(options.archive, path_one, options.flags);
+  srcdiff_input_filename input_new(options.archive, path_two, options.flags);
+  LineDiffRange line_diff_range(path_one, path_two, options.svn_url->c_str(), options.flags);
 
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;
 
-  const char * language_string = srcml_archive_check_extension(gsoptions->archive, path);
+  const char * language_string = srcml_archive_check_extension(options.archive, path);
 
-  translator.translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(gsoptions->archive), filename.c_str(), 0);
+  translator.translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(options.archive), filename.c_str(), 0);
 
-  /*
-  // single file archive (tar, zip, cpio, etc.) is listed as a single file
-  // but is much, much more
-  OPTION_TYPE save_options = options;
-
-  try {
-
-  bool foundfilename = true;
-
-  std::string unit_filename = path;
-  if (root_filename)
-  unit_filename = root_filename;
-  else if (strcmp(path, STDIN))
-  unit_filename = path;
-  else
-  foundfilename = false;
-
-  // language based on extension, if not specified
-
-  // 1) language may have been explicitly specified
-  int reallanguage = language;
-
-  // 2) try from the filename (basically the extension)
-  if (!reallanguage)
-  reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
-
-  // error if can't find a language
-  if (!reallanguage) {
-
-  if (!isoption(soptions.flags, OPTION_QUIET)) {
-  if (unit_filename == "-")
-  fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
-  else
-  fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
-  "    - %s\tSkipped: Unregistered extension.\n",
-  unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-  }
-
-  ++skipped;
-
-  return;
-  }
-
-  // turnon cpp namespace for non Java-based languages
-  if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
-  options |= OPTION_CPP;
-
-  // open up the file
-  void* context = translator.setInput(path);
-
-  // check if file is bad
-  if (!context || archiveReadStatus(context) < 0 ) {
-  fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-
-  options = save_options;
-  ++error;
-
-  return;
-  }
-  /
-  // another file
-  ++count;
-
-
-  const char* c_filename = clean_filename(unit_filename.c_str());
-
-  // output the currently processed filename
-  if (!isoption(soptions.flags, OPTION_QUIET) && shownumber)
-  fprintf(stderr, "%5d %s\n", count, c_filename);
-
-  // translate the file
-  translator.translate(path, dir,
-  foundfilename ? c_filename : 0,
-  version, reallanguage);
-
-  } catch (FileError) {
-
-  // output tracing information about the input file
-  if (showinput && !isoption(soptions.flags, OPTION_QUIET)) {
-
-  // output the currently processed filename
-  fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
-  fprintf(stderr, "\tError: Unable to open file.\n");
-
-  } else {
-
-  if (dir)
-  fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, path);
-  else
-  fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-  }
-
-  ++error;
-  }
-
-  options = save_options;
-  */
 }
+
 #if 0
-void srcdiff_archive(srcdiff_translator& translator, const char* path, OPTION_TYPE& soptions.flags, const char* dir, const char* root_filename, const char* version, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
-
-  // single file archive (tar, zip, cpio, etc.) is listed as a single file
-  // but is much, much more
-  OPTION_TYPE save_options = options;
-
-  // process the individual file (once), or an archive as many times as it takes
-  void* context = 0;
-  bool isarchive = false;
-  //bool firstopen = true;
-  do {
-
-    // start with the original options
-    options = save_options;
-    std::string unit_filename;
-
-    try {
-
-      /*      // open up the file
-              if (firstopen)
-              context = translator.setInput(path);
-              else*/
-      //context = getContext();
-
-      // check if file is bad
-      if (!context || archiveReadStatus(context) < 0 ) {
-        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-        ++error;
-        return;
-      }
-
-      // so, do we have an archive?
-      //isarchive = isArchiveRead(context);
-
-      // once any source archive is input, then we have to assume nested not just locally
-      if (isarchive) {
-        translator.set_nested();
-        save_options |= SRCML_OPTION_ARCHIVE;
-        showinput = true;
-        //        shownumber = true;
-      }
-
-      // output tracing information about the input file
-      //if (showinput && isArchiveFirst(context) && !isoption(soptions.flags, OPTION_QUIET)) {
-      if (showinput && !isoption(soptions.flags, OPTION_QUIET)) {
-
-        // output the currently processed filename
-        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
-
-        // output compression and format (if any)
-        if (isarchive)
-          fprintf(stderr, "\tFormat: %s", archiveReadFormat(context));
-
-        if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
-          fprintf(stderr, "\tCompression: %s", archiveReadCompression(context));
-
-        fprintf(stderr, "\n");
-      }
-
-      //bool foundfilename = true;
-      unit_filename = path;
-      if (archiveReadFilename(context))
-        unit_filename = archiveReadFilename(context);
-      else if (root_filename)
-        unit_filename = root_filename;
-      else if (strcmp(path, STDIN))
-        unit_filename = path;
-      //else
-      //foundfilename = false;
-
-      // special case:  skip directories (in archives)
-      if (archiveIsDir(context)) {
-
-        if (!isoption(soptions.flags, OPTION_QUIET))
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Directory\n" :
-                  "    - %s\tSkipped: Directory\n", unit_filename.c_str());
-
-        ++skipped;
-
-        // explicitly close, since we are skipping it
-        archiveReadClose(context);
-
-        continue;
-      }
-
-      // language (for this item in archive mode) based on extension, if not specified
-
-      // 1) language may have been specified explicitly
-      int reallanguage = language;
-
-      // 2) try from the filename (basically the extension)
-      if (!reallanguage)
-        reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
-
-      // error if can't find a language
-      if (!reallanguage) {
-
-        if (!isoption(soptions.flags, OPTION_QUIET)) {
-          if (unit_filename == "-")
-            fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
-          else
-            fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
-                    "    - %s\tSkipped: Unregistered extension\n",
-                    unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-        }
-
-        ++skipped;
-
-        // close the file that we don't have a language for
-        archiveReadClose(context);
-
-        continue;
-      }
-
-      // turnon cpp namespace for non Java-based languages
-      if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
-        options |= OPTION_CPP;
-
-      // another file
-      ++count;
-
-      const char* c_filename = clean_filename(unit_filename.c_str());
-
-      // output the currently processed filename
-      if (!isoption(soptions.flags, OPTION_QUIET) && shownumber)
-        fprintf(stderr, "%5d %s\n", count, c_filename);
-
-      // open up the file
-      /*      if (!firstopen)
-              context = translator.setInput(path);
-      */
-
-      // translate the file
-      /*      translator.translate(path, dir,
-              foundfilename ? c_filename : 0,
-              version, reallanguage);
-      */
-    } catch (... /*FileError*/) {
-
-      // output tracing information about the input file
-      if (showinput && !isoption(soptions.flags, OPTION_QUIET)) {
-
-        // output the currently processed filename
-        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
-        fprintf(stderr, "\tError: Unable to open file.\n");
-
-      } else {
-
-        if (dir)
-          fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, path);
-        else
-          fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-      }
-
-      ++error;
-
-      return;
-      //      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-
-    // restore options for next time around
-    options = save_options;
-
-    // compound documents are interrupted gracefully
-    if (isoption(soptions.flags, OPTION_TERMINATE))
-      return;
-    //     return STATUS_TERMINATED;
-
-    //firstopen = false;
-
-  } while (isarchive && isAnythingOpen(context));
-}
-#endif
-void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& options) {
 
   // by default, all dirs are treated as an archive
-  srcml_archive_enable_option(soptions.archive, SRCML_OPTION_ARCHIVE);
+  srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
 
   // record the stat info on the output file
 
   struct stat outstat = { 0 };
-  stat(gsoptions->srcdiff_filename, &outstat);
+  stat(goptions->srcdiff_filename, &outstat);
 
   showinput = true;
 
@@ -776,9 +256,10 @@ void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old,
 
   }
 
- if(!srcml_archive_get_directory(gsoptions->archive)) srcml_archive_set_directory(gsoptions->archive, directory.c_str());
+ if(!srcml_archive_get_directory(goptions->archive)) srcml_archive_set_directory(goptions->archive, directory.c_str());
 
-  srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *gsoptions, count, skipped, error, showinput, shownumber, outstat);
+  srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *goptions, outstat);
+
 }
 
 // file/directory names to ignore when processing a directory
@@ -841,7 +322,7 @@ void noteSkipped(bool shownumber, const srcdiff_options& options) {
 }
 
 void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
-                 srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+                 srcdiff_options& options, const struct stat& outstat) {
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
@@ -888,13 +369,13 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, soptions);
+      noteSkipped(shownumber, options);
       ++i;
       ++skipped;
       continue;
     }
     if (is_output_file(filename_new.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, soptions);
+      noteSkipped(shownumber, options);
       ++j;
       ++skipped;
       continue;
@@ -924,7 +405,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, soptions);
+      noteSkipped(shownumber, options);
       ++skipped;
       continue;
     }
@@ -950,7 +431,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_new.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, soptions);
+      noteSkipped(shownumber, options);
       ++skipped;
       continue;
     }
@@ -965,7 +446,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
   }
 
   // no need to handle subdirectories, unless recursive
-  //  if (!isoption(soptions.flags, OPTION_RECURSIVE))
+  //  if (!isoption(options.flags, OPTION_RECURSIVE))
   //    return;
 
   // process all directories
@@ -996,7 +477,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
                 directory_length_old,
                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
                 directory_length_new,
-                soptions,
+                options,
                 count, skipped, error, showinput, shownumber, outstat);
   }
 
@@ -1012,7 +493,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, soptions);
+      noteSkipped(shownumber, options);
       ++skipped;
       continue;
     }
@@ -1023,7 +504,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
                 directory_length_old,
                 "",
                 directory_length_new,
-                soptions,
+                options,
                 count, skipped, error, showinput, shownumber, outstat);
   }
 
@@ -1039,7 +520,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_new.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, soptions);
+      noteSkipped(shownumber, options);
       ++skipped;
       continue;
     }
@@ -1050,7 +531,7 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
                 directory_length_old,
                 filename_new.c_str(),
                 directory_length_new,
-                soptions,
+                options,
                 count, skipped, error, showinput, shownumber, outstat);
   }
 
@@ -1072,12 +553,12 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 #endif
 }
 
-void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& soptions, int& count, int & skipped, int & error, bool & showinput, bool & shownumber) {
+void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& options) {
   try {
 
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(soptions.file_list_name);
+    URIStream uriinput(options.file_list_name);
     char* file_one;
     /*
       if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
@@ -1106,8 +587,6 @@ void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& soptions,
           break;
       }
 
-      showinput = true;
-
       *separator = 0;
 
       char * file_two = separator + 1;
@@ -1127,29 +606,19 @@ void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& soptions,
       filename += "|";
       filename += file_two;
 
-      srcdiff_text(translator, file_one, file_two, 0, 0, count, skipped, error, showinput, shownumber);
+      srcdiff_text(translator, file_one, file_two);
 
       *separator = '|';
 
-      if (isoption(soptions.flags, OPTION_TERMINATE))
+      if (isoption(options.flags, OPTION_TERMINATE))
         return;
-
-      /*
-      // process this command line argument
-      srcdiff_file(translator, argv[i], soptions.flags,
-      input_arg_count == 1 ? soptions.given_directory : 0,
-      input_arg_count == 1 ? soptions.given_filename : 0,
-      input_arg_count == 1 ? soptions.given_version : 0,
-      soptions.language,
-      soptions.tabsize,
-      count, skipped, error, showinput, shownumber);
-      */
 
     }
 
   } catch (URIStreamFileError) {
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, soptions.file_list_name);
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, options.file_list_name->c_str());
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
 }
+#endif
