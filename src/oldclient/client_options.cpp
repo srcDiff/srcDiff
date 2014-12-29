@@ -32,7 +32,7 @@ boost::program_options::positional_options_description input_file;
 
 void option_help(const std::string & arg) {
 
-    printf( "Usage: %s [options] <old_src_infile new_src_infile>... [-o <srcDiff_outfile>]\n\n"
+  printf( "Usage: %s [options] <old_src_infile new_src_infile>... [-o <srcDiff_outfile>]\n\n"
 
           "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
           "Multiple files are stored in a srcDiff archive.\n\n"
@@ -133,6 +133,8 @@ void option_help(const std::string & arg) {
   printf("www.sdml.info\n"
          "Report bugs to %s\n", EMAIL_ADDRESS);
 
+  exit(0);
+
 }
 
 void option_version(const std::string & arg) {
@@ -147,6 +149,14 @@ void option_version(const std::string & arg) {
     printf("libxml %d, ", LIBXML_VERSION);
   else
     printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
+
+  exit(0);
+
+}
+
+void option_input_file(const std::vector<std::string> & arg) {
+
+
 
 }
 
@@ -305,7 +315,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
   ;
 
   input_ops.add_options()
-    ("input", "Set the input to be a list of file pairs from the provided file")
+    ("input", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Set the input to be a list of file pairs from the provided file")
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file")
     ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository")
     ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision") // this may have been where needed revision
