@@ -69,6 +69,8 @@ void option_input_file(const std::vector<std::string> & arg) {
   for(std::vector<std::string>::size_type pos = 0; pos + 1 < arg.size(); pos += 2)
     options.input_pairs.push_back(std::pair<std::string, std::string>(arg[pos], arg[pos + 1]));
 
+  if(options.input_pairs.size() > 1) srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+
 }
 
 template<boost::optional<std::string> srcdiff_options::*field>
