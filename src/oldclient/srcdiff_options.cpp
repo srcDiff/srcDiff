@@ -57,6 +57,13 @@ void option_version(const bool & on) {
 
 void option_input_file(const std::vector<std::string> & arg) {
 
+  if(arg.size() % 2 != 0) {
+
+    std::cout << "Odd number of input files.\n";
+    exit(1);
+
+  }
+
   options.input_pairs.reserve(arg.size() / 2);
 
   for(std::vector<std::string>::size_type pos = 0; pos + 1 < arg.size(); pos += 2)
