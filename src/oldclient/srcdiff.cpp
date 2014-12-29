@@ -128,18 +128,15 @@ int main(int argc, char* argv[]) {
     // translator from input to output using determined language
     srcdiff_translator translator(options.srcdiff_filename->c_str(),
                                  options.methods,
-                                 options.css_url->c_str(),
+                                 options.css_url ? *options.css_url : std::string(),
                                  options.archive,
                                  options.flags,
                                  options.number_context_lines);
-
-
 
 #ifdef __GNUG__
     // setup so we can gracefully stop after a file at a time
     signal(SIGINT, terminate_handler);
 #endif
-
 
     for(std::pair<std::string, std::string> input_pair : options.input_pairs)
       srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
@@ -155,8 +152,6 @@ int main(int argc, char* argv[]) {
   return exit_status;
 
 }
-
-
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int) {}
@@ -192,11 +187,11 @@ void srcdiff_text(srcdiff_translator& translator, srcdiff_options & options, con
     filename += path_two[0] ? path_two + directory_length_new : path_two;
 
   }
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   srcdiff_input_filename input_old(options.archive, path_one, options.flags);
   srcdiff_input_filename input_new(options.archive, path_two, options.flags);
-  LineDiffRange line_diff_range(path_one, path_two, options.svn_url->c_str(), options.flags);
-
+  LineDiffRange line_diff_range(path_one, path_two, options.svn_url ? options.svn_url->c_str() : 0, options.flags);
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;
