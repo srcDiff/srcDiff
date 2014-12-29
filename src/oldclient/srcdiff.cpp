@@ -141,7 +141,8 @@ int main(int argc, char* argv[]) {
 #endif
 
 
-    //  srcdiff_file(translator, path_one, path_two);
+    for(std::pair<std::string, std::string> input_pair : options.input_pairs)
+      srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
 
   } catch (const std::exception & e) {
 
