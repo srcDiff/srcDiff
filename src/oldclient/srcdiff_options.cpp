@@ -271,15 +271,24 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
     ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are purely added/deleted")
     ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
-    ("bash", boost::program_options::value<int>()->notifier(option_field<&srcdiff_options::number_context_lines>)->implicit_value(3), "Output as colorized bash text")
+    ("bash", boost::program_options::value<int>()->implicit_value(3)->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text")
   ;
 
   input_file.add("input", -1);
   all.add(general).add(input_ops).add(srcml_ops).add(srcdiff_ops);
 
-  boost::program_options::variables_map var_map;
-  boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all).positional(input_file).run(), var_map);
-  boost::program_options::notify(var_map);
+  try {
+
+    boost::program_options::variables_map var_map;
+    boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all).positional(input_file).run(), var_map);
+    boost::program_options::notify(var_map);
+
+  } catch(boost::program_options::error e) {
+
+    std::cerr << "Exception: " << e.what() << '\n';
+    exit(1);
+
+  }
 
   return options;
 
