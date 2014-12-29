@@ -38,8 +38,6 @@
 
 const char* const COPYRIGHT = "Copyright (C) 2014 SDML";
 
-const char* const EMAIL_ADDRESS = "collard@uakron.edu";
-
 const char* const STDIN = "-";
 
 const char* const OPTION_SEPARATOR = "--";
