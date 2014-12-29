@@ -7,10 +7,10 @@
 
 srcdiff_options options;
 
-boost::program_options::options_description general("General options");
-boost::program_options::options_description input_ops("Input options");
-boost::program_options::options_description srcml_ops("srcML options");
-boost::program_options::options_description srcdiff_ops("srcDiff options");
+boost::program_options::options_description general("General Options");
+boost::program_options::options_description input_ops("Input Options");
+boost::program_options::options_description srcml_ops("srcml Options");
+boost::program_options::options_description srcdiff_ops("srcdiff Options");
 boost::program_options::options_description all("All options");
 
 boost::program_options::positional_options_description input_file;
@@ -31,6 +31,9 @@ void option_help(const std::string & arg) {
 
   std::cout << SRCDIFF_HELP_HEADER;
   std::cout << general << '\n';
+  std::cout << input_ops<< '\n';
+  std::cout << srcml_ops << '\n';
+  std::cout << srcdiff_ops << '\n';
   std::cout << SRCDIFF_HELP_FOOTER;
 
   exit(0);
@@ -266,7 +269,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
     ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are purely added/deleted")
     ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
-    ("bash", boost::program_options::value<int>()->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text")
+    ("bash", boost::program_options::value<int>()->notifier(option_field<&srcdiff_options::number_context_lines>)->implicit_value(3), "Output as colorized bash text")
   ;
 
   input_file.add("input", -1);
