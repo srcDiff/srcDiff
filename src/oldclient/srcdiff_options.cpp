@@ -27,7 +27,9 @@ const char * const SRCDIFF_HELP_FOOTER =
 "Report bugs to " EMAIL_ADDRESS "\n";
 
 
-void option_help(const std::string & arg) {
+void option_help(const bool & on) {
+
+  if(!on) return;
 
   std::cout << SRCDIFF_HELP_HEADER;
   std::cout << general << '\n';
@@ -222,7 +224,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
   srcml_archive_register_namespace(options.archive, "diff", "http://www.sdml.info/srcDiff");
 
   general.add_options()
-    ("help,h", boost::program_options::value<std::string>()->implicit_value("")->notifier(&option_help), "Output srcdiff help message")
+    ("help,h", boost::program_options::bool_switch()->notifier(&option_help), "Output srcdiff help message")
     ("version,V", boost::program_options::bool_switch()->notifier(&option_version), "Output srcdiff version")
     ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
     ("compress,z", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_COMPRESS>), "Compress the output")
