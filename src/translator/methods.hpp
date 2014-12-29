@@ -25,7 +25,7 @@
 #ifndef INCLUDED_METHOD_HPP
 #define INCLUDED_METHOD_HPP
 
-#include <srcdiff_options.hpp>
+#include <string>
 
 #ifdef __GNUC__
   typedef unsigned long long METHOD_TYPE;
@@ -39,20 +39,20 @@
 #define ull(a) a##i64
 #endif
 
-inline bool ismethod(METHOD_TYPE options, METHOD_TYPE flag) {
-  return (flag & options) > 0;
+inline bool ismethod(METHOD_TYPE methods, METHOD_TYPE flag) {
+  return (flag & methods) > 0;
 }
 
 const std::string COLLECT_METHOD = "collect";
 const std::string RAW_METHOD = "raw";
 
 // @srcdiff
-const OPTION_TYPE METHOD_RAW       = ull(1) << 0;
+const METHOD_TYPE METHOD_RAW       = ull(1) << 0;
 
 const std::string GROUP_DIFF_METHOD = "group-diff";
 const std::string NO_GROUP_DIFF_METHOD = "no-group-diff";
 
 // @srcdiff
-const OPTION_TYPE METHOD_GROUP       = ull(1) << 1;
+const METHOD_TYPE METHOD_GROUP       = ull(1) << 1;
 
 #endif

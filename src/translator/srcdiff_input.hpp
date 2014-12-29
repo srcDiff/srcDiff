@@ -2,7 +2,7 @@
 #define INCLUDED_SRCDIFF_INPUT_HPP
 
 #include <srcml.h>
-#include <Options.hpp>
+#include <srcdiff_options.hpp>
 #include <xmlrw.hpp>
 
 #include <vector>

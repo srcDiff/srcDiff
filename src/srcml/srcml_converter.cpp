@@ -1,9 +1,5 @@
 #include <srcml_converter.hpp>
 
-#ifdef SVN
-#include <svn_io.hpp>
-#endif
-
 #include <string>
 
 #include <libxml/xmlreader.h>

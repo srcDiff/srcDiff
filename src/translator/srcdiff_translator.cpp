@@ -32,8 +32,6 @@
 #include <shortest_edit_script.h>
 #include <srcdiff_constants.hpp>
 
-#include <srcmlns.hpp>
-#include <srcmlapps.hpp>
 #include <LineDiffRange.hpp>
 #include <xmlrw.hpp>
 

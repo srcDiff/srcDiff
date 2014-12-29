@@ -4,7 +4,6 @@
 #include <srcdiff_input.hpp>
 
 #include <srcml.h>
-#include <Options.hpp>
 #include <xmlrw.hpp>
 
 #include <vector>

@@ -1,4 +1,4 @@
-#include <client_options.hpp>
+#include <srcdiff_options.hpp>
 
 #include <boost/program_options.hpp>
 #include <libxml/parser.h>
@@ -197,7 +197,7 @@ void option_method(const std::string & arg) {
   else {
 
       fprintf(stderr, "Invalid argument to --method: '%s'\n", arg.c_str());
-      exit(STATUS_INVALID_ARGUMENT);    
+      exit(/*STATUS_INVALID_ARGUMENT*/1);    
   }
 
 }

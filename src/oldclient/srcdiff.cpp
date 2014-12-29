@@ -24,6 +24,8 @@
 
 #include <srcdiff_input_filename.hpp>
 #include <srcdiff_translator.hpp>
+#include <srcdiff_options.hpp>
+#include <methods.hpp>
 
 #include <cstring>
 #ifdef __GNUG__
@@ -31,12 +33,7 @@
 #endif
 #include <sys/types.h>
 #include <dirent.h>
-#include <srcmlapps.hpp>
-#include <srcmlns.hpp>
-#include <Options.hpp>
-#include <methods.hpp>
 #include <URIStream.hpp>
-#include <getopt.h>
 #include <dirent.h>
 #include <algorithm>
 #include <archive.h>
@@ -56,9 +53,6 @@
 #ifdef SVN
 #include <svn_io.hpp>
 #endif
-
-#include <client_options.hpp>
-#include <srcdiff_uri.hpp>
 
 #define PROGRAM_NAME "srcdiff"
 
