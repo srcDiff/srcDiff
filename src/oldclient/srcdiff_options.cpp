@@ -72,7 +72,7 @@ void option_input_file(const std::vector<std::string> & arg) {
   options.input_pairs.reserve(arg.size() / 2);
 
   for(std::vector<std::string>::size_type pos = 0; pos + 1 < arg.size(); pos += 2)
-    options.input_pairs.push_back(std::pair<std::string, std::string>(arg[pos], arg[pos + 1]));
+    options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
 
   if(options.input_pairs.size() > 1) srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
 
@@ -104,7 +104,7 @@ void option_srcml_field<TABSTOP>(const int & arg) {
 
 }
 
-enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, DIRECTORY, FILENAME, SRC_VERSION, REGISTER_EXT, XMLNS_DEFAULT, XMLNS };
+enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, DIRECTORY, FILENAME, SRC_VERSION, REGISTER_EXT, XMLNS };
 
 template<srcml_string_field field>
 void option_srcml_field(const std::string & arg) {}
@@ -159,18 +159,15 @@ void option_srcml_field<REGISTER_EXT>(const std::string & arg) {
 
 }
 
-template<>
-void option_srcml_field<XMLNS_DEFAULT>(const std::string & arg) {
-
-  srcml_archive_register_namespace(options.archive, "", arg.c_str());
-
-}
 
 template<>
 void option_srcml_field<XMLNS>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
-  srcml_archive_register_namespace(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1, std::string::npos).c_str());
+  if(pos == std::string::npos)
+    srcml_archive_register_namespace(options.archive, "", arg.c_str());
+  else
+    srcml_archive_register_namespace(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1, std::string::npos).c_str());
 
 }
 
@@ -216,6 +213,29 @@ void option_method(const std::string & arg) {
 
 }
 
+std::pair<std::string, std::string> parse_xmlns(const std::string & arg) {
+
+  if(arg.find("xmlns:") != std::string::npos) {
+
+    std::string::size_type pos = arg.find(':');
+    std::string name, value;
+    if(pos == std::string::npos)
+      name = arg.substr(2);
+    else {
+
+      name = arg.substr(2, pos - 2);
+      value = arg.substr(pos + 1);
+
+    }
+
+    return std::make_pair(name, value);
+
+  }
+
+  return std::make_pair(std::string(), std::string());
+
+}
+
 srcdiff_options process_command_line(int argc, char* argv[]) {
 
   options.archive = srcml_create_archive();
@@ -248,8 +268,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
     ("directory,d", boost::program_options::value<std::string>()->notifier(option_srcml_field<DIRECTORY>), "Set the root directory attribute")
     ("filename,f", boost::program_options::value<std::string>()->notifier(option_srcml_field<FILENAME>), "Set the root filename attribute")
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
-    ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS_DEFAULT>), "Set default namespace")
-    ("xmlns:", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set namesapce for given prefix or create a new one")
+    ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set default namespace")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
     ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Tabstop size")
     ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_NAMESPACE_DECL>), "Do not output the xml declaration")
@@ -280,7 +299,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
   try {
 
     boost::program_options::variables_map var_map;
-    boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all).positional(input_file).run(), var_map);
+    boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all).positional(input_file).extra_parser(parse_xmlns).run(), var_map);
     boost::program_options::notify(var_map);
 
   } catch(boost::program_options::error e) {
