@@ -29,14 +29,9 @@ struct srcdiff_options
   
 };
 
-srcdiff_options process_cmdline(int argc, char* argv[]);
-void process_method(char * optarg, srcdiff_options & soptions);
+srcdiff_options process_command_line(int argc, char* argv[]);
 
 int option_error_status(int optopt);
-
-void output_settings(const char * name);
-
-void output_features(const char * name);
 
 void output_help(const char* name);
 
