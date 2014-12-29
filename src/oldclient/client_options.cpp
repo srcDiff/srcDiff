@@ -1,17 +1,9 @@
 #include <client_options.hpp>
 
-#include <srcml.h>
+#include <boost/program_options.hpp>
 #include <libxml/parser.h>
 
 #include <iostream>
-
-#include <srcmlapps.hpp>
-#include <srcmlns.hpp>
-#include <Options.hpp>
-
-#include <srcdiff_options.hpp>
-
-#include <boost/program_options.hpp>
 
 srcdiff_options options;
 
