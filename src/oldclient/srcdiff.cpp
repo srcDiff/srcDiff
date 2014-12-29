@@ -187,11 +187,11 @@ void srcdiff_text(srcdiff_translator& translator, srcdiff_options & options, con
     filename += path_two[0] ? path_two + directory_length_new : path_two;
 
   }
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   srcdiff_input_filename input_old(options.archive, path_one, options.flags);
   srcdiff_input_filename input_new(options.archive, path_two, options.flags);
   LineDiffRange line_diff_range(path_one, path_two, options.svn_url ? options.svn_url->c_str() : 0, options.flags);
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
     path = path_two;

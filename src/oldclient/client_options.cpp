@@ -137,18 +137,19 @@ void option_help(const std::string & arg) {
 
 }
 
-void option_version(const std::string & arg) {
+void option_version(const bool & arg) {
 
+  if(!arg) return;
 
   printf("%s Version 1\n", PROGRAM_NAME);
 
-  printf("Using: %s\n", srcml_version_string());
+  printf("Using: libsrcml %s\n", srcml_version_string());
 
   printf("Using: ");
   if(atoi(xmlParserVersion) == LIBXML_VERSION)
-    printf("libxml %d, ", LIBXML_VERSION);
+    printf("libxml %d\n", LIBXML_VERSION);
   else
-    printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
+    printf("libxml %s (Compiled %d)\n", xmlParserVersion, LIBXML_VERSION);
 
   exit(0);
 
@@ -310,7 +311,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
 
   general.add_options()
     ("help,h", boost::program_options::value<std::string>()->implicit_value("")->notifier(&option_help), "Output srcdiff help message")
-    ("version,V", boost::program_options::value<std::string>()->implicit_value("")->notifier(&option_version), "Output srcdiff version")
+    ("version,V", boost::program_options::bool_switch()->notifier(&option_version), "Output srcdiff version")
     ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
     ("compress,z", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_COMPRESS>), "Compress the output")
     ("verbose,v", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VERBOSE>), "Verbose messaging")
@@ -336,7 +337,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
     ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS_DEFAULT>), "Set default namespace")
     ("xmlns:", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set namesapce for given prefix or create a new one")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
-    ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(3), "Tabstop size")
+    ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Tabstop size")
     ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_NAMESPACE_DECL>), "Do not output the xml declaration")
     ("no-namespace-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output any namespace declarations")
     ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents")
@@ -356,7 +357,7 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
     ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are purely added/deleted")
     ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
-    ("bash", boost::program_options::value<int>()->notifier(option_field<&srcdiff_options::number_context_lines>)->default_value(3), "Output as colorized bash text")
+    ("bash", boost::program_options::value<int>()->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text")
   ;
 
   input_file.add("input", -1);
