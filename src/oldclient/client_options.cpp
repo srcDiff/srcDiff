@@ -156,7 +156,10 @@ void option_version(const std::string & arg) {
 
 void option_input_file(const std::vector<std::string> & arg) {
 
+  options.input_files.reserve(arg.size());
 
+  for(std::string input_file : arg)
+    options.input_files.push_back(input_file);
 
 }
 
