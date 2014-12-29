@@ -27,8 +27,128 @@ boost::program_options::options_description all("All options");
 
 boost::program_options::positional_options_description input_file;
 
-void option_help(const std::string & arg) {}
-void option_version(const std::string & arg) {}
+#define PROGRAM_NAME "srcdiff"
+#define EMAIL_ADDRESS "mdecker6@kent.edu"
+
+void option_help(const std::string & arg) {
+
+    printf( "Usage: %s [options] <old_src_infile new_src_infile>... [-o <srcDiff_outfile>]\n\n"
+
+          "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
+          "Multiple files are stored in a srcDiff archive.\n\n"
+
+          "The source-code language is based on the file extension.  Additional extensions for a language\n"
+          "can be registered, and can be directly set using the --language option.\n\n"
+
+          "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
+          "Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
+
+          "Options:\n", PROGRAM_NAME, "output", 'o');
+
+  printf("  -%c, --%-17s display this help and exit\n",     'h', "help");
+  printf("  -%c, --%-17s display version number and exit\n\n", 'V', "version");
+
+  printf("  -%c, --%-17s set the language to %s, %s, or %s\n", 'l', "language", "C", "C++", "Java");
+  printf("  --%-21s register file extension EXT for source-code language LANG\n\n", "register-ext");
+
+  printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", 'o', "output");
+  printf("  --%-21s read list of source file names, either FILE or URI, from INPUT\n"
+         "                          to form a srcDiff archive\n", "files-from");
+  printf("  -%c, --%-17s store output in a srcDiff archive, default for multiple input files\n", 'n', "archive");
+
+  printf("  -%c, --%-17s set the output XML encoding to ENC (default:  %s)\n",  'x', "xml-encoding", "UTF-8");
+
+  printf("  -%c, --%-17s set the input source encoding to ENC (default:  %s)\n\n", 't', "src-encoding", "ISO-8859-1");
+
+  printf("  -%c, --%-17s conversion and status information to stderr\n", 'v', "verbose");
+
+  printf("  -%c, --%-17s suppresses status messages\n\n", 'q', "quiet");
+
+  printf("  --%-21s do not output the default XML declaration\n", "no-xml-decl");
+  printf("  --%-21s do not output any namespace declarations\n\n", "no-namespace-decl");
+
+  printf("Metadata Options:\n"
+         "  -%c, --%-17s set the directory attribute to DIR\n", 'd', "directory");
+
+  printf("  -%c, --%-17s set the filename attribute to FILE\n", 'f', "filename");
+
+  printf("  -%c, --%-17s set the version attribute to VER\n\n", 's', "src-version");
+
+  printf("srcML Markup Extensions:\n");
+
+  printf("\nPrefix Options:\n");
+
+  printf("  --%-21s set the default namespace URI\n", "xmlns");
+
+  printf("  --%-21s set the namespace PREFIX for the namespace URI\n\n", "xmlns");
+
+  printf("                          Predefined URIs and Prefixes:\n");
+  printf("                            xmlns=\"%s\"\n", "http://www.sdml.info/srcML/src");
+  printf("                            xmlns:%s=\"%s\"\n", "cpp", "http://www.sdml.info/srcML/cpp");
+  printf("                            xmlns:%s=\"%s\"\n", "diff", "http://www.sdml.info/srcDiff");
+
+  printf("\nCPP Markup Options:\n");
+
+  printf("  --%-21s markup cpp #else regions (default)\n", "cpp-markup-else");
+  printf("  --%-21s leave cpp #else regions as text\n\n", "cpp-text-else");
+
+  printf("  --%-21s markup cpp #if 0 regions\n", "cpp-markup-if0");
+  printf("  --%-21s leave cpp #if 0 regions as text (default)\n\n", "cpp-text-if0");
+
+  printf("srcDiff Method:\n");
+
+  printf("  --%-21s select srcDiff granularity and markup methods\n", "method");
+  printf("                            %s - collect statements/substatements providing coarser granularity (default)\n", "collect");
+  printf("                            %s - markup with fine granularity\n", "raw");
+
+  printf("\n");
+
+  printf("srcDiff Visualization:\n");
+
+  printf("  --%-21s Output html visualization of the differences\n", "visualize");
+  printf("  --%-21s Include files with no changes \n", "same");
+  printf("  --%-21s Do not include files with no change \n", "no-same");
+  printf("  --%-21s Include files that were completely added or deleted \n",  "pure");
+  printf("  --%-21s Do not include files that were completely added or deleted \n", "no-pure");
+  printf("  --%-21s Include changes only i.e. lines where diff occurs and sections of srcdiff \n", "change");
+  printf("  --%-21s Include only the changes that are in srcdiff, but the line is not in diff \n", "srcdiff-only");
+  printf("  --%-21s Include changes that are in diff, but no srcdiff is on that line \n", "diff-only");
+
+  printf("\n");
+
+  printf("Examples:  \n"
+         //"  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
+         "  " PROGRAM_NAME " m.cpp n.cpp                 (compute difference of m.cpp and n.cpp, write to standard output)\n"
+         "  " PROGRAM_NAME " m.cpp n.cpp -o diff.cpp.xml (compute difference of m.cpp and n.cpp, write to file diff.cpp.xml)\n"
+         "\n"
+         "  " PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n"
+         "\n"
+         "  " PROGRAM_NAME " --directory=src --filename=diff.cpp m.cpp n.cpp -o diff.cpp.xml "
+         "(element unit attributes dir \"src\", filename \"diff.cpp\")\n"
+         "  " PROGRAM_NAME " --src-encoding=UTF-8      m.cpp n.cpp -o diff.cpp.xml    "
+         "       (encoding of input text files are UTF-8)\n"
+         "  " PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp n.cpp -o diff.cpp.xml    "
+         "       (set encoding of srcDiff file to ISO-8859-1)\n\n");
+
+  printf("www.sdml.info\n"
+         "Report bugs to %s\n", EMAIL_ADDRESS);
+
+}
+
+void option_version(const std::string & arg) {
+
+
+  printf("%s Version 1\n", PROGRAM_NAME);
+
+  printf("Using: %s\n", srcml_version_string());
+
+  printf("Using: ");
+  if(atoi(xmlParserVersion) == LIBXML_VERSION)
+    printf("libxml %d, ", LIBXML_VERSION);
+  else
+    printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
+
+}
 
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
@@ -175,7 +295,6 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
   srcml_archive_enable_option(options.archive, SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_TERNARY);
   srcml_archive_register_namespace(options.archive, "diff", "http://www.sdml.info/srcDiff");
 
-
   general.add_options()
     ("help,h", boost::program_options::value<std::string>()->implicit_value("")->notifier(&option_help), "Output srcdiff help message")
     ("version,V", boost::program_options::value<std::string>()->implicit_value("")->notifier(&option_version), "Output srcdiff version")
@@ -237,186 +356,3 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
   return options;
 
 }
-
-#define PROGRAM_NAME "srcdiff"
-
-#if 0
-// output help
-void output_help(const char* name) {
-  printf( "Usage: %s [options] <old_src_infile new_src_infile>... [-o <srcDiff_outfile>]\n\n"
-
-          "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
-          //"Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n"
-          "Multiple files are stored in a srcDiff archive.\n\n"
-
-          "The source-code language is based on the file extension.  Additional extensions for a language\n"
-          "can be registered, and can be directly set using the --language option.\n\n"
-
-          "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
-          //"When no filenames are given, input is from stdin and output is to stdout.\n"
-          //"An input filename of '-' also reads from stdin.\n\n"
-
-          "Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
-
-          "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
-
-  printf("  -%c, --%-17s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  -%c, --%-17s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
-
-  printf("  -%c, --%-17s set the language to %s, %s, or %s\n",
-         LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
-         LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA);
-  printf("  --%-21s register file extension EXT for source-code language LANG\n\n",
-         REGISTER_EXT_FLAG_FULL);
-
-  printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
-  printf("  --%-21s read list of source file names, either FILE or URI, from INPUT\n"
-         "                          to form a srcDiff archive\n",
-         FILELIST_FLAG_FULL);
-  /*
-    printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
-    printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
-  */
-  /*
-    printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
-  */
-  printf("  -%c, --%-17s store output in a srcDiff archive, default for multiple input files\n",
-         COMPOUND_FLAG_SHORT, COMPOUND_FLAG);
-
-  printf("  -%c, --%-17s expression mode for translating a single expression not in a statement\n",
-         EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
-
-  printf("  -%c, --%-17s set the output XML encoding to ENC (default:  %s)\n",
-         ENCODING_FLAG_SHORT, ENCODING_FLAG_FULL, DEFAULT_XML_ENCODING);
-
-  printf("  -%c, --%-17s set the input source encoding to ENC (default:  %s)\n\n",
-         SRC_ENCODING_FLAG_SHORT, SRC_ENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
-
-  //printf("  -%c, --%-17s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
-
-  //printf("  -%c, --%-17s immediate output while parsing, default for keyboard input\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
-
-  printf("  -%c, --%-17s markup translation errors, namespace %s\n",
-         DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
-
-  printf("  -%c, --%-17s conversion and status information to stderr\n",
-         VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
-
-  printf("  -%c, --%-17s suppresses status messages\n\n",
-         QUIET_FLAG_SHORT, QUIET_FLAG);
-
-  printf("  --%-21s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
-  printf("  --%-21s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
-
-  printf("Metadata Options:\n"
-         "  -%c, --%-17s set the directory attribute to DIR\n",
-         DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG_FULL);
-
-  printf("  -%c, --%-17s set the filename attribute to FILE\n",
-         FILENAME_FLAG_SHORT, FILENAME_FLAG_FULL);
-
-  printf("  -%c, --%-17s set the version attribute to VER\n\n",
-         SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
-
-  printf("srcML Markup Extensions:\n");
-
-  printf("  --%-21s markup literal values, namespace \"%s\"\n",
-         LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
-
-  printf("  --%-21s markup operators, namespace \"%s\"\n",
-         OPERATOR_FLAG, SRCML_EXT_OPERATOR_NS_URI);
-
-  printf("  --%-21s markup type modifiers, namespace \"%s\"\n",
-         MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
-
-  /*
-    printf("\nLine/Column Position:\n");
-
-    printf("  --%-21s include line/column attributes, namespace \"%s\"\n",
-    POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
-
-    printf("  --%-21s set tabs NUMBER characters apart.  Default is %d\n",
-    TABS_FLAG_FULL, 8);
-  */
-
-  printf("\nPrefix Options:\n");
-
-  printf("  --%-21s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
-
-  printf("  --%-21s set the namespace PREFIX for the namespace URI\n\n", XMLNS_FLAG_FULL);
-
-  printf("                          Predefined URIs and Prefixes:\n");
-  printf("                            xmlns=\"%s\"\n", SRCML_SRC_NS_URI);
-  printf("                            xmlns:%s=\"%s\"\n", SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
-  printf("                            xmlns:%s=\"%s\"\n", SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
-  printf("                            xmlns:%s=\"%s\"\n", SRCML_DIFF_NS_PREFIX_DEFAULT, SRCML_DIFF_NS_URI);
-
-  printf("\nCPP Markup Options:\n");
-
-  printf("  --%-21s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
-  printf("  --%-21s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
-
-  printf("  --%-21s markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
-  printf("  --%-21s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
-
-  printf("srcDiff Method:\n");
-
-  printf("  --%-21s select srcDiff granularity and markup methods\n", METHOD_FLAG);
-  printf("                            %s - collect statements/substatements providing coarser granularity (default)\n", COLLECT_METHOD);
-  printf("                            %s - markup with fine granularity\n", RAW_METHOD);
-
-  printf("\n");
-
-  printf("srcDiff Visualization:\n");
-
-  printf("  --%-21s Output html visualization of the differences\n", VISUALIZE_FLAG);
-  printf("  --%-21s Include files with no changes \n", SAME_FLAG);
-  printf("  --%-21s Do not include files with no change \n", NO_SAME_FLAG);
-  printf("  --%-21s Include files that were completely added or deleted \n",  PURE_FLAG);
-  printf("  --%-21s Do not include files that were completely added or deleted \n", NO_PURE_FLAG);
-  printf("  --%-21s Include changes only i.e. lines where diff occurs and sections of srcdiff \n", CHANGE_FLAG);
-  printf("  --%-21s Include only the changes that are in srcdiff, but the line is not in diff \n", SRCDIFFONLY_FLAG);
-  printf("  --%-21s Include changes that are in diff, but no srcdiff is on that line \n", DIFFONLY_FLAG);
-
-  printf("\n");
-
-  printf("Examples:  \n"
-         //"  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
-         "  " PROGRAM_NAME " m.cpp n.cpp                 (compute difference of m.cpp and n.cpp, write to standard output)\n"
-         "  " PROGRAM_NAME " m.cpp n.cpp -o diff.cpp.xml (compute difference of m.cpp and n.cpp, write to file diff.cpp.xml)\n"
-         "\n"
-         "  " PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n"
-         "\n"
-         "  " PROGRAM_NAME " --directory=src --filename=diff.cpp m.cpp n.cpp -o diff.cpp.xml "
-         "(element unit attributes dir \"src\", filename \"diff.cpp\")\n"
-         "  " PROGRAM_NAME " --src-encoding=UTF-8      m.cpp n.cpp -o diff.cpp.xml    "
-         "       (encoding of input text files are UTF-8)\n"
-         "  " PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp n.cpp -o diff.cpp.xml    "
-         "       (set encoding of srcDiff file to ISO-8859-1)\n\n");
-
-  printf("www.sdml.info\n"
-         "Report bugs to %s\n", EMAIL_ADDRESS);
-}
-
-// output version message
-void output_version(const char* name) {
-
-    printf("%s Version %s\n", name, "1");
-
-    printf("Using: %s\n", srcml_version_string());
-
-  printf("Using: ");
-  if(atoi(xmlParserVersion) == LIBXML_VERSION)
-    printf("libxml %d, ", LIBXML_VERSION);
-  else
-    printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
-
-
-/*
-  if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
-    printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
-  else
-    printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
-*/
-}
-#endif
