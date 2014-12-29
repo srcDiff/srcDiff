@@ -23,9 +23,9 @@ boost::program_options::options_description general("General options");
 boost::program_options::options_description input_ops("Input options");
 boost::program_options::options_description srcml_ops("srcML options");
 boost::program_options::options_description srcdiff_ops("srcDiff options");
-boost::program_options::positional_options_description input_file;
 boost::program_options::options_description all("All options");
 
+boost::program_options::positional_options_description input_file;
 
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
@@ -222,6 +222,10 @@ srcdiff_options process_cmdline(int argc, char* argv[]) {
 
   input_file.add("input", -1);
   all.add(general).add(input_ops).add(srcml_ops).add(srcdiff_ops);
+
+  boost::program_options::variables_map var_map;
+  boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all).positional(input_file).run(), var_map);
+  boost::program_options::notify(var_map);
 
   return options;
 
