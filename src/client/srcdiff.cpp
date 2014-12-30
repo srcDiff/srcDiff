@@ -54,10 +54,6 @@
 #include <svn_io.hpp>
 #endif
 
-#define PROGRAM_NAME "srcdiff"
-
-void output_version(const char* name);
-
 struct stringequal {
   const char *const lhs;
 
@@ -135,11 +131,7 @@ int main(int argc, char* argv[]) {
     for(std::pair<std::string, std::string> input_pair : options.input_pairs)
       srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
 
-  } catch (const std::exception & e) {
-
-    fprintf(stderr, "%s: Error Executing command. %s\n", PROGRAM_NAME, e.what());
-
-  }
+  } catch (const std::exception & e) {}
 
   srcml_free_archive(options.archive);
   
