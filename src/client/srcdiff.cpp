@@ -54,34 +54,13 @@
 #include <svn_io.hpp>
 #endif
 
-struct stringequal {
-  const char *const lhs;
-
-  stringequal(const char *l) : lhs(l) {}
-};
-
-bool operator==(const char* lhs, const stringequal& r) {
-  return std::strcmp(lhs, r.lhs) == 0;
-}
-
-const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
-const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
-
-const char FILELIST_COMMENT = '#';
-
 void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
 
-int option_error_status(int optopt);
-
 #ifdef __GNUG__
-extern "C" void verbose_handler(int);
-
 extern "C" void terminate_handler(int);
 #endif
 
-srcdiff_options* goptions = 0;
-
-void srcdiff_archive(srcdiff_translator & translator, const char* path, const char* dir, const char* root_filename, const char* version, int tabsize);
+void srcdiff_archive(srcdiff_translator & translator, const char * path, const char * dir, const char * root_filename, const char * version, int tabsize);
 void srcdiff_dir_top(srcdiff_translator & translator, const char * directory_old, const char * directory_new, srcdiff_options& options);
 void srcdiff_dir(srcdiff_translator & translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& options, const struct stat& outstat);
 void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options& options);
@@ -91,10 +70,6 @@ void srcdiff_file(srcdiff_translator & translator, srcdiff_options & options, co
 
 void srcdiff_text(srcdiff_translator & translator, srcdiff_options & options, const char * path_one, const char * path_two, int directory_length_old, int directory_length_new);
 
-// setup options and collect info from arguments
-
-#define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
-
 int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
@@ -103,12 +78,6 @@ int main(int argc, char* argv[]) {
 
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) srcdiff_libxml_error;
   initGenericErrorDefaultFunc(&handler);
-
-  /* signal handling */
-#if defined(__GNUG__) && !defined(__MINGW32__)
-  // signal to toggle verbose flag
-  signal(SIGUSR1, verbose_handler);
-#endif
 
   // process command-line arguments
   srcdiff_options options = process_command_line(argc, argv);
@@ -140,8 +109,6 @@ int main(int argc, char* argv[]) {
 }
 
 #ifdef __GNUG__
-extern "C" void verbose_handler(int) {}
-
 extern "C" void terminate_handler(int) {
 
   // turn off handler for this signal
@@ -150,7 +117,7 @@ extern "C" void terminate_handler(int) {
 }
 #endif
 
-void srcdiff_file(srcdiff_translator& translator, srcdiff_options & options, const char* path_one, const char* path_two) {
+void srcdiff_file(srcdiff_translator& translator, srcdiff_options & options, const char * path_one, const char * path_two) {
 
   // handle local directories specially
   struct stat instat = { 0 };
@@ -164,7 +131,7 @@ void srcdiff_file(srcdiff_translator& translator, srcdiff_options & options, con
 
 }
 
-void srcdiff_text(srcdiff_translator& translator, srcdiff_options & options, const char* path_one, const char* path_two, int directory_length_old, int directory_length_new) {
+void srcdiff_text(srcdiff_translator& translator, srcdiff_options & options, const char * path_one, const char * path_two, int directory_length_old, int directory_length_new) {
 
   std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
