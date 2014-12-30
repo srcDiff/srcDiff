@@ -35,8 +35,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <signal.h>
-// #include <URIStream.hpp>
-// #include <algorithm>
+#include <URIStream.hpp>
 
 #ifdef SVN
 #include <svn_io.hpp>
@@ -50,7 +49,7 @@ extern "C" void terminate_handler(int);
 
 void srcdiff_dir_top(srcdiff_translator & translator, srcdiff_options & options, const char * directory_old, const char * directory_new);
 void srcdiff_dir(srcdiff_translator & translator, srcdiff_options & options, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, const struct stat& outstat);
-void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options & options);
+void srcdiff_files_from(srcdiff_translator & translator, srcdiff_options & options);
 
 // translate a file, maybe an archive
 void srcdiff_file(srcdiff_translator & translator, srcdiff_options & options, const char * path_one, const char * path_two);
@@ -84,8 +83,16 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, terminate_handler);
 #endif
 
-    for(std::pair<std::string, std::string> input_pair : options.input_pairs)
-      srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
+    if(options.files_from_name) {
+
+      srcdiff_files_from(translator, options);
+
+    } else {
+
+     for(std::pair<std::string, std::string> input_pair : options.input_pairs)
+        srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
+
+    }
 
   } catch (const std::exception & e) {
 
@@ -465,22 +472,22 @@ void srcdiff_dir(srcdiff_translator & translator, srcdiff_options & options,
 #else
 
 #endif
+
+#undef PATH_SEPARATOR
+
 }
 
-#if 0
-void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options & options) {
+
+void srcdiff_files_from(srcdiff_translator & translator, srcdiff_options & options) {
+
+#define FILELIST_COMMENT '#'
+
   try {
 
     // translate all the filenames listed in the named file
-    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(options.file_list_name);
-    char* file_one;
-    /*
-      if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
-      exit(1);
-      }
-    */
+    URIStream uriinput(options.files_from_name->c_str());
+    char * file_one;
+
     while ((file_one = uriinput.readline())) {
 
       // skip over whitespace
@@ -495,7 +502,7 @@ void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options & options
 
       // remove any end whitespace
       // TODO:  Extract function, and use elsewhere
-      for (char* p = separator- 1; p != file_one; --p) {
+      for (char * p = separator- 1; p != file_one; --p) {
         if (isspace(*p))
           *p = 0;
         else
@@ -510,7 +517,7 @@ void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options & options
 
       // remove any end whitespace
       // TODO:  Extract function, and use elsewhere
-      for (char* p = file_two + strlen(file_two) - 1; p != file_two; --p) {
+      for (char * p = file_two + strlen(file_two) - 1; p != file_two; --p) {
         if (isspace(*p))
           *p = 0;
         else
@@ -521,19 +528,19 @@ void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options & options
       filename += "|";
       filename += file_two;
 
-      srcdiff_text(translator, file_one, file_two);
+      srcdiff_file(translator, options, file_one, file_two);
 
       *separator = '|';
-
-      if (isoption(options.flags, OPTION_TERMINATE))
-        return;
 
     }
 
   } catch (URIStreamFileError) {
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, options.file_list_name->c_str());
-    exit(STATUS_INPUTFILE_PROBLEM);
+
+    fprintf(stderr, "error: file/URI \'%s\' does not exist.\n", options.files_from_name->c_str());
+    exit(EXIT_FAILURE);
+
   }
 
+#undef FILELIST_COMMENT
+
 }
-#endif
