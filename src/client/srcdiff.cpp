@@ -33,9 +33,9 @@
 
 #include <cstdlib>
 #include <sys/stat.h>
+#include <dirent.h>
 #include <signal.h>
 // #include <URIStream.hpp>
-// #include <dirent.h>
 // #include <algorithm>
 
 #ifdef SVN
@@ -48,9 +48,9 @@ void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
 extern "C" void terminate_handler(int);
 #endif
 
-//void srcdiff_dir_top(srcdiff_translator & translator, const char * directory_old, const char * directory_new, srcdiff_options& options);
-//void srcdiff_dir(srcdiff_translator & translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& options, const struct stat& outstat);
-void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options& options);
+void srcdiff_dir_top(srcdiff_translator & translator, srcdiff_options & options, const char * directory_old, const char * directory_new);
+void srcdiff_dir(srcdiff_translator & translator, srcdiff_options & options, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, const struct stat& outstat);
+void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options & options);
 
 // translate a file, maybe an archive
 void srcdiff_file(srcdiff_translator & translator, srcdiff_options & options, const char * path_one, const char * path_two);
@@ -108,13 +108,13 @@ extern "C" void terminate_handler(int) {
 }
 #endif
 
-void srcdiff_file(srcdiff_translator& translator, srcdiff_options & options, const char * path_one, const char * path_two) {
+void srcdiff_file(srcdiff_translator & translator, srcdiff_options & options, const char * path_one, const char * path_two) {
 
   // handle local directories specially
   struct stat instat = { 0 };
   int stat_status = stat(path_one, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    //srcdiff_dir_top(translator, path_one, path_two, *goptions);
+    srcdiff_dir_top(translator, options, path_one, path_two);
     return;
   }
 
@@ -122,7 +122,7 @@ void srcdiff_file(srcdiff_translator& translator, srcdiff_options & options, con
 
 }
 
-void srcdiff_text(srcdiff_translator& translator, srcdiff_options & options, const char * path_one, const char * path_two, int directory_length_old, int directory_length_new) {
+void srcdiff_text(srcdiff_translator & translator, srcdiff_options & options, const char * path_one, const char * path_two, int directory_length_old, int directory_length_new) {
 
   std::string filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
@@ -146,8 +146,8 @@ void srcdiff_text(srcdiff_translator& translator, srcdiff_options & options, con
 
 }
 
-#if 0
-void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old, const char * directory_new, srcdiff_options& options) {
+
+void srcdiff_dir_top(srcdiff_translator & translator, srcdiff_options & options, const char * directory_old, const char * directory_new) {
 
   // by default, all dirs are treated as an archive
   srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
@@ -155,9 +155,7 @@ void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old,
   // record the stat info on the output file
 
   struct stat outstat = { 0 };
-  stat(goptions->srcdiff_filename, &outstat);
-
-  showinput = true;
+  stat(options.srcdiff_filename->c_str(), &outstat);
 
   int directory_length_old = strlen(directory_old);
 
@@ -196,9 +194,9 @@ void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old,
 
   }
 
- if(!srcml_archive_get_directory(goptions->archive)) srcml_archive_set_directory(goptions->archive, directory.c_str());
+ if(!srcml_archive_get_directory(options.archive)) srcml_archive_set_directory(options.archive, directory.c_str());
 
-  srcdiff_dir(translator, dold, directory_length_old, dnew, directory_length_new, *goptions, outstat);
+  srcdiff_dir(translator, options, dold, directory_length_old, dnew, directory_length_new, outstat);
 
 }
 
@@ -206,7 +204,7 @@ void srcdiff_dir_top(srcdiff_translator& translator, const char * directory_old,
 // const/non-const versions for linux/bsd different declarations
 int dir_filter(const struct dirent* d) {
 
-    return d->d_name[0] != '.';// && !archiveReadMatchExtension(d->d_name);
+    return d->d_name[0] != '.';
 }
 
 int dir_filter(struct dirent* d) {
@@ -255,20 +253,20 @@ int is_output_file(const char * filename, const struct stat & outstat) {
 
 }
 
-void noteSkipped(bool shownumber, const srcdiff_options& options) {
+void srcdiff_dir(srcdiff_translator & translator, srcdiff_options & options,
+  const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, const struct stat& outstat) {
 
-  fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
-          "    - %s\tSkipped: Output file.\n", options.srcdiff_filename);
-}
-
-void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new,
-                 srcdiff_options& options, const struct stat& outstat) {
+#ifdef __MINGW32__
+#define PATH_SEPARATOR '\\'
+#else
+#define PATH_SEPARATOR '/'
+#endif
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
-  struct dirent **namelist_old;
-  struct dirent **namelist_new;
+  struct dirent ** namelist_old;
+  struct dirent ** namelist_new;
 
   int n = scandir(directory_old, &namelist_old, dir_filter, alphasort);
   int m = scandir(directory_new, &namelist_new, dir_filter, alphasort);
@@ -309,15 +307,11 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, options);
       ++i;
-      ++skipped;
       continue;
     }
     if (is_output_file(filename_new.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, options);
       ++j;
-      ++skipped;
       continue;
     }
 
@@ -326,11 +320,11 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     srcdiff_text(translator,
+                 options,
                  comparison <= 0 ? (++i, filename_old.c_str()) : "",
                  comparison >= 0 ? (++j, filename_new.c_str()) : "",
                  directory_length_old,
-                 directory_length_new,
-                 count, skipped, error, showinput, shownumber);
+                 directory_length_new);
   }
 
   // process all non-directory files that are remaining in the old version
@@ -345,18 +339,12 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, options);
-      ++skipped;
       continue;
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    srcdiff_text(translator,
-                 filename_old.c_str(),
-                 "",
-                 directory_length_old,
-                 directory_length_new,
-                 count, skipped, error, showinput, shownumber);
+    srcdiff_text(translator, options, filename_old.c_str(), "", directory_length_old, directory_length_new);
+
   }
 
   // process all non-directory files that are remaining in the new version
@@ -371,23 +359,13 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_new.c_str(), outstat) != 0) {
-      noteSkipped(shownumber, options);
-      ++skipped;
       continue;
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    srcdiff_text(translator,
-                 "",
-                 filename_new.c_str(),
-                 directory_length_old,
-                 directory_length_new,
-                 count, skipped, error, showinput, shownumber);
-  }
+    srcdiff_text(translator, options, "", filename_new.c_str(), directory_length_old, directory_length_new);
 
-  // no need to handle subdirectories, unless recursive
-  //  if (!isoption(options.flags, OPTION_RECURSIVE))
-  //    return;
+  }
 
   // process all directories
   i = 0;
@@ -413,12 +391,12 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // process these directories
     srcdiff_dir(translator,
+                options,
                 comparison <= 0 ? (++i, filename_old.c_str()) : "",
                 directory_length_old,
                 comparison >= 0 ? (++j, filename_new.c_str()) : "",
                 directory_length_new,
-                options,
-                count, skipped, error, showinput, shownumber, outstat);
+                outstat);
   }
 
   // process all directories that remain in the old version
@@ -433,19 +411,17 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_old.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, options);
-      ++skipped;
       continue;
     }
 
     // process this directory
     srcdiff_dir(translator,
+                options,
                 filename_old.c_str(),
                 directory_length_old,
                 "",
                 directory_length_new,
-                options,
-                count, skipped, error, showinput, shownumber, outstat);
+                outstat);
   }
 
   // process all directories that remain in the new version
@@ -460,19 +436,17 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 
     // skip over output file
     if (is_output_file(filename_new.c_str(), outstat) == 1) {
-      noteSkipped(shownumber, options);
-      ++skipped;
       continue;
     }
 
     // process this directory
     srcdiff_dir(translator,
+                options,
                 "",
                 directory_length_old,
                 filename_new.c_str(),
                 directory_length_new,
-                options,
-                count, skipped, error, showinput, shownumber, outstat);
+                outstat);
   }
 
   // all done with this directory
@@ -493,7 +467,8 @@ void srcdiff_dir(srcdiff_translator& translator, const char * directory_old, int
 #endif
 }
 
-void srcdiff_filelist(srcdiff_translator& translator, srcdiff_options& options) {
+#if 0
+void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options & options) {
   try {
 
     // translate all the filenames listed in the named file
