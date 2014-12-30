@@ -32,9 +32,9 @@ void option_help(const bool & on) {
   if(!on) return;
 
   std::cout << SRCDIFF_HELP_HEADER;
-  std::cout << general << '\n';
-  std::cout << input_ops<< '\n';
-  std::cout << srcml_ops << '\n';
+  std::cout << general     << '\n';
+  std::cout << input_ops   << '\n';
+  std::cout << srcml_ops   << '\n';
   std::cout << srcdiff_ops << '\n';
   std::cout << SRCDIFF_HELP_FOOTER;
 
@@ -48,9 +48,9 @@ void option_version(const bool & on) {
 
   printf("%s Version 1\n", PROGRAM_NAME);
 
-  printf("Using: libsrcml %s\n", srcml_version_string());
+  printf("Using:\n");
+  printf("libsrcml %s\n", srcml_version_string());
 
-  printf("Using: ");
   if(atoi(xmlParserVersion) == LIBXML_VERSION)
     printf("libxml %d\n", LIBXML_VERSION);
   else
