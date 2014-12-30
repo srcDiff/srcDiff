@@ -30,7 +30,6 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include <Options.hpp>
 #include <srcdiff_options.hpp>
 
 #include <srcml.h>

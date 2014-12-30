@@ -12,7 +12,6 @@
 
 #include <fstream>
 #include <string>
-#include <Options.hpp>
 #include <srcdiff_options.hpp>
 
 namespace color_diff {

@@ -9,11 +9,10 @@
 
 #include <shortest_edit_script.hpp>
 
-#include <Options.hpp>
-
 #include <string>
 #include <vector>
 #include <fstream>
+#include <srcdiff_options.hpp>
 
 #ifndef INCLUDED_LINEDIFFRANGE_HPP
 #define INCLUDED_LINEDIFFRANGE_HPP

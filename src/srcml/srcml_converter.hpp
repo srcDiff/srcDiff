@@ -8,7 +8,7 @@
 #include <thread>
 #include <functional>
 
-#include <Options.hpp>
+#include <srcdiff_options.hpp>
 #include <xmlrw.hpp>
 
 class srcml_converter {

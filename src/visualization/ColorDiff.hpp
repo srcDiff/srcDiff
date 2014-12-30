@@ -2,7 +2,7 @@
 #define INCLUDED_COLORDIFF_HPP
 
 #include <fstream>
-#include <Options.hpp>
+#include <srcdiff_options.hpp>
 #include <LineDiffRange.hpp>
 
 class ColorDiff {
