@@ -27,28 +27,16 @@
 #include <srcdiff_options.hpp>
 #include <methods.hpp>
 
-#include <cstring>
-#ifdef __GNUG__
-#include <sys/stat.h>
-#endif
-#include <sys/types.h>
-#include <dirent.h>
-#include <URIStream.hpp>
-#include <dirent.h>
-#include <algorithm>
-#include <archive.h>
 #include <LineDiffRange.hpp>
 
 #include <srcml.h>
 
-#include <cstring>
-#include <clocale>
-#include <cstdio>
-#include <cctype>
 #include <cstdlib>
 #include <sys/stat.h>
 #include <signal.h>
-#include <errno.h>
+// #include <URIStream.hpp>
+// #include <dirent.h>
+// #include <algorithm>
 
 #ifdef SVN
 #include <svn_io.hpp>
@@ -60,9 +48,8 @@ void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
 extern "C" void terminate_handler(int);
 #endif
 
-void srcdiff_archive(srcdiff_translator & translator, const char * path, const char * dir, const char * root_filename, const char * version, int tabsize);
-void srcdiff_dir_top(srcdiff_translator & translator, const char * directory_old, const char * directory_new, srcdiff_options& options);
-void srcdiff_dir(srcdiff_translator & translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& options, const struct stat& outstat);
+//void srcdiff_dir_top(srcdiff_translator & translator, const char * directory_old, const char * directory_new, srcdiff_options& options);
+//void srcdiff_dir(srcdiff_translator & translator, const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, srcdiff_options& options, const struct stat& outstat);
 void srcdiff_filelist(srcdiff_translator & translator, srcdiff_options& options);
 
 // translate a file, maybe an archive
@@ -100,7 +87,11 @@ int main(int argc, char* argv[]) {
     for(std::pair<std::string, std::string> input_pair : options.input_pairs)
       srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
 
-  } catch (const std::exception & e) {}
+  } catch (const std::exception & e) {
+
+    exit_status = EXIT_FAILURE;
+
+  }
 
   srcml_free_archive(options.archive);
   
