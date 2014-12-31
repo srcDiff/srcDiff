@@ -384,10 +384,7 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
 
 }
 
-void srcdiff_svn_input::file(const char* path_one, const char* path_two, int directory_length_old, int directory_length_new) {
-
-  // Do not nest individual files
-  OPTION_TYPE local_options = options & ~SRCML_OPTION_ARCHIVE;
+void srcdiff_svn_input::file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new) {
 
   std::string unit_filename = path_one[0] ? path_one + directory_length_old : path_one;
   if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
@@ -397,13 +394,8 @@ void srcdiff_svn_input::file(const char* path_one, const char* path_two, int dir
 
   }
 
-  if(srcml_archive_check_extension(archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(archive, path_two) == SRCML_LANGUAGE_NONE)
+  if(srcml_archive_check_extension(options.archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(options.archive, path_two) == SRCML_LANGUAGE_NONE)
     return;
-
-  ++count;
-
-  if(showinput && !isoption(local_options, OPTION_QUIET))
-    fprintf(stderr, "%5d '%s|%s'\n", count, path_one, path_two);
 
   // set path to include revision
   std::ostringstream file_one(path_one, std::ios_base::ate);
@@ -417,10 +409,10 @@ void srcdiff_svn_input::file(const char* path_one, const char* path_two, int dir
   std::string file_old = file_one.str();
   std::string file_new = file_two.str();
 
-  srcdiff_input_svn input_old(archive, file_old.c_str(), local_options);
-  srcdiff_input_svn input_new(archive, file_new.c_str(), local_options);
+  srcdiff_input_svn input_old(options.archive, file_old.c_str(), 0);
+  srcdiff_input_svn input_new(options.archive, file_new.c_str(), 0);
 
-  LineDiffRange line_diff_range(file_old.c_str(), file_new.c_str(), svn_url, local_options);
+  LineDiffRange line_diff_range(file_old, file_new, options.svn_url ? options.svn_url->c_str() : 0, 0);
 
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
@@ -428,11 +420,10 @@ void srcdiff_svn_input::file(const char* path_one, const char* path_two, int dir
 
   const char * end = index(path, '@');
   const char * filename = strndup(path, end - path);
-  const char * language_string = srcml_archive_check_extension(archive, filename);
+  const char * language_string = srcml_archive_check_extension(options.archive, filename);
   free((void *)filename);
 
-  translator.translate(input_old, input_new, line_diff_range,
-                       language_string, NULL, unit_filename.c_str(), 0);
+  translator->translate(input_old, input_new, line_diff_range, language_string, NULL, unit_filename.c_str(), 0);
 
 }
 
