@@ -36,12 +36,16 @@
 
 struct xNs {
 
+  xNs() : href(0), prefix(0) {}
+
   const char * href;
   const char * prefix;
 
 };
 
 struct xAttr {
+
+  xAttr() : next(0), name(0), value(0) {}
 
   xAttr * next;
   const char * name;
@@ -50,6 +54,8 @@ struct xAttr {
 };
 
 struct xNode {
+
+  xNode() : type(XML_ELEMENT_NODE), name(0), ns(0), content(0), properties(0), extra(0), parent(0), is_empty(false), free(false), move(0), nest(0) {}
 
   xmlElementType type;
   const char * name;
