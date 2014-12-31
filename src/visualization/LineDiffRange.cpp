@@ -17,7 +17,7 @@
 
 #include <URIStream.hpp>
 #ifdef SVN
-#include <svn_io.hpp>
+#include <srcdiff_svn_input.hpp>
 #endif
 
 LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, const char * url, OPTION_TYPE options)
@@ -98,7 +98,7 @@ std::vector<std::string> LineDiffRange::read_svn_file(const char * file) {
 
   if(file == 0 || file[0] == 0) return lines;
 
-  svn_context * context = (svn_context *)svnReadOpen(file);
+  srcdiff_svn_input::svn_context * context = (srcdiff_svn_input::svn_context *)srcdiff_svn_input::svnReadOpen(file);
 
   URIStream stream(context);
 
@@ -159,12 +159,9 @@ void LineDiffRange::create_line_diff() {
 #ifdef SVN
   } else {
 
-    svn_ra_session_t * session;
-    apr_pool_t * pool;
-    svn_session_create(url, &session, &pool);
+    srcdiff_svn_input input(url);
     lines_one = read_svn_file(file_one.c_str());
     lines_two = read_svn_file(file_two.c_str());
-    svn_session_destroy(session, pool);
 
   }
 #endif
