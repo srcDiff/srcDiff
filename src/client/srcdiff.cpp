@@ -73,7 +73,11 @@ int main(int argc, char* argv[]) {
     try {
 
       srcdiff_svn_input input(options);
-      input.session_single();
+
+      if(options.files_from_name)
+        input.session_files_from(options.files_from_name->c_str());
+      else
+        input.session_single();
 
     } catch(URIStreamFileError e) {
 

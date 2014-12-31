@@ -132,6 +132,8 @@ void srcdiff_svn_input::session_single() {
 
 void srcdiff_svn_input::session_files_from(const char * list) {
 
+  this->revision_one = options.revision_one;
+  this->revision_two = options.revision_two;
 
   srcdiff_translator translator(options.srcdiff_filename->c_str(),
                                 options.methods,

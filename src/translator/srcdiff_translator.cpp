@@ -63,7 +63,6 @@ void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & in
   int is_new = 0;
   std::thread thread_new(std::ref(input_new), SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
 
-
   thread_old.join();
   thread_new.join();
 
