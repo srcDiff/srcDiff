@@ -97,7 +97,7 @@ void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
     options.svn_url = arg.substr(0, atsign);
     options.revision_one = std::stoi(arg.substr(atsign + 1));
     std::string::size_type dash = arg.find('-', atsign + 1);
-    options.revision_one = std::stoi(arg.substr(dash + 1));
+    options.revision_two = std::stoi(arg.substr(dash + 1));
 
   }
 
