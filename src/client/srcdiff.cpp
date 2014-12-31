@@ -37,9 +37,7 @@
 #include <signal.h>
 #include <URIStream.hpp>
 
-#ifdef SVN
 #include <srcdiff_svn_input.hpp>
-#endif
 
 void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
 

@@ -9,6 +9,8 @@
 
 #include <LineDiffRange.hpp>
 
+#include <srcdiff_svn_input.hpp>
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -16,9 +18,6 @@
 #include <iostream>
 
 #include <URIStream.hpp>
-#ifdef SVN
-#include <srcdiff_svn_input.hpp>
-#endif
 
 LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, const char * url, OPTION_TYPE options)
   : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), options(options) {}
@@ -92,13 +91,13 @@ std::vector<std::string> LineDiffRange::read_local_file(const char * file) {
 }
 
 #ifdef SVN
-std::vector<std::string> LineDiffRange::read_svn_file(const char * file) {
+std::vector<std::string> LineDiffRange::read_svn_file(const srcdiff_svn_input * input, const char * file) {
 
   std::vector<std::string> lines;
 
   if(file == 0 || file[0] == 0) return lines;
 
-  srcdiff_svn_input::svn_context * context;;// = (srcdiff_svn_input::svn_context *)srcdiff_svn_input::open(file);
+  srcdiff_svn_input::svn_context * context = input->open(file);
 
   URIStream stream(context);
 
@@ -159,9 +158,11 @@ void LineDiffRange::create_line_diff() {
 #ifdef SVN
   } else {
 
-    //srcdiff_svn_input input(url);
-    lines_one = read_svn_file(file_one.c_str());
-    lines_two = read_svn_file(file_two.c_str());
+    srcdiff_options options;
+    options.svn_url = url;
+    srcdiff_svn_input input(options);
+    lines_one = read_svn_file(&input, file_one.c_str());
+    lines_two = read_svn_file(&input, file_two.c_str());
 
   }
 #endif

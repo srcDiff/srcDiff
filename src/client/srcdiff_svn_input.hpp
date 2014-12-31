@@ -7,6 +7,8 @@
   mdecker6@kent.edu
 */
 
+#if SVN
+
 #ifndef INCLUDED_SRCDIFF_SVN_INPUT_HPP
 #define INCLUDED_SRCDIFF_SVN_INPUT_HPP
 
@@ -68,5 +70,7 @@ public:
   static int close(void * context);
 
 };
+
+#endif
 
 #endif

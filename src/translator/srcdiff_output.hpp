@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFF_OUTPUT_HPP
 
 
+#include <LineDiffRange.hpp>
 #include <ColorDiff.hpp>
 #include <bash_view.hpp>
 #include <methods.hpp>
