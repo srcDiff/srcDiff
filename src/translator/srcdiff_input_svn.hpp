@@ -1,5 +1,7 @@
-#ifndef INCLUDED_SRCDIFF_INPUT_FILENAME_HPP
-#define INCLUDED_SRCDIFF_INPUT_FILENAME_HPP
+#if SVN
+
+#ifndef INCLUDED_SRCDIFF_INPUT_SVN_HPP
+#define INCLUDED_SRCDIFF_INPUT_SVN_HPP
 
 #include <srcdiff_input.hpp>
 
@@ -21,5 +23,7 @@ public:
 	virtual std::vector<xNodePtr> input_nodes(const char * input_path, int stream_source);
 
 };
+
+#endif
 
 #endif
