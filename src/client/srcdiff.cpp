@@ -76,6 +76,8 @@ int main(int argc, char* argv[]) {
 
       if(options.files_from_name)
         input.session_files_from(options.files_from_name->c_str());
+      else if(isoption(options.flags, OPTION_SVN_CONTINUOUS))
+        input.session_range();
       else
         input.session_single();
 

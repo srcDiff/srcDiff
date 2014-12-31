@@ -231,6 +231,8 @@ void srcdiff_svn_input::session_range() {
                                   options.flags,
                                   options.number_context_lines);
 
+    this->translator = &translator;
+
     const char * path = "";
     svn_dirent_t * dirent;
     svn_ra_stat(session, path, revision_one, &dirent, pool);
