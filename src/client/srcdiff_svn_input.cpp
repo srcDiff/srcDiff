@@ -7,6 +7,7 @@
   mdecker6@kent.edu
 */
 
+#include <srcdiff_svn_input.hpp>
 #include <srcdiff_input_svn.hpp>
 
 #include <iostream>
@@ -18,11 +19,71 @@
 
 #include <URIStream.hpp>
 
-#include <svn_io.hpp>
-#include <srcmlapps.hpp>
 #include <svn_version.h>
 
 #include <pthread.h>
+
+srcdiff_svn_input::srcdiff_svn_input() {
+
+
+  apr_initialize();
+
+  apr_allocator_t * allocator;
+  apr_allocator_create(&allocator);
+
+  apr_pool_create_ex(pool, NULL, abortfunc, allocator);
+
+  svn_client_ctx_t * ctx;
+  apr_hash_t * cfg_hash;
+  svn_config_t * cfg_config;
+
+  svn_ra_initialize(*pool);
+  svn_config_get_config(&cfg_hash, NULL, *pool);
+  
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
+  svn_client_create_context2(&ctx, 0, *pool);
+#else
+  svn_client_create_context(&ctx, *pool);
+#endif
+
+  ctx->config = cfg_hash;
+  cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
+
+  svn_boolean_t non_interactive = false;
+  const char * auth_username = "";
+  const char * auth_password = "";
+  const char * config_dir = 0;
+
+  svn_boolean_t no_auth_cache = false;
+  svn_boolean_t trust_server_cert = true;
+
+  svn_auth_baton_t * ab;
+  svn_cmdline_create_auth_baton(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert, cfg_config, ctx->cancel_func, ctx->cancel_baton, *pool);
+
+  ctx->auth_baton = ab;
+  ctx->conflict_func = NULL;
+  ctx->conflict_baton = NULL;
+
+  ;
+
+#if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
+  svn_error_t * svn_error = svn_client_open_ra_session2(session, url, 0, ctx, *pool, *pool);
+#else
+  svn_error_t * svn_error = svn_client_open_ra_session(session, url, ctx, *pool);
+#endif
+
+  global_session = *session;
+
+  if(svn_error) {
+
+    fprintf(stderr, "%s\n", svn_error->message);
+    exit(1);
+
+  }
+
+
+}
+
 
 svn_ra_session_t * global_session;
 pthread_mutex_t mutex;
