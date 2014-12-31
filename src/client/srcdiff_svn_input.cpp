@@ -209,7 +209,7 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
 
     apr_allocator_t * allocator;
     apr_allocator_create(&allocator);
-
+/** @todo why a new pool */
     apr_pool_t * new_pool;
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
@@ -217,15 +217,8 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
     int comparison = strcoll(dir_entries_one[i].c_str(), dir_entries_two[j].c_str());
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    svn_process_file(session, revision_one, revision_two, new_pool, translator,
-                     comparison <= 0 ? (++i, filename_old.c_str()) : "",
-                     comparison >= 0 ? (++j, filename_new.c_str()) : "",
-                     directory_length_old,
-                     directory_length_new,
-                     svn_url,
-                     archive,
-                     options,
-                     count, skipped, error, showinput, shownumber);
+    file(comparison <= 0 ? (++i, filename_old.c_str()) : "", comparison >= 0 ? (++j, filename_new.c_str()) : "",
+         directory_length_old, directory_length_new);
 
     apr_pool_destroy(new_pool);
 
@@ -253,15 +246,7 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    svn_process_file(session, revision_one, revision_two, new_pool, translator,
-                     filename_old.c_str(),
-                     "",
-                     directory_length_old,
-                     directory_length_new,
-                     svn_url,
-                     archive,
-                     options,
-                     count, skipped, error, showinput, shownumber);
+    file(filename_old.c_str(), "", directory_length_old, directory_length_new);
 
     apr_pool_destroy(new_pool);
 
@@ -289,15 +274,7 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    svn_process_file(session, revision_one, revision_two, new_pool, translator,
-                     "",
-                     filename_new.c_str(),
-                     directory_length_old,
-                     directory_length_new,
-                     svn_url,
-                     archive,
-                     options,
-                     count, skipped, error, showinput, shownumber);
+    file("", filename_new.c_str(), directory_length_old, directory_length_new);
 
     apr_pool_destroy(new_pool);
 
@@ -343,15 +320,8 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
     int comparison = strcoll(dir_entries_one[i].c_str(), dir_entries_two[j].c_str());
 
     // process these directories
-    svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                    comparison <= 0 ? (++i, filename_old.c_str()) : NULL,
-                    directory_length_old,
-                    comparison >= 0 ? (++j, filename_new.c_str()) : NULL,
-                    directory_length_new,
-                    svn_url,
-                    archive,
-                    options,
-                    count, skipped, error, showinput, shownumber);
+    directory(comparison <= 0 ? (++i, filename_old.c_str()) : NULL, directory_length_old,
+              comparison >= 0 ? (++j, filename_new.c_str()) : NULL, directory_length_new);
 
     apr_pool_destroy(new_pool);
 
@@ -378,15 +348,7 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     // process this directory
-    svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                    filename_old.c_str(),
-                    directory_length_old,
-                    NULL,
-                    directory_length_new,
-                    svn_url,
-                    archive,
-                    options,
-                    count, skipped, error, showinput, shownumber);
+    directory(filename_old.c_str(), directory_length_old, NULL, directory_length_new);
 
     apr_pool_destroy(new_pool);
 
@@ -412,15 +374,7 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
     apr_pool_t * new_pool;
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
-    svn_process_dir(session, revision_one, revision_two, new_pool, translator,
-                    NULL,
-                    directory_length_old,
-                    filename_new.c_str(),
-                    directory_length_new,
-                    svn_url,
-                    archive,
-                    options,
-                    count, skipped, error, showinput, shownumber);
+    directory(NULL, directory_length_old, filename_new.c_str(), directory_length_new);
 
     apr_pool_destroy(new_pool);
 
@@ -503,9 +457,9 @@ void srcdiff_svn_input::session_single(svn_revnum_t revision_one, svn_revnum_t r
   svn_ra_stat(session, path, revision_one, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
+    file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_dir)
-    svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
+    directory(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
     fprintf(stderr, "%s\n", "Path does not exist");
   else if(dirent->kind == svn_node_unknown)
@@ -574,9 +528,9 @@ void srcdiff_svn_input::session_range(svn_revnum_t start_rev, svn_revnum_t end_r
     svn_ra_stat(session, path, revision_one, &dirent, path_pool);
 
     if(dirent->kind == svn_node_file)
-      svn_process_file(session, revision_one, revision_two, path_pool, translator, path, path, 0, 0, url, archive, options, count, skipped, error, showinput, shownumber);
+      file(session, revision_one, revision_two, path_pool, translator, path, path, 0, 0, url, archive, options, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
+      directory(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
@@ -661,10 +615,10 @@ void srcdiff_svn_input::session_file(svn_revnum_t revision_one, svn_revnum_t rev
       svn_ra_stat(session, path, revision, &dirent, path_pool);
 
       if(dirent->kind == svn_node_file)
-        svn_process_file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
+        file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
       else if(dirent->kind == svn_node_dir)
         fprintf(stderr, "Skipping directory: %s", path);
-      //svn_process_dir(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
+      //directory(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
       else if(dirent->kind == svn_node_none)
         fprintf(stderr, "%s\n", "Path does not exist");
       else if(dirent->kind == svn_node_unknown)

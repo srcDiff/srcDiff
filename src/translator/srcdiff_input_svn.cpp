@@ -33,12 +33,12 @@ std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const char * input_path, in
 
   srcml_converter converter(archive, stream_source);
 
-  void * context = srcdiff_svn_input::svnReadOpen(input_path);
+  void * context = srcdiff_svn_input::open(input_path);
 
   const char * end = index(input_path, '@');
   const char * filename = strndup(input_path, end - input_path);
 
-  converter.convert(filename, (void *)context, srcdiff_svn_input::svnRead, srcdiff_svn_input::svnReadClose, options);
+  converter.convert(filename, (void *)context, srcdiff_svn_input::read, srcdiff_svn_input::close, options);
   free((void *)filename);
 
   return converter.create_nodes();

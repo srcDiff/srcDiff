@@ -51,7 +51,7 @@ public:
 
   void session_range(svn_revnum_t start_revision, svn_revnum_t end_revision);
 
-  void file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new, const char * svn_url);
+  void file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new);
 
   void directory(const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new);
 
