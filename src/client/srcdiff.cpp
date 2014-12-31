@@ -165,7 +165,7 @@ void srcdiff_text(srcdiff_translator & translator, srcdiff_options & options, co
 
   srcdiff_input_filename input_old(options.archive, path_one, options.flags);
   srcdiff_input_filename input_new(options.archive, path_two, options.flags);
-  LineDiffRange line_diff_range(path_one, path_two, options.svn_url ? options.svn_url->c_str() : 0);
+  LineDiffRange line_diff_range(path_one, path_two, 0);
 
   const char * path = path_one;
   if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
