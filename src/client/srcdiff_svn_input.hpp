@@ -29,15 +29,31 @@ class srcdiff_svn_input {
 
 protected:
 
-  svn_ra_session_t * session;
-  apr_pool_t * pool;
+  const srcdiff_options & options;
+  srcdiff_translator * translator;
 
 private:
 
+  svn_ra_session_t * session;
+  apr_pool_t * pool;
+
+  svn_revnum_t revision_one;
+  svn_revnum_t revision_two;
+
 public:
 
-  srcdiff_svn_input(std::string url);
+  srcdiff_svn_input(const srcdiff_options & options);
   ~srcdiff_svn_input();
+
+  void session_single(svn_revnum_t revision_one, svn_revnum_t revision_two);
+
+  void session_files_from(svn_revnum_t revision_one, svn_revnum_t revision_two, const char * list);
+
+  void session_range(svn_revnum_t start_revision, svn_revnum_t end_revision);
+
+  void file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new, const char * svn_url);
+
+  void directory(const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new);
 
   struct svn_context {
 
@@ -46,26 +62,11 @@ public:
 
   };
 
-  static int svnReadMatch(const char * uri);
-  static void * svnReadOpen(const char * uri);
-  static int svnRead(void * context, char * buffer, int len);
-  static int svnReadClose(void * context);
+  static int match(const char * uri);
+  static void * open(const char * uri);
+  static int read(void * context, char * buffer, int len);
+  static int close(void * context);
 
 };
-
-void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator, OPTION_TYPE options,
-  const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new);
-
-void svn_process_file(svn_ra_session_t * session,  svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator,
-  const char * path_one, const char * path_two, int directory_length_old, int directory_length_new, const char * svn_url, OPTION_TYPE options);
-
-void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcdiff_translator & translator, OPTION_TYPE options);
-
-void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, OPTION_TYPE options);
-
-void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_revnum_t revision_two, OPTION_TYPE options);
-
-void svn_session_destroy(svn_ra_session_t * session, apr_pool_t * pool);
-
 
 #endif

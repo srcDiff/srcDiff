@@ -38,11 +38,11 @@ URIStream::URIStream(const char* uriname)
 }
 
 #ifdef SVN
-URIStream::URIStream(svn_context * context)
+URIStream::URIStream(srcdiff_svn_input::svn_context * context)
   : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
 {
 
-  if (!(input = xmlParserInputBufferCreateIO(svnRead, svnReadClose, context, XML_CHAR_ENCODING_NONE)))
+  if (!(input = xmlParserInputBufferCreateIO(srcdiff_svn_input::svnRead, srcdiff_svn_input::svnReadClose, context, XML_CHAR_ENCODING_NONE)))
     throw URIStreamFileError();
 
   // get some data into the buffer

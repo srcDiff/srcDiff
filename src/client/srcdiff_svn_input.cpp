@@ -23,7 +23,14 @@
 
 #include <pthread.h>
 
-srcdiff_svn_input::srcdiff_svn_input() {
+int abortfunc(int retcode) {
+
+  std::cout << retcode << '\n';
+
+  return retcode;
+}
+
+srcdiff_svn_input::srcdiff_svn_input(const srcdiff_options & options) : options(options) {
 
 
   apr_initialize();
@@ -65,9 +72,9 @@ srcdiff_svn_input::srcdiff_svn_input() {
   ctx->conflict_baton = NULL;
 
 #if (SVN_VER_MAJOR == 1 && SVN_VER_MINOR >= 8) || SVN_VER_MAJOR > 1
-  svn_error_t * svn_error = svn_client_open_ra_session2(&session, url, 0, ctx, pool, pool);
+  svn_error_t * svn_error = svn_client_open_ra_session2(&session, options.svn_url ? options.svn_url->c_str() : 0, 0, ctx, pool, pool);
 #else
-  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, options.svn_url ? options.svn_url->c_str() : 0, ctx, pool);
 #endif
 
   if(svn_error) {
@@ -93,16 +100,13 @@ srcdiff_svn_input::~srcdiff_svn_input() {
 
 pthread_mutex_t mutex;
 
-int abortfunc(int retcode) {
+void srcdiff_svn_input::directory(const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new) {
 
-  std::cout << retcode << '\n';
-
-  return retcode;
-}
-
-void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator,
-  const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new, const char * svn_url, srcml_archive * archive, OPTION_TYPE options,
-  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+#ifdef __MINGW32__
+#define PATH_SEPARATOR '\\'
+#else
+#define PATH_SEPARATOR '/'
+#endif
 
   apr_hash_t * dirents_one;
   svn_revnum_t fetched_rev_one;
@@ -422,11 +426,11 @@ void svn_process_dir(svn_ra_session_t * session, svn_revnum_t revision_one, svn_
 
   }
 
+#undef PATH_SEPARATOR
+
 }
 
-void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn_revnum_t revision_two, apr_pool_t * pool, srcdiff_translator& translator,
-  const char* path_one, const char* path_two, int directory_length_old, int directory_length_new, const char * svn_url, srcml_archive * archive, OPTION_TYPE options,
-  int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_svn_input::file(const char* path_one, const char* path_two, int directory_length_old, int directory_length_new) {
 
   // Do not nest individual files
   OPTION_TYPE local_options = options & ~SRCML_OPTION_ARCHIVE;
@@ -478,8 +482,7 @@ void svn_process_file(svn_ra_session_t * session, svn_revnum_t revision_one, svn
 
 }
 
-void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, srcdiff_translator& translator,
-  const char * url, srcml_archive * archive, OPTION_TYPE options, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void srcdiff_svn_input::session_single(svn_revnum_t revision_one, svn_revnum_t revision_two) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -516,12 +519,7 @@ void svn_process_session(svn_revnum_t revision_one, svn_revnum_t revision_two, s
 
 }
 
-void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const char * url, int& count, int & skipped, int & error, bool & showinput, bool shownumber,
-                             const char* srcdiff_filename,  // filename of result srcDiff file
-                             METHOD_TYPE method,
-                             std::string css,
-                             srcml_archive * archive,
-                             OPTION_TYPE options) {
+void srcdiff_svn_input::session_range(svn_revnum_t start_rev, svn_revnum_t end_rev) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -594,12 +592,7 @@ void svn_process_session_all(svn_revnum_t start_rev, svn_revnum_t end_rev, const
 
 }
 
-void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_revnum_t revision_two, const char * url, int& count, int & skipped, int & error, bool & showinput, bool shownumber,
-                            const char* srcdiff_filename,  // filename of result srcDiff file
-                            METHOD_TYPE method,
-                            std::string css,
-                            srcml_archive * archive,
-                            OPTION_TYPE options) {
+void srcdiff_svn_input::session_file(svn_revnum_t revision_one, svn_revnum_t revision_two, const char * list) {
 
   pthread_mutex_init(&mutex, 0);
 
@@ -698,13 +691,12 @@ void svn_process_session_file(const char * list, svn_revnum_t revision_one, svn_
 
 }
 
-// check svn match
-int svnReadMatch(const char * URI) {
+int srcdiff_svn_input::match(const char * uri) {
 
   return 1;
 }
 
-void * svnReadOpen(const char * URI) {
+void * srcdiff_svn_input::open(const char * uri) {
 
   svn_context * context = new svn_context;
 
@@ -723,9 +715,9 @@ void * svnReadOpen(const char * URI) {
   apr_hash_t * props = 0;
 
   // parse uri
-  const char * end = index(URI, '@');
+  const char * end = index(uri, '@');
 
-  const char * path = strndup(URI, end - URI);
+  const char * path = strndup(uri, end - uri);
 
   svn_revnum_t revision = atoi(end + 1);
 
@@ -737,8 +729,7 @@ void * svnReadOpen(const char * URI) {
 
 }
 
-// read from the URI
-int svnRead(void * context, char * buffer, int len) {
+int srcdiff_svn_input::read(void * context, char * buffer, int len) {
 
   svn_context * ctx = (svn_context *)context;
 
@@ -751,8 +742,7 @@ int svnRead(void * context, char * buffer, int len) {
   return length;
 }
 
-// close the open file
-int svnReadClose(void * context) {
+int srcdiff_svn_input::close(void * context) {
 
   svn_context * ctx = (svn_context *)context;
 

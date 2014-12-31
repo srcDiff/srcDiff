@@ -159,7 +159,7 @@ void LineDiffRange::create_line_diff() {
 #ifdef SVN
   } else {
 
-    srcdiff_svn_input input(url);
+    //srcdiff_svn_input input(url);
     lines_one = read_svn_file(file_one.c_str());
     lines_two = read_svn_file(file_two.c_str());
 
