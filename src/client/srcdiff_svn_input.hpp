@@ -29,7 +29,7 @@ class srcdiff_svn_input {
 
 protected:
 
-  const srcdiff_options & options;
+  srcdiff_options & options;
   srcdiff_translator * translator;
 
 private:
@@ -42,7 +42,7 @@ private:
 
 public:
 
-  srcdiff_svn_input(const srcdiff_options & options);
+  srcdiff_svn_input(srcdiff_options & options);
   ~srcdiff_svn_input();
 
   void session_single(svn_revnum_t revision_one, svn_revnum_t revision_two);
@@ -62,8 +62,8 @@ public:
 
   };
 
-  static int match(const char * uri);
-  static void * open(const char * uri);
+  svn_context * open(const char * uri) const;
+
   static int read(void * context, char * buffer, int len);
   static int close(void * context);
 

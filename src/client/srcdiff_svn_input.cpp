@@ -8,7 +8,10 @@
 */
 
 #include <srcdiff_svn_input.hpp>
+
 #include <srcdiff_input_svn.hpp>
+
+#include <thread>
 
 #include <iostream>
 #include <string>
@@ -21,7 +24,7 @@
 
 #include <svn_version.h>
 
-#include <pthread.h>
+std::mutex mutex;
 
 int abortfunc(int retcode) {
 
@@ -30,7 +33,7 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
-srcdiff_svn_input::srcdiff_svn_input(const srcdiff_options & options) : options(options) {
+srcdiff_svn_input::srcdiff_svn_input(srcdiff_options & options) : options(options) {
 
 
   apr_initialize();
@@ -91,14 +94,192 @@ srcdiff_svn_input::srcdiff_svn_input(const srcdiff_options & options) : options(
 
 srcdiff_svn_input::~srcdiff_svn_input() {
 
-
   apr_pool_destroy(pool);
 
   apr_terminate();
 
 }
 
-pthread_mutex_t mutex;
+void srcdiff_svn_input::session_single(svn_revnum_t revision_one, svn_revnum_t revision_two) {
+
+  this->revision_one = revision_one;
+  this->revision_two = revision_two;
+
+  srcdiff_translator translator(options.srcdiff_filename->c_str(),
+                                options.methods,
+                                options.css_url ? *options.css_url : std::string(),
+                                options.archive,
+                                options.flags,
+                                options.number_context_lines);
+
+  this->translator = &translator;
+
+  /** @todo two pools */
+
+  const char * path = "";
+
+  svn_dirent_t * dirent;
+  svn_ra_stat(session, path, revision_one, &dirent, pool);
+
+  if(dirent->kind == svn_node_file)         file(path, path, 0, 0);
+  else if(dirent->kind == svn_node_dir)     directory(path, 0, path, 0);
+  else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
+  else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
+
+}
+
+void srcdiff_svn_input::session_files_from(svn_revnum_t revision_one, svn_revnum_t revision_two, const char * list) {
+
+
+  srcdiff_translator translator(options.srcdiff_filename->c_str(),
+                                options.methods,
+                                options.css_url ? *options.css_url : std::string(),
+                                options.archive,
+                                options.flags,
+                                options.number_context_lines);
+
+  this->translator = &translator;
+
+  try {
+
+    // translate all the filenames listed in the named file
+    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+    std::ifstream input(list);
+    std::string line;
+    while(getline(input, line, '\n'), input) {
+
+      // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
+      int white_length = strspn(line.c_str(), " \t\f");
+
+      line.erase(0, white_length);
+
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == '#')
+        continue;
+
+      // remove any end whitespace
+      // TODO:  Extract function, and use elsewhere
+      for (int i = line.size() - 1; i != 0; --i) {
+        if (isspace(line[i]))
+          line[i] = 0;
+        else
+          break;
+
+      }
+
+      std::string path_one = line.substr(0, line.find('|'));
+      std::string path_two = line.substr(line.find('|') + 1);
+
+      const char * path = path_one.c_str();
+      svn_revnum_t revision = revision_one;
+      if(path_one == "") {
+
+         path = path_two.c_str();
+         revision = revision_two;
+
+      }
+
+      svn_dirent_t * dirent;
+      svn_ra_stat(session, path, revision, &dirent, pool);
+
+      if(dirent->kind == svn_node_file)         file(path_one.c_str(), path_two.c_str(), 0,0);
+      else if(dirent->kind == svn_node_dir)     fprintf(stderr, "Skipping directory: %s", path);
+      else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
+      else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
+
+    }
+
+  } catch (URIStreamFileError) {
+
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", list);
+    exit(EXIT_FAILURE);
+
+  }
+
+}
+
+void srcdiff_svn_input::session_range(svn_revnum_t start_revision, svn_revnum_t end_revision) {
+
+  if(start_revision == SVN_INVALID_REVNUM) revision_one = 1;
+  else revision_one = start_revision;
+
+  revision_two = revision_one + 1;
+
+  svn_revnum_t last_revision = end_revision;
+  if(last_revision == SVN_INVALID_REVNUM) svn_ra_get_latest_revnum(session, &last_revision, pool);
+
+  for(; revision_one < last_revision; ++revision_one, ++revision_two) {
+
+    std::ostringstream full_srcdiff(options.srcdiff_filename && *options.srcdiff_filename != "-" ? *options.srcdiff_filename : "", std::ios_base::ate);
+    full_srcdiff << '_';
+    full_srcdiff << revision_one;
+    full_srcdiff << '-';
+    full_srcdiff << revision_two;
+    full_srcdiff << ".xml";
+
+    srcdiff_translator translator(full_srcdiff.str().c_str(),
+                                  options.methods,
+                                  options.css_url ? *options.css_url : std::string(),
+                                  options.archive,
+                                  options.flags,
+                                  options.number_context_lines);
+
+    const char * path = "";
+    svn_dirent_t * dirent;
+    svn_ra_stat(session, path, revision_one, &dirent, pool);
+
+    if(dirent->kind == svn_node_file)         file(path, path, 0, 0);
+    else if(dirent->kind == svn_node_dir)     directory(path, 0, path, 0);
+    else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
+    else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
+
+  }
+
+}
+
+void srcdiff_svn_input::file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new) {
+
+  std::string unit_filename = path_one[0] ? path_one + directory_length_old : path_one;
+  if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
+
+    unit_filename += "|";
+    unit_filename += path_two[0] ? path_two + directory_length_new : path_two;
+
+  }
+
+  if(srcml_archive_check_extension(options.archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(options.archive, path_two) == SRCML_LANGUAGE_NONE)
+    return;
+
+  // set path to include revision
+  std::ostringstream file_one(path_one, std::ios_base::ate);
+  file_one << '@';
+  file_one << revision_one;
+
+  std::ostringstream file_two(path_two, std::ios_base::ate);
+  file_two << '@';
+  file_two << revision_two;
+
+  std::string file_old = file_one.str();
+  std::string file_new = file_two.str();
+
+  srcdiff_input_svn input_old(options.archive, file_old.c_str(), 0, *this);
+  srcdiff_input_svn input_new(options.archive, file_new.c_str(), 0, *this);
+
+  LineDiffRange line_diff_range(file_old, file_new, options.svn_url ? options.svn_url->c_str() : 0, 0);
+
+  const char * path = path_one;
+  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
+    path = path_two;
+
+  const char * end = index(path, '@');
+  const char * filename = strndup(path, end - path);
+  const char * language_string = srcml_archive_check_extension(options.archive, filename);
+  free((void *)filename);
+
+  translator->translate(input_old, input_new, line_diff_range, language_string, NULL, unit_filename.c_str(), 0);
+
+}
 
 void srcdiff_svn_input::directory(const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new) {
 
@@ -384,264 +565,7 @@ void srcdiff_svn_input::directory(const char * directory_old, int directory_leng
 
 }
 
-void srcdiff_svn_input::file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new) {
-
-  std::string unit_filename = path_one[0] ? path_one + directory_length_old : path_one;
-  if(path_two[0] == 0 || strcmp(path_one + directory_length_old, path_two + directory_length_new) != 0) {
-
-    unit_filename += "|";
-    unit_filename += path_two[0] ? path_two + directory_length_new : path_two;
-
-  }
-
-  if(srcml_archive_check_extension(options.archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(options.archive, path_two) == SRCML_LANGUAGE_NONE)
-    return;
-
-  // set path to include revision
-  std::ostringstream file_one(path_one, std::ios_base::ate);
-  file_one << '@';
-  file_one << revision_one;
-
-  std::ostringstream file_two(path_two, std::ios_base::ate);
-  file_two << '@';
-  file_two << revision_two;
-
-  std::string file_old = file_one.str();
-  std::string file_new = file_two.str();
-
-  srcdiff_input_svn input_old(options.archive, file_old.c_str(), 0);
-  srcdiff_input_svn input_new(options.archive, file_new.c_str(), 0);
-
-  LineDiffRange line_diff_range(file_old, file_new, options.svn_url ? options.svn_url->c_str() : 0, 0);
-
-  const char * path = path_one;
-  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
-    path = path_two;
-
-  const char * end = index(path, '@');
-  const char * filename = strndup(path, end - path);
-  const char * language_string = srcml_archive_check_extension(options.archive, filename);
-  free((void *)filename);
-
-  translator->translate(input_old, input_new, line_diff_range, language_string, NULL, unit_filename.c_str(), 0);
-
-}
-
-void srcdiff_svn_input::session_single(svn_revnum_t revision_one, svn_revnum_t revision_two) {
-
-  pthread_mutex_init(&mutex, 0);
-
-  apr_initialize();
-
-  apr_pool_t * pool;
-  svn_ra_session_t * session;
-  svn_session_create(url, &session, &pool);
-
-  apr_allocator_t * allocator;
-  apr_allocator_create(&allocator);
-
-  const char * path = "";
-  apr_pool_t * path_pool;
-  apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
-
-  svn_dirent_t * dirent;
-  svn_ra_stat(session, path, revision_one, &dirent, path_pool);
-
-  if(dirent->kind == svn_node_file)
-    file(session, revision_one, revision_two, path_pool, translator, path, path, 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
-  else if(dirent->kind == svn_node_dir)
-    directory(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
-  else if(dirent->kind == svn_node_none)
-    fprintf(stderr, "%s\n", "Path does not exist");
-  else if(dirent->kind == svn_node_unknown)
-    fprintf(stderr, "%s\n", "Unknown");
-
-  apr_pool_destroy(path_pool);
-
-  svn_session_destroy(session, pool);
-
-  pthread_mutex_destroy(&mutex);
-
-}
-
-void srcdiff_svn_input::session_range(svn_revnum_t start_rev, svn_revnum_t end_rev) {
-
-  pthread_mutex_init(&mutex, 0);
-
-  apr_pool_t * pool;
-  svn_ra_session_t * session;
-  svn_session_create(url, &session, &pool);
-
-  svn_revnum_t latest_revision = end_rev;
-  if(end_rev == SVN_INVALID_REVNUM) {
-
-    svn_ra_get_latest_revnum(global_session,
-                             &latest_revision,
-                             pool);
-
-  }
-
-  svn_revnum_t revision_one = start_rev;
-  svn_revnum_t revision_two;
-  if(start_rev == SVN_INVALID_REVNUM) {
-
-    revision_one = 1;
-
-  }
-
-  revision_two = revision_one + 1;
-
-
-  for(; revision_one < latest_revision; ++revision_one, ++revision_two) {
-
-    std::ostringstream full_srcdiff(srcdiff_filename, std::ios_base::ate);
-    full_srcdiff << '_';
-    full_srcdiff << revision_one;
-    full_srcdiff << '-';
-    full_srcdiff << revision_two;
-    full_srcdiff << ".xml";
-
-    srcdiff_translator translator(full_srcdiff.str().c_str(),
-                                 method,
-                                 css,
-                                 archive,
-                                 options,
-                                 3);
-
-    apr_allocator_t * allocator;
-    apr_allocator_create(&allocator);
-
-    const char * path = "";
-    apr_pool_t * path_pool;
-    apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
-
-    svn_dirent_t * dirent;
-    svn_ra_stat(session, path, revision_one, &dirent, path_pool);
-
-    if(dirent->kind == svn_node_file)
-      file(session, revision_one, revision_two, path_pool, translator, path, path, 0, 0, url, archive, options, count, skipped, error, showinput, shownumber);
-    else if(dirent->kind == svn_node_dir)
-      directory(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, url, archive, options, count, skipped, error, showinput, shownumber);
-    else if(dirent->kind == svn_node_none)
-      fprintf(stderr, "%s\n", "Path does not exist");
-    else if(dirent->kind == svn_node_unknown)
-      fprintf(stderr, "%s\n", "Unknown");
-
-    apr_pool_destroy(path_pool);
-
-  }
-
-  svn_session_destroy(session, pool);
-
-  pthread_mutex_destroy(&mutex);
-
-}
-
-void srcdiff_svn_input::session_file(svn_revnum_t revision_one, svn_revnum_t revision_two, const char * list) {
-
-  pthread_mutex_init(&mutex, 0);
-
-  apr_pool_t * pool;
-  svn_ra_session_t * session;
-  svn_session_create(url, &session, &pool);
-
-
-  srcdiff_translator translator(srcdiff_filename,
-                               method,
-                               css,
-                               archive,
-                               options,
-                               3);
-
-
-  try {
-
-    // translate all the filenames listed in the named file
-    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    std::ifstream input(list);
-    std::string line;
-    while(getline(input, line, '\n'), input) {
-
-      // skip over whitespace
-      // TODO:  Other types of whitespace?  backspace?
-      int white_length = strspn(line.c_str(), " \t\f");
-
-      line.erase(0, white_length);
-
-      // skip blank lines or comment lines
-      if (line[0] == '\0' || line[0] == '#')
-        continue;
-
-      // remove any end whitespace
-      // TODO:  Extract function, and use elsewhere
-      for (int i = line.size() - 1; i != 0; --i) {
-        if (isspace(line[i]))
-          line[i] = 0;
-        else
-          break;
-
-      }
-
-      std::string path_one = line.substr(0, line.find('|'));
-      std::string path_two = line.substr(line.find('|') + 1);
-
-      showinput = true;
-
-      apr_allocator_t * allocator;
-      apr_allocator_create(&allocator);
-
-      //const char * path = "";
-      apr_pool_t * path_pool;
-      apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
-      const char * path = path_one.c_str();
-      svn_revnum_t revision = revision_one;
-      if(path_one == "") {
-
-  	     path = path_two.c_str();
-	       revision = revision_two;
-
-      }
-
-      svn_dirent_t * dirent;
-      svn_ra_stat(session, path, revision, &dirent, path_pool);
-
-      if(dirent->kind == svn_node_file)
-        file(session, revision_one, revision_two, path_pool, translator, path_one.c_str(), path_two.c_str(), 0,0, url, archive, options, count, skipped, error, showinput, shownumber);
-      else if(dirent->kind == svn_node_dir)
-        fprintf(stderr, "Skipping directory: %s", path);
-      //directory(session, revision_one, revision_two, path_pool, translator, path, 0, path, 0, options, count, skipped, error, showinput, shownumber);
-      else if(dirent->kind == svn_node_none)
-        fprintf(stderr, "%s\n", "Path does not exist");
-      else if(dirent->kind == svn_node_unknown)
-        fprintf(stderr, "%s\n", "Unknown");
-
-      apr_pool_destroy(path_pool);
-
-
-      if (isoption(options, OPTION_TERMINATE))
-        return;
-
-    }
-
-  } catch (URIStreamFileError) {
-
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", list);
-    exit(STATUS_INPUTFILE_PROBLEM);
-
-  }
-
-  svn_session_destroy(session, pool);
-
-  pthread_mutex_destroy(&mutex);
-
-}
-
-int srcdiff_svn_input::match(const char * uri) {
-
-  return 1;
-}
-
-void * srcdiff_svn_input::open(const char * uri) {
+srcdiff_svn_input::svn_context * srcdiff_svn_input::open(const char * uri) const {
 
   svn_context * context = new svn_context;
 
@@ -666,9 +590,9 @@ void * srcdiff_svn_input::open(const char * uri) {
 
   svn_revnum_t revision = atoi(end + 1);
 
-  pthread_mutex_lock(&mutex);
-  svn_ra_get_file(global_session, path, revision, context->stream, &fetched_rev, &props, context->pool);
-  pthread_mutex_unlock(&mutex);
+  mutex.lock();
+  svn_ra_get_file(session, path, revision, context->stream, &fetched_rev, &props, context->pool);
+  mutex.unlock();
 
   return context;
 

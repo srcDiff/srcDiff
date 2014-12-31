@@ -39,7 +39,7 @@
 #include <cstring>
 
 // constructor
-srcdiff_translator::srcdiff_translator(const char* srcdiff_filename,
+srcdiff_translator::srcdiff_translator(const char * srcdiff_filename,
                                      METHOD_TYPE method,
                                      std::string css,
                                      srcml_archive * archive,
