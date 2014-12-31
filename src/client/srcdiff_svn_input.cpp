@@ -252,7 +252,9 @@ void srcdiff_svn_input::file(const char * path_one, const char * path_two, int d
 
   }
 
-  if(srcml_archive_check_extension(options.archive, path_one) == SRCML_LANGUAGE_NONE && srcml_archive_check_extension(options.archive, path_two) == SRCML_LANGUAGE_NONE)
+  if(srcml_archive_check_extension(options.archive, path_one) == SRCML_LANGUAGE_NONE
+    && srcml_archive_check_extension(options.archive, path_two) == SRCML_LANGUAGE_NONE
+    && srcml_archive_check_extension(options.archive, options.svn_url->c_str()) == SRCML_LANGUAGE_NONE)
     return;
 
   // set path to include revision
@@ -270,16 +272,15 @@ void srcdiff_svn_input::file(const char * path_one, const char * path_two, int d
   srcdiff_input_svn input_old(options.archive, file_old.c_str(), 0, *this);
   srcdiff_input_svn input_new(options.archive, file_new.c_str(), 0, *this);
 
-  LineDiffRange line_diff_range(file_old, file_new, options.svn_url ? options.svn_url->c_str() : 0, 0);
+  LineDiffRange line_diff_range(file_old, file_new, options.svn_url ? options.svn_url->c_str() : 0);
 
   const char * path = path_one;
-  if(path_one == 0 || path_one[0] == 0 || path_one[0] == '@')
+  if(path == 0 || path[0] == 0)
     path = path_two;
+  if(path == 0 || path[0] == 0)
+    path = options.svn_url->c_str();
 
-  const char * end = index(path, '@');
-  const char * filename = strndup(path, end - path);
-  const char * language_string = srcml_archive_check_extension(options.archive, filename);
-  free((void *)filename);
+  const char * language_string = srcml_archive_check_extension(options.archive, path);
 
   translator->translate(input_old, input_new, line_diff_range, language_string, NULL, unit_filename.c_str(), 0);
 

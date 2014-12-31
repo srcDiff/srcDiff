@@ -37,7 +37,7 @@ private:
 
 public:
 
-  LineDiffRange(std::string file_one, std::string file_two, const char * url, OPTION_TYPE options);
+  LineDiffRange(std::string file_one, std::string file_two, const char * url);
 
   ~LineDiffRange();
 

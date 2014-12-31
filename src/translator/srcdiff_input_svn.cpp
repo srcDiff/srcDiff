@@ -18,7 +18,7 @@ srcdiff_input_svn::~srcdiff_input_svn() {}
 
 std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const char * input_path, int stream_source) {
 
-  if(input_path == 0 || input_path[0] == 0 || input_path[0] == '@') throw no_file_exception();
+ if(input_path == 0 || input_path[0] == 0) throw no_file_exception();
 
   srcml_converter converter(archive, stream_source);
 
