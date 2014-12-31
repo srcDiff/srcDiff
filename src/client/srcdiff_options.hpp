@@ -9,6 +9,10 @@
 #include <string>
 #include <vector>
 
+#if SVN
+#include <svn_version.h>
+#endif
+
 #ifdef __GNUC__
 typedef unsigned long long OPTION_TYPE;
 #else
@@ -70,15 +74,17 @@ struct srcdiff_options
   boost::optional<std::string> srcdiff_filename;
   boost::optional<std::string> files_from_name;
   boost::optional<std::string> css_url;
-  boost::optional<std::string> svn_url;
 
   OPTION_TYPE flags;
   METHOD_TYPE methods;
 
-  int revision_one;
-  int revision_two;
-
   int number_context_lines;
+
+#if SVN
+  boost::optional<std::string> svn_url;
+  svn_revnum_t revision_one;
+  svn_revnum_t revision_two;
+#endif
   
 };
 
