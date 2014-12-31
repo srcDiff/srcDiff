@@ -102,10 +102,10 @@ srcdiff_svn_input::~srcdiff_svn_input() {
 
 }
 
-void srcdiff_svn_input::session_single(svn_revnum_t revision_one, svn_revnum_t revision_two) {
+void srcdiff_svn_input::session_single() {
 
-  this->revision_one = revision_one;
-  this->revision_two = revision_two;
+  this->revision_one = options.revision_one;
+  this->revision_two = options.revision_two;
 
   srcdiff_translator translator(options.srcdiff_filename->c_str(),
                                 options.methods,
@@ -130,7 +130,7 @@ void srcdiff_svn_input::session_single(svn_revnum_t revision_one, svn_revnum_t r
 
 }
 
-void srcdiff_svn_input::session_files_from(svn_revnum_t revision_one, svn_revnum_t revision_two, const char * list) {
+void srcdiff_svn_input::session_files_from(const char * list) {
 
 
   srcdiff_translator translator(options.srcdiff_filename->c_str(),
@@ -174,7 +174,7 @@ void srcdiff_svn_input::session_files_from(svn_revnum_t revision_one, svn_revnum
       std::string path_two = line.substr(line.find('|') + 1);
 
       const char * path = path_one.c_str();
-      svn_revnum_t revision = revision_one;
+      svn_revnum_t revision = options.revision_one;
       if(path_one == "") {
 
          path = path_two.c_str();
@@ -201,17 +201,19 @@ void srcdiff_svn_input::session_files_from(svn_revnum_t revision_one, svn_revnum
 
 }
 
-void srcdiff_svn_input::session_range(svn_revnum_t start_revision, svn_revnum_t end_revision) {
+void srcdiff_svn_input::session_range() {
+
+  svn_revnum_t & start_revision = options.revision_one;
 
   if(start_revision == SVN_INVALID_REVNUM) revision_one = 1;
   else revision_one = start_revision;
 
   revision_two = revision_one + 1;
 
-  svn_revnum_t last_revision = end_revision;
-  if(last_revision == SVN_INVALID_REVNUM) svn_ra_get_latest_revnum(session, &last_revision, pool);
+  svn_revnum_t end_revision = options.revision_two;
+  if(end_revision == SVN_INVALID_REVNUM) svn_ra_get_latest_revnum(session, &end_revision, pool);
 
-  for(; revision_one < last_revision; ++revision_one, ++revision_two) {
+  for(; revision_one < end_revision; ++revision_one, ++revision_two) {
 
     std::ostringstream full_srcdiff(options.srcdiff_filename && *options.srcdiff_filename != "-" ? *options.srcdiff_filename : "", std::ios_base::ate);
     full_srcdiff << '_';

@@ -66,37 +66,59 @@ int main(int argc, char* argv[]) {
   // process command-line arguments
   srcdiff_options options = process_command_line(argc, argv);
 
-  try {
+#if SVN
 
-    // translator from input to output using determined language
-    srcdiff_translator translator(options.srcdiff_filename->c_str(),
-                                 options.methods,
-                                 options.css_url ? *options.css_url : std::string(),
-                                 options.archive,
-                                 options.flags,
-                                 options.number_context_lines);
+  if(options.svn_url) {
 
-#ifdef __GNUG__
-    // setup so we can gracefully stop after a file at a time
-    signal(SIGINT, terminate_handler);
-#endif
+    try {
 
-    if(options.files_from_name) {
+      srcdiff_svn_input input(options);
+      input.session_single();
 
-      srcdiff_files_from(translator, options);
+    } catch(URIStreamFileError e) {
 
-    } else {
-
-     for(std::pair<std::string, std::string> input_pair : options.input_pairs)
-        srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
+      std::cerr << "Problem with input url " << *options.svn_url << "for revisions " << options.revision_one << " and " << options.revision_two << '\n';
 
     }
 
-  } catch (const std::exception & e) {
+  } else {
+#endif
 
-    exit_status = EXIT_FAILURE;
+    try {
 
+      // translator from input to output using determined language
+      srcdiff_translator translator(options.srcdiff_filename->c_str(),
+                                   options.methods,
+                                   options.css_url ? *options.css_url : std::string(),
+                                   options.archive,
+                                   options.flags,
+                                   options.number_context_lines);
+
+  #ifdef __GNUG__
+      // setup so we can gracefully stop after a file at a time
+      signal(SIGINT, terminate_handler);
+  #endif
+
+      if(options.files_from_name) {
+
+        srcdiff_files_from(translator, options);
+
+      } else {
+
+       for(std::pair<std::string, std::string> input_pair : options.input_pairs)
+          srcdiff_file(translator, options, input_pair.first.c_str(), input_pair.second.c_str());
+
+      }
+
+    } catch (const std::exception & e) {
+
+      exit_status = EXIT_FAILURE;
+
+    }
+
+#if SVN
   }
+#endif
 
   srcml_free_archive(options.archive);
   

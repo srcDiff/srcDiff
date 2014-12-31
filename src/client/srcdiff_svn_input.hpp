@@ -47,11 +47,11 @@ public:
   srcdiff_svn_input(srcdiff_options & options);
   ~srcdiff_svn_input();
 
-  void session_single(svn_revnum_t revision_one, svn_revnum_t revision_two);
+  void session_single();
 
-  void session_files_from(svn_revnum_t revision_one, svn_revnum_t revision_two, const char * list);
+  void session_files_from(const char * list);
 
-  void session_range(svn_revnum_t start_revision, svn_revnum_t end_revision);
+  void session_range();
 
   void file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new);
 
