@@ -9,6 +9,8 @@
 
 #include <LineDiffRange.hpp>
 
+#include <srcdiff_input_source_svn.hpp>
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -16,12 +18,9 @@
 #include <iostream>
 
 #include <URIStream.hpp>
-#ifdef SVN
-#include <svn_io.hpp>
-#endif
 
-LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, const char * url, OPTION_TYPE options)
-  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), options(options) {}
+LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, const char * url)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url) {}
 
 LineDiffRange::~LineDiffRange() {
 
@@ -92,13 +91,13 @@ std::vector<std::string> LineDiffRange::read_local_file(const char * file) {
 }
 
 #ifdef SVN
-std::vector<std::string> LineDiffRange::read_svn_file(const char * file) {
+std::vector<std::string> LineDiffRange::read_svn_file(const srcdiff_input_source_svn * input, const char * file) {
 
   std::vector<std::string> lines;
 
   if(file == 0 || file[0] == 0) return lines;
 
-  svn_context * context = (svn_context *)svnReadOpen(file);
+  srcdiff_input_source_svn::svn_context * context = input->open(file);
 
   URIStream stream(context);
 
@@ -152,19 +151,18 @@ std::string LineDiffRange::get_line_diff_range() {
 void LineDiffRange::create_line_diff() {
 
 #ifdef SVN
-  if(!isoption(options, OPTION_SVN)) {
+  if(!url) {
 #endif
     lines_one = read_local_file(file_one.c_str());
     lines_two = read_local_file(file_two.c_str());
 #ifdef SVN
   } else {
 
-    svn_ra_session_t * session;
-    apr_pool_t * pool;
-    svn_session_create(url, &session, &pool);
-    lines_one = read_svn_file(file_one.c_str());
-    lines_two = read_svn_file(file_two.c_str());
-    svn_session_destroy(session, pool);
+    srcdiff_options options;
+    options.svn_url = url;
+    srcdiff_input_source_svn input(options);
+    lines_one = read_svn_file(&input, file_one.c_str());
+    lines_two = read_svn_file(&input, file_two.c_str());
 
   }
 #endif

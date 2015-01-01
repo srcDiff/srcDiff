@@ -42,7 +42,7 @@ class srcdiff_translator {
  public:
 
   // constructor
-  srcdiff_translator(const char* srcml_filename,
+  srcdiff_translator(const char * srcml_filename,
                     METHOD_TYPE method,
                     std::string css,
                     srcml_archive * archive,

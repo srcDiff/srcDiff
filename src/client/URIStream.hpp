@@ -24,9 +24,7 @@
 #include <libxml/parser.h>
 #include <string>
 
-#ifdef SVN
-#include <svn_io.hpp>
-#endif
+#include <srcdiff_input_source_svn.hpp>
 
 #ifndef URISTREAM_HPP
 #define URISTREAM_HPP
@@ -38,7 +36,7 @@ public:
     URIStream(const char* uriname);
 
 #ifdef SVN
-    URIStream(svn_context * context);
+    URIStream(srcdiff_input_source_svn::svn_context * context);
 #endif
 
     char* readline();

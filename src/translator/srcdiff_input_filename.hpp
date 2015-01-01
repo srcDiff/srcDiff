@@ -3,11 +3,6 @@
 
 #include <srcdiff_input.hpp>
 
-#include <srcml.h>
-#include <xmlrw.hpp>
-
-#include <vector>
-
 class srcdiff_input_filename : public srcdiff_input {
 
 protected:

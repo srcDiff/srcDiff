@@ -36,12 +36,16 @@
 
 struct xNs {
 
+  xNs(const char * href = 0, const char * prefix = 0) : href(href), prefix(prefix) {}
+
   const char * href;
   const char * prefix;
 
 };
 
 struct xAttr {
+
+  xAttr(xAttr * next = 0, const char * name = 0, const char * value = 0) : next(next), name(name), value(value) {}
 
   xAttr * next;
   const char * name;
@@ -50,6 +54,10 @@ struct xAttr {
 };
 
 struct xNode {
+
+  xNode(xmlElementType type = XML_ELEMENT_NODE, const char * name = 0, xNs * ns = 0, const char * content = 0, xAttr * properties = 0, unsigned short extra = 0,
+    const char * parent = 0, bool is_empty = false, bool free = false, int move = 0, int nest = 0)
+      : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(free), move(move), nest(nest) {}
 
   xmlElementType type;
   const char * name;

@@ -81,6 +81,29 @@ void option_input_file(const std::vector<std::string> & arg) {
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
+#if SVN
+template<>
+void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
+
+  std::string::size_type atsign = arg.find('@');
+  if(atsign == std::string::npos) {
+
+    options.svn_url = arg;
+    options.revision_one = SVN_INVALID_REVNUM;
+    options.revision_two = SVN_INVALID_REVNUM;
+
+  } else {
+
+    options.svn_url = arg.substr(0, atsign);
+    options.revision_one = std::stoi(arg.substr(atsign + 1));
+    std::string::size_type dash = arg.find('-', atsign + 1);
+    options.revision_two = std::stoi(arg.substr(dash + 1));
+
+  }
+
+}
+#endif
+
 template<int srcdiff_options::*field>
 void option_field(const int & arg) { options.*field = arg; }
 
@@ -255,8 +278,12 @@ srcdiff_options process_command_line(int argc, char* argv[]) {
   input_ops.add_options()
     ("input", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Set the input to be a list of file pairs from the provided file")
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file")
+
+#if SVN
     ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository")
     ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision") // this may have been where needed revision
+#endif
+
   ;
 
   srcml_ops.add_options()

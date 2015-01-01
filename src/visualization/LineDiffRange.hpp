@@ -7,15 +7,18 @@
   mjd52@zips.uakron.edu
 */
 
+#ifndef INCLUDED_LINEDIFFRANGE_HPP
+#define INCLUDED_LINEDIFFRANGE_HPP
+
+#include <srcdiff_options.hpp>
+
 #include <shortest_edit_script.hpp>
 
 #include <string>
 #include <vector>
 #include <fstream>
-#include <srcdiff_options.hpp>
 
-#ifndef INCLUDED_LINEDIFFRANGE_HPP
-#define INCLUDED_LINEDIFFRANGE_HPP
+class srcdiff_input_source_svn;
 
 class LineDiffRange {
 
@@ -34,7 +37,7 @@ private:
 
 public:
 
-  LineDiffRange(std::string file_one, std::string file_two, const char * url, OPTION_TYPE options);
+  LineDiffRange(std::string file_one, std::string file_two, const char * url);
 
   ~LineDiffRange();
 
@@ -54,7 +57,7 @@ public:
   static std::vector<std::string> read_local_file(const char * file);
 
  #ifdef SVN
-  static std::vector<std::string> read_svn_file(const char * file);
+  static std::vector<std::string> read_svn_file(const srcdiff_input_source_svn * input, const char * file);
 #endif
 
 };
@@ -62,6 +65,5 @@ public:
 int line_compare(const void * line_one, const void * line_two, const void * context);
 
 const void * line_accessor(int position, const void * lines, const void * context);
-
 
 #endif

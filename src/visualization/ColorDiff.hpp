@@ -21,8 +21,7 @@ private :
 
 public:
 
-  ColorDiff(std::string colordiff_file, std::string directory, std::string version, std::string css,
-            OPTION_TYPE & options);
+  ColorDiff(std::string colordiff_file, std::string directory, std::string version, std::string css, OPTION_TYPE & options);
   ~ColorDiff();
 
   int colorize(const char * srcdiff, LineDiffRange & line_diff_range);
