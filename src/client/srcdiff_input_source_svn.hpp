@@ -9,10 +9,10 @@
 
 #if SVN
 
-#ifndef INCLUDED_SRCDIFF_SVN_INPUT_HPP
-#define INCLUDED_SRCDIFF_SVN_INPUT_HPP
+#ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_SVN_HPP
+#define INCLUDED_SRCDIFF_INPUT_SOURCE_SVN_HPP
 
-#include <srcdiff_source_input.hpp>
+#include <srcdiff_input_source.hpp>
 
 #include <apr.h>
 #include <svn_fs.h>
@@ -26,7 +26,7 @@
 #include <svn_string.h>
 #include <svn_subst.h>
 
-class srcdiff_svn_input : public srcdiff_source_input {
+class srcdiff_input_source_svn : public srcdiff_input_source {
 
 protected:
 
@@ -40,8 +40,8 @@ private:
 
 public:
 
-  srcdiff_svn_input(srcdiff_options & options);
-  virtual ~srcdiff_svn_input();
+  srcdiff_input_source_svn(srcdiff_options & options);
+  virtual ~srcdiff_input_source_svn();
 
   virtual void consume();
 

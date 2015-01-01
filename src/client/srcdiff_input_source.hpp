@@ -7,8 +7,8 @@
   mdecker6@kent.edu
 */
 
-#ifndef INCLUDED_SRCDIFF_SOURCE_INPUT_HPP
-#define INCLUDED_SRCDIFF_SOURCE_INPUT_HPP
+#ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
+#define INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
 
 #include <srcdiff_options.hpp>
 #include <srcdiff_translator.hpp>
@@ -17,7 +17,7 @@
 
 #include <boost/optional.hpp>
 
-class srcdiff_source_input {
+class srcdiff_input_source {
 
 protected:
 
@@ -28,8 +28,8 @@ private:
 
 public:
 
-  srcdiff_source_input(srcdiff_options & options) : options(options), translator(0) {}
-  virtual ~srcdiff_source_input() {}
+  srcdiff_input_source(srcdiff_options & options) : options(options), translator(0) {}
+  virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;
 

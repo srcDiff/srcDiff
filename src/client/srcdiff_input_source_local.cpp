@@ -7,7 +7,7 @@
   mdecker6@kent.edu
 */
 
-#include <srcdiff_local_input.hpp>
+#include <srcdiff_input_source_local.hpp>
 
 #include <srcml.h>
 
@@ -16,7 +16,7 @@
 #include <dirent.h>
 #include <URIStream.hpp>
 
-srcdiff_local_input::srcdiff_local_input(srcdiff_options & options) : srcdiff_source_input(options) {
+srcdiff_input_source_local::srcdiff_input_source_local(srcdiff_options & options) : srcdiff_input_source(options) {
 
   translator = new srcdiff_translator(options.srcdiff_filename->c_str(),
                                    options.methods,
@@ -30,13 +30,13 @@ srcdiff_local_input::srcdiff_local_input(srcdiff_options & options) : srcdiff_so
 
 }
 
-srcdiff_local_input::~srcdiff_local_input() {
+srcdiff_input_source_local::~srcdiff_input_source_local() {
 
   if(translator) delete translator;
 
 }
 
-void srcdiff_local_input::consume() {
+void srcdiff_input_source_local::consume() {
 
   if(options.files_from_name) {
 
@@ -74,7 +74,7 @@ void srcdiff_local_input::consume() {
 
 }
 
-void srcdiff_local_input::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
+void srcdiff_input_source_local::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
 
   std::string path_old = path_one ? *path_one : std::string();
   std::string path_new = path_two ? *path_two : std::string();
@@ -155,7 +155,7 @@ int is_output_file(const char * filename, const struct stat & outstat) {
 
 }
 
-void srcdiff_local_input::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
+void srcdiff_input_source_local::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -372,7 +372,7 @@ void srcdiff_local_input::directory(const boost::optional<std::string> & directo
 }
 
 
-void srcdiff_local_input::files_from() {
+void srcdiff_input_source_local::files_from() {
 
 #define FILELIST_COMMENT '#'
 

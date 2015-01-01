@@ -7,14 +7,14 @@
   mdecker6@kent.edu
 */
 
-#ifndef INCLUDED_SRCDIFF_LOCAL_INPUT_HPP
-#define INCLUDED_SRCDIFF_LOCAL_INPUT_HPP
+#ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_LOCAL_HPP
+#define INCLUDED_SRCDIFF_INPUT_SOURCE_LOCAL_HPP
 
-#include <srcdiff_source_input.hpp>
+#include <srcdiff_input_source.hpp>
 
 #include <sys/stat.h>
 
-class srcdiff_local_input : public srcdiff_source_input {
+class srcdiff_input_source_local : public srcdiff_input_source {
 
 protected:
 
@@ -24,8 +24,8 @@ private:
 
 public:
 
-  srcdiff_local_input(srcdiff_options & options);
-  virtual ~srcdiff_local_input();
+  srcdiff_input_source_local(srcdiff_options & options);
+  virtual ~srcdiff_input_source_local();
 
   virtual void consume();
 

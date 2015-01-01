@@ -9,7 +9,7 @@
 
 #if SVN
 
-#include <srcdiff_svn_input.hpp>
+#include <srcdiff_input_source_svn.hpp>
 
 #include <srcdiff_input_svn.hpp>
 
@@ -35,7 +35,7 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
-srcdiff_svn_input::srcdiff_svn_input(srcdiff_options & options) : srcdiff_source_input(options) {
+srcdiff_input_source_svn::srcdiff_input_source_svn(srcdiff_options & options) : srcdiff_input_source(options) {
 
 
   apr_initialize();
@@ -94,7 +94,7 @@ srcdiff_svn_input::srcdiff_svn_input(srcdiff_options & options) : srcdiff_source
 
 }
 
-srcdiff_svn_input::~srcdiff_svn_input() {
+srcdiff_input_source_svn::~srcdiff_input_source_svn() {
 
   apr_pool_destroy(pool);
 
@@ -102,7 +102,7 @@ srcdiff_svn_input::~srcdiff_svn_input() {
 
 }
 
-void srcdiff_svn_input::consume() {
+void srcdiff_input_source_svn::consume() {
 
   if(options.files_from_name)                             files_from();
   else if(isoption(options.flags, OPTION_SVN_CONTINUOUS)) session_range();
@@ -110,7 +110,7 @@ void srcdiff_svn_input::consume() {
 
 }
 
-void srcdiff_svn_input::session_single() {
+void srcdiff_input_source_svn::session_single() {
 
   this->revision_one = options.revision_one;
   this->revision_two = options.revision_two;
@@ -140,7 +140,7 @@ void srcdiff_svn_input::session_single() {
 
 
 
-void srcdiff_svn_input::session_range() {
+void srcdiff_input_source_svn::session_range() {
 
   svn_revnum_t & start_revision = options.revision_one;
 
@@ -183,7 +183,7 @@ void srcdiff_svn_input::session_range() {
 
 }
 
-void srcdiff_svn_input::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
+void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
 
   std::string path_old = path_one ? *path_one : std::string();
   std::string path_new = path_two ? *path_two : std::string();
@@ -230,7 +230,7 @@ void srcdiff_svn_input::file(const boost::optional<std::string> & path_one, cons
 
 }
 
-void srcdiff_svn_input::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
+void srcdiff_input_source_svn::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -468,7 +468,7 @@ void srcdiff_svn_input::directory(const boost::optional<std::string> & directory
 
 }
 
-void srcdiff_svn_input::files_from() {
+void srcdiff_input_source_svn::files_from() {
 
   this->revision_one = options.revision_one;
   this->revision_two = options.revision_two;
@@ -541,7 +541,7 @@ void srcdiff_svn_input::files_from() {
 
 }
 
-srcdiff_svn_input::svn_context * srcdiff_svn_input::open(const char * uri) const {
+srcdiff_input_source_svn::svn_context * srcdiff_input_source_svn::open(const char * uri) const {
 
   svn_context * context = new svn_context;
 
@@ -574,7 +574,7 @@ srcdiff_svn_input::svn_context * srcdiff_svn_input::open(const char * uri) const
 
 }
 
-int srcdiff_svn_input::read(void * context, char * buffer, int len) {
+int srcdiff_input_source_svn::read(void * context, char * buffer, int len) {
 
   svn_context * ctx = (svn_context *)context;
 
@@ -587,7 +587,7 @@ int srcdiff_svn_input::read(void * context, char * buffer, int len) {
   return length;
 }
 
-int srcdiff_svn_input::close(void * context) {
+int srcdiff_input_source_svn::close(void * context) {
 
   svn_context * ctx = (svn_context *)context;
 

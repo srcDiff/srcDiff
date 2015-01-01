@@ -25,18 +25,15 @@
 #include <srcdiff_translator.hpp>
 #include <srcdiff_options.hpp>
 
-#include <srcdiff_local_input.hpp>
-#include <srcdiff_svn_input.hpp>
+#include <srcdiff_input_source.hpp>
+#include <srcdiff_input_source_local.hpp>
+#include <srcdiff_input_source_svn.hpp>
 
 #include <srcml.h>
 
 #include <cstdlib>
 
 void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
-
-#ifdef __GNUG__
-extern "C" void terminate_handler(int);
-#endif
 
 int main(int argc, char* argv[]) {
 
@@ -50,14 +47,14 @@ int main(int argc, char* argv[]) {
   // process command-line arguments
   srcdiff_options options = process_command_line(argc, argv);
 
- srcdiff_source_input * input = 0;
+ srcdiff_input_source * input = 0;
 #if SVN
 
   if(options.svn_url) {
 
     try {
 
-      input = new srcdiff_svn_input(options);
+      input = new srcdiff_input_source_svn(options);
 
     } catch(...) {
 
@@ -68,7 +65,7 @@ int main(int argc, char* argv[]) {
   } else {
 #endif
 
-    input = new srcdiff_local_input(options);
+    input = new srcdiff_input_source_local(options);
 
 #if SVN
   }
@@ -76,7 +73,16 @@ int main(int argc, char* argv[]) {
 
   if(input) {
 
-    input->consume();
+    try {
+
+      input->consume();
+
+    } catch(...) {
+
+      std::cerr << "Problem with input.\n";
+
+    }
+
     delete input;
 
   }
