@@ -9,14 +9,14 @@
 
 int move_operation = SESCOMMON;
 
-srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE flags, METHOD_TYPE method,
-  const std::string & css, unsigned long number_context_lines)
- : archive(archive), colordiff(NULL), bashview(NULL), flags(flags), rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
-  diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
-  diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
-  diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
-  diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
-  unit_tag(std::make_shared<xNode>()) {
+srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE flags, METHOD_TYPE method, unsigned long number_context_lines)
+ : archive(archive), colordiff(NULL), bashview(NULL), flags(flags),
+   rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
+   diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
+   diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
+   diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
+   diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
+   unit_tag(std::make_shared<xNode>()) {
 
 if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
@@ -32,7 +32,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, css, flags);
+    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, flags);
 
   } else if(isoption(flags, OPTION_BASH_VIEW))
     bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);

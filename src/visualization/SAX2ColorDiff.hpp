@@ -53,7 +53,7 @@ namespace color_diff {
 
   void comment(void* ctx, const xmlChar* ch);
 
-  void output_start_document(std::ostream & colordiff_file, std::string & css_url);
+  void output_start_document(std::ostream & colordiff_file);
   void output_end_document(std::ostream & colordiff_file);
 
 }

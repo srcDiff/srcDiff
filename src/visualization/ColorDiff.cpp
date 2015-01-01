@@ -22,8 +22,8 @@
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
 
-ColorDiff::ColorDiff(std::string colordiff_file, std::string directory, std::string version, std::string css, OPTION_TYPE & options) 
-  : first(true), css_url(css), options(options) {
+ColorDiff::ColorDiff(const std::string & colordiff_file, const std::string & directory, const std::string & version, OPTION_TYPE & options) 
+  : first(true), options(options) {
 
   if(colordiff_file != "-")
     outfile = new std::ofstream(colordiff_file.c_str());
@@ -35,7 +35,7 @@ ColorDiff::~ColorDiff() {
 
   if(first) {
 
-    color_diff::output_start_document(*outfile, css_url);
+    color_diff::output_start_document(*outfile);
     first = false;
   
   }
@@ -108,7 +108,7 @@ int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
 
   if(first) {
 
-    color_diff::output_start_document(*outfile, css_url);
+    color_diff::output_start_document(*outfile);
     first = false;
 
   }

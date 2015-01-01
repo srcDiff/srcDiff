@@ -117,7 +117,6 @@ void srcdiff_input_source_svn::session_single() {
 
   srcdiff_translator translator(options.srcdiff_filename,
                                 options.flags, options.methods,
-                                options.css_url ? *options.css_url : std::string(),
                                 options.archive,
                                 options.number_context_lines);
 
@@ -162,7 +161,6 @@ void srcdiff_input_source_svn::session_range() {
 
     srcdiff_translator translator(full_srcdiff.str(),
                                   options.flags, options.methods,
-                                  options.css_url ? *options.css_url : std::string(),
                                   options.archive,
                                   options.number_context_lines);
 
@@ -472,7 +470,6 @@ void srcdiff_input_source_svn::files_from() {
 
   srcdiff_translator translator(options.srcdiff_filename,
                                 options.flags, options.methods,
-                                options.css_url ? *options.css_url : std::string(),
                                 options.archive,
                                 options.number_context_lines);
 

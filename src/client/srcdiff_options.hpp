@@ -73,7 +73,6 @@ struct srcdiff_options
   std::vector<std::pair<std::string, std::string>> input_pairs;
   std::string srcdiff_filename;
   boost::optional<std::string> files_from_name;
-  boost::optional<std::string> css_url;
 
   OPTION_TYPE flags;
   METHOD_TYPE methods;

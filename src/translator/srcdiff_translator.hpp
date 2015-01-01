@@ -44,7 +44,6 @@ class srcdiff_translator {
   // constructor
   srcdiff_translator(const std::string & srcdiff_filename,
                     OPTION_TYPE & flags, METHOD_TYPE method,
-                    std::string css,
                     srcml_archive * archive,
                     unsigned long number_context_lines);
 
