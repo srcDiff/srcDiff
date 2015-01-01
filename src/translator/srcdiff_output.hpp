@@ -95,7 +95,7 @@ protected:
   srcml_archive * archive;
   std::shared_ptr<ColorDiff> colordiff;
   std::shared_ptr<bash_view> bashview;
-  OPTION_TYPE options;
+  OPTION_TYPE flags;
 
   std::shared_ptr<reader_state> rbuf_old;
   std::shared_ptr<reader_state> rbuf_new;
@@ -124,8 +124,8 @@ private:
 
 public:
 
-  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method,
-    const std::string & css, unsigned long number_context_lines);
+  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE flags, METHOD_TYPE method,
+                 const std::string & css, unsigned long number_context_lines);
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_old, int is_new);

@@ -116,10 +116,9 @@ void srcdiff_input_source_svn::session_single() {
   this->revision_two = options.revision_two;
 
   srcdiff_translator translator(options.srcdiff_filename,
-                                options.methods,
+                                options.flags, options.methods,
                                 options.css_url ? *options.css_url : std::string(),
                                 options.archive,
-                                options.flags,
                                 options.number_context_lines);
 
   this->translator = &translator;
@@ -162,10 +161,9 @@ void srcdiff_input_source_svn::session_range() {
     full_srcdiff << ".xml";
 
     srcdiff_translator translator(full_srcdiff.str(),
-                                  options.methods,
+                                  options.flags, options.methods,
                                   options.css_url ? *options.css_url : std::string(),
                                   options.archive,
-                                  options.flags,
                                   options.number_context_lines);
 
     this->translator = &translator;
@@ -473,10 +471,9 @@ void srcdiff_input_source_svn::files_from() {
   this->revision_two = options.revision_two;
 
   srcdiff_translator translator(options.srcdiff_filename,
-                                options.methods,
+                                options.flags, options.methods,
                                 options.css_url ? *options.css_url : std::string(),
                                 options.archive,
-                                options.flags,
                                 options.number_context_lines);
 
   this->translator = &translator;

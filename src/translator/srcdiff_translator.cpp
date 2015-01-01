@@ -40,13 +40,11 @@
 
 // constructor
 srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
-                                       METHOD_TYPE method,
+                                       OPTION_TYPE & flags, METHOD_TYPE method,
                                        std::string css,
                                        srcml_archive * archive,
-                                       OPTION_TYPE & options,
                                        unsigned long number_context_lines)
-  : archive(archive), method(method), output(archive, srcdiff_filename, options, method, css, number_context_lines),
-    options(options) {}
+  : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method, css, number_context_lines) {}
 
 // Translate from input stream to output stream
 void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & input_new,
@@ -56,7 +54,7 @@ void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & in
 
   line_diff_range.create_line_diff();
 
-  if(!isoption(options, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
+  if(!isoption(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
   int is_old = 0;

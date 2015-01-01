@@ -19,10 +19,10 @@
 srcdiff_input_source_local::srcdiff_input_source_local(srcdiff_options & options) : srcdiff_input_source(options) {
 
   translator = new srcdiff_translator(options.srcdiff_filename,
-                                   options.methods,
+                                   options.flags, options.methods,
+
                                    options.css_url ? *options.css_url : std::string(),
                                    options.archive,
-                                   options.flags,
                                    options.number_context_lines);
 
   outstat = { 0 };

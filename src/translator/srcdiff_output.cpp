@@ -9,20 +9,20 @@
 
 int move_operation = SESCOMMON;
 
-srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method,
+srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE flags, METHOD_TYPE method,
   const std::string & css, unsigned long number_context_lines)
- : archive(archive), colordiff(NULL), bashview(NULL), options(options), rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
+ : archive(archive), colordiff(NULL), bashview(NULL), flags(flags), rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
   diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
   diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
   diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
   diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
   unit_tag(std::make_shared<xNode>()) {
 
-if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
+if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
 
   // writer state
-  if(isoption(options, OPTION_VISUALIZE)) {
+  if(isoption(flags, OPTION_VISUALIZE)) {
 
     std::string dir = "";
     if(srcml_archive_get_directory(archive) != NULL)
@@ -32,9 +32,9 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, css, options);
+    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, css, flags);
 
-  } else if(isoption(options, OPTION_BASH_VIEW))
+  } else if(isoption(flags, OPTION_BASH_VIEW))
     bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);
 
   wstate->filename = srcdiff_filename;
@@ -120,7 +120,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
   } else if(rbuf_old->nodes.empty()) {
 
-    if(!isoption(options, OPTION_PURE)) {
+    if(!isoption(flags, OPTION_PURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -133,7 +133,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
   } else {
 
-    if(!isoption(options, OPTION_PURE)) {
+    if(!isoption(flags, OPTION_PURE)) {
 
       is_old = 0;
       is_new = 0;
@@ -171,18 +171,18 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
   srcml_write_end_unit(wstate->unit);
 
-  if(!isoption(options, OPTION_VISUALIZE)) {
+  if(!isoption(flags, OPTION_VISUALIZE)) {
 
     srcml_write_unit(archive, wstate->unit);
 
   }
 
-  if(isoption(options, OPTION_VISUALIZE)) {
+  if(isoption(flags, OPTION_VISUALIZE)) {
 
     if(is_old || is_new)
       colordiff->colorize(srcml_unit_get_xml(wstate->unit), line_diff_range);
 
-  } else if(isoption(options, OPTION_BASH_VIEW)) {
+  } else if(isoption(flags, OPTION_BASH_VIEW)) {
 
     bashview->transform(srcml_unit_get_xml(wstate->unit));
   }
@@ -201,7 +201,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
 
 void srcdiff_output::close() {
 
-  if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW)) {
+  if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW)) {
 
     srcml_close_archive(archive);
 
