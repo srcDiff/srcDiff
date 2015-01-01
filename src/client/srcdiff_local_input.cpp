@@ -18,22 +18,53 @@
 
 srcdiff_local_input::srcdiff_local_input(srcdiff_options & options) : srcdiff_source_input(options) {
 
+  translator = new srcdiff_translator(options.srcdiff_filename->c_str(),
+                                   options.methods,
+                                   options.css_url ? *options.css_url : std::string(),
+                                   options.archive,
+                                   options.flags,
+                                   options.number_context_lines);
+
   outstat = { 0 };
   stat(options.srcdiff_filename->c_str(), &outstat);
 
 }
 
-srcdiff_local_input::~srcdiff_local_input() {}
+srcdiff_local_input::~srcdiff_local_input() {
+
+  if(translator) delete translator;
+
+}
+
+void srcdiff_local_input::consume() {
+
+  if(options.files_from_name) {
+
+    files_from();
+
+  } else {
+
+   for(std::pair<std::string, std::string> input_pair : options.input_pairs) {
+
+      struct stat instat = { 0 };
+      int stat_status = stat(input_pair.first.c_str(), &instat);
+      if (!stat_status && S_ISDIR(instat.st_mode)) {
+
+        directory(input_pair.first, input_pair.first.size(), input_pair.second, input_pair.second.size());
+
+      } else {
+
+        file(input_pair.first, input_pair.second, 0, 0);
+
+      }
+
+   }
+
+  }
+
+}
 
 void srcdiff_local_input::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
-
-  // handle local directories specially
-  // struct stat instat = { 0 };
-  // int stat_status = stat(path_one, &instat);
-  // if (!stat_status && S_ISDIR(instat.st_mode)) {
-  //   srcdiff_dir_top(translator, options, path_one, path_two);
-  //   return;
-  // }
 
   std::string path_old = path_one ? *path_one : std::string();
   std::string path_new = path_two ? *path_two : std::string();

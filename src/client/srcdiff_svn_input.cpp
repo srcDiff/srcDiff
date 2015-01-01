@@ -102,6 +102,14 @@ srcdiff_svn_input::~srcdiff_svn_input() {
 
 }
 
+void srcdiff_svn_input::consume() {
+
+  if(options.files_from_name)                             files_from();
+  else if(isoption(options.flags, OPTION_SVN_CONTINUOUS)) session_range();
+  else                                                    session_single();
+
+}
+
 void srcdiff_svn_input::session_single() {
 
   this->revision_one = options.revision_one;
@@ -130,78 +138,7 @@ void srcdiff_svn_input::session_single() {
 
 }
 
-void srcdiff_svn_input::session_files_from(const std::string & list) {
 
-  this->revision_one = options.revision_one;
-  this->revision_two = options.revision_two;
-
-  srcdiff_translator translator(options.srcdiff_filename->c_str(),
-                                options.methods,
-                                options.css_url ? *options.css_url : std::string(),
-                                options.archive,
-                                options.flags,
-                                options.number_context_lines);
-
-  this->translator = &translator;
-
-  try {
-
-    // translate all the filenames listed in the named file
-    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    std::ifstream input(list);
-    std::string line;
-    while(getline(input, line, '\n'), input) {
-
-      // skip over whitespace
-      // TODO:  Other types of whitespace?  backspace?
-      int white_length = strspn(line.c_str(), " \t\f");
-
-      line.erase(0, white_length);
-
-      // skip blank lines or comment lines
-      if (line[0] == '\0' || line[0] == '#')
-        continue;
-
-      // remove any end whitespace
-      // TODO:  Extract function, and use elsewhere
-      for (int i = line.size() - 1; i != 0; --i) {
-        if (isspace(line[i]))
-          line[i] = 0;
-        else
-          break;
-
-      }
-
-      std::string path_one = line.substr(0, line.find('|'));
-      std::string path_two = line.substr(line.find('|') + 1);
-
-      boost::optional<std::string> path = path_one;
-      svn_revnum_t revision = options.revision_one;
-      if(*path == "") {
-
-         path = path_two;
-         revision = revision_two;
-
-      }
-
-      svn_dirent_t * dirent;
-      svn_ra_stat(session, path->c_str(), revision, &dirent, pool);
-
-      if(dirent->kind == svn_node_file)         file(path_one, path_two, 0,0);
-      else if(dirent->kind == svn_node_dir)     fprintf(stderr, "Skipping directory: %s", path->c_str());
-      else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
-      else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
-
-    }
-
-  } catch (URIStreamFileError) {
-
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", list.c_str());
-    exit(EXIT_FAILURE);
-
-  }
-
-}
 
 void srcdiff_svn_input::session_range() {
 
@@ -531,7 +468,78 @@ void srcdiff_svn_input::directory(const boost::optional<std::string> & directory
 
 }
 
-void srcdiff_svn_input::files_from() {}
+void srcdiff_svn_input::files_from() {
+
+  this->revision_one = options.revision_one;
+  this->revision_two = options.revision_two;
+
+  srcdiff_translator translator(options.srcdiff_filename->c_str(),
+                                options.methods,
+                                options.css_url ? *options.css_url : std::string(),
+                                options.archive,
+                                options.flags,
+                                options.number_context_lines);
+
+  this->translator = &translator;
+
+  try {
+
+    // translate all the filenames listed in the named file
+    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+    std::ifstream input(options.files_from_name->c_str());
+    std::string line;
+    while(getline(input, line, '\n'), input) {
+
+      // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
+      int white_length = strspn(line.c_str(), " \t\f");
+
+      line.erase(0, white_length);
+
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == '#')
+        continue;
+
+      // remove any end whitespace
+      // TODO:  Extract function, and use elsewhere
+      for (int i = line.size() - 1; i != 0; --i) {
+        if (isspace(line[i]))
+          line[i] = 0;
+        else
+          break;
+
+      }
+
+      std::string path_one = line.substr(0, line.find('|'));
+      std::string path_two = line.substr(line.find('|') + 1);
+
+      boost::optional<std::string> path = path_one;
+      svn_revnum_t revision = options.revision_one;
+      if(*path == "") {
+
+         path = path_two;
+         revision = revision_two;
+
+      }
+
+      svn_dirent_t * dirent;
+      svn_ra_stat(session, path->c_str(), revision, &dirent, pool);
+
+      if(dirent->kind == svn_node_file)         file(path_one, path_two, 0,0);
+      else if(dirent->kind == svn_node_dir)     fprintf(stderr, "Skipping directory: %s", path->c_str());
+      else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
+      else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
+
+    }
+
+  } catch (URIStreamFileError) {
+
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", options.files_from_name->c_str());
+    exit(EXIT_FAILURE);
+
+  }
+
+}
 
 srcdiff_svn_input::svn_context * srcdiff_svn_input::open(const char * uri) const {
 

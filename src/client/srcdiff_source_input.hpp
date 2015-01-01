@@ -28,8 +28,10 @@ private:
 
 public:
 
-  srcdiff_source_input(srcdiff_options & options) : options(options) {}
-  ~srcdiff_source_input() {}
+  srcdiff_source_input(srcdiff_options & options) : options(options), translator(0) {}
+  virtual ~srcdiff_source_input() {}
+
+  virtual void consume() = 0;
 
   virtual void file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) = 0;
   virtual void directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) = 0;

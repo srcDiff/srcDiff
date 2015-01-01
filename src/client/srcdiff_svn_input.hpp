@@ -41,10 +41,11 @@ private:
 public:
 
   srcdiff_svn_input(srcdiff_options & options);
-  ~srcdiff_svn_input();
+  virtual ~srcdiff_svn_input();
+
+  virtual void consume();
 
   void session_single();
-  void session_files_from(const std::string & list);
   void session_range();
 
   virtual void file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new);
