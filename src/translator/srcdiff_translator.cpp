@@ -39,18 +39,20 @@
 #include <cstring>
 
 // constructor
-srcdiff_translator::srcdiff_translator(const char * srcdiff_filename,
-                                     METHOD_TYPE method,
-                                     std::string css,
-                                     srcml_archive * archive,
-                                     OPTION_TYPE & options,
-                                     unsigned long number_context_lines)
-  : archive(archive), method(method), output(archive, srcdiff_filename, options, method, srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF), css, number_context_lines),
+srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
+                                       METHOD_TYPE method,
+                                       std::string css,
+                                       srcml_archive * archive,
+                                       OPTION_TYPE & options,
+                                       unsigned long number_context_lines)
+  : archive(archive), method(method), output(archive, srcdiff_filename, options, method, css, number_context_lines),
     options(options) {}
 
 // Translate from input stream to output stream
-void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & input_new, LineDiffRange line_diff_range,
-                                  const char * language, const char * unit_directory, const char * unit_filename, const char * unit_version) {
+void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & input_new,
+                                  LineDiffRange line_diff_range, const std::string & language,
+                                  const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename,
+                                  const boost::optional<std::string> & unit_version) {
 
   line_diff_range.create_line_diff();
 
@@ -74,7 +76,7 @@ void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & in
   // run on file level
   if(is_old || is_new) {
 
-    output.start_unit(language, unit_directory, unit_filename, unit_version);
+    output.start_unit(language.c_str(), unit_directory ? unit_directory->c_str() : 0, unit_filename ? unit_filename->c_str() : 0, unit_version ? unit_version->c_str() : 0);
 
     srcdiff_diff diff(output, &set_old, &set_new);
     diff.output();

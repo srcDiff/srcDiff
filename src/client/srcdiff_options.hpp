@@ -71,7 +71,7 @@ struct srcdiff_options
   srcml_archive * archive;
 
   std::vector<std::pair<std::string, std::string>> input_pairs;
-  boost::optional<std::string> srcdiff_filename;
+  std::string srcdiff_filename;
   boost::optional<std::string> files_from_name;
   boost::optional<std::string> css_url;
 

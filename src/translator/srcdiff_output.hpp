@@ -124,8 +124,8 @@ private:
 
 public:
 
-  srcdiff_output(srcml_archive * archive, const char * srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method, const char * prefix,
-    std::string css, unsigned long number_context_lines);
+  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method,
+    const std::string & css, unsigned long number_context_lines);
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_old, int is_new);

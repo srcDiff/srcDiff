@@ -9,8 +9,8 @@
 
 int move_operation = SESCOMMON;
 
-srcdiff_output::srcdiff_output(srcml_archive * archive, const char * srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method, const char * prefix,
-  std::string css, unsigned long number_context_lines)
+srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE options, METHOD_TYPE method,
+  const std::string & css, unsigned long number_context_lines)
  : archive(archive), colordiff(NULL), bashview(NULL), options(options), rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
   diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
   diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
@@ -19,7 +19,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const char * srcdiff_fil
   unit_tag(std::make_shared<xNode>()) {
 
 if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
-    srcml_write_open_filename(archive, srcdiff_filename);
+    srcml_write_open_filename(archive, srcdiff_filename.c_str());
 
   // writer state
   if(isoption(options, OPTION_VISUALIZE)) {
@@ -40,7 +40,7 @@ if(!isoption(options, OPTION_VISUALIZE) && !isoption(options, OPTION_BASH_VIEW))
   wstate->filename = srcdiff_filename;
   wstate->method = method;
 
-  diff->prefix = prefix;
+  diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF);
   diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
 
   // diff attribute

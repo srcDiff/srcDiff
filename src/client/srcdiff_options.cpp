@@ -78,6 +78,9 @@ void option_input_file(const std::vector<std::string> & arg) {
 
 }
 
+template<std::string srcdiff_options::*field>
+void option_field(const std::string & arg) { options.*field = arg; }
+
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 

@@ -115,7 +115,7 @@ void srcdiff_input_source_svn::session_single() {
   this->revision_one = options.revision_one;
   this->revision_two = options.revision_two;
 
-  srcdiff_translator translator(options.srcdiff_filename->c_str(),
+  srcdiff_translator translator(options.srcdiff_filename,
                                 options.methods,
                                 options.css_url ? *options.css_url : std::string(),
                                 options.archive,
@@ -154,14 +154,14 @@ void srcdiff_input_source_svn::session_range() {
 
   for(; revision_one < end_revision; ++revision_one, ++revision_two) {
 
-    std::ostringstream full_srcdiff(options.srcdiff_filename && *options.srcdiff_filename != "-" ? *options.srcdiff_filename : "", std::ios_base::ate);
+    std::ostringstream full_srcdiff(options.srcdiff_filename != "-" ? options.srcdiff_filename : "", std::ios_base::ate);
     full_srcdiff << '_';
     full_srcdiff << revision_one;
     full_srcdiff << '-';
     full_srcdiff << revision_two;
     full_srcdiff << ".xml";
 
-    srcdiff_translator translator(full_srcdiff.str().c_str(),
+    srcdiff_translator translator(full_srcdiff.str(),
                                   options.methods,
                                   options.css_url ? *options.css_url : std::string(),
                                   options.archive,
@@ -187,7 +187,6 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
 
   std::string path_old = path_one ? *path_one : std::string();
   std::string path_new = path_two ? *path_two : std::string();
-
 
   std::string unit_filename = !path_old.empty() ? path_old.substr(directory_length_old) : std::string();
   std::string filename_two =  !path_new.empty() ? path_new.substr(directory_length_old) : std::string();
@@ -224,9 +223,9 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
   if(!path || path->empty()) path = path_two;
   if(!path || path->empty()) path = options.svn_url->c_str();
 
-  const char * language_string = srcml_archive_check_extension(options.archive, path->c_str());
+  const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
 
-  translator->translate(input_old, input_new, line_diff_range, language_string, NULL, unit_filename.c_str(), 0);
+  translator->translate(input_old, input_new, line_diff_range, language_string, NULL, unit_filename, 0);
 
 }
 
@@ -473,7 +472,7 @@ void srcdiff_input_source_svn::files_from() {
   this->revision_one = options.revision_one;
   this->revision_two = options.revision_two;
 
-  srcdiff_translator translator(options.srcdiff_filename->c_str(),
+  srcdiff_translator translator(options.srcdiff_filename,
                                 options.methods,
                                 options.css_url ? *options.css_url : std::string(),
                                 options.archive,

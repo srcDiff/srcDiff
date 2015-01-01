@@ -18,7 +18,7 @@
 
 srcdiff_input_source_local::srcdiff_input_source_local(srcdiff_options & options) : srcdiff_input_source(options) {
 
-  translator = new srcdiff_translator(options.srcdiff_filename->c_str(),
+  translator = new srcdiff_translator(options.srcdiff_filename,
                                    options.methods,
                                    options.css_url ? *options.css_url : std::string(),
                                    options.archive,
@@ -26,7 +26,7 @@ srcdiff_input_source_local::srcdiff_input_source_local(srcdiff_options & options
                                    options.number_context_lines);
 
   outstat = { 0 };
-  stat(options.srcdiff_filename->c_str(), &outstat);
+  stat(options.srcdiff_filename.c_str(), &outstat);
 
 }
 
@@ -96,9 +96,9 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
   if(!path || path->empty()) path = path_two;
   if(!path) path = std::string();
 
-  const char * language_string = srcml_archive_check_extension(options.archive, path->c_str());
+  const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
 
-  translator->translate(input_old, input_new, line_diff_range, language_string, srcml_archive_get_directory(options.archive), unit_filename.c_str(), 0);
+  translator->translate(input_old, input_new, line_diff_range, language_string, boost::optional<std::string>(srcml_archive_get_directory(options.archive)), unit_filename, 0);
 
 }
 

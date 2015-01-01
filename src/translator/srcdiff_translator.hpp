@@ -42,7 +42,7 @@ class srcdiff_translator {
  public:
 
   // constructor
-  srcdiff_translator(const char * srcml_filename,
+  srcdiff_translator(const std::string & srcdiff_filename,
                     METHOD_TYPE method,
                     std::string css,
                     srcml_archive * archive,
@@ -51,8 +51,10 @@ class srcdiff_translator {
 
   void close();
 
-  void translate(srcdiff_input & input_old, srcdiff_input & input_new, LineDiffRange line_diff_range, 
-                 const char * language, const char * unit_directory = 0, const char * unit_filename = 0, const char * unit_version = 0);
+  void translate(srcdiff_input & input_old, srcdiff_input & input_new,
+                 LineDiffRange line_diff_range, const std::string & language,
+                 const boost::optional<std::string> & unit_directory = boost::optional<std::string>(), const boost::optional<std::string> & unit_filename = boost::optional<std::string>(),
+                 const boost::optional<std::string> & unit_version = boost::optional<std::string>());
 
   srcml_archive * get_archive();
 
