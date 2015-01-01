@@ -12,6 +12,8 @@
 #ifndef INCLUDED_SRCDIFF_SVN_INPUT_HPP
 #define INCLUDED_SRCDIFF_SVN_INPUT_HPP
 
+#include <srcdiff_source_input.hpp>
+
 #include <apr.h>
 #include <svn_fs.h>
 #include <svn_repos.h>
@@ -24,15 +26,9 @@
 #include <svn_string.h>
 #include <svn_subst.h>
 
-#include <srcdiff_options.hpp>
-#include <srcdiff_translator.hpp>
-
-class srcdiff_svn_input {
+class srcdiff_svn_input : public srcdiff_source_input {
 
 protected:
-
-  srcdiff_options & options;
-  srcdiff_translator * translator;
 
 private:
 
@@ -49,13 +45,13 @@ public:
 
   void session_single();
 
-  void session_files_from(const char * list);
+  void session_files_from(const std::string & list);
 
   void session_range();
 
-  void file(const char * path_one, const char * path_two, int directory_length_old, int directory_length_new);
+  virtual void file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new);
 
-  void directory(const char * directory_old, int directory_length_old, const char * directory_new, int directory_length_new);
+  virtual void directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new);
 
   struct svn_context {
 

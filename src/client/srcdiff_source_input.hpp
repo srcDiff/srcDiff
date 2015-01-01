@@ -1,0 +1,39 @@
+/*
+  svn_io.hpp
+
+  Functions for reading a file form svn
+
+  Michael J. Decker
+  mdecker6@kent.edu
+*/
+
+#ifndef INCLUDED_SRCDIFF_SOURCE_INPUT_HPP
+#define INCLUDED_SRCDIFF_SOURCE_INPUT_HPP
+
+#include <srcdiff_options.hpp>
+#include <srcdiff_translator.hpp>
+
+#include <string>
+
+#include <boost/optional.hpp>
+
+class srcdiff_source_input {
+
+protected:
+
+  srcdiff_options & options;
+  srcdiff_translator * translator;
+
+private:
+
+public:
+
+  srcdiff_source_input(srcdiff_options & options) : options(options) {}
+  ~srcdiff_source_input() {}
+
+  virtual void file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) = 0;
+  virtual void directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) = 0;
+
+};
+
+#endif
