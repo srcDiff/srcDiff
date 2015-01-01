@@ -50,7 +50,10 @@ void srcdiff_local_input::consume() {
       int stat_status = stat(input_pair.first.c_str(), &instat);
       if (!stat_status && S_ISDIR(instat.st_mode)) {
 
-        directory(input_pair.first, input_pair.first.size(), input_pair.second, input_pair.second.size());
+        srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+        //srcml_archive_set_directory(options.archive, );
+        directory(input_pair.first,  input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1,
+                  input_pair.second, input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1);
 
       } else {
 
