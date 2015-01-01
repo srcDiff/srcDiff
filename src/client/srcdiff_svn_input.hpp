@@ -44,14 +44,12 @@ public:
   ~srcdiff_svn_input();
 
   void session_single();
-
   void session_files_from(const std::string & list);
-
   void session_range();
 
   virtual void file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new);
-
   virtual void directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new);
+  virtual void files_from();
 
   struct svn_context {
 
@@ -61,7 +59,6 @@ public:
   };
 
   svn_context * open(const char * uri) const;
-
   static int read(void * context, char * buffer, int len);
   static int close(void * context);
 

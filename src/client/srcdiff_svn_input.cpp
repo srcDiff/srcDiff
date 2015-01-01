@@ -347,26 +347,24 @@ void srcdiff_svn_input::directory(const boost::optional<std::string> & directory
 
   }
 
-  std::string path_old = "";
+  std::string path_old;
   int basesize_old = 0;
 
   // process directory
   if(directory_old) {
 
     path_old = *directory_old;
-    if (!path_old.empty() && path_old[path_old.size() - 1] != PATH_SEPARATOR)
-      path_old += PATH_SEPARATOR;
+    if (!path_old.empty() && path_old.back() != PATH_SEPARATOR) path_old += PATH_SEPARATOR;
     basesize_old = path_old.size();
 
   }
 
-  std::string path_new = "";
+  std::string path_new;
   int basesize_new = 0;
   if(directory_new) {
 
     path_new = *directory_new;
-    if (!path_new.empty() && path_new[path_new.size() - 1] != PATH_SEPARATOR)
-      path_new += PATH_SEPARATOR;
+    if (!path_new.empty() && path_new.back() != PATH_SEPARATOR) path_new += PATH_SEPARATOR;
     basesize_new = path_new.size();
 
   }
@@ -532,6 +530,8 @@ void srcdiff_svn_input::directory(const boost::optional<std::string> & directory
 #undef PATH_SEPARATOR
 
 }
+
+void srcdiff_svn_input::files_from() {}
 
 srcdiff_svn_input::svn_context * srcdiff_svn_input::open(const char * uri) const {
 
