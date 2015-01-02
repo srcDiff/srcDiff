@@ -12,7 +12,7 @@ void srcdiff_input::operator()(int stream_source, std::vector<xNodePtr> & nodes,
   is_input = 0;
   try {
 
-    nodes = input_nodes(input_path, stream_source);
+    nodes = input_nodes(stream_source);
     is_input = 1;
 
   } catch(no_file_exception) {}

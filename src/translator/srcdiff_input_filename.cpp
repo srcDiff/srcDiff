@@ -7,7 +7,7 @@
 
 class no_file_exception {};
 
-srcdiff_input_filename::srcdiff_input_filename(srcml_archive * archive, const boost::optional<std::string> &, const OPTION_TYPE & options) : srcdiff_input(archive, input_path, options) {}
+srcdiff_input_filename::srcdiff_input_filename(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options) : srcdiff_input(archive, input_path, options) {}
 
 srcdiff_input_filename::~srcdiff_input_filename() {}
 
@@ -23,7 +23,7 @@ static int file_close(void * context) {
 
  }
 
-std::vector<xNodePtr> srcdiff_input_filename::input_nodes(const boost::optional<std::string> &, int stream_source) const {
+std::vector<xNodePtr> srcdiff_input_filename::input_nodes(int stream_source) const {
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 

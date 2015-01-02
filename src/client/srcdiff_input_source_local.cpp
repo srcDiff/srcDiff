@@ -76,7 +76,7 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
 
   std::string path_old = path_one ? *path_one : std::string();
   std::string path_new = path_two ? *path_two : std::string();
-
+fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, path_old.c_str());
   std::string unit_filename = !path_old.empty() ? path_old.substr(directory_length_old) : path_old;
   std::string filename_two =  !path_new.empty() ? path_new.substr(directory_length_new) : path_new;
   if(path_new.empty() || unit_filename != filename_two) {
@@ -86,8 +86,8 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
 
   }
 
-  srcdiff_input_filename input_old(options.archive, path_old, options.flags);
-  srcdiff_input_filename input_new(options.archive, path_new, options.flags);
+  srcdiff_input_filename input_old(options.archive, path_one, options.flags);
+  srcdiff_input_filename input_new(options.archive, path_two, options.flags);
   LineDiffRange line_diff_range(path_old, path_new, 0);
 
   boost::optional<std::string> path = path_one;
