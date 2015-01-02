@@ -47,7 +47,7 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
 
 // Translate from input stream to output stream
 void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & input_new,
-                                  LineDiffRange line_diff_range, const std::string & language,
+                                  LineDiffRange & line_diff_range, const std::string & language,
                                   const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename,
                                   const boost::optional<std::string> & unit_version) {
 
@@ -87,12 +87,6 @@ void srcdiff_translator::translate(srcdiff_input & input_old, srcdiff_input & in
   }
 
   output.reset();
-
-}
-
-srcml_archive * srcdiff_translator::get_archive() {
-
-  return archive;
 
 }
 

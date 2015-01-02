@@ -11,10 +11,10 @@ private:
 
 public:
 
-	srcdiff_input_filename(srcml_archive * archive, const char * input_path, OPTION_TYPE options);
+	srcdiff_input_filename(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options);
 	~srcdiff_input_filename();
 
-	virtual std::vector<xNodePtr> input_nodes(const char * input_path, int stream_source);
+	virtual std::vector<xNodePtr> input_nodes(const boost::optional<std::string> & input_path, int stream_source);
 
 };
 

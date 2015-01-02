@@ -16,7 +16,9 @@ srcml_converter::~srcml_converter() {
 }
 
 // converts source code to srcML
-void srcml_converter::convert(const char * filename, void * context, std::function<int(void *, char *, int)> read, std::function<int(void *)> close, OPTION_TYPE options) {
+void srcml_converter::convert(const std::string & path, void * context,
+                              std::function<int(void *, char *, int)> read, std::function<int(void *)> close,
+                              const OPTION_TYPE & options) {
 
   srcml_archive * unit_archive = srcml_clone_archive(archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
@@ -25,7 +27,7 @@ void srcml_converter::convert(const char * filename, void * context, std::functi
 
   srcml_unit * unit = srcml_create_unit(unit_archive);
 
-  srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, filename));
+  srcml_unit_set_language(unit, srcml_archive_check_extension(unit_archive, path.c_str()));
 
   srcml_parse_unit_io(unit, context, *read.target<int (*) (void *, char *, int)>(), *close.target<int (*) (void *)>());
 

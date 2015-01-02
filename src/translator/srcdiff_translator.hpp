@@ -50,11 +50,9 @@ class srcdiff_translator {
   void close();
 
   void translate(srcdiff_input & input_old, srcdiff_input & input_new,
-                 LineDiffRange line_diff_range, const std::string & language,
+                 LineDiffRange & line_diff_range, const std::string & language,
                  const boost::optional<std::string> & unit_directory = boost::optional<std::string>(), const boost::optional<std::string> & unit_filename = boost::optional<std::string>(),
                  const boost::optional<std::string> & unit_version = boost::optional<std::string>());
-
-  srcml_archive * get_archive();
 
   // destructor
   ~srcdiff_translator();

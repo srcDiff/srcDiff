@@ -2,7 +2,8 @@
 
 class no_file_exception {};
 
-srcdiff_input::srcdiff_input(srcml_archive * archive, const char * input_path, OPTION_TYPE options) : archive(archive), input_path(input_path), options(options) {}
+srcdiff_input::srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options)
+	: archive(archive), input_path(input_path), options(options) {}
 
 srcdiff_input::~srcdiff_input() {}
 

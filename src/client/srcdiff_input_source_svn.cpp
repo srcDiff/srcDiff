@@ -210,8 +210,8 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
   std::string svn_path_old = svn_path_one.str();
   std::string svn_path_new = svn_path_two.str();
 
-  srcdiff_input_svn input_old(options.archive, svn_path_old.c_str(), 0, *this);
-  srcdiff_input_svn input_new(options.archive, svn_path_new.c_str(), 0, *this);
+  srcdiff_input_svn input_old(options.archive, svn_path_old, 0, *this);
+  srcdiff_input_svn input_new(options.archive, svn_path_new, 0, *this);
 
   LineDiffRange line_diff_range(svn_path_old, svn_path_new, options.svn_url ? options.svn_url->c_str() : 0);
 

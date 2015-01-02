@@ -7,24 +7,26 @@
 
 #include <vector>
 
+#include <boost/optional.hpp>
+
 class srcdiff_input {
 
 protected:
 
 	srcml_archive * archive;
-	const char * input_path;
-	OPTION_TYPE options;
+	const boost::optional<std::string> input_path;
+	const OPTION_TYPE & options;
 
 private:
 
 public:
 
-	srcdiff_input(srcml_archive * archive, const char * input_path, OPTION_TYPE options);
+	srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options);
 	~srcdiff_input();
 
 	void operator()(int stream_source, std::vector<xNodePtr> & nodes, int & is_input);
 
-	virtual std::vector<xNodePtr> input_nodes(const char * input_path, int stream_source) = 0;
+	virtual std::vector<xNodePtr> input_nodes(const boost::optional<std::string> & input_path, int stream_source) = 0;
 
 };
 

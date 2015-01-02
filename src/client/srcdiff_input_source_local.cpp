@@ -86,8 +86,8 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
 
   }
 
-  srcdiff_input_filename input_old(options.archive, path_old.c_str(), options.flags);
-  srcdiff_input_filename input_new(options.archive, path_new.c_str(), options.flags);
+  srcdiff_input_filename input_old(options.archive, path_old, options.flags);
+  srcdiff_input_filename input_new(options.archive, path_new, options.flags);
   LineDiffRange line_diff_range(path_old, path_new, 0);
 
   boost::optional<std::string> path = path_one;

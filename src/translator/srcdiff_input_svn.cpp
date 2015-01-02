@@ -9,24 +9,22 @@
 
 class no_file_exception {};
 
-srcdiff_input_svn::srcdiff_input_svn(srcml_archive * archive, const char * input_path, OPTION_TYPE options, const srcdiff_input_source_svn & svn_input)
+srcdiff_input_svn::srcdiff_input_svn(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options, const srcdiff_input_source_svn & svn_input)
   : srcdiff_input(archive, input_path, options), svn_input(svn_input) {}
 
 srcdiff_input_svn::~srcdiff_input_svn() {}
 
-std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const char * input_path, int stream_source) {
+std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const boost::optional<std::string> & input_path, int stream_source) {
 
- if(input_path == 0 || input_path[0] == 0) throw no_file_exception();
+ if(!input_path || input_path->empty()) throw no_file_exception();
 
   srcml_converter converter(archive, stream_source);
 
-  void * context = svn_input.open(input_path);
+  void * context = svn_input.open(input_path->c_str());
 
-  const char * end = index(input_path, '@');
-  const char * filename = strndup(input_path, end - input_path);
+  std::string path = input_path->substr(0, input_path->find('@'));
 
-  converter.convert(filename, (void *)context, srcdiff_input_source_svn::read, srcdiff_input_source_svn::close, options);
-  free((void *)filename);
+  converter.convert(path, (void *)context, srcdiff_input_source_svn::read, srcdiff_input_source_svn::close, options);
 
   return converter.create_nodes();
 
