@@ -23,7 +23,7 @@ static int file_close(void * context) {
 
  }
 
-std::vector<xNodePtr> srcdiff_input_filename::input_nodes(const boost::optional<std::string> &, int stream_source) {
+std::vector<xNodePtr> srcdiff_input_filename::input_nodes(const boost::optional<std::string> &, int stream_source) const {
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 
@@ -31,7 +31,7 @@ std::vector<xNodePtr> srcdiff_input_filename::input_nodes(const boost::optional<
 
   FILE * context = fopen(input_path->c_str(), "r");
 
-  converter.convert(*input_path, (void *)context, file_read, file_close, options);
+  converter.convert(srcml_archive_check_extension(archive, input_path->c_str()), (void *)context, file_read, file_close, options);
 
   return converter.create_nodes();
 

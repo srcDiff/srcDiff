@@ -14,7 +14,7 @@ srcdiff_input_svn::srcdiff_input_svn(srcml_archive * archive, const boost::optio
 
 srcdiff_input_svn::~srcdiff_input_svn() {}
 
-std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const boost::optional<std::string> & input_path, int stream_source) {
+std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const boost::optional<std::string> & input_path, int stream_source) const {
 
  if(!input_path || input_path->empty()) throw no_file_exception();
 
@@ -24,7 +24,7 @@ std::vector<xNodePtr> srcdiff_input_svn::input_nodes(const boost::optional<std::
 
   std::string path = input_path->substr(0, input_path->find('@'));
 
-  converter.convert(path, (void *)context, srcdiff_input_source_svn::read, srcdiff_input_source_svn::close, options);
+  converter.convert(srcml_archive_check_extension(archive, path.c_str()), (void *)context, srcdiff_input_source_svn::read, srcdiff_input_source_svn::close, options);
 
   return converter.create_nodes();
 

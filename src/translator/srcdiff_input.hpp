@@ -26,7 +26,7 @@ public:
 
 	void operator()(int stream_source, std::vector<xNodePtr> & nodes, int & is_input);
 
-	virtual std::vector<xNodePtr> input_nodes(const boost::optional<std::string> & input_path, int stream_source) = 0;
+	virtual std::vector<xNodePtr> input_nodes(const boost::optional<std::string> & input_path, int stream_source) const = 0;
 
 };
 
