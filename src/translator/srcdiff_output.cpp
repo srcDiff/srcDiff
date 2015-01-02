@@ -149,15 +149,16 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  }
 
- void srcdiff_output::start_unit(const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version) {
+ void srcdiff_output::start_unit(const std::string & language_string, const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_create_unit(archive);
 
-  srcml_unit_set_language(wstate->unit, language_string);
+  srcml_unit_set_language(wstate->unit, language_string.c_str());
 
-  srcml_archive_get_filename(archive) ? srcml_unit_set_filename(wstate->unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(wstate->unit, unit_filename);
-  srcml_unit_set_directory(wstate->unit, unit_directory);
-  srcml_unit_set_version(wstate->unit, unit_version);
+  srcml_archive_get_filename(archive) ? 
+    srcml_unit_set_filename(wstate->unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
+  srcml_unit_set_directory(wstate->unit, unit_directory ? unit_directory->c_str() : 0);
+  srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
   /** @todo when output non-archive additional namespaces not appended, because not collected 
     However this is correct when output is to archive */
   srcml_write_start_unit(wstate->unit);

@@ -128,7 +128,7 @@ public:
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_old, int is_new);
-  virtual void start_unit(const char * language_string, const char * unit_directory, const char * unit_filename, const char * unit_version);
+  virtual void start_unit(const std::string & language_string, const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version);
   virtual void finish(int is_old, int is_new, LineDiffRange & line_diff_range);
   virtual void reset();
   virtual void close();

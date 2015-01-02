@@ -73,7 +73,7 @@ void srcdiff_translator::translate(const srcdiff_input & input_old, const srcdif
   // run on file level
   if(is_old || is_new) {
 
-    output.start_unit(language.c_str(), unit_directory ? unit_directory->c_str() : 0, unit_filename ? unit_filename->c_str() : 0, unit_version ? unit_version->c_str() : 0);
+    output.start_unit(language, unit_directory, unit_filename, unit_version);
 
     srcdiff_diff diff(output, &set_old, &set_new);
     diff.output();
