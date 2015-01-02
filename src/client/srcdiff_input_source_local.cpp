@@ -95,8 +95,9 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
   if(!path) path = std::string();
 
   const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
+  const char * dir = srcml_archive_get_directory(options.archive);
 
-  translator->translate(input_old, input_new, line_diff_range, language_string, boost::optional<std::string>(srcml_archive_get_directory(options.archive)), unit_filename, 0);
+  translator->translate(input_old, input_new, line_diff_range, language_string, dir ? boost::optional<std::string>(dir) : boost::optional<std::string>(), unit_filename, 0);
 
 }
 
