@@ -24,7 +24,7 @@ public:
 	srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options);
 	~srcdiff_input();
 
-	void operator()(int stream_source, std::vector<xNodePtr> & nodes, int & is_input);
+	void operator()(int stream_source, std::vector<xNodePtr> & nodes, int & is_input) const;
 
 	virtual std::vector<xNodePtr> input_nodes(int stream_source) const = 0;
 
