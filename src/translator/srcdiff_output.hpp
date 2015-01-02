@@ -133,6 +133,8 @@ public:
   virtual void reset();
   virtual void close();
 
+  virtual const std::vector<xNodePtr> & get_nodes_old() const;
+  virtual const std::vector<xNodePtr> & get_nodes_new() const;
   virtual std::vector<xNodePtr> & get_nodes_old();
   virtual std::vector<xNodePtr> & get_nodes_new();
   virtual unsigned int & last_output_old();

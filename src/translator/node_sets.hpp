@@ -8,7 +8,7 @@ class node_sets : public srcdiff_vector<node_set *> {
 
 private:
 
-	std::vector<xNodePtr> & nodes;
+	const std::vector<xNodePtr> & nodes;
 
 	static bool is_non_white_space(const xNodePtr node, const void * context) {
 
@@ -21,7 +21,7 @@ private:
 
 public:
 
-	node_sets(std::vector<xNodePtr> & nodes) : nodes(nodes) {}
+	node_sets(const std::vector<xNodePtr> & nodes) : nodes(nodes) {}
 	node_sets(const node_sets & sets) : nodes(sets.nodes) {
 
 
@@ -49,7 +49,7 @@ public:
 	}
 		
 	// create the node sets for shortest edit script
-	node_sets(std::vector<xNodePtr> & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
+	node_sets(const std::vector<xNodePtr> & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
 
 	  // runs on a subset of base array
 	  for(int i = start; i < end; ++i) {

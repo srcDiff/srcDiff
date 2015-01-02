@@ -16,7 +16,6 @@ class srcml_converter {
 protected:
 
   srcml_archive * archive;
-  OPTION_TYPE options;
 
   int stream_source;
 
@@ -25,7 +24,7 @@ protected:
 
 private:
 
-std::vector<xNodePtr> collect_nodes(xmlTextReaderPtr reader);
+std::vector<xNodePtr> collect_nodes(xmlTextReaderPtr reader) const;
 
 public:
 
@@ -33,7 +32,7 @@ public:
   ~srcml_converter();
 
   void convert(const std::string & language, void * context, std::function<int(void *, char *, int)> read, std::function<int(void *)> close, const OPTION_TYPE & options); 
-  std::vector<xNodePtr> create_nodes();
+  std::vector<xNodePtr> create_nodes() const;
 
 };
 

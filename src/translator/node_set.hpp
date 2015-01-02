@@ -9,7 +9,7 @@ class node_set : public srcdiff_vector<int> {
 
 private:
 
-	std::vector<xNodePtr> & nodes;
+	const std::vector<xNodePtr> & nodes;
 
 	static bool is_white_space(const xNodePtr node) {
 
@@ -20,7 +20,7 @@ private:
 
 public:
 
-	node_set(std::vector<xNodePtr> & nodes) : nodes(nodes) {}
+	node_set(const std::vector<xNodePtr> & nodes) : nodes(nodes) {}
 
 	node_set(const node_set & set) : nodes(set.nodes) {
 
@@ -40,7 +40,7 @@ public:
 
 	}
 
-	node_set(std::vector<xNodePtr> & nodes, int & start) : nodes(nodes) {
+	node_set(const std::vector<xNodePtr> & nodes, int & start) : nodes(nodes) {
 
 	if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 

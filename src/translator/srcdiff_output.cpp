@@ -210,6 +210,18 @@ void srcdiff_output::close() {
 
 }
 
+const std::vector<xNodePtr> & srcdiff_output::get_nodes_old() const {
+
+  return rbuf_old->nodes;
+
+}
+
+const std::vector<xNodePtr> & srcdiff_output::get_nodes_new() const {
+
+  return rbuf_new->nodes;
+
+}
+
 std::vector<xNodePtr> & srcdiff_output::get_nodes_old() {
 
   return rbuf_old->nodes;

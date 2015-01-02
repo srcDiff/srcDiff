@@ -19,7 +19,7 @@ srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, 
 
 
 void add_construct(std::map<std::string, IntPairs > & constructs
-                   , node_sets & sets, std::vector<xNodePtr> & nodes
+                   , node_sets & sets, const std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
   std::string tag = nodes.at(sets.at(offset)->at(0))->name;
@@ -34,7 +34,7 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
-bool srcdiff_move::is_move(node_set * set, std::vector<xNodePtr> & nodes) {
+bool srcdiff_move::is_move(node_set * set, const std::vector<xNodePtr> & nodes) {
 
   return nodes.at(set->at(0))->move;
 

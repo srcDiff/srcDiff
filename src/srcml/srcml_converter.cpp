@@ -40,7 +40,7 @@ void srcml_converter::convert(const std::string & language, void * context,
 
 }
 
-std::vector<xNodePtr> srcml_converter::create_nodes() {
+std::vector<xNodePtr> srcml_converter::create_nodes() const {
   
   xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
@@ -94,7 +94,7 @@ static bool is_atomic_srcml(std::vector<xNodePtr> & nodes, unsigned start) {
 
 
 // collect the differences
-std::vector<xNodePtr> srcml_converter::collect_nodes(xmlTextReaderPtr reader) {
+std::vector<xNodePtr> srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
   std::vector<xNodePtr> nodes;
 

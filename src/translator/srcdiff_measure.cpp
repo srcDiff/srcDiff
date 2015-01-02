@@ -7,7 +7,7 @@
 
 #include <cstring>
 
-srcdiff_measure::srcdiff_measure(std::vector<xNodePtr> & nodes_old, std::vector<xNodePtr> & nodes_new, node_set * set_old, node_set * set_new) 
+srcdiff_measure::srcdiff_measure(const std::vector<xNodePtr> & nodes_old, const std::vector<xNodePtr> & nodes_new, node_set * set_old, node_set * set_new) 
   : nodes_old(nodes_old), nodes_new(nodes_new), set_old(set_old), set_new(set_new) {}
 
 void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {

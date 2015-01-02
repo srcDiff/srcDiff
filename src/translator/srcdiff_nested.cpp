@@ -74,7 +74,7 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(node_set * structure, std::vector<xNodePtr> & nodes) {
+int is_block_type(node_set * structure, const std::vector<xNodePtr> & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
@@ -89,7 +89,7 @@ int is_block_type(node_set * structure, std::vector<xNodePtr> & nodes) {
   return -1;
 }
 
-bool has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes, const char * type) {
+bool has_internal_structure(node_set * structure, const std::vector<xNodePtr> & nodes, const char * type) {
 
   for(unsigned int i = 1; i < structure->size(); ++i)
     if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
@@ -99,8 +99,8 @@ bool has_internal_structure(node_set * structure, std::vector<xNodePtr> & nodes,
   return false;
 }
 
-bool is_nest_type(node_set * structure, std::vector<xNodePtr> & nodes
-                           , node_set * structure_other, std::vector<xNodePtr> & nodes_other, int type_index) {
+bool is_nest_type(node_set * structure, const std::vector<xNodePtr> & nodes
+                           , node_set * structure_other, const std::vector<xNodePtr> & nodes_other, int type_index) {
 
   if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
@@ -122,8 +122,8 @@ bool is_match(const xNodePtr node, const void * context) {
 
 }
 
-int best_match(std::vector<xNodePtr> & nodes, node_sets & set
-               , std::vector<xNodePtr> & nodes_match, node_set * match, int operation) {
+int best_match(const std::vector<xNodePtr> & nodes, node_sets & set
+               , const std::vector<xNodePtr> & nodes_match, node_set * match, int operation) {
 
   int match_pos = set.size();
   int match_similarity = 0;
@@ -165,8 +165,8 @@ int best_match(std::vector<xNodePtr> & nodes, node_sets & set
 
 }
 
-bool is_nestable_internal(node_set * structure_one, std::vector<xNodePtr> & nodes_one
-                 , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool is_nestable_internal(node_set * structure_one, const std::vector<xNodePtr> & nodes_one
+                 , node_set * structure_two, const std::vector<xNodePtr> & nodes_two) {
 
   int block = is_block_type(structure_two, nodes_two);
 
@@ -207,8 +207,8 @@ bool is_nestable_internal(node_set * structure_one, std::vector<xNodePtr> & node
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
-                      , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool srcdiff_nested::is_same_nestable(node_set * structure_one, const std::vector<xNodePtr> & nodes_one
+                      , node_set * structure_two, const std::vector<xNodePtr> & nodes_two) {
 
   if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
     return false;
@@ -241,8 +241,8 @@ bool srcdiff_nested::is_same_nestable(node_set * structure_one, std::vector<xNod
 
 }
 
-bool srcdiff_nested::is_nestable(node_set * structure_one, std::vector<xNodePtr> & nodes_one
-                 , node_set * structure_two, std::vector<xNodePtr> & nodes_two) {
+bool srcdiff_nested::is_nestable(node_set * structure_one, const std::vector<xNodePtr> & nodes_one
+                 , node_set * structure_two, const std::vector<xNodePtr> & nodes_two) {
 
   if(srcdiff_compare::node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
     return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
@@ -251,8 +251,8 @@ bool srcdiff_nested::is_nestable(node_set * structure_one, std::vector<xNodePtr>
 
 }
 
-bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
-                    std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
+bool is_better_nest_no_recursion(const std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
+                    const std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
@@ -284,8 +284,8 @@ bool is_better_nest_no_recursion(std::vector<xNodePtr> & nodes_outer, node_set *
 
 }
 
-bool is_better_nest(std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
-                    std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
+bool is_better_nest(const std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
+                    const std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 // parents and children same do not nest.
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
@@ -319,8 +319,8 @@ bool is_better_nest(std::vector<xNodePtr> & nodes_outer, node_set * node_set_out
 
 }
 
-bool srcdiff_nested::is_better_nested(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old, int start_pos_old,
-                    std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new, int start_pos_new,
+bool srcdiff_nested::is_better_nested(const std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old, int start_pos_old,
+                    const std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
   for(int pos = start_pos_old; pos < node_sets_old->size(); ++pos) {
@@ -342,7 +342,7 @@ bool srcdiff_nested::is_better_nested(std::vector<xNodePtr> & nodes_old, node_se
 }
 
 bool srcdiff_nested::reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
-  std::vector<xNodePtr> & nodes_old, node_set * set_old, std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+  const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
 
   int old_pos = set_old->at(0);
   int new_pos = set_new->at(0);
@@ -391,8 +391,8 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
 
 }
 
-void srcdiff_nested::check_nestable(node_sets * node_sets_old, std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , node_sets * node_sets_new, std::vector<xNodePtr> & nodes_new, int start_new, int end_new
+void srcdiff_nested::check_nestable(node_sets * node_sets_old, const std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , node_sets * node_sets_new, const std::vector<xNodePtr> & nodes_new, int start_new, int end_new
                  , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
                  , int & operation) {
 
