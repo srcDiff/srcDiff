@@ -16,7 +16,7 @@
 #include <dirent.h>
 #include <URIStream.hpp>
 
-srcdiff_input_source_local::srcdiff_input_source_local(srcdiff_options & options) : srcdiff_input_source(options) {
+srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
 
   translator = new srcdiff_translator(options.srcdiff_filename,
                                    options.flags, options.methods,

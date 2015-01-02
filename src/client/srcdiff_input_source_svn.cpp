@@ -35,7 +35,7 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
-srcdiff_input_source_svn::srcdiff_input_source_svn(srcdiff_options & options) : srcdiff_input_source(options) {
+srcdiff_input_source_svn::srcdiff_input_source_svn(const srcdiff_options & options) : srcdiff_input_source(options) {
 
 
   apr_initialize();
@@ -140,7 +140,7 @@ void srcdiff_input_source_svn::session_single() {
 
 void srcdiff_input_source_svn::session_range() {
 
-  svn_revnum_t & start_revision = options.revision_one;
+  const svn_revnum_t & start_revision = options.revision_one;
 
   if(start_revision == SVN_INVALID_REVNUM) revision_one = 1;
   else revision_one = start_revision;

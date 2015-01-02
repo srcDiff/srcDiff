@@ -21,14 +21,14 @@ class srcdiff_input_source {
 
 protected:
 
-  srcdiff_options & options;
+  const srcdiff_options & options;
   srcdiff_translator * translator;
 
 private:
 
 public:
 
-  srcdiff_input_source(srcdiff_options & options) : options(options), translator(0) {}
+  srcdiff_input_source(const srcdiff_options & options) : options(options), translator(0) {}
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;

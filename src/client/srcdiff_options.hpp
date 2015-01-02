@@ -87,6 +87,6 @@ struct srcdiff_options
   
 };
 
-srcdiff_options process_command_line(int argc, char* argv[]);
+const srcdiff_options & process_command_line(int argc, char* argv[]);
 
 #endif

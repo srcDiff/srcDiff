@@ -24,7 +24,7 @@ private:
 
 public:
 
-  srcdiff_input_source_local(srcdiff_options & options);
+  srcdiff_input_source_local(const srcdiff_options & options);
   virtual ~srcdiff_input_source_local();
 
   virtual void consume();

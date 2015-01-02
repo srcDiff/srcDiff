@@ -35,6 +35,8 @@
 
 void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
 
+srcdiff_input_source * next_input_source(const srcdiff_options & options);
+
 int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
@@ -45,9 +47,36 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
   // process command-line arguments
-  srcdiff_options options = process_command_line(argc, argv);
+  const srcdiff_options & options = process_command_line(argc, argv);
 
- srcdiff_input_source * input = 0;
+  srcdiff_input_source * input = next_input_source(options);
+
+  if(input) {
+
+    try {
+
+      input->consume();
+
+    } catch(...) {
+
+      std::cerr << "Problem with input.\n";
+
+    }
+
+    delete input;
+
+  }
+
+  srcml_free_archive(options.archive);
+  
+  return exit_status;
+
+}
+
+srcdiff_input_source * next_input_source(const srcdiff_options & options) {
+
+  srcdiff_input_source * input = nullptr;
+
 #if SVN
 
   if(options.svn_url) {
@@ -71,24 +100,6 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
-  if(input) {
-
-    try {
-
-      input->consume();
-
-    } catch(...) {
-
-      std::cerr << "Problem with input.\n";
-
-    }
-
-    delete input;
-
-  }
-
-  srcml_free_archive(options.archive);
-  
-  return exit_status;
+  return input;
 
 }

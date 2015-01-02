@@ -40,7 +40,7 @@
 
 // constructor
 srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
-                                       OPTION_TYPE & flags, METHOD_TYPE method,
+                                       const OPTION_TYPE & flags, const METHOD_TYPE & method,
                                        srcml_archive * archive,
                                        unsigned long number_context_lines)
   : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method, number_context_lines) {}

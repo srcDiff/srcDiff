@@ -40,7 +40,7 @@ private:
 
 public:
 
-  srcdiff_input_source_svn(srcdiff_options & options);
+  srcdiff_input_source_svn(const srcdiff_options & options);
   virtual ~srcdiff_input_source_svn();
 
   virtual void consume();
