@@ -227,14 +227,30 @@ void option_srcml_flag_disable(bool on) {
 
 void option_method(const std::string & arg) {
 
-  if(arg == COLLECT_METHOD) options.methods &= ~METHOD_RAW;
-  else if(arg == RAW_METHOD) options.methods |= METHOD_RAW;
-  else if(arg == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
-  else if(arg == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
-  else {
+  std::vector<std::string> methods;
+  std::string::size_type last_pos = 0;
+  std::string::size_type pos = 0;
+  while((pos = arg.find(',', last_pos)) != std::string::npos) {
 
-      fprintf(stderr, "Invalid argument to --method: '%s'\n", arg.c_str());
-      exit(/*STATUS_INVALID_ARGUMENT*/1);    
+    methods.push_back(arg.substr(last_pos, pos));
+    last_pos = pos + 1;
+
+  }
+
+  methods.push_back(arg.substr(last_pos));
+
+  for(std::string method : methods) {
+
+    if(method == COLLECT_METHOD) options.methods &= ~METHOD_RAW;
+    else if(method == RAW_METHOD) options.methods |= METHOD_RAW;
+    else if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
+    else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
+    else {
+
+        fprintf(stderr, "Invalid argument to --method: '%s'\n", method.c_str());
+        exit(/*STATUS_INVALID_ARGUMENT*/1);    
+    }
+
   }
 
 }
@@ -310,7 +326,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   ;
 
   srcdiff_ops.add_options()
-    ("method,m",  boost::program_options::value<std::string>()->notifier(option_method), "Set srcdiff parsing method")
+    ("method,m",  boost::program_options::value<std::string>()->notifier(option_method)->default_value("collect,group-diff"), "Set srcdiff parsing method")
     ("recursive", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_RECURSIVE>), "I need to double check this one, but maybe recursive svn read")
     ("visualization", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VISUALIZE>), "Output a visualization instead of xml")
     ("same", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SAME>), "Output files that are the same")
