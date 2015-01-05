@@ -22,11 +22,11 @@ namespace color_diff {
     unsigned int line_new;
     std::vector<int> * in_diff;
 
-    std::vector<bool> & lines_old;
-    std::vector<bool> & lines_new;
+    const std::vector<bool> & lines_old;
+    const std::vector<bool> & lines_new;
 
-    std::string & file_one;
-    std::string & file_two;
+    const std::string & file_one;
+    const std::string & file_two;
     std::ostream & colordiff_file;
     const OPTION_TYPE & options;
     std::string last_context;

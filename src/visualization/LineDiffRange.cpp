@@ -19,31 +19,31 @@
 
 #include <URIStream.hpp>
 
-LineDiffRange::LineDiffRange(std::string file_one, std::string file_two, const char * url)
+LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url)
   : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url) {}
 
 LineDiffRange::~LineDiffRange() {
 
 }
 
-std::string & LineDiffRange::get_file_one() {
+const std::string & LineDiffRange::get_file_one() const {
 
   return file_one;
 
 }
 
-std::string & LineDiffRange::get_file_two() {
+const std::string & LineDiffRange::get_file_two() const {
 
   return file_two;
 
 }
-unsigned int LineDiffRange::get_length_file_one() {
+unsigned int LineDiffRange::get_length_file_one() const {
 
   return lines_one.size();
 
 }
 
-unsigned int LineDiffRange::get_length_file_two() {
+unsigned int LineDiffRange::get_length_file_two() const {
 
   return lines_two.size();
 

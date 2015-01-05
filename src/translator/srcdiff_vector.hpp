@@ -113,7 +113,7 @@ public:
 
 	}
 
-	template< class... Args >
+	template<class... Args>
 	void emplace_back(Args &&... args) {
 
 		data.template emplace_back<Args...>(args...);

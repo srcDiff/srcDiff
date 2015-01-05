@@ -24,27 +24,27 @@ class LineDiffRange {
 
 private:
 
-  std::string file_one;
-  std::string file_two;
+  const std::string & file_one;
+  const std::string & file_two;
   class shortest_edit_script ses;
 
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;
 
-  const char * url;
+  const boost::optional<std::string> url;
 
   OPTION_TYPE options;
 
 public:
 
-  LineDiffRange(std::string file_one, std::string file_two, const char * url);
+  LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url);
 
   ~LineDiffRange();
 
-  std::string & get_file_one();
-  std::string & get_file_two();
-  unsigned int get_length_file_one();
-  unsigned int get_length_file_two();
+  const std::string & get_file_one() const;
+  const std::string & get_file_two() const;
+  unsigned int get_length_file_one() const;
+  unsigned int get_length_file_two() const;
 
   edit * get_line_diff();
 
