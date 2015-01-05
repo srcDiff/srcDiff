@@ -22,7 +22,7 @@ void add_construct(std::map<std::string, IntPairs > & constructs
                    , const node_sets & sets, const std::vector<xNodePtr> & nodes
                    , int offset, int operation) {
 
-  std::string tag = nodes.at(sets.at(offset)->at(0))->name;
+  std::string tag = nodes.at(sets.at(offset).at(0))->name;
 
   if(constructs.find(tag) == constructs.end()) {
 
@@ -99,7 +99,7 @@ void srcdiff_move::mark_moves(std::vector<xNodePtr> & nodes_old, const node_sets
 
       }
 
-      if(nodes_one->at(node_sets_one->at(elements.at(i).first)->at(0))->move)
+      if(nodes_one->at(node_sets_one->at(elements.at(i).first).at(0))->move)
         continue;
 
       for(unsigned int j = i + 1; j < elements.size(); ++j) {
@@ -109,8 +109,8 @@ void srcdiff_move::mark_moves(std::vector<xNodePtr> & nodes_old, const node_sets
 
         diff_nodes diff_set = { *nodes_one, *nodes_two };
 
-        if(srcdiff_compare::node_set_syntax_compare(node_sets_one->at(elements.at(i).first)
-                                   , node_sets_two->at(elements.at(j).first), &diff_set) != 0)
+        if(srcdiff_compare::node_set_syntax_compare(&node_sets_one->at(elements.at(i).first)
+                                   , &node_sets_two->at(elements.at(j).first), &diff_set) != 0)
           continue;
         /*
           if(compute_difference(nodes_one, node_sets_one->at(elements.at(i).first)
@@ -118,29 +118,29 @@ void srcdiff_move::mark_moves(std::vector<xNodePtr> & nodes_old, const node_sets
           continue;
         */
 
-	if(is_move(*node_sets_one->at(elements.at(i).first), *nodes_one) || is_move(*node_sets_two->at(elements.at(j).first), *nodes_two))
+	if(is_move(node_sets_one->at(elements.at(i).first), *nodes_one) || is_move(node_sets_two->at(elements.at(j).first), *nodes_two))
 		   continue;
 
         ++move_id;
-        xNode * start_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first)->at(0)));
+        xNode * start_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
         start_node_one->move = move_id;
 
-        xNode * start_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first)->at(0)));
+        xNode * start_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
         start_node_two->move = move_id;
 
-        nodes_one->at(node_sets_one->at(elements.at(i).first)->at(0)) = start_node_one;
-        nodes_two->at(node_sets_two->at(elements.at(j).first)->at(0)) = start_node_two;
+        nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)) = start_node_one;
+        nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)) = start_node_two;
 
         if(!start_node_one->is_empty) {
 
-          xNode * end_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first)->back()));
+          xNode * end_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
           end_node_one->move = move_id;
 
-          xNode * end_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first)->back()));
+          xNode * end_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
           end_node_two->move = move_id;
 
-          nodes_one->at(node_sets_one->at(elements.at(i).first)->back()) = end_node_one;
-          nodes_two->at(node_sets_two->at(elements.at(j).first)->back()) = end_node_two;
+          nodes_one->at(node_sets_one->at(elements.at(i).first).back()) = end_node_one;
+          nodes_two->at(node_sets_two->at(elements.at(j).first).back()) = end_node_two;
 
         }
 

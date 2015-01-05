@@ -80,11 +80,26 @@ public:
 
 	}
 
+	const_iterator begin() const {
+
+		return data.begin();
+
+	}
+
 	iterator end() {
 
 		return data.end();
 
 	}
+
+
+
+	const_iterator end() const {
+
+		return data.end();
+
+	}
+
 
 	size_type size() const {
 
