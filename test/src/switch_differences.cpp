@@ -14,15 +14,11 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include <Options.hpp>
-
 #include <xmlrw.hpp>
 
 const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
 const char * XML_DECLARATION_STANDALONE = "yes";
-
-OPTION_TYPE options;
 
 // output current XML node in reader
 void outputNode(const xmlNode& node, xmlTextWriterPtr writer, bool output_ns) {
