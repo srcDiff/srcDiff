@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="member_init_list">
+
+<unit filename="member_init_list|member_init_list">
+<constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
+<diff:delete><member_init_list>: <member_init><name>a</name><argument_list>()</argument_list></member_init></member_init_list></diff:delete><block>{}</block></constructor>
+</unit>
+
+<unit filename="member_init_list|member_init_list">
+<constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
+<diff:delete><member_init_list>: <member_init><name>a</name><argument_list>()</argument_list></member_init>
+</member_init_list></diff:delete><block>{}</block></constructor>
+</unit>
+
+</unit>

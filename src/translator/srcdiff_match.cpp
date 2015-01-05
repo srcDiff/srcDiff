@@ -970,10 +970,10 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
   if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "condition" || old_tag == "init"
     || old_tag == "default" || old_tag == "comment"
     || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
-    || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_list"
+    || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_init_list"
     || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
     || old_tag == "argument"
-    || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier")
+    || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier" || old_tag == "member_list")
     return false;
 
   if((old_tag == "expr" || old_tag == "expr_stmt") && similarity > 0) return false;

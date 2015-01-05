@@ -56,7 +56,7 @@ def safe_communicate_two_files(command, filename_one, filename_two, directory) :
 	newcommand = command[:]
 	newcommand.append(filename_one)
 	newcommand.append(filename_two)
-	newcommand.append(directory)
+
 	try :
 		return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
 	except OSError, (errornum, strerror) :
