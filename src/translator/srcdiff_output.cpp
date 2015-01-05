@@ -9,9 +9,10 @@
 
 int move_operation = SESCOMMON;
 
-srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE flags, METHOD_TYPE method, unsigned long number_context_lines)
+srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
+  unsigned long number_context_lines)
  : archive(archive), colordiff(NULL), bashview(NULL), flags(flags),
-   rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>()),
+   rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
    diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
    diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
    diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
@@ -38,7 +39,6 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);
 
   wstate->filename = srcdiff_filename;
-  wstate->method = method;
 
   diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF);
   diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
@@ -231,6 +231,18 @@ std::vector<xNodePtr> & srcdiff_output::get_nodes_old() {
 std::vector<xNodePtr> & srcdiff_output::get_nodes_new() {
 
   return rbuf_new->nodes;
+
+}
+
+unsigned int srcdiff_output::last_output_old() const {
+
+  return rbuf_old->last_output;
+
+}
+
+unsigned int srcdiff_output::last_output_new() const {
+
+return rbuf_new->last_output;
 
 }
 

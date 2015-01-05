@@ -70,6 +70,8 @@ protected:
 
   public:
 
+    writer_state(const METHOD_TYPE & method) : method(method) {}
+
     void clear() {
 
       while(!output_diff.empty()) {
@@ -86,7 +88,7 @@ protected:
     xmlTextWriterPtr writer;
     srcml_unit * unit;
 
-    METHOD_TYPE method;
+    const METHOD_TYPE & method;
 
     std::vector<diff_set *> output_diff;
 
@@ -95,7 +97,7 @@ protected:
   srcml_archive * archive;
   std::shared_ptr<ColorDiff> colordiff;
   std::shared_ptr<bash_view> bashview;
-  OPTION_TYPE flags;
+  const OPTION_TYPE & flags;
 
   std::shared_ptr<reader_state> rbuf_old;
   std::shared_ptr<reader_state> rbuf_new;
@@ -124,7 +126,7 @@ private:
 
 public:
 
-  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, OPTION_TYPE flags, METHOD_TYPE method, unsigned long number_context_lines);
+  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, unsigned long number_context_lines);
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_old, int is_new);
@@ -137,6 +139,8 @@ public:
   virtual const std::vector<xNodePtr> & get_nodes_new() const;
   virtual std::vector<xNodePtr> & get_nodes_old();
   virtual std::vector<xNodePtr> & get_nodes_new();
+  unsigned int last_output_old() const;
+  unsigned int last_output_new() const;
   virtual unsigned int & last_output_old();
   virtual unsigned int & last_output_new();
   METHOD_TYPE method() const;

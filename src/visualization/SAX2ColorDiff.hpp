@@ -28,7 +28,7 @@ namespace color_diff {
     std::string & file_one;
     std::string & file_two;
     std::ostream & colordiff_file;
-    OPTION_TYPE & options;
+    const OPTION_TYPE & options;
     std::string last_context;
     bool spanning;
     bool in_move;

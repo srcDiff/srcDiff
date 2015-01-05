@@ -32,6 +32,12 @@ public:
 
 	}
 
+	const T & at(size_type pos) const {
+
+		return data.at(pos);
+
+	}
+
 	T & operator[](size_type pos) {
 
 		return data[pos];
@@ -50,7 +56,19 @@ public:
 
 	}
 
+	const T & front() const {
+
+		return data.front();
+
+	}
+
 	T & back() {
+
+		return data.back();
+
+	}
+
+	const T & back() const {
 
 		return data.back();
 

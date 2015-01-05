@@ -13,14 +13,14 @@ private :
 
   std::string directory;
   std::string version;
-  OPTION_TYPE & options;
+  const OPTION_TYPE & options;
 
   std::ostream * outfile;
 
 
 public:
 
-  ColorDiff(const std::string & colordiff_file, const std::string & directory, const std::string & version, OPTION_TYPE & options);
+  ColorDiff(const std::string & colordiff_file, const std::string & directory, const std::string & version, const OPTION_TYPE & options);
   ~ColorDiff();
 
   int colorize(const char * srcdiff, LineDiffRange & line_diff_range);
