@@ -7,7 +7,7 @@ namespace srcdiff_compare {
   // diff node accessor function
   const void * node_set_index(int idx, const void *s, const void * context) {
     node_sets & sets = *(node_sets *)s;
-    return sets[idx];
+    return &sets[idx];
   }
 
   const void * node_index(int idx, const void *s, const void * context) {

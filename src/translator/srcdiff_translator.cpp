@@ -75,7 +75,7 @@ void srcdiff_translator::translate(const srcdiff_input & input_old, const srcdif
 
     output.start_unit(language, unit_directory, unit_filename, unit_version);
 
-    srcdiff_diff diff(output, &set_old, &set_new);
+    srcdiff_diff diff(output, set_old, set_new);
     diff.output();
 
     // output remaining whitespace
