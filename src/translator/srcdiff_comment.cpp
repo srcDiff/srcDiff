@@ -45,13 +45,13 @@ void srcdiff_comment::output() {
     diff_end_new = out.last_output_new();
     if(edits->operation == SESDELETE && last_diff_old < edits->offset_sequence_one) {
 
-      diff_end_old = node_sets_old.at(edits->offset_sequence_one - 1)->back() + 1;
-      diff_end_new = node_sets_new.at(edits->offset_sequence_two - 1)->back() + 1;
+      diff_end_old = node_sets_old.at(edits->offset_sequence_one - 1).back() + 1;
+      diff_end_new = node_sets_new.at(edits->offset_sequence_two - 1).back() + 1;
 
     } else if(edits->operation == SESINSERT && edits->offset_sequence_one != 0 && last_diff_old <= edits->offset_sequence_one)  {
 
-      diff_end_old = node_sets_old.at(edits->offset_sequence_one - 1)->back() + 1;
-      diff_end_new = node_sets_new.at(edits->offset_sequence_two - 1)->back() + 1;
+      diff_end_old = node_sets_old.at(edits->offset_sequence_one - 1).back() + 1;
+      diff_end_new = node_sets_new.at(edits->offset_sequence_two - 1).back() + 1;
 
     }
 
@@ -66,16 +66,16 @@ void srcdiff_comment::output() {
 
       // TODO: simplify unless plan to handle many to many different // 1-1
       if(edits->length == edit_next->length && edits->length == 1
-         && (node_sets_old.at(edits->offset_sequence_one)->size() > 1
-             || node_sets_old.at(edits->offset_sequence_one)->size() > 1)) {
+         && (node_sets_old.at(edits->offset_sequence_one).size() > 1
+             || node_sets_old.at(edits->offset_sequence_one).size() > 1)) {
 
-        output_change_whitespace(node_sets_old.at(edits->offset_sequence_one)->back() + 1, node_sets_new.at(edit_next->offset_sequence_two)->back() + 1);
+        output_change_whitespace(node_sets_old.at(edits->offset_sequence_one).back() + 1, node_sets_new.at(edit_next->offset_sequence_two).back() + 1);
 
       } else {
 
         // many to many
-        output_change_whitespace(node_sets_old.at(edits->offset_sequence_one + edits->length - 1)->back() + 1,
-         node_sets_new.at(edit_next->offset_sequence_two + edit_next->length - 1)->back() + 1);
+        output_change_whitespace(node_sets_old.at(edits->offset_sequence_one + edits->length - 1).back() + 1,
+         node_sets_new.at(edit_next->offset_sequence_two + edit_next->length - 1).back() + 1);
 
       }
 
@@ -92,7 +92,7 @@ void srcdiff_comment::output() {
       case SESINSERT:
 
         //fprintf(stderr, "HERE\n");
-        output_pure(0, node_sets_new.at(edits->offset_sequence_two + edits->length - 1)->back() + 1);
+        output_pure(0, node_sets_new.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
 
         // update for common
         last_diff_old = edits->offset_sequence_one;
@@ -103,7 +103,7 @@ void srcdiff_comment::output() {
       case SESDELETE:
 
         //fprintf(stderr, "HERE\n");
-        output_pure(node_sets_old.at(edits->offset_sequence_one + edits->length - 1)->back() + 1, 0);
+        output_pure(node_sets_old.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
 
         // update for common
         last_diff_old = edits->offset_sequence_one + edits->length;
@@ -120,8 +120,8 @@ void srcdiff_comment::output() {
   diff_end_new = out.last_output_new();
   if(last_diff_old < (signed)node_sets_old.size()) {
 
-    diff_end_old = node_sets_old.back()->back() + 1;
-    diff_end_new = node_sets_new.back()->back() + 1;
+    diff_end_old = node_sets_old.back().back() + 1;
+    diff_end_new = node_sets_new.back().back() + 1;
 
   }
 

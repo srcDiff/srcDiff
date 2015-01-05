@@ -27,20 +27,20 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
                         , node_sets_new, out.get_nodes_new(), start_new, end_new + 1
                         , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
-        finish_old = node_sets_old.at(end_old)->back() + 1;
-        finish_new = node_sets_new.at(end_new)->back() + 1;
+        finish_old = node_sets_old.at(end_old).back() + 1;
+        finish_new = node_sets_new.at(end_new).back() + 1;
 
         unsigned int pre_nest_end_old = 0;
         if(start_nest_old > 0) {
 
-          pre_nest_end_old = node_sets_old.at(start_nest_old - 1)->back() + 1;
+          pre_nest_end_old = node_sets_old.at(start_nest_old - 1).back() + 1;
 
         }
 
         unsigned int pre_nest_end_new = 0;
         if(start_nest_new > 0) {
 
-          pre_nest_end_new = node_sets_new.at(start_nest_new - 1)->back() + 1;
+          pre_nest_end_new = node_sets_new.at(start_nest_new - 1).back() + 1;
 
         }
 
@@ -70,12 +70,12 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
 
       if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old.size()) {
 
-        finish_old = node_sets_old.at(end_old)->back() + 1;
+        finish_old = node_sets_old.at(end_old).back() + 1;
       }
 
       if(start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new.size()) {
 
-        finish_new = node_sets_new.at(end_new)->back() + 1;
+        finish_new = node_sets_new.at(end_new).back() + 1;
       }
 
     }
@@ -101,11 +101,11 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     unsigned int index = edits->offset_sequence_one + i;
 
-    if(out.get_nodes_old().at(node_sets_old.at(index)->at(0))->move) {
+    if(out.get_nodes_old().at(node_sets_old.at(index).at(0))->move) {
 
       old_moved.push_back(IntPair(SESMOVE, 0));
 
-    } else if(out.get_nodes_old().at(node_sets_old.at(index)->at(0))->nest) {
+    } else if(out.get_nodes_old().at(node_sets_old.at(index).at(0))->nest) {
 
       old_moved.push_back(IntPair(SESNEST, 0));
 
@@ -113,7 +113,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
       old_moved.push_back(IntPair(SESDELETE, 0));
       pos_old.push_back(i);
-      old_sets.push_back(new node_set(*node_sets_old.at(index)));
+      old_sets.push_back(node_sets_old.at(index));
 
     }
 
@@ -127,11 +127,11 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 
-    if(out.get_nodes_new().at(node_sets_new.at(index)->at(0))->move) {
+    if(out.get_nodes_new().at(node_sets_new.at(index).at(0))->move) {
 
       new_moved.push_back(IntPair(SESMOVE, 0));
 
-    } else if(out.get_nodes_new().at(node_sets_new.at(index)->at(0))->nest) {
+    } else if(out.get_nodes_new().at(node_sets_new.at(index).at(0))->nest) {
 
       new_moved.push_back(IntPair(SESNEST, 0));
 
@@ -139,7 +139,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
       new_moved.push_back(IntPair(SESINSERT, 0));
       pos_new.push_back(i);
-      new_sets.push_back(new node_set(*node_sets_new.at(index)));
+      new_sets.push_back(node_sets_new.at(index));
 
     }
 
@@ -220,7 +220,7 @@ void srcdiff_many::output() {
 
     if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
  
-      if((xmlReaderTypes)out.get_nodes_old().at(node_sets_old.at(edits->offset_sequence_one + i)->at(0))->type != XML_READER_TYPE_TEXT
+      if((xmlReaderTypes)out.get_nodes_old().at(node_sets_old.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT
          && (ismethod(out.method(), METHOD_RAW) || srcdiff_diff::go_down_a_level(out.get_nodes_old(), node_sets_old, edits->offset_sequence_one + i
                                                                     , out.get_nodes_new(), node_sets_new, edit_next->offset_sequence_two + j))) {
 
@@ -230,16 +230,16 @@ void srcdiff_many::output() {
       } else {
 
         // syntax mismatch
-        output_change_whitespace(node_sets_old.at(edits->offset_sequence_one + i)->back() + 1,
-          node_sets_new.at(edit_next->offset_sequence_two + j)->back() + 1);
+        output_change_whitespace(node_sets_old.at(edits->offset_sequence_one + i).back() + 1,
+          node_sets_new.at(edit_next->offset_sequence_two + j).back() + 1);
       }
 
     }
     /** @todo this appears to now be dead code */
      else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
   
-      if(srcdiff_nested::is_nestable(*node_sets_old.at(edits->offset_sequence_one + i)
-                     , out.get_nodes_old(), *node_sets_new.at(edit_next->offset_sequence_two + j), out.get_nodes_new())) {
+      if(srcdiff_nested::is_nestable(node_sets_old.at(edits->offset_sequence_one + i)
+                     , out.get_nodes_old(), node_sets_new.at(edit_next->offset_sequence_two + j), out.get_nodes_new())) {
 
           int nest_length = 1;
           while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
@@ -249,8 +249,8 @@ void srcdiff_many::output() {
                               edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1, SESINSERT);
           diff.output();
 
-      } else if(srcdiff_nested::is_nestable(*node_sets_new.at(edit_next->offset_sequence_two + j)
-                            , out.get_nodes_new(), *node_sets_old.at(edits->offset_sequence_one + i), out.get_nodes_old())) {
+      } else if(srcdiff_nested::is_nestable(node_sets_new.at(edit_next->offset_sequence_two + j)
+                            , out.get_nodes_new(), node_sets_old.at(edits->offset_sequence_one + i), out.get_nodes_old())) {
 
           int nest_length = 1;
           while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)

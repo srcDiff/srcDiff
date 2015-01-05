@@ -4,7 +4,7 @@
 #include <srcdiff_vector.hpp>
 #include <node_set.hpp>
 
-class node_sets : public srcdiff_vector<node_set *> {
+class node_sets : public srcdiff_vector<node_set> {
 
 private:
 
@@ -27,7 +27,7 @@ public:
 
 		for(size_type pos = 0; pos < sets.size(); ++pos) {
 
-			push_back(new node_set(*sets[pos]));
+			push_back(sets[pos]);
 
 		}
 
@@ -41,12 +41,7 @@ public:
 
 	}
 
-	~node_sets() {
-
-		for(size_type pos = 0; pos < size(); ++pos)
-			delete operator[](pos);
-
-	}
+	~node_sets() {}
 		
 	// create the node sets for shortest edit script
 	node_sets(const std::vector<xNodePtr> & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
@@ -60,7 +55,7 @@ public:
 	      // text is separate node if not surrounded by a tag in range
 	      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-		      node_set * set = new node_set(nodes, i);
+		      node_set set(nodes, i);
 		      push_back(set);
 
 	      } else {
