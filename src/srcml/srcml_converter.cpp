@@ -17,7 +17,7 @@ srcml_converter::~srcml_converter() {
 
 // converts source code to srcML
 void srcml_converter::convert(const std::string & language, void * context,
-                              std::function<int(void *, char *, int)> read, std::function<int(void *)> close,
+                              const std::function<int(void *, char *, int)> & read, const std::function<int(void *)> & close,
                               const OPTION_TYPE & options) {
 
   srcml_archive * unit_archive = srcml_clone_archive(archive);

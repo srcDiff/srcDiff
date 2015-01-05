@@ -31,7 +31,7 @@ public:
   srcml_converter(srcml_archive * archive, int stream_source);
   ~srcml_converter();
 
-  void convert(const std::string & language, void * context, std::function<int(void *, char *, int)> read, std::function<int(void *)> close, const OPTION_TYPE & options); 
+void convert(const std::string & language, void * context, const std::function<int(void *, char *, int)> & read, const std::function<int(void *)> & close, const OPTION_TYPE & options); 
   std::vector<xNodePtr> create_nodes() const;
 
 };
