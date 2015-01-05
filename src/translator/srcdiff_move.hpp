@@ -19,10 +19,10 @@ public:
 
 	srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation);
 
-	static bool is_move(node_set * set, const std::vector<xNodePtr> & nodes);
+	static bool is_move(const node_set & set, const std::vector<xNodePtr> & nodes);
 
-	static void mark_moves(std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old
-	                , std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new
+	static void mark_moves(std::vector<xNodePtr> & nodes_old, const node_sets & node_sets_old
+	                , std::vector<xNodePtr> & nodes_new, const node_sets & node_sets_new
 	                , edit * edit_script);
 
 	virtual void output();

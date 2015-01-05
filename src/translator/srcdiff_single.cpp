@@ -96,17 +96,17 @@ void srcdiff_single::output_recursive_same() {
 
   xNodePtr merged_node = 0;
 
-  if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)), out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))) == 0) {
+  if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0)), out.get_nodes_new().at(node_sets_new.at(start_new)->at(0))) == 0) {
 
-    out.output_node(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)), SESCOMMON);
+    out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0)), SESCOMMON);
 
   } else {
 
-    merged_node = copyXNode(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)));
+    merged_node = copyXNode(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0)));
     freeXAttr(merged_node->properties);
 
-    merged_node->properties = merge_properties(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->properties,
-                                              out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->properties);
+    merged_node->properties = merge_properties(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0))->properties,
+                                              out.get_nodes_new().at(node_sets_new.at(start_new)->at(0))->properties);
 
 
     out.output_node(merged_node, SESCOMMON);
@@ -118,37 +118,37 @@ void srcdiff_single::output_recursive_same() {
   ++out.last_output_new();
 
   // compare subset of nodes
-  if(strcmp((const char *)out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "comment") == 0) {
+  if(strcmp((const char *)out.get_nodes_old().at(node_sets_old.at(start_old)->at(0))->name, "comment") == 0) {
 
     // collect subset of nodes
     node_sets next_set_old
-      = node_sets(out.get_nodes_old(), node_sets_old->at(start_old)->at(1)
-                        , node_sets_old->at(start_old)->at(node_sets_old->at(start_old)->size() - 1));
+      = node_sets(out.get_nodes_old(), node_sets_old.at(start_old)->at(1)
+                        , node_sets_old.at(start_old)->at(node_sets_old.at(start_old)->size() - 1));
 
     node_sets next_set_new
-      = node_sets(out.get_nodes_new(), node_sets_new->at(start_new)->at(1)
-                        , node_sets_new->at(start_new)->at(node_sets_new->at(start_new)->size() - 1));
+      = node_sets(out.get_nodes_new(), node_sets_new.at(start_new)->at(1)
+                        , node_sets_new.at(start_new)->at(node_sets_new.at(start_new)->size() - 1));
 
-    srcdiff_comment diff(out, &next_set_old, &next_set_new);
+    srcdiff_comment diff(out, next_set_old, next_set_new);
     diff.output();
 
   } else {
 
       // collect subset of nodes
       node_sets next_set_old
-        = node_sets(out.get_nodes_old(), node_sets_old->at(start_old)->at(1)
-                          , node_sets_old->at(start_old)->back());
+        = node_sets(out.get_nodes_old(), node_sets_old.at(start_old)->at(1)
+                          , node_sets_old.at(start_old)->back());
 
       node_sets next_set_new
-        = node_sets(out.get_nodes_new(), node_sets_new->at(start_new)->at(1)
-                          , node_sets_new->at(start_new)->back());
+        = node_sets(out.get_nodes_new(), node_sets_new.at(start_new)->at(1)
+                          , node_sets_new.at(start_new)->back());
 
-      srcdiff_diff diff(out, &next_set_old, &next_set_new);
+      srcdiff_diff diff(out, next_set_old, next_set_new);
       diff.output();
 
   }
 
-  output_common(node_sets_old->at(start_old)->back() + 1, node_sets_new->at(start_new)->back() + 1);
+  output_common(node_sets_old.at(start_old)->back() + 1, node_sets_new.at(start_new)->back() + 1);
 
   out.output_node(out.diff_common_end.get(), SESCOMMON);
 
@@ -165,15 +165,15 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   out.output_node(out.diff_old_start.get(), SESDELETE);
 
-  out.output_node(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0)), SESDELETE);
+  out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0)), SESDELETE);
 
-  bool is_same_keyword = srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old->at(start_old)->at(1)),
-                  out.get_nodes_new().at(node_sets_new->at(start_new)->at(1))) == 0;
+  bool is_same_keyword = srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old)->at(1)),
+                  out.get_nodes_new().at(node_sets_new.at(start_new)->at(1))) == 0;
 
   int old_collect_start_pos = 1;
   if(!is_same_keyword) {
 
-    out.output_node(out.get_nodes_old().at(node_sets_old->at(start_old)->at(1)), SESDELETE);
+    out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old)->at(1)), SESDELETE);
     ++out.last_output_old();
     old_collect_start_pos = 2;
 
@@ -183,12 +183,12 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   out.output_node(out.diff_new_start.get(), SESINSERT);
 
-  out.output_node(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0)), SESINSERT);
+  out.output_node(out.get_nodes_new().at(node_sets_new.at(start_new)->at(0)), SESINSERT);
 
   int new_collect_start_pos = 1;
   if(!is_same_keyword){
 
-    out.output_node(out.get_nodes_new().at(node_sets_new->at(start_new)->at(1)), SESINSERT);
+    out.output_node(out.get_nodes_new().at(node_sets_new.at(start_new)->at(1)), SESINSERT);
     ++out.last_output_new();
     new_collect_start_pos = 2;
 
@@ -198,21 +198,21 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   // collect subset of nodes
   node_sets next_set_old
-    = node_sets(out.get_nodes_old(), node_sets_old->at(start_old)->at(old_collect_start_pos)
-                      , node_sets_old->at(start_old)->back());
+    = node_sets(out.get_nodes_old(), node_sets_old.at(start_old)->at(old_collect_start_pos)
+                      , node_sets_old.at(start_old)->back());
 
   node_sets next_set_new
-    = node_sets(out.get_nodes_new(), node_sets_new->at(start_new)->at(new_collect_start_pos)
-                      , node_sets_new->at(start_new)->back());
+    = node_sets(out.get_nodes_new(), node_sets_new.at(start_new)->at(new_collect_start_pos)
+                      , node_sets_new.at(start_new)->back());
 
-  srcdiff_diff diff(out, &next_set_old, &next_set_new);
+  srcdiff_diff diff(out, next_set_old, next_set_new);
   diff.output();
 
-  output_change(out.last_output_old(), node_sets_new->at(start_new)->back() + 1);
+  output_change(out.last_output_old(), node_sets_new.at(start_new)->back() + 1);
 
   out.output_node(out.diff_new_end.get(), SESINSERT);
 
-  output_change(node_sets_old->at(start_old)->back() + 1, out.last_output_new());
+  output_change(node_sets_old.at(start_old)->back() + 1, out.last_output_new());
 
   out.output_node(out.diff_old_end.get(), SESDELETE);
 
@@ -223,8 +223,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-    xNodePtr start_node_old = out.get_nodes_old().at(node_sets_old->at(start_old)->front());
-    xNodePtr start_node_new = out.get_nodes_new().at(node_sets_new->at(start_new)->front());
+    xNodePtr start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old)->front());
+    xNodePtr start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new)->front());
 
   if(strcmp((const char *)start_node_old->name, (const char *)start_node_new->name) == 0
     && (start_node_old->ns == start_node_new->ns 

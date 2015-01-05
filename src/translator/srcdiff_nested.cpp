@@ -172,30 +172,12 @@ bool is_nestable_internal(const node_set & structure_one, const std::vector<xNod
   if(block == -1)
     return false;
 
-  // may want to switch to a list of disallows such as can not nest function block
-  /** should this be here or in is better nest */
-  // if(strcmp(nodes_one.at(structure_one.at(0))->name, "block") == 0
-  //   && strcmp(nodes_two.at(structure_two.at(0))->name, "block") == 0
-  //   && nodes_one.at(structure_one.at(0))->parent && nodes_two.at(structure_two.at(0))->parent
-  //   && strcmp(nodes_one.at(structure_one.at(0))->parent, nodes_two.at(structure_two.at(0))->parent) == 0)
-  //   return false;
-
   /** Only can nest a block into another block if it's parent is a block */
   bool is_block = strcmp(nodes_one.at(structure_one.at(0))->name, "block") == 0
    && strcmp(nodes_two.at(structure_two.at(0))->name, "block") == 0;
   bool parent_is_block = nodes_one.at(structure_one.at(0))->parent
    && strcmp(nodes_one.at(structure_one.at(0))->parent, "block") == 0;
   if(is_block && !parent_is_block) return false;
-
-  /** @todo This is a more general version.  Need to see if better. */
-  // bool is_block = strcmp(nodes_one.at(structure_one.at(0))->name, "block") == 0;
-  // bool is_then = strcmp(nodes_two.at(structure_two.at(0))->name, "then") == 0;
-  // bool parent_is_block = nodes_one.at(structure_one.at(0))->parent
-  //  && strcmp(nodes_one.at(structure_one.at(0))->parent, "block") == 0;
-  // bool is_else_to_elseif = nodes_one.at(structure_one.at(0))->parent
-  //  && strcmp(nodes_one.at(structure_one.at(0))->parent, "else") == 0
-  //  && strcmp(nodes_two.at(structure_two.at(0))->name, "if") == 0;
-  // if(is_block && !parent_is_block && !is_then && !is_else_to_elseif) return false;
 
   if(is_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
 
@@ -359,29 +341,6 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
     return srcdiff_match::reject_similarity(similarity, difference, text_old_length, text_new_length,
       nodes_old, set_old, nodes_new, set_new);
 
-    // int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
-    // int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
-
-    // if(min_child_length > 1) { 
-
-    //   if(min_child_length < 3 && 2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
-    //     return false;
-
-    //   if(min_child_length > 2 && 3 * syntax_similarity >= 2 * min_child_length && syntax_difference <= min_child_length) 
-    //     return false;
-
-    // }
-
-    // int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
-    // int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
-
-    // if(min_size <= 2)
-    //   return 2 * similarity < min_size || difference > min_size;
-    // else if(min_size <= 3)
-    //   return 3 * similarity < 2 * min_size || difference > min_size;
-    // else
-    //   return 10 * similarity < 7 * min_size || difference > min_size;
-
   } else {
 
     return srcdiff_match::reject_match(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
@@ -412,24 +371,24 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
 
       if(nodes_new.at(node_sets_new.at(j)->at(0))->move) continue;
 
-      if(is_nestable(node_sets_new.at(j), nodes_new, node_sets_old.at(i), nodes_old)) {
+      if(is_nestable(*node_sets_new.at(j), nodes_new, *node_sets_old.at(i), nodes_old)) {
 
         node_sets set = node_sets(nodes_old, node_sets_old.at(i)->at(1), node_sets_old.at(i)->back(), is_match
                                                              , nodes_new.at(node_sets_new.at(j)->at(0)));
 
-        int match = best_match(nodes_old, set, nodes_new, node_sets_new.at(j), SESDELETE);
+        int match = best_match(nodes_old, set, nodes_new, *node_sets_new.at(j), SESDELETE);
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new.at(j));
+        srcdiff_measure measure(nodes_old, nodes_new, *set.at(match), *node_sets_new.at(j));
         int similarity, difference, text_old_length, text_new_length;
         measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-          nodes_old, set.at(match), nodes_new, node_sets_new.at(j))
-          || is_better_nest(nodes_new, node_sets_new.at(j), nodes_old, node_sets_old.at(i), similarity, difference, text_new_length, text_old_length)
-          || (i + 1 < end_old && is_better_nest(nodes_old, node_sets_old.at(i + 1), nodes_new, node_sets_new.at(j), similarity, difference, text_old_length, text_new_length))
-          || (j + 1 < end_new && is_better_nest(nodes_new, node_sets_new.at(j + 1), nodes_old, node_sets_old.at(i), similarity, difference, text_new_length, text_old_length))
+          nodes_old, *set.at(match), nodes_new, *node_sets_new.at(j))
+          || is_better_nest(nodes_new, *node_sets_new.at(j), nodes_old, *node_sets_old.at(i), similarity, difference, text_new_length, text_old_length)
+          || (i + 1 < end_old && is_better_nest(nodes_old, *node_sets_old.at(i + 1), nodes_new, *node_sets_new.at(j), similarity, difference, text_old_length, text_new_length))
+          || (j + 1 < end_new && is_better_nest(nodes_new, *node_sets_new.at(j + 1), nodes_old, *node_sets_old.at(i), similarity, difference, text_new_length, text_old_length))
           )
           continue;
 
@@ -447,21 +406,21 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
 
           if(nodes_new.at(node_sets_new.at(k)->at(0))->move) continue;
 
-          if(!is_nestable(node_sets_new.at(k), nodes_new, node_sets_old.at(i), nodes_old)) continue;
+          if(!is_nestable(*node_sets_new.at(k), nodes_new, *node_sets_old.at(i), nodes_old)) continue;
 
           node_sets set = node_sets(nodes_old, node_sets_old.at(i)->at(1), node_sets_old.at(i)->back(), is_match
                                                                , nodes_new.at(node_sets_new.at(k)->at(0)));
 
-          int match = best_match(nodes_old, set, nodes_new, node_sets_new.at(k), SESDELETE);
+          int match = best_match(nodes_old, set, nodes_new, *node_sets_new.at(k), SESDELETE);
 
           if(match >= set.size()) continue;
 
-          srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new.at(k));
+          srcdiff_measure measure(nodes_old, nodes_new, *set.at(match), *node_sets_new.at(k));
           int similarity, difference, text_old_length, text_new_length;
           measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
           if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-            nodes_old, set.at(match), nodes_new, node_sets_new.at(k)))
+            nodes_old, *set.at(match), nodes_new, *node_sets_new.at(k)))
             continue;
 
           if(strcmp(nodes_new.at(node_sets_new.at(k)->at(0))->name, "name") == 0
@@ -491,22 +450,22 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
 
       if(nodes_old.at(node_sets_old.at(j)->at(0))->move) continue;
 
-      if(is_nestable(node_sets_old.at(j), nodes_old, node_sets_new.at(i), nodes_new)) {
+      if(is_nestable(*node_sets_old.at(j), nodes_old, *node_sets_new.at(i), nodes_new)) {
 
         node_sets set = node_sets(nodes_new, node_sets_new.at(i)->at(1), node_sets_new.at(i)->back(), is_match
                                                              , nodes_old.at(node_sets_old.at(j)->at(0)));
 
-        int match = best_match(nodes_new, set, nodes_old, node_sets_old.at(j), SESINSERT);
+        int match = best_match(nodes_new, set, nodes_old, *node_sets_old.at(j), SESINSERT);
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_old, nodes_new, node_sets_old.at(j), set.at(match));
+        srcdiff_measure measure(nodes_old, nodes_new, *node_sets_old.at(j), *set.at(match));
         int similarity, difference, text_old_length, text_new_length;
         measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_sets_old.at(j), nodes_new, set.at(match))
-          || (i + 1 < end_new && is_better_nest(nodes_new, node_sets_new.at(i + 1), nodes_old, node_sets_old.at(j), similarity, difference, text_new_length, text_old_length)))
+          nodes_old, *node_sets_old.at(j), nodes_new, *set.at(match))
+          || (i + 1 < end_new && is_better_nest(nodes_new, *node_sets_new.at(i + 1), nodes_old, *node_sets_old.at(j), similarity, difference, text_new_length, text_old_length)))
           continue;
 
         if(strcmp(nodes_old.at(node_sets_old.at(j)->at(0))->name, "name") == 0
@@ -523,21 +482,21 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
 
           if(nodes_old.at(node_sets_old.at(k)->at(0))->move) continue;
         
-          if(!is_nestable(node_sets_old.at(k), nodes_old, node_sets_new.at(i), nodes_new)) continue;
+          if(!is_nestable(*node_sets_old.at(k), nodes_old, *node_sets_new.at(i), nodes_new)) continue;
 
             node_sets set = node_sets(nodes_new, node_sets_new.at(i)->at(1), node_sets_new.at(i)->back(), is_match
                                                              , nodes_old.at(node_sets_old.at(k)->at(0)));
 
-            int match = best_match(nodes_new, set, nodes_old, node_sets_old.at(k), SESINSERT);
+            int match = best_match(nodes_new, set, nodes_old, *node_sets_old.at(k), SESINSERT);
 
             if(match >= set.size()) continue;
 
-            srcdiff_measure measure(nodes_old, nodes_new, node_sets_old.at(k), set.at(match));
+            srcdiff_measure measure(nodes_old, nodes_new, *node_sets_old.at(k), *set.at(match));
             int similarity, difference, text_old_length, text_new_length;
             measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
             if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-              nodes_old, node_sets_old.at(k), nodes_new, set.at(match)))
+              nodes_old, *node_sets_old.at(k), nodes_new, *set.at(match)))
               continue;
 
             if(strcmp(nodes_old.at(node_sets_old.at(k)->at(0))->name, "name") == 0 
@@ -638,7 +597,7 @@ void srcdiff_nested::output() {
 
       whitespace.output_nested(SESDELETE);
 
-      srcdiff_diff diff(out, &set, &nest_set);
+      srcdiff_diff diff(out, set, nest_set);
       diff.output();
 
       whitespace.output_nested(SESDELETE);
@@ -688,7 +647,7 @@ void srcdiff_nested::output() {
 
       whitespace.output_nested(SESINSERT);
 
-      srcdiff_diff diff(out, &nest_set, &set);
+      srcdiff_diff diff(out, nest_set, set);
       diff.output();
 
       whitespace.output_nested(SESINSERT);
