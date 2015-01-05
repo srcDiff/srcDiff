@@ -55,8 +55,8 @@ public:
 	      // text is separate node if not surrounded by a tag in range
 	      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-		      node_set set(nodes, i);
-		      push_back(set);
+		      //node_set set(nodes, i);
+		      emplace_back(nodes, i);
 
 	      } else {
 
