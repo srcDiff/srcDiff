@@ -37,7 +37,7 @@ bool srcdiff_diff::go_down_a_level(const std::vector<xNodePtr> & nodes_old, node
      && strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "expr") != 0)
     return true;
 
-  srcdiff_measure measure(nodes_old, nodes_new, node_sets_old->at(start_old), node_sets_new->at(start_new));
+  srcdiff_measure measure(nodes_old, nodes_new, *node_sets_old->at(start_old), *node_sets_new->at(start_new));
   int similarity, difference, text_old_length, text_new_length;
   measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
@@ -56,7 +56,7 @@ bool srcdiff_diff::group_sub_elements(const std::vector<xNodePtr> & nodes_old, n
   if(strcmp(nodes_old.at(node_sets_old->at(start_old)->at(0))->name, "type") != 0)
     return false;
 
-  srcdiff_measure measure(nodes_old, nodes_new, node_sets_old->at(start_old), node_sets_new->at(start_new));
+  srcdiff_measure measure(nodes_old, nodes_new, *node_sets_old->at(start_old), *node_sets_new->at(start_new));
   unsigned int similarity = measure.compute_similarity();
 
   unsigned int olength = node_sets_old->at(start_old)->size();

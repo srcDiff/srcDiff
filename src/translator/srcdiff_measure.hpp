@@ -11,8 +11,8 @@ class srcdiff_measure {
 protected:
 	const std::vector<xNodePtr> & nodes_old;
 	const std::vector<xNodePtr> & nodes_new;
-	node_set * set_old;
-	node_set * set_new;
+	const node_set & set_old;
+	const node_set & set_new;
 
 private:
 	void compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length);
@@ -20,7 +20,7 @@ private:
 
 public:
 
-	srcdiff_measure(const std::vector<xNodePtr> & nodes_old, const std::vector<xNodePtr> & nodes_new, node_set * set_old, node_set * set_new);
+	srcdiff_measure(const std::vector<xNodePtr> & nodes_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_old, const node_set & set_new);
 
 	int compute_similarity();
 	int compute_similarity(int & text_old_length, int & text_new_length);

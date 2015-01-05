@@ -23,8 +23,8 @@ void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, i
 
       do {
 
-        srcdiff_nested::check_nestable(node_sets_old, out.get_nodes_old(), start_old, end_old + 1
-                        , node_sets_new, out.get_nodes_new(), start_new, end_new + 1
+        srcdiff_nested::check_nestable(*node_sets_old, out.get_nodes_old(), start_old, end_old + 1
+                        , *node_sets_new, out.get_nodes_new(), start_new, end_new + 1
                         , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
 
         finish_old = node_sets_old->at(end_old)->back() + 1;
@@ -238,8 +238,8 @@ void srcdiff_many::output() {
     /** @todo this appears to now be dead code */
      else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
   
-      if(srcdiff_nested::is_nestable(node_sets_old->at(edits->offset_sequence_one + i)
-                     , out.get_nodes_old(), node_sets_new->at(edit_next->offset_sequence_two + j), out.get_nodes_new())) {
+      if(srcdiff_nested::is_nestable(*node_sets_old->at(edits->offset_sequence_one + i)
+                     , out.get_nodes_old(), *node_sets_new->at(edit_next->offset_sequence_two + j), out.get_nodes_new())) {
 
           int nest_length = 1;
           while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
@@ -249,8 +249,8 @@ void srcdiff_many::output() {
                               edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1, SESINSERT);
           diff.output();
 
-      } else if(srcdiff_nested::is_nestable(node_sets_new->at(edit_next->offset_sequence_two + j)
-                            , out.get_nodes_new(), node_sets_old->at(edits->offset_sequence_one + i), out.get_nodes_old())) {
+      } else if(srcdiff_nested::is_nestable(*node_sets_new->at(edit_next->offset_sequence_two + j)
+                            , out.get_nodes_new(), *node_sets_old->at(edits->offset_sequence_one + i), out.get_nodes_old())) {
 
           int nest_length = 1;
           while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)

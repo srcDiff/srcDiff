@@ -74,43 +74,43 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(node_set * structure, const std::vector<xNodePtr> & nodes) {
+int is_block_type(const node_set & structure, const std::vector<xNodePtr> & nodes) {
 
-  if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
+  if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
 
-  if(strcmp(nodes.at(structure->at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
+  if(strcmp(nodes.at(structure.at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
-    if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[i].type) == 0)
+    if(strcmp((const char *)nodes.at(structure.at(0))->name, nesting[i].type) == 0)
       return i;
 
   return -1;
 }
 
-bool has_internal_structure(node_set * structure, const std::vector<xNodePtr> & nodes, const char * type) {
+bool has_internal_structure(const node_set & structure, const std::vector<xNodePtr> & nodes, const char * type) {
 
-  for(unsigned int i = 1; i < structure->size(); ++i)
-    if((xmlReaderTypes)nodes.at(structure->at(i))->type == XML_READER_TYPE_ELEMENT
-              && strcmp((const char *)nodes.at(structure->at(i))->name, type) == 0)
+  for(unsigned int i = 1; i < structure.size(); ++i)
+    if((xmlReaderTypes)nodes.at(structure.at(i))->type == XML_READER_TYPE_ELEMENT
+              && strcmp((const char *)nodes.at(structure.at(i))->name, type) == 0)
       return true;
 
   return false;
 }
 
-bool is_nest_type(node_set * structure, const std::vector<xNodePtr> & nodes
-                           , node_set * structure_other, const std::vector<xNodePtr> & nodes_other, int type_index) {
+bool is_nest_type(const node_set & structure, const std::vector<xNodePtr> & nodes
+                           , const node_set & structure_other, const std::vector<xNodePtr> & nodes_other, int type_index) {
 
-  if((xmlReaderTypes)nodes.at(structure->at(0))->type != XML_READER_TYPE_ELEMENT)
+  if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-  if(strcmp(nodes.at(structure->at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
+  if(strcmp(nodes.at(structure.at(0))->ns->href, "http://www.sdml.info/srcML/src") != 0)
     return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
-    if(strcmp((const char *)nodes.at(structure->at(0))->name, nesting[type_index].possible_nest_items[i]) == 0
-       && has_internal_structure(structure_other, nodes_other, (const char *)nodes.at(structure->at(0))->name))
+    if(strcmp((const char *)nodes.at(structure.at(0))->name, nesting[type_index].possible_nest_items[i]) == 0
+       && has_internal_structure(structure_other, nodes_other, (const char *)nodes.at(structure.at(0))->name))
       return true;
 
   return false;
@@ -122,19 +122,18 @@ bool is_match(const xNodePtr node, const void * context) {
 
 }
 
-int best_match(const std::vector<xNodePtr> & nodes, node_sets & set
-               , const std::vector<xNodePtr> & nodes_match, node_set * match, int operation) {
+int best_match(const std::vector<xNodePtr> & nodes, const node_sets & set, const std::vector<xNodePtr> & nodes_match, const node_set & match, int operation) {
 
   int match_pos = set.size();
   int match_similarity = 0;
 
   if(set.size() > 0) {
 
-    if(!((set.at(0)->size() > match->size() && (set.at(0)->size()) > (4 * match->size()))
-      || (match->size() > set.at(0)->size() && (match->size()) > (4 * set.at(0)->size())))) {
+    if(!((set.at(0)->size() > match.size() && (set.at(0)->size()) > (4 * match.size()))
+      || (match.size() > set.at(0)->size() && (match.size()) > (4 * set.at(0)->size())))) {
 
       match_pos = 0;
-      srcdiff_measure measure(nodes, nodes_match, set.at(0), match);
+      srcdiff_measure measure(nodes, nodes_match, *set.at(0), match);
       match_similarity = measure.compute_similarity();
 
     }
@@ -144,13 +143,13 @@ int best_match(const std::vector<xNodePtr> & nodes, node_sets & set
 
   for(unsigned int i = 1; i < set.size(); ++i) {
 
-    if(set.at(i)->size() > match->size() && (set.at(i)->size()) > (4 * match->size()))
+    if(set.at(i)->size() > match.size() && (set.at(i)->size()) > (4 * match.size()))
       continue;
 
-    if(match->size() > set.at(i)->size() && (match->size()) > (4 * set.at(i)->size()))
+    if(match.size() > set.at(i)->size() && (match.size()) > (4 * set.at(i)->size()))
       continue;
 
-    srcdiff_measure measure(nodes, nodes_match, set.at(i), match);
+    srcdiff_measure measure(nodes, nodes_match, *set.at(i), match);
     int similarity = measure.compute_similarity();
     if(similarity > match_similarity) {
 
@@ -165,8 +164,8 @@ int best_match(const std::vector<xNodePtr> & nodes, node_sets & set
 
 }
 
-bool is_nestable_internal(node_set * structure_one, const std::vector<xNodePtr> & nodes_one
-                 , node_set * structure_two, const std::vector<xNodePtr> & nodes_two) {
+bool is_nestable_internal(const node_set & structure_one, const std::vector<xNodePtr> & nodes_one
+                 , const node_set & structure_two, const std::vector<xNodePtr> & nodes_two) {
 
   int block = is_block_type(structure_two, nodes_two);
 
@@ -175,27 +174,27 @@ bool is_nestable_internal(node_set * structure_one, const std::vector<xNodePtr> 
 
   // may want to switch to a list of disallows such as can not nest function block
   /** should this be here or in is better nest */
-  // if(strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0
-  //   && strcmp(nodes_two.at(structure_two->at(0))->name, "block") == 0
-  //   && nodes_one.at(structure_one->at(0))->parent && nodes_two.at(structure_two->at(0))->parent
-  //   && strcmp(nodes_one.at(structure_one->at(0))->parent, nodes_two.at(structure_two->at(0))->parent) == 0)
+  // if(strcmp(nodes_one.at(structure_one.at(0))->name, "block") == 0
+  //   && strcmp(nodes_two.at(structure_two.at(0))->name, "block") == 0
+  //   && nodes_one.at(structure_one.at(0))->parent && nodes_two.at(structure_two.at(0))->parent
+  //   && strcmp(nodes_one.at(structure_one.at(0))->parent, nodes_two.at(structure_two.at(0))->parent) == 0)
   //   return false;
 
   /** Only can nest a block into another block if it's parent is a block */
-  bool is_block = strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0
-   && strcmp(nodes_two.at(structure_two->at(0))->name, "block") == 0;
-  bool parent_is_block = nodes_one.at(structure_one->at(0))->parent
-   && strcmp(nodes_one.at(structure_one->at(0))->parent, "block") == 0;
+  bool is_block = strcmp(nodes_one.at(structure_one.at(0))->name, "block") == 0
+   && strcmp(nodes_two.at(structure_two.at(0))->name, "block") == 0;
+  bool parent_is_block = nodes_one.at(structure_one.at(0))->parent
+   && strcmp(nodes_one.at(structure_one.at(0))->parent, "block") == 0;
   if(is_block && !parent_is_block) return false;
 
   /** @todo This is a more general version.  Need to see if better. */
-  // bool is_block = strcmp(nodes_one.at(structure_one->at(0))->name, "block") == 0;
-  // bool is_then = strcmp(nodes_two.at(structure_two->at(0))->name, "then") == 0;
-  // bool parent_is_block = nodes_one.at(structure_one->at(0))->parent
-  //  && strcmp(nodes_one.at(structure_one->at(0))->parent, "block") == 0;
-  // bool is_else_to_elseif = nodes_one.at(structure_one->at(0))->parent
-  //  && strcmp(nodes_one.at(structure_one->at(0))->parent, "else") == 0
-  //  && strcmp(nodes_two.at(structure_two->at(0))->name, "if") == 0;
+  // bool is_block = strcmp(nodes_one.at(structure_one.at(0))->name, "block") == 0;
+  // bool is_then = strcmp(nodes_two.at(structure_two.at(0))->name, "then") == 0;
+  // bool parent_is_block = nodes_one.at(structure_one.at(0))->parent
+  //  && strcmp(nodes_one.at(structure_one.at(0))->parent, "block") == 0;
+  // bool is_else_to_elseif = nodes_one.at(structure_one.at(0))->parent
+  //  && strcmp(nodes_one.at(structure_one.at(0))->parent, "else") == 0
+  //  && strcmp(nodes_two.at(structure_two.at(0))->name, "if") == 0;
   // if(is_block && !parent_is_block && !is_then && !is_else_to_elseif) return false;
 
   if(is_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
@@ -207,23 +206,23 @@ bool is_nestable_internal(node_set * structure_one, const std::vector<xNodePtr> 
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(node_set * structure_one, const std::vector<xNodePtr> & nodes_one
-                      , node_set * structure_two, const std::vector<xNodePtr> & nodes_two) {
+bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const std::vector<xNodePtr> & nodes_one
+                      , const node_set & structure_two, const std::vector<xNodePtr> & nodes_two) {
 
   if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
     return false;
 
   //unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
 
-  node_sets set = node_sets(nodes_two, structure_two->at(1), structure_two->back(), is_match
-                                                             , nodes_one.at(structure_one->at(0)));
+  node_sets set = node_sets(nodes_two, structure_two.at(1), structure_two.back(), is_match
+                                                             , nodes_one.at(structure_one.at(0)));
 
   unsigned int match = best_match(nodes_two, set, nodes_one, structure_one, SESDELETE);
 
   if(match >= set.size())
     return false;
 
-  srcdiff_measure match_measure(nodes_one, nodes_two, structure_one, set.at(match));
+  srcdiff_measure match_measure(nodes_one, nodes_two, structure_one, *set.at(match));
   int match_similarity, match_difference, size_one, size_match;
   match_measure.compute_measures(match_similarity, match_difference, size_one, size_match);
 
@@ -237,34 +236,34 @@ bool srcdiff_nested::is_same_nestable(node_set * structure_one, const std::vecto
   return (match_similarity >= similarity && match_difference <= difference) 
   || (match_min_size > 50 && min_size > 50 && (match_min_size / match_similarity) < (0.9 * (min_size / similarity))
 //   && match_difference < 1.5 * difference
-    && !srcdiff_nested::reject_match_nested(match_similarity, match_difference, size_match, size_one, nodes_two, set.at(match), nodes_one, structure_one));
+    && !srcdiff_nested::reject_match_nested(match_similarity, match_difference, size_match, size_one, nodes_two, *set.at(match), nodes_one, structure_one));
 
 }
 
-bool srcdiff_nested::is_nestable(node_set * structure_one, const std::vector<xNodePtr> & nodes_one
-                 , node_set * structure_two, const std::vector<xNodePtr> & nodes_two) {
+bool srcdiff_nested::is_nestable(const node_set & structure_one, const std::vector<xNodePtr> & nodes_one
+                 , const node_set & structure_two, const std::vector<xNodePtr> & nodes_two) {
 
-  if(srcdiff_compare::node_compare(nodes_one.at(structure_one->at(0)), nodes_two.at(structure_two->at(0))) == 0)
+  if(srcdiff_compare::node_compare(nodes_one.at(structure_one.at(0)), nodes_two.at(structure_two.at(0))) == 0)
     return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
   else
     return is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two);
 
 }
 
-bool is_better_nest_no_recursion(const std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
-                    const std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
+bool is_better_nest_no_recursion(const std::vector<xNodePtr> & nodes_outer, const node_set & node_set_outer,
+                    const std::vector<xNodePtr> & nodes_inner, const node_set & node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
-      node_sets set = node_sets(nodes_outer, node_set_outer->at(1), node_set_outer->back(), is_match
-                                                             , nodes_inner.at(node_set_inner->at(0)));
+      node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), is_match
+                                                             , nodes_inner.at(node_set_inner.at(0)));
 
       int match = best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
 
       if(match < set.size()) {
 
-        srcdiff_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
+        srcdiff_measure measure(nodes_outer, nodes_inner, *set.at(match), node_set_inner);
         int nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length;
         measure.compute_measures(nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
 
@@ -284,20 +283,20 @@ bool is_better_nest_no_recursion(const std::vector<xNodePtr> & nodes_outer, node
 
 }
 
-bool is_better_nest(const std::vector<xNodePtr> & nodes_outer, node_set * node_set_outer,
-                    const std::vector<xNodePtr> & nodes_inner, node_set * node_set_inner,
+bool is_better_nest(const std::vector<xNodePtr> & nodes_outer, const node_set & node_set_outer,
+                    const std::vector<xNodePtr> & nodes_inner, const node_set & node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 // parents and children same do not nest.
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
-      node_sets set = node_sets(nodes_outer, node_set_outer->at(1), node_set_outer->back(), is_match
-                                                             , nodes_inner.at(node_set_inner->at(0)));
+      node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), is_match
+                                                             , nodes_inner.at(node_set_inner.at(0)));
 
       int match = best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
 
       if(match < set.size()) {
 
-        srcdiff_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
+        srcdiff_measure measure(nodes_outer, nodes_inner, *set.at(match), node_set_inner);
         int nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length;
         measure.compute_measures(nest_similarity, nest_difference, nest_text_outer_length, nest_text_inner_length);
 
@@ -319,20 +318,20 @@ bool is_better_nest(const std::vector<xNodePtr> & nodes_outer, node_set * node_s
 
 }
 
-bool srcdiff_nested::is_better_nested(const std::vector<xNodePtr> & nodes_old, node_sets * node_sets_old, int start_pos_old,
-                    const std::vector<xNodePtr> & nodes_new, node_sets * node_sets_new, int start_pos_new,
+bool srcdiff_nested::is_better_nested(const std::vector<xNodePtr> & nodes_old, const node_sets & node_sets_old, int start_pos_old,
+                    const std::vector<xNodePtr> & nodes_new, const node_sets & node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
-  for(int pos = start_pos_old; pos < node_sets_old->size(); ++pos) {
+  for(int pos = start_pos_old; pos < node_sets_old.size(); ++pos) {
 
-    if(is_better_nest(nodes_old, node_sets_old->at(pos), nodes_new, node_sets_new->at(start_pos_new), similarity, difference, text_old_length, text_new_length))
+    if(is_better_nest(nodes_old, *node_sets_old.at(pos), nodes_new, *node_sets_new.at(start_pos_new), similarity, difference, text_old_length, text_new_length))
       return true;
 
   }
 
-  for(int pos = start_pos_new; pos < node_sets_new->size(); ++pos) {
+  for(int pos = start_pos_new; pos < node_sets_new.size(); ++pos) {
 
-    if(is_better_nest(nodes_new, node_sets_new->at(pos), nodes_old, node_sets_old->at(start_pos_old), similarity, difference, text_old_length, text_new_length))
+    if(is_better_nest(nodes_new, *node_sets_new.at(pos), nodes_old, *node_sets_old.at(start_pos_old), similarity, difference, text_old_length, text_new_length))
       return true;
 
   }
@@ -342,10 +341,10 @@ bool srcdiff_nested::is_better_nested(const std::vector<xNodePtr> & nodes_old, n
 }
 
 bool srcdiff_nested::reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+  const std::vector<xNodePtr> & nodes_old, const node_set & set_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_new) {
 
-  int old_pos = set_old->at(0);
-  int new_pos = set_new->at(0);
+  int old_pos = set_old.at(0);
+  int new_pos = set_new.at(0);
 
   std::string old_tag = nodes_old.at(old_pos)->name;
   std::string new_tag = nodes_new.at(new_pos)->name;
@@ -391,8 +390,8 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
 
 }
 
-void srcdiff_nested::check_nestable(node_sets * node_sets_old, const std::vector<xNodePtr> & nodes_old, int start_old, int end_old
-                 , node_sets * node_sets_new, const std::vector<xNodePtr> & nodes_new, int start_new, int end_new
+void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::vector<xNodePtr> & nodes_old, int start_old, int end_old
+                 , const node_sets & node_sets_new, const std::vector<xNodePtr> & nodes_new, int start_new, int end_new
                  , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
                  , int & operation) {
 
@@ -407,36 +406,36 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, const std::vector
 
   for(int i = start_old; i < end_old; ++i) {
 
-    if(nodes_old.at(node_sets_old->at(i)->at(0))->move) continue;
+    if(nodes_old.at(node_sets_old.at(i)->at(0))->move) continue;
 
     for(int j = start_new; j < end_new; ++j) {
 
-      if(nodes_new.at(node_sets_new->at(j)->at(0))->move) continue;
+      if(nodes_new.at(node_sets_new.at(j)->at(0))->move) continue;
 
-      if(is_nestable(node_sets_new->at(j), nodes_new, node_sets_old->at(i), nodes_old)) {
+      if(is_nestable(node_sets_new.at(j), nodes_new, node_sets_old.at(i), nodes_old)) {
 
-        node_sets set = node_sets(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back(), is_match
-                                                             , nodes_new.at(node_sets_new->at(j)->at(0)));
+        node_sets set = node_sets(nodes_old, node_sets_old.at(i)->at(1), node_sets_old.at(i)->back(), is_match
+                                                             , nodes_new.at(node_sets_new.at(j)->at(0)));
 
-        int match = best_match(nodes_old, set, nodes_new, node_sets_new->at(j), SESDELETE);
+        int match = best_match(nodes_old, set, nodes_new, node_sets_new.at(j), SESDELETE);
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new->at(j));
+        srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new.at(j));
         int similarity, difference, text_old_length, text_new_length;
         measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-          nodes_old, set.at(match), nodes_new, node_sets_new->at(j))
-          || is_better_nest(nodes_new, node_sets_new->at(j), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length)
-          || (i + 1 < end_old && is_better_nest(nodes_old, node_sets_old->at(i + 1), nodes_new, node_sets_new->at(j), similarity, difference, text_old_length, text_new_length))
-          || (j + 1 < end_new && is_better_nest(nodes_new, node_sets_new->at(j + 1), nodes_old, node_sets_old->at(i), similarity, difference, text_new_length, text_old_length))
+          nodes_old, set.at(match), nodes_new, node_sets_new.at(j))
+          || is_better_nest(nodes_new, node_sets_new.at(j), nodes_old, node_sets_old.at(i), similarity, difference, text_new_length, text_old_length)
+          || (i + 1 < end_old && is_better_nest(nodes_old, node_sets_old.at(i + 1), nodes_new, node_sets_new.at(j), similarity, difference, text_old_length, text_new_length))
+          || (j + 1 < end_new && is_better_nest(nodes_new, node_sets_new.at(j + 1), nodes_old, node_sets_old.at(i), similarity, difference, text_new_length, text_old_length))
           )
           continue;
 
-        if(strcmp(nodes_new.at(node_sets_new->at(j)->at(0))->name, "name") == 0
-          && strcmp(nodes_new.at(node_sets_new->at(j)->at(0))->parent, "expr") == 0
-          && strcmp(nodes_old.at(node_sets_old->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+        if(strcmp(nodes_new.at(node_sets_new.at(j)->at(0))->name, "name") == 0
+          && strcmp(nodes_new.at(node_sets_new.at(j)->at(0))->parent, "expr") == 0
+          && strcmp(nodes_old.at(node_sets_old.at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
           continue;
 
         valid_nests_old.push_back(j);
@@ -446,28 +445,28 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, const std::vector
 
         for(int k = j + 1; k < end_new; ++k) {
 
-          if(nodes_new.at(node_sets_new->at(k)->at(0))->move) continue;
+          if(nodes_new.at(node_sets_new.at(k)->at(0))->move) continue;
 
-          if(!is_nestable(node_sets_new->at(k), nodes_new, node_sets_old->at(i), nodes_old)) continue;
+          if(!is_nestable(node_sets_new.at(k), nodes_new, node_sets_old.at(i), nodes_old)) continue;
 
-          node_sets set = node_sets(nodes_old, node_sets_old->at(i)->at(1), node_sets_old->at(i)->back(), is_match
-                                                               , nodes_new.at(node_sets_new->at(k)->at(0)));
+          node_sets set = node_sets(nodes_old, node_sets_old.at(i)->at(1), node_sets_old.at(i)->back(), is_match
+                                                               , nodes_new.at(node_sets_new.at(k)->at(0)));
 
-          int match = best_match(nodes_old, set, nodes_new, node_sets_new->at(k), SESDELETE);
+          int match = best_match(nodes_old, set, nodes_new, node_sets_new.at(k), SESDELETE);
 
           if(match >= set.size()) continue;
 
-          srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new->at(k));
+          srcdiff_measure measure(nodes_old, nodes_new, set.at(match), node_sets_new.at(k));
           int similarity, difference, text_old_length, text_new_length;
           measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
           if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-            nodes_old, set.at(match), nodes_new, node_sets_new->at(k)))
+            nodes_old, set.at(match), nodes_new, node_sets_new.at(k)))
             continue;
 
-          if(strcmp(nodes_new.at(node_sets_new->at(k)->at(0))->name, "name") == 0
-            && strcmp(nodes_new.at(node_sets_new->at(k)->at(0))->parent, "expr") == 0
-            && strcmp(nodes_old.at(node_sets_old->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+          if(strcmp(nodes_new.at(node_sets_new.at(k)->at(0))->name, "name") == 0
+            && strcmp(nodes_new.at(node_sets_new.at(k)->at(0))->parent, "expr") == 0
+            && strcmp(nodes_old.at(node_sets_old.at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
             continue;
 
           valid_nests_old.push_back(k);
@@ -486,33 +485,33 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, const std::vector
 
   for(int i = start_new; i < end_new; ++i) {
 
-    if(nodes_new.at(node_sets_new->at(i)->at(0))->move) continue;
+    if(nodes_new.at(node_sets_new.at(i)->at(0))->move) continue;
 
     for(int j = start_old; j < end_old; ++j) {
 
-      if(nodes_old.at(node_sets_old->at(j)->at(0))->move) continue;
+      if(nodes_old.at(node_sets_old.at(j)->at(0))->move) continue;
 
-      if(is_nestable(node_sets_old->at(j), nodes_old, node_sets_new->at(i), nodes_new)) {
+      if(is_nestable(node_sets_old.at(j), nodes_old, node_sets_new.at(i), nodes_new)) {
 
-        node_sets set = node_sets(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back(), is_match
-                                                             , nodes_old.at(node_sets_old->at(j)->at(0)));
+        node_sets set = node_sets(nodes_new, node_sets_new.at(i)->at(1), node_sets_new.at(i)->back(), is_match
+                                                             , nodes_old.at(node_sets_old.at(j)->at(0)));
 
-        int match = best_match(nodes_new, set, nodes_old, node_sets_old->at(j), SESINSERT);
+        int match = best_match(nodes_new, set, nodes_old, node_sets_old.at(j), SESINSERT);
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_old, nodes_new, node_sets_old->at(j), set.at(match));
+        srcdiff_measure measure(nodes_old, nodes_new, node_sets_old.at(j), set.at(match));
         int similarity, difference, text_old_length, text_new_length;
         measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
         if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_sets_old->at(j), nodes_new, set.at(match))
-          || (i + 1 < end_new && is_better_nest(nodes_new, node_sets_new->at(i + 1), nodes_old, node_sets_old->at(j), similarity, difference, text_new_length, text_old_length)))
+          nodes_old, node_sets_old.at(j), nodes_new, set.at(match))
+          || (i + 1 < end_new && is_better_nest(nodes_new, node_sets_new.at(i + 1), nodes_old, node_sets_old.at(j), similarity, difference, text_new_length, text_old_length)))
           continue;
 
-        if(strcmp(nodes_old.at(node_sets_old->at(j)->at(0))->name, "name") == 0
-          && strcmp(nodes_old.at(node_sets_old->at(j)->at(0))->parent, "expr") == 0
-          && strcmp(nodes_new.at(node_sets_new->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+        if(strcmp(nodes_old.at(node_sets_old.at(j)->at(0))->name, "name") == 0
+          && strcmp(nodes_old.at(node_sets_old.at(j)->at(0))->parent, "expr") == 0
+          && strcmp(nodes_new.at(node_sets_new.at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
           continue;
 
         valid_nests_new.push_back(j);
@@ -522,28 +521,28 @@ void srcdiff_nested::check_nestable(node_sets * node_sets_old, const std::vector
 
         for(int k = j + 1; k < end_old; ++k) {
 
-          if(nodes_old.at(node_sets_old->at(k)->at(0))->move) continue;
+          if(nodes_old.at(node_sets_old.at(k)->at(0))->move) continue;
         
-          if(!is_nestable(node_sets_old->at(k), nodes_old, node_sets_new->at(i), nodes_new)) continue;
+          if(!is_nestable(node_sets_old.at(k), nodes_old, node_sets_new.at(i), nodes_new)) continue;
 
-            node_sets set = node_sets(nodes_new, node_sets_new->at(i)->at(1), node_sets_new->at(i)->back(), is_match
-                                                             , nodes_old.at(node_sets_old->at(k)->at(0)));
+            node_sets set = node_sets(nodes_new, node_sets_new.at(i)->at(1), node_sets_new.at(i)->back(), is_match
+                                                             , nodes_old.at(node_sets_old.at(k)->at(0)));
 
-            int match = best_match(nodes_new, set, nodes_old, node_sets_old->at(k), SESINSERT);
+            int match = best_match(nodes_new, set, nodes_old, node_sets_old.at(k), SESINSERT);
 
             if(match >= set.size()) continue;
 
-            srcdiff_measure measure(nodes_old, nodes_new, node_sets_old->at(k), set.at(match));
+            srcdiff_measure measure(nodes_old, nodes_new, node_sets_old.at(k), set.at(match));
             int similarity, difference, text_old_length, text_new_length;
             measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
             if(reject_match_nested(similarity, difference, text_old_length, text_new_length,
-              nodes_old, node_sets_old->at(k), nodes_new, set.at(match)))
+              nodes_old, node_sets_old.at(k), nodes_new, set.at(match)))
               continue;
 
-            if(strcmp(nodes_old.at(node_sets_old->at(k)->at(0))->name, "name") == 0 
-              && strcmp(nodes_old.at(node_sets_old->at(k)->at(0))->parent, "expr") == 0
-              && strcmp(nodes_new.at(node_sets_new->at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
+            if(strcmp(nodes_old.at(node_sets_old.at(k)->at(0))->name, "name") == 0 
+              && strcmp(nodes_old.at(node_sets_old.at(k)->at(0))->parent, "expr") == 0
+              && strcmp(nodes_new.at(node_sets_new.at(i)->at(0))->parent, "expr") == 0 && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
               continue;
 
           valid_nests_new.push_back(k);
@@ -597,16 +596,16 @@ void srcdiff_nested::output() {
 
   if(operation == SESDELETE) {
 
-    unsigned int end_pos = node_sets_old->at(start_old)->at(1);
+    unsigned int end_pos = node_sets_old.at(start_old)->at(1);
 
-    if(strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "if") == 0 || strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "elseif") == 0) {
+    if(strcmp(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0))->name, "if") == 0 || strcmp(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0))->name, "elseif") == 0) {
 
         while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
           && strcmp(out.get_nodes_old().at(end_pos)->name, "then") == 0))
 
           ++end_pos;
 
-    } else if(strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "while") == 0) {
+    } else if(strcmp(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0))->name, "while") == 0) {
 
         while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(out.get_nodes_old().at(end_pos)->name, "condition") == 0))
@@ -614,7 +613,7 @@ void srcdiff_nested::output() {
 
         ++end_pos;
 
-    } else if(strcmp(out.get_nodes_old().at(node_sets_old->at(start_old)->at(0))->name, "for") == 0) {
+    } else if(strcmp(out.get_nodes_old().at(node_sets_old.at(start_old)->at(0))->name, "for") == 0) {
 
         while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(out.get_nodes_old().at(end_pos)->name, "control") == 0))
@@ -626,14 +625,14 @@ void srcdiff_nested::output() {
     }
 
     node_sets set = node_sets(out.get_nodes_old(),
-      //node_sets_old->at(start_old)->at(1),
+      //node_sets_old.at(start_old)->at(1),
       end_pos,
-      node_sets_old->at(end_old - 1)->back());
+      node_sets_old.at(end_old - 1)->back());
 
     node_sets nest_set(out.get_nodes_new());
 
     for(int i = start_new; i < end_new; ++i)
-        nest_set.push_back(new node_set(*node_sets_new->at(i)));
+        nest_set.push_back(new node_set(*node_sets_new.at(i)));
 
       output_change(end_pos, out.last_output_new());
 
@@ -644,19 +643,19 @@ void srcdiff_nested::output() {
 
       whitespace.output_nested(SESDELETE);
 
-      output_change(node_sets_old->at(end_old - 1)->back() + 1, out.last_output_new());
+      output_change(node_sets_old.at(end_old - 1)->back() + 1, out.last_output_new());
 
   } else {
 
-    unsigned int end_pos = node_sets_new->at(start_new)->at(1);
+    unsigned int end_pos = node_sets_new.at(start_new)->at(1);
 
-    if(strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "if") == 0 || strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "elseif") == 0) {
+    if(strcmp(out.get_nodes_new().at(node_sets_new.at(start_new)->at(0))->name, "if") == 0 || strcmp(out.get_nodes_new().at(node_sets_new.at(start_new)->at(0))->name, "elseif") == 0) {
 
         while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
           && strcmp(out.get_nodes_new().at(end_pos)->name, "then") == 0))
           ++end_pos;
 
-    } else if(strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "while") == 0) {
+    } else if(strcmp(out.get_nodes_new().at(node_sets_new.at(start_new)->at(0))->name, "while") == 0) {
 
         while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(out.get_nodes_new().at(end_pos)->name, "condition") == 0))
@@ -664,7 +663,7 @@ void srcdiff_nested::output() {
 
         ++end_pos;
 
-    } else if(strcmp(out.get_nodes_new().at(node_sets_new->at(start_new)->at(0))->name, "for") == 0) {
+    } else if(strcmp(out.get_nodes_new().at(node_sets_new.at(start_new)->at(0))->name, "for") == 0) {
 
         while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && strcmp(out.get_nodes_new().at(end_pos)->name, "control") == 0))
@@ -676,14 +675,14 @@ void srcdiff_nested::output() {
     }
 
     node_sets set = node_sets(out.get_nodes_new(),
-      //node_sets_old->at(start_old)->at(1),
+      //node_sets_old.at(start_old)->at(1),
       end_pos,
-      node_sets_new->at(end_new - 1)->back());
+      node_sets_new.at(end_new - 1)->back());
 
     node_sets nest_set(out.get_nodes_old());
 
     for(int i = start_old; i < end_old; ++i)
-        nest_set.push_back(new node_set(*node_sets_old->at(i)));
+        nest_set.push_back(new node_set(*node_sets_old.at(i)));
 
       output_change(out.last_output_old(), end_pos);
 
@@ -694,7 +693,7 @@ void srcdiff_nested::output() {
 
       whitespace.output_nested(SESINSERT);
 
-      output_change(out.last_output_old(), node_sets_new->at(end_new - 1)->back() + 1);
+      output_change(out.last_output_old(), node_sets_new.at(end_new - 1)->back() + 1);
   }
 
   //output_all(rbuf_old, rbuf_new, wstate);

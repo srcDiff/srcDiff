@@ -144,7 +144,7 @@ offset_pair * srcdiff_match::match_differences() {
 
     for(int j = 0; j < olength; ++j) {
 
-      srcdiff_measure measure(nodes_old, nodes_new, node_sets_old->at(j), node_sets_new->at(i));
+      srcdiff_measure measure(nodes_old, nodes_new, *node_sets_old->at(j), *node_sets_new->at(i));
       int similarity, difference, text_old_length, text_new_length;
       measure.compute_measures(similarity, difference, text_old_length, text_new_length);
 
@@ -156,7 +156,7 @@ offset_pair * srcdiff_match::match_differences() {
       if(similarity == MAX_INT 
         || reject_match(similarity, difference, text_old_length, text_new_length,
           nodes_old, node_sets_old->at(j), nodes_new, node_sets_new->at(i))
-        || srcdiff_nested::is_better_nested(nodes_old, node_sets_old, j, nodes_new, node_sets_new, i,
+        || srcdiff_nested::is_better_nested(nodes_old, *node_sets_old, j, nodes_new, *node_sets_new, i,
             similarity, difference, text_old_length, text_new_length)) {
 
         similarity = 0;
@@ -752,7 +752,7 @@ std::string get_class_type_name(const std::vector<xNodePtr> & nodes, int start_p
 
 }
 
-bool conditional_has_block(const std::vector<xNodePtr> & nodes, node_set * set) {
+bool conditional_has_block(const std::vector<xNodePtr> & nodes, const node_set & set) {
 
   node_sets sets = node_sets(nodes, set->at(1), set->back());
 
@@ -783,7 +783,7 @@ bool conditional_has_block(const std::vector<xNodePtr> & nodes, node_set * set) 
 
 }
 
-bool if_has_else(const std::vector<xNodePtr> & nodes, node_set * set) {
+bool if_has_else(const std::vector<xNodePtr> & nodes, const node_set & set) {
 
   node_sets sets = node_sets(nodes, set->at(1), set->back());
 
@@ -801,7 +801,7 @@ bool if_has_else(const std::vector<xNodePtr> & nodes, node_set * set) {
 
 }
 
-bool if_then_equal(const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+bool if_then_equal(const std::vector<xNodePtr> & nodes_old, const node_set & set_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -836,7 +836,7 @@ bool if_then_equal(const std::vector<xNodePtr> & nodes_old, node_set * set_old, 
 
 }
 
-bool for_control_matches(const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+bool for_control_matches(const std::vector<xNodePtr> & nodes_old, const node_set & set_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -957,7 +957,7 @@ bool srcdiff_match::is_interchangeable_match(const std::string & old_tag, const 
 }
 
 bool reject_match_same(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+  const std::vector<xNodePtr> & nodes_old, const node_set & set_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_new) {
 
   int old_pos = set_old->at(0);
   int new_pos = set_new->at(0);
@@ -997,7 +997,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
         node_sets node_sets_new = node_sets(nodes_new, set_new->at(0), set_new->back() + 1);
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
-        srcdiff_nested::check_nestable(&node_sets_old, nodes_old, 0, node_sets_old.size(), &node_sets_new, nodes_new, 0, 1,
+        srcdiff_nested::check_nestable(node_sets_old, nodes_old, 0, node_sets_old.size(), node_sets_new, nodes_new, 0, 1,
                       start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
 
 
@@ -1009,7 +1009,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
         node_sets node_sets_new = node_sets(nodes_new, set_new->at(1), set_new->back());
 
         int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
-        srcdiff_nested::check_nestable(&node_sets_old, nodes_old, 0, 1, &node_sets_new, nodes_new, 0, node_sets_new.size(),
+        srcdiff_nested::check_nestable(node_sets_old, nodes_old, 0, 1, node_sets_new, nodes_new, 0, node_sets_new.size(),
                       start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
 
 
@@ -1114,7 +1114,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 }
 
 bool reject_match_interchangeable(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+  const std::vector<xNodePtr> & nodes_old, const node_set & set_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_new) {
 
   int old_pos = set_old->at(0);
   int new_pos = set_new->at(0);
@@ -1144,7 +1144,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 }
 
 bool srcdiff_match::reject_match(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+  const std::vector<xNodePtr> & nodes_old, const node_set & set_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_new) {
 
   /** if different prefix should not reach here, however, may want to add that here */
   int old_pos = set_old->at(0);
@@ -1163,7 +1163,7 @@ bool srcdiff_match::reject_match(int similarity, int difference, int text_old_le
 }
 
 bool srcdiff_match::reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<xNodePtr> & nodes_old, node_set * set_old, const std::vector<xNodePtr> & nodes_new, node_set * set_new) {
+  const std::vector<xNodePtr> & nodes_old, const node_set & set_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_new) {
 
   srcdiff_measure measure(nodes_old, nodes_new, set_old, set_new);
   int syntax_similarity, syntax_difference, children_length_old, children_length_new;
@@ -1179,8 +1179,8 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   }
 
-  node_sets child_node_sets_old = node_sets(nodes_old, set_old->at(1), set_old->back());
-  node_sets child_node_sets_new = node_sets(nodes_new, set_new->at(1), set_new->back());    
+  node_sets child_node_sets_old = node_sets(nodes_old, set_old.at(1), set_old.back());
+  node_sets child_node_sets_new = node_sets(nodes_new, set_new-.t(1), set_new.back());    
 
   if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "then") == 0) {
 
@@ -1199,7 +1199,7 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   if(strcmp(nodes_old.at(child_node_sets_old.back()->at(0))->name, "block") == 0
     && strcmp(nodes_new.at(child_node_sets_new.back()->at(0))->name, "block") == 0) {
 
-    srcdiff_measure measure(nodes_old, nodes_new, child_node_sets_old.back(), child_node_sets_new.back());
+    srcdiff_measure measure(nodes_old, nodes_new, *child_node_sets_old.back(), *child_node_sets_new.back());
     measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_old, children_length_new);
 
     min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
