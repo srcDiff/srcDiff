@@ -25,62 +25,6 @@ extern xNode diff_new_end;
 srcdiff_diff::srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_old, const node_sets & node_sets_new) 
   : out(out), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
-
-bool srcdiff_diff::go_down_a_level(const std::vector<xNodePtr> & nodes_old, const node_sets & node_sets_old
-                     , unsigned int start_old
-                     , const std::vector<xNodePtr> & nodes_new, const node_sets & node_sets_new
-                     , unsigned int start_new) {
-
-
-  if(strcmp(nodes_old.at(node_sets_old.at(start_old).at(0))->name, "expr_stmt") != 0
-     && strcmp(nodes_old.at(node_sets_old.at(start_old).at(0))->name, "decl_stmt") != 0
-     && strcmp(nodes_old.at(node_sets_old.at(start_old).at(0))->name, "expr") != 0)
-    return true;
-
-  srcdiff_measure measure(nodes_old, nodes_new, node_sets_old.at(start_old), node_sets_new.at(start_new));
-  int similarity, difference, text_old_length, text_new_length;
-  measure.compute_measures(similarity, difference, text_old_length, text_new_length);
-
-  return !srcdiff_match::reject_match(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_sets_old.at(start_old), nodes_new, node_sets_new.at(start_new));
-
-}
-
-bool srcdiff_diff::group_sub_elements(const std::vector<xNodePtr> & nodes_old, const node_sets & node_sets_old
-                        , unsigned int start_old
-                        , const std::vector<xNodePtr> & nodes_new, const node_sets & node_sets_new
-                        , unsigned int start_new) {
-
-
-  if(strcmp(nodes_old.at(node_sets_old.at(start_old).at(0))->name, "type") != 0)
-    return false;
-
-  srcdiff_measure measure(nodes_old, nodes_new, node_sets_old.at(start_old), node_sets_new.at(start_new));
-  unsigned int similarity = measure.compute_similarity();
-
-  unsigned int olength = node_sets_old.at(start_old).size();
-  unsigned int nlength = node_sets_new.at(start_new).size();
-
-  unsigned int size_old = 0;
-
-  for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(node_sets_old.at(start_old).at(i))) && !is_white_space(nodes_old.at(node_sets_old.at(start_old).at(i))))
-      ++size_old;
-
-  unsigned int size_new = 0;
-
-  for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(node_sets_new.at(start_new).at(i))) && !is_white_space(nodes_new.at(node_sets_new.at(start_new).at(i))))
-      ++size_new;
-
-  unsigned int min_length = size_old;
-  if(size_new < min_length)
-    min_length = size_new;
-
-  return 4 * similarity < 3 * min_length;
-
-}
-
 /*
 
   Outputs diff on each level.  First, Common areas as well as inserts and deletes

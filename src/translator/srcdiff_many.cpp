@@ -220,9 +220,7 @@ void srcdiff_many::output() {
 
     if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
  
-      if((xmlReaderTypes)out.get_nodes_old().at(node_sets_old.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT
-         && (ismethod(out.method(), METHOD_RAW) || srcdiff_diff::go_down_a_level(out.get_nodes_old(), node_sets_old, edits->offset_sequence_one + i
-                                                                    , out.get_nodes_new(), node_sets_new, edit_next->offset_sequence_two + j))) {
+      if((xmlReaderTypes)out.get_nodes_old().at(node_sets_old.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
 
         srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
         diff.output();
