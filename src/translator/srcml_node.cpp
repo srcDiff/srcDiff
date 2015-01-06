@@ -267,7 +267,7 @@ srcml_node::~srcml_node() {
 
 }
 
-bool srcml_node::operator==(const srcml_node & node) {
+bool srcml_node::operator==(const srcml_node & node) const {
 
   return type == node.type &&
     (strcmp((char*) name, (char*) node.name) == 0) && 
@@ -275,20 +275,20 @@ bool srcml_node::operator==(const srcml_node & node) {
       (strcmp((char*) content, (char*) node.content) == 0));
 }
 
-bool srcml_node::is_white_space() {
+bool srcml_node::is_white_space() const {
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
   return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && isspace((char)content[0]);
 
 }
 
-bool srcml_node::is_new_line() {
+bool srcml_node::is_new_line() const {
 
   return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && content[0] == '\n';
 
 }
 
-bool srcml_node::is_text() {
+bool srcml_node::is_text() const {
 
   return (xmlReaderTypes)type == XML_READER_TYPE_TEXT;
 }

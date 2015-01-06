@@ -26,10 +26,10 @@ namespace srcdiff_compare {
   }
 
 
-  bool attribute_compare(xAttr * attr1, xAttr * attr2) {
+  bool attribute_compare(srcml_attr * attr1, srcml_attr * attr2) {
 
-    xAttr * attr_old = attr1;
-    xAttr * attr_new = attr2;
+    srcml_attr * attr_old = attr1;
+    srcml_attr * attr_new = attr2;
 
     for(; attr_old && attr_new
           && strcmp((const char *)attr_old->name, (const char *)attr_new->name) == 0
@@ -87,14 +87,14 @@ namespace srcdiff_compare {
 
       // string consecutive non whitespace text nodes
       // TODO:  Why create the string?  Just compare directly as you go through
-      if(is_text(dnodes.nodes_old.at(node_set1->at(i))) && is_text(dnodes.nodes_new.at(node_set2->at(j)))) {
+      if(dnodes.nodes_old.at(node_set1->at(i))->is_text() && dnodes.nodes_new.at(node_set2->at(j))->is_text()) {
 
         std::string text1 = "";
-        for(; i < node_set1->size() && is_text(dnodes.nodes_old.at(node_set1->at(i))); ++i)
+        for(; i < node_set1->size() && dnodes.nodes_old.at(node_set1->at(i))->is_text(); ++i)
           text1 += (const char *)dnodes.nodes_old.at(node_set1->at(i))->content;
 
         std::string text2 = "";
-        for(; j < node_set2->size() && is_text(dnodes.nodes_new.at(node_set2->at(j))); ++j)
+        for(; j < node_set2->size() && dnodes.nodes_new.at(node_set2->at(j))->is_text(); ++j)
           text2 += (const char *)dnodes.nodes_new.at(node_set2->at(j))->content;
 
         if(text1 != text2)

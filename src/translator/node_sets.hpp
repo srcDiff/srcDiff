@@ -2,6 +2,7 @@
 #define INCLUDED_NODE_SETS_HPP
 
 #include <srcdiff_vector.hpp>
+
 #include <node_set.hpp>
 
 class node_sets : public srcdiff_vector<node_set> {

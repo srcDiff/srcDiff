@@ -3,7 +3,7 @@
 
 #include <srcdiff_vector.hpp>
 
-#include <xmlrw.hpp>
+#include <srcml_node.hpp>
 
 class node_set : public srcdiff_vector<int> {
 

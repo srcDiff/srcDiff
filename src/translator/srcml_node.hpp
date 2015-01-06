@@ -90,13 +90,13 @@ public:
 
   ~srcml_node();
 
-  bool operator==(const srcml_node & node);
+  bool operator==(const srcml_node & node) const;
 
-  bool is_white_space();
+  bool is_white_space() const;
 
-  bool is_new_line();
+  bool is_new_line() const;
 
-  bool is_text();
+  bool is_text() const;
 
 };
 
