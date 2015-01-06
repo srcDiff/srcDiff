@@ -235,6 +235,8 @@ void srcml_attr::free_srcml_attr(srcml_attr * properties) {
 
 }
 
+srcml_ns::srcml_ns(const srcml_ns & ns) : href(strdup(href)), prefix(strdup(prefix)) {}
+
 srcml_node::~srcml_node() {
 
  if(ns) {

@@ -40,6 +40,8 @@ public:
 
   srcml_ns(const char * href = 0, const char * prefix = 0) : href(href), prefix(prefix) {}
 
+  srcml_ns(const srcml_ns & ns);
+
   const char * href;
   const char * prefix;
 
