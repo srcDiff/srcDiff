@@ -236,7 +236,7 @@ void srcml_attr::free_srcml_attr(srcml_attr * properties) {
 }
 
 srcml_node::~srcml_node() {
-return;
+
  if(ns) {
 
     if(ns->href)
