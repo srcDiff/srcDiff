@@ -4,28 +4,10 @@
 
 #include <libxml/xmlreader.h>
 
-// inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
+std::mutex srcml_converter::mutex;
 
-//   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-//     xmlStrEqual(xmlTextReaderConstName(reader), element_name);
-// }
-
-// inline bool isendelement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
-
-//   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT &&
-//     xmlStrEqual(xmlTextReaderConstName(reader), element_name);
-// }
-
-// inline bool iselement(const xmlTextReaderPtr& reader) {
-
-//   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT;
-// }
-
-// inline bool isendelement(const xmlTextReaderPtr& reader) {
-
-//   return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
-// }
-
+std::map<std::string, srcml_node *> srcml_converter::start_tags;
+std::map<std::string, srcml_node *> srcml_converter::end_tags;
 
 srcml_node * srcml_converter::get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context) {
 

@@ -25,7 +25,7 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
 
   // advance whitespace while matches
   for(; ostart < oend && nstart < nend
-        && is_white_space(rbuf_old->nodes.at(ostart)) && is_white_space(rbuf_new->nodes.at(nstart))
+        && rbuf_old->nodes.at(ostart)->is_white_space() && rbuf_new->nodes.at(nstart)->is_white_space()
         && srcdiff_compare::node_compare(rbuf_old->nodes.at(ostart), rbuf_new->nodes.at(nstart)) == 0; ++ostart, ++nstart)
     ;
 
@@ -139,15 +139,15 @@ void srcdiff_whitespace::output_nested(int operation) {
 
   // advance whitespace after targeted end
   for(; oend < rbuf_old->nodes.size() && nend < rbuf_new->nodes.size()
-        && is_white_space(rbuf_old->nodes.at(oend)) && is_white_space(rbuf_new->nodes.at(nend))
+        && rbuf_old->nodes.at(oend)->is_white_space() && rbuf_new->nodes.at(nend)->is_white_space()
         ; ++oend)
     ;
 
   if(operation == SESDELETE)
-    for(; oend < rbuf_old->nodes.size() && is_white_space(rbuf_old->nodes.at(oend)); ++oend) {
+    for(; oend < rbuf_old->nodes.size() && rbuf_old->nodes.at(oend)->is_white_space(); ++oend) {
     }
   else
-    for(; nend < rbuf_new->nodes.size() && is_white_space(rbuf_new->nodes.at(nend)); ++nend) {
+    for(; nend < rbuf_new->nodes.size() && rbuf_new->nodes.at(nend)->is_white_space(); ++nend) {
     }
 
   markup_whitespace(oend, nend);
@@ -161,16 +161,16 @@ void srcdiff_whitespace::output_statement() {
   unsigned int nend = rbuf_new->last_output;
 
   // advance whitespace after targeted end
-  for(; oend < rbuf_old->nodes.size() && is_white_space(rbuf_old->nodes.at(oend)) && !is_new_line(rbuf_old->nodes.at(oend)); ++oend)
+  for(; oend < rbuf_old->nodes.size() && rbuf_old->nodes.at(oend)->is_white_space() && !rbuf_old->nodes.at(oend)->is_new_line(); ++oend)
     ;
 
-  for(; nend < rbuf_new->nodes.size() && is_white_space(rbuf_new->nodes.at(nend)) && !is_new_line(rbuf_new->nodes.at(nend)); ++nend)
+  for(; nend < rbuf_new->nodes.size() && rbuf_new->nodes.at(nend)->is_white_space() && !rbuf_new->nodes.at(nend)->is_new_line(); ++nend)
     ;
 
-  if(oend < rbuf_old->nodes.size() && is_new_line(rbuf_old->nodes.at(oend)))
+  if(oend < rbuf_old->nodes.size() && rbuf_old->nodes.at(oend)->is_new_line())
     ++oend;
 
-  if(nend < rbuf_new->nodes.size() && is_new_line(rbuf_new->nodes.at(nend)))
+  if(nend < rbuf_new->nodes.size() && rbuf_new->nodes.at(nend)->is_new_line())
     ++nend;
 
   markup_whitespace(oend, nend);
@@ -183,10 +183,10 @@ void srcdiff_whitespace::output_all() {
   unsigned int nend = rbuf_new->last_output;
 
   // advance whitespace after targeted end
-  for(; oend < rbuf_old->nodes.size() && is_white_space(rbuf_old->nodes.at(oend)); ++oend)
+  for(; oend < rbuf_old->nodes.size() && rbuf_old->nodes.at(oend)->is_white_space(); ++oend)
     ;
 
-  for(; nend < rbuf_new->nodes.size() && is_white_space(rbuf_new->nodes.at(nend)); ++nend)
+  for(; nend < rbuf_new->nodes.size() && rbuf_new->nodes.at(nend)->is_white_space(); ++nend)
     ;
 
   markup_whitespace(oend, nend);
@@ -202,7 +202,7 @@ void srcdiff_whitespace::output_prefix() {
 
   // advance whitespace while matches
   for(; oend < rbuf_old->nodes.size() && nend < rbuf_new->nodes.size()
-        && is_white_space(rbuf_old->nodes.at(oend)) && is_white_space(rbuf_new->nodes.at(nend))
+        && rbuf_old->nodes.at(oend)->is_white_space() && rbuf_new->nodes.at(nend)->is_white_space()
         && srcdiff_compare::node_compare(rbuf_old->nodes.at(oend), rbuf_new->nodes.at(nend)) == 0; ++oend, ++nend)
     ;
   /*
@@ -214,16 +214,16 @@ void srcdiff_whitespace::output_prefix() {
   unsigned int save_oend = oend;
   unsigned int save_nend = nend;
 
-  while(rbuf_old->last_output < oend && (is_white_space(rbuf_old->nodes.at(oend - 1)) && !is_new_line(rbuf_old->nodes.at(oend - 1))))
+  while(rbuf_old->last_output < oend && (rbuf_old->nodes.at(oend - 1)->is_white_space() && !rbuf_old->nodes.at(oend - 1)->is_new_line()))
     --oend;
 
-  while(rbuf_new->last_output < nend && (is_white_space(rbuf_new->nodes.at(nend - 1)) && !is_new_line(rbuf_new->nodes.at(nend - 1))))
+  while(rbuf_new->last_output < nend && (rbuf_new->nodes.at(nend - 1)->is_white_space() && !rbuf_new->nodes.at(nend - 1)->is_new_line()))
     --nend;
 
-  if(oend > 0 && !is_new_line(rbuf_old->nodes.at(oend - 1)))
+  if(oend > 0 && !rbuf_old->nodes.at(oend - 1)->is_new_line())
     oend = save_oend;
 
-  if(nend > 0 && !is_new_line(rbuf_new->nodes.at(nend - 1)))
+  if(nend > 0 && !rbuf_new->nodes.at(nend - 1)->is_new_line())
     nend = save_nend;
 
   if(ostart < oend) {
@@ -250,10 +250,10 @@ void srcdiff_whitespace::output_suffix() {
   int nend = nstart;
 
   // advance all whitespace
-  for(; oend < (signed)rbuf_old->nodes.size() && is_white_space(rbuf_old->nodes.at(oend)); ++oend)
+  for(; oend < (signed)rbuf_old->nodes.size() && rbuf_old->nodes.at(oend)->is_white_space(); ++oend)
     ;
 
-  for(; nend < (signed)rbuf_new->nodes.size() && is_white_space(rbuf_new->nodes.at(nend)); ++nend)
+  for(; nend < (signed)rbuf_new->nodes.size() && rbuf_new->nodes.at(nend)->is_white_space(); ++nend)
     ;
 
   int opivot = oend - 1;

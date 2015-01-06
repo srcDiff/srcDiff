@@ -2,7 +2,6 @@
 #define INCLUDED_SRCDIFF_MATCH_HPP
 
 #include <node_sets.hpp>
-#include <xmlrw.hpp>
 
 struct offset_pair {
 

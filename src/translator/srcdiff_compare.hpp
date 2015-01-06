@@ -13,7 +13,7 @@ namespace srcdiff_compare {
 	int node_index_compare(const void * node1, const void * node2, const void * context);
 
 	// diff node comparison function
-	int node_compare(srcml_node * node1, srcml_node * node2);
+	int node_compare(const srcml_node * node1, const srcml_node * node2);
 
 	// diff node comparison function
 	int node_set_syntax_compare(const void * e1, const void * e2, const void * context);

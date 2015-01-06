@@ -3,7 +3,6 @@
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 #include <methods.hpp>
-#include <xmlrw.hpp>
 
 #include <cstring>
 
@@ -16,7 +15,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
    diff_common_start(std::make_shared<srcml_node>()), diff_common_end(std::make_shared<srcml_node>()),
    diff_old_start(std::make_shared<srcml_node>()), diff_old_end(std::make_shared<srcml_node>()),
    diff_new_start(std::make_shared<srcml_node>()), diff_new_end(std::make_shared<srcml_node>()),
-   diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
+   diff(std::make_shared<srcml_ns>()), diff_type(std::make_shared<srcml_attr>()),
    unit_tag(std::make_shared<srcml_node>()) {
 
 if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
@@ -174,7 +173,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   if(!isoption(flags, OPTION_VISUALIZE)) {
 
-    srcml_write_unit(archive);
+    srcml_write_unit(archive, wstate->unit);
 
   }
 
@@ -454,7 +453,7 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
 void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const srcml_node * node, int operation) {
 
   // Skip empty node
-  if(node->is_empty || is_text(node))
+  if(node->is_empty || node->is_text())
     return;
 
   if(open_diffs.back()->operation != operation) {
@@ -528,14 +527,14 @@ void srcdiff_output::output_node(const srcml_node & node) {
     isemptyelement = node.extra & 0x1;
 
     // start the element
-    srcml_write_start_element(unit, node.ns->prefix, node.name, 0);
+    srcml_write_start_element(wstate->unit, node.ns->prefix, node.name, 0);
 
     // copy all the attributes
     {
-      xAttr * attribute = node.properties;
+      srcml_attr * attribute = node.properties;
       while (attribute) {
 
-        srcml_write_attribute(unit, 0, attribute->name, 0, attribute->value);
+        srcml_write_attribute(wstate->unit, 0, attribute->name, 0, attribute->value);
         attribute = attribute->next;
       }
     }
@@ -543,17 +542,17 @@ void srcdiff_output::output_node(const srcml_node & node) {
     // end now if this is an empty element
     if (isemptyelement) {
 
-      srcml_write_end_element(unit);
+      srcml_write_end_element(wstate->unit);
     }
 
     break;
 
   case XML_READER_TYPE_END_ELEMENT:
-    srcml_write_end_element(unit);
+    srcml_write_end_element(wstate->unit);
     break;
 
   case XML_READER_TYPE_COMMENT:
-    //xmlTextWriterWriteComment(unit, (const xmlChar *)node.content);
+    //xmlTextWriterWriteComment(wstate->unit, (const xmlChar *)node.content);
     break;
 
   case XML_READER_TYPE_TEXT:
@@ -561,16 +560,16 @@ void srcdiff_output::output_node(const srcml_node & node) {
 
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml
-    srcml_write_string(unit, node.content);
+    srcml_write_string(wstate->unit, node.content);
     /*for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
       if (*p == '&')
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&amp;", 5);
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&amp;", 5);
       else if (*p == '<')
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&lt;", 4);
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&lt;", 4);
       else if (*p == '>')
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&gt;", 4);
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&gt;", 4);
       else
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) p, 1);
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) p, 1);
     }*/
     break;
 

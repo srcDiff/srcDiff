@@ -26,10 +26,10 @@ namespace srcdiff_compare {
   }
 
 
-  bool attribute_compare(srcml_attr * attr1, srcml_attr * attr2) {
+  bool attribute_compare(const srcml_attr * attr1, const srcml_attr * attr2) {
 
-    srcml_attr * attr_old = attr1;
-    srcml_attr * attr_new = attr2;
+    const srcml_attr * attr_old = attr1;
+    const srcml_attr * attr_new = attr2;
 
     for(; attr_old && attr_new
           && strcmp((const char *)attr_old->name, (const char *)attr_new->name) == 0
@@ -45,7 +45,7 @@ namespace srcdiff_compare {
   }
 
   // diff node comparison function
-  int node_compare(srcml_node * node1, srcml_node * node2) {
+  int node_compare(const srcml_node * node1, const srcml_node * node2) {
 
     if (node1 == node2)
       return 0;

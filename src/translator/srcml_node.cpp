@@ -225,7 +225,7 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.ex
 
 }
 
-void srcml_node::free_srcml_attr(srcml_attr * properties) {
+void srcml_attr::free_srcml_attr(srcml_attr * properties) {
 
   srcml_attr * attr = properties;
   while(attr) {
@@ -254,7 +254,7 @@ srcml_node::~srcml_node() {
     delete ns;
   }
 
-  free_srcml_attr(properties);
+  srcml_attr::free_srcml_attr(properties);
 
   if(strcmp(name, "text") != 0)
     std::free((void *)name);

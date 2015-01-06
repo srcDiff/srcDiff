@@ -9,7 +9,7 @@
 
 int move_id = 0;
 
-static xAttr move_attribute = { 0, "move", 0 };
+static srcml_attr move_attribute = { 0, "move", 0 };
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;
@@ -122,10 +122,10 @@ void srcdiff_move::mark_moves(std::vector<srcml_node *> & nodes_old, const node_
 		   continue;
 
         ++move_id;
-        srcml_node * start_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
+        srcml_node * start_node_one = new srcml_node(*nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
         start_node_one->move = move_id;
 
-        srcml_node * start_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
+        srcml_node * start_node_two = new srcml_node(*nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
         start_node_two->move = move_id;
 
         nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)) = start_node_one;
@@ -133,10 +133,10 @@ void srcdiff_move::mark_moves(std::vector<srcml_node *> & nodes_old, const node_
 
         if(!start_node_one->is_empty) {
 
-          srcml_node * end_node_one = copyXNode(nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
+          srcml_node * end_node_one = new srcml_node(*nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
           end_node_one->move = move_id;
 
-          srcml_node * end_node_two = copyXNode(nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
+          srcml_node * end_node_two = new srcml_node(*nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
           end_node_two->move = move_id;
 
           nodes_one->at(node_sets_one->at(elements.at(i).first).back()) = end_node_one;
@@ -187,7 +187,7 @@ void srcdiff_move::output() {
 
   move_attribute.value = buffer;
 
-  xAttr * save_attributes = start_node->properties;
+  srcml_attr * save_attributes = start_node->properties;
   start_node->properties = &move_attribute;
 
   output_node(start_node.get(), SESMOVE);

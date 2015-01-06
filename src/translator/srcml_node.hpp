@@ -55,6 +55,9 @@ public:
   const char * name;
   const char * value;
 
+  static void free_srcml_attr(srcml_attr * properties);
+
+
 };
 
 class srcml_node {
@@ -74,10 +77,6 @@ public:
 
   int move;
   int nest;
-
-private:
-
-void free_srcml_attr(srcml_attr * properties);
 
 public:
 
