@@ -14,12 +14,12 @@
 #include <methods.hpp>
 
 // more external variables
-extern xNode diff_common_start;
-extern xNode diff_common_end;
-extern xNode diff_old_start;
-extern xNode diff_old_end;
-extern xNode diff_new_start;
-extern xNode diff_new_end;
+extern srcml_node diff_common_start;
+extern srcml_node diff_common_end;
+extern srcml_node diff_old_start;
+extern srcml_node diff_old_end;
+extern srcml_node diff_new_start;
+extern srcml_node diff_new_end;
 
 
 srcdiff_diff::srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_old, const node_sets & node_sets_new) 

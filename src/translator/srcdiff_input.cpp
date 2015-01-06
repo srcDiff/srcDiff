@@ -7,7 +7,7 @@ srcdiff_input::srcdiff_input(srcml_archive * archive, const boost::optional<std:
 
 srcdiff_input::~srcdiff_input() {}
 
-void srcdiff_input::operator()(int stream_source, std::vector<xNodePtr> & nodes, int & is_input) const {
+void srcdiff_input::operator()(int stream_source, std::vector<srcml_node *> & nodes, int & is_input) const {
 
   is_input = 0;
   try {

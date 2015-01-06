@@ -7,7 +7,7 @@
 
 #include <cstring>
 
-srcdiff_measure::srcdiff_measure(const std::vector<xNodePtr> & nodes_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_old, const node_set & set_new) 
+srcdiff_measure::srcdiff_measure(const std::vector<srcml_node *> & nodes_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_old, const node_set & set_new) 
   : nodes_old(nodes_old), nodes_new(nodes_new), set_old(set_old), set_new(set_new) {}
 
 void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {
@@ -200,7 +200,7 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
 }
 
-static bool is_significant(xNodePtr node, const void * context) {
+static bool is_significant(srcml_node * node, const void * context) {
 
   return !is_text(node) && strcmp(node->name, "operator") != 0 
       && strcmp(node->name, "literal") != 0 && strcmp(node->name, "modifier") != 0;

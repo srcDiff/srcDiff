@@ -94,7 +94,7 @@ void srcdiff_single::output_recursive_same() {
 
   out.output_node(out.diff_common_start.get(), SESCOMMON);
 
-  xNodePtr merged_node = 0;
+  srcml_node * merged_node = 0;
 
   if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), out.get_nodes_new().at(node_sets_new.at(start_new).at(0))) == 0) {
 
@@ -223,8 +223,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-    xNodePtr start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
-    xNodePtr start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
+    srcml_node * start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
+    srcml_node * start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
 
   if(strcmp((const char *)start_node_old->name, (const char *)start_node_new->name) == 0
     && (start_node_old->ns == start_node_new->ns 

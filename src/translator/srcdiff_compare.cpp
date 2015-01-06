@@ -19,8 +19,8 @@ namespace srcdiff_compare {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    xNodePtr node_old = dnodes.nodes_old.at(*(int *)node1);
-    xNodePtr node_new = dnodes.nodes_new.at(*(int *)node2);
+    srcml_node * node_old = dnodes.nodes_old.at(*(int *)node1);
+    srcml_node * node_new = dnodes.nodes_new.at(*(int *)node2);
 
     return node_compare(node_old, node_new);
   }
@@ -45,7 +45,7 @@ namespace srcdiff_compare {
   }
 
   // diff node comparison function
-  int node_compare(xNode * node1, xNode * node2) {
+  int node_compare(srcml_node * node1, srcml_node * node2) {
 
     if (node1 == node2)
       return 0;

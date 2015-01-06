@@ -13,11 +13,11 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   unsigned long number_context_lines)
  : archive(archive), colordiff(NULL), bashview(NULL), flags(flags),
    rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
-   diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
-   diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
+   diff_common_start(std::make_shared<srcml_node>()), diff_common_end(std::make_shared<srcml_node>()),
+   diff_old_start(std::make_shared<srcml_node>()), diff_old_end(std::make_shared<srcml_node>()),
+   diff_new_start(std::make_shared<srcml_node>()), diff_new_end(std::make_shared<srcml_node>()),
    diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
-   unit_tag(std::make_shared<xNode>()) {
+   unit_tag(std::make_shared<srcml_node>()) {
 
 if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
@@ -167,8 +167,8 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
-  static const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, 0, true, false, 0, 0 };
-  output_node((xNodePtr)&flush, SESCOMMON);
+  static const srcml_node flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, 0, true, false, 0, 0 };
+  output_node((srcml_node *)&flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
 
@@ -210,25 +210,25 @@ void srcdiff_output::close() {
 
 }
 
-const std::vector<xNodePtr> & srcdiff_output::get_nodes_old() const {
+const std::vector<srcml_node *> & srcdiff_output::get_nodes_old() const {
 
   return rbuf_old->nodes;
 
 }
 
-const std::vector<xNodePtr> & srcdiff_output::get_nodes_new() const {
+const std::vector<srcml_node *> & srcdiff_output::get_nodes_new() const {
 
   return rbuf_new->nodes;
 
 }
 
-std::vector<xNodePtr> & srcdiff_output::get_nodes_old() {
+std::vector<srcml_node *> & srcdiff_output::get_nodes_old() {
 
   return rbuf_old->nodes;
 
 }
 
-std::vector<xNodePtr> & srcdiff_output::get_nodes_new() {
+std::vector<srcml_node *> & srcdiff_output::get_nodes_new() {
 
   return rbuf_new->nodes;
 
@@ -264,7 +264,7 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
-void srcdiff_output::output_node(const xNodePtr node, int operation) {
+void srcdiff_output::output_node(const srcml_node * node, int operation) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -451,7 +451,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
 }
 
-void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation) {
+void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const srcml_node * node, int operation) {
 
   // Skip empty node
   if(node->is_empty || is_text(node))
@@ -465,7 +465,7 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
     open_diffs.push_back(new_diff);
   }
 
-  //xNodePtr node = getRealCurrentNode(reader);
+  //srcml_node * node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     open_diffs.back()->open_tags.push_back(node);
@@ -498,7 +498,7 @@ void srcdiff_output::output_text_as_node(const char * text, int operation) {
   if(strlen((char *)text) == 0)
     return;
 
-  xNode node;
+  srcml_node node;
   node.type = (xmlElementType)XML_READER_TYPE_TEXT;
   node.name = "text";
   node.content = text;
@@ -517,7 +517,7 @@ void srcdiff_output::output_char(char character, int operation) {
 }
 
 // output current XML node in reader
-void srcdiff_output::output_node(const xNode & node) {
+void srcdiff_output::output_node(const srcml_node & node) {
 
   bool isemptyelement = false;
 
