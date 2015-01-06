@@ -122,6 +122,7 @@ public:
 
 private:
 
+  void output_node(const xNode & node);
   static void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation);
 
 public:

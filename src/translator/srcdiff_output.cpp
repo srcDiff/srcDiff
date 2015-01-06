@@ -174,7 +174,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   if(!isoption(flags, OPTION_VISUALIZE)) {
 
-    srcml_write_unit(archive, wstate->unit);
+    srcml_write_unit(archive);
 
   }
 
@@ -290,7 +290,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     if(delay_operation == SESDELETE) {
 
-      outputNode(*diff_old_end, wstate->unit);
+      output_node(*diff_old_end);
 
       update_diff_stack(rbuf_old->open_diff, diff_old_end.get(), SESDELETE);
 
@@ -298,7 +298,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     } else if(delay_operation == SESINSERT) {
 
-      outputNode(*diff_new_end, wstate->unit);
+      output_node(*diff_new_end);
 
       update_diff_stack(rbuf_new->open_diff, diff_new_end.get(), SESINSERT);
 
@@ -306,7 +306,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     } else if(delay_operation == SESCOMMON)  {
 
-      outputNode(*diff_common_end, wstate->unit);
+      output_node(*diff_common_end);
 
       update_diff_stack(rbuf_old->open_diff, diff_common_end.get(), SESCOMMON);
       update_diff_stack(rbuf_new->open_diff, diff_common_end.get(), SESCOMMON);
@@ -341,7 +341,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     } else {
 
-      outputNode(*node, wstate->unit);
+      output_node(*node);
 
     }
 
@@ -402,7 +402,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
   }
 
   // output non-text node and get next node
-  outputNode(*node, wstate->unit);
+  output_node(*node);
 
   if(operation == SESCOMMON) {
 
@@ -516,3 +516,66 @@ void srcdiff_output::output_char(char character, int operation) {
   output_text_as_node(buf, operation);
 }
 
+// output current XML node in reader
+void srcdiff_output::output_node(const xNode & node) {
+
+  bool isemptyelement = false;
+
+  switch (node.type) {
+  case XML_READER_TYPE_ELEMENT:
+
+    // record if this is an empty element since it will be erased by the attribute copying
+    isemptyelement = node.extra & 0x1;
+
+    // start the element
+    srcml_write_start_element(unit, node.ns->prefix, node.name, 0);
+
+    // copy all the attributes
+    {
+      xAttr * attribute = node.properties;
+      while (attribute) {
+
+        srcml_write_attribute(unit, 0, attribute->name, 0, attribute->value);
+        attribute = attribute->next;
+      }
+    }
+
+    // end now if this is an empty element
+    if (isemptyelement) {
+
+      srcml_write_end_element(unit);
+    }
+
+    break;
+
+  case XML_READER_TYPE_END_ELEMENT:
+    srcml_write_end_element(unit);
+    break;
+
+  case XML_READER_TYPE_COMMENT:
+    //xmlTextWriterWriteComment(unit, (const xmlChar *)node.content);
+    break;
+
+  case XML_READER_TYPE_TEXT:
+  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+
+    // output the UTF-8 buffer escaping the characters.  Note that the output encoding
+    // is handled by libxml
+    srcml_write_string(unit, node.content);
+    /*for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
+      if (*p == '&')
+        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&amp;", 5);
+      else if (*p == '<')
+        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&lt;", 4);
+      else if (*p == '>')
+        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&gt;", 4);
+      else
+        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) p, 1);
+    }*/
+    break;
+
+  default:
+    break;
+  }
+
+}
