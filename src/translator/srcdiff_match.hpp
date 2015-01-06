@@ -38,7 +38,7 @@ public:
 
   static const char * find_attribute(const srcml_node * node, const char * attr_name);
 
-  static bool is_interchangeable_match(const std::string & old_tag, const std::string & new_tag);
+  static bool is_interchangeable_match(const boost::optional<std::string> & old_tag, const boost::optional<std::string> & new_tag);
 
 };
 

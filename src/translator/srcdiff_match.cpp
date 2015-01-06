@@ -938,15 +938,17 @@ static const interchange_list interchange_lists[] = {
 
 };
 
-bool srcdiff_match::is_interchangeable_match(const std::string & old_tag, const std::string & new_tag) {
+bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> & old_tag, const boost::optional<std::string> & new_tag) {
+
+  if(!old_tag || !new_tag) return false;
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
-    if(interchange_lists[list_pos].name == old_tag) {
+    if(interchange_lists[list_pos].name == *old_tag) {
 
       for(size_t pos = 0; interchange_lists[list_pos].list[pos]; ++pos) {
 
-        if(interchange_lists[list_pos].list[pos] == new_tag)
+        if(interchange_lists[list_pos].list[pos] == *new_tag)
           return true;
 
       }

@@ -9,7 +9,7 @@
 
 int move_id = 0;
 
-static srcml_attr move_attribute = { 0, "move", 0 };
+static srcml_attr move_attribute = { 0, std::string("move"), 0 };
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;
@@ -22,7 +22,7 @@ void add_construct(std::map<std::string, IntPairs > & constructs
                    , const node_sets & sets, const std::vector<srcml_node *> & nodes
                    , int offset, int operation) {
 
-  std::string tag = nodes.at(sets.at(offset).at(0))->name;
+  std::string tag = nodes.at(sets.at(offset).at(0))->name ? *nodes.at(sets.at(offset).at(0))->name : "";
 
   if(constructs.find(tag) == constructs.end()) {
 
