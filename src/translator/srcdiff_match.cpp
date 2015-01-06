@@ -873,15 +873,15 @@ std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos
   int expr_pos = start_pos + 1;
 
   if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-     || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case") return "";
+     || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case")) return "";
 
-  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(expr_pos)->name, "expr") != 0) 
+  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || !nodes.at(expr_pos)->name || * nodes.at(expr_pos)->name != "expr")
     && !(nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-    && !(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case")
+    && !(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case"))
     ++expr_pos;
 
   if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-    || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case") return "";
+    || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case")) return "";
 
   std::string case_expr = "";
 
@@ -890,7 +890,7 @@ std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos
 
   while(open_expr_count) {
 
-    if(nodes.at(expr_pos)->name && *nodes.at(expr_pos)->name == "expr") == 0) {
+    if(nodes.at(expr_pos)->name && *nodes.at(expr_pos)->name == "expr") {
 
       if(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(expr_pos)->extra & 0x1) == 0)
         ++open_expr_count;
@@ -899,7 +899,7 @@ std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos
 
     } else if(nodes.at(expr_pos)->is_text() && !nodes.at(expr_pos)->is_white_space()) {
 
-      case_expr += (const char *)nodes.at(expr_pos)->content;
+      case_expr += nodes.at(expr_pos)->content ? *nodes.at(expr_pos)->content : "";
 
     }
 
@@ -966,8 +966,8 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
   int old_pos = set_old.at(0);
   int new_pos = set_new.at(0);
 
-  std::string old_tag = nodes_old.at(old_pos)->name;
-  std::string new_tag = nodes_new.at(new_pos)->name;
+  std::string old_tag = nodes_old.at(old_pos)->name ? *nodes_old.at(old_pos)->name : "";
+  std::string new_tag = nodes_new.at(new_pos)->name ? *nodes_new.at(new_pos)->name : "";
 
   if(old_tag != new_tag) return true;
 
@@ -1030,11 +1030,11 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
   if(is_single_call_expr(nodes_old, old_pos) && is_single_call_expr(nodes_new, new_pos)) {
 
     while(nodes_old.at(old_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || strcmp((const char *)nodes_old.at(old_pos)->name, "call") != 0)
+      || !nodes_old.at(old_pos)->name || *nodes_old.at(old_pos)->name != "call")
       ++old_pos;
 
     while(nodes_new.at(new_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || strcmp((const char *)nodes_new.at(new_pos)->name, "call") != 0)
+      || !nodes_new.at(new_pos)->name || *nodes_new.at(new_pos)->name != "call")
       ++new_pos;
 
     std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
@@ -1123,8 +1123,8 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
   int old_pos = set_old.at(0);
   int new_pos = set_new.at(0);
 
-  std::string old_tag = nodes_old.at(old_pos)->name;
-  std::string new_tag = nodes_new.at(new_pos)->name;
+  std::string old_tag = nodes_old.at(old_pos)->name ? *nodes_old.at(old_pos)->name : "";
+  std::string new_tag = nodes_new.at(new_pos)->name ? *nodes_new.at(new_pos)->name : "";
 
   std::string old_condition = "";
   if(old_tag == "if" || old_tag == "while" || old_tag == "for" || old_tag == "foreach") {
@@ -1154,8 +1154,8 @@ bool srcdiff_match::reject_match(int similarity, int difference, int text_old_le
   int old_pos = set_old.at(0);
   int new_pos = set_new.at(0);
 
-  std::string old_tag = nodes_old.at(old_pos)->name;
-  std::string new_tag = nodes_new.at(new_pos)->name;
+  std::string old_tag = nodes_old.at(old_pos)->name ? *nodes_old.at(old_pos)->name : "";
+  std::string new_tag = nodes_new.at(new_pos)->name ? *nodes_new.at(new_pos)->name : "";
 
   if(old_tag == new_tag)
     return reject_match_same(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
@@ -1186,22 +1186,22 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   node_sets child_node_sets_old = node_sets(nodes_old, set_old.at(1), set_old.back());
   node_sets child_node_sets_new = node_sets(nodes_new, set_new.at(1), set_new.back());    
 
-  if(strcmp(nodes_old.at(child_node_sets_old.back().at(0))->name, "then") == 0) {
+  if(nodes_old.at(child_node_sets_old.back().at(0))->name && *nodes_old.at(child_node_sets_old.back().at(0))->name == "then") {
 
     node_sets temp = node_sets(nodes_old, child_node_sets_old.back().at(1), child_node_sets_old.back().back());
     child_node_sets_old = temp;
 
   }
 
-  if(strcmp(nodes_new.at(child_node_sets_new.back().at(0))->name, "then") == 0) {
+  if(nodes_new.at(child_node_sets_new.back().at(0))->name && *nodes_new.at(child_node_sets_new.back().at(0))->name == "then") {
 
     node_sets temp = node_sets(nodes_new, child_node_sets_new.back().at(1), child_node_sets_new.back().back());
     child_node_sets_new = temp;
 
   }
 
-  if(strcmp(nodes_old.at(child_node_sets_old.back().at(0))->name, "block") == 0
-    && strcmp(nodes_new.at(child_node_sets_new.back().at(0))->name, "block") == 0) {
+  if(nodes_old.at(child_node_sets_old.back().at(0))->name && *nodes_old.at(child_node_sets_old.back().at(0))->name == "block"
+    && nodes_new.at(child_node_sets_new.back().at(0))->name && *nodes_new.at(child_node_sets_new.back().at(0))->name == "block") {
 
     srcdiff_measure measure(nodes_old, nodes_new, child_node_sets_old.back(), child_node_sets_new.back());
     measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_old, children_length_new);
