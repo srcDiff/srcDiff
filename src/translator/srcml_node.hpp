@@ -1,0 +1,141 @@
+/*
+  diffe2diff.cpp
+
+  Copyright (C) 2006  SDML (www.sdml.info)
+
+  This file is part of a translator from source code to srcDiff
+
+  The extractor is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  The srcML translator is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with the srcML translator; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+
+#ifndef INCLUDED_SRCML_NODE_HPP
+#define INCLUDED_SRCML_NODE_HPP
+
+#include <string>
+#include <vector>
+
+#include <libxml/xmlreader.h>
+#include <libxml/xmlwriter.h>
+
+#include <srcdiff_options.hpp>
+
+#include <srcml.h>
+
+class xNs {
+
+public:
+
+  xNs(const char * href = 0, const char * prefix = 0) : href(href), prefix(prefix) {}
+
+  const char * href;
+  const char * prefix;
+
+};
+
+class xAttr {
+
+public:
+
+  xAttr(xAttr * next = 0, const char * name = 0, const char * value = 0) : next(next), name(name), value(value) {}
+
+  xAttr * next;
+  const char * name;
+  const char * value;
+
+};
+
+class srcml_node {
+
+public:
+
+  xmlElementType type;
+  const char * name;
+  xNs * ns;
+  const char * content;
+  xAttr * properties;
+  unsigned short extra;
+  const char * parent;
+
+  bool is_empty;
+  bool free;
+
+  int move;
+  int nest;
+  
+public:
+
+  srcml_node(const xmlNode & node, bool is_archive);
+
+  srcml_node(xmlElementType type = XML_ELEMENT_NODE, const char * name = 0, xNs * ns = 0, const char * content = 0, xAttr * properties = 0, unsigned short extra = 0,
+    const char * parent = 0, bool is_empty = false, bool free = false, int move = 0, int nest = 0)
+      : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(free), move(move), nest(nest) {}
+
+  bool operator==(const srcml_node & node_one, const srcml_node & node_two);
+
+
+};
+
+xNode * createInternalNode(xmlNode & node, bool is_archive);
+
+
+xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
+
+xNode * copyXNode(xNode * node);
+
+xNode * split_text(const char * characters_start, const char * characters_end);
+
+inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
+    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
+}
+
+inline bool isendelement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT &&
+    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
+}
+
+inline bool iselement(const xmlTextReaderPtr& reader) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT;
+}
+
+inline bool isendelement(const xmlTextReaderPtr& reader) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
+}
+
+bool is_white_space(const xNodePtr node);
+
+bool is_new_line(const xNodePtr node);
+
+bool is_text(const xNodePtr node);
+
+xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
+
+void freeXAttr(xAttrPtr properties);
+void freeXNode(xNode * node);
+
+void eat_element(xmlTextReaderPtr& reader);
+
+void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
+
+void outputNode(const xNode& node, xmlTextWriterPtr writer);
+
+void outputNode(const xNode& node, srcml_unit * unit);
+
+#endif
