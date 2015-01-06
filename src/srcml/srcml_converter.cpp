@@ -262,7 +262,7 @@ std::vector<srcml_node *> srcml_converter::collect_nodes(xmlTextReaderPtr reader
       else if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         element_stack.pop_back();
 
-      if(*node->name == "unit") return nodes;;
+      if(*node->name == "unit") return nodes;
 
       // save non-text node and get next node
       nodes.push_back(node);
