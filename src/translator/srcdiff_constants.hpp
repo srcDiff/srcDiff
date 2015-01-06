@@ -1,17 +1,19 @@
 #ifndef INCLUDED_SRCDIFF_CONSTANTS_HPP
 #define INCLUDED_SRCDIFF_CONSTANTS_HPP
 
-const char * const DIFF_PREFIX = "diff:";
-const char * const DIFF_OLD = "delete";
-const char * const DIFF_NEW = "insert";
-const char * const DIFF_SESCOMMON = "common";
-const char * const DIFF_TYPE = "type";
+#include <string>
 
-const char * const change = "change";
-const char * const whitespace = "whitespace";
+const std::string DIFF_PREFIX = "diff:";
+const std::string DIFF_OLD = "delete";
+const std::string DIFF_NEW = "insert";
+const std::string DIFF_SESCOMMON = "common";
+const std::string DIFF_TYPE = "type";
 
-const char * const SRCDIFF_DEFAULT_NAMESPACE_HREF = "http://www.sdml.info/srcDiff";
-const char * const SRCDIFF_DEFAULT_NAMESPACE_PREFIX =  "diff";
+const std::string change = "change";
+const std::string whitespace = "whitespace";
+
+const std::string SRCDIFF_DEFAULT_NAMESPACE_HREF = "http://www.sdml.info/srcDiff";
+const std::string SRCDIFF_DEFAULT_NAMESPACE_PREFIX =  "diff";
 
 const int MAX_INT = (unsigned)-1 >> 1;
 

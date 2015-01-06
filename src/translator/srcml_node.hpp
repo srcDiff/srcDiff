@@ -92,7 +92,7 @@ public:
     const boost::optional<std::string> & parent = boost::optional<std::string>(), bool is_empty = false, bool free = false,
     int move = 0, int nest = 0);
 
-  srcml_node(xmlElementType type, boost::optional<std::string> name, const srcml_ns & ns);
+  srcml_node(xmlElementType type, const boost::optional<std::string> & name, const srcml_ns & ns);
 
   srcml_node(const srcml_node & node);
 

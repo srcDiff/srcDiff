@@ -35,14 +35,14 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   wstate->filename = srcdiff_filename;
 
-  diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF);
+  diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
   diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
 
   // diff attribute
   *diff_type = { 0 };
   diff_type->name = DIFF_TYPE;
 
-  unit_tag          = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, "unit", srcml_ns());
+  unit_tag          = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_ns());
 
   diff_common_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SESCOMMON, *diff.get());
   diff_common_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SESCOMMON, *diff.get());
@@ -138,7 +138,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
-  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, "text", 0, 0, 0, 0, 0, true, false, 0, 0);
+  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"), 0, 0, 0, 0, 0, true, false, 0, 0);
   output_node((srcml_node *)&flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
@@ -253,11 +253,11 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
   // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SESDELETE 
-          && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_old_end->name) == 0)
+          && wstate->output_diff.back()->open_tags.back()->name && *wstate->output_diff.back()->open_tags.back()->name == diff_old_end->name)
          || (delay_operation == SESINSERT 
-             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_new_end->name) == 0)
+             && wstate->output_diff.back()->open_tags.back()->name && *wstate->output_diff.back()->open_tags.back()->name == diff_new_end->name)
          || (delay_operation == SESCOMMON 
-             && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)diff_common_end->name) == 0))) {
+             && wstate->output_diff.back()->open_tags.back()->name && *wstate->output_diff.back()->open_tags.back()->name == diff_common_end->name))) {
 
     if(delay_operation == SESDELETE) {
 
@@ -299,7 +299,7 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
     if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
-       && strcmp((const char *)wstate->output_diff.back()->open_tags.back()->name, (const char *)node->name) != 0)
+       && (!wstate->output_diff.back()->open_tags.back()->name || wstate->output_diff.back()->open_tags.back()->name != node->name))
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
@@ -499,14 +499,14 @@ void srcdiff_output::output_node(const srcml_node & node) {
     isemptyelement = node.extra & 0x1;
 
     // start the element
-    srcml_write_start_element(wstate->unit, node.ns->prefix, node.name, 0);
+    srcml_write_start_element(wstate->unit, node.ns->prefix ? node.ns->prefix->c_str() : 0, node.name ? node.name->c_str() : 0, 0);
 
     // copy all the attributes
     {
       srcml_attr * attribute = node.properties;
       while (attribute) {
 
-        srcml_write_attribute(wstate->unit, 0, attribute->name, 0, attribute->value);
+        srcml_write_attribute(wstate->unit, 0, attribute->name ? attribute->name->c_str() : 0, 0, attribute->value ? attribute->value->c_str() : 0);
         attribute = attribute->next;
       }
     }
@@ -532,7 +532,7 @@ void srcdiff_output::output_node(const srcml_node & node) {
 
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml
-    srcml_write_string(wstate->unit, node.content);
+    srcml_write_string(wstate->unit, node.content ? node.content->c_str() : 0);
     /*for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
       if (*p == '&')
         xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&amp;", 5);

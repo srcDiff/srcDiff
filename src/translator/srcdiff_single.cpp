@@ -20,28 +20,28 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
   srcml_attr * nproperties = properties_new;
   while(oproperties && nproperties) {
 
-    if(strcmp(oproperties->name, nproperties->name) == 0) {
+    if(*oproperties->name == *nproperties->name) {
 
-      attribute_names.push_back(oproperties->name);
-      if(strcmp(oproperties->value, nproperties->value) == 0) 
-        attribute_values.push_back(oproperties->value);
+      attribute_names.push_back(*oproperties->name);
+      if(*oproperties->value == nproperties->value) 
+        attribute_values.push_back(*oproperties->value);
       else
-        attribute_values.push_back(std::string(oproperties->value) + std::string("|") + std::string(nproperties->value));
+        attribute_values.push_back(*oproperties->value + std::string("|") +*nproperties->value);
 
       oproperties = oproperties->next;
       nproperties = nproperties->next;
 
-    } else if(nproperties->next && strcmp(oproperties->name, nproperties->next->name) == 0) {
+    } else if(nproperties->next && *oproperties->name == *nproperties->next->name) {
 
-      attribute_names.push_back(nproperties->name);
-      attribute_values.push_back(std::string("|") + std::string(nproperties->value));
+      attribute_names.push_back(*nproperties->name);
+      attribute_values.push_back(std::string("|") + *nproperties->value);
 
       nproperties = nproperties->next;
 
     } else {
 
-      attribute_names.push_back(oproperties->name);
-      attribute_values.push_back(std::string(oproperties->value) + std::string("|"));
+      attribute_names.push_back(*oproperties->name);
+      attribute_values.push_back(*oproperties->value + std::string("|"));
 
       oproperties = oproperties->next;
 
@@ -52,8 +52,8 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
 
   while(oproperties) {
 
-      attribute_names.push_back(oproperties->name);
-      attribute_values.push_back(std::string(oproperties->value) + std::string("|"));
+      attribute_names.push_back(*oproperties->name);
+      attribute_values.push_back(*oproperties->value + std::string("|"));
 
       oproperties = oproperties->next;
 
@@ -61,8 +61,8 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
 
   while(nproperties) {
 
-      attribute_names.push_back(nproperties->name);
-      attribute_values.push_back(std::string("|") + std::string(nproperties->value));
+      attribute_names.push_back(*nproperties->name);
+      attribute_values.push_back(std::string("|") + *nproperties->value);
 
       nproperties = nproperties->next;
 
@@ -74,7 +74,7 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
   for(std::vector<std::string>::size_type pos = 0; pos < attribute_names.size(); ++pos) {
 
     srcml_attr * attr = new srcml_attr;
-    attr->name = strdup(attribute_names[pos].c_str()), attr->value = strdup(attribute_values[pos].c_str()), attr->next = 0;
+    attr->name = attribute_names[pos], attr->value = attribute_values[pos], attr->next = 0;
 
     if(last_attr == 0) first = attr;
     else last_attr->next = attr;
@@ -118,7 +118,7 @@ void srcdiff_single::output_recursive_same() {
   ++out.last_output_new();
 
   // compare subset of nodes
-  if(strcmp((const char *)out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name, "comment") == 0) {
+  if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name && *out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "comment") {
 
     // collect subset of nodes
     node_sets next_set_old
@@ -226,10 +226,10 @@ void srcdiff_single::output() {
     srcml_node * start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
     srcml_node * start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
 
-  if(strcmp((const char *)start_node_old->name, (const char *)start_node_new->name) == 0
+  if(start_node_old->name == start_node_new->name && (!start_node_old->name || *start_node_old->name == *start_node_new->name)
     && (start_node_old->ns == start_node_new->ns 
-      || (start_node_old->ns && start_node_old->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix 
-        || (start_node_old->ns->prefix && start_node_new->ns->prefix && strcmp((const char *)start_node_old->ns->prefix, (const char *)start_node_new->ns->prefix) == 0)))))
+      || (start_node_old->ns && start_node_new->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix && (!start_node_old->ns->prefix
+        || *start_node_old->ns->prefix == *start_node_new->ns->prefix)))))
     output_recursive_same();
   else
     output_recursive_interchangeable();
