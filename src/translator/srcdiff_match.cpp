@@ -352,7 +352,7 @@ bool is_single_call_expr(const std::vector<srcml_node *> & nodes, int start_pos)
 
   if(!nodes.at(start_pos)->name) return false;
 
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || !nodes.at(start_pos)->name
     || (*nodes.at(start_pos)->name != "expr_stmt" && *nodes.at(start_pos)->name != "expr")) return false;
 
   if(nodes.at(start_pos)->extra & 0x1) return false;
@@ -499,16 +499,17 @@ void skip_specifiers(const std::vector<srcml_node *> & nodes, int & start_pos) {
 std::vector<std::string> get_call_name(const std::vector<srcml_node *> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || !nodes.at(start_pos)->name || *nodes.at(start_pos)->name != "call")
-return std::vector<std::string>();
+    return std::vector<std::string>();
+
   if(nodes.at(start_pos)->extra & 0x1) return std::vector<std::string>();
 
   int name_start_pos = start_pos + 1;
 
   while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || ((!nodes.at(start_pos)->name || *nodes.at(start_pos)->name != "name") && (!nodes.at(start_pos)->name || *nodes.at(start_pos)->name != "argument_list")))
+   || !nodes.at(name_start_pos)->name || (*nodes.at(name_start_pos)->name != "name" && *nodes.at(name_start_pos)->name != "argument_list"))
     ++name_start_pos;
 
-  if(nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "argument_list") return std::vector<std::string>();
+  if(nodes.at(name_start_pos)->name && *nodes.at(name_start_pos)->name == "argument_list") return std::vector<std::string>();
 
   std::vector<std::string> name_list;
 
@@ -518,9 +519,9 @@ return std::vector<std::string>();
 
   while(open_name_count) {
 
-    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "argument_list") return name_list;
+    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(name_pos)->name && *nodes.at(name_pos)->name == "argument_list") return name_list;
 
-    if(nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "name") {
+    if(nodes.at(name_pos)->name && *nodes.at(name_pos)->name == "name") {
 
       if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(name_pos)->extra & 0x1) == 0) {
 

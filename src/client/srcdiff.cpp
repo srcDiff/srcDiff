@@ -57,9 +57,17 @@ int main(int argc, char* argv[]) {
 
       input->consume();
 
+    } catch(std::exception & e) {
+
+      std::cerr << "Error: " << e.what() << '\n';
+
+    } catch(std::string & s) {
+
+      std::cerr << "Error: " << s << '\n';
+
     } catch(...) {
 
-      std::cerr << "Problem with input.\n";
+      std::cerr << "Unknown error occurred.\n";
 
     }
 
