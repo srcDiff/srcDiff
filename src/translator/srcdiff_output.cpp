@@ -12,9 +12,6 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   unsigned long number_context_lines)
  : archive(archive), colordiff(NULL), bashview(NULL), flags(flags),
    rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff_common_start(std::make_shared<srcml_node>()), diff_common_end(std::make_shared<srcml_node>()),
-   diff_old_start(std::make_shared<srcml_node>()), diff_old_end(std::make_shared<srcml_node>()),
-   diff_new_start(std::make_shared<srcml_node>()), diff_new_end(std::make_shared<srcml_node>()),
    diff(std::make_shared<srcml_ns>()), diff_type(std::make_shared<srcml_attr>()),
    unit_tag(std::make_shared<srcml_node>()) {
 
@@ -48,36 +45,12 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   *unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, 0, 0, false, false, 0, 0 };
 
-  // diff tags
-  diff_common_start->name = DIFF_SESCOMMON;
-  diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_common_start->ns = diff.get();
-  diff_common_start->extra = 0;
-
-  diff_common_end->name = DIFF_SESCOMMON;
-  diff_common_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_common_end->ns = diff.get();
-  diff_common_end->extra = 0;
-
-  diff_old_start->name = DIFF_OLD;
-  diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_old_start->ns = diff.get();
-  diff_old_start->extra = 0;
-
-  diff_old_end->name = DIFF_OLD;
-  diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_old_end->ns = diff.get();
-  diff_old_end->extra = 0;
-
-  diff_new_start->name = DIFF_NEW;
-  diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_new_start->ns = diff.get();
-  diff_new_start->extra = 0;
-
-  diff_new_end->name = DIFF_NEW;
-  diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_new_end->ns = diff.get();
-  diff_new_end->extra = 0;
+   diff_common_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SESCOMMON, diff.get());
+   diff_common_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SESCOMMON, diff.get());
+   diff_old_start    = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_OLD, diff.get());
+   diff_old_end      = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_OLD, diff.get());
+   diff_new_start    = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, diff.get());
+   diff_new_end      = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_NEW, diff.get());
 
  }
 

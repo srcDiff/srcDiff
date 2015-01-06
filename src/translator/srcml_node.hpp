@@ -85,6 +85,8 @@ public:
   srcml_node(xmlElementType type = XML_ELEMENT_NODE, const char * name = 0, srcml_ns * ns = 0, const char * content = 0, srcml_attr * properties = 0, unsigned short extra = 0,
     const char * parent = 0, bool is_empty = false, bool free = false, int move = 0, int nest = 0);
 
+  srcml_node(xmlElementType type, std::string name, const srcml_ns & ns);
+
   srcml_node(const srcml_node & node);
 
   ~srcml_node();

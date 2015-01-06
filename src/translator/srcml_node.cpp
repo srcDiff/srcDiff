@@ -156,6 +156,9 @@ srcml_node::srcml_node(xmlElementType type, const char * name, srcml_ns * ns, co
   const char * parent, bool is_empty, bool free, int move, int nest)
   : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0), nest(0) {}
 
+srcml_node::srcml_node(xmlElementType type, std::string name, const srcml_ns & ns) : type(type), name(strdup(name.c_str())), ns(new srcml_ns(ns)),
+  content(0), properties(0), extra(0), parent(0), is_empty(false), free(false), move(0), nest(0) {}
+
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.extra), is_empty(node.is_empty), free(true), move(0), nest(0) {
 
 
@@ -233,7 +236,7 @@ void srcml_attr::free_srcml_attr(srcml_attr * properties) {
 }
 
 srcml_node::~srcml_node() {
-
+return;
  if(ns) {
 
     if(ns->href)
