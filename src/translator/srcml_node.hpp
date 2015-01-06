@@ -82,8 +82,9 @@ public:
 
   srcml_node(const xmlNode & node, bool is_archive);
 
-  srcml_node(xmlElementType type = XML_ELEMENT_NODE, const char * name = 0, srcml_ns * ns = 0, const char * content = 0, srcml_attr * properties = 0, unsigned short extra = 0,
-    const char * parent = 0, bool is_empty = false, bool free = false, int move = 0, int nest = 0);
+  srcml_node(xmlElementType type = XML_ELEMENT_NODE, const char * name = nullptr, srcml_ns * ns = nullptr, const char * content = nullptr,
+    srcml_attr * properties = nullptr, unsigned short extra = 0, const char * parent = nullptr, bool is_empty = false, bool free = false,
+    int move = 0, int nest = 0);
 
   srcml_node(xmlElementType type, std::string name, const srcml_ns & ns);
 
