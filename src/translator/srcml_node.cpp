@@ -40,9 +40,7 @@
 #include <mingw32.hpp>
 #endif
 
-srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
-
-  type = node.type;
+srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type), extra(node.extra), is_empty(node.extra), free(false), move(0), nest(0) {
 
   name = strdup((const char *)node.name);
 
@@ -150,22 +148,15 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
     }
   }
 
-  extra = node.extra;
-  is_empty = node.extra;
-
   parent = 0;
-
-  free = false;
-  move = 0;
-  nest = 0;
 
 }
 
 srcml_node::srcml_node(xmlElementType type, const char * name, srcml_ns * ns, const char * content, srcml_attr * properties, unsigned short extra,
   const char * parent, bool is_empty, bool free, int move, int nest)
-  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(true), move(0), nest(0) {}
+  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0), nest(0) {}
 
-srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.extra), is_empty(node.is_empty), free(node.free), move(node.move), nest(node.nest) {
+srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.extra), is_empty(node.is_empty), free(true), move(0), nest(0) {
 
 
   name = strdup((const char *)node.name);
