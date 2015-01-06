@@ -3,7 +3,6 @@
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 #include <methods.hpp>
-#include <xmlrw.hpp>
 
 #include <cstring>
 
@@ -13,11 +12,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   unsigned long number_context_lines)
  : archive(archive), colordiff(NULL), bashview(NULL), flags(flags),
    rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff_common_start(std::make_shared<xNode>()), diff_common_end(std::make_shared<xNode>()),
-   diff_old_start(std::make_shared<xNode>()), diff_old_end(std::make_shared<xNode>()),
-   diff_new_start(std::make_shared<xNode>()), diff_new_end(std::make_shared<xNode>()),
-   diff(std::make_shared<xNs>()), diff_type(std::make_shared<xAttr>()),
-   unit_tag(std::make_shared<xNode>()) {
+   diff(std::make_shared<srcml_ns>()), diff_type(std::make_shared<srcml_attr>()) {
 
 if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
@@ -47,38 +42,14 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
   *diff_type = { 0 };
   diff_type->name = DIFF_TYPE;
 
-  *unit_tag = { (xmlElementType)XML_READER_TYPE_ELEMENT, "unit", 0, 0, 0, 0, 0, false, false, 0, 0 };
+  unit_tag          = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, "unit", nullptr, nullptr, nullptr, 0, nullptr, false, false, 0, 0);
 
-  // diff tags
-  diff_common_start->name = DIFF_SESCOMMON;
-  diff_common_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_common_start->ns = diff.get();
-  diff_common_start->extra = 0;
-
-  diff_common_end->name = DIFF_SESCOMMON;
-  diff_common_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_common_end->ns = diff.get();
-  diff_common_end->extra = 0;
-
-  diff_old_start->name = DIFF_OLD;
-  diff_old_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_old_start->ns = diff.get();
-  diff_old_start->extra = 0;
-
-  diff_old_end->name = DIFF_OLD;
-  diff_old_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_old_end->ns = diff.get();
-  diff_old_end->extra = 0;
-
-  diff_new_start->name = DIFF_NEW;
-  diff_new_start->type = (xmlElementType)XML_READER_TYPE_ELEMENT;
-  diff_new_start->ns = diff.get();
-  diff_new_start->extra = 0;
-
-  diff_new_end->name = DIFF_NEW;
-  diff_new_end->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
-  diff_new_end->ns = diff.get();
-  diff_new_end->extra = 0;
+  diff_common_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SESCOMMON, diff.get());
+  diff_common_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SESCOMMON, diff.get());
+  diff_old_start    = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_OLD, diff.get());
+  diff_old_end      = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_OLD, diff.get());
+  diff_new_start    = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, diff.get());
+  diff_new_end      = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_NEW, diff.get());
 
  }
 
@@ -167,8 +138,8 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
-  static const xNode flush = { (xmlElementType)XML_READER_TYPE_TEXT, "text", 0, "", 0, 0, 0, true, false, 0, 0 };
-  output_node((xNodePtr)&flush, SESCOMMON);
+  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, "text", 0, 0, 0, 0, 0, true, false, 0, 0);
+  output_node((srcml_node *)&flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
 
@@ -210,25 +181,25 @@ void srcdiff_output::close() {
 
 }
 
-const std::vector<xNodePtr> & srcdiff_output::get_nodes_old() const {
+const std::vector<srcml_node *> & srcdiff_output::get_nodes_old() const {
 
   return rbuf_old->nodes;
 
 }
 
-const std::vector<xNodePtr> & srcdiff_output::get_nodes_new() const {
+const std::vector<srcml_node *> & srcdiff_output::get_nodes_new() const {
 
   return rbuf_new->nodes;
 
 }
 
-std::vector<xNodePtr> & srcdiff_output::get_nodes_old() {
+std::vector<srcml_node *> & srcdiff_output::get_nodes_old() {
 
   return rbuf_old->nodes;
 
 }
 
-std::vector<xNodePtr> & srcdiff_output::get_nodes_new() {
+std::vector<srcml_node *> & srcdiff_output::get_nodes_new() {
 
   return rbuf_new->nodes;
 
@@ -264,7 +235,7 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
-void srcdiff_output::output_node(const xNodePtr node, int operation) {
+void srcdiff_output::output_node(const srcml_node * node, int operation) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -290,7 +261,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     if(delay_operation == SESDELETE) {
 
-      outputNode(*diff_old_end, wstate->unit);
+      output_node(*diff_old_end);
 
       update_diff_stack(rbuf_old->open_diff, diff_old_end.get(), SESDELETE);
 
@@ -298,7 +269,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     } else if(delay_operation == SESINSERT) {
 
-      outputNode(*diff_new_end, wstate->unit);
+      output_node(*diff_new_end);
 
       update_diff_stack(rbuf_new->open_diff, diff_new_end.get(), SESINSERT);
 
@@ -306,7 +277,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     } else if(delay_operation == SESCOMMON)  {
 
-      outputNode(*diff_common_end, wstate->unit);
+      output_node(*diff_common_end);
 
       update_diff_stack(rbuf_old->open_diff, diff_common_end.get(), SESCOMMON);
       update_diff_stack(rbuf_new->open_diff, diff_common_end.get(), SESCOMMON);
@@ -341,7 +312,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
     } else {
 
-      outputNode(*node, wstate->unit);
+      output_node(*node);
 
     }
 
@@ -402,7 +373,7 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
   }
 
   // output non-text node and get next node
-  outputNode(*node, wstate->unit);
+  output_node(*node);
 
   if(operation == SESCOMMON) {
 
@@ -451,10 +422,10 @@ void srcdiff_output::output_node(const xNodePtr node, int operation) {
 
 }
 
-void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation) {
+void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const srcml_node * node, int operation) {
 
   // Skip empty node
-  if(node->is_empty || is_text(node))
+  if(node->is_empty || node->is_text())
     return;
 
   if(open_diffs.back()->operation != operation) {
@@ -465,7 +436,7 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
     open_diffs.push_back(new_diff);
   }
 
-  //xNodePtr node = getRealCurrentNode(reader);
+  //srcml_node * node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     open_diffs.back()->open_tags.push_back(node);
@@ -498,7 +469,7 @@ void srcdiff_output::output_text_as_node(const char * text, int operation) {
   if(strlen((char *)text) == 0)
     return;
 
-  xNode node;
+  srcml_node node;
   node.type = (xmlElementType)XML_READER_TYPE_TEXT;
   node.name = "text";
   node.content = text;
@@ -516,3 +487,66 @@ void srcdiff_output::output_char(char character, int operation) {
   output_text_as_node(buf, operation);
 }
 
+// output current XML node in reader
+void srcdiff_output::output_node(const srcml_node & node) {
+
+  bool isemptyelement = false;
+
+  switch (node.type) {
+  case XML_READER_TYPE_ELEMENT:
+
+    // record if this is an empty element since it will be erased by the attribute copying
+    isemptyelement = node.extra & 0x1;
+
+    // start the element
+    srcml_write_start_element(wstate->unit, node.ns->prefix, node.name, 0);
+
+    // copy all the attributes
+    {
+      srcml_attr * attribute = node.properties;
+      while (attribute) {
+
+        srcml_write_attribute(wstate->unit, 0, attribute->name, 0, attribute->value);
+        attribute = attribute->next;
+      }
+    }
+
+    // end now if this is an empty element
+    if (isemptyelement) {
+
+      srcml_write_end_element(wstate->unit);
+    }
+
+    break;
+
+  case XML_READER_TYPE_END_ELEMENT:
+    srcml_write_end_element(wstate->unit);
+    break;
+
+  case XML_READER_TYPE_COMMENT:
+    //xmlTextWriterWriteComment(wstate->unit, (const xmlChar *)node.content);
+    break;
+
+  case XML_READER_TYPE_TEXT:
+  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+
+    // output the UTF-8 buffer escaping the characters.  Note that the output encoding
+    // is handled by libxml
+    srcml_write_string(wstate->unit, node.content);
+    /*for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
+      if (*p == '&')
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&amp;", 5);
+      else if (*p == '<')
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&lt;", 4);
+      else if (*p == '>')
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&gt;", 4);
+      else
+        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) p, 1);
+    }*/
+    break;
+
+  default:
+    break;
+  }
+
+}

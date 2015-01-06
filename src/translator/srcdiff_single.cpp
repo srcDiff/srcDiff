@@ -11,13 +11,13 @@
 
 srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_old, unsigned int start_new) : srcdiff_many(diff), start_old(start_old), start_new(start_new) {}
 
-static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_new) {
+static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * properties_new) {
 
   std::vector<std::string> attribute_names;
   std::vector<std::string> attribute_values;
 
-  xAttrPtr oproperties = properties_old;
-  xAttrPtr nproperties = properties_new;
+  srcml_attr * oproperties = properties_old;
+  srcml_attr * nproperties = properties_new;
   while(oproperties && nproperties) {
 
     if(strcmp(oproperties->name, nproperties->name) == 0) {
@@ -68,12 +68,12 @@ static xAttrPtr merge_properties(xAttrPtr properties_old, xAttrPtr properties_ne
 
   }
 
-  xAttrPtr first = 0;
-  xAttrPtr last_attr = 0;
+  srcml_attr * first = 0;
+  srcml_attr * last_attr = 0;
 
   for(std::vector<std::string>::size_type pos = 0; pos < attribute_names.size(); ++pos) {
 
-    xAttrPtr attr = new xAttr;
+    srcml_attr * attr = new srcml_attr;
     attr->name = strdup(attribute_names[pos].c_str()), attr->value = strdup(attribute_values[pos].c_str()), attr->next = 0;
 
     if(last_attr == 0) first = attr;
@@ -94,7 +94,7 @@ void srcdiff_single::output_recursive_same() {
 
   out.output_node(out.diff_common_start.get(), SESCOMMON);
 
-  xNodePtr merged_node = 0;
+  srcml_node * merged_node = 0;
 
   if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), out.get_nodes_new().at(node_sets_new.at(start_new).at(0))) == 0) {
 
@@ -102,8 +102,8 @@ void srcdiff_single::output_recursive_same() {
 
   } else {
 
-    merged_node = copyXNode(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)));
-    freeXAttr(merged_node->properties);
+    merged_node = new srcml_node(*out.get_nodes_old().at(node_sets_old.at(start_old).at(0)));
+    srcml_attr::free_srcml_attr(merged_node->properties);
 
     merged_node->properties = merge_properties(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->properties,
                                               out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->properties);
@@ -154,7 +154,7 @@ void srcdiff_single::output_recursive_same() {
 
   whitespace.output_statement();
 
-  if(merged_node) freeXNode(merged_node);
+  if(merged_node) delete merged_node;
 
 }
 
@@ -223,8 +223,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-    xNodePtr start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
-    xNodePtr start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
+    srcml_node * start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
+    srcml_node * start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
 
   if(strcmp((const char *)start_node_old->name, (const char *)start_node_new->name) == 0
     && (start_node_old->ns == start_node_new->ns 

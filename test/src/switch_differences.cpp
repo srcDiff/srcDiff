@@ -14,14 +14,35 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include <xmlrw.hpp>
-
 const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
 const char * XML_DECLARATION_STANDALONE = "yes";
 
+
+inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
+    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
+}
+
+inline bool isendelement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT &&
+    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
+}
+
+inline bool iselement(const xmlTextReaderPtr& reader) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT;
+}
+
+inline bool isendelement(const xmlTextReaderPtr& reader) {
+
+  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
+}
+
 // output current XML node in reader
-void outputNode(const xmlNode& node, xmlTextWriterPtr writer, bool output_ns) {
+void outputNode(const xmlNode & node, xmlTextWriterPtr writer, bool output_ns) {
 
   bool isemptyelement = false;
 

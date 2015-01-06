@@ -7,7 +7,7 @@
 
 #include <cstring>
 
-srcdiff_measure::srcdiff_measure(const std::vector<xNodePtr> & nodes_old, const std::vector<xNodePtr> & nodes_new, const node_set & set_old, const node_set & set_new) 
+srcdiff_measure::srcdiff_measure(const std::vector<srcml_node *> & nodes_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_old, const node_set & set_new) 
   : nodes_old(nodes_old), nodes_new(nodes_new), set_old(set_old), set_new(set_new) {}
 
 void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {
@@ -21,13 +21,13 @@ void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_o
   node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(set_old.at(i))) && !is_white_space(nodes_old.at(set_old.at(i))))
+    if(nodes_old.at(set_old.at(i))->is_text() && !nodes_old.at(set_old.at(i))->is_white_space())
       set_old_text.push_back(set_old.at(i));
 
   node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(set_new.at(i))) && !is_white_space(nodes_new.at(set_new.at(i))))
+    if(nodes_new.at(set_new.at(i))->is_text() && !nodes_new.at(set_new.at(i))->is_white_space())
       set_new_text.push_back(set_new.at(i));
 
   text_old_length = set_old_text.size();
@@ -48,7 +48,7 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
   node_set set_old_text(nodes_old);
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(is_text(nodes_old.at(set_old.at(i))) && !is_white_space(nodes_old.at(set_old.at(i)))
+    if(nodes_old.at(set_old.at(i))->is_text() && !nodes_old.at(set_old.at(i))->is_white_space()
       && strcmp((const char *)nodes_old.at(set_old.at(i))->content, "(") != 0
       && strcmp((const char *)nodes_old.at(set_old.at(i))->content, ")") != 0
       && strcmp((const char *)nodes_old.at(set_old.at(i))->content, ";") != 0
@@ -59,7 +59,7 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
   node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(is_text(nodes_new.at(set_new.at(i))) && !is_white_space(nodes_new.at(set_new.at(i)))
+    if(nodes_new.at(set_new.at(i))->is_text() && !nodes_new.at(set_new.at(i))->is_white_space()
       && strcmp((const char *)nodes_new.at(set_new.at(i))->content, "(") != 0
       && strcmp((const char *)nodes_new.at(set_new.at(i))->content, ")") != 0
       && strcmp((const char *)nodes_new.at(set_new.at(i))->content, ";") != 0
@@ -200,9 +200,9 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
 }
 
-static bool is_significant(xNodePtr node, const void * context) {
+static bool is_significant(const srcml_node * node, const void * context) {
 
-  return !is_text(node) && strcmp(node->name, "operator") != 0 
+  return !node->is_text() && strcmp(node->name, "operator") != 0 
       && strcmp(node->name, "literal") != 0 && strcmp(node->name, "modifier") != 0;
 
 }

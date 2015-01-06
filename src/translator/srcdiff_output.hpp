@@ -1,16 +1,14 @@
 #ifndef INCLUDED_SRCDIFF_OUTPUT_HPP
 #define INCLUDED_SRCDIFF_OUTPUT_HPP
 
-
+#include <srcml_node.hpp>
 #include <LineDiffRange.hpp>
 #include <ColorDiff.hpp>
 #include <bash_view.hpp>
 #include <methods.hpp>
-#include <xmlrw.hpp>
 
 #include <vector>
 #include <memory>
-#include <pthread.h>
 
 class srcdiff_output {
 
@@ -20,7 +18,7 @@ protected:
 
     int operation;
 
-    std::vector<const xNode *> open_tags;
+    std::vector<const srcml_node *> open_tags;
 
   };
 
@@ -38,7 +36,7 @@ protected:
 
         if(nodes.at(i)->free) {
 
-          freeXNode(nodes[i]);
+          delete nodes[i];
 
         }
 
@@ -59,7 +57,7 @@ protected:
     int stream_source;
     unsigned int last_output;
 
-    std::vector<xNode *> nodes;
+    std::vector<srcml_node *> nodes;
 
     std::vector<diff_set *> open_diff;
 
@@ -106,23 +104,24 @@ protected:
 public:
 
   // diff nodes
-  std::shared_ptr<xNode> diff_common_start;
-  std::shared_ptr<xNode> diff_common_end;
-  std::shared_ptr<xNode> diff_old_start;
-  std::shared_ptr<xNode> diff_old_end;
-  std::shared_ptr<xNode> diff_new_start;
-  std::shared_ptr<xNode> diff_new_end;
+  std::shared_ptr<srcml_node> diff_common_start;
+  std::shared_ptr<srcml_node> diff_common_end;
+  std::shared_ptr<srcml_node> diff_old_start;
+  std::shared_ptr<srcml_node> diff_old_end;
+  std::shared_ptr<srcml_node> diff_new_start;
+  std::shared_ptr<srcml_node> diff_new_end;
 
-  std::shared_ptr<xNs> diff;
+  std::shared_ptr<srcml_ns> diff;
 
   // diff attribute
-  std::shared_ptr<xAttr> diff_type;
+  std::shared_ptr<srcml_attr> diff_type;
 
-  std::shared_ptr<xNode> unit_tag;
+  std::shared_ptr<srcml_node> unit_tag;
 
 private:
 
-  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const xNodePtr node, int operation);
+  void output_node(const srcml_node & node);
+  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const srcml_node * node, int operation);
 
 public:
 
@@ -135,17 +134,17 @@ public:
   virtual void reset();
   virtual void close();
 
-  virtual const std::vector<xNodePtr> & get_nodes_old() const;
-  virtual const std::vector<xNodePtr> & get_nodes_new() const;
-  virtual std::vector<xNodePtr> & get_nodes_old();
-  virtual std::vector<xNodePtr> & get_nodes_new();
+  virtual const std::vector<srcml_node *> & get_nodes_old() const;
+  virtual const std::vector<srcml_node *> & get_nodes_new() const;
+  virtual std::vector<srcml_node *> & get_nodes_old();
+  virtual std::vector<srcml_node *> & get_nodes_new();
   unsigned int last_output_old() const;
   unsigned int last_output_new() const;
   virtual unsigned int & last_output_old();
   virtual unsigned int & last_output_new();
   METHOD_TYPE method() const;
 
-  virtual void output_node(const xNodePtr node, int operation);
+  virtual void output_node(const srcml_node * node, int operation);
   virtual void output_text_as_node(const char * text, int operation);
   virtual void output_char(char character, int operation);
 

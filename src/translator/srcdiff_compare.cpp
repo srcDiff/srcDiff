@@ -19,17 +19,17 @@ namespace srcdiff_compare {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    xNodePtr node_old = dnodes.nodes_old.at(*(int *)node1);
-    xNodePtr node_new = dnodes.nodes_new.at(*(int *)node2);
+    srcml_node * node_old = dnodes.nodes_old.at(*(int *)node1);
+    srcml_node * node_new = dnodes.nodes_new.at(*(int *)node2);
 
     return node_compare(node_old, node_new);
   }
 
 
-  bool attribute_compare(xAttr * attr1, xAttr * attr2) {
+  bool attribute_compare(const srcml_attr * attr1, const srcml_attr * attr2) {
 
-    xAttr * attr_old = attr1;
-    xAttr * attr_new = attr2;
+    const srcml_attr * attr_old = attr1;
+    const srcml_attr * attr_new = attr2;
 
     for(; attr_old && attr_new
           && strcmp((const char *)attr_old->name, (const char *)attr_new->name) == 0
@@ -45,7 +45,7 @@ namespace srcdiff_compare {
   }
 
   // diff node comparison function
-  int node_compare(xNode * node1, xNode * node2) {
+  int node_compare(const srcml_node * node1, const srcml_node * node2) {
 
     if (node1 == node2)
       return 0;
@@ -87,14 +87,14 @@ namespace srcdiff_compare {
 
       // string consecutive non whitespace text nodes
       // TODO:  Why create the string?  Just compare directly as you go through
-      if(is_text(dnodes.nodes_old.at(node_set1->at(i))) && is_text(dnodes.nodes_new.at(node_set2->at(j)))) {
+      if(dnodes.nodes_old.at(node_set1->at(i))->is_text() && dnodes.nodes_new.at(node_set2->at(j))->is_text()) {
 
         std::string text1 = "";
-        for(; i < node_set1->size() && is_text(dnodes.nodes_old.at(node_set1->at(i))); ++i)
+        for(; i < node_set1->size() && dnodes.nodes_old.at(node_set1->at(i))->is_text(); ++i)
           text1 += (const char *)dnodes.nodes_old.at(node_set1->at(i))->content;
 
         std::string text2 = "";
-        for(; j < node_set2->size() && is_text(dnodes.nodes_new.at(node_set2->at(j))); ++j)
+        for(; j < node_set2->size() && dnodes.nodes_new.at(node_set2->at(j))->is_text(); ++j)
           text2 += (const char *)dnodes.nodes_new.at(node_set2->at(j))->content;
 
         if(text1 != text2)

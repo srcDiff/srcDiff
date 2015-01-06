@@ -33,7 +33,6 @@
 #include <srcdiff_constants.hpp>
 
 #include <LineDiffRange.hpp>
-#include <xmlrw.hpp>
 
 #include <strings.h>
 #include <cstring>

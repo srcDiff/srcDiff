@@ -34,15 +34,15 @@ void srcdiff_common::markup_common() {
 
       output_node(rbuf_old->nodes.at(i), SESCOMMON);
         
-    } else if(is_white_space(rbuf_old->nodes.at(i)) && is_white_space(rbuf_new->nodes.at(j))) {
+    } else if(rbuf_old->nodes.at(i)->is_white_space() && rbuf_new->nodes.at(j)->is_white_space()) {
       
       int olength = i;
       int nlength = j;
 
-      for(; olength < oend && is_white_space(rbuf_old->nodes.at(olength)); ++olength)
+      for(; olength < oend && rbuf_old->nodes.at(olength)->is_white_space(); ++olength)
         ;
 
-      for(; nlength < nend && is_white_space(rbuf_new->nodes.at(nlength)); ++nlength)
+      for(; nlength < nend && rbuf_new->nodes.at(nlength)->is_white_space(); ++nlength)
         ;
 
       //markup_whitespace(rbuf_old, olength, rbuf_new, nlength, wstate);
@@ -104,13 +104,13 @@ void srcdiff_common::markup_common() {
 
         j = nlength - 1;
 
-    } else if(is_white_space(rbuf_old->nodes.at(i))) {
+    } else if(rbuf_old->nodes.at(i)->is_white_space()) {
 
       output_node(diff_old_start.get(), SESDELETE);
       // whitespace delete
       // output diff tag
 
-      for(; i < oend && is_white_space(rbuf_old->nodes.at(i)); ++i)
+      for(; i < oend && rbuf_old->nodes.at(i)->is_white_space(); ++i)
         output_node(rbuf_old->nodes.at(i), SESDELETE);
 
       // output diff tag
@@ -119,13 +119,13 @@ void srcdiff_common::markup_common() {
       --i;
       --j;
 
-    } else if(is_white_space(rbuf_new->nodes.at(j))) {
+    } else if(rbuf_new->nodes.at(j)->is_white_space()) {
 
       output_node(diff_new_start.get(), SESINSERT);
       //whitespace insert
       // output diff tag
 
-      for(; j < nend && is_white_space(rbuf_new->nodes.at(j)); ++j)
+      for(; j < nend && rbuf_new->nodes.at(j)->is_white_space(); ++j)
         output_node(rbuf_new->nodes.at(j), SESINSERT);
 
       // output diff tag
@@ -134,15 +134,15 @@ void srcdiff_common::markup_common() {
       --i;
       --j;
 
-    } else if(is_text(rbuf_old->nodes.at(i)) && is_text(rbuf_new->nodes.at(j))) {
+    } else if(rbuf_old->nodes.at(i)->is_text() && rbuf_new->nodes.at(j)->is_text()) {
 
       // collect all adjacent text nodes character arrays and input difference
       std::string text_old = "";
-      for(; i < oend && is_text(rbuf_old->nodes.at(i)); ++i)
+      for(; i < oend && rbuf_old->nodes.at(i)->is_text(); ++i)
         text_old += (const char *)rbuf_old->nodes.at(i)->content;
 
       std::string text_new = "";
-      for(; j < nend && is_text(rbuf_new->nodes.at(j)); ++j)
+      for(; j < nend && rbuf_new->nodes.at(j)->is_text(); ++j)
         text_new += (const char *)rbuf_new->nodes.at(j)->content;
 
       --i;

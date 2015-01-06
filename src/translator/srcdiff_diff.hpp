@@ -9,8 +9,8 @@
 
 struct diff_nodes {
 
-  const std::vector<xNode *> & nodes_old;
-  const std::vector<xNode *> & nodes_new;
+  const std::vector<srcml_node *> & nodes_old;
+  const std::vector<srcml_node *> & nodes_new;
 
 };
 
