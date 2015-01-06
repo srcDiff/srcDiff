@@ -152,11 +152,11 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
 
 }
 
-srcml_node::srcml_node(xmlElementType type, const char * name, srcml_ns * ns, const char * content, srcml_attr * properties, unsigned short extra,
-  const char * parent, bool is_empty, bool free, int move, int nest)
+srcml_node::srcml_node(xmlElementType type, const boost::optional<std::string> & name, srcml_ns * ns, const boost::optional<std::string> & content, srcml_attr * properties, unsigned short extra,
+  const boost::optional<std::string> & parent, bool is_empty, bool free, int move, int nest)
   : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0), nest(0) {}
 
-srcml_node::srcml_node(xmlElementType type, std::string name, const srcml_ns & ns) : type(type), name(strdup(name.c_str())), ns(new srcml_ns(ns)),
+srcml_node::srcml_node(xmlElementType type, const boost::optional<std::string> & name, const srcml_ns & ns) : type(type), name(strdup(name.c_str())), ns(new srcml_ns(ns)),
   content(0), properties(0), extra(0), parent(0), is_empty(false), free(false), move(0), nest(0) {}
 
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.extra), is_empty(node.is_empty), free(true), move(0), nest(0) {

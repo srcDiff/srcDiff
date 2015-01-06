@@ -171,11 +171,14 @@ static bool is_atomic_srcml(std::vector<srcml_node *> & nodes, unsigned start) {
   if((xmlReaderTypes)nodes.at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
     return false;
 
-  if(strcmp((const char *)nodes.at(start)->name, (const char *)nodes.at(start + 2)->name) != 0)
+  if(!nodes.at(start)->name || !nodes.at(start + 2)->name)
+    return false
+
+  if(*nodes.at(start)->name != *nodes.at(start + 2)->name)
     return false;
 
   for(int i = 0; atomic[i]; ++i)
-    if(strcmp((const char *)nodes.at(start)->name, atomic[i]) == 0)
+    if(*nodes.at(start)->name == atomic[i])
       return true;
 
   return false;
