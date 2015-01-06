@@ -163,32 +163,6 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
 }
 
-srcml_node~srcml_node() {
-
- if(node->ns) {
-
-    if(node->ns->href)
-      free((void *)node->ns->href);
-
-    if(node->ns->prefix)
-      free((void *)node->ns->prefix);
-
-    delete node->ns;
-  }
-
-  freeXAttr(node->properties);
-
-  if(strcmp(node->name, "text") != 0)
-    free((void *)node->name);
-
-  if(node->content)
-    free((void *)node->content);
-
-  if(node->parent)
-    free((void *)node->parent);
-
-}
-
 srcml_node::srcml_node(xmlElementType type, const char * name, xNs * ns, const char * content, xAttr * properties, unsigned short extra,
   const char * parent, bool is_empty, bool free, int move, int nest)
   : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(true), move(0), nest(0) {}
@@ -196,28 +170,28 @@ srcml_node::srcml_node(xmlElementType type, const char * name, xNs * ns, const c
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.extra), is_empty(node.is_empty), free(node.free), move(node.move), nest(node.nest) {
 
 
-  name = strdup((const char *)node->name);
+  name = strdup((const char *)node.name);
 
   content = 0;
-  if(node->content)
-    content = strdup((const char *)node->content);
+  if(node.content)
+    content = strdup((const char *)node.content);
 
   ns = 0;
-  if(node->ns) {
+  if(node.ns) {
 
     ns = new xNs;
 
     ns->href = 0;
 
-    if(node->ns->href)
-      ns->href = strdup((const char *)node->ns->href);
+    if(node.ns->href)
+      ns->href = strdup((const char *)node.ns->href);
 
     ns->prefix = 0;
-    if(node->ns->prefix)
-      ns->prefix = strdup((const char *)node->ns->prefix);
+    if(node.ns->prefix)
+      ns->prefix = strdup((const char *)node.ns->prefix);
   }
 
-  xAttr * attribute = node->properties;
+  xAttr * attribute = node.properties;
   properties = 0;
   if(attribute) {
 
@@ -246,16 +220,16 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.ex
     }
   }
 
-  if(node->parent)
-    parent = strdup(node->parent);
+  if(node.parent)
+    parent = strdup(node.parent);
   else
     parent = 0;
 
 }
 
-void freeXAttr(xAttrPtr properties) {
+void srcml_node::freeXAttr(xAttr * properties) {
 
-  xAttrPtr attr = properties;
+  xAttr * attr = properties;
   while(attr) {
 
     xAttr * save_attr = attr;
@@ -269,196 +243,54 @@ void freeXAttr(xAttrPtr properties) {
 
 }
 
-bool operator==(const srcml_node& n1, const srcml_node& n2) {
+srcml_node::~srcml_node() {
 
-  return n1.type == n2.type &&
-    (strcmp((char*) n1.name, (char*) n2.name) == 0) && (
-                                                        ((xmlReaderTypes)n1.type != XML_READER_TYPE_TEXT && (xmlReaderTypes)n1.type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE) ||
-                                                        (strcmp((char*) n1.content, (char*) n2.content) == 0)
-                                                        );
-}
+ if(ns) {
 
-srcml_node* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context) {
+    if(ns->href)
+      free((void *)ns->href);
 
-  srcml_node* pnode = getCurrentNode(reader, options, context);
+    if(ns->prefix)
+      free((void *)ns->prefix);
 
-  //  pnode->extra = xmlTextReaderIsEmptyElement(reader);
-
-  return pnode;
-}
-
-srcml_node * copysrcml_node(srcml_nodePtr node) {
-
-
-
-
-  return srcml_node;
-}
-
-srcml_node* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context) {
-
-  xmlNode* curnode = xmlTextReaderCurrentNode(reader);
-
-  std::string full_name;
-  if(curnode->ns && (const char*)curnode->ns->prefix) {
-
-    full_name = (const char*)curnode->ns->prefix;
-    full_name += ":";
-
+    delete ns;
   }
 
-  full_name += (const char*)curnode->name;
+  freeXAttr(properties);
 
-  srcml_node * node = 0;
-  if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
+  if(strcmp(name, "text") != 0)
+    free((void *)name);
 
-    NodeMap::iterator lb = starttags.lower_bound(full_name);
-    if (lb != starttags.end() && !(starttags.key_comp()(full_name, lb->first))) {
+  if(content)
+    free((void *)content);
 
-      node = lb->second;
-    } else {
-
-      node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
-      node->extra = 0;
-      starttags.insert(lb, NodeMap::value_type(full_name, node));
-    }
-
-  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
-
-    NodeMap::iterator lb = endtags.lower_bound(full_name);
-    if (lb != endtags.end() && !(endtags.key_comp()(full_name, lb->first))) {
-
-      node = lb->second;
-    } else {
-
-      node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
-      node->extra = 0;
-      endtags.insert(lb, NodeMap::value_type(full_name, node));
-    }
-
-  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
-    node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
-    node->free = true;
-    node->extra = xmlTextReaderIsEmptyElement(reader);
-  } else {
-    node = createInternalNode(*curnode, options & SRCML_OPTION_ARCHIVE);
-    node->free = true;
-  }
-
-  node->type = (xmlElementType) xmlTextReaderNodeType(reader);
-
-  return node;
-}
-
-srcml_node * split_text(const char * characters_start, const char * characters_end) {
-
-  srcml_node * text = new srcml_node;
-  text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-  text->name = "text";
-  text->content = 0;
-
-  if(characters_start != characters_end) {
-
-    const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
-    text->content = content;
-  }
-  text->ns = 0;
-  text->properties = 0;
-  text->is_empty = true;
-  text->parent = 0;
-  text->free = true;
-  text->move = 0;
-  text->nest = 0;
-
-  return text;
-}
-
-void eat_element(xmlTextReaderPtr& reader) {
-  int depth = xmlTextReaderDepth(reader);
-  xmlTextReaderRead(reader);
-  while (xmlTextReaderDepth(reader) > depth)
-    xmlTextReaderRead(reader);
-  xmlTextReaderRead(reader);
-}
-
-// output current XML node in reader
-void outputNode(const srcml_node & node, srcml_unit * unit) {
-
-  bool isemptyelement = false;
-
-  switch (node.type) {
-  case XML_READER_TYPE_ELEMENT:
-
-    // record if this is an empty element since it will be erased by the attribute copying
-    isemptyelement = node.extra & 0x1;
-
-    // start the element
-    srcml_write_start_element(unit, node.ns->prefix, node.name, 0);
-
-    // copy all the attributes
-    {
-      xAttr * attribute = node.properties;
-      while (attribute) {
-
-        srcml_write_attribute(unit, 0, attribute->name, 0, attribute->value);
-        attribute = attribute->next;
-      }
-    }
-
-    // end now if this is an empty element
-    if (isemptyelement) {
-
-      srcml_write_end_element(unit);
-    }
-
-    break;
-
-  case XML_READER_TYPE_END_ELEMENT:
-    srcml_write_end_element(unit);
-    break;
-
-  case XML_READER_TYPE_COMMENT:
-    //xmlTextWriterWriteComment(unit, (const xmlChar *)node.content);
-    break;
-
-  case XML_READER_TYPE_TEXT:
-  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-
-    // output the UTF-8 buffer escaping the characters.  Note that the output encoding
-    // is handled by libxml
-    srcml_write_string(unit, node.content);
-    /*for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
-      if (*p == '&')
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&amp;", 5);
-      else if (*p == '<')
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&lt;", 4);
-      else if (*p == '>')
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) "&gt;", 4);
-      else
-        xmlTextWriterWriteRawLen(unit, BAD_CAST (unsigned char*) p, 1);
-    }*/
-    break;
-
-  default:
-    break;
-  }
+  if(parent)
+    free((void *)parent);
 
 }
 
-bool is_white_space(const srcml_nodePtr node) {
+bool operator==(const srcml_node & node) {
+
+  return type == node.type &&
+    (strcmp((char*) name, (char*) node.name) == 0) && 
+    (((xmlReaderTypes)type != XML_READER_TYPE_TEXT && (xmlReaderTypes)type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE) ||
+      (strcmp((char*) content, (char*) node.content) == 0));
+}
+
+bool srcml_node::is_white_space() {
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && isspace((char)node->content[0]);
+  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && isspace((char)content[0]);
 
 }
 
-bool is_new_line(const srcml_nodePtr node) {
+bool srcml_node::is_new_line() {
 
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content[0] == '\n';
+  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && content[0] == '\n';
 
 }
 
-bool is_text(const srcml_nodePtr node) {
+bool srcml_node::is_text() {
 
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT;
+  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT;
 }

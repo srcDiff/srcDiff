@@ -77,7 +77,7 @@ public:
 
 private:
 
-void freeXAttr(xAttrPtr properties);
+void freeXAttr(xAttr * properties);
 
 public:
 
@@ -90,15 +90,13 @@ public:
 
   ~srcml_node();
 
-  bool operator==(const srcml_node & node_one, const srcml_node & node_two);
+  bool operator==(const srcml_node & node);
 
-  xNode * split_text(const char * characters_start, const char * characters_end);
+  bool is_white_space();
 
-  bool is_white_space(const xNodePtr node);
+  bool is_new_line();
 
-  bool is_new_line(const xNodePtr node);
-
-  bool is_text(const xNodePtr node);
+  bool is_text();
 
 };
 
