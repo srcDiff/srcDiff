@@ -74,68 +74,32 @@ public:
 
   int move;
   int nest;
-  
+
+private:
+
+void freeXAttr(xAttrPtr properties);
+
 public:
 
   srcml_node(const xmlNode & node, bool is_archive);
 
   srcml_node(xmlElementType type = XML_ELEMENT_NODE, const char * name = 0, xNs * ns = 0, const char * content = 0, xAttr * properties = 0, unsigned short extra = 0,
-    const char * parent = 0, bool is_empty = false, bool free = false, int move = 0, int nest = 0)
-      : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(free), move(move), nest(nest) {}
+    const char * parent = 0, bool is_empty = false, bool free = false, int move = 0, int nest = 0);
+
+  srcml_node(const srcml_node & node);
+
+  ~srcml_node();
 
   bool operator==(const srcml_node & node_one, const srcml_node & node_two);
 
+  xNode * split_text(const char * characters_start, const char * characters_end);
+
+  bool is_white_space(const xNodePtr node);
+
+  bool is_new_line(const xNodePtr node);
+
+  bool is_text(const xNodePtr node);
 
 };
-
-xNode * createInternalNode(xmlNode & node, bool is_archive);
-
-
-xNode* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
-
-xNode * copyXNode(xNode * node);
-
-xNode * split_text(const char * characters_start, const char * characters_end);
-
-inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
-}
-
-inline bool isendelement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT &&
-    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
-}
-
-inline bool iselement(const xmlTextReaderPtr& reader) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT;
-}
-
-inline bool isendelement(const xmlTextReaderPtr& reader) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
-}
-
-bool is_white_space(const xNodePtr node);
-
-bool is_new_line(const xNodePtr node);
-
-bool is_text(const xNodePtr node);
-
-xNode* getCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int context);
-
-void freeXAttr(xAttrPtr properties);
-void freeXNode(xNode * node);
-
-void eat_element(xmlTextReaderPtr& reader);
-
-void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
-
-void outputNode(const xNode& node, xmlTextWriterPtr writer);
-
-void outputNode(const xNode& node, srcml_unit * unit);
 
 #endif

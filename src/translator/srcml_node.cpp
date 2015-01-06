@@ -163,29 +163,9 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
 }
 
-srcml_node * createInternalNode(xmlNode & node, bool is_archive) {
+srcml_node~srcml_node() {
 
-}
-
-void freeXAttr(xAttrPtr properties) {
-
-  xAttrPtr attr = properties;
-  while(attr) {
-
-    xAttr * save_attr = attr;
-    attr = attr->next;
-
-    free((void *)save_attr->name);
-    free((void *)save_attr->value);
-    delete save_attr;
-
-  }  
-
-}
-
-void freesrcml_node(srcml_node * node) {
-
-  if(node->ns) {
+ if(node->ns) {
 
     if(node->ns->href)
       free((void *)node->ns->href);
@@ -207,7 +187,85 @@ void freesrcml_node(srcml_node * node) {
   if(node->parent)
     free((void *)node->parent);
 
-  delete node;
+}
+
+srcml_node::srcml_node(xmlElementType type, const char * name, xNs * ns, const char * content, xAttr * properties, unsigned short extra,
+  const char * parent, bool is_empty, bool free, int move, int nest)
+  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(true), move(0), nest(0) {}
+
+srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.extra), is_empty(node.is_empty), free(node.free), move(node.move), nest(node.nest) {
+
+
+  name = strdup((const char *)node->name);
+
+  content = 0;
+  if(node->content)
+    content = strdup((const char *)node->content);
+
+  ns = 0;
+  if(node->ns) {
+
+    ns = new xNs;
+
+    ns->href = 0;
+
+    if(node->ns->href)
+      ns->href = strdup((const char *)node->ns->href);
+
+    ns->prefix = 0;
+    if(node->ns->prefix)
+      ns->prefix = strdup((const char *)node->ns->prefix);
+  }
+
+  xAttr * attribute = node->properties;
+  properties = 0;
+  if(attribute) {
+
+    xAttr * attr;
+    attr = new xAttr;
+    attr->name = strdup((const char *)attribute->name);
+    attr->value = strdup((const char *)attribute->value);
+    attr->next = 0;
+
+    properties = attr;;
+
+    attribute = attribute->next;
+
+    while (attribute) {
+
+      xAttr * nattr = new xAttr;
+      nattr->name = strdup((const char *)attribute->name);
+      nattr->value = strdup((const char *)attribute->value);
+      nattr->next = 0;
+
+      attr->next = nattr;
+      attr = nattr;
+
+      attribute = attribute->next;
+
+    }
+  }
+
+  if(node->parent)
+    parent = strdup(node->parent);
+  else
+    parent = 0;
+
+}
+
+void freeXAttr(xAttrPtr properties) {
+
+  xAttrPtr attr = properties;
+  while(attr) {
+
+    xAttr * save_attr = attr;
+    attr = attr->next;
+
+    free((void *)save_attr->name);
+    free((void *)save_attr->value);
+    delete save_attr;
+
+  }  
 
 }
 
@@ -232,71 +290,7 @@ srcml_node* getRealCurrentNode(xmlTextReaderPtr reader, OPTION_TYPE options, int
 srcml_node * copysrcml_node(srcml_nodePtr node) {
 
 
-  srcml_node * srcml_node = new srcml_node;
 
-  srcml_node->type = node->type;
-
-  srcml_node->name = strdup((const char *)node->name);
-
-  srcml_node->content = 0;
-  if(node->content)
-    srcml_node->content = strdup((const char *)node->content);
-  srcml_node->ns = 0;
-
-  if(node->ns) {
-
-    srcml_node->ns = new xNs;
-
-    srcml_node->ns->href = 0;
-
-    if(node->ns->href)
-      srcml_node->ns->href = strdup((const char *)node->ns->href);
-
-    srcml_node->ns->prefix = 0;
-    if(node->ns->prefix)
-      srcml_node->ns->prefix = strdup((const char *)node->ns->prefix);
-  }
-
-  xAttr * attribute = node->properties;
-  srcml_node->properties = 0;
-  if(attribute) {
-
-    xAttr * attr;
-    attr = new xAttr;
-    attr->name = strdup((const char *)attribute->name);
-    attr->value = strdup((const char *)attribute->value);
-    attr->next = 0;
-
-    srcml_node->properties = attr;;
-
-    attribute = attribute->next;
-
-    while (attribute) {
-
-      xAttr * nattr = new xAttr;
-      nattr->name = strdup((const char *)attribute->name);
-      nattr->value = strdup((const char *)attribute->value);
-      nattr->next = 0;
-
-      attr->next = nattr;
-      attr = nattr;
-
-      attribute = attribute->next;
-
-    }
-  }
-
-  srcml_node->extra = node->extra;
-  srcml_node->is_empty = node->extra;
-
-  if(node->parent)
-    srcml_node->parent = strdup(node->parent);
-  else
-    srcml_node->parent = 0;
-
-  srcml_node->free = true;
-  srcml_node->move = 0;
-  srcml_node->nest = 0;
 
   return srcml_node;
 }
