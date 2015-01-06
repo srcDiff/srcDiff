@@ -23,7 +23,10 @@
 */
 
 #include <srcml_node.hpp>
+
 #include <iostream>
+#include <cstdlib>
+
 #include <cstring>
 #include <map>
 #include <vector>
@@ -36,11 +39,6 @@
 #ifdef __MINGW32__
 #include <mingw32.hpp>
 #endif
-
-typedef std::map<std::string, srcml_node*> NodeMap;
-
-NodeMap starttags;
-NodeMap endtags;
 
 srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
@@ -55,7 +53,7 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
   if(node.ns) {
 
-    ns = new xNs;
+    ns = new srcml_ns;
 
     ns->href = 0;
 
@@ -71,14 +69,14 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
   properties = 0;
 
   xmlNsPtr ns = node.nsDef;
-  xAttr * ns_attr = 0;
+  srcml_attr * ns_attr = 0;
   if(strcmp((const char*)name, "unit") == 0 && ns) {
 
     while(is_archive && ns && strcmp((const char *)ns->href, "http://www.sdml.info/srcML/cpp") != 0)
         ns = ns->next;
 
 
-    xAttr * attr = new xAttr;
+    srcml_attr * attr = new srcml_attr;
 
     std::string ns_name = "xmlns";
     if(ns->prefix) {
@@ -99,7 +97,7 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
     while(!is_archive && ns) {
 
-      xAttr * nattr = new xAttr;
+      srcml_attr * nattr = new srcml_attr;
 
       std::string ns_name = "xmlns";
       if(ns->prefix) {
@@ -125,7 +123,7 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
   if(attribute) {
 
-    xAttr * attr = new xAttr;
+    srcml_attr * attr = new srcml_attr;
     attr->name = strdup((const char *)attribute->name);
     attr->value = strdup((const char *)attribute->children->content);
     attr->next = 0;
@@ -139,7 +137,7 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
     while (attribute) {
 
-      xAttr * nattr = new xAttr;
+      srcml_attr * nattr = new srcml_attr;
       nattr->name = strdup((const char *)attribute->name);
       nattr->value = strdup((const char *)attribute->children->content);
       nattr->next = 0;
@@ -163,7 +161,7 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) {
 
 }
 
-srcml_node::srcml_node(xmlElementType type, const char * name, xNs * ns, const char * content, xAttr * properties, unsigned short extra,
+srcml_node::srcml_node(xmlElementType type, const char * name, srcml_ns * ns, const char * content, srcml_attr * properties, unsigned short extra,
   const char * parent, bool is_empty, bool free, int move, int nest)
   : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(true), move(0), nest(0) {}
 
@@ -179,7 +177,7 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.ex
   ns = 0;
   if(node.ns) {
 
-    ns = new xNs;
+    ns = new srcml_ns;
 
     ns->href = 0;
 
@@ -191,12 +189,12 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.ex
       ns->prefix = strdup((const char *)node.ns->prefix);
   }
 
-  xAttr * attribute = node.properties;
+  srcml_attr * attribute = node.properties;
   properties = 0;
   if(attribute) {
 
-    xAttr * attr;
-    attr = new xAttr;
+    srcml_attr * attr;
+    attr = new srcml_attr;
     attr->name = strdup((const char *)attribute->name);
     attr->value = strdup((const char *)attribute->value);
     attr->next = 0;
@@ -207,7 +205,7 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.ex
 
     while (attribute) {
 
-      xAttr * nattr = new xAttr;
+      srcml_attr * nattr = new srcml_attr;
       nattr->name = strdup((const char *)attribute->name);
       nattr->value = strdup((const char *)attribute->value);
       nattr->next = 0;
@@ -227,16 +225,16 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), extra(node.ex
 
 }
 
-void srcml_node::freeXAttr(xAttr * properties) {
+void srcml_node::free_srcml_attr(srcml_attr * properties) {
 
-  xAttr * attr = properties;
+  srcml_attr * attr = properties;
   while(attr) {
 
-    xAttr * save_attr = attr;
+    srcml_attr * save_attr = attr;
     attr = attr->next;
 
-    free((void *)save_attr->name);
-    free((void *)save_attr->value);
+    std::free((void *)save_attr->name);
+    std::free((void *)save_attr->value);
     delete save_attr;
 
   }  
@@ -248,28 +246,28 @@ srcml_node::~srcml_node() {
  if(ns) {
 
     if(ns->href)
-      free((void *)ns->href);
+      std::free((void *)ns->href);
 
     if(ns->prefix)
-      free((void *)ns->prefix);
+      std::free((void *)ns->prefix);
 
     delete ns;
   }
 
-  freeXAttr(properties);
+  free_srcml_attr(properties);
 
   if(strcmp(name, "text") != 0)
-    free((void *)name);
+    std::free((void *)name);
 
   if(content)
-    free((void *)content);
+    std::free((void *)content);
 
   if(parent)
-    free((void *)parent);
+    std::free((void *)parent);
 
 }
 
-bool operator==(const srcml_node & node) {
+bool srcml_node::operator==(const srcml_node & node) {
 
   return type == node.type &&
     (strcmp((char*) name, (char*) node.name) == 0) && 
