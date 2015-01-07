@@ -15,14 +15,16 @@ protected:
 
 private:
 
+	static const std::string move;
+
 public:
 
 	srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation);
 
-	static bool is_move(const node_set & set, const std::vector<srcml_node *> & nodes);
+	static bool is_move(const node_set & set, const std::vector<std::shared_ptr<srcml_node>> & nodes);
 
-	static void mark_moves(std::vector<srcml_node *> & nodes_old, const node_sets & node_sets_old
-	                , std::vector<srcml_node *> & nodes_new, const node_sets & node_sets_new
+	static void mark_moves(std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_sets & node_sets_old
+	                , std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_sets & node_sets_new
 	                , edit * edit_script);
 
 	virtual void output();

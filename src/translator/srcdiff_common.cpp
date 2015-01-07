@@ -6,6 +6,8 @@
 
 #include <string>
 
+const boost::optional<std::string> srcdiff_common::whitespace("whitespace");
+
 srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
 : srcdiff_output(out), end_old(end_old), end_new(end_new) {}
 
@@ -24,8 +26,8 @@ void srcdiff_common::markup_common() {
 
   // set attribute to change
   diff_type->value = whitespace;
-  diff_old_start->properties = diff_type.get();
-  diff_new_start->properties = diff_type.get();
+  diff_old_start->properties.push_back(*diff_type.get());
+  diff_new_start->properties.push_back(*diff_type.get());
 
   int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
@@ -66,37 +68,37 @@ void srcdiff_common::markup_common() {
 
         if(i < opivot) {
 
-        output_node(diff_old_start.get(), SESDELETE);
+        output_node(diff_old_start, SESDELETE);
 
         for(int k = i; k < opivot; ++k)
           output_node(rbuf_old->nodes.at(k), SESDELETE);
 
         // output diff tag
-        output_node(diff_old_end.get(), SESDELETE);
+        output_node(diff_old_end, SESDELETE);
 
         }
 
         if(j < npivot) {
 
-        output_node(diff_new_start.get(), SESINSERT);
+        output_node(diff_new_start, SESINSERT);
 
         for(int k = j; k < npivot; ++k)
           output_node(rbuf_new->nodes.at(k), SESINSERT);
 
         // output diff tag
-        output_node(diff_new_end.get(), SESINSERT);
+        output_node(diff_new_end, SESINSERT);
 
         }
 
         if(opivot < olength) {
 
-          //output_node(diff_common_start.get(), SESCOMMON);
+          //output_node(diff_common_start, SESCOMMON);
 
         for(int k = opivot; k < olength; ++k)
           output_node(rbuf_old->nodes.at(k), SESCOMMON);
 
         // output diff tag
-        //output_node(diff_common_end.get(), SESCOMMON);
+        //output_node(diff_common_end, SESCOMMON);
 
         }
 
@@ -106,7 +108,7 @@ void srcdiff_common::markup_common() {
 
     } else if(rbuf_old->nodes.at(i)->is_white_space()) {
 
-      output_node(diff_old_start.get(), SESDELETE);
+      output_node(diff_old_start, SESDELETE);
       // whitespace delete
       // output diff tag
 
@@ -114,14 +116,14 @@ void srcdiff_common::markup_common() {
         output_node(rbuf_old->nodes.at(i), SESDELETE);
 
       // output diff tag
-      output_node(diff_old_end.get(), SESDELETE);
+      output_node(diff_old_end, SESDELETE);
 
       --i;
       --j;
 
     } else if(rbuf_new->nodes.at(j)->is_white_space()) {
 
-      output_node(diff_new_start.get(), SESINSERT);
+      output_node(diff_new_start, SESINSERT);
       //whitespace insert
       // output diff tag
 
@@ -129,7 +131,7 @@ void srcdiff_common::markup_common() {
         output_node(rbuf_new->nodes.at(j), SESINSERT);
 
       // output diff tag
-      output_node(diff_new_end.get(), SESINSERT);
+      output_node(diff_new_end, SESINSERT);
 
       --i;
       --j;
@@ -169,7 +171,7 @@ void srcdiff_common::markup_common() {
 
             if(isspace(text_old[opos])) {
 
-              output_node(diff_old_start.get(), SESDELETE);
+              output_node(diff_old_start, SESDELETE);
 
               for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
 
@@ -178,13 +180,13 @@ void srcdiff_common::markup_common() {
               }
 
               // output diff tag
-              output_node(diff_old_end.get(), SESDELETE);
+              output_node(diff_old_end, SESDELETE);
 
             }
 
             if(isspace(text_new[npos])) {
 
-              output_node(diff_new_start.get(), SESINSERT);
+              output_node(diff_new_start, SESINSERT);
 
               for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
 
@@ -193,7 +195,7 @@ void srcdiff_common::markup_common() {
               }
 
               // output diff tag
-              output_node(diff_new_end.get(), SESINSERT);
+              output_node(diff_new_end, SESINSERT);
 
             }
 
@@ -205,7 +207,7 @@ void srcdiff_common::markup_common() {
 
       if(opos < (signed)text_old.size()) {
 
-        output_node(diff_old_start.get(), SESDELETE);
+        output_node(diff_old_start, SESDELETE);
 
         for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
 
@@ -214,13 +216,13 @@ void srcdiff_common::markup_common() {
         }
 
         // output diff tag
-        output_node(diff_old_end.get(), SESDELETE);
+        output_node(diff_old_end, SESDELETE);
 
       }
 
       if(npos < (signed)text_new.size()) {
         
-        output_node(diff_new_start.get(), SESINSERT);
+        output_node(diff_new_start, SESINSERT);
 
         for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
 
@@ -229,7 +231,7 @@ void srcdiff_common::markup_common() {
         }
 
         // output diff tag
-        output_node(diff_new_end.get(), SESINSERT);
+        output_node(diff_new_end, SESINSERT);
 
       }
 
@@ -249,7 +251,7 @@ void srcdiff_common::markup_common() {
   // output leftover nodes
   if(i < oend) {
 
-    output_node(diff_old_start.get(), SESDELETE);
+    output_node(diff_old_start, SESDELETE);
     // whitespace delete
     // output diff tag
 
@@ -257,11 +259,11 @@ void srcdiff_common::markup_common() {
       output_node(rbuf_old->nodes.at(i), SESDELETE);
 
     // output diff tag
-    output_node(diff_old_end.get(), SESDELETE);
+    output_node(diff_old_end, SESDELETE);
 
   } else if(j < nend) {
 
-    output_node(diff_new_start.get(), SESINSERT);
+    output_node(diff_new_start, SESINSERT);
     // whitespace delete
     // output diff tag
 
@@ -269,15 +271,15 @@ void srcdiff_common::markup_common() {
       output_node(rbuf_new->nodes.at(j), SESINSERT);
 
     // output diff tag
-    output_node(diff_new_end.get(), SESINSERT);
+    output_node(diff_new_end, SESINSERT);
 
   }
 
   rbuf_old->last_output = oend > (signed)rbuf_old->last_output ? oend : rbuf_old->last_output;
   rbuf_new->last_output = nend > (signed)rbuf_new->last_output ? nend : rbuf_new->last_output;
 
-  diff_old_start->properties = 0;
-  diff_new_start->properties = 0;
+  diff_old_start->properties.clear();
+  diff_new_start->properties.clear();
 
 }
 
@@ -306,7 +308,7 @@ void srcdiff_common::output() {
     return;
 
   // output common tag if needed
-  output_node(diff_common_start.get(), SESCOMMON);
+  output_node(diff_common_start, SESCOMMON);
 
   // output common nodes
   markup_common();
@@ -315,6 +317,6 @@ void srcdiff_common::output() {
   //output_statement(rbuf_old, rbuf_new, wstate);
 
   // output common tag if needed
-  output_node(diff_common_end.get(), SESCOMMON);
+  output_node(diff_common_end, SESCOMMON);
 
 }

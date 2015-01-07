@@ -6,10 +6,10 @@
 
 #include <vector>
 #include <map>
+#include <list>
 
 int move_id = 0;
-
-static srcml_node::srcml_attr move_attribute = { 0, std::string("move"), 0 };
+const std::string srcdiff_move::move("move");
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;
@@ -19,7 +19,7 @@ srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, 
 
 
 void add_construct(std::map<std::string, IntPairs > & constructs
-                   , const node_sets & sets, const std::vector<srcml_node *> & nodes
+                   , const node_sets & sets, const std::vector<std::shared_ptr<srcml_node>> & nodes
                    , int offset, int operation) {
 
   std::string tag = nodes.at(sets.at(offset).at(0))->name;
@@ -34,14 +34,14 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
-bool srcdiff_move::is_move(const node_set & set, const std::vector<srcml_node *> & nodes) {
+bool srcdiff_move::is_move(const node_set & set, const std::vector<std::shared_ptr<srcml_node>> & nodes) {
 
   return nodes.at(set.at(0))->move;
 
 }
 
-void srcdiff_move::mark_moves(std::vector<srcml_node *> & nodes_old, const node_sets & node_sets_old
-                , std::vector<srcml_node *> & nodes_new, const node_sets & node_sets_new
+void srcdiff_move::mark_moves(std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_sets & node_sets_old
+                , std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_sets & node_sets_new
                 , edit * edit_script) {
 
   std::map<std::string, IntPairs > constructs;
@@ -83,8 +83,8 @@ void srcdiff_move::mark_moves(std::vector<srcml_node *> & nodes_old, const node_
 
     for(unsigned int i = 0; i < elements.size(); ++i) {
 
-      std::vector<srcml_node *> * nodes_one = &nodes_old;
-      std::vector<srcml_node *> * nodes_two = &nodes_new;
+      std::vector<std::shared_ptr<srcml_node>> * nodes_one = &nodes_old;
+      std::vector<std::shared_ptr<srcml_node>> * nodes_two = &nodes_new;
 
       const node_sets * node_sets_one = &node_sets_old;
       const node_sets * node_sets_two = &node_sets_new;
@@ -122,10 +122,10 @@ void srcdiff_move::mark_moves(std::vector<srcml_node *> & nodes_old, const node_
 		   continue;
 
         ++move_id;
-        srcml_node * start_node_one = new srcml_node(*nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
+        std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
         start_node_one->move = move_id;
 
-        srcml_node * start_node_two = new srcml_node(*nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
+        std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
         start_node_two->move = move_id;
 
         nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)) = start_node_one;
@@ -133,10 +133,10 @@ void srcdiff_move::mark_moves(std::vector<srcml_node *> & nodes_old, const node_
 
         if(!start_node_one->is_empty) {
 
-          srcml_node * end_node_one = new srcml_node(*nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
+          std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
           end_node_one->move = move_id;
 
-          srcml_node * end_node_two = new srcml_node(*nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
+          std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
           end_node_two->move = move_id;
 
           nodes_one->at(node_sets_one->at(elements.at(i).first).back()) = end_node_one;
@@ -171,26 +171,9 @@ void srcdiff_move::output() {
 
   int id = rbuf->nodes.at(position)->move;
 
-  if(!id)
-    return;
+  start_node->properties.emplace_back(move, std::to_string(id));
 
-  int temp_count = id;
-  int length;
-  for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-    ;
-
-  ++length;
-
-  char * buffer = (char *)malloc(sizeof(char) * length);
-
-  snprintf(buffer, length, "%d", id);
-
-  move_attribute.value = buffer;
-
-  srcml_node::srcml_attr * save_attributes = start_node->properties;
-  start_node->properties = &move_attribute;
-
-  output_node(start_node.get(), SESMOVE);
+  output_node(start_node, SESMOVE);
 
   output_node(rbuf->nodes.at(position), SESMOVE);
 
@@ -208,11 +191,8 @@ void srcdiff_move::output() {
 
   }
 
-  output_node(end_node.get(), SESMOVE);
+  output_node(end_node, SESMOVE);
 
-  start_node->properties = save_attributes;
-  free(buffer);
-
-  // output saved diff if is any
+  start_node->properties.clear();
 
 }

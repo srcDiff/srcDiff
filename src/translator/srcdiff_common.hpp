@@ -12,6 +12,7 @@ protected:
 
 private:
 
+	static const boost::optional<std::string> whitespace;
 	virtual void markup_common();
 
 public:

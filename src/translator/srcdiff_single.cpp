@@ -8,82 +8,74 @@
 
 #include <cstring>
 #include <map>
+#include <list>
 
 srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_old, unsigned int start_new) : srcdiff_many(diff), start_old(start_old), start_new(start_new) {}
 
-static srcml_node::srcml_attr * merge_properties(srcml_node::srcml_attr * properties_old, srcml_node::srcml_attr * properties_new) {
+static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_node::srcml_attr> & properties_old, const std::list<srcml_node::srcml_attr> & properties_new) {
 
-  std::vector<std::string> attribute_names;
-  std::vector<std::string> attribute_values;
+  std::list<srcml_node::srcml_attr> attributes;
 
-  srcml_node::srcml_attr * oproperties = properties_old;
-  srcml_node::srcml_attr * nproperties = properties_new;
-  while(oproperties && nproperties) {
+  auto citr_old = properties_old.begin();
+  auto citr_new = properties_new.begin();
 
-    if(oproperties->name == nproperties->name) {
+  while(citr_old != properties_old.end() && citr_new != properties_new.end()) {
 
-      attribute_names.push_back(oproperties->name);
-      if(*oproperties->value == nproperties->value) 
-        attribute_values.push_back(*oproperties->value);
+    if(citr_old->name == citr_new->name) {
+
+      if(*citr_old->value == citr_new->value) 
+        attributes.emplace_back(citr_old->name, *citr_old->value);
       else
-        attribute_values.push_back(*oproperties->value + std::string("|") +*nproperties->value);
+        attributes.emplace_back(citr_old->name, *citr_old->value + std::string("|") +*citr_new->value);
 
-      oproperties = oproperties->next;
-      nproperties = nproperties->next;
-
-    } else if(nproperties->next && oproperties->name == nproperties->next->name) {
-
-      attribute_names.push_back(nproperties->name);
-      attribute_values.push_back(std::string("|") + *nproperties->value);
-
-      nproperties = nproperties->next;
+      ++citr_old;
+      ++citr_new;
 
     } else {
 
-      attribute_names.push_back(oproperties->name);
-      attribute_values.push_back(*oproperties->value + std::string("|"));
+      ++citr_new;
 
-      oproperties = oproperties->next;
+      bool is_end = citr_new == properties_new.end();
+      std::string name;
+      if(!is_end) name = citr_new->name;
+
+      --citr_new;
+
+      if(!is_end && citr_old->name == name) {
+
+        attributes.emplace_back(citr_new->name, std::string("|") + *citr_new->value);
+
+        ++citr_new;
+
+      } else {
+
+        attributes.emplace_back(citr_old->name, *citr_old->value + std::string("|"));
+
+        ++citr_old;
+
+      }
 
     }
 
+  }
+
+  while(citr_old != properties_old.end()) {
+
+      attributes.emplace_back(citr_old->name, *citr_old->value + std::string("|"));
+
+      ++citr_old;
 
   }
 
-  while(oproperties) {
+  while(citr_new != properties_new.end()) {
 
-      attribute_names.push_back(oproperties->name);
-      attribute_values.push_back(*oproperties->value + std::string("|"));
+      attributes.emplace_back(citr_new->name, std::string("|") + *citr_new->value);
 
-      oproperties = oproperties->next;
-
-  }
-
-  while(nproperties) {
-
-      attribute_names.push_back(nproperties->name);
-      attribute_values.push_back(std::string("|") + *nproperties->value);
-
-      nproperties = nproperties->next;
+      ++citr_new;
 
   }
 
-  srcml_node::srcml_attr * first = 0;
-  srcml_node::srcml_attr * last_attr = 0;
-
-  for(std::vector<std::string>::size_type pos = 0; pos < attribute_names.size(); ++pos) {
-
-    srcml_node::srcml_attr * attr = new srcml_node::srcml_attr;
-    attr->name = attribute_names[pos], attr->value = attribute_values[pos], attr->next = 0;
-
-    if(last_attr == 0) first = attr;
-    else last_attr->next = attr;
-
-    last_attr = attr;
-
-  }
-
-  return first;
+  return attributes;
 
 }
 
@@ -92,9 +84,9 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.output_node(out.diff_common_start.get(), SESCOMMON);
+  out.output_node(out.diff_common_start, SESCOMMON);
 
-  srcml_node * merged_node = 0;
+  std::shared_ptr<srcml_node> merged_node;
 
   if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), out.get_nodes_new().at(node_sets_new.at(start_new).at(0))) == 0) {
 
@@ -102,8 +94,7 @@ void srcdiff_single::output_recursive_same() {
 
   } else {
 
-    merged_node = new srcml_node(*out.get_nodes_old().at(node_sets_old.at(start_old).at(0)));
-    srcml_node::srcml_attr::free_srcml_attr(merged_node->properties);
+    merged_node = std::make_shared<srcml_node>(*out.get_nodes_old().at(node_sets_old.at(start_old).at(0)));
 
     merged_node->properties = merge_properties(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->properties,
                                               out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->properties);
@@ -150,11 +141,9 @@ void srcdiff_single::output_recursive_same() {
 
   output_common(node_sets_old.at(start_old).back() + 1, node_sets_new.at(start_new).back() + 1);
 
-  out.output_node(out.diff_common_end.get(), SESCOMMON);
+  out.output_node(out.diff_common_end, SESCOMMON);
 
   whitespace.output_statement();
-
-  if(merged_node) delete merged_node;
 
 }
 
@@ -163,7 +152,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.output_node(out.diff_old_start.get(), SESDELETE);
+  out.output_node(out.diff_old_start, SESDELETE);
 
   out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), SESDELETE);
 
@@ -181,7 +170,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   ++out.last_output_old();
 
-  out.output_node(out.diff_new_start.get(), SESINSERT);
+  out.output_node(out.diff_new_start, SESINSERT);
 
   out.output_node(out.get_nodes_new().at(node_sets_new.at(start_new).at(0)), SESINSERT);
 
@@ -210,11 +199,11 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   output_change(out.last_output_old(), node_sets_new.at(start_new).back() + 1);
 
-  out.output_node(out.diff_new_end.get(), SESINSERT);
+  out.output_node(out.diff_new_end, SESINSERT);
 
   output_change(node_sets_old.at(start_old).back() + 1, out.last_output_new());
 
-  out.output_node(out.diff_old_end.get(), SESDELETE);
+  out.output_node(out.diff_old_end, SESDELETE);
 
   whitespace.output_statement();
 
@@ -223,8 +212,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-    srcml_node * start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
-    srcml_node * start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
+    const std::shared_ptr<srcml_node> & start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
+    const std::shared_ptr<srcml_node> & start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
 
   if(start_node_old->name == start_node_new->name
     && (bool(start_node_old->ns) == bool(start_node_new->ns) && (!start_node_old->ns

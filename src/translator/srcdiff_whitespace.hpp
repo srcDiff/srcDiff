@@ -9,6 +9,7 @@ protected:
 
 private:
 
+  static const boost::optional<std::string> whitespace;
   void markup_whitespace(unsigned int end_old, unsigned int end_new);
 
 public:

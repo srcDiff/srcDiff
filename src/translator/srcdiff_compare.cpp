@@ -2,6 +2,8 @@
 
 #include <srcdiff_diff.hpp>
 
+#include <list>
+
 namespace srcdiff_compare {
 
   // diff node accessor function
@@ -19,34 +21,14 @@ namespace srcdiff_compare {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    srcml_node * node_old = dnodes.nodes_old.at(*(int *)node1);
-    srcml_node * node_new = dnodes.nodes_new.at(*(int *)node2);
+    const std::shared_ptr<srcml_node> & node_old = dnodes.nodes_old.at(*(int *)node1);
+    const std::shared_ptr<srcml_node> & node_new = dnodes.nodes_new.at(*(int *)node2);
 
     return node_compare(node_old, node_new);
   }
 
-
-  bool attribute_compare(const srcml_node::srcml_attr * attr1, const srcml_node::srcml_attr * attr2) {
-
-    const srcml_node::srcml_attr * attr_old = attr1;
-    const srcml_node::srcml_attr * attr_new = attr2;
-
-    for(; attr_old && attr_new
-          && attr_old->name == attr_new->name
-          && (attr_old->value == attr_new->value)
-          && (!attr_old->value || *attr_old->value == *attr_new->value);
-        attr_old = attr_old->next, attr_new = attr_new->next)
-      ;
-
-    if(attr_old || attr_new)
-      return 1;
-
-    return 0;
-
-  }
-
   // diff node comparison function
-  int node_compare(const srcml_node * node1, const srcml_node * node2) {
+  int node_compare(const std::shared_ptr<srcml_node> & node1, const std::shared_ptr<srcml_node> & node2) {
 
     if (node1 == node2)
       return 0;
@@ -75,7 +57,7 @@ namespace srcdiff_compare {
 
     }
 
-    return attribute_compare(node1->properties, node2->properties);
+    return node1->properties != node2->properties;
   }
 
 

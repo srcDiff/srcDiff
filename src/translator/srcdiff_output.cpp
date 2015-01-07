@@ -4,6 +4,8 @@
 #include <shortest_edit_script.h>
 #include <methods.hpp>
 
+#include <list>
+
 #include <cstring>
 
 int move_operation = SESCOMMON;
@@ -12,7 +14,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   unsigned long number_context_lines)
  : archive(archive), colordiff(NULL), bashview(NULL), flags(flags),
    rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>()) {
+   diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
 if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
@@ -37,10 +39,6 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
   diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
-
-  // diff attribute
-  *diff_type = { 0 };
-  diff_type->name = DIFF_TYPE;
 
   unit_tag          = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
 
@@ -71,15 +69,15 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   if(!rbuf_old->nodes.empty() && !rbuf_new->nodes.empty()) {
 
-    update_diff_stack(rbuf_old->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
 
   } else if(rbuf_old->nodes.empty() && rbuf_new->nodes.empty()) {
 
-    update_diff_stack(rbuf_old->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, diff_common_start.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(wstate->output_diff, diff_common_start, SESCOMMON);
 
     if(is_old <= -1 && is_new <= -1) {
 
@@ -98,9 +96,9 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
     }
 
-    update_diff_stack(rbuf_old->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
 
   } else {
 
@@ -111,9 +109,9 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
     }
 
-    update_diff_stack(rbuf_old->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
 
   }
 
@@ -138,8 +136,8 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
-  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"), 0, 0, 0, 0, 0, true, false, 0);
-  output_node((srcml_node *)&flush, SESCOMMON);
+  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
+  output_node(flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
 
@@ -181,25 +179,25 @@ void srcdiff_output::close() {
 
 }
 
-const std::vector<srcml_node *> & srcdiff_output::get_nodes_old() const {
+const std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_old() const {
 
   return rbuf_old->nodes;
 
 }
 
-const std::vector<srcml_node *> & srcdiff_output::get_nodes_new() const {
+const std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_new() const {
 
   return rbuf_new->nodes;
 
 }
 
-std::vector<srcml_node *> & srcdiff_output::get_nodes_old() {
+std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_old() {
 
   return rbuf_old->nodes;
 
 }
 
-std::vector<srcml_node *> & srcdiff_output::get_nodes_new() {
+std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_new() {
 
   return rbuf_new->nodes;
 
@@ -235,7 +233,7 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
-void srcdiff_output::output_node(const srcml_node * node, int operation) {
+void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -263,26 +261,26 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
 
       output_node(*diff_old_end);
 
-      update_diff_stack(rbuf_old->open_diff, diff_old_end.get(), SESDELETE);
+      update_diff_stack(rbuf_old->open_diff, diff_old_end, SESDELETE);
 
-      update_diff_stack(wstate->output_diff, diff_old_end.get(), SESDELETE);
+      update_diff_stack(wstate->output_diff, diff_old_end, SESDELETE);
 
     } else if(delay_operation == SESINSERT) {
 
       output_node(*diff_new_end);
 
-      update_diff_stack(rbuf_new->open_diff, diff_new_end.get(), SESINSERT);
+      update_diff_stack(rbuf_new->open_diff, diff_new_end, SESINSERT);
 
-      update_diff_stack(wstate->output_diff, diff_new_end.get(), SESINSERT);
+      update_diff_stack(wstate->output_diff, diff_new_end, SESINSERT);
 
     } else if(delay_operation == SESCOMMON)  {
 
       output_node(*diff_common_end);
 
-      update_diff_stack(rbuf_old->open_diff, diff_common_end.get(), SESCOMMON);
-      update_diff_stack(rbuf_new->open_diff, diff_common_end.get(), SESCOMMON);
+      update_diff_stack(rbuf_old->open_diff, diff_common_end, SESCOMMON);
+      update_diff_stack(rbuf_new->open_diff, diff_common_end, SESCOMMON);
 
-      update_diff_stack(wstate->output_diff, diff_common_end.get(), SESCOMMON);
+      update_diff_stack(wstate->output_diff, diff_common_end, SESCOMMON);
 
     }
 
@@ -421,7 +419,7 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
 
 }
 
-void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const srcml_node * node, int operation) {
+void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation) {
 
   // Skip empty node
   if(node->is_empty || node->is_text())
@@ -435,7 +433,6 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
     open_diffs.push_back(new_diff);
   }
 
-  //srcml_node * node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     open_diffs.back()->open_tags.push_back(node);
@@ -463,17 +460,11 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
 
 }
 
-void srcdiff_output::output_text_as_node(const char * text, int operation) {
+void srcdiff_output::output_text_as_node(const std::string & text, int operation) {
 
-  if(strlen((char *)text) == 0)
-    return;
+  if(text.size() == 0) return;
 
-  srcml_node node;
-  node.type = (xmlElementType)XML_READER_TYPE_TEXT;
-  node.name = "text";
-  node.content = text;
-
-  output_node(&node, operation);
+  output_node(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, "text", boost::optional<srcml_node::srcml_ns>(), text), operation);
 
 }
 
@@ -502,12 +493,13 @@ void srcdiff_output::output_node(const srcml_node & node) {
 
     // copy all the attributes
     {
-      srcml_node::srcml_attr * attribute = node.properties;
-      while (attribute) {
+      const std::list<srcml_node::srcml_attr> & attributes = node.properties;
+      for(const srcml_node::srcml_attr attr : attributes) {
 
-        srcml_write_attribute(wstate->unit, 0, attribute->name.c_str(), 0, attribute->value ? attribute->value->c_str() : 0);
-        attribute = attribute->next;
+        srcml_write_attribute(wstate->unit, 0, attr.name.c_str(), 0, attr.value ? attr.value->c_str() : 0);
+
       }
+
     }
 
     // end now if this is an empty element

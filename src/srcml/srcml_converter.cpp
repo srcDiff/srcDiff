@@ -6,10 +6,10 @@
 
 std::mutex srcml_converter::mutex;
 
-std::map<std::string, srcml_node *> srcml_converter::start_tags;
-std::map<std::string, srcml_node *> srcml_converter::end_tags;
+std::map<std::string, std::shared_ptr<srcml_node>> srcml_converter::start_tags;
+std::map<std::string, std::shared_ptr<srcml_node>> srcml_converter::end_tags;
 
-srcml_node * srcml_converter::get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context) {
+std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
 
@@ -23,39 +23,39 @@ srcml_node * srcml_converter::get_current_node(xmlTextReaderPtr reader, const OP
 
   full_name += (const char*)curnode->name;
 
-  srcml_node * node = 0;
+  std::shared_ptr<srcml_node> node;
   if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
 
-    std::map<std::string, srcml_node *>::iterator lb = start_tags.lower_bound(full_name);
+    std::map<std::string, std::shared_ptr<srcml_node>>::iterator lb = start_tags.lower_bound(full_name);
     if (lb != start_tags.end() && !(start_tags.key_comp()(full_name, lb->first))) {
 
       node = lb->second;
     } else {
 
-      node = new srcml_node(*curnode, options & SRCML_OPTION_ARCHIVE);
+      node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
       node->extra = 0;
-      start_tags.insert(lb, std::map<std::string, srcml_node *>::value_type(full_name, node));
+      start_tags.insert(lb, std::map<std::string, std::shared_ptr<srcml_node>>::value_type(full_name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
 
-    std::map<std::string, srcml_node *>::iterator lb = end_tags.lower_bound(full_name);
+    std::map<std::string, std::shared_ptr<srcml_node>>::iterator lb = end_tags.lower_bound(full_name);
     if (lb != end_tags.end() && !(end_tags.key_comp()(full_name, lb->first))) {
 
       node = lb->second;
     } else {
 
-      node = new srcml_node(*curnode, options & SRCML_OPTION_ARCHIVE);
+      node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
       node->extra = 0;
-      end_tags.insert(lb, std::map<std::string, srcml_node *>::value_type(full_name, node));
+      end_tags.insert(lb, std::map<std::string, std::shared_ptr<srcml_node>>::value_type(full_name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
-    node = new srcml_node(*curnode, options & SRCML_OPTION_ARCHIVE);
+    node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
     node->free = true;
     node->extra = xmlTextReaderIsEmptyElement(reader);
   } else {
-    node = new srcml_node(*curnode, options & SRCML_OPTION_ARCHIVE);
+    node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
     node->free = true;
   }
 
@@ -64,9 +64,9 @@ srcml_node * srcml_converter::get_current_node(xmlTextReaderPtr reader, const OP
   return node;
 }
 
-srcml_node * split_text(const char * characters_start, const char * characters_end) {
+std::shared_ptr<srcml_node> split_text(const char * characters_start, const char * characters_end) {
 
-  srcml_node * text = new srcml_node;
+  std::shared_ptr<srcml_node> text = std::make_shared<srcml_node>();
   text->type = (xmlElementType)XML_READER_TYPE_TEXT;
   text->name = std::string("text");
   text->content = boost::optional<std::string>();
@@ -77,7 +77,6 @@ srcml_node * split_text(const char * characters_start, const char * characters_e
     text->content = content;
   }
 
-  text->properties = 0;
   text->is_empty = true;
   text->parent = boost::optional<std::string>();
   text->free = true;
@@ -128,7 +127,7 @@ void srcml_converter::convert(const std::string & language, void * context,
 
 }
 
-std::vector<srcml_node *> srcml_converter::create_nodes() const {
+std::vector<std::shared_ptr<srcml_node>> srcml_converter::create_nodes() const {
   
   xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
@@ -141,7 +140,7 @@ std::vector<srcml_node *> srcml_converter::create_nodes() const {
   if(xmlTextReaderRead(reader) == 0) throw std::string("Error reading srcML.");
 
   // collect if non empty files
-  std::vector<srcml_node *> nodes = collect_nodes(reader);
+  std::vector<std::shared_ptr<srcml_node>> nodes = collect_nodes(reader);
 
   xmlFreeTextReader(reader);
 
@@ -157,7 +156,7 @@ static bool is_separate_token(const char character) {
 }
 
 // check if node is a indivisable group of three (atomic)
-static bool is_atomic_srcml(std::vector<srcml_node *> & nodes, unsigned start) {
+static bool is_atomic_srcml(std::vector<std::shared_ptr<srcml_node>> & nodes, unsigned start) {
 
   static const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
 
@@ -182,9 +181,9 @@ static bool is_atomic_srcml(std::vector<srcml_node *> & nodes, unsigned start) {
 
 
 // collect the differences
-std::vector<srcml_node *> srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
+std::vector<std::shared_ptr<srcml_node>> srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
-  std::vector<srcml_node *> nodes;
+  std::vector<std::shared_ptr<srcml_node>> nodes;
 
   std::vector<std::string> element_stack;
   element_stack.push_back("unit");
@@ -202,7 +201,7 @@ std::vector<srcml_node *> srcml_converter::collect_nodes(xmlTextReaderPtr reader
 
         const char * characters_start = characters;
 
-        srcml_node * text;
+        std::shared_ptr<srcml_node> text;
 
         // separate new line
         if(*characters == '\n') {
@@ -247,7 +246,7 @@ std::vector<srcml_node *> srcml_converter::collect_nodes(xmlTextReaderPtr reader
 
       // text node does not need to be copied.
       mutex.lock();
-      srcml_node * node = get_current_node(reader, srcml_archive_get_options(archive), stream_source);
+      std::shared_ptr<srcml_node> node = get_current_node(reader, srcml_archive_get_options(archive), stream_source);
       mutex.unlock();
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
