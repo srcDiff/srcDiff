@@ -7,8 +7,6 @@
   mdecker6@kent.edu
 */
 
-#if SVN
-
 #include <srcdiff_input_source_svn.hpp>
 
 #include <srcdiff_input_svn.hpp>
@@ -592,5 +590,3 @@ int srcdiff_input_source_svn::close(void * context) {
 
   return 1;
 }
-
-#endif

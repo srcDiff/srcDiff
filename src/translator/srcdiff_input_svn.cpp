@@ -1,5 +1,3 @@
-#ifdef SVN
-
 #include <srcdiff_input_svn.hpp>
 
 #include <srcml_converter.hpp>
@@ -29,5 +27,3 @@ std::vector<std::shared_ptr<srcml_node>> srcdiff_input_svn::input_nodes(int stre
   return converter.create_nodes();
 
 }
-
-#endif
