@@ -22,6 +22,12 @@
 file(GLOB TRANSLATOR_HEADERS *.hpp)
 file(GLOB TRANSLATOR_SOURCE *.cpp)
 
+if(NOT SVN)
+
+list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_svn.cpp)
+
+endif()
+
 # srcdiff
 add_library(translator OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})
 

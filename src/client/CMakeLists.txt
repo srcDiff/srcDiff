@@ -19,23 +19,22 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB OLDCLIENT_HEADERS *.hpp)
-file(GLOB OLDCLIENT_SOURCE *.cpp)
+file(GLOB CLIENT_HEADERS *.hpp)
+file(GLOB CLIENT_SOURCE *.cpp)
 
 if(NOT SVN_ENABLED)
 
-    list(REMOVE_ITEM OLDCLIENT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.hpp)
-    list(REMOVE_ITEM OLDCLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
+    list(REMOVE_ITEM CLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_source_svn.cpp)
 
 endif()
 
 # srcdiff
 if(WIN32)
-add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
+add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>
 		       $<TARGET_OBJECTS:windows>)
 else()
-add_executable(srcdiff ${OLDCLIENT_HEADERS} ${OLDCLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
+add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
 endif()
 
