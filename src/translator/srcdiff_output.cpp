@@ -4,6 +4,8 @@
 #include <shortest_edit_script.h>
 #include <methods.hpp>
 
+#include <list>
+
 #include <cstring>
 
 int move_operation = SESCOMMON;
@@ -12,7 +14,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   unsigned long number_context_lines)
  : archive(archive), colordiff(NULL), bashview(NULL), flags(flags),
    rbuf_old(std::make_shared<reader_state>(SESDELETE)), rbuf_new(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>()) {
+   diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
 if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
@@ -37,10 +39,6 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
   diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
-
-  // diff attribute
-  *diff_type = { 0 };
-  diff_type->name = DIFF_TYPE;
 
   unit_tag          = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
 
@@ -138,7 +136,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
-  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"), 0, 0, 0, 0, 0, true, false, 0);
+  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
   output_node((srcml_node *)&flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
@@ -502,12 +500,13 @@ void srcdiff_output::output_node(const srcml_node & node) {
 
     // copy all the attributes
     {
-      srcml_node::srcml_attr * attribute = node.properties;
-      while (attribute) {
+      const std::list<srcml_node::srcml_attr> & attributes = node.properties;
+      for(const srcml_node::srcml_attr attr : attributes) {
 
-        srcml_write_attribute(wstate->unit, 0, attribute->name.c_str(), 0, attribute->value ? attribute->value->c_str() : 0);
-        attribute = attribute->next;
+        srcml_write_attribute(wstate->unit, 0, attr.name.c_str(), 0, attr.value ? attr.value->c_str() : 0);
+
       }
+
     }
 
     // end now if this is an empty element

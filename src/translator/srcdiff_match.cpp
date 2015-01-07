@@ -5,6 +5,8 @@
 #include <srcdiff_compare.hpp>
 #include <srcdiff_constants.hpp>
 
+#include <list>
+
 #include <cstring>
 
 struct difference {
@@ -331,15 +333,17 @@ offset_pair * srcdiff_match::match_differences() {
 
 boost::optional<std::string> find_attribute(const srcml_node * node, const char * attr_name) {
 
-  const srcml_node::srcml_attr * attr = node->properties;
+  const std::list<srcml_node::srcml_attr> & attributes = node->properties;
 
-  for(; attr && attr->name != attr_name; attr = attr->next)
-    ;
+  std::list<srcml_node::srcml_attr>::size_type pos = 0;
+  for(const srcml_node::srcml_attr & attr : attributes) {
 
-  if(attr)
-    return attr->value;
+    if(attr.name == attr_name)
+      return attr.value;
 
-  return 0;
+  }
+
+  return boost::optional<std::string>();
 
 }
 

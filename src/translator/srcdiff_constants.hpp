@@ -9,9 +9,6 @@ const std::string DIFF_NEW = "insert";
 const std::string DIFF_SESCOMMON = "common";
 const std::string DIFF_TYPE = "type";
 
-const std::string change = "change";
-const std::string whitespace = "whitespace";
-
 const std::string SRCDIFF_DEFAULT_NAMESPACE_HREF = "http://www.sdml.info/srcDiff";
 const std::string SRCDIFF_DEFAULT_NAMESPACE_PREFIX =  "diff";
 

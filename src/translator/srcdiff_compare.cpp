@@ -2,6 +2,8 @@
 
 #include <srcdiff_diff.hpp>
 
+#include <list>
+
 namespace srcdiff_compare {
 
   // diff node accessor function
@@ -23,26 +25,6 @@ namespace srcdiff_compare {
     srcml_node * node_new = dnodes.nodes_new.at(*(int *)node2);
 
     return node_compare(node_old, node_new);
-  }
-
-
-  bool attribute_compare(const srcml_node::srcml_attr * attr1, const srcml_node::srcml_attr * attr2) {
-
-    const srcml_node::srcml_attr * attr_old = attr1;
-    const srcml_node::srcml_attr * attr_new = attr2;
-
-    for(; attr_old && attr_new
-          && attr_old->name == attr_new->name
-          && (attr_old->value == attr_new->value)
-          && (!attr_old->value || *attr_old->value == *attr_new->value);
-        attr_old = attr_old->next, attr_new = attr_new->next)
-      ;
-
-    if(attr_old || attr_new)
-      return 1;
-
-    return 0;
-
   }
 
   // diff node comparison function
@@ -75,7 +57,7 @@ namespace srcdiff_compare {
 
     }
 
-    return attribute_compare(node1->properties, node2->properties);
+    return node1->properties != node2->properties;
   }
 
 

@@ -6,6 +6,8 @@
 
 #include <string>
 
+const boost::optional<std::string> srcdiff_common::whitespace("whitespace");
+
 srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
 : srcdiff_output(out), end_old(end_old), end_new(end_new) {}
 
@@ -24,8 +26,8 @@ void srcdiff_common::markup_common() {
 
   // set attribute to change
   diff_type->value = whitespace;
-  diff_old_start->properties = diff_type.get();
-  diff_new_start->properties = diff_type.get();
+  diff_old_start->properties.push_back(*diff_type.get());
+  diff_new_start->properties.push_back(*diff_type.get());
 
   int i, j;
   for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
@@ -276,8 +278,8 @@ void srcdiff_common::markup_common() {
   rbuf_old->last_output = oend > (signed)rbuf_old->last_output ? oend : rbuf_old->last_output;
   rbuf_new->last_output = nend > (signed)rbuf_new->last_output ? nend : rbuf_new->last_output;
 
-  diff_old_start->properties = 0;
-  diff_new_start->properties = 0;
+  diff_old_start->properties.clear();
+  diff_new_start->properties.clear();
 
 }
 

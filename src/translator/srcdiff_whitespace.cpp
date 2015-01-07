@@ -5,6 +5,8 @@
 #include <shortest_edit_script.h>
 #include <srcdiff_constants.hpp>
 
+const boost::optional<std::string> srcdiff_whitespace::whitespace("whitespace");
+
 srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {}
 
 void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int end_new) {
@@ -17,8 +19,8 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
 
   // set attribute to change
   diff_type->value = whitespace;
-  diff_old_start->properties = diff_type.get();
-  diff_new_start->properties = diff_type.get();
+  diff_old_start->properties.push_back(*diff_type.get());
+  diff_new_start->properties.push_back(*diff_type.get());
 
   int ostart = begin_old;
   int nstart = begin_new;
@@ -126,8 +128,8 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
     rbuf_old->last_output = oend > (signed)rbuf_old->last_output ? oend : rbuf_old->last_output;
     rbuf_new->last_output = nend > (signed)rbuf_new->last_output ? nend : rbuf_new->last_output;
 
-    diff_old_start->properties = 0;
-    diff_new_start->properties = 0;
+    diff_old_start->properties.clear();
+    diff_new_start->properties.clear();
 
 
 }
@@ -274,15 +276,6 @@ void srcdiff_whitespace::output_suffix() {
     ++npivot;
   }
 
-  //if(ostart < opivot && nstart < npivot) {
-
-  //diff_type.value = whitespace;
-  //diff_old_start->properties = &diff_type;
-  //diff_new_start->properties = &diff_type;
-
-  //}
-
-
   if(ostart < opivot) {
 
     // output delete
@@ -323,9 +316,5 @@ void srcdiff_whitespace::output_suffix() {
 
   rbuf_old->last_output = oend > (signed)rbuf_old->last_output ? oend : rbuf_old->last_output;
   rbuf_new->last_output = nend > (signed)rbuf_new->last_output ? nend : rbuf_new->last_output;
-
-
-  diff_old_start->properties = 0;
-  diff_new_start->properties = 0;
 
 }

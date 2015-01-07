@@ -6,10 +6,10 @@
 
 #include <vector>
 #include <map>
+#include <list>
 
 int move_id = 0;
-
-static srcml_node::srcml_attr move_attribute = { 0, std::string("move"), 0 };
+const std::string srcdiff_move::move("move");
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;
@@ -171,24 +171,7 @@ void srcdiff_move::output() {
 
   int id = rbuf->nodes.at(position)->move;
 
-  if(!id)
-    return;
-
-  int temp_count = id;
-  int length;
-  for(length = 0; temp_count > 0; temp_count /= 10, ++length)
-    ;
-
-  ++length;
-
-  char * buffer = (char *)malloc(sizeof(char) * length);
-
-  snprintf(buffer, length, "%d", id);
-
-  move_attribute.value = buffer;
-
-  srcml_node::srcml_attr * save_attributes = start_node->properties;
-  start_node->properties = &move_attribute;
+  start_node->properties.emplace_back(move, std::to_string(id));
 
   output_node(start_node.get(), SESMOVE);
 
@@ -210,9 +193,6 @@ void srcdiff_move::output() {
 
   output_node(end_node.get(), SESMOVE);
 
-  start_node->properties = save_attributes;
-  free(buffer);
-
-  // output saved diff if is any
+  start_node->properties.clear();
 
 }

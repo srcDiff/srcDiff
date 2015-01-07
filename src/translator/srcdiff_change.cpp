@@ -2,7 +2,6 @@
 
 #include <srcdiff_whiteSpace.hpp>
 #include <srcdiff_move.hpp>
-#include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 
 #ifdef __MINGW32__
@@ -11,6 +10,8 @@
 
 #include <cstring>
 #include <string>
+
+const boost::optional<std::string> srcdiff_change::change("change");
 
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
 : srcdiff_output(out), end_old(end_old), end_new(end_new) {}
@@ -49,8 +50,8 @@ void srcdiff_change::output() {
 
     // set attribute to change
     diff_type->value = change;
-    diff_old_start->properties = diff_type.get();
-    diff_new_start->properties = diff_type.get();
+    diff_old_start->properties.push_back(*diff_type.get());
+    diff_new_start->properties.push_back(*diff_type.get());
 
   }
 
@@ -116,7 +117,7 @@ void srcdiff_change::output() {
 
   }
 
-  diff_old_start->properties = 0;
-  diff_new_start->properties = 0;
+  diff_old_start->properties.clear();
+  diff_new_start->properties.clear();
 
 }
