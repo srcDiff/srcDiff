@@ -105,10 +105,6 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
       old_moved.push_back(IntPair(SESMOVE, 0));
 
-    } else if(out.get_nodes_old().at(node_sets_old.at(index).at(0))->nest) {
-
-      old_moved.push_back(IntPair(SESNEST, 0));
-
     } else {
 
       old_moved.push_back(IntPair(SESDELETE, 0));
@@ -130,10 +126,6 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
     if(out.get_nodes_new().at(node_sets_new.at(index).at(0))->move) {
 
       new_moved.push_back(IntPair(SESMOVE, 0));
-
-    } else if(out.get_nodes_new().at(node_sets_new.at(index).at(0))->nest) {
-
-      new_moved.push_back(IntPair(SESNEST, 0));
 
     } else {
 
@@ -230,39 +222,6 @@ void srcdiff_many::output() {
         // syntax mismatch
         output_change_whitespace(node_sets_old.at(edits->offset_sequence_one + i).back() + 1,
           node_sets_new.at(edit_next->offset_sequence_two + j).back() + 1);
-      }
-
-    }
-    /** @todo this appears to now be dead code */
-     else if(old_moved.at(i).first == SESNEST && new_moved.at(j).first == SESNEST) {
-  
-      if(srcdiff_nested::is_nestable(node_sets_old.at(edits->offset_sequence_one + i)
-                     , out.get_nodes_old(), node_sets_new.at(edit_next->offset_sequence_two + j), out.get_nodes_new())) {
-
-          int nest_length = 1;
-          while(i + nest_length < old_moved.size() && old_moved.at(i + nest_length).first == SESNEST)
-            ++nest_length;
-
-          srcdiff_nested diff(*this, edits->offset_sequence_one + i, edits->offset_sequence_one + i + nest_length,
-                              edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + 1, SESINSERT);
-          diff.output();
-
-      } else if(srcdiff_nested::is_nestable(node_sets_new.at(edit_next->offset_sequence_two + j)
-                            , out.get_nodes_new(), node_sets_old.at(edits->offset_sequence_one + i), out.get_nodes_old())) {
-
-          int nest_length = 1;
-          while(j + nest_length < new_moved.size() && new_moved.at(j + nest_length).first == SESNEST)
-            ++nest_length;
-
-          srcdiff_nested diff(*this, edits->offset_sequence_one + i, edits->offset_sequence_one + i + 1,
-                              edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + j + nest_length, SESDELETE);
-          diff.output();
-
-      } else {
-
-        fprintf(stderr, "Nesting Error\n");
-        exit(1);
-
       }
 
     } else {

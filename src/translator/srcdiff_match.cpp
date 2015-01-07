@@ -717,8 +717,7 @@ std::string get_function_type_name(const std::vector<srcml_node *> & nodes, int 
 
   int name_start_pos = start_pos + 1;
 
-  /** @todo this is wrong */
-  if(nodes.at(name_start_pos)->name != "function" || nodes.at(name_start_pos)->name != "function_decl")
+  if(nodes.at(name_start_pos)->name != "function" && nodes.at(name_start_pos)->name != "function_decl")
     skip_type(nodes, name_start_pos);
   else
     skip_specifiers(nodes, ++name_start_pos);

@@ -40,7 +40,7 @@
 #include <mingw32.hpp>
 #endif
 
-srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type), extra(node.extra), is_empty(node.extra), free(false), move(0), nest(0) {
+srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type), extra(node.extra), is_empty(node.extra), free(false), move(0) {
 
   name = std::string((const char *)node.name);
 
@@ -147,14 +147,14 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
 }
 
 srcml_node::srcml_node(xmlElementType type, const std::string & name, srcml_ns * ns, const boost::optional<std::string> & content, srcml_attr * properties, unsigned short extra,
-  const boost::optional<std::string> & parent, bool is_empty, bool free, int move, int nest)
-  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0), nest(0) {}
+  const boost::optional<std::string> & parent, bool is_empty, bool free, int move)
+  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0) {}
 
 srcml_node::srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns) : type(type), name(name), ns(new srcml_ns(ns)),
- properties(0), extra(0), is_empty(false), free(false), move(0), nest(0) {}
+ properties(0), extra(0), is_empty(false), free(false), move(0) {}
 
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.name), content(node.content), extra(node.extra),
-  is_empty(node.is_empty), free(true), move(0), nest(0) {
+  is_empty(node.is_empty), free(true), move(0) {
 
   ns = 0;
   if(node.ns) {

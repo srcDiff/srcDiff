@@ -81,7 +81,6 @@ public:
   bool free;
 
   int move;
-  int nest;
 
 public:
 
@@ -90,7 +89,7 @@ public:
   srcml_node(xmlElementType type = XML_ELEMENT_NODE, const std::string & name = std::string(), srcml_ns * ns = nullptr,
     const boost::optional<std::string> & content = boost::optional<std::string>(), srcml_attr * properties = nullptr, unsigned short extra = 0,
     const boost::optional<std::string> & parent = boost::optional<std::string>(), bool is_empty = false, bool free = false,
-    int move = 0, int nest = 0);
+    int move = 0);
 
   srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns);
 

@@ -82,7 +82,6 @@ srcml_node * split_text(const char * characters_start, const char * characters_e
   text->parent = boost::optional<std::string>();
   text->free = true;
   text->move = 0;
-  text->nest = 0;
 
   return text;
 }

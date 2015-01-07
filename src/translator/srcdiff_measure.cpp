@@ -54,8 +54,6 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
       && *nodes_old.at(set_old.at(i))->content != ")"
       && *nodes_old.at(set_old.at(i))->content != ";"
       && *nodes_old.at(set_old.at(i))->content != ",")
-/** @todo this does not make sense may need to correct paper*/
-//      && strcmp((const char *)nodes_old.at(set_old.at(i))->name, "operator") != 0)
       set_old_text.push_back(set_old.at(i));
 
   node_set set_new_text(nodes_new);
@@ -67,7 +65,6 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
       && *nodes_new.at(set_new.at(i))->content != ")"
       && *nodes_new.at(set_new.at(i))->content != ";"
       && *nodes_new.at(set_new.at(i))->content != ",")
-//      && strcmp((const char *)nodes_new.at(set_new.at(i))->name, "operator") != 0)
       set_new_text.push_back(set_new.at(i));
 
   text_old_length = set_old_text.size();

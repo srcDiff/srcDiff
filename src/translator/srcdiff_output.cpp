@@ -138,7 +138,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
-  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"), 0, 0, 0, 0, 0, true, false, 0, 0);
+  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"), 0, 0, 0, 0, 0, true, false, 0);
   output_node((srcml_node *)&flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
