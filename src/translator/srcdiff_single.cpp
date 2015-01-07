@@ -227,9 +227,9 @@ void srcdiff_single::output() {
     srcml_node * start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
 
   if(start_node_old->name == start_node_new->name
-    && (start_node_old->ns == start_node_new->ns 
-      || (start_node_old->ns && start_node_new->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix && (!start_node_old->ns->prefix
-        || *start_node_old->ns->prefix == *start_node_new->ns->prefix)))))
+    && (bool(start_node_old->ns) == bool(start_node_new->ns) && (!start_node_old->ns
+      || (start_node_old->ns->prefix == start_node_new->ns->prefix 
+        && (!start_node_old->ns->prefix || *start_node_old->ns->prefix == *start_node_new->ns->prefix)))))
     output_recursive_same();
   else
     output_recursive_interchangeable();

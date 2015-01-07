@@ -46,11 +46,10 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
 
   if(content)
     content = std::string((const char *)node.content);
-  ns = 0;
 
   if(node.ns) {
 
-    ns = new srcml_ns;
+    ns = srcml_ns();
 
     if(node.ns->href)
       ns->href = std::string((const char *)node.ns->href);
@@ -62,54 +61,54 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
   xmlAttrPtr attribute = node.properties;
   properties = 0;
 
-  xmlNsPtr ns = node.nsDef;
+  xmlNsPtr node_ns = node.nsDef;
   srcml_attr * ns_attr = 0;
   if(name == "unit" && ns) {
 
-    while(is_archive && ns && (const char *)ns->href != std::string("http://www.sdml.info/srcML/cpp"))
-        ns = ns->next;
+    while(is_archive && node_ns && (const char *)node_ns->href != std::string("http://www.sdml.info/srcML/cpp"))
+        node_ns = node_ns->next;
 
 
     srcml_attr * attr = new srcml_attr;
 
     std::string ns_name = "xmlns";
-    if(ns->prefix) {
+    if(node_ns->prefix) {
 
       ns_name += ":";
-      ns_name += (const char *)ns->prefix;
+      ns_name += (const char *)node_ns->prefix;
 
     }
 
     attr->name = ns_name;
-    attr->value = std::string((const char *)ns->href);
+    attr->value = std::string((const char *)node_ns->href);
     attr->next = 0;
 
     properties = attr;
     ns_attr = attr;
 
-    ns = ns->next;
+    node_ns = node_ns->next;
 
-    while(!is_archive && ns) {
+    while(!is_archive && node_ns) {
 
       srcml_attr * nattr = new srcml_attr;
 
       std::string ns_name = "xmlns";
-      if(ns->prefix) {
+      if(node_ns->prefix) {
 
         ns_name += ":";
-        ns_name += (const char *)ns->prefix;
+        ns_name += (const char *)node_ns->prefix;
 
       }
 
       nattr->name = ns_name;
-      nattr->value = std::string((const char *)ns->href);
+      nattr->value = std::string((const char *)node_ns->href);
       nattr->next = 0;
 
       attr->next = nattr;
       attr = nattr;
       ns_attr = nattr;
 
-      ns = ns->next;
+      node_ns = node_ns->next;
 
     }
 
@@ -146,25 +145,18 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
 
 }
 
-srcml_node::srcml_node(xmlElementType type, const std::string & name, srcml_ns * ns, const boost::optional<std::string> & content, srcml_attr * properties, unsigned short extra,
+srcml_node::srcml_node(xmlElementType type, const std::string & name, const boost::optional<srcml_ns> & ns, const boost::optional<std::string> & content, srcml_attr * properties, unsigned short extra,
   const boost::optional<std::string> & parent, bool is_empty, bool free, int move)
   : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0) {}
 
-srcml_node::srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns) : type(type), name(name), ns(new srcml_ns(ns)),
+srcml_node::srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns) : type(type), name(name), ns(ns),
  properties(0), extra(0), is_empty(false), free(false), move(0) {}
 
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.name), content(node.content), extra(node.extra),
   is_empty(node.is_empty), free(true), move(0) {
 
-  ns = 0;
-  if(node.ns) {
-
-    ns = new srcml_ns;
-
-    ns->href = node.ns->href;
-
-    ns->prefix = node.ns->prefix;
-  }
+  if(node.ns)
+    ns = srcml_ns(node.ns->href, node.ns->prefix);
 
   srcml_attr * attribute = node.properties;
   properties = 0;
@@ -216,8 +208,6 @@ void srcml_node::srcml_attr::free_srcml_attr(srcml_attr * properties) {
 srcml_node::srcml_ns::srcml_ns(const srcml_ns & ns) : href(ns.href), prefix(ns.prefix) {}
 
 srcml_node::~srcml_node() {
-
- if(ns) delete ns;
 
   srcml_attr::free_srcml_attr(properties);
 
