@@ -606,13 +606,13 @@ std::string get_decl_name(const std::vector<srcml_node *> & nodes, int start_pos
   skip_type(nodes, name_start_pos);
 
   while(!(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-      && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "name")
+      && nodes.at(name_start_pos)->name && *nodes.at(name_start_pos)->name == "name")
     && !(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-      && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "decl"))
+      && nodes.at(name_start_pos)->name && *nodes.at(name_start_pos)->name == "decl"))
     ++name_start_pos;
 
   if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-      && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "decl")
+      && nodes.at(name_start_pos)->name && *nodes.at(name_start_pos)->name == "decl")
     return "";
 
   return get_name(nodes, name_start_pos);
@@ -624,7 +624,7 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
   int control_start_pos = start_pos;
 
   while(nodes.at(control_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || !nodes.at(start_pos)->name || *nodes.at(start_pos)->name != "control")
+   || !nodes.at(control_start_pos)->name || *nodes.at(control_start_pos)->name != "control")
     ++control_start_pos;
 
   if(nodes.at(control_start_pos)->extra & 0x1) return "";
@@ -634,7 +634,7 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
 
   while(open_control_count) {
 
-    if(nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "control") {
+    if(nodes.at(control_end_pos)->name && *nodes.at(control_end_pos)->name == "control") {
 
       if(nodes.at(control_end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(control_end_pos)->extra & 0x1) == 0)
         ++open_control_count;
@@ -723,7 +723,7 @@ std::string get_function_type_name(const std::vector<srcml_node *> & nodes, int 
   int name_start_pos = start_pos + 1;
 
   /** @todo this is wrong */
-  if(!nodes.at(start_pos)->name || (*nodes.at(start_pos)->name != "function" || *nodes.at(start_pos)->name != "function_decl"))
+  if(!nodes.at(name_start_pos)->name || (*nodes.at(name_start_pos)->name != "function" || *nodes.at(name_start_pos)->name != "function_decl"))
     skip_type(nodes, name_start_pos);
   else
     skip_specifiers(nodes, ++name_start_pos);
@@ -874,15 +874,15 @@ std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos
   int expr_pos = start_pos + 1;
 
   if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-     || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case")) return "";
+     || (nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name && *nodes.at(expr_pos)->name == "case")) return "";
 
   while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || !nodes.at(expr_pos)->name || * nodes.at(expr_pos)->name != "expr")
     && !(nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-    && !(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case"))
+    && !(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name && *nodes.at(expr_pos)->name == "case"))
     ++expr_pos;
 
   if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-    || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name && *nodes.at(start_pos)->name == "case")) return "";
+    || (nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name && *nodes.at(expr_pos)->name == "case")) return "";
 
   std::string case_expr = "";
 
