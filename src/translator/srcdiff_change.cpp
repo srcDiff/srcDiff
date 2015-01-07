@@ -1,6 +1,6 @@
 #include <srcdiff_change.hpp>
 
-#include <srcdiff_whiteSpace.hpp>
+#include <srcdiff_whitespace.hpp>
 #include <srcdiff_move.hpp>
 #include <shortest_edit_script.h>
 
