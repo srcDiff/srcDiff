@@ -333,7 +333,7 @@ boost::optional<std::string> find_attribute(const srcml_node * node, const char 
 
   srcml_attr * attr = node->properties;
 
-  for(; attr && attr->name && *attr->name != attr_name; attr = attr->next)
+  for(; attr && attr->name != attr_name; attr = attr->next)
     ;
 
   if(attr)

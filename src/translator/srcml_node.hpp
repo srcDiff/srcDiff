@@ -38,12 +38,12 @@ class srcml_ns {
 
 public:
 
-  srcml_ns(const boost::optional<std::string> & href = boost::optional<std::string>(), const boost::optional<std::string> & prefix = boost::optional<std::string>())
+  srcml_ns(const std::string & href = std::string(), const boost::optional<std::string> & prefix = boost::optional<std::string>())
     : href(href), prefix(prefix) {}
 
   srcml_ns(const srcml_ns & ns);
 
-  boost::optional<std::string> href;
+  std::string href;
   boost::optional<std::string> prefix;
 
 };
@@ -52,12 +52,12 @@ class srcml_attr {
 
 public:
 
-  srcml_attr(srcml_attr * next = 0, const boost::optional<std::string> & name = boost::optional<std::string>(),
+  srcml_attr(srcml_attr * next = 0, const std::string & name = std::string(),
     const boost::optional<std::string> & value = boost::optional<std::string>())
     : next(next), name(name), value(value) {}
 
   srcml_attr * next;
-  boost::optional<std::string> name;
+  std::string name;
   boost::optional<std::string> value;
 
   static void free_srcml_attr(srcml_attr * properties);

@@ -20,9 +20,9 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
   srcml_attr * nproperties = properties_new;
   while(oproperties && nproperties) {
 
-    if(*oproperties->name == *nproperties->name) {
+    if(oproperties->name == nproperties->name) {
 
-      attribute_names.push_back(*oproperties->name);
+      attribute_names.push_back(oproperties->name);
       if(*oproperties->value == nproperties->value) 
         attribute_values.push_back(*oproperties->value);
       else
@@ -31,16 +31,16 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
       oproperties = oproperties->next;
       nproperties = nproperties->next;
 
-    } else if(nproperties->next && *oproperties->name == *nproperties->next->name) {
+    } else if(nproperties->next && oproperties->name == nproperties->next->name) {
 
-      attribute_names.push_back(*nproperties->name);
+      attribute_names.push_back(nproperties->name);
       attribute_values.push_back(std::string("|") + *nproperties->value);
 
       nproperties = nproperties->next;
 
     } else {
 
-      attribute_names.push_back(*oproperties->name);
+      attribute_names.push_back(oproperties->name);
       attribute_values.push_back(*oproperties->value + std::string("|"));
 
       oproperties = oproperties->next;
@@ -52,7 +52,7 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
 
   while(oproperties) {
 
-      attribute_names.push_back(*oproperties->name);
+      attribute_names.push_back(oproperties->name);
       attribute_values.push_back(*oproperties->value + std::string("|"));
 
       oproperties = oproperties->next;
@@ -61,7 +61,7 @@ static srcml_attr * merge_properties(srcml_attr * properties_old, srcml_attr * p
 
   while(nproperties) {
 
-      attribute_names.push_back(*nproperties->name);
+      attribute_names.push_back(nproperties->name);
       attribute_values.push_back(std::string("|") + *nproperties->value);
 
       nproperties = nproperties->next;

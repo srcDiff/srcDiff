@@ -505,7 +505,7 @@ void srcdiff_output::output_node(const srcml_node & node) {
       srcml_attr * attribute = node.properties;
       while (attribute) {
 
-        srcml_write_attribute(wstate->unit, 0, attribute->name ? attribute->name->c_str() : 0, 0, attribute->value ? attribute->value->c_str() : 0);
+        srcml_write_attribute(wstate->unit, 0, attribute->name.c_str(), 0, attribute->value ? attribute->value->c_str() : 0);
         attribute = attribute->next;
       }
     }

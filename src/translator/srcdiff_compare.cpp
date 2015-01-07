@@ -32,8 +32,7 @@ namespace srcdiff_compare {
     const srcml_attr * attr_new = attr2;
 
     for(; attr_old && attr_new
-          && (attr_old->name == attr_new->name)
-          && (!attr_old->name || *attr_old->name == *attr_new->name)
+          && attr_old->name == attr_new->name
           && (attr_old->value == attr_new->value)
           && (!attr_old->value || *attr_old->value == *attr_new->value);
         attr_old = attr_old->next, attr_new = attr_new->next)

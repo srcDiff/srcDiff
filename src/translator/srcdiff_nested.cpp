@@ -79,7 +79,7 @@ int is_block_type(const node_set & structure, const std::vector<srcml_node *> & 
   if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
 
-  if(nodes.at(structure.at(0))->ns->href && *nodes.at(structure.at(0))->ns->href != "http://www.sdml.info/srcML/src")
+  if(nodes.at(structure.at(0))->ns->href != "http://www.sdml.info/srcML/src")
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
@@ -107,7 +107,7 @@ bool is_nest_type(const node_set & structure, const std::vector<srcml_node *> & 
   if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-    if(nodes.at(structure.at(0))->ns->href && *nodes.at(structure.at(0))->ns->href != "http://www.sdml.info/srcML/src")
+    if(nodes.at(structure.at(0))->ns->href != "http://www.sdml.info/srcML/src")
     return -1;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
