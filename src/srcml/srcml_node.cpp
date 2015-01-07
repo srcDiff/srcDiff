@@ -199,7 +199,7 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.nam
 
 }
 
-void srcml_attr::free_srcml_attr(srcml_attr * properties) {
+void srcml_node::srcml_attr::free_srcml_attr(srcml_attr * properties) {
 
   srcml_attr * attr = properties;
   while(attr) {
@@ -213,7 +213,7 @@ void srcml_attr::free_srcml_attr(srcml_attr * properties) {
 
 }
 
-srcml_ns::srcml_ns(const srcml_ns & ns) : href(ns.href), prefix(ns.prefix) {}
+srcml_node::srcml_ns::srcml_ns(const srcml_ns & ns) : href(ns.href), prefix(ns.prefix) {}
 
 srcml_node::~srcml_node() {
 

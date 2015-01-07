@@ -111,10 +111,10 @@ public:
   std::shared_ptr<srcml_node> diff_new_start;
   std::shared_ptr<srcml_node> diff_new_end;
 
-  std::shared_ptr<srcml_ns> diff;
+  std::shared_ptr<srcml_node::srcml_ns> diff;
 
   // diff attribute
-  std::shared_ptr<srcml_attr> diff_type;
+  std::shared_ptr<srcml_node::srcml_attr> diff_type;
 
   std::shared_ptr<srcml_node> unit_tag;
 

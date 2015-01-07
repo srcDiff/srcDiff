@@ -9,7 +9,7 @@
 
 int move_id = 0;
 
-static srcml_attr move_attribute = { 0, std::string("move"), 0 };
+static srcml_node::srcml_attr move_attribute = { 0, std::string("move"), 0 };
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;
@@ -187,7 +187,7 @@ void srcdiff_move::output() {
 
   move_attribute.value = buffer;
 
-  srcml_attr * save_attributes = start_node->properties;
+  srcml_node::srcml_attr * save_attributes = start_node->properties;
   start_node->properties = &move_attribute;
 
   output_node(start_node.get(), SESMOVE);

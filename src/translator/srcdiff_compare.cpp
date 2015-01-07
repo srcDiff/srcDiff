@@ -26,10 +26,10 @@ namespace srcdiff_compare {
   }
 
 
-  bool attribute_compare(const srcml_attr * attr1, const srcml_attr * attr2) {
+  bool attribute_compare(const srcml_node::srcml_attr * attr1, const srcml_node::srcml_attr * attr2) {
 
-    const srcml_attr * attr_old = attr1;
-    const srcml_attr * attr_new = attr2;
+    const srcml_node::srcml_attr * attr_old = attr1;
+    const srcml_node::srcml_attr * attr_new = attr2;
 
     for(; attr_old && attr_new
           && attr_old->name == attr_new->name

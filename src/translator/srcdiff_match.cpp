@@ -331,7 +331,7 @@ offset_pair * srcdiff_match::match_differences() {
 
 boost::optional<std::string> find_attribute(const srcml_node * node, const char * attr_name) {
 
-  srcml_attr * attr = node->properties;
+  const srcml_node::srcml_attr * attr = node->properties;
 
   for(; attr && attr->name != attr_name; attr = attr->next)
     ;

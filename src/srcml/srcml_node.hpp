@@ -34,40 +34,40 @@
 
 #include <srcml.h>
 
-class srcml_ns {
-
-public:
-
-  srcml_ns(const std::string & href = std::string(), const boost::optional<std::string> & prefix = boost::optional<std::string>())
-    : href(href), prefix(prefix) {}
-
-  srcml_ns(const srcml_ns & ns);
-
-  std::string href;
-  boost::optional<std::string> prefix;
-
-};
-
-class srcml_attr {
-
-public:
-
-  srcml_attr(srcml_attr * next = 0, const std::string & name = std::string(),
-    const boost::optional<std::string> & value = boost::optional<std::string>())
-    : next(next), name(name), value(value) {}
-
-  srcml_attr * next;
-  std::string name;
-  boost::optional<std::string> value;
-
-  static void free_srcml_attr(srcml_attr * properties);
-
-
-};
-
 class srcml_node {
 
 public:
+
+  class srcml_ns {
+
+  public:
+
+    srcml_ns(const std::string & href = std::string(), const boost::optional<std::string> & prefix = boost::optional<std::string>())
+      : href(href), prefix(prefix) {}
+
+    srcml_ns(const srcml_ns & ns);
+
+    std::string href;
+    boost::optional<std::string> prefix;
+
+  };
+
+  class srcml_attr {
+
+  public:
+
+    srcml_attr(srcml_attr * next = 0, const std::string & name = std::string(),
+      const boost::optional<std::string> & value = boost::optional<std::string>())
+      : next(next), name(name), value(value) {}
+
+    srcml_attr * next;
+    std::string name;
+    boost::optional<std::string> value;
+
+    static void free_srcml_attr(srcml_attr * properties);
+
+
+  };
 
   xmlElementType type;
   std::string name;
@@ -88,8 +88,7 @@ public:
 
   srcml_node(xmlElementType type = XML_ELEMENT_NODE, const std::string & name = std::string(), srcml_ns * ns = nullptr,
     const boost::optional<std::string> & content = boost::optional<std::string>(), srcml_attr * properties = nullptr, unsigned short extra = 0,
-    const boost::optional<std::string> & parent = boost::optional<std::string>(), bool is_empty = false, bool free = false,
-    int move = 0);
+    const boost::optional<std::string> & parent = boost::optional<std::string>(), bool is_empty = false, bool free = false, int move = 0);
 
   srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns);
 
