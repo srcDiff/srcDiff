@@ -84,9 +84,9 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.output_node(out.diff_common_start.get(), SESCOMMON);
+  out.output_node(out.diff_common_start, SESCOMMON);
 
-  srcml_node * merged_node = 0;
+  std::shared_ptr<srcml_node> merged_node;
 
   if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), out.get_nodes_new().at(node_sets_new.at(start_new).at(0))) == 0) {
 
@@ -94,7 +94,7 @@ void srcdiff_single::output_recursive_same() {
 
   } else {
 
-    merged_node = new srcml_node(*out.get_nodes_old().at(node_sets_old.at(start_old).at(0)));
+    merged_node = std::make_shared<srcml_node>(*out.get_nodes_old().at(node_sets_old.at(start_old).at(0)));
 
     merged_node->properties = merge_properties(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->properties,
                                               out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->properties);
@@ -141,11 +141,9 @@ void srcdiff_single::output_recursive_same() {
 
   output_common(node_sets_old.at(start_old).back() + 1, node_sets_new.at(start_new).back() + 1);
 
-  out.output_node(out.diff_common_end.get(), SESCOMMON);
+  out.output_node(out.diff_common_end, SESCOMMON);
 
   whitespace.output_statement();
-
-  if(merged_node) delete merged_node;
 
 }
 
@@ -154,7 +152,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.output_node(out.diff_old_start.get(), SESDELETE);
+  out.output_node(out.diff_old_start, SESDELETE);
 
   out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), SESDELETE);
 
@@ -172,7 +170,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   ++out.last_output_old();
 
-  out.output_node(out.diff_new_start.get(), SESINSERT);
+  out.output_node(out.diff_new_start, SESINSERT);
 
   out.output_node(out.get_nodes_new().at(node_sets_new.at(start_new).at(0)), SESINSERT);
 
@@ -201,11 +199,11 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   output_change(out.last_output_old(), node_sets_new.at(start_new).back() + 1);
 
-  out.output_node(out.diff_new_end.get(), SESINSERT);
+  out.output_node(out.diff_new_end, SESINSERT);
 
   output_change(node_sets_old.at(start_old).back() + 1, out.last_output_new());
 
-  out.output_node(out.diff_old_end.get(), SESDELETE);
+  out.output_node(out.diff_old_end, SESDELETE);
 
   whitespace.output_statement();
 
@@ -214,8 +212,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-    srcml_node * start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
-    srcml_node * start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
+    const std::shared_ptr<srcml_node> & start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
+    const std::shared_ptr<srcml_node> & start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
 
   if(start_node_old->name == start_node_new->name
     && (bool(start_node_old->ns) == bool(start_node_new->ns) && (!start_node_old->ns

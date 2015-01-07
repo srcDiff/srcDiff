@@ -69,15 +69,15 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   if(!rbuf_old->nodes.empty() && !rbuf_new->nodes.empty()) {
 
-    update_diff_stack(rbuf_old->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
 
   } else if(rbuf_old->nodes.empty() && rbuf_new->nodes.empty()) {
 
-    update_diff_stack(rbuf_old->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, diff_common_start.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(wstate->output_diff, diff_common_start, SESCOMMON);
 
     if(is_old <= -1 && is_new <= -1) {
 
@@ -96,9 +96,9 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
     }
 
-    update_diff_stack(rbuf_old->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
 
   } else {
 
@@ -109,9 +109,9 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
     }
 
-    update_diff_stack(rbuf_old->open_diff, unit_tag.get(), SESCOMMON);
-    update_diff_stack(rbuf_new->open_diff, diff_common_start.get(), SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag.get(), SESCOMMON);
+    update_diff_stack(rbuf_old->open_diff, unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_new->open_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
 
   }
 
@@ -136,8 +136,8 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
-  static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
-  output_node((std::shared_ptr<srcml_node>)&flush, SESCOMMON);
+  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
+  output_node(flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
 
@@ -261,26 +261,26 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
       output_node(*diff_old_end);
 
-      update_diff_stack(rbuf_old->open_diff, diff_old_end.get(), SESDELETE);
+      update_diff_stack(rbuf_old->open_diff, diff_old_end, SESDELETE);
 
-      update_diff_stack(wstate->output_diff, diff_old_end.get(), SESDELETE);
+      update_diff_stack(wstate->output_diff, diff_old_end, SESDELETE);
 
     } else if(delay_operation == SESINSERT) {
 
       output_node(*diff_new_end);
 
-      update_diff_stack(rbuf_new->open_diff, diff_new_end.get(), SESINSERT);
+      update_diff_stack(rbuf_new->open_diff, diff_new_end, SESINSERT);
 
-      update_diff_stack(wstate->output_diff, diff_new_end.get(), SESINSERT);
+      update_diff_stack(wstate->output_diff, diff_new_end, SESINSERT);
 
     } else if(delay_operation == SESCOMMON)  {
 
       output_node(*diff_common_end);
 
-      update_diff_stack(rbuf_old->open_diff, diff_common_end.get(), SESCOMMON);
-      update_diff_stack(rbuf_new->open_diff, diff_common_end.get(), SESCOMMON);
+      update_diff_stack(rbuf_old->open_diff, diff_common_end, SESCOMMON);
+      update_diff_stack(rbuf_new->open_diff, diff_common_end, SESCOMMON);
 
-      update_diff_stack(wstate->output_diff, diff_common_end.get(), SESCOMMON);
+      update_diff_stack(wstate->output_diff, diff_common_end, SESCOMMON);
 
     }
 
@@ -461,17 +461,11 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
 
 }
 
-void srcdiff_output::output_text_as_node(const char * text, int operation) {
+void srcdiff_output::output_text_as_node(const std::string & text, int operation) {
 
-  if(strlen((char *)text) == 0)
-    return;
+  if(text.size() == 0) return;
 
-  srcml_node node;
-  node.type = (xmlElementType)XML_READER_TYPE_TEXT;
-  node.name = "text";
-  node.content = text;
-
-  output_node(&node, operation);
+  output_node(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, "text", boost::optional<srcml_node::srcml_ns>(), text), operation);
 
 }
 

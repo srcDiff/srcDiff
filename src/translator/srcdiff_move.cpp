@@ -122,10 +122,10 @@ void srcdiff_move::mark_moves(std::vector<std::shared_ptr<srcml_node>> & nodes_o
 		   continue;
 
         ++move_id;
-        std::shared_ptr<srcml_node> start_node_one = new srcml_node(*nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
+        std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
         start_node_one->move = move_id;
 
-        std::shared_ptr<srcml_node> start_node_two = new srcml_node(*nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
+        std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
         start_node_two->move = move_id;
 
         nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)) = start_node_one;
@@ -133,10 +133,10 @@ void srcdiff_move::mark_moves(std::vector<std::shared_ptr<srcml_node>> & nodes_o
 
         if(!start_node_one->is_empty) {
 
-          std::shared_ptr<srcml_node> end_node_one = new srcml_node(*nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
+          std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
           end_node_one->move = move_id;
 
-          std::shared_ptr<srcml_node> end_node_two = new srcml_node(*nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
+          std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
           end_node_two->move = move_id;
 
           nodes_one->at(node_sets_one->at(elements.at(i).first).back()) = end_node_one;
@@ -173,7 +173,7 @@ void srcdiff_move::output() {
 
   start_node->properties.emplace_back(move, std::to_string(id));
 
-  output_node(start_node.get(), SESMOVE);
+  output_node(start_node, SESMOVE);
 
   output_node(rbuf->nodes.at(position), SESMOVE);
 
@@ -191,7 +191,7 @@ void srcdiff_move::output() {
 
   }
 
-  output_node(end_node.get(), SESMOVE);
+  output_node(end_node, SESMOVE);
 
   start_node->properties.clear();
 

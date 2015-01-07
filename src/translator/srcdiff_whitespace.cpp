@@ -33,12 +33,12 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
 
   if(begin_old < ostart) {
 
-    output_node(diff_common_start.get(), SESCOMMON);
+    output_node(diff_common_start, SESCOMMON);
     
     for(int i = begin_old; i < ostart; ++i)
       output_node(rbuf_old->nodes.at(i), SESCOMMON);
     
-    output_node(diff_common_end.get(), SESCOMMON);
+    output_node(diff_common_end, SESCOMMON);
 
   }
 
@@ -63,25 +63,25 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
 
     if(nstart < npivot) {
 
-      output_node(diff_new_start.get(), SESINSERT);
+      output_node(diff_new_start, SESINSERT);
 
       for(int k = nstart; k < npivot; ++k)
         output_node(rbuf_new->nodes.at(k), SESINSERT);
 
       // output diff tag
-      output_node(diff_new_end.get(), SESINSERT);
+      output_node(diff_new_end, SESINSERT);
 
     }
 
     if(ostart < opivot) {
 
-      output_node(diff_old_start.get(), SESDELETE);
+      output_node(diff_old_start, SESDELETE);
 
       for(int k = ostart; k < opivot; ++k)
         output_node(rbuf_old->nodes.at(k), SESDELETE);
 
       // output diff tag
-      output_node(diff_old_end.get(), SESDELETE);
+      output_node(diff_old_end, SESDELETE);
 
     }
 
@@ -89,25 +89,25 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
 
     if(ostart < opivot) {
 
-      output_node(diff_old_start.get(), SESDELETE);
+      output_node(diff_old_start, SESDELETE);
 
       for(int k = ostart; k < opivot; ++k)
         output_node(rbuf_old->nodes.at(k), SESDELETE);
 
       // output diff tag
-      output_node(diff_old_end.get(), SESDELETE);
+      output_node(diff_old_end, SESDELETE);
 
     }
 
     if(nstart < npivot) {
 
-      output_node(diff_new_start.get(), SESINSERT);
+      output_node(diff_new_start, SESINSERT);
 
       for(int k = nstart; k < npivot; ++k)
         output_node(rbuf_new->nodes.at(k), SESINSERT);
 
       // output diff tag
-      output_node(diff_new_end.get(), SESINSERT);
+      output_node(diff_new_end, SESINSERT);
 
     }
 
@@ -115,13 +115,13 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_old, unsigned int en
 
   if(opivot < oend) {
 
-    output_node(diff_common_start.get(), SESCOMMON);
+    output_node(diff_common_start, SESCOMMON);
 
     for(int k = opivot; k < oend; ++k)
       output_node(rbuf_old->nodes.at(k), SESCOMMON);
 
     // output diff tag
-    output_node(diff_common_end.get(), SESCOMMON);
+    output_node(diff_common_end, SESCOMMON);
 
   }
 
@@ -230,12 +230,12 @@ void srcdiff_whitespace::output_prefix() {
 
   if(ostart < oend) {
 
-  output_node(diff_common_start.get(), SESCOMMON);
+  output_node(diff_common_start, SESCOMMON);
 
   for(unsigned int i = ostart; i < oend; ++i)
     output_node(rbuf_old->nodes.at(i), SESCOMMON);
 
-  output_node(diff_common_end.get(), SESCOMMON);
+  output_node(diff_common_end, SESCOMMON);
 
   }
 
@@ -279,38 +279,38 @@ void srcdiff_whitespace::output_suffix() {
   if(ostart < opivot) {
 
     // output delete
-    output_node(diff_old_start.get(), SESDELETE);
+    output_node(diff_old_start, SESDELETE);
 
     for(int i = ostart; i < opivot; ++i)
       output_node(rbuf_old->nodes.at(i), SESDELETE);
 
     // output diff tag begin
-    output_node(diff_old_end.get(), SESDELETE);
+    output_node(diff_old_end, SESDELETE);
 
   }
 
   if(nstart < npivot) {
 
     // output insert
-    output_node(diff_new_start.get(), SESINSERT);
+    output_node(diff_new_start, SESINSERT);
 
     for(int i = nstart; i < npivot; ++i)
       output_node(rbuf_new->nodes.at(i), SESINSERT);
 
     // output diff tag begin
-    output_node(diff_new_end.get(), SESINSERT);
+    output_node(diff_new_end, SESINSERT);
 
   }
 
   if(opivot < oend) {
 
   // output common
-  output_node(diff_common_start.get(), SESCOMMON);
+  output_node(diff_common_start, SESCOMMON);
 
   for(int i = opivot; i < oend; ++i)
     output_node(rbuf_old->nodes.at(i), SESCOMMON);
 
-  output_node(diff_common_end.get(), SESCOMMON);
+  output_node(diff_common_end, SESCOMMON);
 
   }
 

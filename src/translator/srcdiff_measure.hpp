@@ -9,8 +9,8 @@
 class srcdiff_measure {
 
 protected:
-	const std::vector<srcml_node *> & nodes_old;
-	const std::vector<srcml_node *> & nodes_new;
+	const std::vector<std::shared_ptr<srcml_node>> & nodes_old;
+	const std::vector<std::shared_ptr<srcml_node>> & nodes_new;
 	const node_set & set_old;
 	const node_set & set_new;
 
@@ -20,7 +20,7 @@ private:
 
 public:
 
-	srcdiff_measure(const std::vector<srcml_node *> & nodes_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_old, const node_set & set_new);
+	srcdiff_measure(const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_old, const node_set & set_new);
 
 	int compute_similarity();
 	int compute_similarity(int & text_old_length, int & text_new_length);

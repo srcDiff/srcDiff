@@ -21,7 +21,7 @@ struct difference {
 
 };
 
-srcdiff_match::srcdiff_match(const std::vector<srcml_node *> & nodes_old, const std::vector<srcml_node *> & nodes_new, const node_sets & node_sets_old, const node_sets & node_sets_new)
+srcdiff_match::srcdiff_match(const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_sets & node_sets_old, const node_sets & node_sets_new)
   : nodes_old(nodes_old), nodes_new(nodes_new), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
 
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
@@ -331,7 +331,7 @@ offset_pair * srcdiff_match::match_differences() {
 }
 
 
-boost::optional<std::string> find_attribute(const srcml_node * node, const char * attr_name) {
+boost::optional<std::string> find_attribute(const std::shared_ptr<srcml_node> node, const char * attr_name) {
 
   const std::list<srcml_node::srcml_attr> & attributes = node->properties;
 
@@ -352,7 +352,7 @@ boost::optional<std::string> find_attribute(const srcml_node * node, const char 
 */
 
 
-bool is_single_call_expr(const std::vector<srcml_node *> & nodes, int start_pos) {
+bool is_single_call_expr(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (nodes.at(start_pos)->name != "expr_stmt" && nodes.at(start_pos)->name != "expr")) return false;
@@ -394,7 +394,7 @@ bool is_single_call_expr(const std::vector<srcml_node *> & nodes, int start_pos)
  
 }
 
-std::string get_name(const std::vector<srcml_node *> & nodes, int name_start_pos) {
+std::string get_name(const std::vector<std::shared_ptr<srcml_node>> & nodes, int name_start_pos) {
 
   int open_name_count = nodes.at(name_start_pos)->extra & 0x1 ? 0 : 1;
   int name_pos = name_start_pos + 1;
@@ -425,7 +425,7 @@ std::string get_name(const std::vector<srcml_node *> & nodes, int name_start_pos
 
 }
 
-void skip_type(const std::vector<srcml_node *> & nodes, int & start_pos) {
+void skip_type(const std::vector<std::shared_ptr<srcml_node>> & nodes, int & start_pos) {
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
    && nodes.at(start_pos)->name == "decl_stmt")
@@ -467,7 +467,7 @@ void skip_type(const std::vector<srcml_node *> & nodes, int & start_pos) {
 
 }
 
-void skip_specifiers(const std::vector<srcml_node *> & nodes, int & start_pos) {
+void skip_specifiers(const std::vector<std::shared_ptr<srcml_node>> & nodes, int & start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "specifier")
       return;
@@ -496,7 +496,7 @@ void skip_specifiers(const std::vector<srcml_node *> & nodes, int & start_pos) {
 
 }
 
-std::vector<std::string> get_call_name(const std::vector<srcml_node *> & nodes, int start_pos) {
+std::vector<std::string> get_call_name(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "call")
     return std::vector<std::string>();
@@ -591,7 +591,7 @@ int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std
 
 }
 
-std::string get_decl_name(const std::vector<srcml_node *> & nodes, int start_pos) {
+std::string get_decl_name(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (nodes.at(start_pos)->name != "decl_stmt"
@@ -618,7 +618,7 @@ std::string get_decl_name(const std::vector<srcml_node *> & nodes, int start_pos
 
 }
 
-std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start_pos) {
+std::string get_for_condition(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   int control_start_pos = start_pos;
 
@@ -667,7 +667,7 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
 
 }
 
-std::string get_condition(const std::vector<srcml_node *> & nodes, int start_pos) {
+std::string get_condition(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->name == "for" || nodes.at(start_pos)->name == "foreach")
     return get_for_condition(nodes, start_pos);
@@ -711,7 +711,7 @@ std::string get_condition(const std::vector<srcml_node *> & nodes, int start_pos
 
 }
 
-std::string get_function_type_name(const std::vector<srcml_node *> & nodes, int start_pos) {
+std::string get_function_type_name(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (nodes.at(start_pos)->name != "function" && nodes.at(start_pos)->name != "function_decl"
@@ -734,7 +734,7 @@ std::string get_function_type_name(const std::vector<srcml_node *> & nodes, int 
 
 }
 
-std::string get_class_type_name(const std::vector<srcml_node *> & nodes, int start_pos) {
+std::string get_class_type_name(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || (nodes.at(start_pos)->name != "class" && nodes.at(start_pos)->name != "struct"
@@ -754,7 +754,7 @@ std::string get_class_type_name(const std::vector<srcml_node *> & nodes, int sta
 
 }
 
-bool conditional_has_block(const std::vector<srcml_node *> & nodes, const node_set & set) {
+bool conditional_has_block(const std::vector<std::shared_ptr<srcml_node>> & nodes, const node_set & set) {
 
   node_sets sets = node_sets(nodes, set.at(1), set.back());
 
@@ -785,7 +785,7 @@ bool conditional_has_block(const std::vector<srcml_node *> & nodes, const node_s
 
 }
 
-bool if_has_else(const std::vector<srcml_node *> & nodes, const node_set & set) {
+bool if_has_else(const std::vector<std::shared_ptr<srcml_node>> & nodes, const node_set & set) {
 
   node_sets sets = node_sets(nodes, set.at(1), set.back());
 
@@ -803,7 +803,7 @@ bool if_has_else(const std::vector<srcml_node *> & nodes, const node_set & set) 
 
 }
 
-bool if_then_equal(const std::vector<srcml_node *> & nodes_old, const node_set & set_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_new) {
+bool if_then_equal(const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -838,7 +838,7 @@ bool if_then_equal(const std::vector<srcml_node *> & nodes_old, const node_set &
 
 }
 
-bool for_control_matches(const std::vector<srcml_node *> & nodes_old, const node_set & set_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_new) {
+bool for_control_matches(const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new) {
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
@@ -862,7 +862,7 @@ bool for_control_matches(const std::vector<srcml_node *> & nodes_old, const node
 
 }
 
-std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos) {
+std::string get_case_expr(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
     || nodes.at(start_pos)->name != "case" || (nodes.at(start_pos)->extra & 0x1)) return "";
@@ -961,7 +961,7 @@ bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> 
 }
 
 bool reject_match_same(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<srcml_node *> & nodes_old, const node_set & set_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_new) {
+  const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new) {
 
   int old_pos = set_old.at(0);
   int new_pos = set_new.at(0);
@@ -1118,7 +1118,7 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 }
 
 bool reject_match_interchangeable(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<srcml_node *> & nodes_old, const node_set & set_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_new) {
+  const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new) {
 
   int old_pos = set_old.at(0);
   int new_pos = set_new.at(0);
@@ -1148,7 +1148,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_old_l
 }
 
 bool srcdiff_match::reject_match(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<srcml_node *> & nodes_old, const node_set & set_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_new) {
+  const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new) {
 
   /** if different prefix should not reach here, however, may want to add that here */
   int old_pos = set_old.at(0);
@@ -1167,7 +1167,7 @@ bool srcdiff_match::reject_match(int similarity, int difference, int text_old_le
 }
 
 bool srcdiff_match::reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<srcml_node *> & nodes_old, const node_set & set_old, const std::vector<srcml_node *> & nodes_new, const node_set & set_new) {
+  const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new) {
 
   srcdiff_measure measure(nodes_old, nodes_new, set_old, set_new);
   int syntax_similarity, syntax_difference, children_length_old, children_length_new;
