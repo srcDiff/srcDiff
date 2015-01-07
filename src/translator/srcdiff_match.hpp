@@ -36,7 +36,7 @@ public:
     const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new);
 
 
-  static const char * find_attribute(const std::shared_ptr<srcml_node> node, const char * attr_name);
+  static const char * find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);
 
   static bool is_interchangeable_match(const boost::optional<std::string> & old_tag, const boost::optional<std::string> & new_tag);
 

@@ -433,7 +433,6 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
     open_diffs.push_back(new_diff);
   }
 
-  //std::shared_ptr<srcml_node> node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     open_diffs.back()->open_tags.push_back(node);

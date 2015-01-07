@@ -119,9 +119,9 @@ bool is_nest_type(const node_set & structure, const std::vector<std::shared_ptr<
   return false;
 }
 
-bool is_match(const std::shared_ptr<srcml_node> node, const void * context) {
+bool is_match(const std::shared_ptr<srcml_node> & node, const void * context) {
 
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && srcdiff_compare::node_compare(node, *(std::shared_ptr<srcml_node> *)context) == 0;
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && srcdiff_compare::node_compare(node, *(const std::shared_ptr<srcml_node> *)context) == 0;
 
 }
 
