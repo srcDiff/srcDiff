@@ -118,7 +118,7 @@ void srcdiff_single::output_recursive_same() {
   ++out.last_output_new();
 
   // compare subset of nodes
-  if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name && *out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "comment") {
+  if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "comment") {
 
     // collect subset of nodes
     node_sets next_set_old
@@ -226,7 +226,7 @@ void srcdiff_single::output() {
     srcml_node * start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
     srcml_node * start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
 
-  if(start_node_old->name == start_node_new->name && (!start_node_old->name || *start_node_old->name == *start_node_new->name)
+  if(start_node_old->name == start_node_new->name
     && (start_node_old->ns == start_node_new->ns 
       || (start_node_old->ns && start_node_new->ns && (start_node_old->ns->prefix == start_node_new->ns->prefix && (!start_node_old->ns->prefix
         || *start_node_old->ns->prefix == *start_node_new->ns->prefix)))))

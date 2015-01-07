@@ -55,10 +55,7 @@ namespace srcdiff_compare {
     if(node1->type != node2->type)
       return 1;
 
-    if(node1->name != node1->name)
-      return 1;
-
-    if(node1->name && *node1->name != *node2->name)
+    if(node1->name != node2->name)
       return 1;
 
     // end if text node contents differ

@@ -171,14 +171,11 @@ static bool is_atomic_srcml(std::vector<srcml_node *> & nodes, unsigned start) {
   if((xmlReaderTypes)nodes.at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
     return false;
 
-  if(!nodes.at(start)->name || !nodes.at(start + 2)->name)
-    return false;
-
-  if(*nodes.at(start)->name != *nodes.at(start + 2)->name)
+  if(nodes.at(start)->name != nodes.at(start + 2)->name)
     return false;
 
   for(int i = 0; atomic[i]; ++i)
-    if(*nodes.at(start)->name == atomic[i])
+    if(nodes.at(start)->name == atomic[i])
       return true;
 
   return false;
@@ -190,8 +187,8 @@ std::vector<srcml_node *> srcml_converter::collect_nodes(xmlTextReaderPtr reader
 
   std::vector<srcml_node *> nodes;
 
-  std::vector<boost::optional<std::string>> element_stack;
-  element_stack.push_back(std::string("unit"));
+  std::vector<std::string> element_stack;
+  element_stack.push_back("unit");
 
   int not_done = 1;
   while(not_done) {
@@ -262,7 +259,7 @@ std::vector<srcml_node *> srcml_converter::collect_nodes(xmlTextReaderPtr reader
       else if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         element_stack.pop_back();
 
-      if(*node->name == "unit") return nodes;
+      if(node->name == "unit") return nodes;
 
       // save non-text node and get next node
       nodes.push_back(node);

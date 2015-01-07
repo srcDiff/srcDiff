@@ -83,7 +83,7 @@ int is_block_type(const node_set & structure, const std::vector<srcml_node *> & 
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
-    if(nodes.at(structure.at(0))->name && *nodes.at(structure.at(0))->name == nesting[i].type)
+    if(nodes.at(structure.at(0))->name == nesting[i].type)
       return i;
 
   return -1;
@@ -95,7 +95,7 @@ bool has_internal_structure(const node_set & structure, const std::vector<srcml_
 
   for(unsigned int i = 1; i < structure.size(); ++i)
     if((xmlReaderTypes)nodes.at(structure.at(i))->type == XML_READER_TYPE_ELEMENT
-              && nodes.at(structure.at(i))->name && *nodes.at(structure.at(i))->name == type)
+              && nodes.at(structure.at(i))->name == type)
       return true;
 
   return false;
@@ -111,7 +111,7 @@ bool is_nest_type(const node_set & structure, const std::vector<srcml_node *> & 
     return -1;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
-    if(nodes.at(structure.at(0))->name && *nodes.at(structure.at(0))->name == nesting[type_index].possible_nest_items[i]
+    if(nodes.at(structure.at(0))->name == nesting[type_index].possible_nest_items[i]
        && has_internal_structure(structure_other, nodes_other, nodes.at(structure.at(0))->name))
       return true;
 
@@ -175,10 +175,8 @@ bool is_nestable_internal(const node_set & structure_one, const std::vector<srcm
     return false;
 
   /** Only can nest a block into another block if it's parent is a block */
-  bool is_block = nodes_one.at(structure_one.at(0))->name && *nodes_one.at(structure_one.at(0))->name == "block"
-   && nodes_two.at(structure_two.at(0))->name && *nodes_two.at(structure_two.at(0))->name == "block";
-  bool parent_is_block = nodes_one.at(structure_one.at(0))->parent
-   && *nodes_one.at(structure_one.at(0))->parent == "block";
+  bool is_block = nodes_one.at(structure_one.at(0))->name == "block" && nodes_two.at(structure_two.at(0))->name == "block";
+  bool parent_is_block = nodes_one.at(structure_one.at(0))->parent && *nodes_one.at(structure_one.at(0))->parent == "block";
   if(is_block && !parent_is_block) return false;
 
   if(is_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
@@ -330,8 +328,8 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
   int old_pos = set_old.at(0);
   int new_pos = set_new.at(0);
 
-  std::string old_tag = nodes_old.at(old_pos)->name ? *nodes_old.at(old_pos)->name : "";
-  std::string new_tag = nodes_new.at(new_pos)->name ? *nodes_new.at(new_pos)->name : "";
+  std::string old_tag = nodes_old.at(old_pos)->name;
+  std::string new_tag = nodes_new.at(new_pos)->name;
 
   if(old_tag != new_tag && !srcdiff_match::is_interchangeable_match(old_tag, new_tag)) return true;
 
@@ -394,7 +392,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
           )
           continue;
 
-        if(nodes_new.at(node_sets_new.at(j).at(0))->name && *nodes_new.at(node_sets_new.at(j).at(0))->name =="name"
+        if(nodes_new.at(node_sets_new.at(j).at(0))->name =="name"
           && nodes_new.at(node_sets_new.at(j).at(0))->parent && *nodes_new.at(node_sets_new.at(j).at(0))->parent == "expr"
           && nodes_old.at(node_sets_old.at(i).at(0))->parent && *nodes_old.at(node_sets_old.at(i).at(0))->parent == "expr"
           && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
@@ -426,7 +424,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
             nodes_old, set.at(match), nodes_new, node_sets_new.at(k)))
             continue;
 
-          if(nodes_new.at(node_sets_new.at(k).at(0))->name && *nodes_new.at(node_sets_new.at(k).at(0))->name == "name"
+          if(nodes_new.at(node_sets_new.at(k).at(0))->name == "name"
             && nodes_new.at(node_sets_new.at(k).at(0))->parent && *nodes_new.at(node_sets_new.at(k).at(0))->parent == "expr"
             && nodes_old.at(node_sets_old.at(i).at(0))->parent && *nodes_old.at(node_sets_old.at(i).at(0))->parent == "expr"
             && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
@@ -472,7 +470,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
           || (i + 1 < end_new && is_better_nest(nodes_new, node_sets_new.at(i + 1), nodes_old, node_sets_old.at(j), similarity, difference, text_new_length, text_old_length)))
           continue;
 
-        if(nodes_old.at(node_sets_old.at(j).at(0))->name && *nodes_old.at(node_sets_old.at(j).at(0))->name =="name"
+        if(nodes_old.at(node_sets_old.at(j).at(0))->name =="name"
           && nodes_old.at(node_sets_old.at(j).at(0))->parent && *nodes_old.at(node_sets_old.at(j).at(0))->parent == "expr"
           && nodes_new.at(node_sets_new.at(i).at(0))->parent && *nodes_new.at(node_sets_new.at(i).at(0))->parent == "expr"
           && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
@@ -504,7 +502,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::
               nodes_old, node_sets_old.at(k), nodes_new, set.at(match)))
               continue;
 
-            if(nodes_old.at(node_sets_old.at(k).at(0))->name && *nodes_old.at(node_sets_old.at(k).at(0))->name == "name" 
+            if(nodes_old.at(node_sets_old.at(k).at(0))->name == "name" 
               && nodes_old.at(node_sets_old.at(k).at(0))->parent && *nodes_old.at(node_sets_old.at(k).at(0))->parent == "expr"
               && nodes_new.at(node_sets_new.at(i).at(0))->parent && *nodes_new.at(node_sets_new.at(i).at(0))->parent == "expr"
               && ((end_old - start_old) > 1 || (end_new - start_new) > 1))
@@ -563,26 +561,25 @@ void srcdiff_nested::output() {
 
     unsigned int end_pos = node_sets_old.at(start_old).at(1);
 
-    if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name && (*out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "if"
-      || *out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "elseif")) {
+    if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "if"|| out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "elseif") {
 
         while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_old().at(end_pos)->name && *out.get_nodes_old().at(end_pos)->name == "then"))
+          && out.get_nodes_old().at(end_pos)->name == "then"))
 
           ++end_pos;
 
-    } else if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name && *out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "while") {
+    } else if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "while") {
 
         while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_old().at(end_pos)->name && *out.get_nodes_old().at(end_pos)->name == "condition"))
+          && out.get_nodes_old().at(end_pos)->name == "condition"))
           ++end_pos;
 
         ++end_pos;
 
-    } else if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name && *out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "for") {
+    } else if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "for") {
 
         while(!(out.get_nodes_old().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_old().at(end_pos)->name && *out.get_nodes_old().at(end_pos)->name == "control"))
+          && out.get_nodes_old().at(end_pos)->name == "control"))
           ++end_pos;
 
         ++end_pos;
@@ -615,25 +612,24 @@ void srcdiff_nested::output() {
 
     unsigned int end_pos = node_sets_new.at(start_new).at(1);
 
-    if(out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name && (*out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "if"
-      || *out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "elseif")) {
+    if(out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "if"|| out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "elseif") {
 
         while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_new().at(end_pos)->name && *out.get_nodes_new().at(end_pos)->name == "then"))
+          && out.get_nodes_new().at(end_pos)->name == "then"))
           ++end_pos;
 
-    } else if(out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name && *out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "while") {
+    } else if(out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "while") {
 
         while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_new().at(end_pos)->name && *out.get_nodes_new().at(end_pos)->name == "condition"))
+          && out.get_nodes_new().at(end_pos)->name == "condition"))
           ++end_pos;
 
         ++end_pos;
 
-    } else if(out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name && *out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "for") {
+    } else if(out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->name == "for") {
 
         while(!(out.get_nodes_new().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_new().at(end_pos)->name && *out.get_nodes_new().at(end_pos)->name == "control"))
+          && out.get_nodes_new().at(end_pos)->name == "control"))
           ++end_pos;
 
         ++end_pos;

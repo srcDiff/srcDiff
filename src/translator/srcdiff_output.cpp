@@ -253,11 +253,11 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
   // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SESDELETE 
-          && wstate->output_diff.back()->open_tags.back()->name && *wstate->output_diff.back()->open_tags.back()->name == diff_old_end->name)
+          && wstate->output_diff.back()->open_tags.back()->name == diff_old_end->name)
          || (delay_operation == SESINSERT 
-             && wstate->output_diff.back()->open_tags.back()->name && *wstate->output_diff.back()->open_tags.back()->name == diff_new_end->name)
+             && wstate->output_diff.back()->open_tags.back()->name == diff_new_end->name)
          || (delay_operation == SESCOMMON 
-             && wstate->output_diff.back()->open_tags.back()->name && *wstate->output_diff.back()->open_tags.back()->name == diff_common_end->name))) {
+             && wstate->output_diff.back()->open_tags.back()->name == diff_common_end->name))) {
 
     if(delay_operation == SESDELETE) {
 
@@ -298,8 +298,7 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
 
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT
-       && (!wstate->output_diff.back()->open_tags.back()->name || wstate->output_diff.back()->open_tags.back()->name != node->name))
+    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT && wstate->output_diff.back()->open_tags.back()->name != node->name)
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
@@ -499,7 +498,7 @@ void srcdiff_output::output_node(const srcml_node & node) {
     isemptyelement = node.extra & 0x1;
 
     // start the element
-    srcml_write_start_element(wstate->unit, node.ns->prefix ? node.ns->prefix->c_str() : 0, node.name ? node.name->c_str() : 0, 0);
+    srcml_write_start_element(wstate->unit, node.ns->prefix ? node.ns->prefix->c_str() : 0, node.name.c_str(), 0);
 
     // copy all the attributes
     {

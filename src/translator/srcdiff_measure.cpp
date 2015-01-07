@@ -97,8 +97,7 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
      || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
         && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
-        && (!nodes_old.at(set_old.at(0))->name || *nodes_old.at(set_old.at(0))->name != "block"
-            || !nodes_new.at(set_new.at(0))->name || *nodes_new.at(set_new.at(0))->name != "block"))) {
+        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
 
     return MAX_INT;
 
@@ -153,8 +152,7 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
      || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
         && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
-        && (!nodes_old.at(set_old.at(0))->name || *nodes_old.at(set_old.at(0))->name != "block"
-            || !nodes_new.at(set_new.at(0))->name || *nodes_new.at(set_new.at(0))->name != "block"))) {
+        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
 
     similarity = MAX_INT;
     difference = MAX_INT;
@@ -205,8 +203,8 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
 static bool is_significant(const srcml_node * node, const void * context) {
 
-  return !node->is_text() && node->name && *node->name != "operator"
-      && *node->name != "literal" && *node->name != "modifier";
+  return !node->is_text() && node->name != "operator"
+      && node->name != "literal" && node->name != "modifier";
 
 }
 
@@ -214,15 +212,11 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new.at(0))->name);
-
   if((xmlReaderTypes)nodes_old.at(set_old.at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
         && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
-        && (!nodes_old.at(set_old.at(0))->name || *nodes_old.at(set_old.at(0))->name != "block"
-            || !nodes_new.at(set_new.at(0))->name || *nodes_new.at(set_new.at(0))->name != "block"))) {
+        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
 
     similarity = 0;
     difference = MAX_INT;

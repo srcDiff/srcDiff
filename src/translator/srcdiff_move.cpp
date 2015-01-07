@@ -22,7 +22,7 @@ void add_construct(std::map<std::string, IntPairs > & constructs
                    , const node_sets & sets, const std::vector<srcml_node *> & nodes
                    , int offset, int operation) {
 
-  std::string tag = nodes.at(sets.at(offset).at(0))->name ? *nodes.at(sets.at(offset).at(0))->name : "";
+  std::string tag = nodes.at(sets.at(offset).at(0))->name;
 
   if(constructs.find(tag) == constructs.end()) {
 
