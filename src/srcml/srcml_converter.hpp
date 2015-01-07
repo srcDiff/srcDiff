@@ -10,6 +10,7 @@
 #include <map>
 #include <thread>
 #include <functional>
+#include <memory>
 
 class srcml_converter {
 
@@ -24,14 +25,14 @@ protected:
 
   static std::mutex mutex;
 
-  static std::map<std::string, srcml_node *> start_tags;
-  static std::map<std::string, srcml_node *> end_tags;
+  static std::map<std::string, std::shared_ptr<srcml_node>> start_tags;
+  static std::map<std::string, std::shared_ptr<srcml_node>> end_tags;
 
 private:
 
-	std::vector<srcml_node *> collect_nodes(xmlTextReaderPtr reader) const;
+	std::vector<std::shared_ptr<srcml_node>> collect_nodes(xmlTextReaderPtr reader) const;
 
-	static srcml_node * get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context);
+	static std::shared_ptr<srcml_node> get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context);
 
 public:
 
@@ -39,7 +40,7 @@ public:
  	~srcml_converter();
 
 	void convert(const std::string & language, void * context, const std::function<int(void *, char *, int)> & read, const std::function<int(void *)> & close, const OPTION_TYPE & options); 
-	std::vector<srcml_node *> create_nodes() const;
+	std::vector<std::shared_ptr<srcml_node>> create_nodes() const;
 
 };
 

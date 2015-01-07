@@ -9,9 +9,9 @@ class node_set : public srcdiff_vector<int> {
 
 private:
 
-	const std::vector<srcml_node *> & nodes;
+	const std::vector<std::shared_ptr<srcml_node>> & nodes;
 
-	static bool is_white_space(const srcml_node * node) {
+	static bool is_white_space(const std::shared_ptr<srcml_node> node) {
 
 	  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
 	  return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space();
@@ -20,7 +20,7 @@ private:
 
 public:
 
-	node_set(const std::vector<srcml_node *> & nodes) : nodes(nodes) {}
+	node_set(const std::vector<std::shared_ptr<srcml_node>> & nodes) : nodes(nodes) {}
 
 	node_set(const node_set & set) : nodes(set.nodes) {
 
@@ -40,7 +40,7 @@ public:
 
 	}
 
-	node_set(const std::vector<srcml_node *> & nodes, int & start) : nodes(nodes) {
+	node_set(const std::vector<std::shared_ptr<srcml_node>> & nodes, int & start) : nodes(nodes) {
 
 	if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 

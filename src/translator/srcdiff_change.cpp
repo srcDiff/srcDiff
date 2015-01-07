@@ -70,17 +70,17 @@ void srcdiff_change::output() {
       }
 
       // output diff tag begin
-      output_node(diff_old_start.get(), SESDELETE);
+      output_node(diff_old_start, SESDELETE);
 
       output_node(rbuf_old->nodes.at(i), SESDELETE);
 
       // output diff tag begin
-      output_node(diff_old_end.get(), SESDELETE);
+      output_node(diff_old_end, SESDELETE);
 
     }
 
     // output diff tag begin
-    output_node(diff_old_end.get(), SESDELETE);
+    output_node(diff_old_end, SESDELETE);
 
     rbuf_old->last_output = end_old;
 
@@ -100,18 +100,18 @@ void srcdiff_change::output() {
       }
 
       // output diff tag
-      output_node(diff_new_start.get(), SESINSERT);
+      output_node(diff_new_start, SESINSERT);
 
       output_node(rbuf_new->nodes.at(i), SESINSERT);
 
     // output diff tag begin
-    output_node(diff_new_end.get(), SESINSERT);
+    output_node(diff_new_end, SESINSERT);
 
 
     }
 
     // output diff tag begin
-    output_node(diff_new_end.get(), SESINSERT);
+    output_node(diff_new_end, SESINSERT);
 
     rbuf_new->last_output = end_new;
 

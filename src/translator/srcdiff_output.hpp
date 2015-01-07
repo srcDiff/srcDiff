@@ -18,7 +18,7 @@ protected:
 
     int operation;
 
-    std::vector<const srcml_node *> open_tags;
+    std::vector<const std::shared_ptr<srcml_node>> open_tags;
 
   };
 
@@ -31,16 +31,6 @@ protected:
       : stream_source(source), last_output(0) { }
 
     void clear() {
-
-      for(unsigned int i = 0; i < nodes.size(); ++i) {
-
-        if(nodes.at(i)->free) {
-
-          delete nodes[i];
-
-        }
-
-      }
 
       last_output = 0;
       nodes.clear();
@@ -57,7 +47,7 @@ protected:
     int stream_source;
     unsigned int last_output;
 
-    std::vector<srcml_node *> nodes;
+    std::vector<std::shared_ptr<srcml_node>> nodes;
 
     std::vector<diff_set *> open_diff;
 
@@ -121,7 +111,7 @@ public:
 private:
 
   void output_node(const srcml_node & node);
-  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const srcml_node * node, int operation);
+  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation);
 
 public:
 
@@ -134,17 +124,17 @@ public:
   virtual void reset();
   virtual void close();
 
-  virtual const std::vector<srcml_node *> & get_nodes_old() const;
-  virtual const std::vector<srcml_node *> & get_nodes_new() const;
-  virtual std::vector<srcml_node *> & get_nodes_old();
-  virtual std::vector<srcml_node *> & get_nodes_new();
+  virtual const std::vector<std::shared_ptr<srcml_node>> & get_nodes_old() const;
+  virtual const std::vector<std::shared_ptr<srcml_node>> & get_nodes_new() const;
+  virtual std::vector<std::shared_ptr<srcml_node>> & get_nodes_old();
+  virtual std::vector<std::shared_ptr<srcml_node>> & get_nodes_new();
   unsigned int last_output_old() const;
   unsigned int last_output_new() const;
   virtual unsigned int & last_output_old();
   virtual unsigned int & last_output_new();
   METHOD_TYPE method() const;
 
-  virtual void output_node(const srcml_node * node, int operation);
+  virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation);
   virtual void output_text_as_node(const char * text, int operation);
   virtual void output_char(char character, int operation);
 

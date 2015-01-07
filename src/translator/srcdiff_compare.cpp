@@ -21,14 +21,14 @@ namespace srcdiff_compare {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    srcml_node * node_old = dnodes.nodes_old.at(*(int *)node1);
-    srcml_node * node_new = dnodes.nodes_new.at(*(int *)node2);
+    const std::shared_ptr<srcml_node> & node_old = dnodes.nodes_old.at(*(int *)node1);
+    const std::shared_ptr<srcml_node> & node_new = dnodes.nodes_new.at(*(int *)node2);
 
     return node_compare(node_old, node_new);
   }
 
   // diff node comparison function
-  int node_compare(const srcml_node * node1, const srcml_node * node2) {
+  int node_compare(const std::shared_ptr<srcml_node> & node1, const std::shared_ptr<srcml_node> & node2) {
 
     if (node1 == node2)
       return 0;

@@ -137,7 +137,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
  void srcdiff_output::finish(int is_old, int is_new, LineDiffRange & line_diff_range) {
 
   static const srcml_node flush = srcml_node((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
-  output_node((srcml_node *)&flush, SESCOMMON);
+  output_node((std::shared_ptr<srcml_node>)&flush, SESCOMMON);
 
   srcml_write_end_unit(wstate->unit);
 
@@ -179,25 +179,25 @@ void srcdiff_output::close() {
 
 }
 
-const std::vector<srcml_node *> & srcdiff_output::get_nodes_old() const {
+const std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_old() const {
 
   return rbuf_old->nodes;
 
 }
 
-const std::vector<srcml_node *> & srcdiff_output::get_nodes_new() const {
+const std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_new() const {
 
   return rbuf_new->nodes;
 
 }
 
-std::vector<srcml_node *> & srcdiff_output::get_nodes_old() {
+std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_old() {
 
   return rbuf_old->nodes;
 
 }
 
-std::vector<srcml_node *> & srcdiff_output::get_nodes_new() {
+std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_new() {
 
   return rbuf_new->nodes;
 
@@ -233,7 +233,7 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
-void srcdiff_output::output_node(const srcml_node * node, int operation) {
+void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -419,7 +419,7 @@ void srcdiff_output::output_node(const srcml_node * node, int operation) {
 
 }
 
-void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const srcml_node * node, int operation) {
+void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation) {
 
   // Skip empty node
   if(node->is_empty || node->is_text())
@@ -433,7 +433,7 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
     open_diffs.push_back(new_diff);
   }
 
-  //srcml_node * node = getRealCurrentNode(reader);
+  //std::shared_ptr<srcml_node> node = getRealCurrentNode(reader);
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
 
     open_diffs.back()->open_tags.push_back(node);

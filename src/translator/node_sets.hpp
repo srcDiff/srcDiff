@@ -9,20 +9,20 @@ class node_sets : public srcdiff_vector<node_set> {
 
 private:
 
-	const std::vector<srcml_node *> & nodes;
+	const std::vector<std::shared_ptr<srcml_node>> & nodes;
 
-	static bool is_non_white_space(const srcml_node * node, const void * context) {
+	static bool is_non_white_space(const std::shared_ptr<srcml_node> node, const void * context) {
 
 	  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
 	  return !((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space());
 
 	}
 
-	typedef bool (*node_set_filter)(const srcml_node * node, const void * context);
+	typedef bool (*node_set_filter)(const std::shared_ptr<srcml_node> node, const void * context);
 
 public:
 
-	node_sets(const std::vector<srcml_node *> & nodes) : nodes(nodes) {}
+	node_sets(const std::vector<std::shared_ptr<srcml_node>> & nodes) : nodes(nodes) {}
 	node_sets(const node_sets & sets) : nodes(sets.nodes) {
 
 
@@ -45,7 +45,7 @@ public:
 	~node_sets() {}
 		
 	// create the node sets for shortest edit script
-	node_sets(const std::vector<srcml_node *> & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
+	node_sets(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
 
 	  // runs on a subset of base array
 	  for(int i = start; i < end; ++i) {
