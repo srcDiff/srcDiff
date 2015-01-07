@@ -868,7 +868,7 @@ bool for_control_matches(const std::vector<srcml_node *> & nodes_old, const node
 std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || !nodes.at(start_pos)->name || *nodes.at(start_pos)->name == "case" || (nodes.at(start_pos)->extra & 0x1)) return "";
+    || !nodes.at(start_pos)->name || *nodes.at(start_pos)->name != "case" || (nodes.at(start_pos)->extra & 0x1)) return "";
 
   // skip case tag and case text
   int expr_pos = start_pos + 1;
