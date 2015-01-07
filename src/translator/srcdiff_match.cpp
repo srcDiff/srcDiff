@@ -329,11 +329,11 @@ offset_pair * srcdiff_match::match_differences() {
 }
 
 
-const char * find_attribute(const srcml_node * node, const char * attr_name) {
+boost::optional<std::string> find_attribute(const srcml_node * node, const char * attr_name) {
 
   srcml_attr * attr = node->properties;
 
-  for(; attr && strcmp((const char *)attr->name, attr_name) != 0; attr = attr->next)
+  for(; attr && attr->name != attr_name; attr = attr->next)
     ;
 
   if(attr)
@@ -351,26 +351,26 @@ const char * find_attribute(const srcml_node * node, const char * attr_name) {
 bool is_single_call_expr(const std::vector<srcml_node *> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || (strcmp((const char *)nodes.at(start_pos)->name, "expr_stmt") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "expr") != 0)) return false;
+    || (nodes.at(start_pos)->name != "expr_stmt" && nodes.at(start_pos)->name != "expr")) return false;
 
   if(nodes.at(start_pos)->extra & 0x1) return false;
 
-  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "expr_stmt") == 0)
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "expr_stmt")
     ++start_pos;
 
   if(nodes.at(start_pos)->extra & 0x1) return false;
 
-  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "expr") == 0)
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "expr")
     ++start_pos;
 
-  if(strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return false;
+  if(nodes.at(start_pos)->name != "call") return false;
 
   int open_call_count = (nodes.at(start_pos)->extra & 0x1) ? 0 : 1;
   ++start_pos;
 
   while(open_call_count) {
 
-    if(strcmp((const char *)nodes.at(start_pos)->name, "call") == 0) {
+    if(nodes.at(start_pos)->name == "call") {
 
       if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
         ++open_call_count;
@@ -383,7 +383,7 @@ bool is_single_call_expr(const std::vector<srcml_node *> & nodes, int start_pos)
 
   }
 
-  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "expr") == 0)
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "expr")
     return true;
 
   return false;
@@ -398,9 +398,9 @@ std::string get_name(const std::vector<srcml_node *> & nodes, int name_start_pos
 
   while(open_name_count) {
 
-    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_pos)->name, "argument_list") == 0) return name;
+    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(name_pos)->name == "argument_list") return name;
 
-    if(strcmp((const char *)nodes.at(name_pos)->name, "name") == 0) {
+    if(nodes.at(name_pos)->name == "name") {
 
       if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(name_pos)->extra & 0x1) == 0)
         ++open_name_count;
@@ -409,7 +409,7 @@ std::string get_name(const std::vector<srcml_node *> & nodes, int name_start_pos
 
     } else if(nodes.at(name_pos)->is_text() && !nodes.at(name_pos)->is_white_space()) {
 
-      name += (const char *)nodes.at(name_pos)->content;
+      name += nodes.at(name_pos)->content ? *nodes.at(name_pos)->content : "";
 
     }
 
@@ -424,23 +424,23 @@ std::string get_name(const std::vector<srcml_node *> & nodes, int name_start_pos
 void skip_type(const std::vector<srcml_node *> & nodes, int & start_pos) {
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") == 0)
+   && nodes.at(start_pos)->name == "decl_stmt")
     ++start_pos;
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && strcmp((const char *)nodes.at(start_pos)->name, "parameter") == 0)
+   && nodes.at(start_pos)->name == "parameter")
     ++start_pos;
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && strcmp((const char *)nodes.at(start_pos)->name, "param") == 0)
+   && nodes.at(start_pos)->name == "param")
     ++start_pos;
 
   if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && strcmp((const char *)nodes.at(start_pos)->name, "decl") == 0)
+   && nodes.at(start_pos)->name == "decl")
     ++start_pos;
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(start_pos)->name, "type") != 0)
+   || nodes.at(start_pos)->name != "type")
     return;
 
   int open_type_count = nodes.at(start_pos)->extra & 0x1 ? 0 : 1;
@@ -448,7 +448,7 @@ void skip_type(const std::vector<srcml_node *> & nodes, int & start_pos) {
 
   while(open_type_count) {
 
-    if(strcmp((const char *)nodes.at(start_pos)->name, "type") == 0) {
+    if(nodes.at(start_pos)->name == "type") {
 
       if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
         ++open_type_count;
@@ -465,19 +465,17 @@ void skip_type(const std::vector<srcml_node *> & nodes, int & start_pos) {
 
 void skip_specifiers(const std::vector<srcml_node *> & nodes, int & start_pos) {
 
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(start_pos)->name, "specifier") != 0)
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "specifier")
       return;
 
-  while(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-    && strcmp((const char *)nodes.at(start_pos)->name, "specifier") == 0) {
+  while(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "specifier") {
 
     int open_specifier_count = nodes.at(start_pos)->extra & 0x1 ? 0 : 1;
     ++start_pos;
 
     while(open_specifier_count) {
 
-      if(strcmp((const char *)nodes.at(start_pos)->name, "specifier") == 0) {
+      if(nodes.at(start_pos)->name == "specifier") {
 
         if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
           ++open_specifier_count;
@@ -496,16 +494,18 @@ void skip_specifiers(const std::vector<srcml_node *> & nodes, int & start_pos) {
 
 std::vector<std::string> get_call_name(const std::vector<srcml_node *> & nodes, int start_pos) {
 
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(start_pos)->name, "call") != 0) return std::vector<std::string>();
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "call")
+    return std::vector<std::string>();
+
   if(nodes.at(start_pos)->extra & 0x1) return std::vector<std::string>();
 
   int name_start_pos = start_pos + 1;
 
   while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0 && strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") != 0))
+   || (nodes.at(name_start_pos)->name != "name" && nodes.at(name_start_pos)->name != "argument_list"))
     ++name_start_pos;
 
-  if(strcmp((const char *)nodes.at(name_start_pos)->name, "argument_list") == 0) return std::vector<std::string>();
+  if(nodes.at(name_start_pos)->name == "argument_list") return std::vector<std::string>();
 
   std::vector<std::string> name_list;
 
@@ -515,9 +515,9 @@ std::vector<std::string> get_call_name(const std::vector<srcml_node *> & nodes, 
 
   while(open_name_count) {
 
-    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)nodes.at(name_pos)->name, "argument_list") == 0) return name_list;
+    if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(name_pos)->name == "argument_list") return name_list;
 
-    if(strcmp((const char *)nodes.at(name_pos)->name, "name") == 0) {
+    if(nodes.at(name_pos)->name == "name") {
 
       if(nodes.at(name_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(name_pos)->extra & 0x1) == 0) {
 
@@ -533,7 +533,7 @@ std::vector<std::string> get_call_name(const std::vector<srcml_node *> & nodes, 
 
     } else if(nodes.at(name_pos)->is_text() && !nodes.at(name_pos)->is_white_space()) {
 
-      name += (const char *)nodes.at(name_pos)->content;
+      name += nodes.at(name_pos)->content ? *nodes.at(name_pos)->content : 0;
 
     }
 
@@ -590,10 +590,10 @@ int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std
 std::string get_decl_name(const std::vector<srcml_node *> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || (strcmp((const char *)nodes.at(start_pos)->name, "decl_stmt") != 0
-      && strcmp((const char *)nodes.at(start_pos)->name, "parameter") != 0
-      && strcmp((const char *)nodes.at(start_pos)->name, "param") != 0
-      && strcmp((const char *)nodes.at(start_pos)->name, "decl") != 0)) return "";
+    || (nodes.at(start_pos)->name != "decl_stmt"
+      && nodes.at(start_pos)->name != "parameter"
+      && nodes.at(start_pos)->name != "param"
+      && nodes.at(start_pos)->name != "decl")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
   int name_start_pos = start_pos + 1;
@@ -601,13 +601,13 @@ std::string get_decl_name(const std::vector<srcml_node *> & nodes, int start_pos
   skip_type(nodes, name_start_pos);
 
   while(!(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-      && strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0)
+      && nodes.at(name_start_pos)->name == "name")
     && !(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-      && strcmp((const char *)nodes.at(name_start_pos)->name, "decl") == 0))
+      && nodes.at(name_start_pos)->name == "decl"))
     ++name_start_pos;
 
   if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-      && strcmp((const char *)nodes.at(name_start_pos)->name, "decl") == 0)
+      && nodes.at(name_start_pos)->name == "decl")
     return "";
 
   return get_name(nodes, name_start_pos);
@@ -619,7 +619,7 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
   int control_start_pos = start_pos;
 
   while(nodes.at(control_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(control_start_pos)->name, "control") != 0)
+   || nodes.at(control_start_pos)->name != "control")
     ++control_start_pos;
 
   if(nodes.at(control_start_pos)->extra & 0x1) return "";
@@ -629,7 +629,7 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
 
   while(open_control_count) {
 
-    if(strcmp((const char *)nodes.at(control_end_pos)->name, "control") == 0) {
+    if(nodes.at(control_end_pos)->name == "control") {
 
       if(nodes.at(control_end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(control_end_pos)->extra & 0x1) == 0)
         ++open_control_count;
@@ -646,7 +646,7 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
 
   node_sets::const_iterator citr;
   for(citr = control_sets.begin(); citr != control_sets.end(); ++citr)
-    if(strcmp((const char *)nodes.at(citr->front())->name, "condition") == 0)
+    if(nodes.at(citr->front())->name == "condition")
       break;
 
   if(citr == control_sets.end()) return "";
@@ -654,7 +654,7 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
   std::string condition = "";
   for(node_set::const_iterator node_itr = citr->begin(); node_itr != citr->end(); ++node_itr)
     if(nodes.at(*node_itr)->is_text())
-      condition += (const char *)nodes.at(*node_itr)->content;
+      condition += nodes.at(*node_itr)->content ? *nodes.at(*node_itr)->content : "";
 
   if(condition.size() > 0 && *--condition.end() == ';')
     condition.erase(--condition.end());
@@ -665,14 +665,13 @@ std::string get_for_condition(const std::vector<srcml_node *> & nodes, int start
 
 std::string get_condition(const std::vector<srcml_node *> & nodes, int start_pos) {
 
-  if(strcmp((const char *)nodes.at(start_pos)->name, "for") == 0
-    || strcmp((const char *)nodes.at(start_pos)->name, "foreach") == 0)
+  if(nodes.at(start_pos)->name == "for" || nodes.at(start_pos)->name == "foreach")
     return get_for_condition(nodes, start_pos);
 
   int condition_start_pos = start_pos;
 
   while(nodes.at(condition_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(condition_start_pos)->name, "condition") != 0)
+    || nodes.at(condition_start_pos)->name != "condition")
     ++condition_start_pos;
 
   std::string condition = "";
@@ -681,7 +680,7 @@ std::string get_condition(const std::vector<srcml_node *> & nodes, int start_pos
 
   while(open_condition_count) {
 
-    if(strcmp((const char *)nodes.at(condition_pos)->name, "condition") == 0) {
+    if(nodes.at(condition_pos)->name == "condition") {
 
       if(nodes.at(condition_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(condition_pos)->extra & 0x1) == 0)
         ++open_condition_count;
@@ -690,7 +689,7 @@ std::string get_condition(const std::vector<srcml_node *> & nodes, int start_pos
 
     } else if(nodes.at(condition_pos)->is_text() && !nodes.at(condition_pos)->is_white_space()) {
 
-      condition += (const char *)nodes.at(condition_pos)->content;
+      condition += nodes.at(condition_pos)->content ? *nodes.at(condition_pos)->content : "";
 
     }
 
@@ -711,20 +710,21 @@ std::string get_condition(const std::vector<srcml_node *> & nodes, int start_pos
 std::string get_function_type_name(const std::vector<srcml_node *> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || (strcmp((const char *)nodes.at(start_pos)->name, "function") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "function_decl") != 0
-      && strcmp((const char *)nodes.at(start_pos)->name, "constructor") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "constructor_decl") != 0
-      && strcmp((const char *)nodes.at(start_pos)->name, "destructor") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "destructor_decl")) != 0) return "";
+    || (nodes.at(start_pos)->name != "function" && nodes.at(start_pos)->name != "function_decl"
+      && nodes.at(start_pos)->name != "constructor" && nodes.at(start_pos)->name != "constructor_decl"
+      && nodes.at(start_pos)->name != "destructor" && nodes.at(start_pos)->name != "destructor_decl")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
   int name_start_pos = start_pos + 1;
 
-  if(strcmp((const char *)nodes.at(start_pos)->name, "function") != 0 || strcmp((const char *)nodes.at(start_pos)->name, "function_decl") != 0)
+  /** @todo this is wrong */
+  if(nodes.at(name_start_pos)->name != "function" || nodes.at(name_start_pos)->name != "function_decl")
     skip_type(nodes, name_start_pos);
   else
     skip_specifiers(nodes, ++name_start_pos);
 
   while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0)
+   || nodes.at(name_start_pos)->name != "name")
     ++name_start_pos;
 
   return get_name(nodes, name_start_pos);
@@ -734,18 +734,17 @@ std::string get_function_type_name(const std::vector<srcml_node *> & nodes, int 
 std::string get_class_type_name(const std::vector<srcml_node *> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || (strcmp((const char *)nodes.at(start_pos)->name, "class") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "struct") != 0
-      && strcmp((const char *)nodes.at(start_pos)->name, "union") != 0 && strcmp((const char *)nodes.at(start_pos)->name, "enum") != 0)) return "";
+    || (nodes.at(start_pos)->name != "class" && nodes.at(start_pos)->name != "struct"
+      && nodes.at(start_pos)->name != "union" && nodes.at(start_pos)->name == "enum")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
   int name_start_pos = start_pos + 1;
 
   while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || (strcmp((const char *)nodes.at(name_start_pos)->name, "name") != 0
-    && strcmp((const char *)nodes.at(name_start_pos)->name, "block") != 0))
+   || (nodes.at(name_start_pos)->name != "name" && nodes.at(name_start_pos)->name != "block"))
     ++name_start_pos;
 
-  if(strcmp((const char *)nodes.at(name_start_pos)->name, "name") == 0)
+  if(nodes.at(name_start_pos)->name == "name")
     return get_name(nodes, name_start_pos);
   else
     return "";
@@ -758,18 +757,18 @@ bool conditional_has_block(const std::vector<srcml_node *> & nodes, const node_s
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(strcmp((const char *)nodes.at(itr->at(0))->name, "block") == 0 && find_attribute(nodes.at(itr->at(0)), "type") == 0) {
+    if(nodes.at(itr->at(0))->name == "block" && find_attribute(nodes.at(itr->at(0)), "type") == 0) {
 
       return true;
 
-    } else if(strcmp((const char *)nodes.at(itr->at(0))->name, "then") == 0) {
+    } else if(nodes.at(itr->at(0))->name == "then") {
 
       int next_element_pos = itr->at(0) + 1;
       while(nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         ++next_element_pos;
 
       if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-        && strcmp((const char *)nodes.at(next_element_pos)->name, "block") == 0
+        && nodes.at(next_element_pos)->name == "block"
         && find_attribute(nodes.at((next_element_pos)), "type") == 0)
         return true;
       else
@@ -789,7 +788,7 @@ bool if_has_else(const std::vector<srcml_node *> & nodes, const node_set & set) 
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(strcmp((const char *)nodes.at(itr->at(0))->name, "else") == 0 || strcmp((const char *)nodes.at(itr->at(0))->name, "elseif") == 0) {
+    if(nodes.at(itr->at(0))->name == "else" || nodes.at(itr->at(0))->name == "elseif") {
 
       return true;
 
@@ -811,7 +810,7 @@ bool if_then_equal(const std::vector<srcml_node *> & nodes_old, const node_set &
   node_sets::iterator then_old;
   for(then_old = node_sets_old.begin(); then_old != node_sets_old.end(); ++then_old) {
 
-    if(strcmp((const char *)nodes_old.at(then_old->at(0))->name, "then") == 0) {
+    if(nodes_old.at(then_old->at(0))->name == "then") {
 
       break;
 
@@ -822,7 +821,7 @@ bool if_then_equal(const std::vector<srcml_node *> & nodes_old, const node_set &
   node_sets::iterator then_new;
   for(then_new = node_sets_new.begin(); then_new != node_sets_new.end(); ++then_new) {
 
-    if(strcmp((const char *)nodes_new.at(then_new->at(0))->name, "then") == 0) {
+    if(nodes_new.at(then_new->at(0))->name == "then") {
 
       break;
 
@@ -845,12 +844,12 @@ bool for_control_matches(const std::vector<srcml_node *> & nodes_old, const node
 
   node_sets::size_type control_pos_old;
   for(control_pos_old = 0; control_pos_old < node_sets_old.size(); ++control_pos_old)
-    if(strcmp((const char *)nodes_old.at(node_sets_old.at(control_pos_old).front())->name, "control") == 0)
+    if(nodes_old.at(node_sets_old.at(control_pos_old).front())->name == "control")
       break;
 
   node_sets::size_type control_pos_new;
   for(control_pos_new = 0; control_pos_new < node_sets_new.size(); ++control_pos_new)
-    if(strcmp((const char *)nodes_new.at(node_sets_new.at(control_pos_new).front())->name, "control") == 0)
+    if(nodes_new.at(node_sets_new.at(control_pos_new).front())->name == "control")
       break;
 
   bool matches = control_pos_old != node_sets_old.size() && control_pos_new != node_sets_new.size() 
@@ -863,21 +862,21 @@ bool for_control_matches(const std::vector<srcml_node *> & nodes_old, const node
 std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-    || strcmp((const char *)nodes.at(start_pos)->name, "case") != 0 || (nodes.at(start_pos)->extra & 0x1)) return "";
+    || nodes.at(start_pos)->name != "case" || (nodes.at(start_pos)->extra & 0x1)) return "";
 
   // skip case tag and case text
   int expr_pos = start_pos + 1;
 
-  if((nodes.at(expr_pos)->is_text() && index(nodes.at(expr_pos)->content, ':'))
-     || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "case") == 0)) return "";
+  if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
+     || (nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == "case")) return "";
 
-  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || strcmp((const char *)nodes.at(expr_pos)->name, "expr") != 0) 
-    && !(nodes.at(expr_pos)->is_text() && index(nodes.at(expr_pos)->content, ':'))
-    && !(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "case") == 0))
+  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(expr_pos)->name != "expr")
+    && !(nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
+    && !(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == "case"))
     ++expr_pos;
 
-  if((nodes.at(expr_pos)->is_text() && index(nodes.at(expr_pos)->content, ':'))
-    || (nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && strcmp((const char *)nodes.at(start_pos)->name, "case") == 0)) return "";
+  if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
+    || (nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == "case")) return "";
 
   std::string case_expr = "";
 
@@ -886,7 +885,7 @@ std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos
 
   while(open_expr_count) {
 
-    if(strcmp((const char *)nodes.at(expr_pos)->name, "expr") == 0) {
+    if(nodes.at(expr_pos)->name == "expr") {
 
       if(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(expr_pos)->extra & 0x1) == 0)
         ++open_expr_count;
@@ -895,7 +894,7 @@ std::string get_case_expr(const std::vector<srcml_node *> & nodes, int start_pos
 
     } else if(nodes.at(expr_pos)->is_text() && !nodes.at(expr_pos)->is_white_space()) {
 
-      case_expr += (const char *)nodes.at(expr_pos)->content;
+      case_expr += nodes.at(expr_pos)->content ? *nodes.at(expr_pos)->content : "";
 
     }
 
@@ -934,15 +933,17 @@ static const interchange_list interchange_lists[] = {
 
 };
 
-bool srcdiff_match::is_interchangeable_match(const std::string & old_tag, const std::string & new_tag) {
+bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> & old_tag, const boost::optional<std::string> & new_tag) {
+
+  if(!old_tag || !new_tag) return false;
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
-    if(interchange_lists[list_pos].name == old_tag) {
+    if(interchange_lists[list_pos].name == *old_tag) {
 
       for(size_t pos = 0; interchange_lists[list_pos].list[pos]; ++pos) {
 
-        if(interchange_lists[list_pos].list[pos] == new_tag)
+        if(interchange_lists[list_pos].list[pos] == *new_tag)
           return true;
 
       }
@@ -1026,11 +1027,11 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
   if(is_single_call_expr(nodes_old, old_pos) && is_single_call_expr(nodes_new, new_pos)) {
 
     while(nodes_old.at(old_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || strcmp((const char *)nodes_old.at(old_pos)->name, "call") != 0)
+      || nodes_old.at(old_pos)->name != "call")
       ++old_pos;
 
     while(nodes_new.at(new_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || strcmp((const char *)nodes_new.at(new_pos)->name, "call") != 0)
+      || nodes_new.at(new_pos)->name != "call")
       ++new_pos;
 
     std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
@@ -1182,22 +1183,21 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   node_sets child_node_sets_old = node_sets(nodes_old, set_old.at(1), set_old.back());
   node_sets child_node_sets_new = node_sets(nodes_new, set_new.at(1), set_new.back());    
 
-  if(strcmp(nodes_old.at(child_node_sets_old.back().at(0))->name, "then") == 0) {
+  if(nodes_old.at(child_node_sets_old.back().at(0))->name == "then") {
 
     node_sets temp = node_sets(nodes_old, child_node_sets_old.back().at(1), child_node_sets_old.back().back());
     child_node_sets_old = temp;
 
   }
 
-  if(strcmp(nodes_new.at(child_node_sets_new.back().at(0))->name, "then") == 0) {
+  if(nodes_new.at(child_node_sets_new.back().at(0))->name == "then") {
 
     node_sets temp = node_sets(nodes_new, child_node_sets_new.back().at(1), child_node_sets_new.back().back());
     child_node_sets_new = temp;
 
   }
 
-  if(strcmp(nodes_old.at(child_node_sets_old.back().at(0))->name, "block") == 0
-    && strcmp(nodes_new.at(child_node_sets_new.back().at(0))->name, "block") == 0) {
+  if(nodes_old.at(child_node_sets_old.back().at(0))->name == "block" && nodes_new.at(child_node_sets_new.back().at(0))->name == "block") {
 
     srcdiff_measure measure(nodes_old, nodes_new, child_node_sets_old.back(), child_node_sets_new.back());
     measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_old, children_length_new);

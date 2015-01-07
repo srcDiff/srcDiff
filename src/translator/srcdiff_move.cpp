@@ -9,7 +9,7 @@
 
 int move_id = 0;
 
-static srcml_attr move_attribute = { 0, "move", 0 };
+static srcml_attr move_attribute = { 0, std::string("move"), 0 };
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;

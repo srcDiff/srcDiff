@@ -49,22 +49,25 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
 
   for(unsigned int i = 0; i < olength; ++i)
     if(nodes_old.at(set_old.at(i))->is_text() && !nodes_old.at(set_old.at(i))->is_white_space()
-      && strcmp((const char *)nodes_old.at(set_old.at(i))->content, "(") != 0
-      && strcmp((const char *)nodes_old.at(set_old.at(i))->content, ")") != 0
-      && strcmp((const char *)nodes_old.at(set_old.at(i))->content, ";") != 0
-      && strcmp((const char *)nodes_old.at(set_old.at(i))->content, ",") != 0
-      && strcmp((const char *)nodes_old.at(set_old.at(i))->name, "operator") != 0)
+      && nodes_old.at(set_old.at(i))->content
+      && *nodes_old.at(set_old.at(i))->content != "("
+      && *nodes_old.at(set_old.at(i))->content != ")"
+      && *nodes_old.at(set_old.at(i))->content != ";"
+      && *nodes_old.at(set_old.at(i))->content != ",")
+/** @todo this does not make sense may need to correct paper*/
+//      && strcmp((const char *)nodes_old.at(set_old.at(i))->name, "operator") != 0)
       set_old_text.push_back(set_old.at(i));
 
   node_set set_new_text(nodes_new);
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(nodes_new.at(set_new.at(i))->is_text() && !nodes_new.at(set_new.at(i))->is_white_space()
-      && strcmp((const char *)nodes_new.at(set_new.at(i))->content, "(") != 0
-      && strcmp((const char *)nodes_new.at(set_new.at(i))->content, ")") != 0
-      && strcmp((const char *)nodes_new.at(set_new.at(i))->content, ";") != 0
-      && strcmp((const char *)nodes_new.at(set_new.at(i))->content, ",") != 0
-      && strcmp((const char *)nodes_new.at(set_new.at(i))->name, "operator") != 0)
+      && nodes_new.at(set_new.at(i))->content
+      && *nodes_new.at(set_new.at(i))->content != "("
+      && *nodes_new.at(set_new.at(i))->content != ")"
+      && *nodes_new.at(set_new.at(i))->content != ";"
+      && *nodes_new.at(set_new.at(i))->content != ",")
+//      && strcmp((const char *)nodes_new.at(set_new.at(i))->name, "operator") != 0)
       set_new_text.push_back(set_new.at(i));
 
   text_old_length = set_old_text.size();
@@ -93,9 +96,8 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
   if((xmlReaderTypes)nodes_old.at(set_old.at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match((const char *)nodes_old.at(set_old.at(0))->name, (const char *)nodes_new.at(set_new.at(0))->name)
-        && (strcmp((const char *)nodes_old.at(set_old.at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(set_new.at(0))->name, "block") != 0))) {
+        && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
+        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
 
     return MAX_INT;
 
@@ -149,9 +151,8 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
   if((xmlReaderTypes)nodes_old.at(set_old.at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match((const char *)nodes_old.at(set_old.at(0))->name, (const char *)nodes_new.at(set_new.at(0))->name)
-        && (strcmp((const char *)nodes_old.at(set_old.at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(set_new.at(0))->name, "block") != 0))) {
+        && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
+        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
 
     similarity = MAX_INT;
     difference = MAX_INT;
@@ -202,8 +203,8 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
 static bool is_significant(const srcml_node * node, const void * context) {
 
-  return !node->is_text() && strcmp(node->name, "operator") != 0 
-      && strcmp(node->name, "literal") != 0 && strcmp(node->name, "modifier") != 0;
+  return !node->is_text() && node->name != "operator"
+      && node->name != "literal" && node->name != "modifier";
 
 }
 
@@ -211,15 +212,11 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
   diff_nodes dnodes = { nodes_old, nodes_new };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new.at(0))->name);
-
   if((xmlReaderTypes)nodes_old.at(set_old.at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match((const char *)nodes_old.at(set_old.at(0))->name, (const char *)nodes_new.at(set_new.at(0))->name)
-        && (strcmp((const char *)nodes_old.at(set_old.at(0))->name, "block") != 0
-            || strcmp((const char *)nodes_new.at(set_new.at(0))->name, "block") != 0))) {
+        && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
+        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
 
     similarity = 0;
     difference = MAX_INT;

@@ -32,8 +32,9 @@ namespace srcdiff_compare {
     const srcml_attr * attr_new = attr2;
 
     for(; attr_old && attr_new
-          && strcmp((const char *)attr_old->name, (const char *)attr_new->name) == 0
-          && strcmp((const char *)attr_old->value, (const char *)attr_new->value) == 0;
+          && attr_old->name == attr_new->name
+          && (attr_old->value == attr_new->value)
+          && (!attr_old->value || *attr_old->value == *attr_new->value);
         attr_old = attr_old->next, attr_new = attr_new->next)
       ;
 
@@ -50,23 +51,26 @@ namespace srcdiff_compare {
     if (node1 == node2)
       return 0;
 
-    if(node1->type != node2->type || strcmp((const char *)node1->name, (const char *)node2->name) != 0)
+    if(node1->type != node2->type)
+      return 1;
+
+    if(node1->name != node2->name)
       return 1;
 
     // end if text node contents differ
     if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
-      return strcmp((const char *)node1->content, (const char *)node2->content);
+      return node1->content == node2->content && (!node1->content || *node1->content == *node2->content) ? 0 : 1;
 
     if(node1->is_empty != node2->is_empty)
       return 1;
 
-    if(!(node1->ns->prefix == 0 && node2->ns->prefix == 0)) {
+    if(node1->ns->prefix || node2->ns->prefix) {
 
-      if(node1->ns->prefix == 0)
+      if(!node1->ns->prefix)
         return 1;
-      else if(node2->ns->prefix == 0)
+      else if(!node2->ns->prefix)
         return 1;
-      else if(strcmp((const char *)node1->ns->prefix, (const char *)node2->ns->prefix) != 0)
+      else if(*node1->ns->prefix != *node2->ns->prefix) 
       return 1;
 
     }
@@ -91,11 +95,11 @@ namespace srcdiff_compare {
 
         std::string text1 = "";
         for(; i < node_set1->size() && dnodes.nodes_old.at(node_set1->at(i))->is_text(); ++i)
-          text1 += (const char *)dnodes.nodes_old.at(node_set1->at(i))->content;
+          text1 += dnodes.nodes_old.at(node_set1->at(i))->content ? *dnodes.nodes_old.at(node_set1->at(i))->content : "";
 
         std::string text2 = "";
         for(; j < node_set2->size() && dnodes.nodes_new.at(node_set2->at(j))->is_text(); ++j)
-          text2 += (const char *)dnodes.nodes_new.at(node_set2->at(j))->content;
+          text2 += dnodes.nodes_new.at(node_set2->at(j))->content ? *dnodes.nodes_new.at(node_set2->at(j))->content : "";
 
         if(text1 != text2)
           return 1;

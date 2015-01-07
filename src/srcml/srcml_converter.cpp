@@ -68,8 +68,8 @@ srcml_node * split_text(const char * characters_start, const char * characters_e
 
   srcml_node * text = new srcml_node;
   text->type = (xmlElementType)XML_READER_TYPE_TEXT;
-  text->name = "text";
-  text->content = 0;
+  text->name = std::string("text");
+  text->content = boost::optional<std::string>();
 
   if(characters_start != characters_end) {
 
@@ -79,7 +79,7 @@ srcml_node * split_text(const char * characters_start, const char * characters_e
   text->ns = 0;
   text->properties = 0;
   text->is_empty = true;
-  text->parent = 0;
+  text->parent = boost::optional<std::string>();
   text->free = true;
   text->move = 0;
   text->nest = 0;
@@ -171,11 +171,11 @@ static bool is_atomic_srcml(std::vector<srcml_node *> & nodes, unsigned start) {
   if((xmlReaderTypes)nodes.at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
     return false;
 
-  if(strcmp((const char *)nodes.at(start)->name, (const char *)nodes.at(start + 2)->name) != 0)
+  if(nodes.at(start)->name != nodes.at(start + 2)->name)
     return false;
 
   for(int i = 0; atomic[i]; ++i)
-    if(strcmp((const char *)nodes.at(start)->name, atomic[i]) == 0)
+    if(nodes.at(start)->name == atomic[i])
       return true;
 
   return false;
@@ -252,14 +252,14 @@ std::vector<srcml_node *> srcml_converter::collect_nodes(xmlTextReaderPtr reader
       mutex.unlock();
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
-        node->parent = strdup(element_stack.back().c_str());
+        node->parent = element_stack.back();
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (node->extra & 0x1) == 0)
         element_stack.push_back(node->name);
       else if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         element_stack.pop_back();
 
-      if(strcmp((const char *)node->name, "unit") == 0) return nodes;;
+      if(node->name == "unit") return nodes;
 
       // save non-text node and get next node
       nodes.push_back(node);

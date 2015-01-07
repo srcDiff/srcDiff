@@ -139,11 +139,11 @@ void srcdiff_common::markup_common() {
       // collect all adjacent text nodes character arrays and input difference
       std::string text_old = "";
       for(; i < oend && rbuf_old->nodes.at(i)->is_text(); ++i)
-        text_old += (const char *)rbuf_old->nodes.at(i)->content;
+        text_old += rbuf_old->nodes.at(i)->content ? *rbuf_old->nodes.at(i)->content : "";
 
       std::string text_new = "";
       for(; j < nend && rbuf_new->nodes.at(j)->is_text(); ++j)
-        text_new += (const char *)rbuf_new->nodes.at(j)->content;
+        text_new += rbuf_new->nodes.at(j)->content ? *rbuf_new->nodes.at(j)->content : "";
 
       --i;
       --j;
@@ -236,8 +236,8 @@ void srcdiff_common::markup_common() {
 
     } else {
 
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_old->nodes.at(i)->name);
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)rbuf_new->nodes.at(j)->name);
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->nodes.at(i)->name.c_str());
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new->nodes.at(j)->name.c_str());
 
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
       fprintf(stderr, "ERROR\n");
