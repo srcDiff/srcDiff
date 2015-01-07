@@ -2,7 +2,6 @@
 
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_compare.hpp>
-#include <srcdiff_constants.hpp>
 
 #include <string>
 

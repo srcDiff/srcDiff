@@ -3,7 +3,6 @@
 #include <srcdiff_common.hpp>
 #include <srcdiff_compare.hpp>
 #include <shortest_edit_script.h>
-#include <srcdiff_constants.hpp>
 
 const boost::optional<std::string> srcdiff_whitespace::whitespace("whitespace");
 
