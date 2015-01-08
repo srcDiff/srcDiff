@@ -12,8 +12,8 @@
 
 #include <cstring>
 
-const char * const DELETE_CODE = "\x1b[48;5;(210);1m";
-const char * const INSERT_CODE = "\x1b[48;5;(120);1m";
+const char * const DELETE_CODE = "\x1b[9;48;5;210;1m";
+const char * const INSERT_CODE = "\x1b[48;5;120;1m";
 
 const char * const COMMON_CODE = "\x1b[0m";
 
