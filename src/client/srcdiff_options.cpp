@@ -7,11 +7,13 @@
 
 srcdiff_options options;
 
-boost::program_options::options_description general("General Options");
-boost::program_options::options_description input_file_op("Input file Option");
-boost::program_options::options_description input_ops("Input Options");
-boost::program_options::options_description srcml_ops("srcml Options");
-boost::program_options::options_description srcdiff_ops("srcdiff Options");
+const unsigned LINE_LENGTH = 150;
+
+boost::program_options::options_description general("General Options", LINE_LENGTH);
+boost::program_options::options_description input_file_op("Input file Option", LINE_LENGTH);
+boost::program_options::options_description input_ops("Input Options", LINE_LENGTH);
+boost::program_options::options_description srcml_ops("srcml Options", LINE_LENGTH);
+boost::program_options::options_description srcdiff_ops("srcdiff Options", LINE_LENGTH);
 boost::program_options::options_description all("All options");
 
 boost::program_options::positional_options_description input_file;
