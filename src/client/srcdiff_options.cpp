@@ -296,11 +296,11 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   input_ops.add_options()
     ("input", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Set the input to be a list of file pairs from the provided file")
-    ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file")
+    ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file.  Pairs are of the format: original|modified")
 
 #if SVN
-    ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository")
-    ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision") // this may have been where needed revision
+    ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository. Example: --svn http://example.org@1-2")
+    ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision: Treat revisions supplied as as range and srcdiff each version with subsequent") // this may have been where needed revision
 #endif
 
   ;
@@ -309,31 +309,30 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("archive,n", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_ARCHIVE>), "Output srcDiff as an archive")
     ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
     ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
-    ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input programming source language")
+    ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input source programming language")
     ("register-ext", boost::program_options::value<std::string>()->notifier(option_srcml_field<REGISTER_EXT>), "Register an extension to language pair to be used during parsing")
     ("directory,d", boost::program_options::value<std::string>()->notifier(option_srcml_field<DIRECTORY>), "Set the root directory attribute")
     ("filename,f", boost::program_options::value<std::string>()->notifier(option_srcml_field<FILENAME>), "Set the root filename attribute")
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
-    ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set default namespace")
+    ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set the prefix associationed with a namespace or register a new one. of the form --xmlns:prefix=url or --xmlns=url for default prefix.")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
-    ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Tabstop size")
+    ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Set the tabstop size")
     ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_NAMESPACE_DECL>), "Do not output the xml declaration")
     ("no-namespace-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output any namespace declarations")
-    ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents")
+    ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents (default)")
     ("cpp-text-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_TEXT_ELSE>), "Do not markup #else contents")
     ("cpp-markup-if0", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_MARKUP_IF0>), "Markup up #if 0 contents")
-    ("cpp-text-if0", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_MARKUP_IF0>), "Do not markup #if 0 contents")
+    ("cpp-text-if0", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_MARKUP_IF0>), "Do not markup #if 0 contents (default)")
   ;
 
   srcdiff_ops.add_options()
     ("method,m",  boost::program_options::value<std::string>()->notifier(option_method)->default_value("collect,group-diff"), "Set srcdiff parsing method")
-    ("recursive", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_RECURSIVE>), "I need to double check this one, but maybe recursive svn read")
     ("visualization", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VISUALIZE>), "Output a visualization instead of xml")
-    ("same", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SAME>)->default_value(true), "Output files that are the same")
-    ("pure", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_PURE>)->default_value(true), "Output files that are the purely added/deleted")
-    ("change", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_CHANGE>)->default_value(true), "Output files that where changed")
+    ("same", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SAME>)->default_value(true), "Output files that are the same (default)")
+    ("pure", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_PURE>)->default_value(true), "Output files that are added/deleted (default)")
+    ("change", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_CHANGE>)->default_value(true), "Output files that where changed (default)")
     ("no-same", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SAME>), "Do not output files that are the same")
-    ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are purely added/deleted")
+    ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are added/deleted")
     ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
     ("bash", boost::program_options::value<int>()->implicit_value(3)->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text")
