@@ -104,7 +104,7 @@ namespace srcdiff_compare {
     std::string & string1 = *(std::string *)s1;
     std::string & string2 = *(std::string *)s2;
 
-    return strcmp(string1.c_str(), string2.c_str());
+    return string1 != string2;
 
   }
 
