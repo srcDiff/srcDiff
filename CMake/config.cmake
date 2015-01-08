@@ -50,7 +50,7 @@ find_package(LibXml2 REQUIRED)
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
 # Set libsrcdiff libraries
-set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} CACHE INTERNAL "libsrcdiff Link Libraries")
+set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} crypto dl CACHE INTERNAL "libsrcdiff Link Libraries")
 
 # Set libsrcdiff libraries
 set(SRCDIFF_LIBRARIES crypto CACHE INTERNAL "srcdiff Link Libraries")
