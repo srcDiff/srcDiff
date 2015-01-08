@@ -8,6 +8,7 @@
 srcdiff_options options;
 
 boost::program_options::options_description general("General Options");
+boost::program_options::options_description input_file_op("Input file Option");
 boost::program_options::options_description input_ops("Input Options");
 boost::program_options::options_description srcml_ops("srcml Options");
 boost::program_options::options_description srcdiff_ops("srcdiff Options");
@@ -294,8 +295,11 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("quiet,q", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_QUIET>), "Silence messaging")
   ;
 
-  input_ops.add_options()
+  input_file_op.add_options()
     ("input", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Set the input to be a list of file pairs from the provided file")
+  ;
+
+  input_ops.add_options()
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file.  Pairs are of the format: original|modified")
 
 #if SVN
@@ -339,7 +343,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   ;
 
   input_file.add("input", -1);
-  all.add(general).add(input_ops).add(srcml_ops).add(srcdiff_ops);
+  all.add(general).add(input_file_op).add(input_ops).add(srcml_ops).add(srcdiff_ops);
 
   try {
 
