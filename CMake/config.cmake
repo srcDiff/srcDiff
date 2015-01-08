@@ -55,6 +55,9 @@ set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRAR
 # Set libsrcdiff libraries
 set(SRCDIFF_LIBRARIES crypto CACHE INTERNAL "srcdiff Link Libraries")
 
+# Do not use rpath on OSX
+set(CMAKE_MACOSX_RPATH OFF)
+
 if(NOT WIN32 AND NOT APPLE)
 list(APPEND SRCDIFF_LIBRARIES rt)
 endif()
