@@ -1,20 +1,13 @@
-/*
-  svn_t.cpp
-
-  Testing as subversion.
-
-  Michael J. Decker
-  mdecker6@kent.edu
-*/
-
 #include <srcdiff_input_source_local.hpp>
 
 #include <srcml.h>
 
 #include <srcdiff_input_filename.hpp>
 
-#include <dirent.h>
 #include <URIStream.hpp>
+
+#include <cstring>
+#include <dirent.h>
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
 

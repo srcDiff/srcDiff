@@ -20,6 +20,8 @@
 #include <algorithm>
 #include <fstream>
 
+#include <cstring>
+  
 #include <URIStream.hpp>
 
 #include <svn_version.h>
