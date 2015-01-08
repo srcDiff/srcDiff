@@ -18,7 +18,7 @@ protected:
 
     int operation;
 
-    std::vector<const std::shared_ptr<srcml_node>> open_tags;
+    srcml_nodes open_tags;
 
   };
 
