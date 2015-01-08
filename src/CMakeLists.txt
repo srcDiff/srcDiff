@@ -38,7 +38,7 @@ endif()
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
-	if(NOT SVN)
+	if(NOT SVN_ENABLED)
     	add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization> client/URIStream.cpp)
 	else()
 	    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization> client/URIStream.cpp client/srcdiff_input_source_svn.cpp)
