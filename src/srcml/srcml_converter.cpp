@@ -73,8 +73,9 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start, const char
 
   if(characters_start != characters_end) {
 
-    const char * content = strndup((const char *)characters_start, characters_end  - characters_start);
-    text->content = content;
+    text->content = std::string();
+    text->content->append((const char *)characters_start, characters_end  - characters_start);
+
   }
 
   text->is_empty = true;
