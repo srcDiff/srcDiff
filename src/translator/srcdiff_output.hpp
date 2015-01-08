@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_OUTPUT_HPP
 #define INCLUDED_SRCDIFF_OUTPUT_HPP
 
-#include <srcml_node.hpp>
+#include <srcml_nodes.hpp>
 #include <LineDiffRange.hpp>
 #include <ColorDiff.hpp>
 #include <bash_view.hpp>
@@ -47,7 +47,7 @@ protected:
     int stream_source;
     unsigned int last_output;
 
-    std::vector<std::shared_ptr<srcml_node>> nodes;
+    srcml_nodes nodes;
 
     std::vector<diff_set *> open_diff;
 
@@ -124,10 +124,10 @@ public:
   virtual void reset();
   virtual void close();
 
-  virtual const std::vector<std::shared_ptr<srcml_node>> & get_nodes_old() const;
-  virtual const std::vector<std::shared_ptr<srcml_node>> & get_nodes_new() const;
-  virtual std::vector<std::shared_ptr<srcml_node>> & get_nodes_old();
-  virtual std::vector<std::shared_ptr<srcml_node>> & get_nodes_new();
+  virtual const srcml_nodes & get_nodes_old() const;
+  virtual const srcml_nodes & get_nodes_new() const;
+  virtual srcml_nodes & get_nodes_old();
+  virtual srcml_nodes & get_nodes_new();
   unsigned int last_output_old() const;
   unsigned int last_output_new() const;
   virtual unsigned int & last_output_old();

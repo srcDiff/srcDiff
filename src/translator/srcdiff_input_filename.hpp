@@ -14,7 +14,7 @@ public:
 	srcdiff_input_filename(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options);
 	~srcdiff_input_filename();
 
-	virtual std::vector<std::shared_ptr<srcml_node>> input_nodes(int stream_source) const;
+	virtual srcml_nodes input_nodes(int stream_source) const;
 
 };
 

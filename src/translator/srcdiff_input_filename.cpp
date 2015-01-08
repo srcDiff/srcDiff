@@ -23,7 +23,7 @@ static int file_close(void * context) {
 
  }
 
-std::vector<std::shared_ptr<srcml_node>> srcdiff_input_filename::input_nodes(int stream_source) const {
+srcml_nodes srcdiff_input_filename::input_nodes(int stream_source) const {
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 

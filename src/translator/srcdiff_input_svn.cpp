@@ -12,7 +12,7 @@ srcdiff_input_svn::srcdiff_input_svn(srcml_archive * archive, const boost::optio
 
 srcdiff_input_svn::~srcdiff_input_svn() {}
 
-std::vector<std::shared_ptr<srcml_node>> srcdiff_input_svn::input_nodes(int stream_source) const {
+srcml_nodes srcdiff_input_svn::input_nodes(int stream_source) const {
 
  if(!input_path || input_path->empty()) throw no_file_exception();
 

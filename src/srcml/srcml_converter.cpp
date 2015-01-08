@@ -127,7 +127,7 @@ void srcml_converter::convert(const std::string & language, void * context,
 
 }
 
-std::vector<std::shared_ptr<srcml_node>> srcml_converter::create_nodes() const {
+srcml_nodes srcml_converter::create_nodes() const {
   
   xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
 
@@ -140,7 +140,7 @@ std::vector<std::shared_ptr<srcml_node>> srcml_converter::create_nodes() const {
   if(xmlTextReaderRead(reader) == 0) throw std::string("Error reading srcML.");
 
   // collect if non empty files
-  std::vector<std::shared_ptr<srcml_node>> nodes = collect_nodes(reader);
+  srcml_nodes nodes = collect_nodes(reader);
 
   xmlFreeTextReader(reader);
 
@@ -156,7 +156,7 @@ static bool is_separate_token(const char character) {
 }
 
 // check if node is a indivisable group of three (atomic)
-static bool is_atomic_srcml(std::vector<std::shared_ptr<srcml_node>> & nodes, unsigned start) {
+static bool is_atomic_srcml(srcml_nodes & nodes, unsigned start) {
 
   static const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
 
@@ -181,9 +181,9 @@ static bool is_atomic_srcml(std::vector<std::shared_ptr<srcml_node>> & nodes, un
 
 
 // collect the differences
-std::vector<std::shared_ptr<srcml_node>> srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
+srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
-  std::vector<std::shared_ptr<srcml_node>> nodes;
+  srcml_nodes nodes;
 
   std::vector<std::string> element_stack;
   element_stack.push_back("unit");

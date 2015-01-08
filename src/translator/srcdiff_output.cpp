@@ -179,25 +179,25 @@ void srcdiff_output::close() {
 
 }
 
-const std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_old() const {
+const srcml_nodes & srcdiff_output::get_nodes_old() const {
 
   return rbuf_old->nodes;
 
 }
 
-const std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_new() const {
+const srcml_nodes & srcdiff_output::get_nodes_new() const {
 
   return rbuf_new->nodes;
 
 }
 
-std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_old() {
+srcml_nodes & srcdiff_output::get_nodes_old() {
 
   return rbuf_old->nodes;
 
 }
 
-std::vector<std::shared_ptr<srcml_node>> & srcdiff_output::get_nodes_new() {
+srcml_nodes & srcdiff_output::get_nodes_new() {
 
   return rbuf_new->nodes;
 

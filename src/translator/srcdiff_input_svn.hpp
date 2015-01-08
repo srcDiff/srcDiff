@@ -20,7 +20,7 @@ public:
 	srcdiff_input_svn(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options, const srcdiff_input_source_svn & svn_input);
 	~srcdiff_input_svn();
 
-	virtual std::vector<std::shared_ptr<srcml_node>> input_nodes(int stream_source) const;
+	virtual srcml_nodes input_nodes(int stream_source) const;
 
 };
 

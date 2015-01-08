@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCML_CONVERTER_HPP
 #define INCLUDED_SRCML_CONVERTER_HPP
 
-#include <srcml_node.hpp>
+#include <srcml_nodes.hpp>
 #include <srcdiff_options.hpp>
 
 #include <srcml.h>
@@ -30,7 +30,7 @@ protected:
 
 private:
 
-	std::vector<std::shared_ptr<srcml_node>> collect_nodes(xmlTextReaderPtr reader) const;
+	srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
 
 	static std::shared_ptr<srcml_node> get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context);
 
@@ -40,7 +40,7 @@ public:
  	~srcml_converter();
 
 	void convert(const std::string & language, void * context, const std::function<int(void *, char *, int)> & read, const std::function<int(void *)> & close, const OPTION_TYPE & options); 
-	std::vector<std::shared_ptr<srcml_node>> create_nodes() const;
+	srcml_nodes create_nodes() const;
 
 };
 

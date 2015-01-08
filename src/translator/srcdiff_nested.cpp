@@ -75,7 +75,7 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(const node_set & structure, const std::vector<std::shared_ptr<srcml_node>> & nodes) {
+int is_block_type(const node_set & structure, const srcml_nodes & nodes) {
 
   if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
@@ -90,7 +90,7 @@ int is_block_type(const node_set & structure, const std::vector<std::shared_ptr<
   return -1;
 }
 
-bool has_internal_structure(const node_set & structure, const std::vector<std::shared_ptr<srcml_node>> & nodes, const boost::optional<std::string> & type) {
+bool has_internal_structure(const node_set & structure, const srcml_nodes & nodes, const boost::optional<std::string> & type) {
 
   if(!type) return false;
 
@@ -102,8 +102,8 @@ bool has_internal_structure(const node_set & structure, const std::vector<std::s
   return false;
 }
 
-bool is_nest_type(const node_set & structure, const std::vector<std::shared_ptr<srcml_node>> & nodes
-                           , const node_set & structure_other, const std::vector<std::shared_ptr<srcml_node>> & nodes_other, int type_index) {
+bool is_nest_type(const node_set & structure, const srcml_nodes & nodes
+                           , const node_set & structure_other, const srcml_nodes & nodes_other, int type_index) {
 
   if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
@@ -125,7 +125,7 @@ bool is_match(const std::shared_ptr<srcml_node> & node, const void * context) {
 
 }
 
-int best_match(const std::vector<std::shared_ptr<srcml_node>> & nodes, const node_sets & set, const std::vector<std::shared_ptr<srcml_node>> & nodes_match, const node_set & match, int operation) {
+int best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match, int operation) {
 
   int match_pos = set.size();
   int match_similarity = 0;
@@ -167,8 +167,8 @@ int best_match(const std::vector<std::shared_ptr<srcml_node>> & nodes, const nod
 
 }
 
-bool is_nestable_internal(const node_set & structure_one, const std::vector<std::shared_ptr<srcml_node>> & nodes_one
-                 , const node_set & structure_two, const std::vector<std::shared_ptr<srcml_node>> & nodes_two) {
+bool is_nestable_internal(const node_set & structure_one, const srcml_nodes & nodes_one
+                 , const node_set & structure_two, const srcml_nodes & nodes_two) {
 
   int block = is_block_type(structure_two, nodes_two);
 
@@ -189,8 +189,8 @@ bool is_nestable_internal(const node_set & structure_one, const std::vector<std:
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const std::vector<std::shared_ptr<srcml_node>> & nodes_one
-                      , const node_set & structure_two, const std::vector<std::shared_ptr<srcml_node>> & nodes_two) {
+bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcml_nodes & nodes_one
+                      , const node_set & structure_two, const srcml_nodes & nodes_two) {
 
   if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
     return false;
@@ -223,8 +223,8 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const std:
 
 }
 
-bool srcdiff_nested::is_nestable(const node_set & structure_one, const std::vector<std::shared_ptr<srcml_node>> & nodes_one
-                 , const node_set & structure_two, const std::vector<std::shared_ptr<srcml_node>> & nodes_two) {
+bool srcdiff_nested::is_nestable(const node_set & structure_one, const srcml_nodes & nodes_one
+                 , const node_set & structure_two, const srcml_nodes & nodes_two) {
 
   if(srcdiff_compare::node_compare(nodes_one.at(structure_one.at(0)), nodes_two.at(structure_two.at(0))) == 0)
     return is_same_nestable(structure_one, nodes_one, structure_two, nodes_two);
@@ -233,8 +233,8 @@ bool srcdiff_nested::is_nestable(const node_set & structure_one, const std::vect
 
 }
 
-bool is_better_nest_no_recursion(const std::vector<std::shared_ptr<srcml_node>> & nodes_outer, const node_set & node_set_outer,
-                    const std::vector<std::shared_ptr<srcml_node>> & nodes_inner, const node_set & node_set_inner,
+bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set & node_set_outer,
+                    const srcml_nodes & nodes_inner, const node_set & node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
@@ -266,8 +266,8 @@ bool is_better_nest_no_recursion(const std::vector<std::shared_ptr<srcml_node>> 
 
 }
 
-bool is_better_nest(const std::vector<std::shared_ptr<srcml_node>> & nodes_outer, const node_set & node_set_outer,
-                    const std::vector<std::shared_ptr<srcml_node>> & nodes_inner, const node_set & node_set_inner,
+bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_outer,
+                    const srcml_nodes & nodes_inner, const node_set & node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
 // parents and children same do not nest.
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
@@ -301,8 +301,8 @@ bool is_better_nest(const std::vector<std::shared_ptr<srcml_node>> & nodes_outer
 
 }
 
-bool srcdiff_nested::is_better_nested(const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_sets & node_sets_old, int start_pos_old,
-                    const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_sets & node_sets_new, int start_pos_new,
+bool srcdiff_nested::is_better_nested(const srcml_nodes & nodes_old, const node_sets & node_sets_old, int start_pos_old,
+                    const srcml_nodes & nodes_new, const node_sets & node_sets_new, int start_pos_new,
                     int similarity, int difference, int text_old_length, int text_new_length) {
 
   for(int pos = start_pos_old; pos < node_sets_old.size(); ++pos) {
@@ -324,7 +324,7 @@ bool srcdiff_nested::is_better_nested(const std::vector<std::shared_ptr<srcml_no
 }
 
 bool srcdiff_nested::reject_match_nested(int similarity, int difference, int text_old_length, int text_new_length,
-  const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const node_set & set_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_new) {
+  const srcml_nodes & nodes_old, const node_set & set_old, const srcml_nodes & nodes_new, const node_set & set_new) {
 
   int old_pos = set_old.at(0);
   int new_pos = set_new.at(0);
@@ -350,8 +350,8 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
 
 }
 
-void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_old, int start_old, int end_old
-                 , const node_sets & node_sets_new, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, int start_new, int end_new
+void srcdiff_nested::check_nestable(const node_sets & node_sets_old, const srcml_nodes & nodes_old, int start_old, int end_old
+                 , const node_sets & node_sets_new, const srcml_nodes & nodes_new, int start_new, int end_new
                  , int & start_nest_old, int & end_nest_old, int & start_nest_new, int & end_nest_new
                  , int & operation) {
 

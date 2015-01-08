@@ -9,7 +9,7 @@ class node_sets : public srcdiff_vector<node_set> {
 
 private:
 
-	const std::vector<std::shared_ptr<srcml_node>> & nodes;
+	const srcml_nodes & nodes;
 
 	static bool is_non_white_space(const std::shared_ptr<srcml_node> & node, const void * context) {
 
@@ -22,7 +22,7 @@ private:
 
 public:
 
-	node_sets(const std::vector<std::shared_ptr<srcml_node>> & nodes) : nodes(nodes) {}
+	node_sets(const srcml_nodes & nodes) : nodes(nodes) {}
 	node_sets(const node_sets & sets) : nodes(sets.nodes) {
 
 
@@ -45,7 +45,7 @@ public:
 	~node_sets() {}
 		
 	// create the node sets for shortest edit script
-	node_sets(const std::vector<std::shared_ptr<srcml_node>> & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
+	node_sets(const srcml_nodes & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
 
 	  // runs on a subset of base array
 	  for(int i = start; i < end; ++i) {

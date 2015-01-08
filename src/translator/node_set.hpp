@@ -3,7 +3,7 @@
 
 #include <srcdiff_vector.hpp>
 
-#include <srcml_node.hpp>
+#include <srcml_nodes.hpp>
 
 #include <memory>
 
@@ -11,7 +11,7 @@ class node_set : public srcdiff_vector<int> {
 
 private:
 
-	const std::vector<std::shared_ptr<srcml_node>> & nodes;
+	const srcml_nodes & nodes;
 
 	static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
 
@@ -22,7 +22,7 @@ private:
 
 public:
 
-	node_set(const std::vector<std::shared_ptr<srcml_node>> & nodes) : nodes(nodes) {}
+	node_set(const srcml_nodes & nodes) : nodes(nodes) {}
 
 	node_set(const node_set & set) : nodes(set.nodes) {
 
@@ -42,7 +42,7 @@ public:
 
 	}
 
-	node_set(const std::vector<std::shared_ptr<srcml_node>> & nodes, int & start) : nodes(nodes) {
+	node_set(const srcml_nodes & nodes, int & start) : nodes(nodes) {
 
 	if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 

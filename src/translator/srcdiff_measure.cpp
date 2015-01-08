@@ -7,7 +7,7 @@
 
 #include <cstring>
 
-srcdiff_measure::srcdiff_measure(const std::vector<std::shared_ptr<srcml_node>> & nodes_old, const std::vector<std::shared_ptr<srcml_node>> & nodes_new, const node_set & set_old, const node_set & set_new) 
+srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_old, const srcml_nodes & nodes_new, const node_set & set_old, const node_set & set_new) 
   : nodes_old(nodes_old), nodes_new(nodes_new), set_old(set_old), set_new(set_new) {}
 
 void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {
