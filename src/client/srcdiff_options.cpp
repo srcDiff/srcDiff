@@ -330,12 +330,12 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("visualization", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VISUALIZE>), "Output a visualization instead of xml")
     ("same", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SAME>)->default_value(true), "Output files that are the same (default)")
     ("pure", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_PURE>)->default_value(true), "Output files that are added/deleted (default)")
-    ("change", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_CHANGE>)->default_value(true), "Output files that where changed (default)")
+    ("change", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_CHANGE>)->default_value(true), "Output files that where changed (default). Used only with visualization option")
     ("no-same", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SAME>), "Do not output files that are the same")
     ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are added/deleted")
     ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
-    ("bash", boost::program_options::value<int>()->implicit_value(3)->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text")
+    ("bash", boost::program_options::value<int>()->implicit_value(3)->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text with provided number of contextual lines (no arg defaults to 3 lines of context)")
   ;
 
   input_file.add("input", -1);
