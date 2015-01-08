@@ -11,7 +11,7 @@
 
 #include <srcdiff_input_svn.hpp>
 
-#include <thread>
+#include <mutex>
 
 #include <iostream>
 #include <string>

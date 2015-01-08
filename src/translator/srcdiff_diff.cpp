@@ -9,7 +9,6 @@
 #include <srcdiff_match.hpp>
 #include <shortest_edit_script.hpp>
 
-#include <pthread.h>
 #include <cstring>
 #include <methods.hpp>
 

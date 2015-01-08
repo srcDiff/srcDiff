@@ -34,6 +34,8 @@
 
 #include <LineDiffRange.hpp>
 
+#include <thread>
+
 #include <strings.h>
 #include <cstring>
 
