@@ -12,7 +12,7 @@
 
 class srcdiff_output {
 
-protected:
+public:
 
   struct diff_set {
 
@@ -81,6 +81,8 @@ protected:
     std::vector<diff_set *> output_diff;
 
   };
+
+protected:
 
   srcml_archive * archive;
   std::shared_ptr<ColorDiff> colordiff;
