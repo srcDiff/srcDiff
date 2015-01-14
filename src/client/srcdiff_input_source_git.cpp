@@ -186,7 +186,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     if(comparison <= 0) {
 
       path_original = names_original.at(pos_original).first;
-      int error = git_commit_tree(&subtree_original, commit_original);
+      int error = git_tree_lookup(&subtree_original, repo, git_tree_entry_id(entry_original));
       if(error) throw std::string("Error accessing git commit tree.");   
 
       ++pos_original;
@@ -196,7 +196,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     if(comparison >= 0) {
 
       path_modified = names_modified.at(pos_modified).first;
-      int error = git_commit_tree(&subtree_modified, commit_modified);
+      int error = git_tree_lookup(&subtree_modified, repo, git_tree_entry_id(entry_modified));
       if(error) throw std::string("Error accessing git commit tree.");
 
       ++pos_modified; 
@@ -217,7 +217,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 
     boost::optional<std::string> path_original = names_original.at(pos_original).first;
     git_tree * subtree_original = nullptr;
-    int error = git_commit_tree(&subtree_original, commit_original);
+    int error = git_tree_lookup(&subtree_original, repo, git_tree_entry_id(entry_original));
     if(error) throw std::string("Error accessing git commit tree.");       
 
     directory(path_original, directory_length_old, subtree_original, boost::optional<std::string>(), directory_length_new, nullptr);
@@ -235,7 +235,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 
     boost::optional<std::string> path_modified = names_modified.at(pos_modified).first;
     git_tree * subtree_modified = nullptr;
-    int error = git_commit_tree(&subtree_modified, commit_modified);
+    int error = git_tree_lookup(&subtree_modified, repo, git_tree_entry_id(entry_modified));
     if(error) throw std::string("Error accessing git commit tree.");
 
     directory(boost::optional<std::string>(), directory_length_old, nullptr, path_modified, directory_length_new, subtree_modified);
