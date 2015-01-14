@@ -1,18 +1,33 @@
 
-#if GIT
+//#if GIT
 
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
 
 #include <srcdiff_input_source.hpp>
 
-#include <git2.hpp>
+#include <git2.h>
+
+#include <boost/filesystem.hpp>
 
 class srcdiff_input_source_git : public srcdiff_input_source {
 
 protected:
 
 private:
+
+  boost::filesystem::path path;
+
+  git_repository * repo;
+
+  git_oid oid_original;
+  git_oid oid_modified;
+
+  git_commit * commit_original;
+  git_commit * commit_modified;
+
+  git_tree * tree_original;
+  git_tree * tree_modified;
 
 public:
 
@@ -37,4 +52,4 @@ public:
 
 #endif
 
-#endif
+//#endif

@@ -1,45 +1,62 @@
-
 #include <srcdiff_input_source_git.hpp>
-
-#include <srcdiff_input_git.hpp>
 
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include <stdio.h>
   
-#include <URIStream.hpp>
+srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
+  : srcdiff_input_source(options), path(boost::filesystem::temp_directory_path()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
 
-srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options) : srcdiff_input_source(options) {
-
-  std::string command = "git clone ";
-  command += argv[1];
-  command += " temp_repo";
+  std::string command("git clone https://github.com/srcML/srcDiff.git ");
+  command += path.native();
 
   FILE * process = popen(command.c_str(), "r");
   pclose(process);
 
   int error = 0;
 
-  git_repository * repo;
   error = git_repository_open(&repo, "temp_repo");
   if(error) throw std::string("Error Opening up temporary repository.");
 
-  git_oid oid = { 0 };
-  error = git_oid_fromstr(&oid, "40b85bebf15521f68be75574773a330b60f42745");
-  if(error) throw std::string("Error getting revision: ");
+  error = git_oid_fromstr(&oid_original, "40b85bebf15521f68be75574773a330b60f42745");
+  if(error) throw std::string("Error getting base/original revision: ");
 
-  git_commit * commit;
-  git_commit_lookup(&commit, repo, &oid);
-  if(error) throw std:string("Error looking up base/original commit.");
+  error = git_oid_fromstr(&oid_modified, "40b85bebf15521f68be75574773a330b60f42745");
+  if(error) throw std::string("Error getting base/original revision: ");
 
-  git_tree * tree;
-  error = git_commit_tree(&tree, commit);
+  git_commit_lookup(&commit_original, repo, &oid_original);
+  if(error) throw std::string("Error looking up base/original commit.");
+
+  git_commit_lookup(&commit_modified, repo, &oid_modified);
+  if(error) throw std::string("Error looking up base/original commit.");
+
+  error = git_commit_tree(&tree_original, commit_original);
   if(error) throw std::string("Error accessing git commit tree.");
 
+   error = git_commit_tree(&tree_modified, commit_modified);
+  if(error) throw std::string("Error accessing git commit tree.");
 
 }
 
-srcdiff_input_source_git::~srcdiff_input_source_git() {}
+srcdiff_input_source_git::~srcdiff_input_source_git() {
+
+  git_tree_free(tree_original);
+  git_tree_free(tree_modified);
+
+  git_commit_free(commit_original);
+  git_commit_free(commit_modified);
+
+  git_repository_free(repo);
+
+  std::string command("rm -rf ");
+  command += path.native();
+  
+  FILE * process = popen(command.c_str(), "r");
+  pclose(process);
+
+}
 
 void srcdiff_input_source_git::consume() {}
 
