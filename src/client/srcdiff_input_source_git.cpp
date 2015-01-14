@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include <stdio.h>
   
@@ -52,7 +53,7 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
   std::string command("rm -rf ");
   command += path.native();
-  
+
   FILE * process = popen(command.c_str(), "r");
   pclose(process);
 
@@ -60,7 +61,20 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 void srcdiff_input_source_git::consume() {}
 
-void srcdiff_input_source_git::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {}
+void srcdiff_input_source_git::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
+
+  if(path_one)
+    std::cerr << "Path one: " << *path_one << '\n';
+  if(path_two)
+    std::cerr << "Path two: " << *path_two << '\n';
+
+}
+
+bool operator<(std::pair<std::string, size_t> pair_one, std::pair<std::string, size_t> pair_two) {
+
+  return pair_one.first < pair_two.first;
+
+}
 
 void srcdiff_input_source_git::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
 
@@ -70,6 +84,60 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 #define PATH_SEPARATOR '/'
 #endif
 
+  size_t count_original = git_tree_entrycount(tree_original);
+  std::vector<std::pair<std::string, size_t>> names_original(count_original);
+  for(size_t i = 0; i < count_original; ++i) {
+
+    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(tree_original, i);
+    if (entry_original) names_original.push_back(std::make_pair(git_tree_entry_name(entry_original), i));
+
+  }
+  sort(names_original.begin(), names_original.end());
+
+  size_t count_modified = git_tree_entrycount(tree_modified);
+  std::vector<std::pair<std::string, size_t>> names_modified(count_modified);
+  for(size_t i = 0; i < count_modified; ++i) {
+
+    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(tree_modified, i);
+    if (entry_modified) names_modified.push_back(std::make_pair(git_tree_entry_name(entry_modified), i));
+
+  }
+  sort(names_modified.begin(), names_modified.end());
+
+  std::vector<std::pair<std::string, size_t>>::size_type pos_original = 0;
+  std::vector<std::pair<std::string, size_t>>::size_type pos_modified = 0;
+  while(pos_original < count_original && pos_modified < count_modified) {
+
+    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(tree_original, names_original.at(pos_original).second);
+    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(tree_modified, names_modified.at(pos_modified).second);
+
+    if(git_tree_entry_type(entry_original) == GIT_OBJ_TREE) { ++pos_original; continue; }
+    if(git_tree_entry_type(entry_modified) == GIT_OBJ_TREE) { ++pos_modified; continue; }
+
+    int comparison = names_original.at(pos_original).first.compare(names_modified.at(pos_modified).first);
+
+    boost::optional<std::string> path_original;
+    boost::optional<std::string> path_modified;
+    if(comparison <= 0) path_original = names_original.at(pos_original).first;
+    if(comparison >= 0) path_modified = names_modified.at(pos_modified).first;
+
+    file(path_original, path_modified, directory_length_old, directory_length_new);
+
+  }
+
+  // for(size_t i = 0; i < count_original; ++i) {
+
+  //   git_tree_entry * entry = (git_tree_entry *)git_tree_entry_byindex(tree_original, i);
+  //   if (entry && git_tree_entry_type(entry) == GIT_OBJ_TREE) {
+
+  //     git_tree *subtree = NULL;
+  //     error = git_tree_lookup(&subtree, repo, git_tree_entry_id(entry));
+  //     process_tree(subtree, repo);
+  //     git_tree_free(tree);
+
+  //   }
+
+  // }
 
 #undef PATH_SEPARATOR
 
