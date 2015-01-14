@@ -8,18 +8,17 @@
 #include <stdio.h>
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source(options), path(boost::filesystem::unique_path()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
+  : srcdiff_input_source(options), path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
 
-  std::string command("git clone https://github.com/srcML/srcDiff.git ");
-  command += boost::filesystem::temp_directory_path().native() + path.native();
-  std::cerr << path << '\n';
+  std::string command("git clone https://github.com/mjdecker/srcDiff.git ");
+  command += path.native();
 
   FILE * process = popen(command.c_str(), "r");
   pclose(process);
 
   int error = 0;
 
-  error = git_repository_open(&repo, "temp_repo");
+  error = git_repository_open(&repo, path.c_str());
   if(error) throw std::string("Error Opening up temporary repository.");
 
   error = git_oid_fromstr(&oid_original, "40b85bebf15521f68be75574773a330b60f42745");
@@ -84,7 +83,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 #else
 #define PATH_SEPARATOR '/'
 #endif
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   size_t count_original = git_tree_entrycount(tree_original);
   std::vector<std::pair<std::string, size_t>> names_original(count_original);
   for(size_t i = 0; i < count_original; ++i) {
