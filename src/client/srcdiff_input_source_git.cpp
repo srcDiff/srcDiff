@@ -61,7 +61,7 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 void srcdiff_input_source_git::consume() {
 
-  directory(std::string(), 0, std::string(), 0);
+  directory(std::string(), 0, (const void *)tree_original, std::string(), 0, (const void *)tree_modified);
 
 }
 
@@ -80,7 +80,8 @@ bool operator<(const std::pair<std::string, size_t> & pair_one, const std::pair<
 
 }
 
-void srcdiff_input_source_git::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
+void srcdiff_input_source_git::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const void * context_old,
+                                         const boost::optional<std::string> & directory_new, int directory_length_new, const void * context_new) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
