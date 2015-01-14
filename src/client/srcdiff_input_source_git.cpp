@@ -8,10 +8,11 @@
 #include <stdio.h>
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source(options), path(boost::filesystem::temp_directory_path()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
+  : srcdiff_input_source(options), path(boost::filesystem::unique_path()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
 
   std::string command("git clone https://github.com/srcML/srcDiff.git ");
-  command += path.native();
+  command += boost::filesystem::temp_directory_path().native() + path.native();
+  std::cerr << path << '\n';
 
   FILE * process = popen(command.c_str(), "r");
   pclose(process);
@@ -24,7 +25,7 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
   error = git_oid_fromstr(&oid_original, "40b85bebf15521f68be75574773a330b60f42745");
   if(error) throw std::string("Error getting base/original revision: ");
 
-  error = git_oid_fromstr(&oid_modified, "40b85bebf15521f68be75574773a330b60f42745");
+  error = git_oid_fromstr(&oid_modified, "4abb37d327703be4b966320c00078a23ea469db5e");
   if(error) throw std::string("Error getting base/original revision: ");
 
   git_commit_lookup(&commit_original, repo, &oid_original);
