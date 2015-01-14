@@ -419,7 +419,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
     if(comparison >= 0) ++j, directory_path_two = path_new;
 
     // process these directories
-    directory(directory_path_one, directory_length_old, null_ptr, directory_path_two, directory_length_new, nullptr);
+    directory(directory_path_one, directory_length_old, nullptr, directory_path_two, directory_length_new, nullptr);
 
   }
 

@@ -111,6 +111,8 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
   }
   sort(names_modified.begin(), names_modified.end(), operator<);
 
+  // process files first
+
   std::vector<std::pair<std::string, size_t>>::size_type pos_original = 0;
   std::vector<std::pair<std::string, size_t>>::size_type pos_modified = 0;
   while(pos_original < count_original && pos_modified < count_modified) {
@@ -155,6 +157,59 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     file(boost::optional<std::string>(), path_modified, directory_length_old, directory_length_new);
   
   }
+
+  // process directories
+
+  pos_original = 0;
+  pos_modified = 0;
+  while(pos_original < count_original && pos_modified < count_modified) {
+
+    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(tree_original, names_original.at(pos_original).second);
+    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(tree_modified, names_modified.at(pos_modified).second);
+
+    if(git_tree_entry_type(entry_original) != GIT_OBJ_TREE) { ++pos_original; continue; }
+    if(git_tree_entry_type(entry_modified) != GIT_OBJ_TREE) { ++pos_modified; continue; }
+
+    int comparison = names_original.at(pos_original).first.compare(names_modified.at(pos_modified).first);
+
+    boost::optional<std::string> path_original;
+    boost::optional<std::string> path_modified;
+    if(comparison <= 0) path_original = names_original.at(pos_original).first, ++pos_original;
+    if(comparison >= 0) path_modified = names_modified.at(pos_modified).first, ++pos_modified;
+
+    git_tree * subtree_original;
+    git_tree * subtree_modified;
+
+    directory(path_original, directory_length_old, subtree_original, path_modified, directory_length_new, subtree_modified);
+
+  }
+
+  while(pos_original < count_original) {
+
+    ++pos_original;
+
+    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(tree_original, names_original.at(pos_original).second);
+    if(git_tree_entry_type(entry_original) != GIT_OBJ_TREE) continue;
+
+    boost::optional<std::string> path_original = names_original.at(pos_original).first;
+    git_tree * subtree_original;
+    directory(path_original, directory_length_old, subtree_original, boost::optional<std::string>(), directory_length_new, nullptr);
+  
+  }
+
+  while(pos_modified < count_modified) {
+
+    ++pos_modified;
+
+    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(tree_modified, names_modified.at(pos_modified).second);
+    if(git_tree_entry_type(entry_modified) != GIT_OBJ_TREE) continue;
+
+    boost::optional<std::string> path_modified = names_modified.at(pos_modified).first;
+    git_tree * subtree_modified;
+    directory(boost::optional<std::string>(), directory_length_old, nullptr, path_modified, directory_length_new, subtree_modified);
+  
+  }
+
   // for(size_t i = 0; i < count_original; ++i) {
 
   //   git_tree_entry * entry = (git_tree_entry *)git_tree_entry_byindex(tree_original, i);
