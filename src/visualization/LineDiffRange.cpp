@@ -10,6 +10,7 @@
 #include <LineDiffRange.hpp>
 
 #include <srcdiff_input_source_svn.hpp>
+#include <srcdiff_input_source_git.hpp>
 
 #include <string>
 #include <vector>
@@ -19,12 +20,10 @@
 
 #include <URIStream.hpp>
 
-LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url)
-  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url) {}
+LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url, const boost::optional<std::string> & dir)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), dir(dir) {}
 
-LineDiffRange::~LineDiffRange() {
-
-}
+LineDiffRange::~LineDiffRange() {}
 
 const std::string & LineDiffRange::get_file_one() const {
 
@@ -113,6 +112,29 @@ std::vector<std::string> LineDiffRange::read_svn_file(const srcdiff_input_source
 }
 #endif
 
+#ifdef GIT
+std::vector<std::string> LineDiffRange::read_git_file(const srcdiff_input_source_git * input, const char * file) {
+
+  std::vector<std::string> lines;
+
+  if(file == 0 || file[0] == 0) return lines;
+
+  srcdiff_input_source_git::git_context * context = input->open(file);
+
+  URIStream stream(context);
+
+  char * line;
+  while((line = stream.readline())) {
+
+    lines.push_back(line);
+
+  }
+
+  return lines;
+
+}
+#endif
+
 std::string LineDiffRange::get_line_diff_range() {
 
   std::string diff;
@@ -150,13 +172,17 @@ std::string LineDiffRange::get_line_diff_range() {
 
 void LineDiffRange::create_line_diff() {
 
-#ifdef SVN
-  if(!url) {
+#if defined(SVN) || defined(GIT)
+  if(!url && !dir) {
 #endif
     lines_one = read_local_file(file_one.c_str());
     lines_two = read_local_file(file_two.c_str());
+#if defined(SVN) || defined(GIT)
+  }
+#endif  
+
 #ifdef SVN
-  } else {
+  if(url) {
 
     srcdiff_options options;
     options.svn_url = url;
@@ -166,7 +192,18 @@ void LineDiffRange::create_line_diff() {
 
   }
 #endif
-  
+
+#ifdef GIT
+  if(dir) {
+
+    srcdiff_options options;
+    srcdiff_input_source_git input(options, dir);
+    lines_one = read_git_file(&input, file_one.c_str());
+    lines_two = read_git_file(&input, file_two.c_str());
+
+  }
+#endif 
+
   int distance = ses.compute(&lines_one, lines_one.size(), &lines_two, lines_two.size());
 
   if(distance < 0) {

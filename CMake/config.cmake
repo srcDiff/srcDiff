@@ -26,15 +26,24 @@ option(BUILD_UNIT_TESTS "Build unit tests for srcDiff" OFF)
 
 option(SVN_ENABLED "Build in svn source input support" OFF)
 
+option(GIT_ENABLED "Build in git source input support" OFF)
+
 if(SVN_ENABLED)
 
 find_package(LibApr REQUIRED)
 find_package(LibSvn REQUIRED)
 
-add_definitions(-DSVN)
+add_definitions("-DSVN")
 
 endif()
 
+if(GIT_ENABLED)
+
+find_package(LibGit2 REQUIRED)
+
+add_definitions("-DGIT")
+
+endif()
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
 # find needed libraries
@@ -50,7 +59,7 @@ find_package(LibXml2 REQUIRED)
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
 # Set libsrcdiff libraries
-set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} crypto dl CACHE INTERNAL "libsrcdiff Link Libraries")
+set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} ${LIBGIT2_LIBRARIES} crypto dl CACHE INTERNAL "libsrcdiff Link Libraries")
 
 # Set libsrcdiff libraries
 set(SRCDIFF_LIBRARIES crypto CACHE INTERNAL "srcdiff Link Libraries")
@@ -63,5 +72,5 @@ list(APPEND SRCDIFF_LIBRARIES rt)
 endif()
 
 # include needed includes
-include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR})
+include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR} ${LIBGIT2_INCLUDE_DIR})
 

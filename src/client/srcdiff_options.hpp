@@ -85,6 +85,12 @@ struct srcdiff_options
   svn_revnum_t revision_two;
 #endif
   
+#if GIT
+  boost::optional<std::string> git_url;
+  std::string git_revision_one;
+  std::string git_revision_two;
+#endif
+
 };
 
 const srcdiff_options & process_command_line(int argc, char* argv[]);

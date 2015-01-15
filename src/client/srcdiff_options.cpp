@@ -110,6 +110,20 @@ void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
 }
 #endif
 
+#if GIT
+template<>
+void option_field<&srcdiff_options::git_url>(const std::string & arg) {
+
+  std::string::size_type atsign = arg.rfind('@');
+  options.git_url = arg.substr(0, atsign);
+  options.git_revision_one = arg.substr(atsign + 1);
+  std::string::size_type dash = arg.find('-', atsign + 1);
+  options.git_revision_two = arg.substr(dash + 1);
+  srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+
+}
+#endif
+
 template<int srcdiff_options::*field>
 void option_field(const int & arg) { options.*field = arg; }
 
@@ -307,6 +321,10 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 #if SVN
     ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository. Example: --svn http://example.org@1-2")
     ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision: Treat revisions supplied as as range and srcdiff each version with subsequent") // this may have been where needed revision
+#endif
+
+#if GIT
+    ("git", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::git_url>), "Input from a Subversion repository. Example: --git http://example.org@HASH-HASH")
 #endif
 
   ;
