@@ -142,10 +142,13 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 
     boost::optional<std::string> path_original;
     boost::optional<std::string> path_modified;
-    if(comparison <= 0) path_original = names_original.at(pos_original).first, ++pos_original;
-    if(comparison >= 0) path_modified = names_modified.at(pos_modified).first, ++pos_modified;
+    const git_oid * blob_oid_original = 0;
+    const git_oid * blob_oid_modified = 0;
+    
+    if(comparison <= 0) path_original = names_original.at(pos_original).first, blob_oid_original = git_tree_entry_id(entry_original), ++pos_original;
+    if(comparison >= 0) path_modified = names_modified.at(pos_modified).first, blob_oid_modified = git_tree_entry_id(entry_modified), ++pos_modified;
 
-    file(path_original, current_tree_original, path_modified, current_tree_modified);
+    file(path_original, blob_oid_original, path_modified, blob_oid_modified);
 
   }
 
@@ -155,7 +158,8 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     if(!entry_original || git_tree_entry_type(entry_original) == GIT_OBJ_TREE) { ++pos_original; continue; }
 
     boost::optional<std::string> path_original = names_original.at(pos_original).first;
-    file(path_original, current_tree_original, boost::optional<std::string>(), current_tree_modified);
+    const git_oid * blob_oid_original = git_tree_entry_id(entry_original);
+    file(path_original, blob_oid_original, boost::optional<std::string>(), 0);
 
     ++pos_original;
 
@@ -167,7 +171,8 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     if(!entry_modified || git_tree_entry_type(entry_modified) == GIT_OBJ_TREE) { ++pos_modified; continue; }
 
     boost::optional<std::string> path_modified = names_modified.at(pos_modified).first;
-    file(boost::optional<std::string>(), current_tree_original, path_modified, current_tree_modified);
+    const git_oid * blob_oid_modified = git_tree_entry_id(entry_modified);
+    file(boost::optional<std::string>(), 0, path_modified, blob_oid_modified);
 
     ++pos_modified;
 
