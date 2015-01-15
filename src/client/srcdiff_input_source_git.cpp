@@ -67,12 +67,21 @@ void srcdiff_input_source_git::consume() {
 
 void srcdiff_input_source_git::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
 
-  if(path_one)
-    std::cerr << *path_one << " : ";
-  if(path_two)
-    std::cerr << *path_two;
+  std::string path_original = path_one ? *path_one : "";
+  std::string path_modified = path_two ? *path_two : "";
 
-  std::cerr << '\n';
+  std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_old) : std::string();
+  std::string filename_two =  !path_modified.empty() ? path_modified.substr(directory_length_new) : std::string();
+  if(path_modified.empty() || unit_filename != filename_two) {
+
+    unit_filename += "|";
+    unit_filename += filename_two;
+
+  }
+
+  if(srcml_archive_check_extension(options.archive, path_original.c_str()) == SRCML_LANGUAGE_NONE
+    && srcml_archive_check_extension(options.archive, path_modified.c_str()) == SRCML_LANGUAGE_NONE)
+    return;
 
 }
 
@@ -245,20 +254,6 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     ++pos_modified;
 
   }
-
-  // for(size_t i = 0; i < count_original; ++i) {
-
-  //   git_tree_entry * entry = (git_tree_entry *)git_tree_entry_byindex(tree_original, i);
-  //   if (entry && git_tree_entry_type(entry) == GIT_OBJ_TREE) {
-
-  //     git_tree *subtree = NULL;
-  //     error = git_tree_lookup(&subtree, repo, git_tree_entry_id(entry));
-  //     process_tree(subtree, repo);
-  //     git_tree_free(tree);
-
-  //   }
-
-  // }
 
 #undef PATH_SEPARATOR
 

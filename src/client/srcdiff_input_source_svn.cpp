@@ -130,7 +130,7 @@ void srcdiff_input_source_svn::session_single() {
   svn_ra_stat(session, path->c_str(), revision_one, &dirent, pool);
 
   if(dirent->kind == svn_node_file)         file(path, path, 0, 0);
-  else if(dirent->kind == svn_node_dir)     directory(path, 0, path, 0);
+  else if(dirent->kind == svn_node_dir)     directory(path, 0, nullptr, path, 0, nullptr);
   else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
   else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
 
@@ -171,7 +171,7 @@ void srcdiff_input_source_svn::session_range() {
     svn_ra_stat(session, path->c_str(), revision_one, &dirent, pool);
 
     if(dirent->kind == svn_node_file)         file(path, path, 0, 0);
-    else if(dirent->kind == svn_node_dir)     directory(path, 0, path, 0);
+    else if(dirent->kind == svn_node_dir)     directory(path, 0, nullptr, path, 0, nullptr);
     else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
 
@@ -185,7 +185,7 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
   std::string path_new = path_two ? *path_two : std::string();
 
   std::string unit_filename = !path_old.empty() ? path_old.substr(directory_length_old) : std::string();
-  std::string filename_two =  !path_new.empty() ? path_new.substr(directory_length_old) : std::string();
+  std::string filename_two =  !path_new.empty() ? path_new.substr(directory_length_new) : std::string();
   if(path_new.empty() || unit_filename != filename_two) {
 
     unit_filename += "|";
