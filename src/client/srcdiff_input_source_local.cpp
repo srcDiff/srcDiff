@@ -50,8 +50,8 @@ void srcdiff_input_source_local::consume() {
 
         }
 
-        directory(input_pair.first,  input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1,
-                  input_pair.second, input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1);
+        directory(input_pair.first,  input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1, nullptr,
+                  input_pair.second, input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1, nullptr);
 
       } else {
 
@@ -147,7 +147,8 @@ int is_output_file(const char * filename, const struct stat & outstat) {
 
 }
 
-void srcdiff_input_source_local::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
+void srcdiff_input_source_local::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const void * context_old,
+                                         const boost::optional<std::string> & directory_new, int directory_length_new, const void * context_new) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -302,7 +303,7 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
     if(comparison >= 0) ++j, directory_path_two = path_new;
 
     // process these directories
-    directory(directory_path_one, directory_length_old, directory_path_two, directory_length_new);
+    directory(directory_path_one, directory_length_old, nullptr, directory_path_two, directory_length_new, nullptr);
 
   }
 
@@ -322,7 +323,7 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
     }
 
     // process this directory
-    directory(path_old, directory_length_old, boost::optional<std::string>(), directory_length_new);
+    directory(path_old, directory_length_old, nullptr, boost::optional<std::string>(), directory_length_new, nullptr);
 
   }
 
@@ -342,7 +343,7 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
     }
 
     // process this directory
-    directory(boost::optional<std::string>(), directory_length_old, path_new, directory_length_new);
+    directory(boost::optional<std::string>(), directory_length_old, nullptr, path_new, directory_length_new, nullptr);
 
   }
 

@@ -225,7 +225,8 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
 
 }
 
-void srcdiff_input_source_svn::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const boost::optional<std::string> & directory_new, int directory_length_new) {
+void srcdiff_input_source_svn::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const void * context_old,
+                                         const boost::optional<std::string> & directory_new, int directory_length_new, const void * context_new) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -418,7 +419,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
     if(comparison >= 0) ++j, directory_path_two = path_new;
 
     // process these directories
-    directory(directory_path_one, directory_length_old, directory_path_two, directory_length_new);
+    directory(directory_path_one, directory_length_old, nullptr, directory_path_two, directory_length_new, nullptr);
 
   }
 
@@ -437,7 +438,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
     }
 
     // process this directory
-    directory(path_old, directory_length_old, boost::optional<std::string>(), directory_length_new);
+    directory(path_old, directory_length_old, nullptr, boost::optional<std::string>(), directory_length_new, nullptr);
 
   }
 
@@ -455,7 +456,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
       continue;
     }
 
-    directory(boost::optional<std::string>(), directory_length_old, path_new, directory_length_new);
+    directory(boost::optional<std::string>(), directory_length_old, nullptr, path_new, directory_length_new, nullptr);
 
   }
 
