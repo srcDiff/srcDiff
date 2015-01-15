@@ -28,6 +28,12 @@ if(NOT SVN_ENABLED)
 
 endif()
 
+if(NOT GIT_ENABLED)
+
+    list(REMOVE_ITEM CLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_source_git.cpp)
+
+endif()
+
 # srcdiff
 if(WIN32)
 add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>

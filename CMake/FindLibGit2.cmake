@@ -1,5 +1,5 @@
 ##
-#  FindLibApr.cmake
+#  FindLibGit2.cmake
 #
 #  Copyright (C) 2014 SDML (www.sdml.info)
 #
@@ -21,26 +21,18 @@
 #
 # Based off of FindLibXml2.cmake by Alexander Neundorf
 #
-# LIBAPR_FOUND       indicates if libapr is found
-# LIBAPR_INCLUDE_DIR libapr include directory
-# LIBAPR_LIBRARIES   libapr libraries
+# LIBGIT2_FOUND       indicates if libgit is found
+# LIBGIT2_INCLUDE_DIR libgit include directory
+# LIBGIT2_LIBRARIES   libgit libraries
 
-find_path(LIBAPR_INCLUDE_DIR NAMES apr.h HINTS /usr/local/include/apr-1 /usr/include/apr-1
-	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/apr-1/)
+find_path(LIBGIT2_INCLUDE_DIR NAMES git2.h HINTS /usr/local/include /usr/include)
 
-find_library(LIBAPR_APR     NAMES apr-1     HINTS /usr/local/lib /usr/lib
-	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/)
-find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib 
-	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/)
+find_library(LIBGIT2_GIT2     NAMES git2     HINTS /usr/local/lib /usr/lib)
 
-set(LIBAPR_LIBRARIES "")
+set(LIBGIT2_LIBRARIES "")
 
-if(LIBAPR_APR)
-    list(APPEND LIBAPR_LIBRARIES ${LIBAPR_APR})
-endif()
-
-if(LIBAPR_APRUTIL)
-    list(APPEND LIBAPR_LIBRARIES ${LIBAPR_APRUTIL})
+if(LIBGIT2_GIT2)
+    list(APPEND LIBGIT2_LIBRARIES ${LIBGIT2_GIT2})
 endif()
 
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
@@ -48,6 +40,6 @@ find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandard
 
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
-find_package_handle_standard_args(LibApr REQUIRED_VARS LIBAPR_LIBRARIES LIBAPR_INCLUDE_DIR)
+find_package_handle_standard_args(LibGit2 REQUIRED_VARS LIBGIT2_LIBRARIES LIBGIT2_INCLUDE_DIR)
 
-mark_as_advanced(LIBAPR_LIBRARIES LIBAPR_INCLUDE_DIR)
+mark_as_advanced(LIBGIT2_LIBRARIES LIBGIT2_INCLUDE_DIR)

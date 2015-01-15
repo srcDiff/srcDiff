@@ -35,7 +35,7 @@ if(SVN_ENABLED)
 list(APPEND SRCDIFF_LIBRARY_SOURCE_EXTRA client/srcdiff_input_source_svn.cpp)
 endif()
 
-if(ON)
+if(GIT_ENABLED)
 list(APPEND SRCDIFF_LIBRARY_SOURCE_EXTRA client/srcdiff_input_source_git.cpp)
 endif()
 

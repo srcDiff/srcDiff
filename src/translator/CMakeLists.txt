@@ -28,6 +28,12 @@ list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_svn
 
 endif()
 
+if(NOT GIT_ENABLED)
+
+list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_git.cpp)
+
+endif()
+
 # srcdiff
 add_library(translator OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})
 

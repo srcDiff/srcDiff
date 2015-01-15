@@ -119,6 +119,7 @@ void option_field<&srcdiff_options::git_url>(const std::string & arg) {
   options.git_revision_one = arg.substr(atsign + 1);
   std::string::size_type dash = arg.find('-', atsign + 1);
   options.git_revision_two = arg.substr(dash + 1);
+  srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
 
 }
 #endif

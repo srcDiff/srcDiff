@@ -177,8 +177,12 @@ void LineDiffRange::create_line_diff() {
 #endif
     lines_one = read_local_file(file_one.c_str());
     lines_two = read_local_file(file_two.c_str());
+#if defined(SVN) || defined(GIT)
+  }
+#endif  
+
 #ifdef SVN
-  } else if(url) {
+  if(url) {
 
     srcdiff_options options;
     options.svn_url = url;
@@ -186,17 +190,17 @@ void LineDiffRange::create_line_diff() {
     lines_one = read_svn_file(&input, file_one.c_str());
     lines_two = read_svn_file(&input, file_two.c_str());
 
+  }
 #endif
+
 #ifdef GIT
-  } else if(dir) {
+  if(dir) {
 
     srcdiff_options options;
     srcdiff_input_source_git input(options, dir);
     lines_one = read_git_file(&input, file_one.c_str());
     lines_two = read_git_file(&input, file_two.c_str());
 
-  }
-#else 
   }
 #endif 
 
