@@ -61,11 +61,12 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 void srcdiff_input_source_git::consume() {
 
-  directory(std::string(), 0, (const void *)tree_original, std::string(), 0, (const void *)tree_modified);
+  directory(std::string(), (const void *)tree_original, std::string(), (const void *)tree_modified);
 
 }
 
-void srcdiff_input_source_git::file(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two, int directory_length_old, int directory_length_new) {
+void srcdiff_input_source_git::file(const boost::optional<std::string> & path_one, const void * context_old,
+                                      const boost::optional<std::string> & path_two, const void * context_new) {
 
   std::string path_original = path_one ? *path_one : "";
   std::string path_modified = path_two ? *path_two : "";
@@ -91,8 +92,8 @@ bool operator<(const std::pair<std::string, size_t> & pair_one, const std::pair<
 
 }
 
-void srcdiff_input_source_git::directory(const boost::optional<std::string> & directory_old, int directory_length_old, const void * context_old,
-                                         const boost::optional<std::string> & directory_new, int directory_length_new, const void * context_new) {
+void srcdiff_input_source_git::directory(const boost::optional<std::string> & directory_old, const void * context_old,
+                                         const boost::optional<std::string> & directory_new, const void * context_new) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -144,7 +145,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     if(comparison <= 0) path_original = names_original.at(pos_original).first, ++pos_original;
     if(comparison >= 0) path_modified = names_modified.at(pos_modified).first, ++pos_modified;
 
-    file(path_original, path_modified, directory_length_old, directory_length_new);
+    file(path_original, current_tree_original, path_modified, current_tree_modified);
 
   }
 
@@ -154,7 +155,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     if(!entry_original || git_tree_entry_type(entry_original) == GIT_OBJ_TREE) { ++pos_original; continue; }
 
     boost::optional<std::string> path_original = names_original.at(pos_original).first;
-    file(path_original, boost::optional<std::string>(), directory_length_old, directory_length_new);
+    file(path_original, current_tree_original, boost::optional<std::string>(), current_tree_modified);
 
     ++pos_original;
 
@@ -166,7 +167,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     if(!entry_modified || git_tree_entry_type(entry_modified) == GIT_OBJ_TREE) { ++pos_modified; continue; }
 
     boost::optional<std::string> path_modified = names_modified.at(pos_modified).first;
-    file(boost::optional<std::string>(), path_modified, directory_length_old, directory_length_new);
+    file(boost::optional<std::string>(), current_tree_original, path_modified, current_tree_modified);
 
     ++pos_modified;
 
@@ -212,7 +213,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 
     }
 
-    directory(path_original, directory_length_old, subtree_original, path_modified, directory_length_new, subtree_modified);
+    directory(path_original, subtree_original, path_modified, subtree_modified);
 
     if(subtree_original) git_tree_free(subtree_original);
     if(subtree_modified) git_tree_free(subtree_modified);
@@ -229,7 +230,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     int error = git_tree_lookup(&subtree_original, repo, git_tree_entry_id(entry_original));
     if(error) throw std::string("Error accessing git commit tree.");       
 
-    directory(path_original, directory_length_old, subtree_original, boost::optional<std::string>(), directory_length_new, nullptr);
+    directory(path_original, subtree_original, boost::optional<std::string>(), nullptr);
 
     if(subtree_original) git_tree_free(subtree_original);
 
@@ -247,7 +248,7 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
     int error = git_tree_lookup(&subtree_modified, repo, git_tree_entry_id(entry_modified));
     if(error) throw std::string("Error accessing git commit tree.");
 
-    directory(boost::optional<std::string>(), directory_length_old, nullptr, path_modified, directory_length_new, subtree_modified);
+    directory(boost::optional<std::string>(), nullptr, path_modified, subtree_modified);
 
     if(subtree_modified) git_tree_free(subtree_modified);
 
