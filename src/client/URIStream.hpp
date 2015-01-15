@@ -25,6 +25,7 @@
 #include <string>
 
 #include <srcdiff_input_source_svn.hpp>
+#include <srcdiff_input_source_git.hpp>
 
 #ifndef URISTREAM_HPP
 #define URISTREAM_HPP
@@ -37,6 +38,10 @@ public:
 
 #ifdef SVN
     URIStream(srcdiff_input_source_svn::svn_context * context);
+#endif
+
+#ifdef GIT
+    URIStream(srcdiff_input_source_git::git_context * context);
 #endif
 
     char* readline();

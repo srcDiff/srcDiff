@@ -10,6 +10,7 @@
 #include <LineDiffRange.hpp>
 
 #include <srcdiff_input_source_svn.hpp>
+#include <srcdiff_input_source_git.hpp>
 
 #include <string>
 #include <vector>
@@ -98,6 +99,29 @@ std::vector<std::string> LineDiffRange::read_svn_file(const srcdiff_input_source
   if(file == 0 || file[0] == 0) return lines;
 
   srcdiff_input_source_svn::svn_context * context = input->open(file);
+
+  URIStream stream(context);
+
+  char * line;
+  while((line = stream.readline())) {
+
+    lines.push_back(line);
+
+  }
+
+  return lines;
+
+}
+#endif
+
+#ifdef GIT
+std::vector<std::string> LineDiffRange::read_git_file(const srcdiff_input_source_git * input, const char * file) {
+
+  std::vector<std::string> lines;
+
+  if(file == 0 || file[0] == 0) return lines;
+
+  srcdiff_input_source_git::git_context * context = input->open(file);
 
   URIStream stream(context);
 

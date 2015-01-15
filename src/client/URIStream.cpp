@@ -54,6 +54,23 @@ URIStream::URIStream(srcdiff_input_source_svn::svn_context * context)
 }
 #endif
 
+#ifdef GIT
+URIStream::URIStream(srcdiff_input_source_git::git_context * context)
+  : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
+{
+
+  if (!(input = xmlParserInputBufferCreateIO(srcdiff_input_source_git::read, srcdiff_input_source_git::close, context, XML_CHAR_ENCODING_NONE)))
+    throw URIStreamFileError();
+
+  // get some data into the buffer
+  int size = xmlParserInputBufferGrow(input, 4096);
+
+  // found problem or eof
+  if (size == -1 || size == 0)
+    done = true;
+}
+#endif
+
 std::string URIStream::readlines() {
 
   std::string s;

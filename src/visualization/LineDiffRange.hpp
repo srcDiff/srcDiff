@@ -19,6 +19,7 @@
 #include <fstream>
 
 class srcdiff_input_source_svn;
+class srcdiff_input_source_git;
 
 class LineDiffRange {
 
@@ -56,8 +57,12 @@ public:
 
   static std::vector<std::string> read_local_file(const char * file);
 
- #ifdef SVN
+#ifdef SVN
   static std::vector<std::string> read_svn_file(const srcdiff_input_source_svn * input, const char * file);
+#endif
+
+#ifdef GIT
+  static std::vector<std::string> read_git_file(const srcdiff_input_source_git * input, const char * file);
 #endif
 
 };

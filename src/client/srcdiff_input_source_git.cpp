@@ -1,11 +1,15 @@
 #include <srcdiff_input_source_git.hpp>
 
+#include <srcdiff_input_git.hpp>
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 
-#include <stdio.h>
+#include <cstdio>
+
+#include <URIStream.hpp>
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source(options), path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
@@ -39,9 +43,16 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
    error = git_commit_tree(&tree_modified, commit_modified);
   if(error) throw std::string("Error accessing git commit tree.");
 
+  translator = new srcdiff_translator(options.srcdiff_filename,
+                                options.flags, options.methods,
+                                options.archive,
+                                options.number_context_lines);
+
 }
 
 srcdiff_input_source_git::~srcdiff_input_source_git() {
+
+  delete translator;
 
   git_tree_free(tree_original);
   git_tree_free(tree_modified);
@@ -75,6 +86,11 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
     && srcml_archive_check_extension(options.archive, path_modified.c_str()) == SRCML_LANGUAGE_NONE)
     return;
 
+  boost::optional<std::string> path = path_one;
+  if(!path || path->empty()) path = path_two;
+
+  const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
+
   std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_old) : std::string();
   std::string filename_two  = !path_modified.empty() ? path_modified.substr(directory_length_new) : std::string();
   if(path_modified.empty() || unit_filename != filename_two) {
@@ -97,7 +113,12 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
   path_modified += git_oid_tostr(buf_modified, GIT_OID_HEXSZ + 1, blob_oid_modified);
   delete buf_modified;
 
-  std::cerr << path_original << ':' << path_modified << '\n';
+  srcdiff_input_git input_original(options.archive, path_original, 0, *this);
+  srcdiff_input_git input_modified(options.archive, path_modified, 0, *this);
+
+  LineDiffRange line_diff_range(path_original, path_modified, options.svn_url);
+
+  translator->translate(input_original, input_modified, line_diff_range, language_string, NULL, unit_filename, 0);
 
 }
 
