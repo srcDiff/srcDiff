@@ -1,5 +1,5 @@
 
-//#if GIT
+#if GIT
 
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
@@ -54,4 +54,4 @@ public:
 
 #endif
 
-//#endif
+#endif
