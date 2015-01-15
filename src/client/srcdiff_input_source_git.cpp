@@ -145,12 +145,12 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
   char * buf_original = new char[GIT_OID_HEXSZ + 1];
   path_original += '@';
   path_original += git_oid_tostr(buf_original, GIT_OID_HEXSZ + 1, blob_oid_original);
-  delete buf_original;
+  if(buf_original) delete buf_original;
 
   char * buf_modified = new char[GIT_OID_HEXSZ + 1];
   path_modified += '@';
   path_modified += git_oid_tostr(buf_modified, GIT_OID_HEXSZ + 1, blob_oid_modified);
-  delete buf_modified;
+  if(buf_modified) delete buf_modified;
 
   srcdiff_input_git input_original(options.archive, path_original, 0, *this);
   srcdiff_input_git input_modified(options.archive, path_modified, 0, *this);
@@ -371,11 +371,13 @@ srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const cha
   std::string oid_str(at_pos + 1);
 
   git_oid oid = { 0 };
+
   git_oid_fromstr(&oid, oid_str.c_str());
 
   git_blob_lookup(&context->blob, repo, &oid);
 
   context->content = { 0 };
+
   int error = git_blob_filtered_content(&context->content, context->blob, path.c_str(), true);
 
   context->pos = 0;
