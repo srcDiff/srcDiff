@@ -87,15 +87,15 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
 srcdiff_input_source_git::~srcdiff_input_source_git() {
 
-  delete translator;
+  if(translator) delete translator;
 
-  git_tree_free(tree_original);
-  git_tree_free(tree_modified);
+  if(tree_original) git_tree_free(tree_original);
+  if(tree_modified) git_tree_free(tree_modified);
 
-  git_commit_free(commit_original);
-  git_commit_free(commit_modified);
+  if(commit_original) git_commit_free(commit_original);
+  if(commit_modified) git_commit_free(commit_modified);
 
-  git_repository_free(repo);
+  if(repo) git_repository_free(repo);
 
   std::string command("rm -rf ");
   command += clone_path.native();
