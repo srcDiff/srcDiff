@@ -12,7 +12,7 @@
 #include <URIStream.hpp>
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source(options), clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
+  : srcdiff_input_source(options), clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), clean_path(true), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
 
   std::string command("git clone " + *options.git_url + " ");
   command += clone_path.native();
@@ -51,7 +51,7 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 }
 
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options, const boost::optional<std::string> & local_path)
-  : srcdiff_input_source(options), clone_path(*local_path), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0)  {
+  : srcdiff_input_source(options), clone_path(*local_path), clean_path(false), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0)  {
 
   int error = 0;
 
@@ -97,11 +97,15 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
   if(repo) git_repository_free(repo);
 
-  std::string command("rm -rf ");
-  command += clone_path.native();
+  if(clean_path) {
 
-  FILE * process = popen(command.c_str(), "r");
-  pclose(process);
+    std::string command("rm -rf ");
+    command += clone_path.native();
+
+    FILE * process = popen(command.c_str(), "r");
+    pclose(process);
+
+  }
 
 }
 

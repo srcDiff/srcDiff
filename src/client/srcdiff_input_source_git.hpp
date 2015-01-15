@@ -17,6 +17,7 @@ protected:
 private:
 
   boost::filesystem::path clone_path;
+  bool clean_path;
 
   git_repository * repo;
 
