@@ -2,6 +2,8 @@
 
 #include <srcdiff_input_git.hpp>
 
+#include <mutex>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,6 +12,8 @@
 #include <cstdio>
 
 #include <URIStream.hpp>
+
+static std::mutex mutex;
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source(options), clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), clean_path(true), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
@@ -372,6 +376,7 @@ srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const cha
 
   git_oid oid = { 0 };
 
+  mutex.lock();
   git_oid_fromstr(&oid, oid_str.c_str());
 
   git_blob_lookup(&context->blob, repo, &oid);
@@ -379,6 +384,7 @@ srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const cha
   context->content = { 0 };
 
   int error = git_blob_filtered_content(&context->content, context->blob, path.c_str(), true);
+  mutex.unlock();
 
   context->pos = 0;
 
