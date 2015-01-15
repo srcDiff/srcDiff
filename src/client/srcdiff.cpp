@@ -28,6 +28,7 @@
 #include <srcdiff_input_source.hpp>
 #include <srcdiff_input_source_local.hpp>
 #include <srcdiff_input_source_svn.hpp>
+#include <srcdiff_input_source_git.hpp>
 
 #include <srcml.h>
 
@@ -102,9 +103,29 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
   } else {
 #endif
 
+#if GIT
+
+  if(options.git_url) {
+
+    try {
+
+      input = new srcdiff_input_source_git(options);
+
+    } catch(...) {
+
+      std::cerr << "Problem with input url " << *options.git_url << "for revisions " << options.git_revision_one << " and " << options.git_revision_two << '\n';
+
+    }
+
+  } else {
+#endif
     input = new srcdiff_input_source_local(options);
 
 #if SVN
+  }
+#endif
+
+#if GIT
   }
 #endif
 

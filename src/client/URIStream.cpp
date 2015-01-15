@@ -191,4 +191,5 @@ char* URIStream::readline() {
 URIStream::~URIStream() {
 
     xmlFreeParserInputBuffer(input);
+
 }

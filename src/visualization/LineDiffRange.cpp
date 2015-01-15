@@ -23,9 +23,7 @@
 LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url, const boost::optional<std::string> & dir)
   : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), dir(dir) {}
 
-LineDiffRange::~LineDiffRange() {
-
-}
+LineDiffRange::~LineDiffRange() {}
 
 const std::string & LineDiffRange::get_file_one() const {
 
