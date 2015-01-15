@@ -286,12 +286,19 @@ srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const cha
 
   git_context * context = new git_context;
 
-  std::string oid_str(index(uri, '@') + 1);
+  char * at_pos = index(uri, '@');
+  const std::string path(uri, at_pos - uri);
+  std::string oid_str(at_pos + 1);
 
   git_oid oid = { 0 };
   git_oid_fromstr(&oid, oid_str.c_str());
 
   git_blob_lookup(&context->blob, repo, &oid);
+
+  context->content = { 0 };
+  int error = git_blob_filtered_content(&context->content, context->blob, path.c_str(), true);
+
+  context->pos = 0;
 
   return context;
 
@@ -299,15 +306,30 @@ srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const cha
 
 int srcdiff_input_source_git::read(void * context, char * buffer, int len) {
 
+  git_context * ctx = (git_context *)context;
 
-  return 0;
+  int remaining = ctx->content.size - ctx->pos;
+
+  int length = remaining >= len ? len : remaining;
+
+  memcpy((void *)buffer, (void *)(ctx->content.ptr + ctx->pos), length);
+
+  ctx->pos += length;
+
+  return length;
+
 }
 
 int srcdiff_input_source_git::close(void * context) {
 
   git_context * ctx = (git_context *)context;
 
+  git_buf_free(&ctx->content);
+
+  git_blob_free(ctx->blob);
+
   delete ctx;
 
   return 1;
+
 }
