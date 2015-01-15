@@ -44,6 +44,8 @@ public:
 
   struct git_context {
 
+    git_blob * blob;
+
   };
 
   git_context * open(const char * uri) const;

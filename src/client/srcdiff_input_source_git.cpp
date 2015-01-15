@@ -286,6 +286,12 @@ srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const cha
 
   git_context * context = new git_context;
 
+  std::string oid_str(index(uri, '@') + 1);
+
+  git_oid oid = { 0 };
+  git_oid_fromstr(&oid, oid_str.c_str());
+
+  git_blob_lookup(&context->blob, repo, &oid);
 
   return context;
 
