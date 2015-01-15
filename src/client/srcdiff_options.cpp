@@ -114,7 +114,7 @@ void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
 template<>
 void option_field<&srcdiff_options::git_url>(const std::string & arg) {
 
-  std::string::size_type atsign = arg.find('@');
+  std::string::size_type atsign = arg.rfind('@');
   options.git_url = arg.substr(0, atsign);
   options.git_revision_one = arg.substr(atsign + 1);
   std::string::size_type dash = arg.find('-', atsign + 1);
