@@ -33,12 +33,13 @@ private:
   std::vector<std::string> lines_two;
 
   const boost::optional<std::string> url;
+  const boost::optional<std::string> dir;
 
   OPTION_TYPE options;
 
 public:
 
-  LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url);
+  LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url, const boost::optional<std::string> & dir = boost::optional<std::string>());
 
   ~LineDiffRange();
 

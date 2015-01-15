@@ -16,7 +16,7 @@ protected:
 
 private:
 
-  boost::filesystem::path path;
+  boost::filesystem::path clone_path;
 
   git_repository * repo;
 
@@ -32,6 +32,8 @@ private:
 public:
 
   srcdiff_input_source_git(const srcdiff_options & options);
+  srcdiff_input_source_git(const srcdiff_options & options, const boost::optional<std::string> & local_path);
+
   virtual ~srcdiff_input_source_git();
 
   virtual void consume();

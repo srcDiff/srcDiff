@@ -20,8 +20,8 @@
 
 #include <URIStream.hpp>
 
-LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url)
-  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url) {}
+LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url, const boost::optional<std::string> & dir)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), dir(dir) {}
 
 LineDiffRange::~LineDiffRange() {
 
@@ -174,13 +174,13 @@ std::string LineDiffRange::get_line_diff_range() {
 
 void LineDiffRange::create_line_diff() {
 
-#ifdef SVN
-  if(!url) {
+#if defined(SVN) || defined(GIT)
+  if(!url && !dir) {
 #endif
     lines_one = read_local_file(file_one.c_str());
     lines_two = read_local_file(file_two.c_str());
 #ifdef SVN
-  } else {
+  } else if(url) {
 
     srcdiff_options options;
     options.svn_url = url;
@@ -188,9 +188,20 @@ void LineDiffRange::create_line_diff() {
     lines_one = read_svn_file(&input, file_one.c_str());
     lines_two = read_svn_file(&input, file_two.c_str());
 
-  }
 #endif
-  
+#ifdef GIT
+  } else if(dir) {
+
+    srcdiff_options options;
+    srcdiff_input_source_git input(options, dir);
+    lines_one = read_git_file(&input, file_one.c_str());
+    lines_two = read_git_file(&input, file_two.c_str());
+
+  }
+#else 
+  }
+#endif 
+
   int distance = ses.compute(&lines_one, lines_one.size(), &lines_two, lines_two.size());
 
   if(distance < 0) {

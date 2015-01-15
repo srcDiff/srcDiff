@@ -12,17 +12,17 @@
 #include <URIStream.hpp>
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source(options), path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
+  : srcdiff_input_source(options), clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
 
   std::string command("git clone " + *options.git_url + " ");
-  command += path.native();
+  command += clone_path.native();
 
   FILE * process = popen(command.c_str(), "r");
   pclose(process);
 
   int error = 0;
 
-  error = git_repository_open(&repo, path.c_str());
+  error = git_repository_open(&repo, clone_path.c_str());
   if(error) throw std::string("Error Opening up temporary repository.");
 
   error = git_oid_fromstr(&oid_original, options.git_revision_one.c_str());
@@ -50,6 +50,41 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
 }
 
+srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options, const boost::optional<std::string> & local_path)
+  : srcdiff_input_source(options), clone_path(*local_path), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0)  {
+
+  int error = 0;
+
+  error = git_repository_open(&repo, clone_path.c_str());
+  if(error) throw std::string("Error Opening up temporary repository.");
+
+/*
+  error = git_oid_fromstr(&oid_original, options.git_revision_one.c_str());
+  if(error) throw std::string("Error getting base/original revision: ");
+
+  error = git_oid_fromstr(&oid_modified, options.git_revision_two.c_str());
+  if(error) throw std::string("Error getting base/original revision: ");
+
+  git_commit_lookup(&commit_original, repo, &oid_original);
+  if(error) throw std::string("Error looking up base/original commit.");
+
+  git_commit_lookup(&commit_modified, repo, &oid_modified);
+  if(error) throw std::string("Error looking up base/original commit.");
+
+  error = git_commit_tree(&tree_original, commit_original);
+  if(error) throw std::string("Error accessing git commit tree.");
+
+   error = git_commit_tree(&tree_modified, commit_modified);
+  if(error) throw std::string("Error accessing git commit tree.");
+
+  translator = new srcdiff_translator(options.srcdiff_filename,
+                                options.flags, options.methods,
+                                options.archive,
+                                options.number_context_lines);
+  */
+
+}
+
 srcdiff_input_source_git::~srcdiff_input_source_git() {
 
   delete translator;
@@ -63,7 +98,7 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
   git_repository_free(repo);
 
   std::string command("rm -rf ");
-  command += path.native();
+  command += clone_path.native();
 
   FILE * process = popen(command.c_str(), "r");
   pclose(process);
@@ -116,7 +151,7 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
   srcdiff_input_git input_original(options.archive, path_original, 0, *this);
   srcdiff_input_git input_modified(options.archive, path_modified, 0, *this);
 
-  LineDiffRange line_diff_range(path_original, path_modified, options.git_url);
+  LineDiffRange line_diff_range(path_original, path_modified, boost::optional<std::string>(), clone_path.native());
 
   translator->translate(input_original, input_modified, line_diff_range, language_string, NULL, unit_filename, 0);
 
