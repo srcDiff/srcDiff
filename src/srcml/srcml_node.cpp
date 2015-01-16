@@ -169,7 +169,7 @@ bool srcml_node::is_white_space() const {
 
 }
 
-bool srcml_node::is_new_line() const {
+bool srcml_node::is_modified_line() const {
 
   return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && content && (*content)[0] == '\n';
 

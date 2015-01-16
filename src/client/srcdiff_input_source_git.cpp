@@ -119,8 +119,8 @@ void srcdiff_input_source_git::consume() {
 
 }
 
-void srcdiff_input_source_git::file(const boost::optional<std::string> & path_one, const void * context_old,
-                                    const boost::optional<std::string> & path_two, const void * context_new) {
+void srcdiff_input_source_git::file(const boost::optional<std::string> & path_one, const void * context_original,
+                                    const boost::optional<std::string> & path_two, const void * context_modified) {
 
   std::string path_original = path_one ? *path_one : "";
   std::string path_modified = path_two ? *path_two : "";
@@ -134,8 +134,8 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
 
   const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
 
-  std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_old) : std::string();
-  std::string filename_two  = !path_modified.empty() ? path_modified.substr(directory_length_new) : std::string();
+  std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_original) : std::string();
+  std::string filename_two  = !path_modified.empty() ? path_modified.substr(directory_length_modified) : std::string();
   if(path_modified.empty() || unit_filename != filename_two) {
 
     unit_filename += '|';
@@ -143,8 +143,8 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
 
   }
 
-  const git_oid * blob_oid_original = (const git_oid *)context_old;
-  const git_oid * blob_oid_modified = (const git_oid *)context_new;
+  const git_oid * blob_oid_original = (const git_oid *)context_original;
+  const git_oid * blob_oid_modified = (const git_oid *)context_modified;
 
   char * buf_original = new char[GIT_OID_HEXSZ + 1];
   path_original += '@';
@@ -171,8 +171,8 @@ bool operator<(const std::pair<std::string, size_t> & pair_one, const std::pair<
 
 }
 
-void srcdiff_input_source_git::directory(const boost::optional<std::string> & directory_old, const void * context_old,
-                                         const boost::optional<std::string> & directory_new, const void * context_new) {
+void srcdiff_input_source_git::directory(const boost::optional<std::string> & directory_original, const void * context_original,
+                                         const boost::optional<std::string> & directory_modified, const void * context_modified) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -180,14 +180,14 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 #define PATH_SEPARATOR '/'
 #endif
 
-  const git_tree * current_tree_original = (const git_tree *)context_old;
-  const git_tree * current_tree_modified = (const git_tree *)context_new;
+  const git_tree * current_tree_original = (const git_tree *)context_original;
+  const git_tree * current_tree_modified = (const git_tree *)context_modified;
 
   std::string path_original;
   int basesize_original = 0;
-  if(directory_old) {
+  if(directory_original) {
 
-    path_original = *directory_old;
+    path_original = *directory_original;
     if (!path_original.empty() && path_original.back() != PATH_SEPARATOR) path_original += PATH_SEPARATOR;
     basesize_original = path_original.size();
 
@@ -195,9 +195,9 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 
   std::string path_modified;
   int basesize_modified = 0;
-  if(directory_new) {
+  if(directory_modified) {
 
-    path_modified = *directory_new;
+    path_modified = *directory_modified;
     if (!path_modified.empty() && path_modified.back() != PATH_SEPARATOR) path_modified += PATH_SEPARATOR;
     basesize_modified = path_modified.size();
 

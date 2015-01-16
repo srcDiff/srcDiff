@@ -7,8 +7,8 @@ class srcdiff_single : public srcdiff_many {
 
 protected:
 
-	unsigned int start_old;
-	unsigned int start_new;
+	unsigned int start_original;
+	unsigned int start_modified;
 
 private:
 	
@@ -17,7 +17,7 @@ private:
 
 public:
 
-	srcdiff_single(const srcdiff_many & diff, unsigned int start_old, unsigned int start_new);
+	srcdiff_single(const srcdiff_many & diff, unsigned int start_original, unsigned int start_modified);
 
 	virtual void output();
 

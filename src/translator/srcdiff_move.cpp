@@ -40,8 +40,8 @@ bool srcdiff_move::is_move(const node_set & set, const srcml_nodes & nodes) {
 
 }
 
-void srcdiff_move::mark_moves(srcml_nodes & nodes_old, const node_sets & node_sets_old
-                , srcml_nodes & nodes_new, const node_sets & node_sets_new
+void srcdiff_move::mark_moves(srcml_nodes & nodes_original, const node_sets & node_sets_original
+                , srcml_nodes & nodes_modified, const node_sets & node_sets_modified
                 , edit * edit_script) {
 
   std::map<std::string, IntPairs > constructs;
@@ -54,7 +54,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_old, const node_sets & node_se
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_new, nodes_new, edits->offset_sequence_two + i, SESINSERT);
+        add_construct(constructs, node_sets_modified, nodes_modified, edits->offset_sequence_two + i, SESINSERT);
 
       }
 
@@ -64,7 +64,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_old, const node_sets & node_se
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_old, nodes_old, edits->offset_sequence_one + i, SESDELETE);
+        add_construct(constructs, node_sets_original, nodes_original, edits->offset_sequence_one + i, SESDELETE);
 
       }
 
@@ -83,19 +83,19 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_old, const node_sets & node_se
 
     for(unsigned int i = 0; i < elements.size(); ++i) {
 
-      srcml_nodes * nodes_one = &nodes_old;
-      srcml_nodes * nodes_two = &nodes_new;
+      srcml_nodes * nodes_one = &nodes_original;
+      srcml_nodes * nodes_two = &nodes_modified;
 
-      const node_sets * node_sets_one = &node_sets_old;
-      const node_sets * node_sets_two = &node_sets_new;
+      const node_sets * node_sets_one = &node_sets_original;
+      const node_sets * node_sets_two = &node_sets_modified;
 
       if(elements.at(i).second == SESINSERT) {
 
-       nodes_one = &nodes_new;
-       nodes_two = &nodes_old;
+       nodes_one = &nodes_modified;
+       nodes_two = &nodes_original;
 
-        node_sets_one = &node_sets_new;
-        node_sets_two = &node_sets_old;
+        node_sets_one = &node_sets_modified;
+        node_sets_two = &node_sets_original;
 
       }
 
@@ -157,15 +157,15 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_old, const node_sets & node_se
 void srcdiff_move::output() {
 
   // store current diff if is any
-  std::shared_ptr<reader_state> rbuf = rbuf_old;
-  std::shared_ptr<srcml_node> start_node = diff_old_start;
-  std::shared_ptr<srcml_node> end_node = diff_old_end;
+  std::shared_ptr<reader_state> rbuf = rbuf_original;
+  std::shared_ptr<srcml_node> start_node = diff_original_start;
+  std::shared_ptr<srcml_node> end_node = diff_original_end;
 
   if(operation == SESINSERT) {
 
-    rbuf = rbuf_new;
-    start_node = diff_new_start;
-    end_node = diff_new_end;
+    rbuf = rbuf_modified;
+    start_node = diff_modified_start;
+    end_node = diff_modified_end;
 
   }
 

@@ -39,10 +39,10 @@ public:
 
   virtual void consume();
 
-  virtual void file(const boost::optional<std::string> & path_one, const void * context_old,
-                    const boost::optional<std::string> & path_two, const void * context_new);
-  virtual void directory(const boost::optional<std::string> & directory_old, const void * context_old,
-                         const boost::optional<std::string> & directory_new, const void * context_new);
+  virtual void file(const boost::optional<std::string> & path_one, const void * context_original,
+                    const boost::optional<std::string> & path_two, const void * context_modified);
+  virtual void directory(const boost::optional<std::string> & directory_original, const void * context_original,
+                         const boost::optional<std::string> & directory_modified, const void * context_modified);
   virtual void files_from();
 
   struct git_context {

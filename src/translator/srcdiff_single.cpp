@@ -10,48 +10,48 @@
 #include <map>
 #include <list>
 
-srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_old, unsigned int start_new) : srcdiff_many(diff), start_old(start_old), start_new(start_new) {}
+srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_original, unsigned int start_modified) : srcdiff_many(diff), start_original(start_original), start_modified(start_modified) {}
 
-static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_node::srcml_attr> & properties_old, const std::list<srcml_node::srcml_attr> & properties_new) {
+static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_node::srcml_attr> & properties_original, const std::list<srcml_node::srcml_attr> & properties_modified) {
 
   std::list<srcml_node::srcml_attr> attributes;
 
-  auto citr_old = properties_old.begin();
-  auto citr_new = properties_new.begin();
+  auto citr_original = properties_original.begin();
+  auto citr_modified = properties_modified.begin();
 
-  while(citr_old != properties_old.end() && citr_new != properties_new.end()) {
+  while(citr_original != properties_original.end() && citr_modified != properties_modified.end()) {
 
-    if(citr_old->name == citr_new->name) {
+    if(citr_original->name == citr_modified->name) {
 
-      if(*citr_old->value == citr_new->value) 
-        attributes.emplace_back(citr_old->name, *citr_old->value);
+      if(*citr_original->value == citr_modified->value) 
+        attributes.emplace_back(citr_original->name, *citr_original->value);
       else
-        attributes.emplace_back(citr_old->name, *citr_old->value + std::string("|") +*citr_new->value);
+        attributes.emplace_back(citr_original->name, *citr_original->value + std::string("|") +*citr_modified->value);
 
-      ++citr_old;
-      ++citr_new;
+      ++citr_original;
+      ++citr_modified;
 
     } else {
 
-      ++citr_new;
+      ++citr_modified;
 
-      bool is_end = citr_new == properties_new.end();
+      bool is_end = citr_modified == properties_modified.end();
       std::string name;
-      if(!is_end) name = citr_new->name;
+      if(!is_end) name = citr_modified->name;
 
-      --citr_new;
+      --citr_modified;
 
-      if(!is_end && citr_old->name == name) {
+      if(!is_end && citr_original->name == name) {
 
-        attributes.emplace_back(citr_new->name, std::string("|") + *citr_new->value);
+        attributes.emplace_back(citr_modified->name, std::string("|") + *citr_modified->value);
 
-        ++citr_new;
+        ++citr_modified;
 
       } else {
 
-        attributes.emplace_back(citr_old->name, *citr_old->value + std::string("|"));
+        attributes.emplace_back(citr_original->name, *citr_original->value + std::string("|"));
 
-        ++citr_old;
+        ++citr_original;
 
       }
 
@@ -59,19 +59,19 @@ static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_
 
   }
 
-  while(citr_old != properties_old.end()) {
+  while(citr_original != properties_original.end()) {
 
-      attributes.emplace_back(citr_old->name, *citr_old->value + std::string("|"));
+      attributes.emplace_back(citr_original->name, *citr_original->value + std::string("|"));
 
-      ++citr_old;
+      ++citr_original;
 
   }
 
-  while(citr_new != properties_new.end()) {
+  while(citr_modified != properties_modified.end()) {
 
-      attributes.emplace_back(citr_new->name, std::string("|") + *citr_new->value);
+      attributes.emplace_back(citr_modified->name, std::string("|") + *citr_modified->value);
 
-      ++citr_new;
+      ++citr_modified;
 
   }
 
@@ -88,16 +88,16 @@ void srcdiff_single::output_recursive_same() {
 
   std::shared_ptr<srcml_node> merged_node;
 
-  if(srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), out.get_nodes_new().at(node_sets_new.at(start_new).at(0))) == 0) {
+  if(srcdiff_compare::node_compare(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))) == 0) {
 
-    out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), SESCOMMON);
+    out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SESCOMMON);
 
   } else {
 
-    merged_node = std::make_shared<srcml_node>(*out.get_nodes_old().at(node_sets_old.at(start_old).at(0)));
+    merged_node = std::make_shared<srcml_node>(*out.get_nodes_original().at(node_sets_original.at(start_original).at(0)));
 
-    merged_node->properties = merge_properties(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->properties,
-                                              out.get_nodes_new().at(node_sets_new.at(start_new).at(0))->properties);
+    merged_node->properties = merge_properties(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->properties,
+                                              out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->properties);
 
 
     out.output_node(merged_node, SESCOMMON);
@@ -105,41 +105,41 @@ void srcdiff_single::output_recursive_same() {
 
   }
 
-  ++out.last_output_old();
-  ++out.last_output_new();
+  ++out.last_output_original();
+  ++out.last_output_modified();
 
   // compare subset of nodes
-  if(out.get_nodes_old().at(node_sets_old.at(start_old).at(0))->name == "comment") {
+  if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "comment") {
 
     // collect subset of nodes
-    node_sets next_set_old
-      = node_sets(out.get_nodes_old(), node_sets_old.at(start_old).at(1)
-                        , node_sets_old.at(start_old).at(node_sets_old.at(start_old).size() - 1));
+    node_sets next_set_original
+      = node_sets(out.get_nodes_original(), node_sets_original.at(start_original).at(1)
+                        , node_sets_original.at(start_original).at(node_sets_original.at(start_original).size() - 1));
 
-    node_sets next_set_new
-      = node_sets(out.get_nodes_new(), node_sets_new.at(start_new).at(1)
-                        , node_sets_new.at(start_new).at(node_sets_new.at(start_new).size() - 1));
+    node_sets next_set_modified
+      = node_sets(out.get_nodes_modified(), node_sets_modified.at(start_modified).at(1)
+                        , node_sets_modified.at(start_modified).at(node_sets_modified.at(start_modified).size() - 1));
 
-    srcdiff_comment diff(out, next_set_old, next_set_new);
+    srcdiff_comment diff(out, next_set_original, next_set_modified);
     diff.output();
 
   } else {
 
       // collect subset of nodes
-      node_sets next_set_old
-        = node_sets(out.get_nodes_old(), node_sets_old.at(start_old).at(1)
-                          , node_sets_old.at(start_old).back());
+      node_sets next_set_original
+        = node_sets(out.get_nodes_original(), node_sets_original.at(start_original).at(1)
+                          , node_sets_original.at(start_original).back());
 
-      node_sets next_set_new
-        = node_sets(out.get_nodes_new(), node_sets_new.at(start_new).at(1)
-                          , node_sets_new.at(start_new).back());
+      node_sets next_set_modified
+        = node_sets(out.get_nodes_modified(), node_sets_modified.at(start_modified).at(1)
+                          , node_sets_modified.at(start_modified).back());
 
-      srcdiff_diff diff(out, next_set_old, next_set_new);
+      srcdiff_diff diff(out, next_set_original, next_set_modified);
       diff.output();
 
   }
 
-  output_common(node_sets_old.at(start_old).back() + 1, node_sets_new.at(start_new).back() + 1);
+  output_common(node_sets_original.at(start_original).back() + 1, node_sets_modified.at(start_modified).back() + 1);
 
   out.output_node(out.diff_common_end, SESCOMMON);
 
@@ -152,58 +152,58 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.output_node(out.diff_old_start, SESDELETE);
+  out.output_node(out.diff_original_start, SESDELETE);
 
-  out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old).at(0)), SESDELETE);
+  out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SESDELETE);
 
-  bool is_same_keyword = srcdiff_compare::node_compare(out.get_nodes_old().at(node_sets_old.at(start_old).at(1)),
-                  out.get_nodes_new().at(node_sets_new.at(start_new).at(1))) == 0;
+  bool is_same_keyword = srcdiff_compare::node_compare(out.get_nodes_original().at(node_sets_original.at(start_original).at(1)),
+                  out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1))) == 0;
 
   int old_collect_start_pos = 1;
   if(!is_same_keyword) {
 
-    out.output_node(out.get_nodes_old().at(node_sets_old.at(start_old).at(1)), SESDELETE);
-    ++out.last_output_old();
+    out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(1)), SESDELETE);
+    ++out.last_output_original();
     old_collect_start_pos = 2;
 
   }
 
-  ++out.last_output_old();
+  ++out.last_output_original();
 
-  out.output_node(out.diff_new_start, SESINSERT);
+  out.output_node(out.diff_modified_start, SESINSERT);
 
-  out.output_node(out.get_nodes_new().at(node_sets_new.at(start_new).at(0)), SESINSERT);
+  out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0)), SESINSERT);
 
   int new_collect_start_pos = 1;
   if(!is_same_keyword){
 
-    out.output_node(out.get_nodes_new().at(node_sets_new.at(start_new).at(1)), SESINSERT);
-    ++out.last_output_new();
+    out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1)), SESINSERT);
+    ++out.last_output_modified();
     new_collect_start_pos = 2;
 
   }
 
-  ++out.last_output_new();
+  ++out.last_output_modified();
 
   // collect subset of nodes
-  node_sets next_set_old
-    = node_sets(out.get_nodes_old(), node_sets_old.at(start_old).at(old_collect_start_pos)
-                      , node_sets_old.at(start_old).back());
+  node_sets next_set_original
+    = node_sets(out.get_nodes_original(), node_sets_original.at(start_original).at(old_collect_start_pos)
+                      , node_sets_original.at(start_original).back());
 
-  node_sets next_set_new
-    = node_sets(out.get_nodes_new(), node_sets_new.at(start_new).at(new_collect_start_pos)
-                      , node_sets_new.at(start_new).back());
+  node_sets next_set_modified
+    = node_sets(out.get_nodes_modified(), node_sets_modified.at(start_modified).at(new_collect_start_pos)
+                      , node_sets_modified.at(start_modified).back());
 
-  srcdiff_diff diff(out, next_set_old, next_set_new);
+  srcdiff_diff diff(out, next_set_original, next_set_modified);
   diff.output();
 
-  output_change(out.last_output_old(), node_sets_new.at(start_new).back() + 1);
+  output_change(out.last_output_original(), node_sets_modified.at(start_modified).back() + 1);
 
-  out.output_node(out.diff_new_end, SESINSERT);
+  out.output_node(out.diff_modified_end, SESINSERT);
 
-  output_change(node_sets_old.at(start_old).back() + 1, out.last_output_new());
+  output_change(node_sets_original.at(start_original).back() + 1, out.last_output_modified());
 
-  out.output_node(out.diff_old_end, SESDELETE);
+  out.output_node(out.diff_original_end, SESDELETE);
 
   whitespace.output_statement();
 
@@ -212,13 +212,13 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-    const std::shared_ptr<srcml_node> & start_node_old = out.get_nodes_old().at(node_sets_old.at(start_old).front());
-    const std::shared_ptr<srcml_node> & start_node_new = out.get_nodes_new().at(node_sets_new.at(start_new).front());
+    const std::shared_ptr<srcml_node> & start_node_original = out.get_nodes_original().at(node_sets_original.at(start_original).front());
+    const std::shared_ptr<srcml_node> & start_node_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).front());
 
-  if(start_node_old->name == start_node_new->name
-    && (bool(start_node_old->ns) == bool(start_node_new->ns) && (!start_node_old->ns
-      || (start_node_old->ns->prefix == start_node_new->ns->prefix 
-        && (!start_node_old->ns->prefix || *start_node_old->ns->prefix == *start_node_new->ns->prefix)))))
+  if(start_node_original->name == start_node_modified->name
+    && (bool(start_node_original->ns) == bool(start_node_modified->ns) && (!start_node_original->ns
+      || (start_node_original->ns->prefix == start_node_modified->ns->prefix 
+        && (!start_node_original->ns->prefix || *start_node_original->ns->prefix == *start_node_modified->ns->prefix)))))
     output_recursive_same();
   else
     output_recursive_interchangeable();

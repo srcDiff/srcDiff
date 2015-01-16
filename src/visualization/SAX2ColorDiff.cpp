@@ -458,18 +458,18 @@ void color_diff::startDocument(void* ctx) {
 
   std::string span_out = span_class;
   bool is_diff = false;
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+  if(data->line_original < data->lines_original.size() && data->lines_original.at(data->line_original)
+     && data->line_modified < data->lines_modified.size() && data->lines_modified.at(data->line_modified)){
 
     span_out = span_class + diff_color_change;
     is_diff = true;
 
-  } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+  } else if(data->line_original < data->lines_original.size() && data->lines_original.at(data->line_original)) {
 
     span_out = span_class + diff_color_delete;
     is_diff = true;
 
-  } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+  } else if(data->line_modified < data->lines_modified.size() && data->lines_modified.at(data->line_modified)) {
 
     span_out = span_class + diff_color_insert;
     is_diff = true;
@@ -498,9 +498,9 @@ void color_diff::startDocument(void* ctx) {
     data->last_context = span_out;
     data->spanning = true;
 
-    if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
+    if(data->line_original < data->lines_original.size() || data->line_modified < data->lines_modified.size()) {
 
-      data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+      data->colordiff_file << "<span class=\"line\">" << data->line_original << "-" << data->line_modified << "</span>";
       data->is_line_output = true;
 
     }
@@ -601,18 +601,18 @@ void color_diff::characters(void* ctx, const xmlChar* ch, int len) {
   std::string span_out = span_class;
 
   bool is_diff = false;
-  if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-     && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+  if(data->line_original < data->lines_original.size() && data->lines_original.at(data->line_original)
+     && data->line_modified < data->lines_modified.size() && data->lines_modified.at(data->line_modified)){
 
     span_out = span_class + diff_color_change;
     is_diff = true;
 
-  } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+  } else if(data->line_original < data->lines_original.size() && data->lines_original.at(data->line_original)) {
 
     span_out = span_class + diff_color_delete;
     is_diff = true;
 
-  } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+  } else if(data->line_modified < data->lines_modified.size() && data->lines_modified.at(data->line_modified)) {
 
     span_out = span_class + diff_color_insert;
     is_diff = true;
@@ -660,7 +660,7 @@ void color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
       if(!data->is_line_output) {
 
-        data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+        data->colordiff_file << "<span class=\"line\">" << data->line_original << "-" << data->line_modified << "</span>";
         data->is_line_output = true;
 
       }
@@ -680,32 +680,32 @@ void color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
       if(data->in_diff->back() == SESCOMMON) {
 
-        ++data->line_old;
-        ++data->line_new;
+        ++data->line_original;
+        ++data->line_modified;
 
       } else if(data->in_diff->back() == SESDELETE) {
 
-        ++data->line_old;
+        ++data->line_original;
 
       } else {
-        ++data->line_new;
+        ++data->line_modified;
 
       }
 
       std::string span_out = span_class;
       is_diff = false;
-      if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)
-         && data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)){
+      if(data->line_original < data->lines_original.size() && data->lines_original.at(data->line_original)
+         && data->line_modified < data->lines_modified.size() && data->lines_modified.at(data->line_modified)){
 
         span_out = span_class + diff_color_change;
         is_diff = true;
 
-      } else if(data->line_old < data->lines_old.size() && data->lines_old.at(data->line_old)) {
+      } else if(data->line_original < data->lines_original.size() && data->lines_original.at(data->line_original)) {
 
         span_out = span_class + diff_color_delete;
         is_diff = true;
 
-      } else if(data->line_new < data->lines_new.size() && data->lines_new.at(data->line_new)) {
+      } else if(data->line_modified < data->lines_modified.size() && data->lines_modified.at(data->line_modified)) {
 
         span_out = span_class + diff_color_insert;
         is_diff = true;
@@ -749,7 +749,7 @@ void color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
         data->colordiff_file << "</span>";
 
-        if(data->line_old < data->lines_old.size() || data->line_new < data->lines_new.size()) {
+        if(data->line_original < data->lines_original.size() || data->line_modified < data->lines_modified.size()) {
 
           if(data->last_context != span_out) {
 
@@ -764,7 +764,7 @@ void color_diff::characters(void* ctx, const xmlChar* ch, int len) {
             data->colordiff_file << "<span " << span_out.c_str() << ">";
             data->last_context = span_out;
             data->spanning = true;
-            data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+            data->colordiff_file << "<span class=\"line\">" << data->line_original << "-" << data->line_modified << "</span>";
             data->is_line_output = true;
 
           } else {
@@ -776,7 +776,7 @@ void color_diff::characters(void* ctx, const xmlChar* ch, int len) {
               //data->spanning = false;
             }
 
-            data->colordiff_file << "<span class=\"line\">" << data->line_old << "-" << data->line_new << "</span>";
+            data->colordiff_file << "<span class=\"line\">" << data->line_original << "-" << data->line_modified << "</span>";
             data->is_line_output = true;
             //data->colordiff_file << "<span " << span_out.c_str() << ">";
             //data->spanning = true;

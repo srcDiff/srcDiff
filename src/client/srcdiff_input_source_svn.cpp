@@ -179,42 +179,42 @@ void srcdiff_input_source_svn::session_range() {
 
 }
 
-void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_one, const void * context_old,
-                                    const boost::optional<std::string> & path_two, const void * context_new) {
+void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_one, const void * context_original,
+                                    const boost::optional<std::string> & path_two, const void * context_modified) {
 
-  std::string path_old = path_one ? *path_one : std::string();
-  std::string path_new = path_two ? *path_two : std::string();
+  std::string path_original = path_one ? *path_one : std::string();
+  std::string path_modified = path_two ? *path_two : std::string();
 
-  std::string unit_filename = !path_old.empty() ? path_old.substr(directory_length_old) : std::string();
-  std::string filename_two =  !path_new.empty() ? path_new.substr(directory_length_new) : std::string();
-  if(path_new.empty() || unit_filename != filename_two) {
+  std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_original) : std::string();
+  std::string filename_two =  !path_modified.empty() ? path_modified.substr(directory_length_modified) : std::string();
+  if(path_modified.empty() || unit_filename != filename_two) {
 
     unit_filename += "|";
     unit_filename += filename_two;
 
   }
 
-  if(srcml_archive_check_extension(options.archive, path_old.c_str()) == SRCML_LANGUAGE_NONE
-    && srcml_archive_check_extension(options.archive, path_new.c_str()) == SRCML_LANGUAGE_NONE
+  if(srcml_archive_check_extension(options.archive, path_original.c_str()) == SRCML_LANGUAGE_NONE
+    && srcml_archive_check_extension(options.archive, path_modified.c_str()) == SRCML_LANGUAGE_NONE
     && srcml_archive_check_extension(options.archive, options.svn_url->c_str()) == SRCML_LANGUAGE_NONE)
     return;
 
   // set path to include revision
-  std::ostringstream svn_path_one(path_old, std::ios_base::ate);
+  std::ostringstream svn_path_one(path_original, std::ios_base::ate);
   svn_path_one << '@';
   svn_path_one << revision_one;
 
-  std::ostringstream svn_path_two(path_new, std::ios_base::ate);
+  std::ostringstream svn_path_two(path_modified, std::ios_base::ate);
   svn_path_two << '@';
   svn_path_two << revision_two;
 
-  std::string svn_path_old = svn_path_one.str();
-  std::string svn_path_new = svn_path_two.str();
+  std::string svn_path_original = svn_path_one.str();
+  std::string svn_path_modified = svn_path_two.str();
 
-  srcdiff_input_svn input_old(options.archive, svn_path_old, 0, *this);
-  srcdiff_input_svn input_new(options.archive, svn_path_new, 0, *this);
+  srcdiff_input_svn input_original(options.archive, svn_path_original, 0, *this);
+  srcdiff_input_svn input_modified(options.archive, svn_path_modified, 0, *this);
 
-  LineDiffRange line_diff_range(svn_path_old, svn_path_new, options.svn_url);
+  LineDiffRange line_diff_range(svn_path_original, svn_path_modified, options.svn_url);
 
   boost::optional<std::string> path = path_one;
   if(!path || path->empty()) path = path_two;
@@ -222,12 +222,12 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
 
   const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
 
-  translator->translate(input_old, input_new, line_diff_range, language_string, NULL, unit_filename, 0);
+  translator->translate(input_original, input_modified, line_diff_range, language_string, NULL, unit_filename, 0);
 
 }
 
-void srcdiff_input_source_svn::directory(const boost::optional<std::string> & directory_old, const void * context_old,
-                                         const boost::optional<std::string> & directory_new, const void * context_new) {
+void srcdiff_input_source_svn::directory(const boost::optional<std::string> & directory_original, const void * context_original,
+                                         const boost::optional<std::string> & directory_modified, const void * context_modified) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -239,13 +239,13 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
   svn_revnum_t fetched_rev_one;
   std::vector<std::string> dir_entries_one;
 
-  if(directory_old) {
+  if(directory_original) {
 
     apr_hash_index_t * item;
     const void * key;
     void * value;
 
-    svn_ra_get_dir2(session, &dirents_one, &fetched_rev_one, NULL, directory_old->c_str(), revision_one, SVN_DIRENT_ALL, pool);
+    svn_ra_get_dir2(session, &dirents_one, &fetched_rev_one, NULL, directory_original->c_str(), revision_one, SVN_DIRENT_ALL, pool);
 
     for (item = apr_hash_first(pool, dirents_one); item; item = apr_hash_next(item)) {
 
@@ -262,13 +262,13 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
   svn_revnum_t fetched_rev_two;
   std::vector<std::string> dir_entries_two;
 
-  if(directory_new) {
+  if(directory_modified) {
 
     apr_hash_index_t * item;
     const void * key;
     void * value;
 
-    svn_ra_get_dir2(session, &dirents_two, &fetched_rev_two, NULL, directory_new->c_str(), revision_two, SVN_DIRENT_ALL, pool);
+    svn_ra_get_dir2(session, &dirents_two, &fetched_rev_two, NULL, directory_modified->c_str(), revision_two, SVN_DIRENT_ALL, pool);
 
     for (item = apr_hash_first(pool, dirents_two); item; item = apr_hash_next(item)) {
 
@@ -281,25 +281,25 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
 
   }
 
-  std::string path_old;
-  int basesize_old = 0;
+  std::string path_original;
+  int basesize_original = 0;
 
   // process directory
-  if(directory_old) {
+  if(directory_original) {
 
-    path_old = *directory_old;
-    if (!path_old.empty() && path_old.back() != PATH_SEPARATOR) path_old += PATH_SEPARATOR;
-    basesize_old = path_old.size();
+    path_original = *directory_original;
+    if (!path_original.empty() && path_original.back() != PATH_SEPARATOR) path_original += PATH_SEPARATOR;
+    basesize_original = path_original.size();
 
   }
 
-  std::string path_new;
-  int basesize_new = 0;
-  if(directory_new) {
+  std::string path_modified;
+  int basesize_modified = 0;
+  if(directory_modified) {
 
-    path_new = *directory_new;
-    if (!path_new.empty() && path_new.back() != PATH_SEPARATOR) path_new += PATH_SEPARATOR;
-    basesize_new = path_new.size();
+    path_modified = *directory_modified;
+    if (!path_modified.empty() && path_modified.back() != PATH_SEPARATOR) path_modified += PATH_SEPARATOR;
+    basesize_modified = path_modified.size();
 
   }
 
@@ -311,23 +311,23 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
   while (i < n && j < m) {
 
     // form the full path
-    path_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
-    path_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
+    path_original.replace(basesize_original, std::string::npos, dir_entries_one[i]);
+    path_modified.replace(basesize_modified, std::string::npos, dir_entries_two[j]);
 
-    svn_dirent_t * dirent_old;
-    svn_ra_stat(session, path_old.c_str(), revision_one, &dirent_old, pool);
+    svn_dirent_t * dirent_original;
+    svn_ra_stat(session, path_original.c_str(), revision_one, &dirent_original, pool);
 
-    svn_dirent_t * dirent_new;
-    svn_ra_stat(session, path_new.c_str(), revision_two, &dirent_new, pool);
+    svn_dirent_t * dirent_modified;
+    svn_ra_stat(session, path_modified.c_str(), revision_two, &dirent_modified, pool);
 
 
     // skip directories
-    if(dirent_old->kind != svn_node_file) {
+    if(dirent_original->kind != svn_node_file) {
       ++i;
       continue;
     }
 
-    if(dirent_new->kind != svn_node_file) {
+    if(dirent_modified->kind != svn_node_file) {
       ++j;
       continue;
     }
@@ -337,8 +337,8 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
 
     boost::optional<std::string> file_path_one;
     boost::optional<std::string> file_path_two;
-    if(comparison <= 0) ++i, file_path_one = path_old;
-    if(comparison >= 0) ++j, file_path_two = path_new;
+    if(comparison <= 0) ++i, file_path_one = path_original;
+    if(comparison >= 0) ++j, file_path_two = path_modified;
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     file(file_path_one, nullptr, file_path_two, nullptr);
@@ -349,19 +349,19 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
   for (; i < n; ++i) {
 
     // form the full path
-    path_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
+    path_original.replace(basesize_original, std::string::npos, dir_entries_one[i]);
 
-    svn_dirent_t * dirent_old;
-    svn_ra_stat(session, path_old.c_str(), revision_one, &dirent_old, pool);
+    svn_dirent_t * dirent_original;
+    svn_ra_stat(session, path_original.c_str(), revision_one, &dirent_original, pool);
 
     // skip directories
-    if(dirent_old->kind != svn_node_file) {
+    if(dirent_original->kind != svn_node_file) {
       ++i;
       continue;
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(path_old, nullptr, boost::optional<std::string>(), nullptr);
+    file(path_original, nullptr, boost::optional<std::string>(), nullptr);
 
   }
 
@@ -369,19 +369,19 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
   for ( ; j < m; ++j) {
 
     // form the full path
-    path_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
+    path_modified.replace(basesize_modified, std::string::npos, dir_entries_two[j]);
 
-    svn_dirent_t * dirent_new;
-    svn_ra_stat(session, path_new.c_str(), revision_two, &dirent_new, pool);
+    svn_dirent_t * dirent_modified;
+    svn_ra_stat(session, path_modified.c_str(), revision_two, &dirent_modified, pool);
 
     // skip directories
-    if(dirent_new->kind != svn_node_file) {
+    if(dirent_modified->kind != svn_node_file) {
       ++j;
       continue;
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(boost::optional<std::string>(), nullptr, path_new, nullptr);
+    file(boost::optional<std::string>(), nullptr, path_modified, nullptr);
 
   }
 
@@ -390,23 +390,23 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
   j = 0;
   while (i < n && j < m) {
 
-    path_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
-    path_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
+    path_original.replace(basesize_original, std::string::npos, dir_entries_one[i]);
+    path_modified.replace(basesize_modified, std::string::npos, dir_entries_two[j]);
 
-    svn_dirent_t * dirent_old;
-    svn_ra_stat(session, path_old.c_str(), revision_one, &dirent_old, pool);
+    svn_dirent_t * dirent_original;
+    svn_ra_stat(session, path_original.c_str(), revision_one, &dirent_original, pool);
 
-    svn_dirent_t * dirent_new;
-    svn_ra_stat(session, path_new.c_str(), revision_two, &dirent_new, pool);
+    svn_dirent_t * dirent_modified;
+    svn_ra_stat(session, path_modified.c_str(), revision_two, &dirent_modified, pool);
 
 
     // skip directories
-    if(dirent_old->kind != svn_node_dir) {
+    if(dirent_original->kind != svn_node_dir) {
       ++i;
       continue;
     }
 
-    if(dirent_new->kind != svn_node_dir) {
+    if(dirent_modified->kind != svn_node_dir) {
       ++j;
       continue;
     }
@@ -416,8 +416,8 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
 
     boost::optional<std::string> directory_path_one;
     boost::optional<std::string> directory_path_two;
-    if(comparison <= 0) ++i, directory_path_one = path_old;
-    if(comparison >= 0) ++j, directory_path_two = path_new;
+    if(comparison <= 0) ++i, directory_path_one = path_original;
+    if(comparison >= 0) ++j, directory_path_two = path_modified;
 
     // process these directories
     directory(directory_path_one, nullptr, directory_path_two, nullptr);
@@ -427,37 +427,37 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
   // process all directories that remain in the old version
   for ( ; i < n; ++i) {
 
-    path_old.replace(basesize_old, std::string::npos, dir_entries_one[i]);
+    path_original.replace(basesize_original, std::string::npos, dir_entries_one[i]);
 
-    svn_dirent_t * dirent_old;
-    svn_ra_stat(session, path_old.c_str(), revision_one, &dirent_old, pool);
+    svn_dirent_t * dirent_original;
+    svn_ra_stat(session, path_original.c_str(), revision_one, &dirent_original, pool);
 
     // skip directories
-    if(dirent_old->kind != svn_node_dir) {
+    if(dirent_original->kind != svn_node_dir) {
       ++i;
       continue;
     }
 
     // process this directory
-    directory(path_old, nullptr, boost::optional<std::string>(), nullptr);
+    directory(path_original, nullptr, boost::optional<std::string>(), nullptr);
 
   }
 
   // process all directories that remain in the new version
   for ( ; j < m; ++j) {
 
-    path_new.replace(basesize_new, std::string::npos, dir_entries_two[j]);
+    path_modified.replace(basesize_modified, std::string::npos, dir_entries_two[j]);
 
-    svn_dirent_t * dirent_new;
-    svn_ra_stat(session, path_new.c_str(), revision_two, &dirent_new, pool);
+    svn_dirent_t * dirent_modified;
+    svn_ra_stat(session, path_modified.c_str(), revision_two, &dirent_modified, pool);
 
     // skip directories
-    if(dirent_new->kind != svn_node_dir) {
+    if(dirent_modified->kind != svn_node_dir) {
       ++j;
       continue;
     }
 
-    directory(boost::optional<std::string>(), nullptr, path_new, nullptr);
+    directory(boost::optional<std::string>(), nullptr, path_modified, nullptr);
 
   }
 

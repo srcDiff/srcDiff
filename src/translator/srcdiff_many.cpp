@@ -8,79 +8,79 @@
 
 srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
 
-void srcdiff_many::output_unmatched(int start_old, int end_old, int start_new, int end_new) {
+void srcdiff_many::output_unmatched(int start_original, int end_original, int start_modified, int end_modified) {
 
-  unsigned int finish_old = out.last_output_old();
-  unsigned int finish_new = out.last_output_new();
+  unsigned int finish_original = out.last_output_original();
+  unsigned int finish_modified = out.last_output_modified();
 
-  if((start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old.size())
-      || (start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new.size())) {
+  if((start_original <= end_original && start_original >= 0 && end_original < (signed)node_sets_original.size())
+      || (start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size())) {
 
-    if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old.size()
-      && start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new.size()) {
+    if(start_original <= end_original && start_original >= 0 && end_original < (signed)node_sets_original.size()
+      && start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size()) {
 
-      int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
+      int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
 
       do {
 
-        srcdiff_nested::check_nestable(node_sets_old, out.get_nodes_old(), start_old, end_old + 1
-                        , node_sets_new, out.get_nodes_new(), start_new, end_new + 1
-                        , start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
+        srcdiff_nested::check_nestable(node_sets_original, out.get_nodes_original(), start_original, end_original + 1
+                        , node_sets_modified, out.get_nodes_modified(), start_modified, end_modified + 1
+                        , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
 
-        finish_old = node_sets_old.at(end_old).back() + 1;
-        finish_new = node_sets_new.at(end_new).back() + 1;
+        finish_original = node_sets_original.at(end_original).back() + 1;
+        finish_modified = node_sets_modified.at(end_modified).back() + 1;
 
-        unsigned int pre_nest_end_old = 0;
-        if(start_nest_old > 0) {
+        unsigned int pre_nest_end_original = 0;
+        if(start_nest_original > 0) {
 
-          pre_nest_end_old = node_sets_old.at(start_nest_old - 1).back() + 1;
-
-        }
-
-        unsigned int pre_nest_end_new = 0;
-        if(start_nest_new > 0) {
-
-          pre_nest_end_new = node_sets_new.at(start_nest_new - 1).back() + 1;
+          pre_nest_end_original = node_sets_original.at(start_nest_original - 1).back() + 1;
 
         }
 
-        output_change(pre_nest_end_old, pre_nest_end_new);
+        unsigned int pre_nest_end_modified = 0;
+        if(start_nest_modified > 0) {
 
-        if((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0) {
+          pre_nest_end_modified = node_sets_modified.at(start_nest_modified - 1).back() + 1;
 
-          srcdiff_nested diff(*this, start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation);
+        }
+
+        output_change(pre_nest_end_original, pre_nest_end_modified);
+
+        if((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0) {
+
+          srcdiff_nested diff(*this, start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
           diff.output();
 
         }
 
-        start_old = end_nest_old;
-        start_new = end_nest_new;
+        start_original = end_nest_original;
+        start_modified = end_nest_modified;
 
-      } while((end_nest_old - start_nest_old) > 0 && (end_nest_new - start_nest_new) > 0 && end_nest_old <= end_old && end_nest_new <= end_new);
+      } while((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0 && end_nest_original <= end_original && end_nest_modified <= end_modified);
 
       /** @todo may only need to do this if not at end */
-      if(end_nest_old > end_old && end_nest_new > end_new) {
+      if(end_nest_original > end_original && end_nest_modified > end_modified) {
 
-        output_change(finish_old, finish_new);
+        output_change(finish_original, finish_modified);
         return;
 
       }
 
     } else {
 
-      if(start_old <= end_old && start_old >= 0 && end_old < (signed)node_sets_old.size()) {
+      if(start_original <= end_original && start_original >= 0 && end_original < (signed)node_sets_original.size()) {
 
-        finish_old = node_sets_old.at(end_old).back() + 1;
+        finish_original = node_sets_original.at(end_original).back() + 1;
       }
 
-      if(start_new <= end_new && start_new >= 0 && end_new < (signed)node_sets_new.size()) {
+      if(start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size()) {
 
-        finish_new = node_sets_new.at(end_new).back() + 1;
+        finish_modified = node_sets_modified.at(end_modified).back() + 1;
       }
 
     }
 
-    output_change_whitespace(finish_old, finish_new);
+    output_change_whitespace(finish_original, finish_modified);
               
   }
 
@@ -94,52 +94,52 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
   offset_pair * matches = NULL;
 
   IntPairs old_moved;
-  std::vector<int> pos_old;
-  node_sets old_sets(out.get_nodes_old());
+  std::vector<int> pos_original;
+  node_sets old_sets(out.get_nodes_original());
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
     unsigned int index = edits->offset_sequence_one + i;
 
-    if(out.get_nodes_old().at(node_sets_old.at(index).at(0))->move) {
+    if(out.get_nodes_original().at(node_sets_original.at(index).at(0))->move) {
 
       old_moved.push_back(IntPair(SESMOVE, 0));
 
     } else {
 
       old_moved.push_back(IntPair(SESDELETE, 0));
-      pos_old.push_back(i);
-      old_sets.push_back(node_sets_old.at(index));
+      pos_original.push_back(i);
+      old_sets.push_back(node_sets_original.at(index));
 
     }
 
   }
 
   IntPairs new_moved;
-  std::vector<int> pos_new;
-  node_sets new_sets(out.get_nodes_new());
+  std::vector<int> pos_modified;
+  node_sets new_sets(out.get_nodes_modified());
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 
-    if(out.get_nodes_new().at(node_sets_new.at(index).at(0))->move) {
+    if(out.get_nodes_modified().at(node_sets_modified.at(index).at(0))->move) {
 
       new_moved.push_back(IntPair(SESMOVE, 0));
 
     } else {
 
       new_moved.push_back(IntPair(SESINSERT, 0));
-      pos_new.push_back(i);
-      new_sets.push_back(node_sets_new.at(index));
+      pos_modified.push_back(i);
+      new_sets.push_back(node_sets_modified.at(index));
 
     }
 
   }
 
-  if(pos_old.size() != 0 && pos_new.size()) {
+  if(pos_original.size() != 0 && pos_modified.size()) {
 
-    srcdiff_match match(out.get_nodes_old(), out.get_nodes_new(), old_sets, new_sets);
+    srcdiff_match match(out.get_nodes_original(), out.get_nodes_modified(), old_sets, new_sets);
     matches = match.match_differences();
 
   }
@@ -148,11 +148,11 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   for(; matches; matches = matches->next) {
 
-    old_moved.at(pos_old.at(matches->old_offset)).first = SESCOMMON;
-    old_moved.at(pos_old.at(matches->old_offset)).second = pos_new.at(matches->new_offset);
+    old_moved.at(pos_original.at(matches->old_offset)).first = SESCOMMON;
+    old_moved.at(pos_original.at(matches->old_offset)).second = pos_modified.at(matches->new_offset);
 
-    new_moved.at(pos_new.at(matches->new_offset)).first = SESCOMMON;
-    new_moved.at(pos_new.at(matches->new_offset)).second = pos_old.at(matches->old_offset);
+    new_moved.at(pos_modified.at(matches->new_offset)).first = SESCOMMON;
+    new_moved.at(pos_modified.at(matches->new_offset)).second = pos_original.at(matches->old_offset);
 
   }
 
@@ -186,33 +186,33 @@ void srcdiff_many::output() {
 
   for(; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
 
-    unsigned int start_old = i;
+    unsigned int start_original = i;
 
-    unsigned int start_new = j;
+    unsigned int start_modified = j;
 
-    unsigned int end_old = start_old;
+    unsigned int end_original = start_original;
 
-    unsigned int end_new = start_new;
+    unsigned int end_modified = start_modified;
 
-    for(; end_old < old_moved.size() && (old_moved.at(end_old).first == SESDELETE || old_moved.at(end_old).first == SESMOVE); ++end_old)
+    for(; end_original < old_moved.size() && (old_moved.at(end_original).first == SESDELETE || old_moved.at(end_original).first == SESMOVE); ++end_original)
       ;
 
-    for(; end_new < new_moved.size() && (new_moved.at(end_new).first == SESINSERT || new_moved.at(end_new).first == SESMOVE); ++end_new)
+    for(; end_modified < new_moved.size() && (new_moved.at(end_modified).first == SESINSERT || new_moved.at(end_modified).first == SESMOVE); ++end_modified)
       ;
 
     // output diffs until match
-    output_unmatched(edits->offset_sequence_one + start_old, edits->offset_sequence_one + end_old - 1, 
-                      edit_next->offset_sequence_two + start_new, edit_next->offset_sequence_two + end_new - 1);
+    output_unmatched(edits->offset_sequence_one + start_original, edits->offset_sequence_one + end_original - 1, 
+                      edit_next->offset_sequence_two + start_modified, edit_next->offset_sequence_two + end_modified - 1);
 
-    i = end_old;
-    j = end_new;
+    i = end_original;
+    j = end_modified;
 
     if(i >= old_moved.size() || j >= new_moved.size())
       break;
 
     if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
  
-      if((xmlReaderTypes)out.get_nodes_old().at(node_sets_old.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
+      if((xmlReaderTypes)out.get_nodes_original().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
 
         srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
         diff.output();
@@ -220,8 +220,8 @@ void srcdiff_many::output() {
       } else {
 
         // syntax mismatch
-        output_change_whitespace(node_sets_old.at(edits->offset_sequence_one + i).back() + 1,
-          node_sets_new.at(edit_next->offset_sequence_two + j).back() + 1);
+        output_change_whitespace(node_sets_original.at(edits->offset_sequence_one + i).back() + 1,
+          node_sets_modified.at(edit_next->offset_sequence_two + j).back() + 1);
       }
 
     } else {

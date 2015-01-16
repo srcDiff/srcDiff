@@ -9,23 +9,23 @@
 class srcdiff_measure {
 
 protected:
-	const srcml_nodes & nodes_old;
-	const srcml_nodes & nodes_new;
-	const node_set & set_old;
-	const node_set & set_new;
+	const srcml_nodes & nodes_original;
+	const srcml_nodes & nodes_modified;
+	const node_set & set_original;
+	const node_set & set_modified;
 
 private:
-	void compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length);
-	void compute_ses_important_text(class shortest_edit_script & ses, int & text_old_length, int & text_new_length);
+	void compute_ses(class shortest_edit_script & ses, int & text_original_length, int & text_modified_length);
+	void compute_ses_important_text(class shortest_edit_script & ses, int & text_original_length, int & text_modified_length);
 
 public:
 
-	srcdiff_measure(const srcml_nodes & nodes_old, const srcml_nodes & nodes_new, const node_set & set_old, const node_set & set_new);
+	srcdiff_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified);
 
 	int compute_similarity();
-	int compute_similarity(int & text_old_length, int & text_new_length);
-	void compute_measures(int & similarity, int & difference, int & text_old_length, int & text_new_length);
-	void compute_syntax_measures(int & similarity, int & difference, int & children_old_length, int & children_new_length);
+	int compute_similarity(int & text_original_length, int & text_modified_length);
+	void compute_measures(int & similarity, int & difference, int & text_original_length, int & text_modified_length);
+	void compute_syntax_measures(int & similarity, int & difference, int & children_original_length, int & children_modified_length);
 
 };
 

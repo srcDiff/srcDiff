@@ -7,8 +7,8 @@
 
 const boost::optional<std::string> srcdiff_common::whitespace("whitespace");
 
-srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
-: srcdiff_output(out), end_old(end_old), end_new(end_new) {}
+srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
+: srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
 
@@ -17,41 +17,41 @@ srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_old,
 */
 void srcdiff_common::markup_common() {
 
-  int begin_old = rbuf_old->last_output;
-  int begin_new = rbuf_new->last_output;
+  int begin_original = rbuf_original->last_output;
+  int begin_modified = rbuf_modified->last_output;
 
-  int oend = end_old;
-  int nend = end_new;
+  int oend = end_original;
+  int nend = end_modified;
 
   // set attribute to change
   diff_type->value = whitespace;
-  diff_old_start->properties.push_back(*diff_type.get());
-  diff_new_start->properties.push_back(*diff_type.get());
+  diff_original_start->properties.push_back(*diff_type.get());
+  diff_modified_start->properties.push_back(*diff_type.get());
 
   int i, j;
-  for(i = begin_old, j = begin_new; i < oend && j < nend; ++i, ++j) {
+  for(i = begin_original, j = begin_modified; i < oend && j < nend; ++i, ++j) {
 
-    if(srcdiff_compare::node_compare(rbuf_old->nodes.at(i), rbuf_new->nodes.at(j)) == 0) {
+    if(srcdiff_compare::node_compare(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j)) == 0) {
 
-      output_node(rbuf_old->nodes.at(i), SESCOMMON);
+      output_node(rbuf_original->nodes.at(i), SESCOMMON);
         
-    } else if(rbuf_old->nodes.at(i)->is_white_space() && rbuf_new->nodes.at(j)->is_white_space()) {
+    } else if(rbuf_original->nodes.at(i)->is_white_space() && rbuf_modified->nodes.at(j)->is_white_space()) {
       
       int olength = i;
       int nlength = j;
 
-      for(; olength < oend && rbuf_old->nodes.at(olength)->is_white_space(); ++olength)
+      for(; olength < oend && rbuf_original->nodes.at(olength)->is_white_space(); ++olength)
         ;
 
-      for(; nlength < nend && rbuf_new->nodes.at(nlength)->is_white_space(); ++nlength)
+      for(; nlength < nend && rbuf_modified->nodes.at(nlength)->is_white_space(); ++nlength)
         ;
 
-      //markup_whitespace(rbuf_old, olength, rbuf_new, nlength, wstate);
+      //markup_whitespace(rbuf_original, olength, rbuf_modified, nlength, wstate);
 
       int opivot = olength - 1;
       int npivot = nlength - 1;
 
-      for(; opivot > i && npivot > j && srcdiff_compare::node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) == 0; --opivot, --npivot)
+      for(; opivot > i && npivot > j && srcdiff_compare::node_compare(rbuf_original->nodes.at(opivot), rbuf_modified->nodes.at(npivot)) == 0; --opivot, --npivot)
         ;
 
       if(opivot < i || npivot < j) {
@@ -59,7 +59,7 @@ void srcdiff_common::markup_common() {
         opivot = olength;
         npivot = nlength;
 
-      } else if(srcdiff_compare::node_compare(rbuf_old->nodes.at(opivot), rbuf_new->nodes.at(npivot)) != 0) {
+      } else if(srcdiff_compare::node_compare(rbuf_original->nodes.at(opivot), rbuf_modified->nodes.at(npivot)) != 0) {
 
         ++opivot;
         ++npivot;
@@ -67,25 +67,25 @@ void srcdiff_common::markup_common() {
 
         if(i < opivot) {
 
-        output_node(diff_old_start, SESDELETE);
+        output_node(diff_original_start, SESDELETE);
 
         for(int k = i; k < opivot; ++k)
-          output_node(rbuf_old->nodes.at(k), SESDELETE);
+          output_node(rbuf_original->nodes.at(k), SESDELETE);
 
         // output diff tag
-        output_node(diff_old_end, SESDELETE);
+        output_node(diff_original_end, SESDELETE);
 
         }
 
         if(j < npivot) {
 
-        output_node(diff_new_start, SESINSERT);
+        output_node(diff_modified_start, SESINSERT);
 
         for(int k = j; k < npivot; ++k)
-          output_node(rbuf_new->nodes.at(k), SESINSERT);
+          output_node(rbuf_modified->nodes.at(k), SESINSERT);
 
         // output diff tag
-        output_node(diff_new_end, SESINSERT);
+        output_node(diff_modified_end, SESINSERT);
 
         }
 
@@ -94,7 +94,7 @@ void srcdiff_common::markup_common() {
           //output_node(diff_common_start, SESCOMMON);
 
         for(int k = opivot; k < olength; ++k)
-          output_node(rbuf_old->nodes.at(k), SESCOMMON);
+          output_node(rbuf_original->nodes.at(k), SESCOMMON);
 
         // output diff tag
         //output_node(diff_common_end, SESCOMMON);
@@ -105,96 +105,96 @@ void srcdiff_common::markup_common() {
 
         j = nlength - 1;
 
-    } else if(rbuf_old->nodes.at(i)->is_white_space()) {
+    } else if(rbuf_original->nodes.at(i)->is_white_space()) {
 
-      output_node(diff_old_start, SESDELETE);
+      output_node(diff_original_start, SESDELETE);
       // whitespace delete
       // output diff tag
 
-      for(; i < oend && rbuf_old->nodes.at(i)->is_white_space(); ++i)
-        output_node(rbuf_old->nodes.at(i), SESDELETE);
+      for(; i < oend && rbuf_original->nodes.at(i)->is_white_space(); ++i)
+        output_node(rbuf_original->nodes.at(i), SESDELETE);
 
       // output diff tag
-      output_node(diff_old_end, SESDELETE);
+      output_node(diff_original_end, SESDELETE);
 
       --i;
       --j;
 
-    } else if(rbuf_new->nodes.at(j)->is_white_space()) {
+    } else if(rbuf_modified->nodes.at(j)->is_white_space()) {
 
-      output_node(diff_new_start, SESINSERT);
+      output_node(diff_modified_start, SESINSERT);
       //whitespace insert
       // output diff tag
 
-      for(; j < nend && rbuf_new->nodes.at(j)->is_white_space(); ++j)
-        output_node(rbuf_new->nodes.at(j), SESINSERT);
+      for(; j < nend && rbuf_modified->nodes.at(j)->is_white_space(); ++j)
+        output_node(rbuf_modified->nodes.at(j), SESINSERT);
 
       // output diff tag
-      output_node(diff_new_end, SESINSERT);
+      output_node(diff_modified_end, SESINSERT);
 
       --i;
       --j;
 
-    } else if(rbuf_old->nodes.at(i)->is_text() && rbuf_new->nodes.at(j)->is_text()) {
+    } else if(rbuf_original->nodes.at(i)->is_text() && rbuf_modified->nodes.at(j)->is_text()) {
 
       // collect all adjacent text nodes character arrays and input difference
-      std::string text_old = "";
-      for(; i < oend && rbuf_old->nodes.at(i)->is_text(); ++i)
-        text_old += rbuf_old->nodes.at(i)->content ? *rbuf_old->nodes.at(i)->content : "";
+      std::string text_original = "";
+      for(; i < oend && rbuf_original->nodes.at(i)->is_text(); ++i)
+        text_original += rbuf_original->nodes.at(i)->content ? *rbuf_original->nodes.at(i)->content : "";
 
-      std::string text_new = "";
-      for(; j < nend && rbuf_new->nodes.at(j)->is_text(); ++j)
-        text_new += rbuf_new->nodes.at(j)->content ? *rbuf_new->nodes.at(j)->content : "";
+      std::string text_modified = "";
+      for(; j < nend && rbuf_modified->nodes.at(j)->is_text(); ++j)
+        text_modified += rbuf_modified->nodes.at(j)->content ? *rbuf_modified->nodes.at(j)->content : "";
 
       --i;
       --j;
 
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_old.c_str());
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_new.c_str());
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_original.c_str());
+      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_modified.c_str());
 
       int opos = 0;
       int npos = 0;
-      for(; opos < (signed)text_old.size() && npos < (signed)text_new.size();) {
+      for(; opos < (signed)text_original.size() && npos < (signed)text_modified.size();) {
 
-        if(text_old[opos] == text_new[npos]) {
+        if(text_original[opos] == text_modified[npos]) {
 
-          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          output_char((xmlChar)text_old[opos], SESCOMMON);
+          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_original[opos]);
+          output_char((xmlChar)text_original[opos], SESCOMMON);
 
           ++opos;
           ++npos;
 
         } else {
 
-          if(isspace(text_old[opos]) || isspace(text_new[npos])) {
+          if(isspace(text_original[opos]) || isspace(text_modified[npos])) {
 
-            if(isspace(text_old[opos])) {
+            if(isspace(text_original[opos])) {
 
-              output_node(diff_old_start, SESDELETE);
+              output_node(diff_original_start, SESDELETE);
 
-              for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
+              for(; opos < (signed)text_original.size() && isspace(text_original[opos]); ++opos) {
 
-                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-                output_char((xmlChar)text_old[opos], SESDELETE);
+                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_original[opos]);
+                output_char((xmlChar)text_original[opos], SESDELETE);
               }
 
               // output diff tag
-              output_node(diff_old_end, SESDELETE);
+              output_node(diff_original_end, SESDELETE);
 
             }
 
-            if(isspace(text_new[npos])) {
+            if(isspace(text_modified[npos])) {
 
-              output_node(diff_new_start, SESINSERT);
+              output_node(diff_modified_start, SESINSERT);
 
-              for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
+              for(; npos < (signed)text_modified.size() && isspace(text_modified[npos]); ++npos) {
 
-                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-                output_char((xmlChar)text_new[npos], SESINSERT);
+                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_modified[npos]);
+                output_char((xmlChar)text_modified[npos], SESINSERT);
               }
 
               // output diff tag
-              output_node(diff_new_end, SESINSERT);
+              output_node(diff_modified_end, SESINSERT);
 
             }
 
@@ -204,41 +204,41 @@ void srcdiff_common::markup_common() {
 
       }
 
-      if(opos < (signed)text_old.size()) {
+      if(opos < (signed)text_original.size()) {
 
-        output_node(diff_old_start, SESDELETE);
+        output_node(diff_original_start, SESDELETE);
 
-        for(; opos < (signed)text_old.size() && isspace(text_old[opos]); ++opos) {
+        for(; opos < (signed)text_original.size() && isspace(text_original[opos]); ++opos) {
 
-          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_old[opos]);
-          output_char((xmlChar)text_old[opos], SESDELETE);
+          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_original[opos]);
+          output_char((xmlChar)text_original[opos], SESDELETE);
         }
 
         // output diff tag
-        output_node(diff_old_end, SESDELETE);
+        output_node(diff_original_end, SESDELETE);
 
       }
 
-      if(npos < (signed)text_new.size()) {
+      if(npos < (signed)text_modified.size()) {
         
-        output_node(diff_new_start, SESINSERT);
+        output_node(diff_modified_start, SESINSERT);
 
-        for(; npos < (signed)text_new.size() && isspace(text_new[npos]); ++npos) {
+        for(; npos < (signed)text_modified.size() && isspace(text_modified[npos]); ++npos) {
 
-          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_new[npos]);
-          output_char((xmlChar)text_new[npos], SESINSERT);
+          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_modified[npos]);
+          output_char((xmlChar)text_modified[npos], SESINSERT);
         }
 
         // output diff tag
-        output_node(diff_new_end, SESINSERT);
+        output_node(diff_modified_end, SESINSERT);
 
       }
 
 
     } else {
 
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old->nodes.at(i)->name.c_str());
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_new->nodes.at(j)->name.c_str());
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original->nodes.at(i)->name.c_str());
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->name.c_str());
 
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
       fprintf(stderr, "ERROR\n");
@@ -250,35 +250,35 @@ void srcdiff_common::markup_common() {
   // output leftover nodes
   if(i < oend) {
 
-    output_node(diff_old_start, SESDELETE);
+    output_node(diff_original_start, SESDELETE);
     // whitespace delete
     // output diff tag
 
     for( ; i < oend; ++i)
-      output_node(rbuf_old->nodes.at(i), SESDELETE);
+      output_node(rbuf_original->nodes.at(i), SESDELETE);
 
     // output diff tag
-    output_node(diff_old_end, SESDELETE);
+    output_node(diff_original_end, SESDELETE);
 
   } else if(j < nend) {
 
-    output_node(diff_new_start, SESINSERT);
+    output_node(diff_modified_start, SESINSERT);
     // whitespace delete
     // output diff tag
 
     for( ; j < nend; ++j)
-      output_node(rbuf_new->nodes.at(j), SESINSERT);
+      output_node(rbuf_modified->nodes.at(j), SESINSERT);
 
     // output diff tag
-    output_node(diff_new_end, SESINSERT);
+    output_node(diff_modified_end, SESINSERT);
 
   }
 
-  rbuf_old->last_output = oend > (signed)rbuf_old->last_output ? oend : rbuf_old->last_output;
-  rbuf_new->last_output = nend > (signed)rbuf_new->last_output ? nend : rbuf_new->last_output;
+  rbuf_original->last_output = oend > (signed)rbuf_original->last_output ? oend : rbuf_original->last_output;
+  rbuf_modified->last_output = nend > (signed)rbuf_modified->last_output ? nend : rbuf_modified->last_output;
 
-  diff_old_start->properties.clear();
-  diff_new_start->properties.clear();
+  diff_original_start->properties.clear();
+  diff_modified_start->properties.clear();
 
 }
 
@@ -294,16 +294,16 @@ void srcdiff_common::markup_common() {
 
 void srcdiff_common::output() {
 
-  unsigned int oend = end_old;
-  unsigned int nend = end_new;
+  unsigned int oend = end_original;
+  unsigned int nend = end_modified;
 
-  if(rbuf_old->last_output >= oend && rbuf_new->last_output >= nend)
+  if(rbuf_original->last_output >= oend && rbuf_modified->last_output >= nend)
     return;
 
   srcdiff_whitespace whitespace(*this);
   whitespace.output_all();
 
-  if(rbuf_old->last_output >= oend && rbuf_new->last_output >= nend)
+  if(rbuf_original->last_output >= oend && rbuf_modified->last_output >= nend)
     return;
 
   // output common tag if needed
@@ -313,7 +313,7 @@ void srcdiff_common::output() {
   markup_common();
 
   // may need to take out all occurences afterwards except on pure deletes of this after something
-  //output_statement(rbuf_old, rbuf_new, wstate);
+  //output_statement(rbuf_original, rbuf_modified, wstate);
 
   // output common tag if needed
   output_node(diff_common_end, SESCOMMON);

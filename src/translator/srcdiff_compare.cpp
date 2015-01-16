@@ -21,10 +21,10 @@ namespace srcdiff_compare {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    const std::shared_ptr<srcml_node> & node_old = dnodes.nodes_old.at(*(int *)node1);
-    const std::shared_ptr<srcml_node> & node_new = dnodes.nodes_new.at(*(int *)node2);
+    const std::shared_ptr<srcml_node> & node_original = dnodes.nodes_original.at(*(int *)node1);
+    const std::shared_ptr<srcml_node> & node_modified = dnodes.nodes_modified.at(*(int *)node2);
 
-    return node_compare(node_old, node_new);
+    return node_compare(node_original, node_modified);
   }
 
   // diff node comparison function
@@ -73,20 +73,20 @@ namespace srcdiff_compare {
 
       // string consecutive non whitespace text nodes
       // TODO:  Why create the string?  Just compare directly as you go through
-      if(dnodes.nodes_old.at(node_set1->at(i))->is_text() && dnodes.nodes_new.at(node_set2->at(j))->is_text()) {
+      if(dnodes.nodes_original.at(node_set1->at(i))->is_text() && dnodes.nodes_modified.at(node_set2->at(j))->is_text()) {
 
         std::string text1 = "";
-        for(; i < node_set1->size() && dnodes.nodes_old.at(node_set1->at(i))->is_text(); ++i)
-          text1 += dnodes.nodes_old.at(node_set1->at(i))->content ? *dnodes.nodes_old.at(node_set1->at(i))->content : "";
+        for(; i < node_set1->size() && dnodes.nodes_original.at(node_set1->at(i))->is_text(); ++i)
+          text1 += dnodes.nodes_original.at(node_set1->at(i))->content ? *dnodes.nodes_original.at(node_set1->at(i))->content : "";
 
         std::string text2 = "";
-        for(; j < node_set2->size() && dnodes.nodes_new.at(node_set2->at(j))->is_text(); ++j)
-          text2 += dnodes.nodes_new.at(node_set2->at(j))->content ? *dnodes.nodes_new.at(node_set2->at(j))->content : "";
+        for(; j < node_set2->size() && dnodes.nodes_modified.at(node_set2->at(j))->is_text(); ++j)
+          text2 += dnodes.nodes_modified.at(node_set2->at(j))->content ? *dnodes.nodes_modified.at(node_set2->at(j))->content : "";
 
         if(text1 != text2)
           return 1;
 
-      } else if(node_compare(dnodes.nodes_old.at(node_set1->at(i)), dnodes.nodes_new.at(node_set2->at(j))))
+      } else if(node_compare(dnodes.nodes_original.at(node_set1->at(i)), dnodes.nodes_modified.at(node_set2->at(j))))
         return 1;
       else {
 

@@ -18,7 +18,7 @@ private:
 	typedef std::vector<IntPair> IntPairs;
   	typedef std::vector<IntPairs> Moves;
 
- 	void output_unmatched(int start_old, int end_old, int start_new, int end_new);
+ 	void output_unmatched(int start_original, int end_original, int start_modified, int end_modified);
 
 	Moves determine_operations();
   

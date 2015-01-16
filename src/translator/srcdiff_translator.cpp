@@ -47,7 +47,7 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
   : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method, number_context_lines) {}
 
 // Translate from input stream to output stream
-void srcdiff_translator::translate(const srcdiff_input & input_old, const srcdiff_input & input_new,
+void srcdiff_translator::translate(const srcdiff_input & input_original, const srcdiff_input & input_modified,
                                   LineDiffRange & line_diff_range, const std::string & language,
                                   const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename,
                                   const boost::optional<std::string> & unit_version) {
@@ -57,33 +57,33 @@ void srcdiff_translator::translate(const srcdiff_input & input_old, const srcdif
   if(!isoption(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
-  int is_old = 0;
-  std::thread thread_old(std::ref(input_old), SESDELETE, std::ref(output.get_nodes_old()), std::ref(is_old));
+  int is_original = 0;
+  std::thread thread_original(std::ref(input_original), SESDELETE, std::ref(output.get_nodes_original()), std::ref(is_original));
 
-  int is_new = 0;
-  std::thread thread_new(std::ref(input_new), SESINSERT, std::ref(output.get_nodes_new()), std::ref(is_new));
+  int is_modified = 0;
+  std::thread thread_modified(std::ref(input_modified), SESINSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified));
 
-  thread_old.join();
-  thread_new.join();
+  thread_original.join();
+  thread_modified.join();
 
-  node_sets set_old(output.get_nodes_old(), 0, output.get_nodes_old().size());
-  node_sets set_new(output.get_nodes_new(), 0, output.get_nodes_new().size());
+  node_sets set_original(output.get_nodes_original(), 0, output.get_nodes_original().size());
+  node_sets set_modified(output.get_nodes_modified(), 0, output.get_nodes_modified().size());
 
-  output.initialize(is_old, is_new);
+  output.initialize(is_original, is_modified);
 
   // run on file level
-  if(is_old || is_new) {
+  if(is_original || is_modified) {
 
     output.start_unit(language, unit_directory, unit_filename, unit_version);
 
-    srcdiff_diff diff(output, set_old, set_new);
+    srcdiff_diff diff(output, set_original, set_modified);
     diff.output();
 
     // output remaining whitespace
     srcdiff_whitespace whitespace(output);
     whitespace.output_all();
 
-    output.finish(is_old, is_new, line_diff_range);
+    output.finish(is_original, is_modified, line_diff_range);
 
   }
 

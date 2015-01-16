@@ -9,8 +9,8 @@
 
 struct diff_nodes {
 
-  const srcml_nodes & nodes_old;
-  const srcml_nodes & nodes_new;
+  const srcml_nodes & nodes_original;
+  const srcml_nodes & nodes_modified;
 
 };
 
@@ -19,17 +19,17 @@ class srcdiff_diff {
 protected:
   srcdiff_output & out;
 
-  const node_sets & node_sets_old;
-  const node_sets & node_sets_new;
+  const node_sets & node_sets_original;
+  const node_sets & node_sets_modified;
 
 public:
-  srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_old, const node_sets & node_sets_new);
+  srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_original, const node_sets & node_sets_modified);
 
   virtual void output();
-  virtual void output_common(int end_old, int end_new);
-  virtual void output_pure(int end_old, int end_new);
-  virtual void output_change(int end_old, int end_new);
-  virtual void output_change_whitespace(int end_old, int end_new);
+  virtual void output_common(int end_original, int end_modified);
+  virtual void output_pure(int end_original, int end_modified);
+  virtual void output_change(int end_original, int end_modified);
+  virtual void output_change_whitespace(int end_original, int end_modified);
 
 };
 

@@ -11,7 +11,7 @@ private:
 
 public:
 
-	srcdiff_comment(srcdiff_output & out, const node_sets & node_sets_old, const node_sets & node_sets_new);
+	srcdiff_comment(srcdiff_output & out, const node_sets & node_sets_original, const node_sets & node_sets_modified);
 	virtual void output();
 
 };

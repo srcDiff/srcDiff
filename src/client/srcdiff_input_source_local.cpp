@@ -50,8 +50,8 @@ void srcdiff_input_source_local::consume() {
 
         }
 
-        directory_length_old = input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1;
-        directory_length_new = input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1;
+        directory_length_original = input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1;
+        directory_length_modified = input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1;
 
         directory(input_pair.first, nullptr, input_pair.second, nullptr);
 
@@ -67,24 +67,24 @@ void srcdiff_input_source_local::consume() {
 
 }
 
-void srcdiff_input_source_local::file(const boost::optional<std::string> & path_one, const void * context_old,
-                                      const boost::optional<std::string> & path_two, const void * context_new) {
+void srcdiff_input_source_local::file(const boost::optional<std::string> & path_one, const void * context_original,
+                                      const boost::optional<std::string> & path_two, const void * context_modified) {
 
-  std::string path_old = path_one ? *path_one : std::string();
-  std::string path_new = path_two ? *path_two : std::string();
+  std::string path_original = path_one ? *path_one : std::string();
+  std::string path_modified = path_two ? *path_two : std::string();
 
-  std::string unit_filename = !path_old.empty() ? path_old.substr(directory_length_old) : path_old;
-  std::string filename_two =  !path_new.empty() ? path_new.substr(directory_length_new) : path_new;
-  if(path_new.empty() || unit_filename != filename_two) {
+  std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_original) : path_original;
+  std::string filename_two =  !path_modified.empty() ? path_modified.substr(directory_length_modified) : path_modified;
+  if(path_modified.empty() || unit_filename != filename_two) {
 
     unit_filename += "|";
     unit_filename += filename_two;
 
   }
 
-  srcdiff_input_filename input_old(options.archive, path_one, options.flags);
-  srcdiff_input_filename input_new(options.archive, path_two, options.flags);
-  LineDiffRange line_diff_range(path_old, path_new, boost::optional<std::string>());
+  srcdiff_input_filename input_original(options.archive, path_one, options.flags);
+  srcdiff_input_filename input_modified(options.archive, path_two, options.flags);
+  LineDiffRange line_diff_range(path_original, path_modified, boost::optional<std::string>());
 
   boost::optional<std::string> path = path_one;
   if(!path || path->empty()) path = path_two;
@@ -93,7 +93,7 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
   const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
   const char * dir = srcml_archive_get_directory(options.archive);
 
-  translator->translate(input_old, input_new, line_diff_range, language_string, dir ? boost::optional<std::string>(dir) : boost::optional<std::string>(), unit_filename, 0);
+  translator->translate(input_original, input_modified, line_diff_range, language_string, dir ? boost::optional<std::string>(dir) : boost::optional<std::string>(), unit_filename, 0);
 
 }
 
@@ -150,8 +150,8 @@ int is_output_file(const char * filename, const struct stat & outstat) {
 
 }
 
-void srcdiff_input_source_local::directory(const boost::optional<std::string> & directory_old, const void * context_old,
-                                           const boost::optional<std::string> & directory_new, const void * context_new) {
+void srcdiff_input_source_local::directory(const boost::optional<std::string> & directory_original, const void * context_original,
+                                           const boost::optional<std::string> & directory_modified, const void * context_modified) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -160,36 +160,36 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
 #endif
 
   // collect the filenames in alphabetical order
-  struct dirent ** namelist_old;
-  struct dirent ** namelist_new;
+  struct dirent ** namelist_original;
+  struct dirent ** namelist_modified;
 
-  int n = scandir(directory_old ? directory_old->c_str() : "", &namelist_old, dir_filter, alphasort);
-  int m = scandir(directory_new ? directory_new->c_str() : "", &namelist_new, dir_filter, alphasort);
+  int n = scandir(directory_original ? directory_original->c_str() : "", &namelist_original, dir_filter, alphasort);
+  int m = scandir(directory_modified ? directory_modified->c_str() : "", &namelist_modified, dir_filter, alphasort);
   // TODO:  Fix error handling.  What if one is in error?
   if (n < 0 && m < 0) {
     return;
   }
 
-  std::string path_old;
-  int basesize_old = 0;
+  std::string path_original;
+  int basesize_original = 0;
 
-  if(directory_old) {
+  if(directory_original) {
 
     // start of path from directory name
-   path_old = *directory_old;
-   if (!path_old.empty() && path_old.back() != PATH_SEPARATOR) path_old += PATH_SEPARATOR;
-   basesize_old = path_old.size();
+   path_original = *directory_original;
+   if (!path_original.empty() && path_original.back() != PATH_SEPARATOR) path_original += PATH_SEPARATOR;
+   basesize_original = path_original.size();
 
   }
 
-  std::string path_new;
-  int basesize_new = 0;
+  std::string path_modified;
+  int basesize_modified = 0;
 
-  if(directory_new) {
+  if(directory_modified) {
 
-    path_new = *directory_new;
-    if (!path_new.empty() && path_new.back() != PATH_SEPARATOR) path_new += PATH_SEPARATOR;
-    basesize_new = path_new.size();
+    path_modified = *directory_modified;
+    if (!path_modified.empty() && path_modified.back() != PATH_SEPARATOR) path_modified += PATH_SEPARATOR;
+    basesize_modified = path_modified.size();
 
   }
 
@@ -199,39 +199,39 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
   while (i < n && j < m) {
 
     // form the full path
-    path_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
-    path_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
     // skip directories
-    if(is_dir(namelist_old[i], path_old.c_str()) != 0) {
+    if(is_dir(namelist_original[i], path_original.c_str()) != 0) {
       ++i;
       continue;
     }
 
-    if(is_dir(namelist_new[j], path_new.c_str()) != 0) {
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0) {
       ++j;
       continue;
     }
 
     // skip over output file
-    if (is_output_file(path_old.c_str(), outstat) == 1) {
+    if (is_output_file(path_original.c_str(), outstat) == 1) {
       ++i;
       continue;
     }
 
-    if (is_output_file(path_new.c_str(), outstat) == 1) {
+    if (is_output_file(path_modified.c_str(), outstat) == 1) {
       ++j;
       continue;
     }
 
     // is this a common, inserted, or deleted file?
-    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+    int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
 
 
     boost::optional<std::string> file_path_one;
     boost::optional<std::string> file_path_two;
-    if(comparison <= 0) ++i, file_path_one = path_old;
-    if(comparison >= 0) ++j, file_path_two = path_new;
+    if(comparison <= 0) ++i, file_path_one = path_original;
+    if(comparison >= 0) ++j, file_path_two = path_modified;
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     file(file_path_one, nullptr, file_path_two, nullptr);
@@ -242,19 +242,19 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
   for ( ; i < n; ++i) {
 
     // form the full path
-    path_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
 
     // skip directories
-    if(is_dir(namelist_old[i], path_old.c_str()) != 0)
+    if(is_dir(namelist_original[i], path_original.c_str()) != 0)
       continue;
 
     // skip over output file
-    if (is_output_file(path_old.c_str(), outstat) != 0) {
+    if (is_output_file(path_original.c_str(), outstat) != 0) {
       continue;
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(path_old, nullptr, boost::optional<std::string>(), nullptr);
+    file(path_original, nullptr, boost::optional<std::string>(), nullptr);
 
   }
 
@@ -262,19 +262,19 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
   for ( ; j < m; ++j) {
 
     // form the full path
-    path_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
     // skip directories
-    if(is_dir(namelist_new[j], path_new.c_str()) != 0)
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0)
       continue;
 
     // skip over output file
-    if (is_output_file(path_new.c_str(), outstat) != 0) {
+    if (is_output_file(path_modified.c_str(), outstat) != 0) {
       continue;
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-   file(boost::optional<std::string>(), nullptr, path_new, nullptr);
+   file(boost::optional<std::string>(), nullptr, path_modified, nullptr);
 
   }
 
@@ -284,26 +284,26 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
   while (i < n && j < m) {
 
     // form the full path
-    path_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
-    path_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
     // skip non-directories
-    if(is_dir(namelist_old[i], path_old.c_str()) != 1) {
+    if(is_dir(namelist_original[i], path_original.c_str()) != 1) {
       ++i;
       continue;
     }
-    if(is_dir(namelist_new[j], path_new.c_str()) != 1) {
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1) {
       ++j;
       continue;
     }
 
     // is this a common, inserted, or deleted directory?
-    int comparison = strcoll(namelist_old[i]->d_name, namelist_new[j]->d_name);
+    int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
 
     boost::optional<std::string> directory_path_one;
     boost::optional<std::string> directory_path_two;
-    if(comparison <= 0) ++i, directory_path_one = path_old;
-    if(comparison >= 0) ++j, directory_path_two = path_new;
+    if(comparison <= 0) ++i, directory_path_one = path_original;
+    if(comparison >= 0) ++j, directory_path_two = path_modified;
 
     // process these directories
     directory(directory_path_one, nullptr, directory_path_two, nullptr);
@@ -314,19 +314,19 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
   for ( ; i < n; ++i) {
 
     // form the full path
-    path_old.replace(basesize_old, std::string::npos, namelist_old[i]->d_name);
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
 
     // skip non-directories
-    if(is_dir(namelist_old[i], path_old.c_str()) != 1)
+    if(is_dir(namelist_original[i], path_original.c_str()) != 1)
       continue;
 
     // skip over output file
-    if (is_output_file(path_old.c_str(), outstat) == 1) {
+    if (is_output_file(path_original.c_str(), outstat) == 1) {
       continue;
     }
 
     // process this directory
-    directory(path_old, nullptr, boost::optional<std::string>(), nullptr);
+    directory(path_original, nullptr, boost::optional<std::string>(), nullptr);
 
   }
 
@@ -334,33 +334,33 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
   for ( ; j < m; ++j) {
 
     // form the full path
-    path_new.replace(basesize_new, std::string::npos, namelist_new[j]->d_name);
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
     // skip non-directories
-    if(is_dir(namelist_new[j], path_new.c_str()) != 1)
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1)
       continue;
 
     // skip over output file
-    if (is_output_file(path_new.c_str(), outstat) == 1) {
+    if (is_output_file(path_modified.c_str(), outstat) == 1) {
       continue;
     }
 
     // process this directory
-    directory(boost::optional<std::string>(), nullptr, path_new, nullptr);
+    directory(boost::optional<std::string>(), nullptr, path_modified, nullptr);
 
   }
 
   // all done with this directory
   if (n > 0) {
     for (int i = 0; i < n; ++i)
-      free(namelist_old[i]);
-    free(namelist_old);
+      free(namelist_original[i]);
+    free(namelist_original);
   }
 
   if (m > 0) {
     for (int j = 0; j < m; ++j)
-      free(namelist_new[j]);
-    free(namelist_new);
+      free(namelist_modified[j]);
+    free(namelist_modified);
   }
 
 #undef PATH_SEPARATOR

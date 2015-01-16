@@ -18,12 +18,12 @@ namespace color_diff {
 
   struct source_diff {
 
-    unsigned int line_old;
-    unsigned int line_new;
+    unsigned int line_original;
+    unsigned int line_modified;
     std::vector<int> * in_diff;
 
-    const std::vector<bool> & lines_old;
-    const std::vector<bool> & lines_new;
+    const std::vector<bool> & lines_original;
+    const std::vector<bool> & lines_modified;
 
     const std::string & file_one;
     const std::string & file_two;

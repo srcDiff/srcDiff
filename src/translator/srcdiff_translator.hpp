@@ -49,7 +49,7 @@ class srcdiff_translator {
 
   void close();
 
-  void translate(const srcdiff_input & input_old, const srcdiff_input & input_new,
+  void translate(const srcdiff_input & input_original, const srcdiff_input & input_modified,
                  LineDiffRange & line_diff_range, const std::string & language,
                  const boost::optional<std::string> & unit_directory = boost::optional<std::string>(), const boost::optional<std::string> & unit_filename = boost::optional<std::string>(),
                  const boost::optional<std::string> & unit_version = boost::optional<std::string>());

@@ -7,94 +7,94 @@
 
 #include <cstring>
 
-srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_old, const srcml_nodes & nodes_new, const node_set & set_old, const node_set & set_new) 
-  : nodes_old(nodes_old), nodes_new(nodes_new), set_old(set_old), set_new(set_new) {}
+srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified) 
+  : nodes_original(nodes_original), nodes_modified(nodes_modified), set_original(set_original), set_modified(set_modified) {}
 
-void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {
+void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_original_length, int & text_modified_length) {
 
-  unsigned int olength = set_old.size();
-  unsigned int nlength = set_new.size();
+  unsigned int olength = set_original.size();
+  unsigned int nlength = set_modified.size();
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
-  node_set set_old_text(nodes_old);
+  node_set set_original_text(nodes_original);
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(nodes_old.at(set_old.at(i))->is_text() && !nodes_old.at(set_old.at(i))->is_white_space())
-      set_old_text.push_back(set_old.at(i));
+    if(nodes_original.at(set_original.at(i))->is_text() && !nodes_original.at(set_original.at(i))->is_white_space())
+      set_original_text.push_back(set_original.at(i));
 
-  node_set set_new_text(nodes_new);
+  node_set set_modified_text(nodes_modified);
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(nodes_new.at(set_new.at(i))->is_text() && !nodes_new.at(set_new.at(i))->is_white_space())
-      set_new_text.push_back(set_new.at(i));
+    if(nodes_modified.at(set_modified.at(i))->is_text() && !nodes_modified.at(set_modified.at(i))->is_white_space())
+      set_modified_text.push_back(set_modified.at(i));
 
-  text_old_length = set_old_text.size();
-  text_new_length = set_new_text.size();
+  text_original_length = set_original_text.size();
+  text_modified_length = set_modified_text.size();
 
-  ses.compute((const void *)&set_old_text, set_old_text.size(), (const void *)&set_new_text, set_new_text.size());
+  ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
 }
 
-void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & ses, int & text_old_length, int & text_new_length) {
+void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & ses, int & text_original_length, int & text_modified_length) {
 
-  unsigned int olength = set_old.size();
-  unsigned int nlength = set_new.size();
+  unsigned int olength = set_original.size();
+  unsigned int nlength = set_modified.size();
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
-  node_set set_old_text(nodes_old);
+  node_set set_original_text(nodes_original);
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(nodes_old.at(set_old.at(i))->is_text() && !nodes_old.at(set_old.at(i))->is_white_space()
-      && nodes_old.at(set_old.at(i))->content
-      && *nodes_old.at(set_old.at(i))->content != "("
-      && *nodes_old.at(set_old.at(i))->content != ")"
-      && *nodes_old.at(set_old.at(i))->content != ";"
-      && *nodes_old.at(set_old.at(i))->content != ",")
-      set_old_text.push_back(set_old.at(i));
+    if(nodes_original.at(set_original.at(i))->is_text() && !nodes_original.at(set_original.at(i))->is_white_space()
+      && nodes_original.at(set_original.at(i))->content
+      && *nodes_original.at(set_original.at(i))->content != "("
+      && *nodes_original.at(set_original.at(i))->content != ")"
+      && *nodes_original.at(set_original.at(i))->content != ";"
+      && *nodes_original.at(set_original.at(i))->content != ",")
+      set_original_text.push_back(set_original.at(i));
 
-  node_set set_new_text(nodes_new);
+  node_set set_modified_text(nodes_modified);
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(nodes_new.at(set_new.at(i))->is_text() && !nodes_new.at(set_new.at(i))->is_white_space()
-      && nodes_new.at(set_new.at(i))->content
-      && *nodes_new.at(set_new.at(i))->content != "("
-      && *nodes_new.at(set_new.at(i))->content != ")"
-      && *nodes_new.at(set_new.at(i))->content != ";"
-      && *nodes_new.at(set_new.at(i))->content != ",")
-      set_new_text.push_back(set_new.at(i));
+    if(nodes_modified.at(set_modified.at(i))->is_text() && !nodes_modified.at(set_modified.at(i))->is_white_space()
+      && nodes_modified.at(set_modified.at(i))->content
+      && *nodes_modified.at(set_modified.at(i))->content != "("
+      && *nodes_modified.at(set_modified.at(i))->content != ")"
+      && *nodes_modified.at(set_modified.at(i))->content != ";"
+      && *nodes_modified.at(set_modified.at(i))->content != ",")
+      set_modified_text.push_back(set_modified.at(i));
 
-  text_old_length = set_old_text.size();
-  text_new_length = set_new_text.size();
+  text_original_length = set_original_text.size();
+  text_modified_length = set_modified_text.size();
 
-  ses.compute((const void *)&set_old_text, set_old_text.size(), (const void *)&set_new_text, set_new_text.size());
+  ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
 }
 
 int srcdiff_measure::compute_similarity() {
 
-  int text_old_length;
-  int text_new_length;
+  int text_original_length;
+  int text_modified_length;
 
-  return compute_similarity(text_old_length, text_new_length);
+  return compute_similarity(text_original_length, text_modified_length);
 
 }
 
-int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_length) {
+int srcdiff_measure::compute_similarity(int & text_original_length, int & text_modified_length) {
 
-  diff_nodes dnodes = { nodes_old, nodes_new };
+  diff_nodes dnodes = { nodes_original, nodes_modified };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
-  if((xmlReaderTypes)nodes_old.at(set_old.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
-        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
+  if((xmlReaderTypes)nodes_original.at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_modified.at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (srcdiff_compare::node_compare(nodes_original.at(set_original.at(0)), nodes_modified.at(set_modified.at(0))) != 0
+        && !srcdiff_match::is_interchangeable_match(nodes_original.at(set_original.at(0))->name, nodes_modified.at(set_modified.at(0))->name)
+        && (nodes_original.at(set_original.at(0))->name != "block" || nodes_modified.at(set_modified.at(0))->name != "block"))) {
 
     return MAX_INT;
 
@@ -102,7 +102,7 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
 
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
-  compute_ses(ses, text_old_length, text_new_length);
+  compute_ses(ses, text_original_length, text_modified_length);
 
   edit * edits = ses.get_script();
 
@@ -126,8 +126,8 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
 
   }
 
-  delete_similarity = text_old_length - delete_similarity;
-  insert_similarity = text_new_length - insert_similarity;
+  delete_similarity = text_original_length - delete_similarity;
+  insert_similarity = text_modified_length - insert_similarity;
 
   int similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
@@ -138,18 +138,18 @@ int srcdiff_measure::compute_similarity(int & text_old_length, int & text_new_le
 
 }
 
-void srcdiff_measure::compute_measures(int & similarity, int & difference, int & text_old_length, int & text_new_length) {
+void srcdiff_measure::compute_measures(int & similarity, int & difference, int & text_original_length, int & text_modified_length) {
 
-  diff_nodes dnodes = { nodes_old, nodes_new };
+  diff_nodes dnodes = { nodes_original, nodes_modified };
 
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_old.nodes.at(set_old.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(set_new.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
+  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
-  if((xmlReaderTypes)nodes_old.at(set_old.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
-        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
+  if((xmlReaderTypes)nodes_original.at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_modified.at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (srcdiff_compare::node_compare(nodes_original.at(set_original.at(0)), nodes_modified.at(set_modified.at(0))) != 0
+        && !srcdiff_match::is_interchangeable_match(nodes_original.at(set_original.at(0))->name, nodes_modified.at(set_modified.at(0))->name)
+        && (nodes_original.at(set_original.at(0))->name != "block" || nodes_modified.at(set_modified.at(0))->name != "block"))) {
 
     similarity = MAX_INT;
     difference = MAX_INT;
@@ -160,7 +160,7 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
-  compute_ses_important_text(ses, text_old_length, text_new_length);
+  compute_ses_important_text(ses, text_original_length, text_modified_length);
 
   edit * edits = ses.get_script();
 
@@ -188,8 +188,8 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
   }
 
-  delete_similarity = text_old_length - delete_similarity;
-  insert_similarity = text_new_length - insert_similarity;
+  delete_similarity = text_original_length - delete_similarity;
+  insert_similarity = text_modified_length - insert_similarity;
 
   similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
@@ -205,15 +205,15 @@ static bool is_significant(const std::shared_ptr<srcml_node> & node, const void 
 
 }
 
-void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference, int & children_old_length, int & children_new_length) {
+void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference, int & children_original_length, int & children_modified_length) {
 
-  diff_nodes dnodes = { nodes_old, nodes_new };
+  diff_nodes dnodes = { nodes_original, nodes_modified };
 
-  if((xmlReaderTypes)nodes_old.at(set_old.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_new.at(set_new.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(nodes_old.at(set_old.at(0)), nodes_new.at(set_new.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match(nodes_old.at(set_old.at(0))->name, nodes_new.at(set_new.at(0))->name)
-        && (nodes_old.at(set_old.at(0))->name != "block" || nodes_new.at(set_new.at(0))->name != "block"))) {
+  if((xmlReaderTypes)nodes_original.at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)nodes_modified.at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (srcdiff_compare::node_compare(nodes_original.at(set_original.at(0)), nodes_modified.at(set_modified.at(0))) != 0
+        && !srcdiff_match::is_interchangeable_match(nodes_original.at(set_original.at(0))->name, nodes_modified.at(set_modified.at(0))->name)
+        && (nodes_original.at(set_original.at(0))->name != "block" || nodes_modified.at(set_modified.at(0))->name != "block"))) {
 
     similarity = 0;
     difference = MAX_INT;
@@ -225,11 +225,11 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
   class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   // collect subset of nodes
-  node_sets next_node_sets_old(nodes_old, set_old.at(1), set_old.back(), is_significant);
-  node_sets next_node_sets_new(nodes_new, set_new.at(1), set_new.back(), is_significant);
-  children_old_length = next_node_sets_old.size();
-  children_new_length = next_node_sets_new.size();
-  int distance = ses.compute((const void *)&next_node_sets_old, children_old_length, (const void *)&next_node_sets_new, children_new_length);
+  node_sets next_node_sets_original(nodes_original, set_original.at(1), set_original.back(), is_significant);
+  node_sets next_node_sets_modified(nodes_modified, set_modified.at(1), set_modified.back(), is_significant);
+  children_original_length = next_node_sets_original.size();
+  children_modified_length = next_node_sets_modified.size();
+  int distance = ses.compute((const void *)&next_node_sets_original, children_original_length, (const void *)&next_node_sets_modified, children_modified_length);
 
   edit * edits = ses.get_script();
 
@@ -257,8 +257,8 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
   }
 
-  delete_similarity = children_old_length - delete_similarity;
-  insert_similarity = children_new_length - insert_similarity;
+  delete_similarity = children_original_length - delete_similarity;
+  insert_similarity = children_modified_length - insert_similarity;
 
   similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 

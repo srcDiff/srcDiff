@@ -21,8 +21,8 @@ struct difference {
 
 };
 
-srcdiff_match::srcdiff_match(const srcml_nodes & nodes_old, const srcml_nodes & nodes_new, const node_sets & node_sets_old, const node_sets & node_sets_new)
-  : nodes_old(nodes_old), nodes_new(nodes_new), node_sets_old(node_sets_old), node_sets_new(node_sets_new) {}
+srcdiff_match::srcdiff_match(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_sets & node_sets_original, const node_sets & node_sets_modified)
+  : nodes_original(nodes_original), nodes_modified(nodes_modified), node_sets_original(node_sets_original), node_sets_modified(node_sets_modified) {}
 
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
 
@@ -117,7 +117,7 @@ offset_pair * srcdiff_match::match_differences() {
 
     for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_old.at(node_sets_old.at(edits->offset_sequence_one + old_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_original.at(node_sets_original.at(edits->offset_sequence_one + old_pos)->at(0))->name);
 
     }
 
@@ -125,7 +125,7 @@ offset_pair * srcdiff_match::match_differences() {
 
     for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_new.at(node_sets_new.at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(node_sets_modified.at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
 
     }
 
@@ -134,8 +134,8 @@ offset_pair * srcdiff_match::match_differences() {
 
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
-  int olength = node_sets_old.size();
-  int nlength = node_sets_new.size();
+  int olength = node_sets_original.size();
+  int nlength = node_sets_modified.size();
 
   size_t mem_size = olength * nlength * sizeof(difference);
 
@@ -146,9 +146,9 @@ offset_pair * srcdiff_match::match_differences() {
 
     for(int j = 0; j < olength; ++j) {
 
-      srcdiff_measure measure(nodes_old, nodes_new, node_sets_old.at(j), node_sets_new.at(i));
-      int similarity, difference, text_old_length, text_new_length;
-      measure.compute_measures(similarity, difference, text_old_length, text_new_length);
+      srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), node_sets_modified.at(i));
+      int similarity, difference, text_original_length, text_modified_length;
+      measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
 
       //unsigned long long max_similarity = (unsigned long long)-1;
       int max_similarity = -1;
@@ -156,10 +156,10 @@ offset_pair * srcdiff_match::match_differences() {
 
       // check if unmatched
       if(similarity == MAX_INT 
-        || reject_match(similarity, difference, text_old_length, text_new_length,
-          nodes_old, node_sets_old.at(j), nodes_new, node_sets_new.at(i))
-        || srcdiff_nested::is_better_nested(nodes_old, node_sets_old, j, nodes_new, node_sets_new, i,
-            similarity, difference, text_old_length, text_new_length)) {
+        || reject_match(similarity, difference, text_original_length, text_modified_length,
+          nodes_original, node_sets_original.at(j), nodes_modified, node_sets_modified.at(i))
+        || srcdiff_nested::is_better_nested(nodes_original, node_sets_original, j, nodes_modified, node_sets_modified, i,
+            similarity, difference, text_original_length, text_modified_length)) {
 
         similarity = 0;
         unmatched = 1;
@@ -549,11 +549,11 @@ std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos)
 
 }
 
-int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std::string> name_list_new) {
+int name_list_similarity(std::vector<std::string> name_list_original, std::vector<std::string> name_list_modified) {
 
   class shortest_edit_script ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);
 
-  ses.compute(&name_list_old, name_list_old.size(), &name_list_new, name_list_new.size());
+  ses.compute(&name_list_original, name_list_original.size(), &name_list_modified, name_list_modified.size());
 
   edit * edits = ses.get_script();
 
@@ -579,8 +579,8 @@ int name_list_similarity(std::vector<std::string> name_list_old, std::vector<std
 
   }
 
-  delete_similarity = name_list_old.size() - delete_similarity;
-  insert_similarity = name_list_new.size() - insert_similarity;
+  delete_similarity = name_list_original.size() - delete_similarity;
+  insert_similarity = name_list_modified.size() - insert_similarity;
 
   similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
@@ -803,28 +803,17 @@ bool if_has_else(const srcml_nodes & nodes, const node_set & set) {
 
 }
 
-bool if_then_equal(const srcml_nodes & nodes_old, const node_set & set_old, const srcml_nodes & nodes_new, const node_set & set_new) {
+bool if_then_equal(const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  diff_nodes dnodes = { nodes_old, nodes_new };
+  diff_nodes dnodes = { nodes_original, nodes_modified };
 
-  node_sets node_sets_old = node_sets(nodes_old, set_old.at(1), set_old.back());
-  node_sets node_sets_new = node_sets(nodes_new, set_new.at(1), set_new.back());
+  node_sets node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
+  node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());
 
-  node_sets::iterator then_old;
-  for(then_old = node_sets_old.begin(); then_old != node_sets_old.end(); ++then_old) {
+  node_sets::iterator then_original;
+  for(then_original = node_sets_original.begin(); then_original != node_sets_original.end(); ++then_original) {
 
-    if(nodes_old.at(then_old->at(0))->name == "then") {
-
-      break;
-
-    }
-
-  }
-
-  node_sets::iterator then_new;
-  for(then_new = node_sets_new.begin(); then_new != node_sets_new.end(); ++then_new) {
-
-    if(nodes_new.at(then_new->at(0))->name == "then") {
+    if(nodes_original.at(then_original->at(0))->name == "then") {
 
       break;
 
@@ -832,31 +821,42 @@ bool if_then_equal(const srcml_nodes & nodes_old, const node_set & set_old, cons
 
   }
 
-  bool then_is_equal = srcdiff_compare::node_set_syntax_compare((void *)&*then_old, (void *)&*then_new, (void *)&dnodes) == 0;
+  node_sets::iterator then_modified;
+  for(then_modified = node_sets_modified.begin(); then_modified != node_sets_modified.end(); ++then_modified) {
+
+    if(nodes_modified.at(then_modified->at(0))->name == "then") {
+
+      break;
+
+    }
+
+  }
+
+  bool then_is_equal = srcdiff_compare::node_set_syntax_compare((void *)&*then_original, (void *)&*then_modified, (void *)&dnodes) == 0;
 
   return then_is_equal;
 
 }
 
-bool for_control_matches(const srcml_nodes & nodes_old, const node_set & set_old, const srcml_nodes & nodes_new, const node_set & set_new) {
+bool for_control_matches(const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  diff_nodes dnodes = { nodes_old, nodes_new };
+  diff_nodes dnodes = { nodes_original, nodes_modified };
 
-  node_sets node_sets_old = node_sets(nodes_old, set_old.at(1), set_old.back());
-  node_sets node_sets_new = node_sets(nodes_new, set_new.at(1), set_new.back());
+  node_sets node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
+  node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());
 
-  node_sets::size_type control_pos_old;
-  for(control_pos_old = 0; control_pos_old < node_sets_old.size(); ++control_pos_old)
-    if(nodes_old.at(node_sets_old.at(control_pos_old).front())->name == "control")
+  node_sets::size_type control_pos_original;
+  for(control_pos_original = 0; control_pos_original < node_sets_original.size(); ++control_pos_original)
+    if(nodes_original.at(node_sets_original.at(control_pos_original).front())->name == "control")
       break;
 
-  node_sets::size_type control_pos_new;
-  for(control_pos_new = 0; control_pos_new < node_sets_new.size(); ++control_pos_new)
-    if(nodes_new.at(node_sets_new.at(control_pos_new).front())->name == "control")
+  node_sets::size_type control_pos_modified;
+  for(control_pos_modified = 0; control_pos_modified < node_sets_modified.size(); ++control_pos_modified)
+    if(nodes_modified.at(node_sets_modified.at(control_pos_modified).front())->name == "control")
       break;
 
-  bool matches = control_pos_old != node_sets_old.size() && control_pos_new != node_sets_new.size() 
-    && srcdiff_compare::node_set_syntax_compare((void *)&node_sets_old.at(control_pos_old), (void *)&node_sets_new.at(control_pos_new), (void *)&dnodes) == 0;
+  bool matches = control_pos_original != node_sets_original.size() && control_pos_modified != node_sets_modified.size() 
+    && srcdiff_compare::node_set_syntax_compare((void *)&node_sets_original.at(control_pos_original), (void *)&node_sets_modified.at(control_pos_modified), (void *)&dnodes) == 0;
 
   return matches;
 
@@ -960,14 +960,14 @@ bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> 
 
 }
 
-bool reject_match_same(int similarity, int difference, int text_old_length, int text_new_length,
-  const srcml_nodes & nodes_old, const node_set & set_old, const srcml_nodes & nodes_new, const node_set & set_new) {
+bool reject_match_same(int similarity, int difference, int text_original_length, int text_modified_length,
+  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  int old_pos = set_old.at(0);
-  int new_pos = set_new.at(0);
+  int old_pos = set_original.at(0);
+  int new_pos = set_modified.at(0);
 
-  std::string old_tag = nodes_old.at(old_pos)->name;
-  std::string new_tag = nodes_new.at(new_pos)->name;
+  std::string old_tag = nodes_original.at(old_pos)->name;
+  std::string new_tag = nodes_modified.at(new_pos)->name;
 
   if(old_tag != new_tag) return true;
 
@@ -984,10 +984,10 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
   if(old_tag == "block") {
 
-    bool is_pseudo_old = find_attribute(nodes_old.at(old_pos), "type") != 0;
-    bool is_pseudo_new = find_attribute(nodes_new.at(new_pos), "type") != 0;
+    bool is_pseudo_original = find_attribute(nodes_original.at(old_pos), "type") != 0;
+    bool is_pseudo_modified = find_attribute(nodes_modified.at(new_pos), "type") != 0;
 
-    if(is_pseudo_old == is_pseudo_new) {
+    if(is_pseudo_original == is_pseudo_modified) {
 
       return false;
 
@@ -995,26 +995,26 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
       bool is_reject = true;
 
-      if(is_pseudo_old) {
+      if(is_pseudo_original) {
 
-        node_sets node_sets_old = node_sets(nodes_old, set_old.at(1), set_old.back());
-        node_sets node_sets_new = node_sets(nodes_new, set_new.at(0), set_new.back() + 1);
+        node_sets node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
+        node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(0), set_modified.back() + 1);
 
-        int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
-        srcdiff_nested::check_nestable(node_sets_old, nodes_old, 0, node_sets_old.size(), node_sets_new, nodes_new, 0, 1,
-                      start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
+        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+        srcdiff_nested::check_nestable(node_sets_original, nodes_original, 0, node_sets_original.size(), node_sets_modified, nodes_modified, 0, 1,
+                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
 
         is_reject = !(operation == SESINSERT);
 
       } else {
 
-        node_sets node_sets_old = node_sets(nodes_old, set_old.at(0), set_old.back() + 1);
-        node_sets node_sets_new = node_sets(nodes_new, set_new.at(1), set_new.back());
+        node_sets node_sets_original = node_sets(nodes_original, set_original.at(0), set_original.back() + 1);
+        node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());
 
-        int start_nest_old, end_nest_old, start_nest_new, end_nest_new, operation;
-        srcdiff_nested::check_nestable(node_sets_old, nodes_old, 0, 1, node_sets_new, nodes_new, 0, node_sets_new.size(),
-                      start_nest_old, end_nest_old, start_nest_new , end_nest_new, operation);
+        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+        srcdiff_nested::check_nestable(node_sets_original, nodes_original, 0, 1, node_sets_modified, nodes_modified, 0, node_sets_modified.size(),
+                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
 
         is_reject = !(operation == SESDELETE);
@@ -1027,32 +1027,32 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
 
   }
 
-  if(is_single_call_expr(nodes_old, old_pos) && is_single_call_expr(nodes_new, new_pos)) {
+  if(is_single_call_expr(nodes_original, old_pos) && is_single_call_expr(nodes_modified, new_pos)) {
 
-    while(nodes_old.at(old_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || nodes_old.at(old_pos)->name != "call")
+    while(nodes_original.at(old_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+      || nodes_original.at(old_pos)->name != "call")
       ++old_pos;
 
-    while(nodes_new.at(new_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || nodes_new.at(new_pos)->name != "call")
+    while(nodes_modified.at(new_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+      || nodes_modified.at(new_pos)->name != "call")
       ++new_pos;
 
-    std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
-    std::vector<std::string> new_names = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_names = get_call_name(nodes_original, old_pos);
+    std::vector<std::string> new_names = get_call_name(nodes_modified, new_pos);
 
     if(name_list_similarity(old_names, new_names)) return false;
 
   } else if(old_tag == "call") {
 
-    std::vector<std::string> old_names = get_call_name(nodes_old, old_pos);
-    std::vector<std::string> new_names = get_call_name(nodes_new, new_pos);
+    std::vector<std::string> old_names = get_call_name(nodes_original, old_pos);
+    std::vector<std::string> new_names = get_call_name(nodes_modified, new_pos);
 
     if(name_list_similarity(old_names, new_names)) return false;
 
   } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "parameter" || old_tag == "param") {
 
-    std::string old_name = get_decl_name(nodes_old, old_pos);
-    std::string new_name = get_decl_name(nodes_new, new_pos);
+    std::string old_name = get_decl_name(nodes_original, old_pos);
+    std::string new_name = get_decl_name(nodes_modified, new_pos);
 
     if(old_name == new_name && old_name != "") return false;
 
@@ -1060,121 +1060,121 @@ bool reject_match_same(int similarity, int difference, int text_old_length, int 
          || old_tag == "constructor" || old_tag == "constructor_decl"
          || old_tag == "destructor"  || old_tag == "destructor_decl") {
 
-    std::string old_name = get_function_type_name(nodes_old, old_pos);
-    std::string new_name = get_function_type_name(nodes_new, new_pos);
+    std::string old_name = get_function_type_name(nodes_original, old_pos);
+    std::string new_name = get_function_type_name(nodes_modified, new_pos);
 
     if(old_name == new_name) return false;
 
   } else if(old_tag == "if") {
 
-    std::string old_condition = get_condition(nodes_old, old_pos);
-    std::string new_condition = get_condition(nodes_new, new_pos);
+    std::string old_condition = get_condition(nodes_original, old_pos);
+    std::string new_condition = get_condition(nodes_modified, new_pos);
 
-    bool old_has_block = conditional_has_block(nodes_old, set_old);
-    bool new_has_block = conditional_has_block(nodes_new, set_new);
+    bool old_has_block = conditional_has_block(nodes_original, set_original);
+    bool new_has_block = conditional_has_block(nodes_modified, set_modified);
 
-    bool old_has_else = if_has_else(nodes_old, set_old);
-    bool new_has_else = if_has_else(nodes_new, set_new);
+    bool old_has_else = if_has_else(nodes_original, set_original);
+    bool new_has_else = if_has_else(nodes_modified, set_modified);
 
-    if(if_then_equal(nodes_old, set_old, nodes_new, set_new) || (old_condition == new_condition
+    if(if_then_equal(nodes_original, set_original, nodes_modified, set_modified) || (old_condition == new_condition
       && (old_has_block == new_has_block || old_has_else == new_has_else || ((old_has_block || !old_has_else) && (new_has_block || !new_has_else)))))
      return false;
 
   } else if(old_tag == "while" || old_tag == "switch") {
 
-    std::string old_condition = get_condition(nodes_old, old_pos);
-    std::string new_condition = get_condition(nodes_new, new_pos);
+    std::string old_condition = get_condition(nodes_original, old_pos);
+    std::string new_condition = get_condition(nodes_modified, new_pos);
 
     if(old_condition == new_condition) return false;
 
   } else if(old_tag == "for" || old_tag == "foreach") {
 
-    if(for_control_matches(nodes_old, set_old, nodes_new, set_new))
+    if(for_control_matches(nodes_original, set_original, nodes_modified, set_modified))
       return false;
 
   } else if(old_tag == "case") { 
 
-    std::string old_expr = get_case_expr(nodes_old, old_pos);
-    std::string new_expr = get_case_expr(nodes_new, new_pos);
+    std::string old_expr = get_case_expr(nodes_original, old_pos);
+    std::string new_expr = get_case_expr(nodes_modified, new_pos);
 
     if(old_expr == new_expr) return false;
 
   } else if(old_tag == "class" || old_tag == "struct" || old_tag == "union" || old_tag == "enum") {
 
-    std::string old_name = get_class_type_name(nodes_old, old_pos);
-    std::string new_name = get_class_type_name(nodes_new, new_pos);
+    std::string old_name = get_class_type_name(nodes_original, old_pos);
+    std::string new_name = get_class_type_name(nodes_modified, new_pos);
 
     if(old_name == new_name && old_name != "") return false;
 
   } else if(old_tag == "comment") {
 
-    if(srcdiff_compare::node_compare(nodes_old.at(old_pos), nodes_new.at(new_pos)) == 0) return false;
+    if(srcdiff_compare::node_compare(nodes_original.at(old_pos), nodes_modified.at(new_pos)) == 0) return false;
 
   }
 
-  bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
+  bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   return is_reject;
 
 }
 
-bool reject_match_interchangeable(int similarity, int difference, int text_old_length, int text_new_length,
-  const srcml_nodes & nodes_old, const node_set & set_old, const srcml_nodes & nodes_new, const node_set & set_new) {
+bool reject_match_interchangeable(int similarity, int difference, int text_original_length, int text_modified_length,
+  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  int old_pos = set_old.at(0);
-  int new_pos = set_new.at(0);
+  int old_pos = set_original.at(0);
+  int new_pos = set_modified.at(0);
 
-  std::string old_tag = nodes_old.at(old_pos)->name;
-  std::string new_tag = nodes_new.at(new_pos)->name;
+  std::string old_tag = nodes_original.at(old_pos)->name;
+  std::string new_tag = nodes_modified.at(new_pos)->name;
 
   std::string old_condition = "";
   if(old_tag == "if" || old_tag == "while" || old_tag == "for" || old_tag == "foreach") {
 
-    old_condition = get_condition(nodes_old, old_pos);
+    old_condition = get_condition(nodes_original, old_pos);
 
   }
 
   std::string new_condition = "";
   if(new_tag == "if" || new_tag == "while" || new_tag == "for" || new_tag == "foreach") {
 
-    new_condition = get_condition(nodes_new, new_pos);
+    new_condition = get_condition(nodes_modified, new_pos);
 
   }
 
   if(old_condition != "" && old_condition == new_condition) return false;
 
-  bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
+  bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   return is_reject;
 
 }
 
-bool srcdiff_match::reject_match(int similarity, int difference, int text_old_length, int text_new_length,
-  const srcml_nodes & nodes_old, const node_set & set_old, const srcml_nodes & nodes_new, const node_set & set_new) {
+bool srcdiff_match::reject_match(int similarity, int difference, int text_original_length, int text_modified_length,
+  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
   /** if different prefix should not reach here, however, may want to add that here */
-  int old_pos = set_old.at(0);
-  int new_pos = set_new.at(0);
+  int old_pos = set_original.at(0);
+  int new_pos = set_modified.at(0);
 
-  std::string old_tag = nodes_old.at(old_pos)->name;
-  std::string new_tag = nodes_new.at(new_pos)->name;
+  std::string old_tag = nodes_original.at(old_pos)->name;
+  std::string new_tag = nodes_modified.at(new_pos)->name;
 
   if(old_tag == new_tag)
-    return reject_match_same(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
+    return reject_match_same(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   else if(is_interchangeable_match(old_tag, new_tag)) 
-    return reject_match_interchangeable(similarity, difference, text_old_length, text_new_length, nodes_old, set_old, nodes_new, set_new);
+    return reject_match_interchangeable(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   else
     return true;
 
 }
 
-bool srcdiff_match::reject_similarity(int similarity, int difference, int text_old_length, int text_new_length,
-  const srcml_nodes & nodes_old, const node_set & set_old, const srcml_nodes & nodes_new, const node_set & set_new) {
+bool srcdiff_match::reject_similarity(int similarity, int difference, int text_original_length, int text_modified_length,
+  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  srcdiff_measure measure(nodes_old, nodes_new, set_old, set_new);
-  int syntax_similarity, syntax_difference, children_length_old, children_length_new;
-  measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_old, children_length_new);
+  srcdiff_measure measure(nodes_original, nodes_modified, set_original, set_modified);
+  int syntax_similarity, syntax_difference, children_length_original, children_length_modified;
+  measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_original, children_length_modified);
 
-  int min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
-  int max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;
+  int min_child_length = children_length_original < children_length_modified ? children_length_original : children_length_modified;
+  int max_child_length = children_length_original < children_length_modified ? children_length_modified : children_length_original;
 
   if(min_child_length > 1) { 
 
@@ -1183,30 +1183,30 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   }
 
-  node_sets child_node_sets_old = node_sets(nodes_old, set_old.at(1), set_old.back());
-  node_sets child_node_sets_new = node_sets(nodes_new, set_new.at(1), set_new.back());    
+  node_sets child_node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
+  node_sets child_node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());    
 
-  if(nodes_old.at(child_node_sets_old.back().at(0))->name == "then") {
+  if(nodes_original.at(child_node_sets_original.back().at(0))->name == "then") {
 
-    node_sets temp = node_sets(nodes_old, child_node_sets_old.back().at(1), child_node_sets_old.back().back());
-    child_node_sets_old = temp;
-
-  }
-
-  if(nodes_new.at(child_node_sets_new.back().at(0))->name == "then") {
-
-    node_sets temp = node_sets(nodes_new, child_node_sets_new.back().at(1), child_node_sets_new.back().back());
-    child_node_sets_new = temp;
+    node_sets temp = node_sets(nodes_original, child_node_sets_original.back().at(1), child_node_sets_original.back().back());
+    child_node_sets_original = temp;
 
   }
 
-  if(nodes_old.at(child_node_sets_old.back().at(0))->name == "block" && nodes_new.at(child_node_sets_new.back().at(0))->name == "block") {
+  if(nodes_modified.at(child_node_sets_modified.back().at(0))->name == "then") {
 
-    srcdiff_measure measure(nodes_old, nodes_new, child_node_sets_old.back(), child_node_sets_new.back());
-    measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_old, children_length_new);
+    node_sets temp = node_sets(nodes_modified, child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
+    child_node_sets_modified = temp;
 
-    min_child_length = children_length_old < children_length_new ? children_length_old : children_length_new;
-    max_child_length = children_length_old < children_length_new ? children_length_new : children_length_old;      
+  }
+
+  if(nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
+
+    srcdiff_measure measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
+    measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_original, children_length_modified);
+
+    min_child_length = children_length_original < children_length_modified ? children_length_original : children_length_modified;
+    max_child_length = children_length_original < children_length_modified ? children_length_modified : children_length_original;      
 
     if(min_child_length > 1) { 
 
@@ -1217,8 +1217,8 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   }
 
-  int min_size = text_old_length < text_new_length ? text_old_length : text_new_length;
-  int max_size = text_old_length < text_new_length ? text_new_length : text_old_length;
+  int min_size = text_original_length < text_modified_length ? text_original_length : text_modified_length;
+  int max_size = text_original_length < text_modified_length ? text_modified_length : text_original_length;
 
   if(min_size <= 2)
     return 2 * similarity < min_size || (difference > 1.25 * min_size) || difference > max_size;

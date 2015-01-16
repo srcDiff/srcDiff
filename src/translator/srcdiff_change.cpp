@@ -13,8 +13,8 @@
 
 const boost::optional<std::string> srcdiff_change::change("change");
 
-srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_old, unsigned int end_new)
-: srcdiff_output(out), end_old(end_old), end_new(end_new) {}
+srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
+: srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
 
@@ -27,8 +27,8 @@ srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_old,
 */
 void srcdiff_change::output_whitespace() {
 
-  int oend = end_old;
-  int nend = end_new;
+  int oend = end_original;
+  int nend = end_modified;
 
   srcdiff_whitespace whitespace(*this);
   whitespace.output_prefix();
@@ -43,24 +43,24 @@ void srcdiff_change::output_whitespace() {
 */
 void srcdiff_change::output() {
 
-  unsigned int begin_old = rbuf_old->last_output;
-  unsigned int begin_new = rbuf_new->last_output;
+  unsigned int begin_original = rbuf_original->last_output;
+  unsigned int begin_modified = rbuf_modified->last_output;
 
-  if(end_old > begin_old && end_new > begin_new) {
+  if(end_original > begin_original && end_modified > begin_modified) {
 
     // set attribute to change
     diff_type->value = change;
-    diff_old_start->properties.push_back(*diff_type.get());
-    diff_new_start->properties.push_back(*diff_type.get());
+    diff_original_start->properties.push_back(*diff_type.get());
+    diff_modified_start->properties.push_back(*diff_type.get());
 
   }
 
-  if(end_old > begin_old) {
+  if(end_original > begin_original) {
 
 
-    for(unsigned int i = begin_old; i < end_old; ++i) {
+    for(unsigned int i = begin_original; i < end_original; ++i) {
 
-      if(rbuf_old->nodes.at(i)->move) {
+      if(rbuf_original->nodes.at(i)->move) {
 
         srcdiff_move move(*this, i, SESDELETE);
         move.output();
@@ -70,27 +70,27 @@ void srcdiff_change::output() {
       }
 
       // output diff tag begin
-      output_node(diff_old_start, SESDELETE);
+      output_node(diff_original_start, SESDELETE);
 
-      output_node(rbuf_old->nodes.at(i), SESDELETE);
+      output_node(rbuf_original->nodes.at(i), SESDELETE);
 
       // output diff tag begin
-      output_node(diff_old_end, SESDELETE);
+      output_node(diff_original_end, SESDELETE);
 
     }
 
     // output diff tag begin
-    output_node(diff_old_end, SESDELETE);
+    output_node(diff_original_end, SESDELETE);
 
-    rbuf_old->last_output = end_old;
+    rbuf_original->last_output = end_original;
 
   }
 
-  if(end_new > begin_new) {
+  if(end_modified > begin_modified) {
 
-    for(unsigned int i = begin_new; i < end_new; ++i) {
+    for(unsigned int i = begin_modified; i < end_modified; ++i) {
 
-      if(rbuf_new->nodes.at(i)->move) {
+      if(rbuf_modified->nodes.at(i)->move) {
 
         srcdiff_move move(*this, i, SESINSERT);
         move.output();
@@ -100,24 +100,24 @@ void srcdiff_change::output() {
       }
 
       // output diff tag
-      output_node(diff_new_start, SESINSERT);
+      output_node(diff_modified_start, SESINSERT);
 
-      output_node(rbuf_new->nodes.at(i), SESINSERT);
+      output_node(rbuf_modified->nodes.at(i), SESINSERT);
 
     // output diff tag begin
-    output_node(diff_new_end, SESINSERT);
+    output_node(diff_modified_end, SESINSERT);
 
 
     }
 
     // output diff tag begin
-    output_node(diff_new_end, SESINSERT);
+    output_node(diff_modified_end, SESINSERT);
 
-    rbuf_new->last_output = end_new;
+    rbuf_modified->last_output = end_modified;
 
   }
 
-  diff_old_start->properties.clear();
-  diff_new_start->properties.clear();
+  diff_original_start->properties.clear();
+  diff_modified_start->properties.clear();
 
 }

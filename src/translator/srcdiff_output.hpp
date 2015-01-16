@@ -89,8 +89,8 @@ protected:
   std::shared_ptr<bash_view> bashview;
   const OPTION_TYPE & flags;
 
-  std::shared_ptr<reader_state> rbuf_old;
-  std::shared_ptr<reader_state> rbuf_new;
+  std::shared_ptr<reader_state> rbuf_original;
+  std::shared_ptr<reader_state> rbuf_modified;
   std::shared_ptr<writer_state> wstate;
 
 public:
@@ -98,10 +98,10 @@ public:
   // diff nodes
   std::shared_ptr<srcml_node> diff_common_start;
   std::shared_ptr<srcml_node> diff_common_end;
-  std::shared_ptr<srcml_node> diff_old_start;
-  std::shared_ptr<srcml_node> diff_old_end;
-  std::shared_ptr<srcml_node> diff_new_start;
-  std::shared_ptr<srcml_node> diff_new_end;
+  std::shared_ptr<srcml_node> diff_original_start;
+  std::shared_ptr<srcml_node> diff_original_end;
+  std::shared_ptr<srcml_node> diff_modified_start;
+  std::shared_ptr<srcml_node> diff_modified_end;
 
   std::shared_ptr<srcml_node::srcml_ns> diff;
 
@@ -120,20 +120,20 @@ public:
   srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, unsigned long number_context_lines);
   virtual ~srcdiff_output();
 
-  virtual void initialize(int is_old, int is_new);
+  virtual void initialize(int is_original, int is_modified);
   virtual void start_unit(const std::string & language_string, const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version);
-  virtual void finish(int is_old, int is_new, LineDiffRange & line_diff_range);
+  virtual void finish(int is_original, int is_modified, LineDiffRange & line_diff_range);
   virtual void reset();
   virtual void close();
 
-  virtual const srcml_nodes & get_nodes_old() const;
-  virtual const srcml_nodes & get_nodes_new() const;
-  virtual srcml_nodes & get_nodes_old();
-  virtual srcml_nodes & get_nodes_new();
-  unsigned int last_output_old() const;
-  unsigned int last_output_new() const;
-  virtual unsigned int & last_output_old();
-  virtual unsigned int & last_output_new();
+  virtual const srcml_nodes & get_nodes_original() const;
+  virtual const srcml_nodes & get_nodes_modified() const;
+  virtual srcml_nodes & get_nodes_original();
+  virtual srcml_nodes & get_nodes_modified();
+  unsigned int last_output_original() const;
+  unsigned int last_output_modified() const;
+  virtual unsigned int & last_output_original();
+  virtual unsigned int & last_output_modified();
   METHOD_TYPE method() const;
 
   virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation);

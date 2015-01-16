@@ -52,13 +52,13 @@ ColorDiff::~ColorDiff() {
 
 int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
 
-  unsigned int size_old = line_diff_range.get_length_file_one();
-  unsigned int size_new = line_diff_range.get_length_file_two();
+  unsigned int size_original = line_diff_range.get_length_file_one();
+  unsigned int size_modified = line_diff_range.get_length_file_two();
 
   std::string stream = line_diff_range.get_line_diff_range();
 
-  std::vector<bool> lines_old;
-  std::vector<bool> lines_new;
+  std::vector<bool> lines_original;
+  std::vector<bool> lines_modified;
 
   std::stringstream in(stream);
 
@@ -76,35 +76,35 @@ int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
 
     if(operation == 'd') {
 
-      while(lines_old.size() < start)
-        lines_old.push_back(false);
+      while(lines_original.size() < start)
+        lines_original.push_back(false);
 
-      while(lines_old.size() <= end)
-        lines_old.push_back(true);
+      while(lines_original.size() <= end)
+        lines_original.push_back(true);
 
     } else {
 
-      while(lines_new.size() < start)
-        lines_new.push_back(false);
+      while(lines_modified.size() < start)
+        lines_modified.push_back(false);
 
-      while(lines_new.size() <= end)
-        lines_new.push_back(true);
+      while(lines_modified.size() <= end)
+        lines_modified.push_back(true);
 
     }
 
   }
 
-  if(/*isoption(options, OPTION_ARCHIVE) &&*/ !isoption(options, OPTION_SAME) && lines_old.size() == 0 && lines_new.size() == 0)
+  if(/*isoption(options, OPTION_ARCHIVE) &&*/ !isoption(options, OPTION_SAME) && lines_original.size() == 0 && lines_modified.size() == 0)
     return 0;
 
-  if(/*isoption(options, OPTION_ARCHIVE) &&*/ !isoption(options, OPTION_PURE) && (size_old == 0 || size_new == 0))
+  if(/*isoption(options, OPTION_ARCHIVE) &&*/ !isoption(options, OPTION_PURE) && (size_original == 0 || size_modified == 0))
     return 0;
 
-  while(lines_old.size() <= size_old)
-        lines_old.push_back(false);
+  while(lines_original.size() <= size_original)
+        lines_original.push_back(false);
 
-  while(lines_new.size() <= size_new)
-        lines_new.push_back(false);
+  while(lines_modified.size() <= size_modified)
+        lines_modified.push_back(false);
 
   if(first) {
 
@@ -123,7 +123,7 @@ int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
   std::vector<int> stack = std::vector<int>();
   stack.push_back(SESCOMMON);
 
-  struct color_diff::source_diff data = { 1, 1, &stack, lines_old, lines_new, line_diff_range.get_file_one(), line_diff_range.get_file_two()
+  struct color_diff::source_diff data = { 1, 1, &stack, lines_original, lines_modified, line_diff_range.get_file_one(), line_diff_range.get_file_two()
                               , *outfile, options, "", false, false, false };
 
   ctxt->_private = &data;
