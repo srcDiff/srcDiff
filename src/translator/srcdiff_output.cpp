@@ -55,13 +55,13 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
  void srcdiff_output::initialize(int is_original, int is_modified) {
 
-  diff_set * old_diff = new diff_set();
-  old_diff->operation = SESCOMMON;
-  rbuf_original->open_diff.push_back(old_diff);
+  diff_set * original_diff = new diff_set();
+  original_diff->operation = SESCOMMON;
+  rbuf_original->open_diff.push_back(original_diff);
 
-  diff_set * new_diff = new diff_set();
-  new_diff->operation = SESCOMMON;
-  rbuf_modified->open_diff.push_back(new_diff);
+  diff_set * modified_diff = new diff_set();
+  modified_diff->operation = SESCOMMON;
+  rbuf_modified->open_diff.push_back(modified_diff);
 
   diff_set * output_diff = new diff_set();
   output_diff->operation = SESCOMMON;
@@ -427,10 +427,10 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
 
   if(open_diffs.back()->operation != operation) {
 
-    diff_set * new_diff = new diff_set;
-    new_diff->operation = operation;
+    diff_set * modified_diff = new diff_set;
+    modified_diff->operation = operation;
 
-    open_diffs.push_back(new_diff);
+    open_diffs.push_back(modified_diff);
   }
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {

@@ -326,17 +326,17 @@ bool srcdiff_nested::is_better_nested(const srcml_nodes & nodes_original, const 
 bool srcdiff_nested::reject_match_nested(int similarity, int difference, int text_original_length, int text_modified_length,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  int old_pos = set_original.at(0);
-  int new_pos = set_modified.at(0);
+  int original_pos = set_original.at(0);
+  int modified_pos = set_modified.at(0);
 
-  std::string old_tag = nodes_original.at(old_pos)->name;
-  std::string new_tag = nodes_modified.at(new_pos)->name;
+  std::string original_tag = nodes_original.at(original_pos)->name;
+  std::string modified_tag = nodes_modified.at(modified_pos)->name;
 
-  if(old_tag != new_tag && !srcdiff_match::is_interchangeable_match(old_tag, new_tag)) return true;
+  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, modified_tag)) return true;
 
-  if(old_tag == "then" || old_tag == "block" || old_tag == "comment"
-    || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier"
-    || old_tag == "expr" || old_tag == "name") {
+  if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
+    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
+    || original_tag == "expr" || original_tag == "name") {
 
 
     return srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length,

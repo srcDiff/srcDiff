@@ -93,9 +93,9 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   offset_pair * matches = NULL;
 
-  IntPairs old_moved;
+  IntPairs original_moved;
   std::vector<int> pos_original;
-  node_sets old_sets(out.get_nodes_original());
+  node_sets original_sets(out.get_nodes_original());
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
@@ -103,21 +103,21 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     if(out.get_nodes_original().at(node_sets_original.at(index).at(0))->move) {
 
-      old_moved.push_back(IntPair(SESMOVE, 0));
+      original_moved.push_back(IntPair(SESMOVE, 0));
 
     } else {
 
-      old_moved.push_back(IntPair(SESDELETE, 0));
+      original_moved.push_back(IntPair(SESDELETE, 0));
       pos_original.push_back(i);
-      old_sets.push_back(node_sets_original.at(index));
+      original_sets.push_back(node_sets_original.at(index));
 
     }
 
   }
 
-  IntPairs new_moved;
+  IntPairs modified_moved;
   std::vector<int> pos_modified;
-  node_sets new_sets(out.get_nodes_modified());
+  node_sets modified_sets(out.get_nodes_modified());
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
@@ -125,13 +125,13 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     if(out.get_nodes_modified().at(node_sets_modified.at(index).at(0))->move) {
 
-      new_moved.push_back(IntPair(SESMOVE, 0));
+      modified_moved.push_back(IntPair(SESMOVE, 0));
 
     } else {
 
-      new_moved.push_back(IntPair(SESINSERT, 0));
+      modified_moved.push_back(IntPair(SESINSERT, 0));
       pos_modified.push_back(i);
-      new_sets.push_back(node_sets_modified.at(index));
+      modified_sets.push_back(node_sets_modified.at(index));
 
     }
 
@@ -139,7 +139,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   if(pos_original.size() != 0 && pos_modified.size()) {
 
-    srcdiff_match match(out.get_nodes_original(), out.get_nodes_modified(), old_sets, new_sets);
+    srcdiff_match match(out.get_nodes_original(), out.get_nodes_modified(), original_sets, modified_sets);
     matches = match.match_differences();
 
   }
@@ -148,25 +148,25 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   for(; matches; matches = matches->next) {
 
-    old_moved.at(pos_original.at(matches->old_offset)).first = SESCOMMON;
-    old_moved.at(pos_original.at(matches->old_offset)).second = pos_modified.at(matches->new_offset);
+    original_moved.at(pos_original.at(matches->original_offset)).first = SESCOMMON;
+    original_moved.at(pos_original.at(matches->original_offset)).second = pos_modified.at(matches->modified_offset);
 
-    new_moved.at(pos_modified.at(matches->new_offset)).first = SESCOMMON;
-    new_moved.at(pos_modified.at(matches->new_offset)).second = pos_original.at(matches->old_offset);
+    modified_moved.at(pos_modified.at(matches->modified_offset)).first = SESCOMMON;
+    modified_moved.at(pos_modified.at(matches->modified_offset)).second = pos_original.at(matches->original_offset);
 
   }
 
   for(; matches_save;) {
 
-    offset_pair * old_match = matches_save;
+    offset_pair * original_match = matches_save;
     matches_save = matches_save->next;
-    delete old_match;
+    delete original_match;
 
   }
 
   srcdiff_many::Moves moves;
-  moves.push_back(old_moved);
-  moves.push_back(new_moved);
+  moves.push_back(original_moved);
+  moves.push_back(modified_moved);
 
   return moves;
 
@@ -178,13 +178,13 @@ void srcdiff_many::output() {
   edit * edit_next = edit_script->next;
 
   srcdiff_many::Moves moves = determine_operations();
-  IntPairs old_moved = moves.at(0);
-  IntPairs new_moved = moves.at(1);
+  IntPairs original_moved = moves.at(0);
+  IntPairs modified_moved = moves.at(1);
 
   unsigned int i = 0;
   unsigned int j = 0;
 
-  for(; i < old_moved.size() && j < new_moved.size(); ++i, ++j) {
+  for(; i < original_moved.size() && j < modified_moved.size(); ++i, ++j) {
 
     unsigned int start_original = i;
 
@@ -194,10 +194,10 @@ void srcdiff_many::output() {
 
     unsigned int end_modified = start_modified;
 
-    for(; end_original < old_moved.size() && (old_moved.at(end_original).first == SESDELETE || old_moved.at(end_original).first == SESMOVE); ++end_original)
+    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SESDELETE || original_moved.at(end_original).first == SESMOVE); ++end_original)
       ;
 
-    for(; end_modified < new_moved.size() && (new_moved.at(end_modified).first == SESINSERT || new_moved.at(end_modified).first == SESMOVE); ++end_modified)
+    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SESINSERT || modified_moved.at(end_modified).first == SESMOVE); ++end_modified)
       ;
 
     // output diffs until match
@@ -207,10 +207,10 @@ void srcdiff_many::output() {
     i = end_original;
     j = end_modified;
 
-    if(i >= old_moved.size() || j >= new_moved.size())
+    if(i >= original_moved.size() || j >= modified_moved.size())
       break;
 
-    if(old_moved.at(i).first == SESCOMMON && new_moved.at(j).first == SESCOMMON) {
+    if(original_moved.at(i).first == SESCOMMON && modified_moved.at(j).first == SESCOMMON) {
  
       if((xmlReaderTypes)out.get_nodes_original().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
 
@@ -226,14 +226,14 @@ void srcdiff_many::output() {
 
     } else {
 
-      fprintf(stderr, "Mismatched index: %d-%d\n", old_moved.at(i).first, new_moved.at(j).first);
+      fprintf(stderr, "Mismatched index: %d-%d\n", original_moved.at(i).first, modified_moved.at(j).first);
       exit(1);
 
     }
 
   }
 
-  output_unmatched(edits->offset_sequence_one + i, edits->offset_sequence_one + old_moved.size() - 1
-                   , edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + new_moved.size() - 1);
+  output_unmatched(edits->offset_sequence_one + i, edits->offset_sequence_one + original_moved.size() - 1
+                   , edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + modified_moved.size() - 1);
 
 }

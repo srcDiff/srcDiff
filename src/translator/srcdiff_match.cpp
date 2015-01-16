@@ -42,8 +42,8 @@ static offset_pair * create_linked_list(int olength, int nlength, difference * d
 
       offset_pair * match = new offset_pair;
 
-      match->old_offset = differences[i * olength + j].opos;
-      match->new_offset = differences[i * olength + j].npos;
+      match->original_offset = differences[i * olength + j].opos;
+      match->modified_offset = differences[i * olength + j].npos;
       match->similarity = differences[i * olength + j].similarity;
       match->next = last_match;
 
@@ -115,17 +115,17 @@ offset_pair * srcdiff_match::match_differences() {
   /*
     fprintf(stderr, "HERE\n");
 
-    for(int old_pos = 0; old_pos < edits->length; ++old_pos) {
+    for(int original_pos = 0; original_pos < edits->length; ++original_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_original.at(node_sets_original.at(edits->offset_sequence_one + old_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_original.at(node_sets_original.at(edits->offset_sequence_one + original_pos)->at(0))->name);
 
     }
 
     fprintf(stderr, "HERE\n");
 
-    for(int new_pos = 0; new_pos < edit_next->length; ++new_pos) {
+    for(int modified_pos = 0; modified_pos < edit_next->length; ++modified_pos) {
 
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(node_sets_modified.at(edit_next->offset_sequence_two + new_pos)->at(0))->name);
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(node_sets_modified.at(edit_next->offset_sequence_two + modified_pos)->at(0))->name);
 
     }
 
@@ -936,17 +936,17 @@ static const interchange_list interchange_lists[] = {
 
 };
 
-bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> & old_tag, const boost::optional<std::string> & new_tag) {
+bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> & original_tag, const boost::optional<std::string> & modified_tag) {
 
-  if(!old_tag || !new_tag) return false;
+  if(!original_tag || !modified_tag) return false;
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
-    if(interchange_lists[list_pos].name == *old_tag) {
+    if(interchange_lists[list_pos].name == *original_tag) {
 
       for(size_t pos = 0; interchange_lists[list_pos].list[pos]; ++pos) {
 
-        if(interchange_lists[list_pos].list[pos] == *new_tag)
+        if(interchange_lists[list_pos].list[pos] == *modified_tag)
           return true;
 
       }
@@ -963,29 +963,29 @@ bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> 
 bool reject_match_same(int similarity, int difference, int text_original_length, int text_modified_length,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  int old_pos = set_original.at(0);
-  int new_pos = set_modified.at(0);
+  int original_pos = set_original.at(0);
+  int modified_pos = set_modified.at(0);
 
-  std::string old_tag = nodes_original.at(old_pos)->name;
-  std::string new_tag = nodes_modified.at(new_pos)->name;
+  std::string original_tag = nodes_original.at(original_pos)->name;
+  std::string modified_tag = nodes_modified.at(modified_pos)->name;
 
-  if(old_tag != new_tag) return true;
+  if(original_tag != modified_tag) return true;
 
-  if(old_tag == "name" || old_tag == "type" || old_tag == "then" || old_tag == "condition" || old_tag == "init"
-    || old_tag == "default" || old_tag == "comment"
-    || old_tag == "private" || old_tag == "protected" || old_tag == "public" || old_tag == "signals"
-    || old_tag == "parameter_list" || old_tag == "krparameter_list" || old_tag == "argument_list" || old_tag == "member_init_list"
-    || old_tag == "attribute_list" || old_tag == "association_list" || old_tag == "protocol_list"
-    || old_tag == "argument"
-    || old_tag == "literal" || old_tag == "operator" || old_tag == "modifier" || old_tag == "member_list")
+  if(original_tag == "name" || original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "init"
+    || original_tag == "default" || original_tag == "comment"
+    || original_tag == "private" || original_tag == "protected" || original_tag == "public" || original_tag == "signals"
+    || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list" || original_tag == "member_init_list"
+    || original_tag == "attribute_list" || original_tag == "association_list" || original_tag == "protocol_list"
+    || original_tag == "argument"
+    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier" || original_tag == "member_list")
     return false;
 
-  if((old_tag == "expr" || old_tag == "expr_stmt") && similarity > 0) return false;
+  if((original_tag == "expr" || original_tag == "expr_stmt") && similarity > 0) return false;
 
-  if(old_tag == "block") {
+  if(original_tag == "block") {
 
-    bool is_pseudo_original = find_attribute(nodes_original.at(old_pos), "type") != 0;
-    bool is_pseudo_modified = find_attribute(nodes_modified.at(new_pos), "type") != 0;
+    bool is_pseudo_original = find_attribute(nodes_original.at(original_pos), "type") != 0;
+    bool is_pseudo_modified = find_attribute(nodes_modified.at(modified_pos), "type") != 0;
 
     if(is_pseudo_original == is_pseudo_modified) {
 
@@ -1027,88 +1027,88 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   }
 
-  if(is_single_call_expr(nodes_original, old_pos) && is_single_call_expr(nodes_modified, new_pos)) {
+  if(is_single_call_expr(nodes_original, original_pos) && is_single_call_expr(nodes_modified, modified_pos)) {
 
-    while(nodes_original.at(old_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || nodes_original.at(old_pos)->name != "call")
-      ++old_pos;
+    while(nodes_original.at(original_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+      || nodes_original.at(original_pos)->name != "call")
+      ++original_pos;
 
-    while(nodes_modified.at(new_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || nodes_modified.at(new_pos)->name != "call")
-      ++new_pos;
+    while(nodes_modified.at(modified_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+      || nodes_modified.at(modified_pos)->name != "call")
+      ++modified_pos;
 
-    std::vector<std::string> old_names = get_call_name(nodes_original, old_pos);
-    std::vector<std::string> new_names = get_call_name(nodes_modified, new_pos);
+    std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
+    std::vector<std::string> modified_names = get_call_name(nodes_modified, modified_pos);
 
-    if(name_list_similarity(old_names, new_names)) return false;
+    if(name_list_similarity(original_names, modified_names)) return false;
 
-  } else if(old_tag == "call") {
+  } else if(original_tag == "call") {
 
-    std::vector<std::string> old_names = get_call_name(nodes_original, old_pos);
-    std::vector<std::string> new_names = get_call_name(nodes_modified, new_pos);
+    std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
+    std::vector<std::string> modified_names = get_call_name(nodes_modified, modified_pos);
 
-    if(name_list_similarity(old_names, new_names)) return false;
+    if(name_list_similarity(original_names, modified_names)) return false;
 
-  } else if(old_tag == "decl" || old_tag == "decl_stmt" || old_tag == "parameter" || old_tag == "param") {
+  } else if(original_tag == "decl" || original_tag == "decl_stmt" || original_tag == "parameter" || original_tag == "param") {
 
-    std::string old_name = get_decl_name(nodes_original, old_pos);
-    std::string new_name = get_decl_name(nodes_modified, new_pos);
+    std::string original_name = get_decl_name(nodes_original, original_pos);
+    std::string modified_name = get_decl_name(nodes_modified, modified_pos);
 
-    if(old_name == new_name && old_name != "") return false;
+    if(original_name == modified_name && original_name != "") return false;
 
-  } else if(old_tag == "function"    || old_tag == "function_decl"
-         || old_tag == "constructor" || old_tag == "constructor_decl"
-         || old_tag == "destructor"  || old_tag == "destructor_decl") {
+  } else if(original_tag == "function"    || original_tag == "function_decl"
+         || original_tag == "constructor" || original_tag == "constructor_decl"
+         || original_tag == "destructor"  || original_tag == "destructor_decl") {
 
-    std::string old_name = get_function_type_name(nodes_original, old_pos);
-    std::string new_name = get_function_type_name(nodes_modified, new_pos);
+    std::string original_name = get_function_type_name(nodes_original, original_pos);
+    std::string modified_name = get_function_type_name(nodes_modified, modified_pos);
 
-    if(old_name == new_name) return false;
+    if(original_name == modified_name) return false;
 
-  } else if(old_tag == "if") {
+  } else if(original_tag == "if") {
 
-    std::string old_condition = get_condition(nodes_original, old_pos);
-    std::string new_condition = get_condition(nodes_modified, new_pos);
+    std::string original_condition = get_condition(nodes_original, original_pos);
+    std::string modified_condition = get_condition(nodes_modified, modified_pos);
 
-    bool old_has_block = conditional_has_block(nodes_original, set_original);
-    bool new_has_block = conditional_has_block(nodes_modified, set_modified);
+    bool original_has_block = conditional_has_block(nodes_original, set_original);
+    bool modified_has_block = conditional_has_block(nodes_modified, set_modified);
 
-    bool old_has_else = if_has_else(nodes_original, set_original);
-    bool new_has_else = if_has_else(nodes_modified, set_modified);
+    bool original_has_else = if_has_else(nodes_original, set_original);
+    bool modified_has_else = if_has_else(nodes_modified, set_modified);
 
-    if(if_then_equal(nodes_original, set_original, nodes_modified, set_modified) || (old_condition == new_condition
-      && (old_has_block == new_has_block || old_has_else == new_has_else || ((old_has_block || !old_has_else) && (new_has_block || !new_has_else)))))
+    if(if_then_equal(nodes_original, set_original, nodes_modified, set_modified) || (original_condition == modified_condition
+      && (original_has_block == modified_has_block || original_has_else == modified_has_else || ((original_has_block || !original_has_else) && (modified_has_block || !modified_has_else)))))
      return false;
 
-  } else if(old_tag == "while" || old_tag == "switch") {
+  } else if(original_tag == "while" || original_tag == "switch") {
 
-    std::string old_condition = get_condition(nodes_original, old_pos);
-    std::string new_condition = get_condition(nodes_modified, new_pos);
+    std::string original_condition = get_condition(nodes_original, original_pos);
+    std::string modified_condition = get_condition(nodes_modified, modified_pos);
 
-    if(old_condition == new_condition) return false;
+    if(original_condition == modified_condition) return false;
 
-  } else if(old_tag == "for" || old_tag == "foreach") {
+  } else if(original_tag == "for" || original_tag == "foreach") {
 
     if(for_control_matches(nodes_original, set_original, nodes_modified, set_modified))
       return false;
 
-  } else if(old_tag == "case") { 
+  } else if(original_tag == "case") { 
 
-    std::string old_expr = get_case_expr(nodes_original, old_pos);
-    std::string new_expr = get_case_expr(nodes_modified, new_pos);
+    std::string original_expr = get_case_expr(nodes_original, original_pos);
+    std::string modified_expr = get_case_expr(nodes_modified, modified_pos);
 
-    if(old_expr == new_expr) return false;
+    if(original_expr == modified_expr) return false;
 
-  } else if(old_tag == "class" || old_tag == "struct" || old_tag == "union" || old_tag == "enum") {
+  } else if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
 
-    std::string old_name = get_class_type_name(nodes_original, old_pos);
-    std::string new_name = get_class_type_name(nodes_modified, new_pos);
+    std::string original_name = get_class_type_name(nodes_original, original_pos);
+    std::string modified_name = get_class_type_name(nodes_modified, modified_pos);
 
-    if(old_name == new_name && old_name != "") return false;
+    if(original_name == modified_name && original_name != "") return false;
 
-  } else if(old_tag == "comment") {
+  } else if(original_tag == "comment") {
 
-    if(srcdiff_compare::node_compare(nodes_original.at(old_pos), nodes_modified.at(new_pos)) == 0) return false;
+    if(srcdiff_compare::node_compare(nodes_original.at(original_pos), nodes_modified.at(modified_pos)) == 0) return false;
 
   }
 
@@ -1120,27 +1120,27 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 bool reject_match_interchangeable(int similarity, int difference, int text_original_length, int text_modified_length,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
-  int old_pos = set_original.at(0);
-  int new_pos = set_modified.at(0);
+  int original_pos = set_original.at(0);
+  int modified_pos = set_modified.at(0);
 
-  std::string old_tag = nodes_original.at(old_pos)->name;
-  std::string new_tag = nodes_modified.at(new_pos)->name;
+  std::string original_tag = nodes_original.at(original_pos)->name;
+  std::string modified_tag = nodes_modified.at(modified_pos)->name;
 
-  std::string old_condition = "";
-  if(old_tag == "if" || old_tag == "while" || old_tag == "for" || old_tag == "foreach") {
+  std::string original_condition = "";
+  if(original_tag == "if" || original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
 
-    old_condition = get_condition(nodes_original, old_pos);
-
-  }
-
-  std::string new_condition = "";
-  if(new_tag == "if" || new_tag == "while" || new_tag == "for" || new_tag == "foreach") {
-
-    new_condition = get_condition(nodes_modified, new_pos);
+    original_condition = get_condition(nodes_original, original_pos);
 
   }
 
-  if(old_condition != "" && old_condition == new_condition) return false;
+  std::string modified_condition = "";
+  if(modified_tag == "if" || modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
+
+    modified_condition = get_condition(nodes_modified, modified_pos);
+
+  }
+
+  if(original_condition != "" && original_condition == modified_condition) return false;
 
   bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   return is_reject;
@@ -1151,15 +1151,15 @@ bool srcdiff_match::reject_match(int similarity, int difference, int text_origin
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
   /** if different prefix should not reach here, however, may want to add that here */
-  int old_pos = set_original.at(0);
-  int new_pos = set_modified.at(0);
+  int original_pos = set_original.at(0);
+  int modified_pos = set_modified.at(0);
 
-  std::string old_tag = nodes_original.at(old_pos)->name;
-  std::string new_tag = nodes_modified.at(new_pos)->name;
+  std::string original_tag = nodes_original.at(original_pos)->name;
+  std::string modified_tag = nodes_modified.at(modified_pos)->name;
 
-  if(old_tag == new_tag)
+  if(original_tag == modified_tag)
     return reject_match_same(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
-  else if(is_interchangeable_match(old_tag, new_tag)) 
+  else if(is_interchangeable_match(original_tag, modified_tag)) 
     return reject_match_interchangeable(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   else
     return true;

@@ -159,12 +159,12 @@ void srcdiff_single::output_recursive_interchangeable() {
   bool is_same_keyword = srcdiff_compare::node_compare(out.get_nodes_original().at(node_sets_original.at(start_original).at(1)),
                   out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1))) == 0;
 
-  int old_collect_start_pos = 1;
+  int original_collect_start_pos = 1;
   if(!is_same_keyword) {
 
     out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(1)), SESDELETE);
     ++out.last_output_original();
-    old_collect_start_pos = 2;
+    original_collect_start_pos = 2;
 
   }
 
@@ -174,12 +174,12 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0)), SESINSERT);
 
-  int new_collect_start_pos = 1;
+  int modified_collect_start_pos = 1;
   if(!is_same_keyword){
 
     out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1)), SESINSERT);
     ++out.last_output_modified();
-    new_collect_start_pos = 2;
+    modified_collect_start_pos = 2;
 
   }
 
@@ -187,11 +187,11 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   // collect subset of nodes
   node_sets next_set_original
-    = node_sets(out.get_nodes_original(), node_sets_original.at(start_original).at(old_collect_start_pos)
+    = node_sets(out.get_nodes_original(), node_sets_original.at(start_original).at(original_collect_start_pos)
                       , node_sets_original.at(start_original).back());
 
   node_sets next_set_modified
-    = node_sets(out.get_nodes_modified(), node_sets_modified.at(start_modified).at(new_collect_start_pos)
+    = node_sets(out.get_nodes_modified(), node_sets_modified.at(start_modified).at(modified_collect_start_pos)
                       , node_sets_modified.at(start_modified).back());
 
   srcdiff_diff diff(out, next_set_original, next_set_modified);

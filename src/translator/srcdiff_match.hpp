@@ -5,10 +5,10 @@
 
 struct offset_pair {
 
-  int old_offset;
-  int old_length;
-  int new_offset;
-  int new_length;
+  int original_offset;
+  int original_length;
+  int modified_offset;
+  int modified_length;
   int similarity;
   offset_pair * next;
 
@@ -38,7 +38,7 @@ public:
 
   static const char * find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);
 
-  static bool is_interchangeable_match(const boost::optional<std::string> & old_tag, const boost::optional<std::string> & new_tag);
+  static bool is_interchangeable_match(const boost::optional<std::string> & original_tag, const boost::optional<std::string> & modified_tag);
 
 };
 

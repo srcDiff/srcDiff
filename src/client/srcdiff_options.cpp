@@ -21,7 +21,7 @@ boost::program_options::positional_options_description input_file;
 #define PROGRAM_NAME "srcdiff"
 #define EMAIL_ADDRESS "mdecker6@kent.edu"
 const char * const SRCDIFF_HELP_HEADER =
-"Usage: " PROGRAM_NAME " [options] <old_src_infile new_src_infile>... [-o <srcDiff_outfile>]\n\n"
+"Usage: " PROGRAM_NAME " [options] <original_src_infile modified_src_infile>... [-o <srcDiff_outfile>]\n\n"
 
 "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
 "Multiple files are stored in a srcDiff archive.\n\n";
