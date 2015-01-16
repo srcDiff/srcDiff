@@ -238,7 +238,7 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
 
   }
 
-  // process all non-directory files that are remaining in the old version
+  // process all non-directory files that are remaining in the original version
   for ( ; i < n; ++i) {
 
     // form the full path
@@ -258,7 +258,7 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
 
   }
 
-  // process all non-directory files that are remaining in the new version
+  // process all non-directory files that are remaining in the modified version
   for ( ; j < m; ++j) {
 
     // form the full path
@@ -310,7 +310,7 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
 
   }
 
-  // process all directories that remain in the old version
+  // process all directories that remain in the original version
   for ( ; i < n; ++i) {
 
     // form the full path
@@ -330,7 +330,7 @@ void srcdiff_input_source_local::directory(const boost::optional<std::string> & 
 
   }
 
-  // process all directories that remain in the new version
+  // process all directories that remain in the modified version
   for ( ; j < m; ++j) {
 
     // form the full path

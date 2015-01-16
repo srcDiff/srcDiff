@@ -345,7 +345,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
 
   }
 
-  // process all non-directory files that are remaining in the old version
+  // process all non-directory files that are remaining in the original version
   for (; i < n; ++i) {
 
     // form the full path
@@ -365,7 +365,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
 
   }
 
-  // process all non-directory files that are remaining in the new version
+  // process all non-directory files that are remaining in the modified version
   for ( ; j < m; ++j) {
 
     // form the full path
@@ -424,7 +424,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
 
   }
 
-  // process all directories that remain in the old version
+  // process all directories that remain in the original version
   for ( ; i < n; ++i) {
 
     path_original.replace(basesize_original, std::string::npos, dir_entries_one[i]);
@@ -443,7 +443,7 @@ void srcdiff_input_source_svn::directory(const boost::optional<std::string> & di
 
   }
 
-  // process all directories that remain in the new version
+  // process all directories that remain in the modified version
   for ( ; j < m; ++j) {
 
     path_modified.replace(basesize_modified, std::string::npos, dir_entries_two[j]);
