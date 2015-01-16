@@ -20,8 +20,18 @@
 
 #include <URIStream.hpp>
 
-LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url, const boost::optional<std::string> & dir)
-  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), url(url), dir(dir) {}
+LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), svn(nullptr), git(nullptr) {}
+
+#if SVN
+LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, srcdiff_input_source_svn * svn)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), svn(svn), git(nullptr) {}
+#endif
+
+#if GIT
+LineDiffRange::LineDiffRange(const std::string & file_one, const std::string & file_two, srcdiff_input_source_git * git)
+  : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), svn(nullptr), git(git) {}
+#endif
 
 LineDiffRange::~LineDiffRange() {}
 
@@ -173,7 +183,7 @@ std::string LineDiffRange::get_line_diff_range() {
 void LineDiffRange::create_line_diff() {
 
 #if defined(SVN) || defined(GIT)
-  if(!url && !dir) {
+  if(!svn && !git) {
 #endif
     lines_one = read_local_file(file_one.c_str());
     lines_two = read_local_file(file_two.c_str());
@@ -182,24 +192,19 @@ void LineDiffRange::create_line_diff() {
 #endif  
 
 #ifdef SVN
-  if(url) {
+  if(svn) {
 
-    srcdiff_options options;
-    options.svn_url = url;
-    srcdiff_input_source_svn input(options);
-    lines_one = read_svn_file(&input, file_one.c_str());
-    lines_two = read_svn_file(&input, file_two.c_str());
+    lines_one = read_svn_file(svn, file_one.c_str());
+    lines_two = read_svn_file(svn, file_two.c_str());
 
   }
 #endif
 
 #ifdef GIT
-  if(dir) {
+  if(git) {
 
-    srcdiff_options options;
-    srcdiff_input_source_git input(options, dir);
-    lines_one = read_git_file(&input, file_one.c_str());
-    lines_two = read_git_file(&input, file_two.c_str());
+    lines_one = read_git_file(git, file_one.c_str());
+    lines_two = read_git_file(git, file_two.c_str());
 
   }
 #endif 

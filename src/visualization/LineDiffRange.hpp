@@ -32,14 +32,22 @@ private:
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;
 
-  const boost::optional<std::string> url;
-  const boost::optional<std::string> dir;
+  srcdiff_input_source_svn * svn;
+  srcdiff_input_source_git * git;
 
   OPTION_TYPE options;
 
 public:
 
-  LineDiffRange(const std::string & file_one, const std::string & file_two, const boost::optional<std::string> & url, const boost::optional<std::string> & dir = boost::optional<std::string>());
+  LineDiffRange(const std::string & file_one, const std::string & file_two);
+
+#if SVN
+  LineDiffRange(const std::string & file_one, const std::string & file_two, srcdiff_input_source_svn * svn);
+#endif
+
+#if GIT
+  LineDiffRange(const std::string & file_one, const std::string & file_two, srcdiff_input_source_git * git);
+#endif
 
   ~LineDiffRange();
 
