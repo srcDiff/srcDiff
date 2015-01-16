@@ -100,7 +100,7 @@ public:
 
   bool is_white_space() const;
 
-  bool is_modified_line() const;
+  bool is_new_line() const;
 
   bool is_text() const;
 

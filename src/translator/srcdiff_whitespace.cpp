@@ -162,16 +162,16 @@ void srcdiff_whitespace::output_statement() {
   unsigned int nend = rbuf_modified->last_output;
 
   // advance whitespace after targeted end
-  for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space() && !rbuf_original->nodes.at(oend)->is_modified_line(); ++oend)
+  for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space() && !rbuf_original->nodes.at(oend)->is_new_line(); ++oend)
     ;
 
-  for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space() && !rbuf_modified->nodes.at(nend)->is_modified_line(); ++nend)
+  for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space() && !rbuf_modified->nodes.at(nend)->is_new_line(); ++nend)
     ;
 
-  if(oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_modified_line())
+  if(oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_new_line())
     ++oend;
 
-  if(nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_modified_line())
+  if(nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_new_line())
     ++nend;
 
   markup_whitespace(oend, nend);
@@ -215,16 +215,16 @@ void srcdiff_whitespace::output_prefix() {
   unsigned int save_oend = oend;
   unsigned int save_nend = nend;
 
-  while(rbuf_original->last_output < oend && (rbuf_original->nodes.at(oend - 1)->is_white_space() && !rbuf_original->nodes.at(oend - 1)->is_modified_line()))
+  while(rbuf_original->last_output < oend && (rbuf_original->nodes.at(oend - 1)->is_white_space() && !rbuf_original->nodes.at(oend - 1)->is_new_line()))
     --oend;
 
-  while(rbuf_modified->last_output < nend && (rbuf_modified->nodes.at(nend - 1)->is_white_space() && !rbuf_modified->nodes.at(nend - 1)->is_modified_line()))
+  while(rbuf_modified->last_output < nend && (rbuf_modified->nodes.at(nend - 1)->is_white_space() && !rbuf_modified->nodes.at(nend - 1)->is_new_line()))
     --nend;
 
-  if(oend > 0 && !rbuf_original->nodes.at(oend - 1)->is_modified_line())
+  if(oend > 0 && !rbuf_original->nodes.at(oend - 1)->is_new_line())
     oend = save_oend;
 
-  if(nend > 0 && !rbuf_modified->nodes.at(nend - 1)->is_modified_line())
+  if(nend > 0 && !rbuf_modified->nodes.at(nend - 1)->is_new_line())
     nend = save_nend;
 
   if(ostart < oend) {
