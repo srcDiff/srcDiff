@@ -11,8 +11,7 @@
 #include <vector>
 #include <SAX2ColorDiff.hpp>
 #include <shortest_edit_script.h>
-#include <LineDiffRange.hpp>
-//#include <srcdiff_options.hpp>
+#include <line_diff_range.hpp>
 
 const char * const normal_color = "normal";
 

@@ -1,5 +1,5 @@
 /*
-  LineDiffRange.cpp
+  line_diff_range.cpp
 
   Compute range of line diffs
 
@@ -7,7 +7,7 @@
   mjd52@zips.uakron.edu
 */
 
-#include <LineDiffRange.hpp>
+#include <line_diff_range.hpp>
 
 #include <string>
 #include <vector>

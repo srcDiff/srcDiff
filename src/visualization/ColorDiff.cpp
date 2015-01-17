@@ -9,9 +9,7 @@
 #include <string.h>
 #include <vector>
 #include <iostream>
-#include <fstream>
 #include <sstream>
-#include <LineDiffRange.hpp>
 #include <shortest_edit_script.h>
 
 #include <ColorDiff.hpp>

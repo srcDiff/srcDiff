@@ -1,5 +1,5 @@
 /*
-  LineDiffRange.cpp
+  line_diff_range.tcc
 
   Compute range of line diffs
 
@@ -16,49 +16,49 @@
 #include <uri_stream.hpp>
 
 template<class T>
-LineDiffRange<T>::LineDiffRange(const std::string & file_one, const std::string & file_two, const T * input)
+line_diff_range<T>::line_diff_range(const std::string & file_one, const std::string & file_two, const T * input)
   : file_one(file_one), file_two(file_two), ses(line_compare, line_accessor, NULL), input(input) {}
 
 template<class T>
-LineDiffRange<T>::~LineDiffRange() {}
+line_diff_range<T>::~line_diff_range() {}
 
 template<class T>
-const std::string & LineDiffRange<T>::get_file_one() const {
+const std::string & line_diff_range<T>::get_file_one() const {
 
   return file_one;
 
 }
 
 template<class T>
-const std::string & LineDiffRange<T>::get_file_two() const {
+const std::string & line_diff_range<T>::get_file_two() const {
 
   return file_two;
 
 }
 
 template<class T>
-unsigned int LineDiffRange<T>::get_length_file_one() const {
+unsigned int line_diff_range<T>::get_length_file_one() const {
 
   return lines_one.size();
 
 }
 
 template<class T>
-unsigned int LineDiffRange<T>::get_length_file_two() const {
+unsigned int line_diff_range<T>::get_length_file_two() const {
 
   return lines_two.size();
 
 }
 
 template<class T>
-edit * LineDiffRange<T>::get_line_diff() {
+edit * line_diff_range<T>::get_line_diff() {
 
   return ses.get_script();
 
 }
 
 template<class T>
-std::vector<std::string> LineDiffRange<T>::read_file(const T * input, const char * file) {
+std::vector<std::string> line_diff_range<T>::read_file(const T * input, const char * file) {
 
   std::vector<std::string> lines;
 
@@ -80,7 +80,7 @@ std::vector<std::string> LineDiffRange<T>::read_file(const T * input, const char
 }
 
 template<class T>
-std::string LineDiffRange<T>::get_line_diff_range() {
+std::string line_diff_range<T>::get_line_diff_range() {
 
   std::string diff;
 
@@ -116,7 +116,7 @@ std::string LineDiffRange<T>::get_line_diff_range() {
 }
 
 template<class T>
-void LineDiffRange<T>::create_line_diff() {
+void line_diff_range<T>::create_line_diff() {
 
   lines_one = read_file(input, file_one.c_str());
   lines_two = read_file(input, file_two.c_str());
@@ -134,7 +134,7 @@ void LineDiffRange<T>::create_line_diff() {
 }
 
 template<class T>
-bool LineDiffRange<T>::is_no_white_space_diff() {
+bool line_diff_range<T>::is_no_white_space_diff() {
 
 
   for(edit * edits = ses.get_script(); edits; edits = edits->next) {

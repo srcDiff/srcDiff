@@ -11,7 +11,7 @@
 
 #include <cstdio>
 
-#include <URIStream.hpp>
+#include <uri_stream.hpp>
 
 static std::mutex mutex;
   
@@ -123,7 +123,7 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
   srcdiff_input_git input_original(options.archive, path_original, 0, *this);
   srcdiff_input_git input_modified(options.archive, path_modified, 0, *this);
 
-  LineDiffRange<srcdiff_input_source_git> line_diff_range(path_original, path_modified, this);
+  line_diff_range<srcdiff_input_source_git> line_diff_range(path_original, path_modified, this);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string, NULL, unit_filename, 0);
 

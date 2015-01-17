@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <srcdiff_options.hpp>
-#include <LineDiffRange.hpp>
+#include <line_diff_range.hpp>
 
 class ColorDiff {
 
@@ -24,7 +24,7 @@ public:
   ~ColorDiff();
 
   template<class T>
-  int colorize(const char * srcdiff, LineDiffRange<T> & line_diff_range);
+  int colorize(const char * srcdiff, line_diff_range<T> & line_diff_range);
 
 };
 
@@ -35,7 +35,7 @@ xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 void parseDocument(xmlParserCtxtPtr ctxt);
 
 template<class T>
-int ColorDiff::colorize(const char * srcdiff, LineDiffRange<T> & line_diff_range) {
+int ColorDiff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_range) {
 
   unsigned int size_original = line_diff_range.get_length_file_one();
   unsigned int size_modified = line_diff_range.get_length_file_two();

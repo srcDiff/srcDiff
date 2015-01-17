@@ -61,7 +61,7 @@ public:
 
   template<class T>
   void translate(const srcdiff_input & input_original, const srcdiff_input & input_modified,
-                 LineDiffRange<T> & line_diff_range, const std::string & language,
+                 line_diff_range<T> & line_diff_range, const std::string & language,
                  const boost::optional<std::string> & unit_directory = boost::optional<std::string>(), const boost::optional<std::string> & unit_filename = boost::optional<std::string>(),
                  const boost::optional<std::string> & unit_version = boost::optional<std::string>());
 
@@ -74,7 +74,7 @@ public:
 // Translate from input stream to output stream
 template<class T>
 void srcdiff_translator::translate(const srcdiff_input & input_original, const srcdiff_input & input_modified,
-                                  LineDiffRange<T> & line_diff_range, const std::string & language,
+                                  line_diff_range<T> & line_diff_range, const std::string & language,
                                   const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename,
                                   const boost::optional<std::string> & unit_version) {
 

@@ -1,5 +1,5 @@
 /*
-  LineDiffRange.hpp
+  line_diff_range.hpp
 
   Compute range of line diffs
 
@@ -7,8 +7,8 @@
   mjd52@zips.uakron.edu
 */
 
-#ifndef INCLUDED_LINEDIFFRANGE_HPP
-#define INCLUDED_LINEDIFFRANGE_HPP
+#ifndef INCLUDED_LINE_DIFF_RANGE_HPP
+#define INCLUDED_LINE_DIFF_RANGE_HPP
 
 #include <shortest_edit_script.hpp>
 
@@ -16,7 +16,7 @@
 #include <vector>
 
 template<class T>
-class LineDiffRange {
+class line_diff_range {
 
 private:
 
@@ -31,9 +31,9 @@ private:
 
 public:
 
-  LineDiffRange(const std::string & file_one, const std::string & file_two, const T * input);
+  line_diff_range(const std::string & file_one, const std::string & file_two, const T * input);
 
-  ~LineDiffRange();
+  ~line_diff_range();
 
   const std::string & get_file_one() const;
   const std::string & get_file_two() const;
@@ -58,6 +58,6 @@ const void * line_accessor(int position, const void * lines, const void * contex
 
 std::string remove_white_space(std::string & source);
 
-#include <LineDiffRange.tcc>
+#include <line_diff_range.tcc>
 
 #endif

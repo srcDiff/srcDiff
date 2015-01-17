@@ -2,7 +2,7 @@
 #define INCLUDED_SRCDIFF_OUTPUT_HPP
 
 #include <srcml_nodes.hpp>
-#include <LineDiffRange.hpp>
+#include <line_diff_range.hpp>
 #include <ColorDiff.hpp>
 #include <bash_view.hpp>
 #include <methods.hpp>
@@ -124,7 +124,7 @@ public:
   virtual void start_unit(const std::string & language_string, const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version);
 
   template<class T>
-  void finish(int is_original, int is_modified, LineDiffRange<T> & line_diff_range);
+  void finish(int is_original, int is_modified, line_diff_range<T> & line_diff_range);
   virtual void reset();
   virtual void close();
 
@@ -145,7 +145,7 @@ public:
 };
 
 template<class T>
-void srcdiff_output::finish(int is_original, int is_modified, LineDiffRange<T> & line_diff_range) {
+void srcdiff_output::finish(int is_original, int is_modified, line_diff_range<T> & line_diff_range) {
 
   static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
   output_node(flush, SESCOMMON);
