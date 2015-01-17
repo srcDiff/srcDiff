@@ -30,7 +30,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, flags);
+    colordiff = std::make_shared<color_diff>(srcdiff_filename, dir, ver, flags);
 
   } else if(isoption(flags, OPTION_BASH_VIEW))
     bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);

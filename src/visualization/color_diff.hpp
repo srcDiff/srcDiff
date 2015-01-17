@@ -1,11 +1,11 @@
-#ifndef INCLUDED_COLORDIFF_HPP
-#define INCLUDED_COLORDIFF_HPP
+#ifndef INCLUDED_COLOR_DIFF_HPP
+#define INCLUDED_COLOR_DIFF_HPP
 
 #include <fstream>
 #include <srcdiff_options.hpp>
 #include <line_diff_range.hpp>
 
-class ColorDiff {
+class color_diff {
 
 private :
 
@@ -20,8 +20,8 @@ private :
 
 public:
 
-  ColorDiff(const std::string & colordiff_file, const std::string & directory, const std::string & version, const OPTION_TYPE & options);
-  ~ColorDiff();
+  color_diff(const std::string & color_diff_file, const std::string & directory, const std::string & version, const OPTION_TYPE & options);
+  ~color_diff();
 
   template<class T>
   int colorize(const char * srcdiff, line_diff_range<T> & line_diff_range);
@@ -29,13 +29,13 @@ public:
 };
 
 #include <libxml/parserInternals.h>
-#include <SAX2ColorDiff.hpp>
+#include <sax2_color_diff.hpp>
 
-xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
-void parseDocument(xmlParserCtxtPtr ctxt);
+xmlParserCtxtPtr create_url_parser_ctxt(const char * srcdiff);
+void parse_document(xmlParserCtxtPtr ctxt);
 
 template<class T>
-int ColorDiff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_range) {
+int color_diff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_range) {
 
   unsigned int size_original = line_diff_range.get_length_file_one();
   unsigned int size_modified = line_diff_range.get_length_file_two();
@@ -93,27 +93,27 @@ int ColorDiff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_ran
 
   if(first) {
 
-    color_diff::output_start_document(*outfile);
+    sax2_color_diff::output_start_document(*outfile);
     first = false;
 
   }
 
   // create the ctxt
-  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
+  xmlParserCtxtPtr ctxt = create_url_parser_ctxt(srcdiff);
 
   // setup sax handler
-  xmlSAXHandler sax = color_diff::factory();
+  xmlSAXHandler sax = sax2_color_diff::factory();
   ctxt->sax = &sax;
 
   std::vector<int> stack = std::vector<int>();
   stack.push_back(SESCOMMON);
 
-  struct color_diff::source_diff data = { 1, 1, &stack, lines_original, lines_modified, line_diff_range.get_file_one(), line_diff_range.get_file_two()
+  struct sax2_color_diff::source_diff data = { 1, 1, &stack, lines_original, lines_modified, line_diff_range.get_file_one(), line_diff_range.get_file_two()
                               , *outfile, options, "", false, false, false };
 
   ctxt->_private = &data;
 
-  parseDocument(ctxt);
+  parse_document(ctxt);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;

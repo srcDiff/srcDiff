@@ -1,5 +1,5 @@
 /*
-  colordiff.cpp
+  color_diff.cpp
 
   Michael J. Decker
   mjd52@zips.uakron.edu
@@ -12,27 +12,27 @@
 #include <sstream>
 #include <shortest_edit_script.h>
 
-#include <ColorDiff.hpp>
+#include <color_diff.hpp>
 
-ColorDiff::ColorDiff(const std::string & colordiff_file, const std::string & directory, const std::string & version, const OPTION_TYPE & options) 
+color_diff::color_diff(const std::string & color_diff_file, const std::string & directory, const std::string & version, const OPTION_TYPE & options) 
   : first(true), options(options) {
 
-  if(colordiff_file != "-")
-    outfile = new std::ofstream(colordiff_file.c_str());
+  if(color_diff_file != "-")
+    outfile = new std::ofstream(color_diff_file.c_str());
   else
     outfile = &std::cout;
 }
 
-ColorDiff::~ColorDiff() {
+color_diff::~color_diff() {
 
   if(first) {
 
-    color_diff::output_start_document(*outfile);
+    sax2_color_diff::output_start_document(*outfile);
     first = false;
   
   }
 
-  color_diff::output_end_document(*outfile);
+  sax2_color_diff::output_end_document(*outfile);
 
   if(outfile != &std::cout) {
 
@@ -43,7 +43,7 @@ ColorDiff::~ColorDiff() {
 }
 
 // create the ctxt
-xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
+xmlParserCtxtPtr create_url_parser_ctxt(const char * srcdiff) {
 
   xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(srcdiff, strlen(srcdiff));
   //xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
@@ -60,7 +60,7 @@ xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
 }
 
 // parse the document
-void parseDocument(xmlParserCtxtPtr ctxt) {
+void parse_document(xmlParserCtxtPtr ctxt) {
 
   // process the document
   int status;

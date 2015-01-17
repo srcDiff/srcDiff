@@ -3,7 +3,7 @@
 
 #include <srcml_nodes.hpp>
 #include <line_diff_range.hpp>
-#include <ColorDiff.hpp>
+#include <color_diff.hpp>
 #include <bash_view.hpp>
 #include <methods.hpp>
 
@@ -85,7 +85,7 @@ public:
 protected:
 
   srcml_archive * archive;
-  std::shared_ptr<ColorDiff> colordiff;
+  std::shared_ptr<color_diff> colordiff;
   std::shared_ptr<bash_view> bashview;
   const OPTION_TYPE & flags;
 

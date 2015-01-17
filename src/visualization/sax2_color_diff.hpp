@@ -14,7 +14,7 @@
 #include <string>
 #include <srcdiff_options.hpp>
 
-namespace color_diff {
+namespace sax2_color_diff {
 
   struct source_diff {
 
