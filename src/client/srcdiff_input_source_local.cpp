@@ -406,3 +406,33 @@ void srcdiff_input_source_local::files_from() {
 #undef FILELIST_COMMENT
 
 }
+
+srcdiff_input_source_local::local_context * srcdiff_input_source_local::open(const char * uri) const {
+
+  local_context * context = new local_context;
+
+  context->in.open(uri);
+
+  return context->in ? context : (delete context, nullptr);
+
+}
+
+int srcdiff_input_source_local::read(void * context, char * buffer, int len) {
+
+  local_context * ctx = (local_context *)context;
+
+  ctx->in.read(buffer, len);
+
+  return ctx->in.gcount();
+}
+
+int srcdiff_input_source_local::close(void * context) {
+
+  local_context * ctx = (local_context *)context;
+
+  ctx->in.close();
+
+  delete ctx;
+
+  return 1;
+}
