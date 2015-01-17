@@ -10,17 +10,12 @@
 #ifndef INCLUDED_LINEDIFFRANGE_HPP
 #define INCLUDED_LINEDIFFRANGE_HPP
 
-#include <srcdiff_options.hpp>
-
 #include <shortest_edit_script.hpp>
 
 #include <string>
 #include <vector>
-#include <fstream>
 
-class srcdiff_input_source_svn;
-class srcdiff_input_source_git;
-
+template<class T>
 class LineDiffRange {
 
 private:
@@ -32,22 +27,11 @@ private:
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;
 
-  srcdiff_input_source_svn * svn;
-  srcdiff_input_source_git * git;
-
-  OPTION_TYPE options;
+  const T * input;
 
 public:
 
-  LineDiffRange(const std::string & file_one, const std::string & file_two);
-
-#if SVN
-  LineDiffRange(const std::string & file_one, const std::string & file_two, srcdiff_input_source_svn * svn);
-#endif
-
-#if GIT
-  LineDiffRange(const std::string & file_one, const std::string & file_two, srcdiff_input_source_git * git);
-#endif
+  LineDiffRange(const std::string & file_one, const std::string & file_two, const T * input);
 
   ~LineDiffRange();
 
@@ -64,20 +48,16 @@ public:
 
   void create_line_diff();
 
-  static std::vector<std::string> read_local_file(const char * file);
-
-#ifdef SVN
-  static std::vector<std::string> read_svn_file(const srcdiff_input_source_svn * input, const char * file);
-#endif
-
-#ifdef GIT
-  static std::vector<std::string> read_git_file(const srcdiff_input_source_git * input, const char * file);
-#endif
+  static std::vector<std::string> read_file(const T * input, const char * file);
 
 };
 
 int line_compare(const void * line_one, const void * line_two, const void * context);
 
 const void * line_accessor(int position, const void * lines, const void * context);
+
+std::string remove_white_space(std::string & source);
+
+#include <LineDiffRange.tcc>
 
 #endif

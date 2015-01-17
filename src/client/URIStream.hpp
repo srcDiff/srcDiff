@@ -24,31 +24,22 @@
 #include <libxml/parser.h>
 #include <string>
 
-#include <srcdiff_input_source_svn.hpp>
-#include <srcdiff_input_source_git.hpp>
-
 #ifndef URISTREAM_HPP
 #define URISTREAM_HPP
 
 class URIStreamFileError {};
 
+template<class T>
 class URIStream {
 public:
-    URIStream(const char* uriname);
 
-#ifdef SVN
-    URIStream(srcdiff_input_source_svn::svn_context * context);
-#endif
+    URIStream(typename T::input_context * context);
 
-#ifdef GIT
-    URIStream(srcdiff_input_source_git::git_context * context);
-#endif
+    ~URIStream();
 
     char* readline();
 
     std::string readlines();
-
-    ~URIStream();
 
 private:
     xmlParserInputBufferPtr input;
@@ -59,5 +50,6 @@ private:
     bool done;
 };
 
+#include <URIStream.tcc>
 
 #endif

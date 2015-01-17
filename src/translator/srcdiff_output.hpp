@@ -122,7 +122,9 @@ public:
 
   virtual void initialize(int is_original, int is_modified);
   virtual void start_unit(const std::string & language_string, const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version);
-  virtual void finish(int is_original, int is_modified, LineDiffRange & line_diff_range);
+
+  template<class T>
+  void finish(int is_original, int is_modified, LineDiffRange<T> & line_diff_range);
   virtual void reset();
   virtual void close();
 
@@ -141,5 +143,33 @@ public:
   virtual void output_char(char character, int operation);
 
 };
+
+template<class T>
+void srcdiff_output::finish(int is_original, int is_modified, LineDiffRange<T> & line_diff_range) {
+
+  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
+  output_node(flush, SESCOMMON);
+
+  srcml_write_end_unit(wstate->unit);
+
+  if(!isoption(flags, OPTION_VISUALIZE)) {
+
+    srcml_write_unit(archive, wstate->unit);
+
+  }
+
+  if(isoption(flags, OPTION_VISUALIZE)) {
+
+    if(is_original || is_modified)
+      colordiff->colorize(srcml_unit_get_xml(wstate->unit), line_diff_range);
+
+  } else if(isoption(flags, OPTION_BASH_VIEW)) {
+
+    bashview->transform(srcml_unit_get_xml(wstate->unit));
+  }
+
+  srcml_free_unit(wstate->unit);
+
+ }
 
 #endif

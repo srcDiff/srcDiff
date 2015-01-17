@@ -84,7 +84,7 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
 
   srcdiff_input_filename input_original(options.archive, path_one, options.flags);
   srcdiff_input_filename input_modified(options.archive, path_two, options.flags);
-  LineDiffRange line_diff_range(path_original, path_modified);
+  LineDiffRange<srcdiff_input_source_local> line_diff_range(path_original, path_modified, this);
 
   boost::optional<std::string> path = path_one;
   if(!path || path->empty()) path = path_two;
@@ -375,7 +375,9 @@ void srcdiff_input_source_local::files_from() {
   try {
 
     // translate all the filenames listed in the named file
-    URIStream uriinput(options.files_from_name->c_str());
+
+    input_context * context = open(options.files_from_name->c_str());
+    URIStream<srcdiff_input_source_local> uriinput(context);
 
 
     const char * c_line = 0;
@@ -407,9 +409,9 @@ void srcdiff_input_source_local::files_from() {
 
 }
 
-srcdiff_input_source_local::local_context * srcdiff_input_source_local::open(const char * uri) const {
+srcdiff_input_source_local::input_context * srcdiff_input_source_local::open(const char * uri) const {
 
-  local_context * context = new local_context;
+  input_context * context = new input_context;
 
   context->in.open(uri);
 
@@ -419,7 +421,7 @@ srcdiff_input_source_local::local_context * srcdiff_input_source_local::open(con
 
 int srcdiff_input_source_local::read(void * context, char * buffer, int len) {
 
-  local_context * ctx = (local_context *)context;
+  input_context * ctx = (input_context *)context;
 
   ctx->in.read(buffer, len);
 
@@ -428,7 +430,7 @@ int srcdiff_input_source_local::read(void * context, char * buffer, int len) {
 
 int srcdiff_input_source_local::close(void * context) {
 
-  local_context * ctx = (local_context *)context;
+  input_context * ctx = (input_context *)context;
 
   ctx->in.close();
 

@@ -39,25 +39,8 @@
 #include <srcml.h>
 
 class srcdiff_translator {
- public:
 
-  // constructor
-  srcdiff_translator(const std::string & srcdiff_filename,
-                    const OPTION_TYPE & flags, const METHOD_TYPE & method,
-                    srcml_archive * archive,
-                    unsigned long number_context_lines);
-
-  void close();
-
-  void translate(const srcdiff_input & input_original, const srcdiff_input & input_modified,
-                 LineDiffRange & line_diff_range, const std::string & language,
-                 const boost::optional<std::string> & unit_directory = boost::optional<std::string>(), const boost::optional<std::string> & unit_filename = boost::optional<std::string>(),
-                 const boost::optional<std::string> & unit_version = boost::optional<std::string>());
-
-  // destructor
-  ~srcdiff_translator();
-
- private:
+private:
 
   srcml_archive * archive;
 
@@ -65,6 +48,73 @@ class srcdiff_translator {
 
   srcdiff_output output;
 
+public:
+
+  // constructor
+  srcdiff_translator(const std::string & srcdiff_filename,
+                    const OPTION_TYPE & flags, const METHOD_TYPE & method,
+                    srcml_archive * archive,
+                    unsigned long number_context_lines);
+
+  // destructor
+  ~srcdiff_translator();
+
+  template<class T>
+  void translate(const srcdiff_input & input_original, const srcdiff_input & input_modified,
+                 LineDiffRange<T> & line_diff_range, const std::string & language,
+                 const boost::optional<std::string> & unit_directory = boost::optional<std::string>(), const boost::optional<std::string> & unit_filename = boost::optional<std::string>(),
+                 const boost::optional<std::string> & unit_version = boost::optional<std::string>());
+
 };
+
+#include <thread>
+#include <srcdiff_diff.hpp>
+#include <srcdiff_whitespace.hpp>
+
+// Translate from input stream to output stream
+template<class T>
+void srcdiff_translator::translate(const srcdiff_input & input_original, const srcdiff_input & input_modified,
+                                  LineDiffRange<T> & line_diff_range, const std::string & language,
+                                  const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename,
+                                  const boost::optional<std::string> & unit_version) {
+
+  line_diff_range.create_line_diff();
+
+  if(!isoption(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
+    return;
+
+  int is_original = 0;
+  std::thread thread_original(std::ref(input_original), SESDELETE, std::ref(output.get_nodes_original()), std::ref(is_original));
+
+  int is_modified = 0;
+  std::thread thread_modified(std::ref(input_modified), SESINSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified));
+
+  thread_original.join();
+  thread_modified.join();
+
+  node_sets set_original(output.get_nodes_original(), 0, output.get_nodes_original().size());
+  node_sets set_modified(output.get_nodes_modified(), 0, output.get_nodes_modified().size());
+
+  output.initialize(is_original, is_modified);
+
+  // run on file level
+  if(is_original || is_modified) {
+
+    output.start_unit(language, unit_directory, unit_filename, unit_version);
+
+    srcdiff_diff diff(output, set_original, set_modified);
+    diff.output();
+
+    // output remaining whitespace
+    srcdiff_whitespace whitespace(output);
+    whitespace.output_all();
+
+    output.finish(is_original, is_modified, line_diff_range);
+
+  }
+
+  output.reset();
+
+}
 
 #endif

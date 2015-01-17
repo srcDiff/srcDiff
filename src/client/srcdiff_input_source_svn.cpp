@@ -214,7 +214,7 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
   srcdiff_input_svn input_original(options.archive, svn_path_original, 0, *this);
   srcdiff_input_svn input_modified(options.archive, svn_path_modified, 0, *this);
 
-  LineDiffRange line_diff_range(svn_path_original, svn_path_modified, this);
+  LineDiffRange<srcdiff_input_source_svn> line_diff_range(svn_path_original, svn_path_modified, this);
 
   boost::optional<std::string> path = path_one;
   if(!path || path->empty()) path = path_two;
@@ -536,9 +536,9 @@ void srcdiff_input_source_svn::files_from() {
 
 }
 
-srcdiff_input_source_svn::svn_context * srcdiff_input_source_svn::open(const char * uri) const {
+srcdiff_input_source_svn::input_context * srcdiff_input_source_svn::open(const char * uri) const {
 
-  svn_context * context = new svn_context;
+  input_context * context = new input_context;
 
   apr_allocator_t * allocator = 0;
   apr_allocator_create(&allocator);
@@ -571,7 +571,7 @@ srcdiff_input_source_svn::svn_context * srcdiff_input_source_svn::open(const cha
 
 int srcdiff_input_source_svn::read(void * context, char * buffer, int len) {
 
-  svn_context * ctx = (svn_context *)context;
+  input_context * ctx = (input_context *)context;
 
   apr_size_t length = len;
 
@@ -584,7 +584,7 @@ int srcdiff_input_source_svn::read(void * context, char * buffer, int len) {
 
 int srcdiff_input_source_svn::close(void * context) {
 
-  svn_context * ctx = (svn_context *)context;
+  input_context * ctx = (input_context *)context;
 
   svn_stream_close(ctx->stream);
 

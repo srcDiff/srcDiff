@@ -37,13 +37,13 @@ public:
                          const boost::optional<std::string> & directory_modified, const void * context_modified);
   virtual void files_from();
 
-  struct local_context {
+  struct input_context {
 
     std::ifstream in;
 
   };
 
-  local_context * open(const char * uri) const;
+  input_context * open(const char * uri) const;
   static int read(void * context, char * buffer, int len);
   static int close(void * context);
 

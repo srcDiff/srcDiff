@@ -11,16 +11,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <libxml/parserInternals.h>
 #include <LineDiffRange.hpp>
 #include <shortest_edit_script.h>
-#include <SAX2ColorDiff.hpp>
 
 #include <ColorDiff.hpp>
-
-// forward declarations
-static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
-static void parseDocument(xmlParserCtxtPtr ctxt);
 
 ColorDiff::ColorDiff(const std::string & colordiff_file, const std::string & directory, const std::string & version, const OPTION_TYPE & options) 
   : first(true), options(options) {
@@ -50,97 +44,8 @@ ColorDiff::~ColorDiff() {
   }
 }
 
-int ColorDiff::colorize(const char * srcdiff, LineDiffRange & line_diff_range) {
-
-  unsigned int size_original = line_diff_range.get_length_file_one();
-  unsigned int size_modified = line_diff_range.get_length_file_two();
-
-  std::string stream = line_diff_range.get_line_diff_range();
-
-  std::vector<bool> lines_original;
-  std::vector<bool> lines_modified;
-
-  std::stringstream in(stream);
-
-  char operation;
-  while(in >> operation) {
-
-    unsigned int start;
-    in >> start;
-
-    char temp;
-    in >> temp;
-
-    unsigned int end;
-    in >> end;
-
-    if(operation == 'd') {
-
-      while(lines_original.size() < start)
-        lines_original.push_back(false);
-
-      while(lines_original.size() <= end)
-        lines_original.push_back(true);
-
-    } else {
-
-      while(lines_modified.size() < start)
-        lines_modified.push_back(false);
-
-      while(lines_modified.size() <= end)
-        lines_modified.push_back(true);
-
-    }
-
-  }
-
-  if(/*isoption(options, OPTION_ARCHIVE) &&*/ !isoption(options, OPTION_SAME) && lines_original.size() == 0 && lines_modified.size() == 0)
-    return 0;
-
-  if(/*isoption(options, OPTION_ARCHIVE) &&*/ !isoption(options, OPTION_PURE) && (size_original == 0 || size_modified == 0))
-    return 0;
-
-  while(lines_original.size() <= size_original)
-        lines_original.push_back(false);
-
-  while(lines_modified.size() <= size_modified)
-        lines_modified.push_back(false);
-
-  if(first) {
-
-    color_diff::output_start_document(*outfile);
-    first = false;
-
-  }
-
-  // create the ctxt
-  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
-
-  // setup sax handler
-  xmlSAXHandler sax = color_diff::factory();
-  ctxt->sax = &sax;
-
-  std::vector<int> stack = std::vector<int>();
-  stack.push_back(SESCOMMON);
-
-  struct color_diff::source_diff data = { 1, 1, &stack, lines_original, lines_modified, line_diff_range.get_file_one(), line_diff_range.get_file_two()
-                              , *outfile, options, "", false, false, false };
-
-  ctxt->_private = &data;
-
-  parseDocument(ctxt);
-
-  // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
-
-  // all done with parsing
-  xmlFreeParserCtxt(ctxt);
-
-  return 0;
-}
-
 // create the ctxt
-static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
+xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
 
   xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(srcdiff, strlen(srcdiff));
   //xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
@@ -157,7 +62,7 @@ static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
 }
 
 // parse the document
-static void parseDocument(xmlParserCtxtPtr ctxt) {
+void parseDocument(xmlParserCtxtPtr ctxt) {
 
   // process the document
   int status;

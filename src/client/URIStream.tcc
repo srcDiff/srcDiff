@@ -20,13 +20,14 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <URIStream.hpp>
 #include <cstring>
 
-URIStream::URIStream(const char* uriname)
+template<class T>
+URIStream<T>::URIStream(typename T::input_context * context)
   : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
 {
-  if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
+
+  if (!(input = xmlParserInputBufferCreateIO(T::read, T::close, context, XML_CHAR_ENCODING_NONE)))
     throw URIStreamFileError();
 
   // get some data into the buffer
@@ -37,41 +38,15 @@ URIStream::URIStream(const char* uriname)
     done = true;
 }
 
-#ifdef SVN
-URIStream::URIStream(srcdiff_input_source_svn::svn_context * context)
-  : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
-{
+template<class T>
+URIStream<T>::~URIStream() {
 
-  if (!(input = xmlParserInputBufferCreateIO(srcdiff_input_source_svn::read, srcdiff_input_source_svn::close, context, XML_CHAR_ENCODING_NONE)))
-    throw URIStreamFileError();
+    xmlFreeParserInputBuffer(input);
 
-  // get some data into the buffer
-  int size = xmlParserInputBufferGrow(input, 4096);
-
-  // found problem or eof
-  if (size == -1 || size == 0)
-    done = true;
 }
-#endif
 
-#ifdef GIT
-URIStream::URIStream(srcdiff_input_source_git::git_context * context)
-  : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
-{
-
-  if (!(input = xmlParserInputBufferCreateIO(srcdiff_input_source_git::read, srcdiff_input_source_git::close, context, XML_CHAR_ENCODING_NONE)))
-    throw URIStreamFileError();
-
-  // get some data into the buffer
-  int size = xmlParserInputBufferGrow(input, 4096);
-
-  // found problem or eof
-  if (size == -1 || size == 0)
-    done = true;
-}
-#endif
-
-std::string URIStream::readlines() {
+template<class T>
+std::string URIStream<T>::readlines() {
 
   std::string s;
   char* line = 0;
@@ -83,7 +58,8 @@ std::string URIStream::readlines() {
   return s;
 }
 
-char* URIStream::readline() {
+template<class T>
+char * URIStream<T>::readline() {
 
   if (done)
     return 0;
@@ -186,10 +162,4 @@ char* URIStream::readline() {
   startpos = endpos + 1;
 
   return line;
-}
-
-URIStream::~URIStream() {
-
-    xmlFreeParserInputBuffer(input);
-
 }

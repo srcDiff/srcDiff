@@ -48,7 +48,7 @@ endif()
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization> client/URIStream.cpp
+    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>
     ${SRCDIFF_LIBRARY_SOURCE_EXTRA})
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
