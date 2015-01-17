@@ -1,5 +1,5 @@
 /*
-  URIStream.cpp
+  uri_stream.cpp
 
   Copyright (C) 2010-2014  SDML (www.srcML.org)
 
@@ -23,12 +23,12 @@
 #include <cstring>
 
 template<class T>
-URIStream<T>::URIStream(typename T::input_context * context)
+uri_stream<T>::uri_stream(typename T::input_context * context)
   : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
 {
 
   if (!(input = xmlParserInputBufferCreateIO(T::read, T::close, context, XML_CHAR_ENCODING_NONE)))
-    throw URIStreamFileError();
+    throw uri_stream_error();
 
   // get some data into the buffer
   int size = xmlParserInputBufferGrow(input, 4096);
@@ -39,14 +39,14 @@ URIStream<T>::URIStream(typename T::input_context * context)
 }
 
 template<class T>
-URIStream<T>::~URIStream() {
+uri_stream<T>::~uri_stream() {
 
     xmlFreeParserInputBuffer(input);
 
 }
 
 template<class T>
-std::string URIStream<T>::readlines() {
+std::string uri_stream<T>::readlines() {
 
   std::string s;
   char* line = 0;
@@ -59,7 +59,7 @@ std::string URIStream<T>::readlines() {
 }
 
 template<class T>
-char * URIStream<T>::readline() {
+char * uri_stream<T>::readline() {
 
   if (done)
     return 0;

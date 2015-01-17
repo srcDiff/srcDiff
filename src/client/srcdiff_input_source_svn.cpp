@@ -22,7 +22,7 @@
 
 #include <cstring>
   
-#include <URIStream.hpp>
+#include <uri_stream.hpp>
 
 #include <svn_version.h>
 
@@ -527,7 +527,7 @@ void srcdiff_input_source_svn::files_from() {
 
     }
 
-  } catch (URIStreamFileError) {
+  } catch (uri_stream_error) {
 
     fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", options.files_from_name->c_str());
     exit(EXIT_FAILURE);

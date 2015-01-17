@@ -24,18 +24,18 @@
 #include <libxml/parser.h>
 #include <string>
 
-#ifndef URISTREAM_HPP
-#define URISTREAM_HPP
+#ifndef INCLUDED_URI_STREAM_HPP
+#define INCLUDED_URI_STREAM_HPP
 
-class URIStreamFileError {};
+class uri_stream_error {};
 
 template<class T>
-class URIStream {
+class uri_stream {
 public:
 
-    URIStream(typename T::input_context * context);
+    uri_stream(typename T::input_context * context);
 
-    ~URIStream();
+    ~uri_stream();
 
     char* readline();
 
@@ -50,6 +50,6 @@ private:
     bool done;
 };
 
-#include <URIStream.tcc>
+#include <uri_stream.tcc>
 
 #endif

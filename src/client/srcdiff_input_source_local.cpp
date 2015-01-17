@@ -4,7 +4,7 @@
 
 #include <srcdiff_input_filename.hpp>
 
-#include <URIStream.hpp>
+#include <uri_stream.hpp>
 
 #include <cstring>
 #include <dirent.h>
@@ -377,7 +377,7 @@ void srcdiff_input_source_local::files_from() {
     // translate all the filenames listed in the named file
 
     input_context * context = open(options.files_from_name->c_str());
-    URIStream<srcdiff_input_source_local> uriinput(context);
+    uri_stream<srcdiff_input_source_local> uriinput(context);
 
 
     const char * c_line = 0;
@@ -398,7 +398,7 @@ void srcdiff_input_source_local::files_from() {
 
     }
 
-  } catch (URIStreamFileError) {
+  } catch (uri_stream_error) {
 
     fprintf(stderr, "error: file/URI \'%s\' does not exist.\n", options.files_from_name->c_str());
     exit(EXIT_FAILURE);

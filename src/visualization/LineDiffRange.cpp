@@ -11,11 +11,6 @@
 
 #include <string>
 #include <vector>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
-#include <URIStream.hpp>
 
 int line_compare(const void * line_one, const void * line_two, const void * context) {
 

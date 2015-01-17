@@ -13,7 +13,7 @@
 #include <sstream>
 #include <iostream>
 
-#include <URIStream.hpp>
+#include <uri_stream.hpp>
 
 template<class T>
 LineDiffRange<T>::LineDiffRange(const std::string & file_one, const std::string & file_two, const T * input)
@@ -66,7 +66,7 @@ std::vector<std::string> LineDiffRange<T>::read_file(const T * input, const char
 
   typename T::input_context * context = input->open(file);
 
-  URIStream<T> stream(context);
+  uri_stream<T> stream(context);
 
   char * line;
   while((line = stream.readline())) {
