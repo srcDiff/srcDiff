@@ -1,6 +1,6 @@
 #include <srcdiff_input_source_git.hpp>
 
-#include <srcdiff_input_git.hpp>
+#include <srcdiff_input.hpp>
 
 #include <mutex>
 
@@ -120,8 +120,8 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
   path_modified += git_oid_tostr(buf_modified, GIT_OID_HEXSZ + 1, blob_oid_modified);
   if(buf_modified) delete buf_modified;
 
-  srcdiff_input_git input_original(options.archive, path_original, 0, *this);
-  srcdiff_input_git input_modified(options.archive, path_modified, 0, *this);
+  srcdiff_input<srcdiff_input_source_git> input_original(options.archive, path_original, 0, *this);
+  srcdiff_input<srcdiff_input_source_git> input_modified(options.archive, path_modified, 0, *this);
 
   line_diff_range<srcdiff_input_source_git> line_diff_range(path_original, path_modified, this);
 
