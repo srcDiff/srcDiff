@@ -533,8 +533,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
   */
   if(!valid_nests_original.empty() && (valid_nests_modified.empty()
-   || ((start_nest_original - start_original) <= (start_nest_modified - start_modified) 
-      && start_nest_original < valid_nests_modified.front() && valid_nests_original.back() < start_nest_modified)
+   || (start_nest_original < valid_nests_modified.front() && valid_nests_original.back() < start_nest_modified)
    || (((start_nest_original >= valid_nests_modified.front() && start_nest_original <= valid_nests_modified.back())
         || (start_nest_modified >= valid_nests_original.front() && start_nest_modified <= valid_nests_original.back()))
       && (valid_nests_original.back() - valid_nests_original.front()) >= (valid_nests_modified.back() - valid_nests_modified.front())))) {

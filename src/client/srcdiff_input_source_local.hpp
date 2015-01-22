@@ -12,6 +12,8 @@
 
 #include <srcdiff_input_source.hpp>
 
+#include <fstream>
+
 #include <sys/stat.h>
 
 class srcdiff_input_source_local : public srcdiff_input_source {
@@ -34,6 +36,16 @@ public:
   virtual void directory(const boost::optional<std::string> & directory_original, const void * context_original,
                          const boost::optional<std::string> & directory_modified, const void * context_modified);
   virtual void files_from();
+
+  struct input_context {
+
+    std::ifstream in;
+
+  };
+
+  input_context * open(const char * uri) const;
+  static int read(void * context, char * buffer, int len);
+  static int close(void * context);
 
 };
 

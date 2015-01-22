@@ -31,14 +31,6 @@ endif()
 
 set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 
-if(SVN_ENABLED)
-list(APPEND SRCDIFF_LIBRARY_SOURCE_EXTRA client/srcdiff_input_source_svn.cpp)
-endif()
-
-if(GIT_ENABLED)
-list(APPEND SRCDIFF_LIBRARY_SOURCE_EXTRA client/srcdiff_input_source_git.cpp)
-endif()
-
 #
 # build_library
 #
@@ -48,8 +40,7 @@ endif()
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization> client/URIStream.cpp
-    ${SRCDIFF_LIBRARY_SOURCE_EXTRA})
+    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization>)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcdiff LINK_FLAGS_DEBUG "/SAFESEH:NO")

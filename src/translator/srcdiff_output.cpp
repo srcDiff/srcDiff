@@ -30,7 +30,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
     if(srcml_archive_get_version(archive) != NULL)
       ver = srcml_archive_get_version(archive);
 
-    colordiff = std::make_shared<ColorDiff>(srcdiff_filename, dir, ver, flags);
+    colordiff = std::make_shared<color_diff>(srcdiff_filename, dir, ver, flags);
 
   } else if(isoption(flags, OPTION_BASH_VIEW))
     bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);
@@ -131,33 +131,6 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
   /** @todo when output non-archive additional namespaces not appended, because not collected 
     However this is correct when output is to archive */
   srcml_write_start_unit(wstate->unit);
-
- }
-
- void srcdiff_output::finish(int is_original, int is_modified, LineDiffRange & line_diff_range) {
-
-  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
-  output_node(flush, SESCOMMON);
-
-  srcml_write_end_unit(wstate->unit);
-
-  if(!isoption(flags, OPTION_VISUALIZE)) {
-
-    srcml_write_unit(archive, wstate->unit);
-
-  }
-
-  if(isoption(flags, OPTION_VISUALIZE)) {
-
-    if(is_original || is_modified)
-      colordiff->colorize(srcml_unit_get_xml(wstate->unit), line_diff_range);
-
-  } else if(isoption(flags, OPTION_BASH_VIEW)) {
-
-    bashview->transform(srcml_unit_get_xml(wstate->unit));
-  }
-
-  srcml_free_unit(wstate->unit);
 
  }
 

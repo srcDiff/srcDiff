@@ -1,6 +1,6 @@
 #include <srcdiff_input_source_git.hpp>
 
-#include <srcdiff_input_git.hpp>
+#include <srcdiff_input.hpp>
 
 #include <mutex>
 
@@ -11,7 +11,7 @@
 
 #include <cstdio>
 
-#include <URIStream.hpp>
+#include <uri_stream.hpp>
 
 static std::mutex mutex;
   
@@ -120,10 +120,10 @@ void srcdiff_input_source_git::file(const boost::optional<std::string> & path_on
   path_modified += git_oid_tostr(buf_modified, GIT_OID_HEXSZ + 1, blob_oid_modified);
   if(buf_modified) delete buf_modified;
 
-  srcdiff_input_git input_original(options.archive, path_original, 0, *this);
-  srcdiff_input_git input_modified(options.archive, path_modified, 0, *this);
+  srcdiff_input<srcdiff_input_source_git> input_original(options.archive, path_original, 0, *this);
+  srcdiff_input<srcdiff_input_source_git> input_modified(options.archive, path_modified, 0, *this);
 
-  LineDiffRange line_diff_range(path_original, path_modified, this);
+  line_diff_range<srcdiff_input_source_git> line_diff_range(path_original, path_modified, this);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string, NULL, unit_filename, 0);
 
@@ -330,9 +330,9 @@ void srcdiff_input_source_git::directory(const boost::optional<std::string> & di
 
 void srcdiff_input_source_git::files_from() {}
 
-srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const char * uri) const {
+srcdiff_input_source_git::input_context * srcdiff_input_source_git::open(const char * uri) const {
 
-  git_context * context = new git_context;
+  input_context * context = new input_context;
 
   char * at_pos = index(uri, '@');
   const std::string path(uri, at_pos - uri);
@@ -358,7 +358,7 @@ srcdiff_input_source_git::git_context * srcdiff_input_source_git::open(const cha
 
 int srcdiff_input_source_git::read(void * context, char * buffer, int len) {
 
-  git_context * ctx = (git_context *)context;
+  input_context * ctx = (input_context *)context;
 
   int remaining = ctx->content.size - ctx->pos;
 
@@ -374,7 +374,7 @@ int srcdiff_input_source_git::read(void * context, char * buffer, int len) {
 
 int srcdiff_input_source_git::close(void * context) {
 
-  git_context * ctx = (git_context *)context;
+  input_context * ctx = (input_context *)context;
 
   git_buf_free(&ctx->content);
 

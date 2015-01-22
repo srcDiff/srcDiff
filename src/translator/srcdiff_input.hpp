@@ -11,6 +11,7 @@
 
 #include <boost/optional.hpp>
 
+template<class T>
 class srcdiff_input {
 
 protected:
@@ -18,18 +19,21 @@ protected:
 	srcml_archive * archive;
 	const boost::optional<std::string> input_path;
 	const OPTION_TYPE & options;
+	const T & input;
 
 private:
 
 public:
 
-	srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options);
+	srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options, const T & input);
 	~srcdiff_input();
 
 	void operator()(int stream_source, srcml_nodes & nodes, int & is_input) const;
 
-	virtual srcml_nodes input_nodes(int stream_source) const = 0;
+	virtual srcml_nodes input_nodes(int stream_source) const;
 
 };
+
+#include <srcdiff_input.tcc>
 
 #endif

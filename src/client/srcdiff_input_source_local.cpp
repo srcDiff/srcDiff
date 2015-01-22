@@ -2,9 +2,9 @@
 
 #include <srcml.h>
 
-#include <srcdiff_input_filename.hpp>
+#include <srcdiff_input.hpp>
 
-#include <URIStream.hpp>
+#include <uri_stream.hpp>
 
 #include <cstring>
 #include <dirent.h>
@@ -82,9 +82,9 @@ void srcdiff_input_source_local::file(const boost::optional<std::string> & path_
 
   }
 
-  srcdiff_input_filename input_original(options.archive, path_one, options.flags);
-  srcdiff_input_filename input_modified(options.archive, path_two, options.flags);
-  LineDiffRange line_diff_range(path_original, path_modified);
+  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_one, options.flags, *this);
+  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_two, options.flags, *this);
+  line_diff_range<srcdiff_input_source_local> line_diff_range(path_original, path_modified, this);
 
   boost::optional<std::string> path = path_one;
   if(!path || path->empty()) path = path_two;
@@ -375,7 +375,9 @@ void srcdiff_input_source_local::files_from() {
   try {
 
     // translate all the filenames listed in the named file
-    URIStream uriinput(options.files_from_name->c_str());
+
+    input_context * context = open(options.files_from_name->c_str());
+    uri_stream<srcdiff_input_source_local> uriinput(context);
 
 
     const char * c_line = 0;
@@ -396,7 +398,7 @@ void srcdiff_input_source_local::files_from() {
 
     }
 
-  } catch (URIStreamFileError) {
+  } catch (uri_stream_error) {
 
     fprintf(stderr, "error: file/URI \'%s\' does not exist.\n", options.files_from_name->c_str());
     exit(EXIT_FAILURE);
@@ -405,4 +407,34 @@ void srcdiff_input_source_local::files_from() {
 
 #undef FILELIST_COMMENT
 
+}
+
+srcdiff_input_source_local::input_context * srcdiff_input_source_local::open(const char * uri) const {
+
+  input_context * context = new input_context;
+
+  context->in.open(uri);
+
+  return context->in ? context : (delete context, nullptr);
+
+}
+
+int srcdiff_input_source_local::read(void * context, char * buffer, int len) {
+
+  input_context * ctx = (input_context *)context;
+
+  ctx->in.read(buffer, len);
+
+  return ctx->in.gcount();
+}
+
+int srcdiff_input_source_local::close(void * context) {
+
+  input_context * ctx = (input_context *)context;
+
+  ctx->in.close();
+
+  delete ctx;
+
+  return 1;
 }

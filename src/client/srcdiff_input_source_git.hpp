@@ -44,7 +44,7 @@ public:
                          const boost::optional<std::string> & directory_modified, const void * context_modified);
   virtual void files_from();
 
-  struct git_context {
+  struct input_context {
 
     git_blob * blob;
     git_buf content;
@@ -53,7 +53,7 @@ public:
 
   };
 
-  git_context * open(const char * uri) const;
+  input_context * open(const char * uri) const;
   static int read(void * context, char * buffer, int len);
   static int close(void * context);
 
