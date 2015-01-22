@@ -1043,7 +1043,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
   //   if(name_list_similarity(original_names, modified_names)) return false;
 
   // } else 
-  
+
   if(original_tag == "call") {
 
     std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
@@ -1107,10 +1107,6 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
     std::string modified_name = get_class_type_name(nodes_modified, modified_pos);
 
     if(original_name == modified_name && original_name != "") return false;
-
-  } else if(original_tag == "comment") {
-
-    if(srcdiff_compare::node_compare(nodes_original.at(original_pos), nodes_modified.at(modified_pos)) == 0) return false;
 
   }
 
