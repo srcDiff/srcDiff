@@ -36,7 +36,7 @@ const char * const for_nest_types[]         = { "expr_stmt", "decl_stmt", "retur
 const char * const for_control_nest_types[] = { "condition", "comment",                                                                                                                           0 };
 const char * const function_nest_types[]    = { "expr_stmt", "decl_stmt", "if", "while", "for", "foreach",                                                                                        0 };
 const char * const class_nest_types[]       = { "decl_stmt", "function_decl", "function", "constructor_decl", "constructor", "destructor_decl", "destructor", "class_decl", "class",
-                                                "struct_decl", "struct", "union_decl", "union", "typedef"                                                                                         0 };
+                                                "struct_decl", "struct", "union_decl", "union", "typedef",                                                                                        0 };
 const char * const struct_nest_types[]      = { "decl_stmt", "function_decl",                                                                                                                     0 };
 const char * const union_nest_types[]       = { "decl_stmt", "function_decl",                                                                                                                     0 };
 const char * const call_nest_types[]        = { "expr", "call", "operator", "literal", "name",                                                                                                    0 };
