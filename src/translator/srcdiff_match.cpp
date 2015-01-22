@@ -1027,22 +1027,24 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   }
 
-  if(is_single_call_expr(nodes_original, original_pos) && is_single_call_expr(nodes_modified, modified_pos)) {
+  // if(is_single_call_expr(nodes_original, original_pos) && is_single_call_expr(nodes_modified, modified_pos)) {
 
-    while(nodes_original.at(original_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || nodes_original.at(original_pos)->name != "call")
-      ++original_pos;
+  //   while(nodes_original.at(original_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+  //     || nodes_original.at(original_pos)->name != "call")
+  //     ++original_pos;
 
-    while(nodes_modified.at(modified_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-      || nodes_modified.at(modified_pos)->name != "call")
-      ++modified_pos;
+  //   while(nodes_modified.at(modified_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+  //     || nodes_modified.at(modified_pos)->name != "call")
+  //     ++modified_pos;
 
-    std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
-    std::vector<std::string> modified_names = get_call_name(nodes_modified, modified_pos);
+  //   std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
+  //   std::vector<std::string> modified_names = get_call_name(nodes_modified, modified_pos);
 
-    if(name_list_similarity(original_names, modified_names)) return false;
+  //   if(name_list_similarity(original_names, modified_names)) return false;
 
-  } else if(original_tag == "call") {
+  // } else 
+  
+  if(original_tag == "call") {
 
     std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
     std::vector<std::string> modified_names = get_call_name(nodes_modified, modified_pos);

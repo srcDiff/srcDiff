@@ -21,6 +21,7 @@ MAX_COUNT = 29
 sperrorlist = []
 
 srcml_utility = "srcml2src"
+srcml_client = "srcml"
 switch_utility = "../bin/switch_differences"
 srcdiff_utility = "../bin/srcdiff"
 
@@ -133,7 +134,7 @@ def get_srcml_attribute(xml_file, command) :
 
 def get_srcml_attribute_file(xml_file, command) :
 
-	last_line = safe_communicate_file([srcml_utility, command], xml_file)
+	last_line = safe_communicate_file([srcml_client, "--quiet", command], xml_file)
 
 	return last_line.strip()
 

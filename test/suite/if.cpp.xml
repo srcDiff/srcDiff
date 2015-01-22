@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" dir="if">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" directory="if">
 
 <unit filename="if|if"><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
 <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:delete></unit>
