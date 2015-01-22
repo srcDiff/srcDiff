@@ -1218,13 +1218,12 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   int min_size = text_original_length < text_modified_length ? text_original_length : text_modified_length;
   int max_size = text_original_length < text_modified_length ? text_modified_length : text_original_length;
 
-  if(min_size <= 2)
-    return 2 * similarity < min_size || (difference > 1.25 * min_size) || difference > max_size;
-  else if(min_size <= 3)
-    return 3 * similarity < 2 * min_size || (difference > 1.25 * min_size) || difference > max_size;
-  else if(min_size <= 30)
-    return 10 * similarity < 7 * min_size || (difference > 1.25 * min_size) || difference > max_size;
-  else
-    return 2 * similarity < min_size || (difference > 1.25 * min_size) || difference > max_size;
+  if(difference > 1.25 * min_size) return true;
+  if(difference > max_size)        return true;
+
+  if(min_size <= 2)                return 2  * similarity <     min_size;
+  else if(min_size <= 3)           return 3  * similarity < 2 * min_size;
+  else if(min_size <= 30)          return 10 * similarity < 7 * min_size;
+  else                             return 2  * similarity <     min_size;
 
 }
