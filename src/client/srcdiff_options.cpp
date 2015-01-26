@@ -162,7 +162,7 @@ void option_srcml_field<SRC_ENCODING>(const std::string & arg) {
 template<>
 void option_srcml_field<XML_ENCODING>(const std::string & arg) {
 
-  srcml_archive_set_encoding(options.archive, arg.c_str());
+  srcml_archive_set_xml_encoding(options.archive, arg.c_str());
 
 }
 
