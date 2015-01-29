@@ -160,12 +160,20 @@ void srcdiff_output::finish(int is_original, int is_modified, line_diff_range<T>
 
   if(isoption(flags, OPTION_VISUALIZE)) {
 
-    if(is_original || is_modified)
-      colordiff->colorize(srcml_unit_get_xml(wstate->unit), line_diff_range);
+    if(is_original || is_modified) {
+
+      const char * xml = srcml_unit_get_formatted_xml(wstate->unit, "UTF-8");
+      colordiff->colorize(xml, line_diff_range);
+      srcml_free_memory((char *)xml);
+
+    }
 
   } else if(isoption(flags, OPTION_BASH_VIEW)) {
 
-    bashview->transform(srcml_unit_get_xml(wstate->unit));
+    const char * xml = srcml_unit_get_formatted_xml(wstate->unit, "UTF-8");
+    bashview->transform(xml);
+    srcml_free_memory((char *)xml);
+
   }
 
   srcml_free_unit(wstate->unit);

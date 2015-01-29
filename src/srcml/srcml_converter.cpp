@@ -99,7 +99,7 @@ srcml_converter::srcml_converter(srcml_archive * archive, int stream_source)
 
 srcml_converter::~srcml_converter() {
 
-  if(output_buffer) free(output_buffer);
+  if(output_buffer) srcml_free_memory(output_buffer);
 
 }
 
