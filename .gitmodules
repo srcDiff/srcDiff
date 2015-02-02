@@ -1,0 +1,3 @@
+[submodule "src/srcTools"]
+	path = src/srcTools
+	url = https://github.com/mjdecker/srcTools.git
