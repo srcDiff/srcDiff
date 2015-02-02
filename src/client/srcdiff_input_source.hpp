@@ -29,13 +29,21 @@ protected:
 
 private:
 
+  static bool show_input;
+
   static size_t input_count;
   static size_t input_skipped;
   static size_t input_total;
 
 public:
 
-  srcdiff_input_source(const srcdiff_options & options) : options(options), translator(0), directory_length_original(0), directory_length_modified(0) {}
+  srcdiff_input_source(const srcdiff_options & options) : options(options), translator(0), directory_length_original(0), directory_length_modified(0) {
+
+  show_input = is_option(options.flags, OPTION_VERBOSE) && !is_option(options.flags, OPTION_QUIET);
+
+  }
+
+
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;
