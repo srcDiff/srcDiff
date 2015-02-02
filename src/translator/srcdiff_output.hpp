@@ -154,13 +154,13 @@ void srcdiff_output::finish(int is_original, int is_modified, line_diff_range<T>
 
   srcml_write_end_unit(wstate->unit);
 
-  if(!isoption(flags, OPTION_VISUALIZE)) {
+  if(!is_option(flags, OPTION_VISUALIZE)) {
 
     srcml_write_unit(archive, wstate->unit);
 
   }
 
-  if(isoption(flags, OPTION_VISUALIZE)) {
+  if(is_option(flags, OPTION_VISUALIZE)) {
 
     if(is_original || is_modified) {
 
@@ -170,7 +170,7 @@ void srcdiff_output::finish(int is_original, int is_modified, line_diff_range<T>
 
     }
 
-  } else if(isoption(flags, OPTION_BASH_VIEW)) {
+  } else if(is_option(flags, OPTION_BASH_VIEW)) {
 
     const char * xml = srcml_unit_get_formatted_xml(wstate->unit, "UTF-8");
     bashview->transform(xml);

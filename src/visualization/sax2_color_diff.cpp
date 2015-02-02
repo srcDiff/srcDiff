@@ -485,10 +485,10 @@ void sax2_color_diff::startDocument(void* ctx) {
   static std::string blank_class = std::string("class=\"") + std::string(common_color) + std::string(" ")
     + std::string(diff_color_common) + std::string("\"");
 
-  bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
-  bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
-  if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY))
-      && (!isoption(data->options, OPTION_CHANGE)
+  bool srcdiffonly = is_option(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+  bool diffonly = is_option(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
+  if(((!is_option(data->options, OPTION_SRCDIFFONLY) && !is_option(data->options, OPTION_DIFFONLY))
+      && (!is_option(data->options, OPTION_CHANGE)
           || blank_class != span_out))
      || srcdiffonly
      || diffonly) {
@@ -650,10 +650,10 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
   for (int i = 0; i < len; ++i) {
 
-    bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
-    bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
-    if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY))
-        && (!isoption(data->options, OPTION_CHANGE)
+    bool srcdiffonly = is_option(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+    bool diffonly = is_option(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
+    if(((!is_option(data->options, OPTION_SRCDIFFONLY) && !is_option(data->options, OPTION_DIFFONLY))
+        && (!is_option(data->options, OPTION_CHANGE)
             || blank_class != span_out))
        || srcdiffonly
        || diffonly) {
@@ -726,10 +726,10 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
       span_out += "\"";
 
       // clear color before output line
-      bool srcdiffonly = isoption(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
-      bool diffonly = isoption(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
-      if(((!isoption(data->options, OPTION_SRCDIFFONLY) && !isoption(data->options, OPTION_DIFFONLY))
-          && (!isoption(data->options, OPTION_CHANGE)
+      bool srcdiffonly = is_option(data->options, OPTION_SRCDIFFONLY) && is_srcdiff && !is_diff;
+      bool diffonly = is_option(data->options, OPTION_DIFFONLY) && is_diff && !is_srcdiff;
+      if(((!is_option(data->options, OPTION_SRCDIFFONLY) && !is_option(data->options, OPTION_DIFFONLY))
+          && (!is_option(data->options, OPTION_CHANGE)
               || blank_class != span_out))
          || srcdiffonly
          || diffonly) {
