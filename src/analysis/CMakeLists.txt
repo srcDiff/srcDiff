@@ -19,20 +19,8 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB TRANSLATOR_HEADERS *.hpp)
-file(GLOB TRANSLATOR_SOURCE *.cpp)
+file(GLOB ANALYSIS_HEADERS *.hpp)
+file(GLOB ANALYSIS_SOURCE  *.cpp)
 
-if(NOT SVN_ENABLED)
+add_library(analysis OBJECT ${ANALYSIS_HEADERS} ${ANALYSIS_SOURCE})
 
-list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_svn.cpp)
-
-endif()
-
-if(NOT GIT_ENABLED)
-
-list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_git.cpp)
-
-endif()
-
-# srcdiff
-add_library(translator OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})

@@ -5,6 +5,7 @@
 #include <line_diff_range.hpp>
 #include <color_diff.hpp>
 #include <bash_view.hpp>
+#include <srcdiff_summary.hpp>
 #include <methods.hpp>
 
 #include <vector>
@@ -87,6 +88,7 @@ protected:
   srcml_archive * archive;
   std::shared_ptr<color_diff> colordiff;
   std::shared_ptr<bash_view> bashview;
+  srcdiff_summary summary;
   const OPTION_TYPE & flags;
 
   std::shared_ptr<reader_state> rbuf_original;
