@@ -179,8 +179,8 @@ void srcdiff_input_source_svn::session_range() {
 
 }
 
-void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_one, const void * context_original,
-                                    const boost::optional<std::string> & path_two, const void * context_modified) {
+void srcdiff_input_source_svn::process_file(const boost::optional<std::string> & path_one, const void * context_original,
+                                            const boost::optional<std::string> & path_two, const void * context_modified) {
 
   std::string path_original = path_one ? *path_one : std::string();
   std::string path_modified = path_two ? *path_two : std::string();
@@ -226,8 +226,8 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
 
 }
 
-void srcdiff_input_source_svn::directory(const boost::optional<std::string> & directory_original, const void * context_original,
-                                         const boost::optional<std::string> & directory_modified, const void * context_modified) {
+void srcdiff_input_source_svn::process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
+                                                 const boost::optional<std::string> & directory_modified, const void * context_modified) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'

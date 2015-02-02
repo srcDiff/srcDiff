@@ -48,10 +48,10 @@ public:
   void session_single();
   void session_range();
 
-  virtual void file(const boost::optional<std::string> & path_one, const void * context_original,
-                    const boost::optional<std::string> & path_two, const void * context_modified);
-  virtual void directory(const boost::optional<std::string> & directory_original, const void * context_original,
-                         const boost::optional<std::string> & directory_modified, const void * context_modified);
+  virtual void process_file(const boost::optional<std::string> & path_one, const void * context_original,
+                            const boost::optional<std::string> & path_two, const void * context_modified);
+  virtual void process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
+                                 const boost::optional<std::string> & directory_modified, const void * context_modified);
   virtual void files_from();
 
   struct input_context {
