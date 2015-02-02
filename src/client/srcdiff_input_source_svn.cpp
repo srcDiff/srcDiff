@@ -105,7 +105,7 @@ srcdiff_input_source_svn::~srcdiff_input_source_svn() {
 void srcdiff_input_source_svn::consume() {
 
   if(options.files_from_name)                             files_from();
-  else if(isoption(options.flags, OPTION_SVN_CONTINUOUS)) session_range();
+  else if(is_option(options.flags, OPTION_SVN_CONTINUOUS)) session_range();
   else                                                    session_single();
 
 }
@@ -192,7 +192,7 @@ void srcdiff_input_source_svn::session_range() {
 void srcdiff_input_source_svn::process_file(const boost::optional<std::string> & path_original, const void * context_original,
                                             const boost::optional<std::string> & path_modified, const void * context_modified) {
 
-  const std::string language_string = get_language(path_original, path_modified);
+  const char * language_string = get_language(path_original, path_modified);
   if(language_string == SRCML_LANGUAGE_NONE) return;
 
   std::string path_original_temp = path_original ? *path_original : std::string();
