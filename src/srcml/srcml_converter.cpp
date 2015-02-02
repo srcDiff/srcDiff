@@ -138,7 +138,7 @@ srcml_nodes srcml_converter::create_nodes() const {
   xmlTextReaderRead(reader);
 
   // Read past unit tag open
-  if(xmlTextReaderRead(reader) == 0) throw std::string("Error reading srcML.");
+  if(xmlTextReaderRead(reader) == 0) return srcml_nodes();
 
   // collect if non empty files
   srcml_nodes nodes = collect_nodes(reader);
