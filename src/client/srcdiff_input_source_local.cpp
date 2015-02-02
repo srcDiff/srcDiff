@@ -67,8 +67,22 @@ void srcdiff_input_source_local::consume() {
 
 }
 
+const char * srcdiff_input_source_local::get_language(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two) {
+
+  boost::optional<std::string> path = path_one;
+  if(!path || path->empty()) path = path_two;
+  if(!path) path = std::string();
+
+  return srcml_archive_check_extension(options.archive, path->c_str());
+
+}
+
 void srcdiff_input_source_local::process_file(const boost::optional<std::string> & path_one, const void * context_original,
                                               const boost::optional<std::string> & path_two, const void * context_modified) {
+
+  const char * language_string = get_language(path_one, path_two);
+
+  if(language_string == SRCML_LANGUAGE_NONE) return;
 
   std::string path_original = path_one ? *path_one : std::string();
   std::string path_modified = path_two ? *path_two : std::string();
@@ -86,11 +100,6 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
   srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_two, options.flags, *this);
   line_diff_range<srcdiff_input_source_local> line_diff_range(path_original, path_modified, this);
 
-  boost::optional<std::string> path = path_one;
-  if(!path || path->empty()) path = path_two;
-  if(!path) path = std::string();
-
-  const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
   const char * dir = srcml_archive_get_directory(options.archive);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string, dir ? boost::optional<std::string>(dir) : boost::optional<std::string>(), unit_filename, 0);

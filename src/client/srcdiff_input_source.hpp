@@ -30,8 +30,8 @@ protected:
 private:
 
   static size_t input_count;
-  static size_t input_total;
   static size_t input_skipped;
+  static size_t input_total;
 
 public:
 
@@ -39,6 +39,7 @@ public:
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;
+  virtual const char * get_language(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two) = 0;
 
   virtual void file(const boost::optional<std::string> & path_one, const void * context_original,
                     const boost::optional<std::string> & path_two, const void * context_modified);

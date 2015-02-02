@@ -83,20 +83,24 @@ void srcdiff_input_source_git::consume() {
 
 }
 
-void srcdiff_input_source_git::process_file(const boost::optional<std::string> & path_one, const void * context_original,
-                                            const boost::optional<std::string> & path_two, const void * context_modified) {
-
-  std::string path_original = path_one ? *path_one : "";
-  std::string path_modified = path_two ? *path_two : "";
-
-  if(srcml_archive_check_extension(options.archive, path_original.c_str()) == SRCML_LANGUAGE_NONE
-    && srcml_archive_check_extension(options.archive, path_modified.c_str()) == SRCML_LANGUAGE_NONE)
-    return;
+const char * srcdiff_input_source_git::get_language(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two) {
 
   boost::optional<std::string> path = path_one;
   if(!path || path->empty()) path = path_two;
 
-  const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
+  return srcml_archive_check_extension(options.archive, path->c_str());
+
+}
+
+void srcdiff_input_source_git::process_file(const boost::optional<std::string> & path_one, const void * context_original,
+                                            const boost::optional<std::string> & path_two, const void * context_modified) {
+
+  const char * language_string = get_language(path_one, path_two);
+
+  std::string path_original = path_one ? *path_one : "";
+  std::string path_modified = path_two ? *path_two : "";
+
+  if(language_string == SRCML_LANGUAGE_NONE) return;
 
   std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_original) : std::string();
   std::string filename_two  = !path_modified.empty() ? path_modified.substr(directory_length_modified) : std::string();

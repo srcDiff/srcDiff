@@ -45,6 +45,8 @@ public:
 
   virtual void consume();
 
+  virtual const char * get_language(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two);
+
   void session_single();
   void session_range();
 
