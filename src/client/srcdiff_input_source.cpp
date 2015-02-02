@@ -9,19 +9,19 @@ void srcdiff_input_source::file(const boost::optional<std::string> & path_one, c
 
   if(is_option(options.flags, OPTION_VERBOSE)) {
 
+    ++input_total;
+
     if(get_language(path_one, path_two) == SRCML_LANGUAGE_NONE) {
 
       ++input_skipped;
+      std::cerr << "- " << (path_one ? *path_one : "") << '|' << (path_two ? *path_two : "") << '\n';
 
     } else {
 
       ++input_count;
+      std::cerr << input_count << " " << (path_one ? *path_one : "") << '|' << (path_two ? *path_two : "") << '\n';
 
     }
-
-    ++input_total;
-
-    std::cerr << "Processing: " << (path_one ? *path_one : "") << '|' << (path_two ? *path_two : "") << '\n';
 
   }
 
@@ -34,9 +34,9 @@ void srcdiff_input_source::directory(const boost::optional<std::string> & direct
 
   if(is_option(options.flags, OPTION_VERBOSE)) {
 
-    std::cerr << "Processing: " << (directory_original ? *directory_original : "") << '|' << (directory_modified ? *directory_modified : "") << '\n';
     ++input_skipped;
     ++input_total;
+    std::cerr << "- " << (directory_original ? *directory_original : "") << '|' << (directory_modified ? *directory_modified : "") << '\n';
 
   }
 
