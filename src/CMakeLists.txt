@@ -25,6 +25,7 @@ add_subdirectory(srcml)
 add_subdirectory(translator)
 add_subdirectory(visualization)
 add_subdirectory(analysis)
+add_subdirectory(srcTools/srcSAX)
 
 if(WIN32)
 add_subdirectory(windows)
@@ -41,7 +42,10 @@ set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:visualization> $<TARGET_OBJECTS:analysis>)
+    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator>
+    $<TARGET_OBJECTS:visualization> $<TARGET_OBJECTS:analysis>)
+
+	target_link_libraries(${LIBRARY_NAME} srcsax)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcdiff LINK_FLAGS_DEBUG "/SAFESEH:NO")
