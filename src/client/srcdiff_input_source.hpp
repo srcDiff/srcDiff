@@ -47,15 +47,15 @@ public:
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;
-  virtual const char * get_language(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two) = 0;
+  virtual const char * get_language(const boost::optional<std::string> & path_original, const boost::optional<std::string> & path_modified) = 0;
 
-  virtual void file(const boost::optional<std::string> & path_one, const void * context_original,
-                    const boost::optional<std::string> & path_two, const void * context_modified);
+  virtual void file(const boost::optional<std::string> & path_original, const void * context_original,
+                    const boost::optional<std::string> & path_modified, const void * context_modified);
   virtual void directory(const boost::optional<std::string> & directory_original, const void * context_original,
                          const boost::optional<std::string> & directory_modified, const void * context_modified);
 
-  virtual void process_file(const boost::optional<std::string> & path_one, const void * context_original,
-                            const boost::optional<std::string> & path_two, const void * context_modified) = 0;
+  virtual void process_file(const boost::optional<std::string> & path_original, const void * context_original,
+                            const boost::optional<std::string> & path_modified, const void * context_modified) = 0;
   virtual void process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
                                  const boost::optional<std::string> & directory_modified, const void * context_modified) = 0;
   virtual void files_from() = 0;

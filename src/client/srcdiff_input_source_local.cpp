@@ -67,38 +67,38 @@ void srcdiff_input_source_local::consume() {
 
 }
 
-const char * srcdiff_input_source_local::get_language(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two) {
+const char * srcdiff_input_source_local::get_language(const boost::optional<std::string> & path_original, const boost::optional<std::string> & path_modified) {
 
-  boost::optional<std::string> path = path_one;
-  if(!path || path->empty()) path = path_two;
+  boost::optional<std::string> path = path_original;
+  if(!path || path->empty()) path = path_modified;
   if(!path) path = std::string();
 
   return srcml_archive_check_extension(options.archive, path->c_str());
 
 }
 
-void srcdiff_input_source_local::process_file(const boost::optional<std::string> & path_one, const void * context_original,
-                                              const boost::optional<std::string> & path_two, const void * context_modified) {
+void srcdiff_input_source_local::process_file(const boost::optional<std::string> & path_original, const void * context_original,
+                                              const boost::optional<std::string> & path_modified, const void * context_modified) {
 
-  const char * language_string = get_language(path_one, path_two);
+  const char * language_string = get_language(path_original, path_modified);
 
   if(language_string == SRCML_LANGUAGE_NONE) return;
 
-  std::string path_original = path_one ? *path_one : std::string();
-  std::string path_modified = path_two ? *path_two : std::string();
+  std::string path_one = path_original ? *path_original : std::string();
+  std::string path_two = path_modified ? *path_modified : std::string();
 
-  std::string unit_filename = !path_original.empty() ? path_original.substr(directory_length_original) : path_original;
-  std::string filename_two =  !path_modified.empty() ? path_modified.substr(directory_length_modified) : path_modified;
-  if(path_modified.empty() || unit_filename != filename_two) {
+  std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : path_one;
+  std::string filename_two =  !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
+  if(path_two.empty() || unit_filename != filename_two) {
 
     unit_filename += "|";
     unit_filename += filename_two;
 
   }
 
-  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_one, options.flags, *this);
-  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_two, options.flags, *this);
-  line_diff_range<srcdiff_input_source_local> line_diff_range(path_original, path_modified, this);
+  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, options.flags, *this);
+  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, options.flags, *this);
+  line_diff_range<srcdiff_input_source_local> line_diff_range(path_one, path_two, this);
 
   const char * dir = srcml_archive_get_directory(options.archive);
 
@@ -237,13 +237,13 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
 
 
-    boost::optional<std::string> file_path_one;
-    boost::optional<std::string> file_path_two;
-    if(comparison <= 0) ++i, file_path_one = path_original;
-    if(comparison >= 0) ++j, file_path_two = path_modified;
+    boost::optional<std::string> file_path_original;
+    boost::optional<std::string> file_path_modified;
+    if(comparison <= 0) ++i, file_path_original = path_original;
+    if(comparison >= 0) ++j, file_path_modified = path_modified;
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(file_path_one, nullptr, file_path_two, nullptr);
+    file(file_path_original, nullptr, file_path_modified, nullptr);
 
   }
 
@@ -400,10 +400,10 @@ void srcdiff_input_source_local::files_from() {
       // skip blank lines or comment lines
       if (line.empty() || line[0] == FILELIST_COMMENT) continue;
 
-      std::string path_one = line.substr(0, line.find('|'));
-      std::string path_two = line.substr(line.find('|') + 1);
+      std::string path_original = line.substr(0, line.find('|'));
+      std::string path_modified = line.substr(line.find('|') + 1);
 
-      file(path_one, nullptr, path_two, nullptr);
+      file(path_original, nullptr, path_modified, nullptr);
 
     }
 
