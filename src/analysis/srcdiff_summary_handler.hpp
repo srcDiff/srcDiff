@@ -3,6 +3,9 @@
 
 #include <srcSAXHandler.hpp>
 
+#include <string>
+#include <map>
+
 /**
  * srcSAXHandler
  *
@@ -10,11 +13,21 @@
  */
 class srcdiff_summary_handler : public srcSAXHandler {
 
+public:
+
+    typedef std::map<std::string, bool> class_profile_t;
+    typedef std::map<std::string, bool> function_profile_t;
+
 private:
 
 protected:
 
+    class_profile_t & class_profile;
+    function_profile_t & function_profile;
+
 public:
+
+    srcdiff_summary_handler(class_profile_t & class_profile, function_profile_t & function_profile) : class_profile(class_profile), function_profile(function_profile) {}
 
     /**
      * startDocument
