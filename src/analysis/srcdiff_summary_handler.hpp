@@ -25,9 +25,13 @@ protected:
     class_profile_t & class_profile;
     function_profile_t & function_profile;
 
+    size_t in_class;
+    bool in_function;
+
 public:
 
-    srcdiff_summary_handler(class_profile_t & class_profile, function_profile_t & function_profile) : class_profile(class_profile), function_profile(function_profile) {}
+    srcdiff_summary_handler(class_profile_t & class_profile, function_profile_t & function_profile) : class_profile(class_profile), function_profile(function_profile),
+        in_class(0), in_function(false) {}
 
     /**
      * startDocument
@@ -94,7 +98,14 @@ public:
      */
     virtual void startElement(const char * localname, const char * prefix, const char * URI,
                                 int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                                const struct srcsax_attribute * attributes) {}
+                                const struct srcsax_attribute * attributes) {
+
+        const std::string local_name(localname);
+
+        if(local_name == "class") ++in_class;
+        else if(local_name  == "function") in_function = true;
+
+    }
 
     /**
      * endRoot
@@ -127,7 +138,14 @@ public:
      * SAX handler function for end of an element.
      * Overide for desired behaviour.
      */
-    virtual void endElement(const char * localname, const char * prefix, const char * URI) {}
+    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
+
+        const std::string local_name(localname);
+
+        if(local_name == "class") --in_class;
+        else if(local_name  == "function") in_function = false;
+
+    }
 
     /**
      * charactersRoot
