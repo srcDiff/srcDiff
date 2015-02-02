@@ -25,7 +25,7 @@ typedef unsigned __int64 OPTION_TYPE;
 #define ull(a) a##i64
 #endif
 
-inline bool isoption(OPTION_TYPE options, OPTION_TYPE flag) {
+inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
     return (flag & options) > 0;
 }
 

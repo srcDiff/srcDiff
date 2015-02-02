@@ -16,11 +16,11 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
    rbuf_original(std::make_shared<reader_state>(SESDELETE)), rbuf_modified(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
-if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
+if(!is_option(flags, OPTION_VISUALIZE) && !is_option(flags, OPTION_BASH_VIEW))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
 
   // writer state
-  if(isoption(flags, OPTION_VISUALIZE)) {
+  if(is_option(flags, OPTION_VISUALIZE)) {
 
     std::string dir = "";
     if(srcml_archive_get_directory(archive) != NULL)
@@ -32,7 +32,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
     colordiff = std::make_shared<color_diff>(srcdiff_filename, dir, ver, flags);
 
-  } else if(isoption(flags, OPTION_BASH_VIEW))
+  } else if(is_option(flags, OPTION_BASH_VIEW))
     bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);
 
   wstate->filename = srcdiff_filename;
@@ -89,7 +89,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   } else if(rbuf_original->nodes.empty()) {
 
-    if(!isoption(flags, OPTION_PURE)) {
+    if(!is_option(flags, OPTION_PURE)) {
 
       is_original = 0;
       is_modified = 0;
@@ -102,7 +102,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
   } else {
 
-    if(!isoption(flags, OPTION_PURE)) {
+    if(!is_option(flags, OPTION_PURE)) {
 
       is_original = 0;
       is_modified = 0;
@@ -144,7 +144,7 @@ if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW))
 
 void srcdiff_output::close() {
 
-  if(!isoption(flags, OPTION_VISUALIZE) && !isoption(flags, OPTION_BASH_VIEW)) {
+  if(!is_option(flags, OPTION_VISUALIZE) && !is_option(flags, OPTION_BASH_VIEW)) {
 
     srcml_close_archive(archive);
 

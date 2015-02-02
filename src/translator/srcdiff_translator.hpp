@@ -80,7 +80,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
 
   line_diff_range.create_line_diff();
 
-  if(!isoption(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
+  if(!is_option(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
     return;
 
   int is_original = 0;

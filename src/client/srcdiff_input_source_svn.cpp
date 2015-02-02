@@ -110,6 +110,16 @@ void srcdiff_input_source_svn::consume() {
 
 }
 
+const char * srcdiff_input_source_svn::get_language(const boost::optional<std::string> & path_one, const boost::optional<std::string> & path_two) {
+
+  boost::optional<std::string> path = path_one;
+  if(!path || path->empty()) path = path_two;
+  if(!path || path->empty()) path = options.svn_url->c_str();
+
+  return srcml_archive_check_extension(options.archive, path->c_str());
+
+}
+
 void srcdiff_input_source_svn::session_single() {
 
   this->revision_one = options.revision_one;
@@ -179,8 +189,11 @@ void srcdiff_input_source_svn::session_range() {
 
 }
 
-void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_one, const void * context_original,
-                                    const boost::optional<std::string> & path_two, const void * context_modified) {
+void srcdiff_input_source_svn::process_file(const boost::optional<std::string> & path_one, const void * context_original,
+                                            const boost::optional<std::string> & path_two, const void * context_modified) {
+
+  const std::string language_string = get_language(path_one, path_two);
+  if(language_string == SRCML_LANGUAGE_NONE) return;
 
   std::string path_original = path_one ? *path_one : std::string();
   std::string path_modified = path_two ? *path_two : std::string();
@@ -193,11 +206,6 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
     unit_filename += filename_two;
 
   }
-
-  if(srcml_archive_check_extension(options.archive, path_original.c_str()) == SRCML_LANGUAGE_NONE
-    && srcml_archive_check_extension(options.archive, path_modified.c_str()) == SRCML_LANGUAGE_NONE
-    && srcml_archive_check_extension(options.archive, options.svn_url->c_str()) == SRCML_LANGUAGE_NONE)
-    return;
 
   // set path to include revision
   std::ostringstream svn_path_one(path_original, std::ios_base::ate);
@@ -216,18 +224,12 @@ void srcdiff_input_source_svn::file(const boost::optional<std::string> & path_on
 
   line_diff_range<srcdiff_input_source_svn> line_diff_range(svn_path_original, svn_path_modified, this);
 
-  boost::optional<std::string> path = path_one;
-  if(!path || path->empty()) path = path_two;
-  if(!path || path->empty()) path = options.svn_url->c_str();
-
-  const std::string language_string = srcml_archive_check_extension(options.archive, path->c_str());
-
   translator->translate(input_original, input_modified, line_diff_range, language_string, NULL, unit_filename, 0);
 
 }
 
-void srcdiff_input_source_svn::directory(const boost::optional<std::string> & directory_original, const void * context_original,
-                                         const boost::optional<std::string> & directory_modified, const void * context_modified) {
+void srcdiff_input_source_svn::process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
+                                                 const boost::optional<std::string> & directory_modified, const void * context_modified) {
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
