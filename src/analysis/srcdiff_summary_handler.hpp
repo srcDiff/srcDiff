@@ -6,6 +6,8 @@
 #include <string>
 #include <map>
 
+#include <cstdlib>
+
 /**
  * srcSAXHandler
  *
@@ -15,23 +17,37 @@ class srcdiff_summary_handler : public srcSAXHandler {
 
 public:
 
-    typedef std::map<std::string, bool> class_profile_t;
-    typedef std::map<std::string, bool> function_profile_t;
+    typedef std::map<std::string, bool> class_profiles_t;
+    typedef std::map<std::string, bool> function_profiles_t;
 
 private:
 
 protected:
 
-    class_profile_t & class_profile;
-    function_profile_t & function_profile;
+    enum DIFF_TYPE { COMMON, DELETE, INSERT };
 
-    size_t in_class;
+    std::vector<DIFF_TYPE> diff_stack;
+
+    class_profiles_t & class_profiles;
+    function_profiles_t & function_profiles;
+
+    std::vector<std::string> class_names;
+    int in_class;
+
+    std::string function_name;
     bool in_function;
+
+    bool collect_name;
+    std::string name;
 
 public:
 
-    srcdiff_summary_handler(class_profile_t & class_profile, function_profile_t & function_profile) : class_profile(class_profile), function_profile(function_profile),
-        in_class(0), in_function(false) {}
+    srcdiff_summary_handler(class_profiles_t & class_profiles, function_profiles_t & function_profiles) : class_profiles(class_profiles), function_profiles(function_profiles),
+        in_class(0), in_function(false), collect_name(false), name() {
+
+            diff_stack.push_back(COMMON);
+
+        }
 
     /**
      * startDocument
@@ -102,8 +118,27 @@ public:
 
         const std::string local_name(localname);
 
-        if(local_name == "class") ++in_class;
-        else if(local_name  == "function") in_function = true;
+        const std::string & parent = srcml_element_stack.at(srcml_element_stack.size() - 2);
+
+        if(URI == std::string("http://www.sdml.info/srcDiff")) {
+
+            if(local_name == "delete") diff_stack.push_back(DELETE);
+            else if(local_name == "insert") diff_stack.push_back(INSERT);
+            else diff_stack.push_back(COMMON);
+
+        } else if(local_name == "class") {
+
+            ++in_class;
+
+        } else if(local_name == "function") {
+
+            in_function = true;
+
+        } else if(local_name == "name" && (parent == "class" || parent == "function")) {
+
+            collect_name = true;
+
+        }
 
     }
 
@@ -142,8 +177,43 @@ public:
 
         const std::string local_name(localname);
 
-        if(local_name == "class") --in_class;
-        else if(local_name  == "function") in_function = false;
+        const std::string & parent = srcml_element_stack.back();
+
+        if(URI == std::string("http://www.sdml.info/srcDiff")) {
+
+            if(local_name == "delete") diff_stack.push_back(DELETE);
+            else if(local_name == "insert") diff_stack.push_back(INSERT);
+            else diff_stack.push_back(COMMON);
+
+        } if(local_name == "class") {
+
+            --in_class;
+            class_names.pop_back();
+
+        } else if(local_name == "function") {
+
+            in_function = false;
+
+        } else if(local_name == "name" && (parent == "class" || parent == "function")) {
+
+            collect_name = false;
+
+            if(parent == "class") { 
+
+                class_profiles[name] = true;
+                class_names.push_back(name);
+
+
+            } else if(parent == "function") {
+
+                function_profiles[name] = true;
+                function_name = name;
+
+            }
+
+            name = "";
+
+        }
 
     }
 
@@ -165,7 +235,36 @@ public:
      * SAX handler function for character handling within a unit.
      * Overide for desired behaviour.
      */
-    virtual void charactersUnit(const char * ch, int len) {}
+    virtual void charactersUnit(const char * ch, int len) {
+
+        if(diff_stack.back() != COMMON) {
+
+            for(int i = 0; i < len; ++i)
+                if(!isspace(ch[i])) {
+
+                    if(in_class) {
+
+                        for(const std::string & name : class_names)
+                            class_profiles[name] = false;
+
+                    }
+
+                    if(in_function)
+                        function_profiles[function_name] = false;
+
+                }
+
+
+
+        }
+
+        if(collect_name) {
+
+            name.append(ch, len);
+
+        }
+
+    }
 
 };
 

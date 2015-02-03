@@ -13,8 +13,8 @@ private:
 
 	const char * xml_encoding;
 
-	srcdiff_summary_handler::class_profile_t class_profile;
-	srcdiff_summary_handler::function_profile_t function_profile;
+	srcdiff_summary_handler::class_profiles_t class_profiles;
+	srcdiff_summary_handler::function_profiles_t function_profiles;
 
 public:
 

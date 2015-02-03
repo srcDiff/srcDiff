@@ -5,7 +5,7 @@ srcdiff_summary::~srcdiff_summary() {}
 
 void srcdiff_summary::append(const std::string & srcdiff) {
 
-	srcdiff_summary_handler handler(class_profile, function_profile);
+	srcdiff_summary_handler handler(class_profiles, function_profiles);
 
 	srcSAXController controller(srcdiff, xml_encoding);
 
