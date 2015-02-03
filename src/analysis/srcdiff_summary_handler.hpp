@@ -42,9 +42,10 @@ public:
 
     struct element {
 
-        element(std::string type_name) : type_name(type_name), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false) {}
+        element(std::string type_name) : type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false) {}
 
         std::string type_name;
+        std::string name;
         bool is_modified;
         bool is_whitespace;
         bool is_comment;
@@ -134,6 +135,9 @@ protected:
     counts total;
 
     std::string text;
+
+    size_t name_count;
+    std::string collected_name;
 
 private:
 
@@ -263,9 +267,9 @@ private:
 
                     if((pos + 1) == (element_stack.size() - 1) && (element_stack.back().type_name == "template"))
                         update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
-                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.back().type_name == "param")
-                        update_diff(name + "/param", is_whitespace);
-                    else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.at(pos + 2).type_name == "param"
+                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.back().type_name == "parameter")
+                        update_diff(name + "/parameter", is_whitespace);
+                    else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.at(pos + 2).type_name == "parameter"
                             && element_stack.back().type_name == "init")
                         update_diff(name + "/param/init", is_whitespace);
                     else if(element_stack.back().type_name == "return")
@@ -323,8 +327,8 @@ private:
 
                 } else if(is_template(name)) {
 
-                    if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.back().type_name == "param")
-                        update_diff(name + "/param", is_whitespace);
+                    if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.back().type_name == "parameter")
+                        update_diff(name + "/parameter", is_whitespace);
                     else if((pos + 1) == (element_stack.size() - 1) && (is_funct_type(element_stack.back().type_name) || is_class_type(element_stack.back().type_name)
                          || is_decl_stmt(element_stack.back().type_name)))
                         update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
@@ -344,13 +348,13 @@ private:
                 } else if(is_catch(name)) {
 
                     if((pos + 2) == (element_stack.size() - 1)
-                       && element_stack.back().type_name == "param")
-                        update_diff(name + "/param", is_whitespace);
+                       && element_stack.back().type_name == "parameter")
+                        update_diff(name + "/parameter", is_whitespace);
                     else if((pos + 1) < (element_stack.size())
                        && element_stack.at(pos + 1).type_name == "parameter_list"
                        && (pos + 3) == (element_stack.size() - 1)
-                       && element_stack.back().type_name == "param")
-                        update_diff(name + "/param", is_whitespace);
+                       && element_stack.back().type_name == "parameter")
+                        update_diff(name + "/parameter", is_whitespace);
 
 
                 } else if(is_decl_stmt(name)) {
@@ -383,7 +387,7 @@ private:
                     else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "cpp:macro" 
                 && element_stack.at(pos + 2).type_name == "parameter_list"
                 && (pos + 4) == (element_stack.size() - 1)
-                && element_stack.back().type_name == "param")
+                && element_stack.back().type_name == "parameter")
                         update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
 
                 }
@@ -439,10 +443,10 @@ private:
                     update_modified(name + "/" + element_stack.at(pos + 1).type_name);
                 else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list"
                         && (pos + 2) == (element_stack.size() - 1)
-                          && element_stack.back().type_name == "param")
-                    update_modified(name + "/param");
+                          && element_stack.back().type_name == "parameter")
+                    update_modified(name + "/parameter");
                 else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list"
-                        && element_stack.at(pos + 2).type_name == "param"
+                        && element_stack.at(pos + 2).type_name == "parameter"
                         && element_stack.back().type_name == "init")
                     update_modified(name + "/param/init");
                 else if(element_stack.back().type_name == "return")
@@ -508,8 +512,8 @@ private:
                     || is_decl_stmt(element_stack.back().type_name)))
                         update_modified(name + "/" + element_stack.back().type_name);
                 else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list"
-                          && element_stack.back().type_name == "param")
-                    update_modified(name + "/param");
+                          && element_stack.back().type_name == "parameter")
+                    update_modified(name + "/parameter");
 
             } else if(is_condition_type(name)) {
 
@@ -530,13 +534,13 @@ private:
 
                 if((pos + 1) == (element_stack.size() - 1)
                    && (element_stack.back().type_name == "parameter_list"
-                       || element_stack.back().type_name == "param"
+                       || element_stack.back().type_name == "parameter"
                        || element_stack.back().type_name == "block"))
                     update_modified(name + "/" + element_stack.back().type_name);
                 else if((pos + 2) < (element_stack.size())
                        && element_stack.at(pos + 1).type_name == "parameter_list"
-                       && element_stack.back().type_name == "param")
-                    update_modified(name + "/param");
+                       && element_stack.back().type_name == "parameter")
+                    update_modified(name + "/parameter");
 
             } else if(is_decl_stmt(name)) {
 
@@ -576,8 +580,8 @@ private:
                 else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "cpp:macro"
                && element_stack.at(pos + 2).type_name == "parameter_list"
                    && (pos + 3) == (element_stack.size() - 1)
-                   && element_stack.back().type_name == "param")
-                    update_modified(name + "/param");
+                   && element_stack.back().type_name == "parameter")
+                    update_modified(name + "/parameter");
 
             }
 
@@ -722,7 +726,8 @@ public:
 
     srcdiff_summary_handler(class_profiles_t & class_profiles, function_profiles_t & function_profiles) : 
         srcdiff_stack(), element_stack(), class_profiles(class_profiles), function_profiles(function_profiles), 
-        inserted(), deleted(), modified(), insert_count(), delete_count(), change_count(), total(), text() {}
+        inserted(), deleted(), modified(), insert_count(), delete_count(), change_count(), total(), text(),
+        name_count(0), collected_name() {}
 
     /**
      * startDocument
@@ -788,12 +793,12 @@ public:
 
         if(prefix) {
 
-            full_name += (const char *)prefix;
+            full_name += prefix;
             full_name += ":";
 
         }
 
-        full_name += (const char *)localname;
+        full_name += localname;
 
         element_stack.push_back(full_name);
 
@@ -816,21 +821,23 @@ public:
                                 int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                                 const struct srcsax_attribute * attributes) {
 
+        const std::string local_name(localname);
+
         if(text != "") process_characters();
 
-        if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+        if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
 
             /* @todo check if move and put as in common */
             bool is_change = false;
             bool is_move = false;
             for(int i = 0; i < num_attributes; ++i) {
 
-                if(strcmp((const char *)attributes[i].localname, "type") == 0) {
+                if(strcmp(attributes[i].localname, "type") == 0) {
 
                     std::string value = attributes[i].value;
                     if(value == "change") is_change = true;
 
-                } else if(strcmp((const char *)attributes[i].localname, "move") == 0) {
+                } else if(strcmp(attributes[i].localname, "move") == 0) {
 
                     is_move = true;
 
@@ -838,11 +845,11 @@ public:
 
             }
 
-            if(strcmp((const char *)localname, "common") == 0 || is_move)
+            if(local_name == "common" || is_move)
                 srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, is_change, is_move));
-            else if(strcmp((const char *)localname, "delete") == 0)
+            else if(local_name == "delete")
                 srcdiff_stack.push_back(srcdiff(SRCDIFF_DELETE, is_change, is_move));
-            else if(strcmp((const char *)localname, "insert") == 0)
+            else if(local_name == "insert")
                 srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_change, is_move));
 
             if((srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
@@ -855,16 +862,22 @@ public:
 
         if(prefix) {
 
-            full_name += (const char *)prefix;
+            full_name += prefix;
             full_name += ":";
 
         }
 
-        full_name += (const char *)localname;
+        full_name += local_name;
 
         element_stack.push_back(element(full_name));
 
-        if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0) {
+        if(strcmp(URI, "http://www.sdml.info/srcDiff") != 0) {
+
+            if(local_name == "name") {
+
+                ++name_count;
+
+            }
 
             ++srcdiff_stack.back().level;
 
@@ -875,7 +888,7 @@ public:
 
                 if(srcdiff_stack.back().level == 1) {
 
-                    if(strcmp((const char *)localname, "comment") == 0) {
+                    if(local_name == "comment") {
 
                         total.inc_comment();
                         element_stack.at(element_stack.size() - 3).is_comment = true;
@@ -982,14 +995,13 @@ public:
      */
     virtual void endElement(const char * localname, const char * prefix, const char * URI) {
 
+        const std::string local_name(localname);
 
         if(text != "") process_characters();
 
-        if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+        if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
 
-            if(strcmp((const char *)localname, "common") == 0
-               || strcmp((const char *)localname, "delete") == 0
-               || strcmp((const char *)localname, "insert") == 0)
+            if(local_name == "common" || local_name == "delete" || local_name == "insert")
                 srcdiff_stack.pop_back();
 
         }
@@ -998,14 +1010,28 @@ public:
 
         if(prefix) {
 
-            full_name += (const char *)prefix;
+            full_name += prefix;
             full_name += ":";
 
         }
 
-        full_name += (const char *)localname;
+        full_name += localname;
 
-        if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") != 0) {
+
+        if(strcmp(URI, "http://www.sdml.info/srcDiff") != 0) {
+
+            if(local_name == "name") {
+
+                --name_count;
+
+                if(name_count == 0) {
+
+                    element_stack.at(element_stack.size() - 2).name = collected_name;
+                    collected_name = "";
+
+                }
+
+            }
 
             --srcdiff_stack.back().level;
 
@@ -1072,7 +1098,9 @@ public:
 
         if(len == 0) return;
 
-        text.append((const char *)ch, len);
+        text.append(ch, len);
+
+        if(name_count) collected_name.append(ch, len);
 
     }
 
