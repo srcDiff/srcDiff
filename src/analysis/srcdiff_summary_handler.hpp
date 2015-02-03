@@ -42,9 +42,9 @@ public:
 
     struct element {
 
-        element(std::string name) : name(name), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false) {}
+        element(std::string type_name) : type_name(type_name), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false) {}
 
-        std::string name;
+        std::string type_name;
         bool is_modified;
         bool is_whitespace;
         bool is_comment;
@@ -251,7 +251,7 @@ private:
         for(int i = 0; i < counting_element_pos.size(); ++i) {
 
             int pos = counting_element_pos.at(i);
-            std::string name = element_stack.at(pos).name;
+            std::string name = element_stack.at(pos).type_name;
 
         if(is_expr(name)) continue;
 
@@ -261,61 +261,61 @@ private:
 
                 if(is_funct_type(name)) {
 
-                    if((pos + 1) == (element_stack.size() - 1) && (element_stack.back().name == "template"))
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
-                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "parameter_list" && element_stack.back().name == "param")
+                    if((pos + 1) == (element_stack.size() - 1) && (element_stack.back().type_name == "template"))
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
+                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.back().type_name == "param")
                         update_diff(name + "/param", is_whitespace);
-                    else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).name == "parameter_list" && element_stack.at(pos + 2).name == "param"
-                            && element_stack.back().name == "init")
+                    else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.at(pos + 2).type_name == "param"
+                            && element_stack.back().type_name == "init")
                         update_diff(name + "/param/init", is_whitespace);
-                    else if(element_stack.back().name == "return")
+                    else if(element_stack.back().type_name == "return")
                         update_diff(name + "/return", is_whitespace);
-                    else if((pos + 2) == (element_stack.size() - 1) && (element_stack.back().name == "member_list"))
+                    else if((pos + 2) == (element_stack.size() - 1) && (element_stack.back().type_name == "member_list"))
                         update_diff(name + "/member_list", is_whitespace);
-                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "member_list"
-                && (pos + 3) == (element_stack.size() - 1) && element_stack.back().name == "call")
+                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "member_list"
+                && (pos + 3) == (element_stack.size() - 1) && element_stack.back().type_name == "call")
                         update_diff(name + "/member_list/call", is_whitespace);
 
                 } else if(is_class_type(name)) {
 
                     if((pos + 2) == (element_stack.size() - 1)
-                       && (element_stack.back().name == "decl"
-                           || element_stack.back().name == "super"
-                           || element_stack.back().name == "template"))
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
-                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "block"
+                       && (element_stack.back().type_name == "decl"
+                           || element_stack.back().type_name == "super"
+                           || element_stack.back().type_name == "template"))
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
+                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "block"
                             && (pos + 3) == (element_stack.size() - 1) 
-                && (element_stack.back().name == "private" || element_stack.back().name == "public"
-                                || element_stack.back().name == "protected" || element_stack.back().name == "signals"))
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
-                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "block"
+                && (element_stack.back().type_name == "private" || element_stack.back().type_name == "public"
+                                || element_stack.back().type_name == "protected" || element_stack.back().type_name == "signals"))
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
+                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "block"
                             && ((pos + 3) == (element_stack.size() - 1) 
                             || ((pos + 4) == (element_stack.size() - 1) 
-                            && (element_stack.at(pos + 2).name == "private" || element_stack.at(pos + 2).name == "public"
-                            || element_stack.at(pos + 2).name == "protected" || element_stack.at(pos + 2).name == "signals")))
-                            && (element_stack.back().name == "decl_stmt" || element_stack.back().name == "template"
-                            || is_funct_type(element_stack.back().name) || is_class_type(element_stack.back().name))) {
+                            && (element_stack.at(pos + 2).type_name == "private" || element_stack.at(pos + 2).type_name == "public"
+                            || element_stack.at(pos + 2).type_name == "protected" || element_stack.at(pos + 2).type_name == "signals")))
+                            && (element_stack.back().type_name == "decl_stmt" || element_stack.back().type_name == "template"
+                            || is_funct_type(element_stack.back().type_name) || is_class_type(element_stack.back().type_name))) {
 
-                                if(element_stack.back().name == "template")
-                                    update_diff(name + "/block/" + element_stack.back().name, is_whitespace);
+                                if(element_stack.back().type_name == "template")
+                                    update_diff(name + "/block/" + element_stack.back().type_name, is_whitespace);
                                 else
-                                    update_diff(name + "/" + element_stack.back().name, is_whitespace);
+                                    update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
                         
-                    } else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "block" && element_stack.at(element_stack.size() - 2).name == "template") {
+                    } else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "block" && element_stack.at(element_stack.size() - 2).type_name == "template") {
 
                         int count_template = 1;
-                        while(((count_template + 2) < element_stack.size()) && element_stack.at((element_stack.size() - count_template) - 2).name == "template")
+                        while(((count_template + 2) < element_stack.size()) && element_stack.at((element_stack.size() - count_template) - 2).type_name == "template")
                             ++count_template;
 
                         if(((pos + count_template + 3) == (element_stack.size() - 1) 
                             || ((pos + count_template + 4) == (element_stack.size() - 1) 
-                            && (element_stack.at(pos + 2).name == "private" || element_stack.at(pos + 2).name == "public"
-                            || element_stack.at(pos + 2).name == "protected" || element_stack.at(pos + 2).name == "signals")))
-                            && (is_funct_type(element_stack.back().name) || is_class_type(element_stack.back().name)
-                                 || is_decl_stmt(element_stack.back().name))) {
+                            && (element_stack.at(pos + 2).type_name == "private" || element_stack.at(pos + 2).type_name == "public"
+                            || element_stack.at(pos + 2).type_name == "protected" || element_stack.at(pos + 2).type_name == "signals")))
+                            && (is_funct_type(element_stack.back().type_name) || is_class_type(element_stack.back().type_name)
+                                 || is_decl_stmt(element_stack.back().type_name))) {
 
-                                update_diff(name + "/" + element_stack.back().name, is_whitespace);
-                                update_diff(name + "/block/template/" + element_stack.back().name, is_whitespace);
+                                update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
+                                update_diff(name + "/block/template/" + element_stack.back().type_name, is_whitespace);
 
                         }
 
@@ -323,68 +323,68 @@ private:
 
                 } else if(is_template(name)) {
 
-                    if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "parameter_list" && element_stack.back().name == "param")
+                    if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list" && element_stack.back().type_name == "param")
                         update_diff(name + "/param", is_whitespace);
-                    else if((pos + 1) == (element_stack.size() - 1) && (is_funct_type(element_stack.back().name) || is_class_type(element_stack.back().name)
-                         || is_decl_stmt(element_stack.back().name)))
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
+                    else if((pos + 1) == (element_stack.size() - 1) && (is_funct_type(element_stack.back().type_name) || is_class_type(element_stack.back().type_name)
+                         || is_decl_stmt(element_stack.back().type_name)))
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
 
                 } else if(is_condition_type(name)) {
 
                 if((pos + 2) == (element_stack.size() - 1)
-                        && (element_stack.back().name == "incr"
-                            || element_stack.back().name == "case"
-                            || element_stack.back().name == "default"))
-                    update_diff(name + "/" + element_stack.back().name, is_whitespace);
+                        && (element_stack.back().type_name == "incr"
+                            || element_stack.back().type_name == "case"
+                            || element_stack.back().type_name == "default"))
+                    update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
                 else if((pos + 3) == (element_stack.size() - 1)
-                        && (element_stack.back().name == "case"
-                            || element_stack.back().name == "default"))
-                    update_diff(name + "/" + element_stack.back().name, is_whitespace);
+                        && (element_stack.back().type_name == "case"
+                            || element_stack.back().type_name == "default"))
+                    update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
 
                 } else if(is_catch(name)) {
 
                     if((pos + 2) == (element_stack.size() - 1)
-                       && element_stack.back().name == "param")
+                       && element_stack.back().type_name == "param")
                         update_diff(name + "/param", is_whitespace);
                     else if((pos + 1) < (element_stack.size())
-                       && element_stack.at(pos + 1).name == "parameter_list"
+                       && element_stack.at(pos + 1).type_name == "parameter_list"
                        && (pos + 3) == (element_stack.size() - 1)
-                       && element_stack.back().name == "param")
+                       && element_stack.back().type_name == "param")
                         update_diff(name + "/param", is_whitespace);
 
 
                 } else if(is_decl_stmt(name)) {
 
-                    if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "decl" && (pos + 3) == (element_stack.size() - 1)
-                       && (element_stack.back().name == "init" || element_stack.back().name == "name" || element_stack.back().name == "template"))
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
-                    else if(element_stack.back().name == "decl")
+                    if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "decl" && (pos + 3) == (element_stack.size() - 1)
+                       && (element_stack.back().type_name == "init" || element_stack.back().type_name == "name" || element_stack.back().type_name == "template"))
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
+                    else if(element_stack.back().type_name == "decl")
                         update_diff(name + "/decl", is_whitespace);
 
                 } else if(is_call(name)) {
 
                     if((pos + 3) == (element_stack.size() - 1)
-                       && element_stack.back().name == "argument")
+                       && element_stack.back().type_name == "argument")
                         update_diff(name + "/argument", is_whitespace);
 
                 } else if(is_preprocessor_special(name)) {
 
                     if((pos + 2) == (element_stack.size() - 1)
-                       && (element_stack.back().name == "name"
-                           || element_stack.back().name == "cpp:macro"
-                           || element_stack.back().name == "cpp:value"
-                           || element_stack.back().name == "cpp:number"
-                           || element_stack.back().name == "cpp:file"))
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
-                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "cpp:macro"
+                       && (element_stack.back().type_name == "name"
+                           || element_stack.back().type_name == "cpp:macro"
+                           || element_stack.back().type_name == "cpp:value"
+                           || element_stack.back().type_name == "cpp:number"
+                           || element_stack.back().type_name == "cpp:file"))
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
+                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "cpp:macro"
                        && (pos + 3) == (element_stack.size() - 1)
-                       && element_stack.back().name == "parameter_list")
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
-                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "cpp:macro" 
-                && element_stack.at(pos + 2).name == "parameter_list"
+                       && element_stack.back().type_name == "parameter_list")
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
+                    else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "cpp:macro" 
+                && element_stack.at(pos + 2).type_name == "parameter_list"
                 && (pos + 4) == (element_stack.size() - 1)
-                && element_stack.back().name == "param")
-                        update_diff(name + "/" + element_stack.back().name, is_whitespace);
+                && element_stack.back().type_name == "param")
+                        update_diff(name + "/" + element_stack.back().type_name, is_whitespace);
 
                 }
 
@@ -420,7 +420,7 @@ private:
         for(int i = 0; i < counting_element_pos.size(); ++i) {
 
             int pos = counting_element_pos.at(i);
-            std::string name = element_stack.at(pos).name;
+            std::string name = element_stack.at(pos).type_name;
 
             if(pos == (element_stack.size() - 1)) {
 
@@ -430,71 +430,71 @@ private:
             } else if(is_funct_type(name)) {
 
                 if((pos + 1) == (element_stack.size() - 1)
-                   && (element_stack.at(pos + 1).name == "type"
-                       || element_stack.at(pos + 1).name == "name"
-                       || element_stack.at(pos + 1).name == "parameter_list"
-                       || element_stack.at(pos + 1).name == "block"
-                       || element_stack.at(pos + 1).name == "member_list"
-                       || element_stack.at(pos + 1).name == "template"))
-                    update_modified(name + "/" + element_stack.at(pos + 1).name);
-                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "parameter_list"
+                   && (element_stack.at(pos + 1).type_name == "type"
+                       || element_stack.at(pos + 1).type_name == "name"
+                       || element_stack.at(pos + 1).type_name == "parameter_list"
+                       || element_stack.at(pos + 1).type_name == "block"
+                       || element_stack.at(pos + 1).type_name == "member_list"
+                       || element_stack.at(pos + 1).type_name == "template"))
+                    update_modified(name + "/" + element_stack.at(pos + 1).type_name);
+                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list"
                         && (pos + 2) == (element_stack.size() - 1)
-                          && element_stack.back().name == "param")
+                          && element_stack.back().type_name == "param")
                     update_modified(name + "/param");
-                else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).name == "parameter_list"
-                        && element_stack.at(pos + 2).name == "param"
-                        && element_stack.back().name == "init")
+                else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list"
+                        && element_stack.at(pos + 2).type_name == "param"
+                        && element_stack.back().type_name == "init")
                     update_modified(name + "/param/init");
-                else if(element_stack.back().name == "return")
+                else if(element_stack.back().type_name == "return")
                     update_modified(name + "/return");
-                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "member_list"
+                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "member_list"
                         && (pos + 2) == (element_stack.size() - 1)
-                && element_stack.back().name == "call")
+                && element_stack.back().type_name == "call")
                     update_modified(name + "/member_list/call");
 
 
             } else if(is_class_type(name)) {
 
                 if((element_stack.size() - 1) == (pos + 1)
-                   && (element_stack.back().name == "super"
-                       || element_stack.back().name == "name"
-                       || element_stack.back().name == "block"
-                       || element_stack.back().name == "decl"
-                       || element_stack.back().name == "template"))
-                    update_modified(name + "/" + element_stack.back().name);
-            else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "block"
+                   && (element_stack.back().type_name == "super"
+                       || element_stack.back().type_name == "name"
+                       || element_stack.back().type_name == "block"
+                       || element_stack.back().type_name == "decl"
+                       || element_stack.back().type_name == "template"))
+                    update_modified(name + "/" + element_stack.back().type_name);
+            else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "block"
                 && (pos + 2) == (element_stack.size() - 1)
-                && (element_stack.back().name == "private" || element_stack.back().name == "public"
-                || element_stack.back().name == "protected" || element_stack.back().name == "signals"))
-                    update_modified(name + "/" + element_stack.back().name);
-                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "block"
+                && (element_stack.back().type_name == "private" || element_stack.back().type_name == "public"
+                || element_stack.back().type_name == "protected" || element_stack.back().type_name == "signals"))
+                    update_modified(name + "/" + element_stack.back().type_name);
+                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "block"
                         && ((pos + 2) == (element_stack.size() - 1) 
                 || ((pos + 3) == (element_stack.size() - 1) 
-                    && (element_stack.at(pos + 2).name == "private" || element_stack.at(pos + 2).name == "public"
-                    || element_stack.at(pos + 2).name == "protected" || element_stack.at(pos + 2).name == "signals")))
-                        && (element_stack.back().name == "decl_stmt" || element_stack.back().name == "template"
-                            || is_funct_type(element_stack.back().name) || is_class_type(element_stack.back().name))) {
+                    && (element_stack.at(pos + 2).type_name == "private" || element_stack.at(pos + 2).type_name == "public"
+                    || element_stack.at(pos + 2).type_name == "protected" || element_stack.at(pos + 2).type_name == "signals")))
+                        && (element_stack.back().type_name == "decl_stmt" || element_stack.back().type_name == "template"
+                            || is_funct_type(element_stack.back().type_name) || is_class_type(element_stack.back().type_name))) {
 
-                            if(element_stack.back().name == "template")
-                                update_modified(name + "/block/" + element_stack.back().name);
+                            if(element_stack.back().type_name == "template")
+                                update_modified(name + "/block/" + element_stack.back().type_name);
                             else
-                                update_modified(name + "/" + element_stack.back().name);
+                                update_modified(name + "/" + element_stack.back().type_name);
 
-                } else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "block" && element_stack.at(element_stack.size() - 2).name == "template")  {
+                } else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "block" && element_stack.at(element_stack.size() - 2).type_name == "template")  {
 
                         int count_template = 1;
-                        while(((count_template + 2) < element_stack.size()) && element_stack.at((element_stack.size() - count_template) - 2).name == "template")
+                        while(((count_template + 2) < element_stack.size()) && element_stack.at((element_stack.size() - count_template) - 2).type_name == "template")
                             ++count_template;
 
                         if(((pos + count_template + 2) == (element_stack.size() - 1) 
                             || ((pos + count_template + 3) == (element_stack.size() - 1) 
-                            && (element_stack.at(pos + 2).name == "private" || element_stack.at(pos + 2).name == "public"
-                            || element_stack.at(pos + 2).name == "protected" || element_stack.at(pos + 2).name == "signals")))
-                            && (is_funct_type(element_stack.back().name) || is_class_type(element_stack.back().name)
-                                || is_decl_stmt(element_stack.back().name))) {
+                            && (element_stack.at(pos + 2).type_name == "private" || element_stack.at(pos + 2).type_name == "public"
+                            || element_stack.at(pos + 2).type_name == "protected" || element_stack.at(pos + 2).type_name == "signals")))
+                            && (is_funct_type(element_stack.back().type_name) || is_class_type(element_stack.back().type_name)
+                                || is_decl_stmt(element_stack.back().type_name))) {
 
-                                update_modified(name + "/" + element_stack.back().name);
-                                update_modified(name + "/block/template/" + element_stack.back().name);
+                                update_modified(name + "/" + element_stack.back().type_name);
+                                update_modified(name + "/block/template/" + element_stack.back().type_name);
 
                         }
 
@@ -502,81 +502,81 @@ private:
 
             } else if(is_template(name)) { 
 
-                if((pos + 1) == (element_stack.size() - 1) && element_stack.back().name == "parameter_list")
-                    update_modified(name + "/" + element_stack.back().name);
-                else if((pos + 1) == (element_stack.size() - 1) && (is_funct_type(element_stack.back().name) || is_class_type(element_stack.back().name)
-                    || is_decl_stmt(element_stack.back().name)))
-                        update_modified(name + "/" + element_stack.back().name);
-                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "parameter_list"
-                          && element_stack.back().name == "param")
+                if((pos + 1) == (element_stack.size() - 1) && element_stack.back().type_name == "parameter_list")
+                    update_modified(name + "/" + element_stack.back().type_name);
+                else if((pos + 1) == (element_stack.size() - 1) && (is_funct_type(element_stack.back().type_name) || is_class_type(element_stack.back().type_name)
+                    || is_decl_stmt(element_stack.back().type_name)))
+                        update_modified(name + "/" + element_stack.back().type_name);
+                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "parameter_list"
+                          && element_stack.back().type_name == "param")
                     update_modified(name + "/param");
 
             } else if(is_condition_type(name)) {
 
                 if((pos + 1) == (element_stack.size() - 1)
-                   && (element_stack.back().name == "init"
-                       || element_stack.back().name == "condition"
-                       || element_stack.back().name == "incr"
-                       || element_stack.back().name == "then"
-                       || element_stack.back().name == "case"
-                       || element_stack.back().name == "default"))
-                    update_modified(name + "/" + element_stack.back().name);
+                   && (element_stack.back().type_name == "init"
+                       || element_stack.back().type_name == "condition"
+                       || element_stack.back().type_name == "incr"
+                       || element_stack.back().type_name == "then"
+                       || element_stack.back().type_name == "case"
+                       || element_stack.back().type_name == "default"))
+                    update_modified(name + "/" + element_stack.back().type_name);
                 else if((pos + 2) == (element_stack.size() - 1)
-                       && (element_stack.back().name == "case"
-                       || element_stack.back().name == "default"))
-                    update_modified(name + "/" + element_stack.back().name);
+                       && (element_stack.back().type_name == "case"
+                       || element_stack.back().type_name == "default"))
+                    update_modified(name + "/" + element_stack.back().type_name);
 
             } else if(is_catch(name)) {
 
                 if((pos + 1) == (element_stack.size() - 1)
-                   && (element_stack.back().name == "parameter_list"
-                       || element_stack.back().name == "param"
-                       || element_stack.back().name == "block"))
-                    update_modified(name + "/" + element_stack.back().name);
+                   && (element_stack.back().type_name == "parameter_list"
+                       || element_stack.back().type_name == "param"
+                       || element_stack.back().type_name == "block"))
+                    update_modified(name + "/" + element_stack.back().type_name);
                 else if((pos + 2) < (element_stack.size())
-                       && element_stack.at(pos + 1).name == "parameter_list"
-                       && element_stack.back().name == "param")
+                       && element_stack.at(pos + 1).type_name == "parameter_list"
+                       && element_stack.back().type_name == "param")
                     update_modified(name + "/param");
 
             } else if(is_decl_stmt(name)) {
 
-                if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "decl"
+                if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "decl"
                    && (pos + 2) == (element_stack.size() - 1)
-                   && (element_stack.back().name == "type"
-                       || element_stack.back().name == "name"
-                       || element_stack.back().name == "init"
-                       || element_stack.back().name == "template"))
-                    update_modified(name + "/" + element_stack.back().name);
+                   && (element_stack.back().type_name == "type"
+                       || element_stack.back().type_name == "name"
+                       || element_stack.back().type_name == "init"
+                       || element_stack.back().type_name == "template"))
+                    update_modified(name + "/" + element_stack.back().type_name);
 
             } else if(is_call(name)) {
 
                 if((pos + 1) == (element_stack.size() - 1)
-                   && (element_stack.at(pos + 1).name == "name"
-                       || element_stack.back().name == "argument_list"))
-                    update_modified(name + "/" + element_stack.back().name);
-                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "argument_list"
+                   && (element_stack.at(pos + 1).type_name == "name"
+                       || element_stack.back().type_name == "argument_list"))
+                    update_modified(name + "/" + element_stack.back().type_name);
+                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "argument_list"
                    && (pos + 2) == (element_stack.size() - 1)
-                   && element_stack.back().name == "argument")
+                   && element_stack.back().type_name == "argument")
                     update_modified(name + "/argument");
 
             } else if(is_preprocessor_special(name)) {
 
             if((pos + 1) == (element_stack.size() - 1)
-               && (element_stack.back().name == "name"
-                       || element_stack.back().name == "cpp:macro"
-                       || element_stack.back().name == "cpp:value"
-                       || element_stack.back().name == "cpp:number"
-                       || element_stack.back().name == "cpp:file"))
-                    update_modified(name + "/" + element_stack.back().name);
-                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).name == "cpp:macro"
+               && (element_stack.back().type_name == "name"
+                       || element_stack.back().type_name == "cpp:macro"
+                       || element_stack.back().type_name == "cpp:value"
+                       || element_stack.back().type_name == "cpp:number"
+                       || element_stack.back().type_name == "cpp:file"))
+                    update_modified(name + "/" + element_stack.back().type_name);
+                else if((pos + 1) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "cpp:macro"
                    && (pos + 2) == (element_stack.size() - 1)
-                   && (element_stack.back().name == "parameter_list"
-               || element_stack.back().name == "name"))
-                    update_modified(name + "/" + element_stack.back().name);
-                else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).name == "cpp:macro"
-               && element_stack.at(pos + 2).name == "parameter_list"
+                   && (element_stack.back().type_name == "parameter_list"
+               || element_stack.back().type_name == "name"))
+                    update_modified(name + "/" + element_stack.back().type_name);
+                else if((pos + 2) < (element_stack.size()) && element_stack.at(pos + 1).type_name == "cpp:macro"
+               && element_stack.at(pos + 2).type_name == "parameter_list"
                    && (pos + 3) == (element_stack.size() - 1)
-                   && element_stack.back().name == "param")
+                   && element_stack.back().type_name == "param")
                     update_modified(name + "/param");
 
             }
@@ -587,7 +587,7 @@ private:
 
     void process_characters() {
 
-       if(element_stack.back().name == "op:operator") {
+       if(element_stack.back().type_name == "op:operator") {
 
         if(text == "=" || text == "+=" || text == "-=" || text == "*=" || text == "/=" || text == ">>=" || text == "<<=" || text == "%=" || text == "&=" || text == "|=" || text == "^=")
             element_stack.back().has_assignment = true;
@@ -633,7 +633,7 @@ private:
 
                 }
 
-                if(element_stack.back().name == "comment") {
+                if(element_stack.back().type_name == "comment") {
 
                     element_stack.at(element_stack.size() - 2).is_comment = true;
                     total.inc_comment();
@@ -926,7 +926,7 @@ public:
 
                     count_diff(false);
 
-                } else if(srcdiff_stack.back().level == 2 && element_stack.at(element_stack.size() - 2).name == "template"
+                } else if(srcdiff_stack.back().level == 2 && element_stack.at(element_stack.size() - 2).type_name == "template"
                      && (is_funct_type(full_name) || is_class_type(full_name) || is_decl_stmt(full_name))) {
 
                     count_diff(false);
@@ -1010,9 +1010,9 @@ public:
             --srcdiff_stack.back().level;
 
         if(element_stack.back().has_assignment
-           && element_stack.at(element_stack.size() - 2).name != "diff:delete"
-           && element_stack.at(element_stack.size() - 2).name != "diff:insert"
-           && element_stack.at(element_stack.size() - 2).name != "diff:common")
+           && element_stack.at(element_stack.size() - 2).type_name != "diff:delete"
+           && element_stack.at(element_stack.size() - 2).type_name != "diff:insert"
+           && element_stack.at(element_stack.size() - 2).type_name != "diff:common")
         element_stack.at(element_stack.size() - 2).has_assignment = true;
 
 
@@ -1020,9 +1020,9 @@ public:
 
                 count_modified();
 
-                if(element_stack.at(element_stack.size() - 2).name != "diff:delete"
-                   && element_stack.at(element_stack.size() - 2).name != "diff:insert"
-                   && element_stack.at(element_stack.size() - 2).name != "diff:common") {
+                if(element_stack.at(element_stack.size() - 2).type_name != "diff:delete"
+                   && element_stack.at(element_stack.size() - 2).type_name != "diff:insert"
+                   && element_stack.at(element_stack.size() - 2).type_name != "diff:common") {
 
                     element_stack.at(element_stack.size() - 2).is_modified = true;
 
