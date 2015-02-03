@@ -601,10 +601,14 @@ private:
 
        if(element_stack.back().type_name == "op:operator") {
 
-        if(text == "=" || text == "+=" || text == "-=" || text == "*=" || text == "/=" || text == ">>=" || text == "<<=" || text == "%=" || text == "&=" || text == "|=" || text == "^=")
+        if(text == "=" || text == "+=" || text == "-=" || text == "*=" || text == "/=" || text == ">>=" || text == "<<=" || text == "%=" || text == "&=" || text == "|=" || text == "^=") {
+
             element_stack.back().has_assignment = true;
-        else
+            ++element_stack.back().assignment_count;
+
+        } else
             element_stack.back().has_assignment = false;
+            element_stack.back().assignment_count = 0;
 
        }
 
@@ -648,6 +652,7 @@ private:
                 if(element_stack.back().type_name == "comment") {
 
                     element_stack.at(element_stack.size() - 2).is_comment = true;
+                    ++element_stack.at(element_stack.size() - 2).comment_count;
                     total.inc_comment();
 
                     if(srcdiff_stack.back().is_change) {
@@ -670,6 +675,7 @@ private:
                 } else if(is_whitespace) {
 
                     element_stack.at(element_stack.size() - 2).is_whitespace = true;
+                    ++element_stack.at(element_stack.size() - 2).whitespace_count;
                     total.inc_whitespace();
 
                     if(srcdiff_stack.back().is_change) {
@@ -692,6 +698,7 @@ private:
                 } else {
 
                     element_stack.at(element_stack.size() - 2).is_syntax = true;
+                    ++element_stack.at(element_stack.size() - 2).syntax_count;
                     total.inc_syntax();
 
                     if(srcdiff_stack.back().is_change) {
@@ -900,6 +907,7 @@ public:
 
                         total.inc_comment();
                         element_stack.at(element_stack.size() - 3).is_comment = true;
+                        ++element_stack.at(element_stack.size() - 3).comment_count;
 
                         /** @todo refactor into method or something for counting global insert/delete/change */
                         if(srcdiff_stack.back().is_change) {
@@ -923,6 +931,7 @@ public:
 
                         total.inc_syntax();
                         element_stack.at(element_stack.size() - 3).is_syntax = true;
+                        ++element_stack.at(element_stack.size() - 3).syntax_count;
 
                         if(srcdiff_stack.back().is_change) {
 
@@ -1059,16 +1068,30 @@ public:
                    && element_stack.at(element_stack.size() - 2).type_name != "diff:common") {
 
                     element_stack.at(element_stack.size() - 2).is_modified = true;
+                    element_stack.at(element_stack.size() - 2).modified_count += element_stack.back().modified_count;
 
-                    if(element_stack.back().is_whitespace)
+                    if(element_stack.back().is_whitespace) {
+
+
                         element_stack.at(element_stack.size() - 2).is_whitespace = true;
+                        element_stack.at(element_stack.size() - 2).whitespace_count += element_stack.back().whitespace_count;
+
+                    }
+
+                    if(element_stack.back().is_comment) {
 
 
-                    if(element_stack.back().is_comment)
                         element_stack.at(element_stack.size() - 2).is_comment = true;
+                        element_stack.at(element_stack.size() - 2).comment_count += element_stack.back().comment_count;
 
-                    if(element_stack.back().is_syntax)
+                    }
+
+                    if(element_stack.back().is_syntax) {
+
                         element_stack.at(element_stack.size() - 2).is_syntax = true;
+                        element_stack.at(element_stack.size() - 2).syntax_count += element_stack.back().syntax_count;
+
+                    }
 
                 }
 
