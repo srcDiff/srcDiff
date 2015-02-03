@@ -42,7 +42,8 @@ public:
 
     struct element {
 
-        element(std::string type_name) : type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false) {}
+        element(std::string type_name) : type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
+            modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0) {}
 
         std::string type_name;
         std::string name;
@@ -51,6 +52,13 @@ public:
         bool is_comment;
         bool is_syntax;
         bool has_assignment;
+
+        size_t modified_count;
+        size_t whitespace_count;
+        size_t comment_count;
+        size_t syntax_count;
+        size_t assignment_count;
+
 
     };
 
@@ -141,7 +149,7 @@ protected:
 
 private:
 
-    bool is_simple_type(std::string & name) {
+    bool is_simple_type(const std::string & name) {
 
         return name == "throw" || name == "try" || name == "else" || name == "lit:literal" || name == "op:operator"
             || name == "type:modifier" || name == "cpp:if" || name == "cpp:elif" || name == "cpp:else"
@@ -150,63 +158,63 @@ private:
 
     }
 
-    bool is_funct_type(std::string & name) {
+    bool is_funct_type(const std::string & name) {
 
         return name == "function" || name == "function_decl" || name == "constructor" || name == "constructor_decl"
             || name == "destructor" || name == "destructor_decl";
 
     }
 
-    bool is_class_type(std::string & name) {
+    bool is_class_type(const std::string & name) {
 
         return name == "class" || name == "class_decl" || name == "struct" || name == "struct_decl"
             || name == "union" || name == "union_decl" || name == "enum";
 
     }
 
-    bool is_template(std::string & name) {
+    bool is_template(const std::string & name) {
 
         return name == "template";
 
     }
 
-    bool is_condition_type(std::string & name) {
+    bool is_condition_type(const std::string & name) {
 
         return name == "if" || name == "switch" || name == "elseif" || name == "while" || name == "do" || name == "for";
 
     }
 
-    bool is_catch(std::string & name) {
+    bool is_catch(const std::string & name) {
 
         return name == "catch";
 
     }
 
-    bool is_call(std::string & name) {
+    bool is_call(const std::string & name) {
 
         return name == "call" || name == "macro";
 
     }
 
-    bool is_decl_stmt(std::string & name) {
+    bool is_decl_stmt(const std::string & name) {
 
         return name == "decl_stmt";
 
     }
 
-    bool is_preprocessor_special(std::string & name) {
+    bool is_preprocessor_special(const std::string & name) {
 
         return name == "cpp:define" || name == "cpp:include" || name == "cpp:line" || name == "cpp:undef" || name == "cpp:ifdef" || name == "cpp:ifndef";
 
     }
 
-    bool is_expr(std::string & name) {
+    bool is_expr(const std::string & name) {
 
     return name == "expr";
 
     }
 
-    bool is_count(std::string & name) {
+    bool is_count(const std::string & name) {
 
     return is_funct_type(name) || is_class_type(name) || is_simple_type(name)
         || is_condition_type(name) || is_catch(name) || is_decl_stmt(name)
@@ -215,7 +223,7 @@ private:
 
     }
 
-    void update_diff(std::string name, bool is_whitespace) {
+    void update_diff(const std::string & name, bool is_whitespace) {
 
         if(srcdiff_stack.back().operation == SRCDIFF_INSERT) {
 
@@ -398,7 +406,7 @@ private:
 
     }
 
-    void update_modified(std::string name) {
+    void update_modified(const std::string & name) {
 
         if(modified.find(name) == modified.end())
             modified[name] = counts();
@@ -1015,7 +1023,7 @@ public:
 
         }
 
-        full_name += localname;
+        full_name += local_name;
 
 
         if(strcmp(URI, "http://www.sdml.info/srcDiff") != 0) {
