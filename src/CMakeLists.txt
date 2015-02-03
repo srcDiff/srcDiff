@@ -25,7 +25,7 @@ add_subdirectory(srcml)
 add_subdirectory(translator)
 add_subdirectory(visualization)
 add_subdirectory(analysis)
-add_subdirectory(srcTools/srcSAX)
+add_subdirectory(srcSAX/src)
 
 if(WIN32)
 add_subdirectory(windows)
