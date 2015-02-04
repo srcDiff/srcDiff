@@ -21,7 +21,7 @@ public:
 	srcdiff_summary(const char * xml_encoding);
 	~srcdiff_summary();
 
-	void append(const std::string & srcdiff);
+	void summarize(const std::string & srcdiff);
 
 };
 

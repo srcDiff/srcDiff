@@ -154,12 +154,6 @@ void srcdiff_output::finish(int is_original, int is_modified, line_diff_range<T>
 
   srcml_write_end_unit(wstate->unit);
 
-  if(!is_option(flags, OPTION_VISUALIZE)) {
-
-    srcml_write_unit(archive, wstate->unit);
-
-  }
-
   if(is_option(flags, OPTION_VISUALIZE)) {
 
     if(is_original || is_modified) {
@@ -175,6 +169,16 @@ void srcdiff_output::finish(int is_original, int is_modified, line_diff_range<T>
     const char * xml = srcml_unit_get_formatted_xml(wstate->unit, "UTF-8");
     bashview->transform(xml);
     srcml_free_memory((char *)xml);
+
+  } else if(is_option(flags, OPTION_SUMMARY)) {
+
+    const char * xml = srcml_unit_get_formatted_xml(wstate->unit, "UTF-8");
+    summary.summarize(xml);
+    srcml_free_memory((char *)xml);
+
+  } else {
+
+    srcml_write_unit(archive, wstate->unit);
 
   }
 

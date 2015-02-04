@@ -65,6 +65,9 @@ const OPTION_TYPE OPTION_RECURSIVE      = ull(1) << __COUNTER__;
 // @srcdiff
 const OPTION_TYPE OPTION_BASH_VIEW      = ull(1) << __COUNTER__;
 
+// @srcdiff
+const OPTION_TYPE OPTION_SUMMARY        = ull(1) << __COUNTER__;
+
 struct srcdiff_options
 {
 

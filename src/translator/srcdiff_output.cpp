@@ -16,7 +16,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
    rbuf_original(std::make_shared<reader_state>(SESDELETE)), rbuf_modified(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
-if(!is_option(flags, OPTION_VISUALIZE) && !is_option(flags, OPTION_BASH_VIEW))
+if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY))
     srcml_write_open_filename(archive, srcdiff_filename.c_str());
 
   // writer state
@@ -144,7 +144,7 @@ if(!is_option(flags, OPTION_VISUALIZE) && !is_option(flags, OPTION_BASH_VIEW))
 
 void srcdiff_output::close() {
 
-  if(!is_option(flags, OPTION_VISUALIZE) && !is_option(flags, OPTION_BASH_VIEW)) {
+  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY)) {
 
     srcml_close_archive(archive);
 
