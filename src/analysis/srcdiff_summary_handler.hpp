@@ -31,39 +31,15 @@ public:
 
     struct srcdiff {
 
-        srcdiff(srcdiff_type operation, bool is_change, bool is_move) : operation(operation), is_change(is_change), is_move(is_move), level(0) {}
-
         srcdiff_type operation;
         bool is_change;
         bool is_move;
         int level;
 
-    };
-
-    struct profile {
-
-        profile(std::string type_name) : type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
-            modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0) {}
-
-        std::string type_name;
-        std::string name;
-        bool is_modified;
-        bool is_whitespace;
-        bool is_comment;
-        bool is_syntax;
-        bool has_assignment;
-
-        size_t modified_count;
-        size_t whitespace_count;
-        size_t comment_count;
-        size_t syntax_count;
-        size_t assignment_count;
-
-        std::map<std::string, counts> inserted_counts;
-        std::map<std::string, counts> deleted_counts;
-        std::map<std::string, counts> modified_counts;
+        srcdiff(srcdiff_type operation, bool is_change, bool is_move) : operation(operation), is_change(is_change), is_move(is_move), level(0) {}
 
     };
+
 
     struct counts {
 
@@ -120,6 +96,45 @@ public:
         int comment;
         int syntax;
         int total;
+
+    };
+
+    struct profile {
+
+        private:
+
+            static size_t id_count;
+
+        public:
+
+            size_t id;
+            std::string type_name;
+            std::string name;
+            bool is_modified;
+            bool is_whitespace;
+            bool is_comment;
+            bool is_syntax;
+            bool has_assignment;
+
+            size_t modified_count;
+            size_t whitespace_count;
+            size_t comment_count;
+            size_t syntax_count;
+            size_t assignment_count;
+
+            std::map<std::string, counts> inserted_counts;
+            std::map<std::string, counts> deleted_counts;
+            std::map<std::string, counts> modified_counts;
+
+            profile(std::string type_name) : id(0), type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
+                modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0) {}
+
+            void set_id() {
+
+                id = ++id_count;
+
+            }
+
     };
 
 private:
