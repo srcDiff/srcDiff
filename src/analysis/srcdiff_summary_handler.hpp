@@ -138,41 +138,52 @@ public:
 
             }
 
-            std::ostream & print_profile(std::ostream & out, const profile_list_t & profiles) {
+            std::ostream & pad(std::ostream & out, size_t num) const {
 
-                out << *this;
+                for(int i = 0; i < num; ++i)
+                    out << '\t';
 
+                return out;
 
-                for(size_t child_pos : child_profiles) {
+            }
 
-                    if(!profiles[child_pos].inserted.empty()) {
+            std::ostream & print_profile(std::ostream & out, const profile_list_t & profiles) const {
 
-                        out << "\tinserted\n";
+                static int depth = 0;
 
-                        for(auto entry : profiles[child_pos].inserted)
-                            out << '\t' << entry.first << ": " << entry.second << '\n';
+                pad(out, depth) << *this;
 
-                    }
+                if(!inserted.empty()) {
 
-                     if(!profiles[child_pos].deleted.empty()) {
+                    pad(out, depth + 1) << "--inserted--\n";
 
-                        out << "\tdeleted\n";
-
-                        for(auto entry : profiles[child_pos].deleted)
-                            out << '\t' << entry.first << ": " << entry.second << '\n';
-
-                    }
-
-                     if(!profiles[child_pos].modified.empty()) {
-
-                        out << "\tmodified\n";
-
-                        for(auto entry : profiles[child_pos].modified)
-                            out << '\t' << entry.first << ": " << entry.second << '\n';
-
-                    }
+                    for(auto entry : inserted)
+                        pad(out, depth + 1) << entry.first << ": " << entry.second << '\n';
 
                 }
+
+                 if(!deleted.empty()) {
+
+                    pad(out, depth + 1) << "--deleted--\n";
+
+                    for(auto entry : deleted)
+                        pad(out, depth + 1) << entry.first << ": " << entry.second << '\n';
+
+                }
+
+                 if(!modified.empty()) {
+
+                    pad(out, depth + 1) << "--modified--\n";
+
+                    for(auto entry : modified)
+                        pad(out, depth + 1) << entry.first << ": " << entry.second << '\n';
+
+                }
+
+                depth += 2;
+                for(size_t child_pos : child_profiles)
+                    profiles[child_pos].print_profile(out, profiles);
+                depth -= 2;
 
                 return out;
 
@@ -187,6 +198,8 @@ public:
                 out << " Syntax: " << profile.syntax_count;
                 out << " Total: " << profile.total_count;
                 out << '\n';
+
+                return out;
 
             }
 
