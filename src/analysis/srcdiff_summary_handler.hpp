@@ -1129,6 +1129,8 @@ public:
 
                 finished_profiles[profile_stack.back().id] = profile_stack.back();
 
+                profile_stack.at(counting_profile_pos.back()).child_profiles.push_back(profile_stack.back().id);
+
             }
 
         }
