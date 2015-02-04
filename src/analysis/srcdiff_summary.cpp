@@ -15,7 +15,7 @@ void srcdiff_summary::summarize(const std::string & srcdiff) {
 	controller.parse(&handler);
 
 	for(srcdiff_summary_handler::profile_t profile : profile_list)
-		if(profile.type_name == "function") std::cout << profile << '\n';
+		if(profile.type_name == "class" || profile.type_name == "function") std::cout << profile << '\n';
 
 
 }

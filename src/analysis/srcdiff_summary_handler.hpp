@@ -138,7 +138,8 @@ public:
             friend std::ostream & operator<<(std::ostream & out, const profile_t & profile) {
 
 
-                return out << "Whitespace: " << profile.whitespace_count << " Comment: " << profile.comment_count << " Syntax: " << profile.syntax_count << " Total: " << profile.total_count;
+                return out << profile.type_name << " '" << profile.name 
+                    << "': Whitespace: " << profile.whitespace_count << " Comment: " << profile.comment_count << " Syntax: " << profile.syntax_count << " Total: " << profile.total_count;
 
             }
 
