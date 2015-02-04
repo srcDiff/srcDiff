@@ -1113,7 +1113,6 @@ public:
            && profile_stack.at(profile_stack.size() - 2).type_name != "diff:common")
         profile_stack.at(profile_stack.size() - 2).has_assignment = true;
 
-
             if(profile_stack.back().is_modified) {
 
                 count_modified();
@@ -1160,7 +1159,8 @@ public:
 
                 profile_list[profile_stack.back().id] = profile_stack.back();
 
-                profile_stack.at(counting_profile_pos.back()).child_profiles.push_back(profile_stack.back().id);
+                if(counting_profile_pos.size() > 0)
+                    profile_stack.at(counting_profile_pos.back()).child_profiles.push_back(profile_stack.back().id);
 
             }
 
