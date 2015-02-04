@@ -85,7 +85,7 @@ public:
         friend std::ostream & operator<<(std::ostream & out, const counts & count) {
 
 
-            return out << "Whitespace: " << count.whitespace << " Comment: " << count. comment << " Syntax: " << count. syntax << " Total: " << count.total;
+            return out << "Whitespace: " << count.whitespace << " Comment: " << count.comment << " Syntax: " << count.syntax << " Total: " << count.total;
 
         }
 
@@ -118,6 +118,7 @@ public:
             size_t comment_count;
             size_t syntax_count;
             size_t assignment_count;
+            size_t total_count;
 
             std::map<std::string, counts> inserted;
             std::map<std::string, counts> deleted;
@@ -131,6 +132,13 @@ public:
             void set_id() {
 
                 id = ++id_count;
+
+            }
+
+            friend std::ostream & operator<<(std::ostream & out, const profile & profile) {
+
+
+                return out << "Whitespace: " << profile.whitespace_count << " Comment: " << profile.comment_count << " Syntax: " << profile.syntax_count << " Total: " << profile.total_count;
 
             }
 
@@ -688,6 +696,7 @@ private:
 
                     profile_stack.at(profile_stack.size() - 2).is_comment = true;
                     ++profile_stack.at(profile_stack.size() - 2).comment_count;
+                    ++profile_stack.at(profile_stack.size() - 2).total_count;
                     total.inc_comment();
 
                     if(srcdiff_stack.back().is_change) {
@@ -711,6 +720,7 @@ private:
 
                     profile_stack.at(profile_stack.size() - 2).is_whitespace = true;
                     ++profile_stack.at(profile_stack.size() - 2).whitespace_count;
+                    ++profile_stack.at(profile_stack.size() - 2).total_count;
                     total.inc_whitespace();
 
                     if(srcdiff_stack.back().is_change) {
@@ -734,6 +744,7 @@ private:
 
                     profile_stack.at(profile_stack.size() - 2).is_syntax = true;
                     ++profile_stack.at(profile_stack.size() - 2).syntax_count;
+                    ++profile_stack.at(profile_stack.size() - 2).total_count;
                     total.inc_syntax();
 
                     if(srcdiff_stack.back().is_change) {
@@ -946,6 +957,7 @@ public:
                         total.inc_comment();
                         profile_stack.at(profile_stack.size() - 3).is_comment = true;
                         ++profile_stack.at(profile_stack.size() - 3).comment_count;
+                        ++profile_stack.at(profile_stack.size() - 3).total_count;
 
                         /** @todo refactor into method or something for counting global insert/delete/change */
                         if(srcdiff_stack.back().is_change) {
@@ -970,6 +982,7 @@ public:
                         total.inc_syntax();
                         profile_stack.at(profile_stack.size() - 3).is_syntax = true;
                         ++profile_stack.at(profile_stack.size() - 3).syntax_count;
+                        ++profile_stack.at(profile_stack.size() - 3).total_count;
 
                         if(srcdiff_stack.back().is_change) {
 
@@ -1107,9 +1120,9 @@ public:
 
                     profile_stack.at(profile_stack.size() - 2).is_modified = true;
                     profile_stack.at(profile_stack.size() - 2).modified_count += profile_stack.back().modified_count;
+                    profile_stack.at(profile_stack.size() - 2).total_count += profile_stack.back().total_count;
 
                     if(profile_stack.back().is_whitespace) {
-
 
                         profile_stack.at(profile_stack.size() - 2).is_whitespace = true;
                         profile_stack.at(profile_stack.size() - 2).whitespace_count += profile_stack.back().whitespace_count;
@@ -1117,7 +1130,6 @@ public:
                     }
 
                     if(profile_stack.back().is_comment) {
-
 
                         profile_stack.at(profile_stack.size() - 2).is_comment = true;
                         profile_stack.at(profile_stack.size() - 2).comment_count += profile_stack.back().comment_count;
