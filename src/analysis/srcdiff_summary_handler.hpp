@@ -127,7 +127,7 @@ public:
             std::vector<size_t> child_profiles;
 
             profile_t(std::string type_name = "") : id(0), type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
-                modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0) {}
+                modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
 
             void set_id() {
 
@@ -150,7 +150,7 @@ private:
 
 protected:
 
-    profile_list_t profile_list;
+    profile_list_t & profile_list;
 
     std::vector<srcdiff> srcdiff_stack;
     std::vector<profile_t> profile_stack;
