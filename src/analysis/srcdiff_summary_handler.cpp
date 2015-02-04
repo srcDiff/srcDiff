@@ -616,9 +616,7 @@ void srcdiff_summary_handler::process_characters() {
 
 }
 
-public:
-
-srcdiff_summary_handler::srcdiff_summary_handler(profile_list_t & profile_list) : profile_list(profile_list), srcdiff_stack(), profile_stack(), counting_profile_pos(),
+srcdiff_summary_handler::srcdiff_summary_handler(profile_t::profile_list_t & profile_list) : profile_list(profile_list), srcdiff_stack(), profile_stack(), counting_profile_pos(),
     inserted(), deleted(), modified(), insert_count(), delete_count(), change_count(), total(), text(),
     name_count(0), collected_name() {}
 
@@ -628,7 +626,7 @@ srcdiff_summary_handler::srcdiff_summary_handler(profile_list_t & profile_list) 
  * SAX handler function for start of document.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::startDocument() {
+void srcdiff_summary_handler::startDocument() {
 
     srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, false, false));
 
@@ -640,7 +638,7 @@ virtual void srcdiff_summary_handler::startDocument() {
  * SAX handler function for end of document.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::endDocument() {}
+void srcdiff_summary_handler::endDocument() {}
 
 /**
  * startRoot
@@ -655,7 +653,7 @@ virtual void srcdiff_summary_handler::endDocument() {}
  * SAX handler function for start of the root profile.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::startRoot(const char * localname, const char * prefix, const char * URI,
+void srcdiff_summary_handler::startRoot(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
@@ -676,7 +674,7 @@ virtual void srcdiff_summary_handler::startRoot(const char * localname, const ch
  * SAX handler function for start of an unit.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::startUnit(const char * localname, const char * prefix, const char * URI,
+void srcdiff_summary_handler::startUnit(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
@@ -710,7 +708,7 @@ virtual void srcdiff_summary_handler::startUnit(const char * localname, const ch
  * SAX handler function for start of an profile.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::startElement(const char * localname, const char * prefix, const char * URI,
+void srcdiff_summary_handler::startElement(const char * localname, const char * prefix, const char * URI,
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes) {
 
@@ -862,7 +860,7 @@ virtual void srcdiff_summary_handler::startElement(const char * localname, const
  * SAX handler function for end of the root profile.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::endRoot(const char * localname, const char * prefix, const char * URI) {
+void srcdiff_summary_handler::endRoot(const char * localname, const char * prefix, const char * URI) {
 
     if(text != "") process_characters();        
 
@@ -877,7 +875,7 @@ virtual void srcdiff_summary_handler::endRoot(const char * localname, const char
  * SAX handler function for end of an unit.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::endUnit(const char * localname, const char * prefix, const char * URI) {
+void srcdiff_summary_handler::endUnit(const char * localname, const char * prefix, const char * URI) {
 
     if(text != "") process_characters();
 
@@ -894,7 +892,7 @@ virtual void srcdiff_summary_handler::endUnit(const char * localname, const char
  * SAX handler function for end of an profile.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::endElement(const char * localname, const char * prefix, const char * URI) {
+void srcdiff_summary_handler::endElement(const char * localname, const char * prefix, const char * URI) {
 
     const std::string local_name(localname);
 
@@ -1007,7 +1005,7 @@ virtual void srcdiff_summary_handler::endElement(const char * localname, const c
  * SAX handler function for character handling at the root level.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::charactersRoot(const char * ch, int len) {}
+void srcdiff_summary_handler::charactersRoot(const char * ch, int len) {}
 
 /**
  * charactersUnit
@@ -1017,7 +1015,7 @@ virtual void srcdiff_summary_handler::charactersRoot(const char * ch, int len) {
  * SAX handler function for character handling within a unit.
  * Overide for desired behaviour.
  */
-virtual void srcdiff_summary_handler::charactersUnit(const char * ch, int len) {
+void srcdiff_summary_handler::charactersUnit(const char * ch, int len) {
 
 
     if(len == 0) return;

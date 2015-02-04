@@ -7,7 +7,7 @@ srcdiff_summary::~srcdiff_summary() {}
 
 void srcdiff_summary::summarize(const std::string & srcdiff) {
 
-	srcdiff_summary_handler::profile_list_t profile_list(1024);
+	srcdiff_summary_handler::profile_t::profile_list_t profile_list(1024);
 	srcdiff_summary_handler handler(profile_list);
 
 	srcSAXController controller(srcdiff, xml_encoding);
@@ -15,7 +15,7 @@ void srcdiff_summary::summarize(const std::string & srcdiff) {
 	controller.parse(&handler);
 
 	for(srcdiff_summary_handler::profile_t profile : profile_list)
-		if(profile.type_name == "class" || profile.type_name == "function") std::cout << profile << '\n';
+		if(profile.type_name == "class" || profile.type_name == "function") profile.print_profile(std::cout, profile_list);
 
 
 }

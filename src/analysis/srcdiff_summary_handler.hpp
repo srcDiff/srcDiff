@@ -104,6 +104,9 @@ public:
 
         public:
 
+
+            typedef std::vector<profile_t> profile_list_t;
+
             size_t id;
             std::string type_name;
             std::string name;
@@ -135,23 +138,65 @@ public:
 
             }
 
+            std::ostream & print_profile(std::ostream & out, const profile_list_t & profiles) {
+
+                out << *this;
+
+
+                for(size_t child_pos : child_profiles) {
+
+                    if(!profiles[child_pos].inserted.empty()) {
+
+                        out << "\tinserted\n";
+
+                        for(auto entry : profiles[child_pos].inserted)
+                            out << '\t' << entry.first << ": " << entry.second << '\n';
+
+                    }
+
+                     if(!profiles[child_pos].deleted.empty()) {
+
+                        out << "\tdeleted\n";
+
+                        for(auto entry : profiles[child_pos].deleted)
+                            out << '\t' << entry.first << ": " << entry.second << '\n';
+
+                    }
+
+                     if(!profiles[child_pos].modified.empty()) {
+
+                        out << "\tmodified\n";
+
+                        for(auto entry : profiles[child_pos].modified)
+                            out << '\t' << entry.first << ": " << entry.second << '\n';
+
+                    }
+
+                }
+
+                return out;
+
+            }
+
             friend std::ostream & operator<<(std::ostream & out, const profile_t & profile) {
 
 
-                return out << profile.type_name << " '" << profile.name 
-                    << "': Whitespace: " << profile.whitespace_count << " Comment: " << profile.comment_count << " Syntax: " << profile.syntax_count << " Total: " << profile.total_count;
+                out << profile.type_name << " '" << profile.name << "':"; 
+                out << " Whitespace: " << profile.whitespace_count;
+                out << " Comment: " << profile.comment_count;
+                out << " Syntax: " << profile.syntax_count;
+                out << " Total: " << profile.total_count;
+                out << '\n';
 
             }
 
     };
 
-    typedef std::vector<profile_t> profile_list_t;
-
 private:
 
 protected:
 
-    profile_list_t & profile_list;
+    profile_t::profile_list_t & profile_list;
 
     std::vector<srcdiff> srcdiff_stack;
     std::vector<profile_t> profile_stack;
@@ -197,7 +242,7 @@ private:
 
 public:
 
-    srcdiff_summary_handler(profile_list_t & profile_list);
+    srcdiff_summary_handler(profile_t::profile_list_t & profile_list);
 
     /**
      * startDocument
