@@ -694,8 +694,8 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
     full_name += localname;
 
     profile_stack.push_back(full_name);
-    profile_stack.back().set_id();
     counting_profile_pos.push_back(profile_stack.size() - 1);
+    profile_stack.back().set_id();
 
 }
 
@@ -883,8 +883,10 @@ void srcdiff_summary_handler::endUnit(const char * localname, const char * prefi
 
     if(text != "") process_characters();
 
-    profile_stack.pop_back();
     counting_profile_pos.pop_back();
+    profile_list[profile_stack.back().id] = profile_stack.back();
+
+    profile_stack.pop_back();
 
 }
 
