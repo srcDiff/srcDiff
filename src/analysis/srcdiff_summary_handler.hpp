@@ -18,9 +18,6 @@ class srcdiff_summary_handler : public srcSAXHandler {
 
 public:
 
-    typedef std::map<std::string, bool> class_profiles_t;
-    typedef std::map<std::string, bool> function_profiles_t;
-
     enum srcdiff_type {
 
         SRCDIFF_COMMON,
@@ -146,15 +143,11 @@ protected:
     std::vector<srcdiff> srcdiff_stack;
     std::vector<profile> profile_stack;
 
-    class_profiles_t & class_profiles;
-    function_profiles_t & function_profiles;
-
+    std::vector<size_t> counting_profile_pos;
+    std::vector<profile> finished_profiles;
     std::map<std::string, counts> inserted;
     std::map<std::string, counts> deleted;
     std::map<std::string, counts> modified;
-
-    std::vector<size_t> counting_profile_pos;
-    std::vector<profile> finished_profiles;
 
     counts insert_count;
     counts delete_count;
@@ -758,8 +751,7 @@ private:
 
 public:
 
-    srcdiff_summary_handler(class_profiles_t & class_profiles, function_profiles_t & function_profiles) : 
-        srcdiff_stack(), profile_stack(), class_profiles(class_profiles), function_profiles(function_profiles), 
+    srcdiff_summary_handler() : srcdiff_stack(), profile_stack(), counting_profile_pos(), finished_profiles(),
         inserted(), deleted(), modified(), insert_count(), delete_count(), change_count(), total(), text(),
         name_count(0), collected_name() {}
 
