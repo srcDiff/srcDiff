@@ -126,7 +126,9 @@ public:
             std::map<std::string, counts> deleted_counts;
             std::map<std::string, counts> modified_counts;
 
-            profile(std::string type_name) : id(0), type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
+            std::vector<size_t> child_profiles;
+
+            profile(std::string type_name = "") : id(0), type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
                 modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0) {}
 
             void set_id() {
@@ -139,9 +141,7 @@ public:
 
 private:
 
-
 protected:
-
 
     std::vector<srcdiff> srcdiff_stack;
     std::vector<profile> profile_stack;
@@ -153,7 +153,8 @@ protected:
     std::map<std::string, counts> deleted;
     std::map<std::string, counts> modified;
 
-    std::vector<int> counting_profile_pos;
+    std::vector<size_t> counting_profile_pos;
+    std::vector<profile> finished_profiles;
 
     counts insert_count;
     counts delete_count;
@@ -914,8 +915,12 @@ public:
 
             ++srcdiff_stack.back().level;
 
-            if(is_count(full_name))
+            if(is_count(full_name)) {
+
                 counting_profile_pos.push_back(profile_stack.size() - 1);
+                profile_stack.back().set_id();
+
+            }
 
             if(srcdiff_stack.back().operation != SRCDIFF_COMMON) {
 
@@ -1115,8 +1120,16 @@ public:
 
             }
 
-            if(is_count(full_name))
+            if(is_count(full_name)) {
+
                 counting_profile_pos.pop_back();
+
+                if(finished_profiles.size() < profile_stack.back().id)
+                    finished_profiles.resize(profile_stack.back().id * 2);
+
+                finished_profiles[profile_stack.back().id] = profile_stack.back();
+
+            }
 
         }
 
