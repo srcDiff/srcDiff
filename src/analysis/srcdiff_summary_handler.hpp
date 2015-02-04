@@ -869,7 +869,7 @@ public:
     }
 
     /**
-     * startprofile
+     * startElement
      * @param localname the name of the profile tag
      * @param prefix the tag prefix
      * @param URI the namespace of tag
@@ -881,7 +881,7 @@ public:
      * SAX handler function for start of an profile.
      * Overide for desired behaviour.
      */
-    virtual void startprofile(const char * localname, const char * prefix, const char * URI,
+    virtual void startElement(const char * localname, const char * prefix, const char * URI,
                                 int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                                 const struct srcsax_attribute * attributes) {
 
@@ -1057,7 +1057,7 @@ public:
     }
 
     /**
-     * endprofile
+     * endElement
      * @param localname the name of the profile tag
      * @param prefix the tag prefix
      * @param URI the namespace of tag
@@ -1065,7 +1065,7 @@ public:
      * SAX handler function for end of an profile.
      * Overide for desired behaviour.
      */
-    virtual void endprofile(const char * localname, const char * prefix, const char * URI) {
+    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
 
         const std::string local_name(localname);
 
