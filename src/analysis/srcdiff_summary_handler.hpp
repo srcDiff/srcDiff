@@ -96,7 +96,7 @@ public:
 
     };
 
-    struct profile {
+    struct profile_t {
 
         private:
 
@@ -126,7 +126,7 @@ public:
 
             std::vector<size_t> child_profiles;
 
-            profile(std::string type_name = "") : id(0), type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
+            profile_t(std::string type_name = "") : id(0), type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
                 modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0) {}
 
             void set_id() {
@@ -135,7 +135,7 @@ public:
 
             }
 
-            friend std::ostream & operator<<(std::ostream & out, const profile & profile) {
+            friend std::ostream & operator<<(std::ostream & out, const profile_t & profile) {
 
 
                 return out << "Whitespace: " << profile.whitespace_count << " Comment: " << profile.comment_count << " Syntax: " << profile.syntax_count << " Total: " << profile.total_count;
@@ -144,15 +144,19 @@ public:
 
     };
 
+    typedef std::vector<profile_t> profile_list_t;
+
 private:
 
 protected:
 
+    profile_list_t profile_list;
+
     std::vector<srcdiff> srcdiff_stack;
-    std::vector<profile> profile_stack;
+    std::vector<profile_t> profile_stack;
 
     std::vector<size_t> counting_profile_pos;
-    std::vector<profile> finished_profiles;
+
     std::map<std::string, counts> inserted;
     std::map<std::string, counts> deleted;
     std::map<std::string, counts> modified;
@@ -768,7 +772,7 @@ private:
 
                 total.inc_total();
 
-                profile_stack.push_back(profile("text"));
+                profile_stack.push_back(profile_t("text"));
 
                 count_diff(is_whitespace);
 
@@ -785,7 +789,7 @@ private:
 
 public:
 
-    srcdiff_summary_handler() : srcdiff_stack(), profile_stack(), counting_profile_pos(), finished_profiles(),
+    srcdiff_summary_handler(profile_list_t & profile_list) : profile_list(profile_list), srcdiff_stack(), profile_stack(), counting_profile_pos(),
         inserted(), deleted(), modified(), insert_count(), delete_count(), change_count(), total(), text(),
         name_count(0), collected_name() {}
 
@@ -929,7 +933,7 @@ public:
 
         full_name += local_name;
 
-        profile_stack.push_back(profile(full_name));
+        profile_stack.push_back(profile_t(full_name));
 
         if(strcmp(URI, "http://www.sdml.info/srcDiff") != 0) {
 
@@ -1151,10 +1155,10 @@ public:
 
                 counting_profile_pos.pop_back();
 
-                if(finished_profiles.size() < profile_stack.back().id)
-                    finished_profiles.resize(profile_stack.back().id * 2);
+                if(profile_list.size() < profile_stack.back().id)
+                    profile_list.resize(profile_stack.back().id * 2);
 
-                finished_profiles[profile_stack.back().id] = profile_stack.back();
+                profile_list[profile_stack.back().id] = profile_stack.back();
 
                 profile_stack.at(counting_profile_pos.back()).child_profiles.push_back(profile_stack.back().id);
 
