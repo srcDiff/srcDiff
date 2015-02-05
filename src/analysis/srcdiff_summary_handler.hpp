@@ -149,6 +149,8 @@ public:
 
             std::ostream & print_profile(std::ostream & out, const profile_list_t & profiles) const {
 
+                if(total_count == 0) return out;
+
                 static int depth = 0;
 
                 pad(out, depth) << *this;
