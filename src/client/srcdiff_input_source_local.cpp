@@ -96,8 +96,8 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
 
   }
 
-  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, options.flags, *this);
-  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, options.flags, *this);
+  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
+  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
   line_diff_range<srcdiff_input_source_local> line_diff_range(path_one, path_two, this);
 
   const char * dir = srcml_archive_get_directory(options.archive);

@@ -19,13 +19,14 @@ protected:
 	srcml_archive * archive;
 	const boost::optional<std::string> input_path;
 	const OPTION_TYPE & options;
+	const char * language_string;
 	const T & input;
 
 private:
 
 public:
 
-	srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options, const T & input);
+	srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input);
 	~srcdiff_input();
 
 	void operator()(int stream_source, srcml_nodes & nodes, int & is_input) const;

@@ -124,8 +124,8 @@ void srcdiff_input_source_git::process_file(const boost::optional<std::string> &
   path_two += git_oid_tostr(buf_modified, GIT_OID_HEXSZ + 1, blob_oid_modified);
   if(buf_modified) delete buf_modified;
 
-  srcdiff_input<srcdiff_input_source_git> input_original(options.archive, path_one, 0, *this);
-  srcdiff_input<srcdiff_input_source_git> input_modified(options.archive, path_two, 0, *this);
+  srcdiff_input<srcdiff_input_source_git> input_original(options.archive, path_one, language_string, 0, *this);
+  srcdiff_input<srcdiff_input_source_git> input_modified(options.archive, path_two, language_string, 0, *this);
 
   line_diff_range<srcdiff_input_source_git> line_diff_range(path_one, path_two, this);
 

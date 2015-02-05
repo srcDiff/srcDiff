@@ -3,8 +3,8 @@
 class no_file_exception {};
 
 template<class T>
-srcdiff_input<T>::srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const OPTION_TYPE & options, const T & input)
-	: archive(archive), input_path(input_path), options(options), input(input) {}
+srcdiff_input<T>::srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input)
+	: archive(archive), input_path(input_path), language_string(language_string), options(options), input(input) {}
 
 template<class T>
 srcdiff_input<T>::~srcdiff_input() {}
@@ -36,7 +36,7 @@ srcml_nodes srcdiff_input<T>::input_nodes(int stream_source) const {
 
   typename T::input_context * context = input.open(input_path->c_str());
 
-  converter.convert(srcml_archive_check_extension(archive, input_path->c_str()), (void *)context, T::read, T::close, options);
+  converter.convert(language_string, (void *)context, T::read, T::close, options);
 
   return converter.create_nodes();
 
