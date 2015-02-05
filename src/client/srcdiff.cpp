@@ -96,7 +96,7 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
     } catch(...) {
 
-      std::cerr << "Problem with input url " << *options.svn_url << "for revisions " << options.revision_one << " and " << options.revision_two << '\n';
+      std::cerr << "Problem with input url " << *options.svn_url << " for revisions " << options.revision_one << " and " << options.revision_two << '\n';
 
     }
 
@@ -113,7 +113,7 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
     } catch(...) {
 
-      std::cerr << "Problem with input url " << *options.git_url << "for revisions " << options.git_revision_one << " and " << options.git_revision_two << '\n';
+      std::cerr << "Problem with input url " << *options.git_url << " for revisions " << options.git_revision_one << " and " << options.git_revision_two << '\n';
 
     }
 
