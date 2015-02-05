@@ -190,10 +190,11 @@ public:
 
                 }
 
-                depth += 2;
+//                depth += 2;
+                out << "\n\n";
                 for(size_t child_pos : child_profiles)
                     profiles[child_pos].print_profile(out, profiles);
-                depth -= 2;
+//                depth -= 2;
 
                 return out;
 
