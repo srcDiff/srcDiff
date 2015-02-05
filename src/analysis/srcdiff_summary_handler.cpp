@@ -76,7 +76,7 @@ return is_funct_type(name) || is_class_type(name) || is_simple_type(name)
 
 bool srcdiff_summary_handler::is_summary(const std::string & name) {
 
-    return name == "class" || name == "function";
+    return name == "class" || name == "struct" || name == "function";
 
 }
 

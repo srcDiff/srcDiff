@@ -150,6 +150,17 @@ public:
 
                 static int depth = 0;
 
+                if(syntax_count == 0) {
+
+                    if(whitespace_count) pad(out, depth) << "Whitespace:\t" << whitespace_count;
+                    if(comment_count) pad(out, depth) << "Comment:\t" << comment_count;
+
+                    out << '\n';
+
+                    return out;
+
+                }
+
                 pad(out, depth) << *this;
 
                 if(!inserted.empty()) {
