@@ -1,7 +1,5 @@
 #include <srcdiff_summary_handler.hpp>
 
-size_t srcdiff_summary_handler::profile_t::id_count = 0;
-
 bool srcdiff_summary_handler::is_simple_type(const std::string & name) {
 
     return name == "throw" || name == "try" || name == "else" || name == "lit:literal" || name == "op:operator"
@@ -631,7 +629,7 @@ void srcdiff_summary_handler::process_characters() {
 
 }
 
-srcdiff_summary_handler::srcdiff_summary_handler(profile_t::profile_list_t & profile_list) : profile_list(profile_list), srcdiff_stack(), profile_stack(), counting_profile_pos(),
+srcdiff_summary_handler::srcdiff_summary_handler(profile_t::profile_list_t & profile_list) : id_count(0), profile_list(profile_list), srcdiff_stack(), profile_stack(), counting_profile_pos(),
     inserted(), deleted(), modified(), insert_count(), delete_count(), change_count(), total(), text(),
     name_count(0), collected_name() {}
 
@@ -716,7 +714,7 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
         }
 
     counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, profile_stack.size() - 1));
-    profile_stack.back().set_id();
+    profile_stack.back().set_id(++id_count);
 
 }
 
@@ -802,7 +800,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
             bool summarize = is_summary(local_name);
             counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, summarize ? profile_stack.size() - 1 : counting_profile_pos.back().second));
-            profile_stack.back().set_id();
+            profile_stack.back().set_id(++id_count);
 
         }
 
@@ -1052,7 +1050,6 @@ void srcdiff_summary_handler::charactersRoot(const char * ch, int len) {}
  * Overide for desired behaviour.
  */
 void srcdiff_summary_handler::charactersUnit(const char * ch, int len) {
-
 
     if(len == 0) return;
 
