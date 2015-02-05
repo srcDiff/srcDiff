@@ -1019,7 +1019,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
 	            // should always have at least unit
                 if(is_summary(local_name))
-    	            profile_stack.at(counting_profile_pos.back().first).child_profiles.push_back(profile_stack.back().id);
+    	            profile_stack.at(counting_profile_pos.back().second).child_profiles.push_back(profile_stack.back().id);
 
         	}
 
