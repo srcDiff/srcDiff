@@ -279,6 +279,7 @@ void srcdiff_summary_handler::update_modified(const std::string & name, size_t p
         profile_stack.at(profile_pos).modified[name] = counts();
 
     modified[name].inc_total();
+    profile_stack.at(profile_pos).modified[name].inc_total();
 
     if(profile_stack.back().is_whitespace) {
 
