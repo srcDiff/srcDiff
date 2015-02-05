@@ -707,6 +707,14 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
     full_name += localname;
 
     profile_stack.push_back(full_name);
+
+    for(int i = 0; i < num_attributes; ++i)
+        if(attributes[i].localname == std::string("filename")) {
+
+            profile_stack.back().name = attributes[i].value;
+            break;
+        }
+
     counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, profile_stack.size() - 1));
     profile_stack.back().set_id();
 
