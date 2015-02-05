@@ -143,7 +143,7 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                     update_diff(name + "/parameter", prev_pos, is_whitespace);
                 else if((pos + 2) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list" && profile_stack.at(pos + 2).type_name == "parameter"
                         && profile_stack.back().type_name == "init")
-                    update_diff(name + "/param/init", prev_pos, is_whitespace);
+                    update_diff(name + "/parameter/init", prev_pos, is_whitespace);
                 else if(profile_stack.back().type_name == "return")
                     update_diff(name + "/return", prev_pos, is_whitespace);
                 else if((pos + 2) == (profile_stack.size() - 1) && (profile_stack.back().type_name == "member_list"))
@@ -336,7 +336,7 @@ void srcdiff_summary_handler::count_modified() {
             else if((pos + 2) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list"
                     && profile_stack.at(pos + 2).type_name == "parameter"
                     && profile_stack.back().type_name == "init")
-                update_modified(name + "/param/init", pos);
+                update_modified(name + "/parameter/init", pos);
             else if(profile_stack.back().type_name == "return")
                 update_modified(name + "/return", pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "member_list"
