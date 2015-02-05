@@ -175,7 +175,7 @@ public:
 
                     pad(out, depth + 1) << "--modified--\n";
 
-                    for(auto entry : modified)
+                    for(std::pair<std::string, counts> entry : modified)
                         pad(out, depth + 1) << entry.first << ":\t" << entry.second << '\n';
 
                 }
