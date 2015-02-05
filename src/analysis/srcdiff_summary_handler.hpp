@@ -248,6 +248,7 @@ private:
     void update_diff(const std::string & name, size_t profile_pos, bool is_whitespace);
     void count_diff(bool is_whitespace);
 
+    void update_modified_map(std::map<std::string, counts> & map, const std::string & name);
     void update_modified(const std::string & name, size_t profile_pos);
     void count_modified();
 

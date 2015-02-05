@@ -270,37 +270,27 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
 
 }
 
+void srcdiff_summary_handler::update_modified_map(std::map<std::string, counts> & map, const std::string & name) {
+
+    if(map.find(name) == map.end())
+        map[name] = counts();
+
+    map[name].inc_total();
+
+    if(profile_stack.back().is_whitespace) map[name].inc_whitespace();
+
+    if(profile_stack.back().is_comment) map[name].inc_comment();
+
+    if(profile_stack.back().is_syntax) map[name].inc_syntax();
+
+}
+
 void srcdiff_summary_handler::update_modified(const std::string & name, size_t profile_pos) {
 
-    if(modified.find(name) == modified.end())
-        modified[name] = counts();
+    update_modified_map(modified, name);
 
-    if(profile_stack.at(profile_pos).modified.find(name) == profile_stack.at(profile_pos).modified.end())
-        profile_stack.at(profile_pos).modified[name] = counts();
-
-    modified[name].inc_total();
-    profile_stack.at(profile_pos).modified[name].inc_total();
-
-    if(profile_stack.back().is_whitespace) {
-
-        modified[name].inc_whitespace();
-        profile_stack.at(profile_pos).modified[name].inc_whitespace();
-
-    }
-
-    if(profile_stack.back().is_comment) {
-
-        modified[name].inc_comment();
-        profile_stack.at(profile_pos).modified[name].inc_comment();
-
-    }
-
-    if(profile_stack.back().is_syntax) {
-
-        modified[name].inc_syntax();
-        profile_stack.at(profile_pos).modified[name].inc_syntax();
-
-    }
+    if(profile_pos != (profile_stack.size() - 1))
+        update_modified_map(profile_stack.at(profile_pos).modified, name);
 
 }
 
@@ -946,7 +936,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
        && profile_stack.at(profile_stack.size() - 2).type_name != "diff:delete"
        && profile_stack.at(profile_stack.size() - 2).type_name != "diff:insert"
        && profile_stack.at(profile_stack.size() - 2).type_name != "diff:common")
-    profile_stack.at(profile_stack.size() - 2).has_assignment = true;
+        profile_stack.at(profile_stack.size() - 2).has_assignment = true;
 
         if(profile_stack.back().is_modified) {
 
