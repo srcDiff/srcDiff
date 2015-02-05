@@ -90,7 +90,7 @@ public:
         friend std::ostream & operator<<(std::ostream & out, const counts & count) {
 
 
-            return out << "Whitespace: " << count.whitespace << " Comment: " << count.comment << " Syntax: " << count.syntax << " Total: " << count.total;
+            return out << "Whitespace: " << count.whitespace << "\tComment: " << count.comment << "\tSyntax: " << count.syntax << "\tTotal: " << count.total;
 
         }
 
@@ -158,7 +158,7 @@ public:
                     pad(out, depth + 1) << "--inserted--\n";
 
                     for(auto entry : inserted)
-                        pad(out, depth + 1) << entry.first << ": " << entry.second << '\n';
+                        pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
                 }
 
@@ -167,7 +167,7 @@ public:
                     pad(out, depth + 1) << "--deleted--\n";
 
                     for(auto entry : deleted)
-                        pad(out, depth + 1) << entry.first << ": " << entry.second << '\n';
+                        pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
                 }
 
@@ -176,7 +176,7 @@ public:
                     pad(out, depth + 1) << "--modified--\n";
 
                     for(auto entry : modified)
-                        pad(out, depth + 1) << entry.first << ": " << entry.second << '\n';
+                        pad(out, depth + 1) << entry.first << ":\t" << entry.second << '\n';
 
                 }
 
@@ -194,9 +194,9 @@ public:
 
                 out << profile.type_name << " '" << profile.name << "':"; 
                 out << " Whitespace: " << profile.whitespace_count;
-                out << " Comment: " << profile.comment_count;
-                out << " Syntax: " << profile.syntax_count;
-                out << " Total: " << profile.total_count;
+                out << "\tComment: " << profile.comment_count;
+                out << "\tSyntax: " << profile.syntax_count;
+                out << "\tTotal: " << profile.total_count;
                 out << '\n';
 
                 return out;
