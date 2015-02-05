@@ -291,12 +291,27 @@ void srcdiff_summary_handler::update_modified_map(std::map<std::string, counts> 
 
 }
 
+void srcdiff_summary_handler::update_modified_map_summary(std::map<std::string, counts> & map, const std::string & name) {
+
+    if(map.find(name) == map.end())
+        map[name] = counts();
+
+    map[name].total += profile_stack.back().total_count;
+
+    if(profile_stack.back().is_whitespace) map[name].whitespace += profile_stack.back().whitespace_count;
+
+    if(profile_stack.back().is_comment) map[name].comment += profile_stack.back().comment_count;
+
+    if(profile_stack.back().is_syntax) map[name].syntax += profile_stack.back().syntax_count;
+
+}
+
 void srcdiff_summary_handler::update_modified(const std::string & name, size_t profile_pos) {
 
     update_modified_map(modified, name);
 
     if(profile_pos != (profile_stack.size() - 1))
-        update_modified_map(profile_stack.at(profile_pos).modified, name);
+        update_modified_map_summary(profile_stack.at(profile_pos).modified, name);
 
 }
 

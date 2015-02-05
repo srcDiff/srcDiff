@@ -40,6 +40,11 @@ public:
 
     struct counts {
 
+        int whitespace;
+        int comment;
+        int syntax;
+        int total;
+
         counts() : whitespace(0), comment(0), syntax(0), total(0) {}
 
         counts(int whitespace, int comment, int syntax, int total) : whitespace(whitespace), comment(comment), syntax(syntax), total(total) {}
@@ -88,11 +93,6 @@ public:
             return out << "Whitespace: " << count.whitespace << " Comment: " << count.comment << " Syntax: " << count.syntax << " Total: " << count.total;
 
         }
-
-        int whitespace;
-        int comment;
-        int syntax;
-        int total;
 
     };
 
@@ -251,6 +251,7 @@ private:
     void count_diff(bool is_whitespace);
 
     void update_modified_map(std::map<std::string, counts> & map, const std::string & name);
+    void update_modified_map_summary(std::map<std::string, counts> & map, const std::string & name);
     void update_modified(const std::string & name, size_t profile_pos);
     void count_modified();
 
