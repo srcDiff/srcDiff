@@ -157,7 +157,7 @@ public:
 
                     pad(out, depth + 1) << "--inserted--\n";
 
-                    for(auto entry : inserted)
+                    for(std::pair<std::string, counts> entry : inserted)
                         pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
                 }
@@ -166,7 +166,7 @@ public:
 
                     pad(out, depth + 1) << "--deleted--\n";
 
-                    for(auto entry : deleted)
+                    for(std::pair<std::string, counts> entry : deleted)
                         pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
                 }
