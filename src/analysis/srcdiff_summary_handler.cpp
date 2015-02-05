@@ -76,6 +76,12 @@ return is_funct_type(name) || is_class_type(name) || is_simple_type(name)
 
 }
 
+bool srcdiff_summary_handler::is_summary(const std::string & name) {
+
+    return name == "class" || name == "function";
+
+}
+
 void srcdiff_summary_handler::update_diff_map(std::map<std::string, counts> & map, const std::string & name, bool is_whitespace) {
 
     if(map.find(name) == map.end())
@@ -124,33 +130,33 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
 
     for(size_t i = 1; i < counting_profile_pos.size(); ++i) {
 
-        size_t pos = counting_profile_pos.at(i);
-        size_t prev_pos = counting_profile_pos.at(i - 1);
+        size_t pos = counting_profile_pos.at(i).first;
+        size_t summary_pos = counting_profile_pos.at(i - 1).second;
 
         std::string name = profile_stack.at(pos).type_name;
 
     	if(is_expr(name)) continue;
 
-        if(pos == (profile_stack.size() - 1)) update_diff(name, prev_pos, is_whitespace);
+        if(pos == (profile_stack.size() - 1)) update_diff(name, summary_pos, is_whitespace);
 
         else {
 
             if(is_funct_type(name)) {
 
                 if((pos + 1) == (profile_stack.size() - 1) && (profile_stack.back().type_name == "template"))
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                 else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list" && profile_stack.back().type_name == "parameter")
-                    update_diff(name + "/parameter", prev_pos, is_whitespace);
+                    update_diff(name + "/parameter", summary_pos, is_whitespace);
                 else if((pos + 2) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list" && profile_stack.at(pos + 2).type_name == "parameter"
                         && profile_stack.back().type_name == "init")
-                    update_diff(name + "/parameter/init", prev_pos, is_whitespace);
+                    update_diff(name + "/parameter/init", summary_pos, is_whitespace);
                 else if(profile_stack.back().type_name == "return")
-                    update_diff(name + "/return", prev_pos, is_whitespace);
+                    update_diff(name + "/return", summary_pos, is_whitespace);
                 else if((pos + 2) == (profile_stack.size() - 1) && (profile_stack.back().type_name == "member_list"))
-                    update_diff(name + "/member_list", prev_pos, is_whitespace);
+                    update_diff(name + "/member_list", summary_pos, is_whitespace);
                 else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "member_list"
             && (pos + 3) == (profile_stack.size() - 1) && profile_stack.back().type_name == "call")
-                    update_diff(name + "/member_list/call", prev_pos, is_whitespace);
+                    update_diff(name + "/member_list/call", summary_pos, is_whitespace);
 
             } else if(is_class_type(name)) {
 
@@ -158,12 +164,12 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                    && (profile_stack.back().type_name == "decl"
                        || profile_stack.back().type_name == "super"
                        || profile_stack.back().type_name == "template"))
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                 else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "block"
                         && (pos + 3) == (profile_stack.size() - 1) 
             && (profile_stack.back().type_name == "private" || profile_stack.back().type_name == "public"
                             || profile_stack.back().type_name == "protected" || profile_stack.back().type_name == "signals"))
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                 else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "block"
                         && ((pos + 3) == (profile_stack.size() - 1) 
                         || ((pos + 4) == (profile_stack.size() - 1) 
@@ -173,9 +179,9 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                         || is_funct_type(profile_stack.back().type_name) || is_class_type(profile_stack.back().type_name))) {
 
                             if(profile_stack.back().type_name == "template")
-                                update_diff(name + "/block/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                                update_diff(name + "/block/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                             else
-                                update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                                update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                     
                 } else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "block" && profile_stack.at(profile_stack.size() - 2).type_name == "template") {
 
@@ -190,8 +196,8 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                         && (is_funct_type(profile_stack.back().type_name) || is_class_type(profile_stack.back().type_name)
                              || is_decl_stmt(profile_stack.back().type_name))) {
 
-                            update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
-                            update_diff(name + "/block/template/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                            update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
+                            update_diff(name + "/block/template/" + profile_stack.back().type_name, summary_pos, is_whitespace);
 
                     }
 
@@ -200,10 +206,10 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
             } else if(is_template(name)) {
 
                 if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list" && profile_stack.back().type_name == "parameter")
-                    update_diff(name + "/parameter", prev_pos, is_whitespace);
+                    update_diff(name + "/parameter", summary_pos, is_whitespace);
                 else if((pos + 1) == (profile_stack.size() - 1) && (is_funct_type(profile_stack.back().type_name) || is_class_type(profile_stack.back().type_name)
                      || is_decl_stmt(profile_stack.back().type_name)))
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
 
             } else if(is_condition_type(name)) {
 
@@ -211,37 +217,37 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                     && (profile_stack.back().type_name == "incr"
                         || profile_stack.back().type_name == "case"
                         || profile_stack.back().type_name == "default"))
-                update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
             else if((pos + 3) == (profile_stack.size() - 1)
                     && (profile_stack.back().type_name == "case"
                         || profile_stack.back().type_name == "default"))
-                update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
 
             } else if(is_catch(name)) {
 
                 if((pos + 2) == (profile_stack.size() - 1)
                    && profile_stack.back().type_name == "parameter")
-                    update_diff(name + "/parameter", prev_pos, is_whitespace);
+                    update_diff(name + "/parameter", summary_pos, is_whitespace);
                 else if((pos + 1) < (profile_stack.size())
                    && profile_stack.at(pos + 1).type_name == "parameter_list"
                    && (pos + 3) == (profile_stack.size() - 1)
                    && profile_stack.back().type_name == "parameter")
-                    update_diff(name + "/parameter", prev_pos, is_whitespace);
+                    update_diff(name + "/parameter", summary_pos, is_whitespace);
 
 
             } else if(is_decl_stmt(name)) {
 
                 if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "decl" && (pos + 3) == (profile_stack.size() - 1)
                    && (profile_stack.back().type_name == "init" || profile_stack.back().type_name == "name" || profile_stack.back().type_name == "template"))
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                 else if(profile_stack.back().type_name == "decl")
-                    update_diff(name + "/decl", prev_pos, is_whitespace);
+                    update_diff(name + "/decl", summary_pos, is_whitespace);
 
             } else if(is_call(name)) {
 
                 if((pos + 3) == (profile_stack.size() - 1)
                    && profile_stack.back().type_name == "argument")
-                    update_diff(name + "/argument", prev_pos, is_whitespace);
+                    update_diff(name + "/argument", summary_pos, is_whitespace);
 
             } else if(is_preprocessor_special(name)) {
 
@@ -251,16 +257,16 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                        || profile_stack.back().type_name == "cpp:value"
                        || profile_stack.back().type_name == "cpp:number"
                        || profile_stack.back().type_name == "cpp:file"))
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                 else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "cpp:macro"
                    && (pos + 3) == (profile_stack.size() - 1)
                    && profile_stack.back().type_name == "parameter_list")
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
                 else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "cpp:macro" 
             && profile_stack.at(pos + 2).type_name == "parameter_list"
             && (pos + 4) == (profile_stack.size() - 1)
             && profile_stack.back().type_name == "parameter")
-                    update_diff(name + "/" + profile_stack.back().type_name, prev_pos, is_whitespace);
+                    update_diff(name + "/" + profile_stack.back().type_name, summary_pos, is_whitespace);
 
             }
 
@@ -301,13 +307,14 @@ void srcdiff_summary_handler::count_modified() {
 
     for(int i = 0; i < counting_profile_pos.size(); ++i) {
 
-        int pos = counting_profile_pos.at(i);
+        size_t pos = counting_profile_pos.at(i).first;
+        size_t summary_pos = counting_profile_pos.at(i).second;
         std::string name = profile_stack.at(pos).type_name;
 
         if(pos == (profile_stack.size() - 1)) {
 
-        if(!is_expr(name)) update_modified(name, pos);
-        else if(profile_stack.back().has_assignment) update_modified(name + "/assignment", pos);
+        if(!is_expr(name)) update_modified(name, summary_pos);
+        else if(profile_stack.back().has_assignment) update_modified(name + "/assignment", summary_pos);
 
         } else if(is_funct_type(name)) {
 
@@ -318,21 +325,21 @@ void srcdiff_summary_handler::count_modified() {
                    || profile_stack.at(pos + 1).type_name == "block"
                    || profile_stack.at(pos + 1).type_name == "member_list"
                    || profile_stack.at(pos + 1).type_name == "template"))
-                update_modified(name + "/" + profile_stack.at(pos + 1).type_name, pos);
+                update_modified(name + "/" + profile_stack.at(pos + 1).type_name, summary_pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list"
                     && (pos + 2) == (profile_stack.size() - 1)
                       && profile_stack.back().type_name == "parameter")
-                update_modified(name + "/parameter", pos);
+                update_modified(name + "/parameter", summary_pos);
             else if((pos + 2) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list"
                     && profile_stack.at(pos + 2).type_name == "parameter"
                     && profile_stack.back().type_name == "init")
-                update_modified(name + "/parameter/init", pos);
+                update_modified(name + "/parameter/init", summary_pos);
             else if(profile_stack.back().type_name == "return")
-                update_modified(name + "/return", pos);
+                update_modified(name + "/return", summary_pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "member_list"
                     && (pos + 2) == (profile_stack.size() - 1)
             && profile_stack.back().type_name == "call")
-                update_modified(name + "/member_list/call", pos);
+                update_modified(name + "/member_list/call", summary_pos);
 
         } else if(is_class_type(name)) {
 
@@ -342,12 +349,12 @@ void srcdiff_summary_handler::count_modified() {
                    || profile_stack.back().type_name == "block"
                    || profile_stack.back().type_name == "decl"
                    || profile_stack.back().type_name == "template"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
         else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "block"
             && (pos + 2) == (profile_stack.size() - 1)
             && (profile_stack.back().type_name == "private" || profile_stack.back().type_name == "public"
             || profile_stack.back().type_name == "protected" || profile_stack.back().type_name == "signals"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "block"
                     && ((pos + 2) == (profile_stack.size() - 1) 
             || ((pos + 3) == (profile_stack.size() - 1) 
@@ -357,9 +364,9 @@ void srcdiff_summary_handler::count_modified() {
                         || is_funct_type(profile_stack.back().type_name) || is_class_type(profile_stack.back().type_name))) {
 
                         if(profile_stack.back().type_name == "template")
-                            update_modified(name + "/block/" + profile_stack.back().type_name, pos);
+                            update_modified(name + "/block/" + profile_stack.back().type_name, summary_pos);
                         else
-                            update_modified(name + "/" + profile_stack.back().type_name, pos);
+                            update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
 
             } else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "block" && profile_stack.at(profile_stack.size() - 2).type_name == "template")  {
 
@@ -374,8 +381,8 @@ void srcdiff_summary_handler::count_modified() {
                         && (is_funct_type(profile_stack.back().type_name) || is_class_type(profile_stack.back().type_name)
                             || is_decl_stmt(profile_stack.back().type_name))) {
 
-                            update_modified(name + "/" + profile_stack.back().type_name, pos);
-                            update_modified(name + "/block/template/" + profile_stack.back().type_name, pos);
+                            update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
+                            update_modified(name + "/block/template/" + profile_stack.back().type_name, summary_pos);
 
                     }
 
@@ -384,13 +391,13 @@ void srcdiff_summary_handler::count_modified() {
         } else if(is_template(name)) { 
 
             if((pos + 1) == (profile_stack.size() - 1) && profile_stack.back().type_name == "parameter_list")
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 1) == (profile_stack.size() - 1) && (is_funct_type(profile_stack.back().type_name) || is_class_type(profile_stack.back().type_name)
                 || is_decl_stmt(profile_stack.back().type_name)))
-                    update_modified(name + "/" + profile_stack.back().type_name, pos);
+                    update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "parameter_list"
                       && profile_stack.back().type_name == "parameter")
-                update_modified(name + "/parameter", pos);
+                update_modified(name + "/parameter", summary_pos);
 
         } else if(is_condition_type(name)) {
 
@@ -401,11 +408,11 @@ void srcdiff_summary_handler::count_modified() {
                    || profile_stack.back().type_name == "then"
                    || profile_stack.back().type_name == "case"
                    || profile_stack.back().type_name == "default"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 2) == (profile_stack.size() - 1)
                    && (profile_stack.back().type_name == "case"
                    || profile_stack.back().type_name == "default"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
 
         } else if(is_catch(name)) {
 
@@ -413,11 +420,11 @@ void srcdiff_summary_handler::count_modified() {
                && (profile_stack.back().type_name == "parameter_list"
                    || profile_stack.back().type_name == "parameter"
                    || profile_stack.back().type_name == "block"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 2) < (profile_stack.size())
                    && profile_stack.at(pos + 1).type_name == "parameter_list"
                    && profile_stack.back().type_name == "parameter")
-                update_modified(name + "/parameter", pos);
+                update_modified(name + "/parameter", summary_pos);
 
         } else if(is_decl_stmt(name)) {
 
@@ -427,18 +434,18 @@ void srcdiff_summary_handler::count_modified() {
                    || profile_stack.back().type_name == "name"
                    || profile_stack.back().type_name == "init"
                    || profile_stack.back().type_name == "template"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
 
         } else if(is_call(name)) {
 
             if((pos + 1) == (profile_stack.size() - 1)
                && (profile_stack.at(pos + 1).type_name == "name"
                    || profile_stack.back().type_name == "argument_list"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "argument_list"
                && (pos + 2) == (profile_stack.size() - 1)
                && profile_stack.back().type_name == "argument")
-                update_modified(name + "/argument", pos);
+                update_modified(name + "/argument", summary_pos);
 
         } else if(is_preprocessor_special(name)) {
 
@@ -448,17 +455,17 @@ void srcdiff_summary_handler::count_modified() {
                    || profile_stack.back().type_name == "cpp:value"
                    || profile_stack.back().type_name == "cpp:number"
                    || profile_stack.back().type_name == "cpp:file"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "cpp:macro"
                && (pos + 2) == (profile_stack.size() - 1)
                && (profile_stack.back().type_name == "parameter_list"
            || profile_stack.back().type_name == "name"))
-                update_modified(name + "/" + profile_stack.back().type_name, pos);
+                update_modified(name + "/" + profile_stack.back().type_name, summary_pos);
             else if((pos + 2) < (profile_stack.size()) && profile_stack.at(pos + 1).type_name == "cpp:macro"
            && profile_stack.at(pos + 2).type_name == "parameter_list"
                && (pos + 3) == (profile_stack.size() - 1)
                && profile_stack.back().type_name == "parameter")
-                update_modified(name + "/parameter", pos);
+                update_modified(name + "/parameter", summary_pos);
 
         }
 
@@ -685,7 +692,7 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
     full_name += localname;
 
     profile_stack.push_back(full_name);
-    counting_profile_pos.push_back(profile_stack.size() - 1);
+    counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, profile_stack.size() - 1));
     profile_stack.back().set_id();
 
 }
@@ -769,7 +776,9 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
         if(is_count(full_name)) {
 
-            counting_profile_pos.push_back(profile_stack.size() - 1);
+
+            bool summarize = is_summary(local_name);
+            counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, summarize ? profile_stack.size() - 1 : counting_profile_pos.back().second));
             profile_stack.back().set_id();
 
         }
@@ -988,7 +997,8 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 	            profile_list[profile_stack.back().id] = profile_stack.back();
 
 	            // should always have at least unit
-	            profile_stack.at(counting_profile_pos.back()).child_profiles.push_back(profile_stack.back().id);
+                if(is_summary(local_name))
+    	            profile_stack.at(counting_profile_pos.back().first).child_profiles.push_back(profile_stack.back().id);
 
         	}
 

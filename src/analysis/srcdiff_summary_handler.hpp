@@ -214,7 +214,7 @@ protected:
     std::vector<srcdiff> srcdiff_stack;
     std::vector<profile_t> profile_stack;
 
-    std::vector<size_t> counting_profile_pos;
+    std::vector<std::pair<size_t, size_t>> counting_profile_pos;
 
     std::map<std::string, counts> inserted;
     std::map<std::string, counts> deleted;
@@ -243,6 +243,8 @@ private:
     bool is_preprocessor_special(const std::string & name);
     bool is_expr(const std::string & name);
     bool is_count(const std::string & name);
+
+    bool is_summary(const std::string & name);
 
     void update_diff_map(std::map<std::string, counts> & map, const std::string & name, bool is_whitespace);
     void update_diff(const std::string & name, size_t profile_pos, bool is_whitespace);
