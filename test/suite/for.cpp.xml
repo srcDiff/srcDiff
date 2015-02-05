@@ -134,4 +134,8 @@
 }</block></diff:delete><diff:insert type="change">
     <block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></for></unit>
 
+<unit filename="for|for">
+<for>for<control>(<init><decl><type><diff:delete type="change"><name>auto</name></diff:delete><diff:insert type="change"><name><name>std</name><operator>::</operator><name><name>pair</name><argument_list type="template">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>, <argument><expr><name>counts</name></expr></argument>&gt;</argument_list></name></name></diff:insert></type> <name>entry</name> <range>: <expr><name>modified</name></expr></range></decl></init>)</control>
+    <block type="pseudo"><expr_stmt><expr><call><name>pad</name><argument_list>(<argument><expr><name>out</name></expr></argument>, <argument><expr><name>depth</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>&lt;&lt;</operator> <name><name>entry</name><operator>.</operator><name>first</name></name> <operator>&lt;&lt;</operator> <literal type="string">":\t"</literal> <operator>&lt;&lt;</operator> <name><name>entry</name><operator>.</operator><name>second</name></name> <operator>&lt;&lt;</operator> <literal type="char">'\n'</literal></expr>;</expr_stmt></block></for></unit>
+
 </unit>

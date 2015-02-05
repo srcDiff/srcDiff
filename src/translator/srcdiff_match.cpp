@@ -971,7 +971,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   if(original_tag != modified_tag) return true;
 
-  if(original_tag == "name" || original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "init"
+  if(original_tag == "name" || original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
     || original_tag == "default" || original_tag == "comment"
     || original_tag == "private" || original_tag == "protected" || original_tag == "public" || original_tag == "signals"
     || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list" || original_tag == "member_init_list"
