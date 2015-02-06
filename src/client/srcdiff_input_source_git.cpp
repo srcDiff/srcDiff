@@ -18,7 +18,10 @@ static std::mutex mutex;
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source(options), clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), clean_path(true), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
 
-  std::string command("git clone " + *options.git_url + " ");
+  std::string quiet_flag;
+  if(is_option(options.flags, OPTION_QUIET)) quiet_flag = "--quiet ";
+
+  std::string command("git clone " + quiet_flag + *options.git_url + " ");
   command += clone_path.native();
 
   FILE * process = popen(command.c_str(), "r");
