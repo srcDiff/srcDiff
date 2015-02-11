@@ -1,0 +1,12 @@
+#ifndef INCLUDED_SRCDIFF_TYPE_HPP
+#define INCLUDED_SRCDIFF_TYPE_HPP
+
+enum srcdiff_type {
+
+    SRCDIFF_COMMON,
+    SRCDIFF_INSERT,
+    SRCDIFF_DELETE,
+
+};
+
+#endif

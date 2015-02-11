@@ -1,6 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_SUMMARY_HANDLER_HPP
 #define INCLUDED_SRCDIFF_SUMMARY_HANDLER_HPP
 
+#include <srcdiff_type.hpp>
 #include <profile_t.hpp>
 #include <counts_t.hpp>
 
@@ -20,14 +21,6 @@
 class srcdiff_summary_handler : public srcSAXHandler {
 
 public:
-
-    enum srcdiff_type {
-
-        SRCDIFF_COMMON,
-        SRCDIFF_INSERT,
-        SRCDIFF_DELETE,
-
-    };
 
     struct srcdiff {
 
