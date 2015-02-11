@@ -80,10 +80,10 @@ bool srcdiff_summary_handler::is_summary(const std::string & name) {
 
 }
 
-void srcdiff_summary_handler::update_diff_map(std::map<std::string, counts> & map, const std::string & name, bool is_whitespace) {
+void srcdiff_summary_handler::update_diff_map(std::map<std::string, counts_t> & map, const std::string & name, bool is_whitespace) {
 
     if(map.find(name) == map.end())
-        map[name] = counts();
+        map[name] = counts_t();
 
     map[name].inc_total();
 
@@ -274,10 +274,10 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
 
 }
 
-void srcdiff_summary_handler::update_modified_map(std::map<std::string, counts> & map, const std::string & name) {
+void srcdiff_summary_handler::update_modified_map(std::map<std::string, counts_t> & map, const std::string & name) {
 
     if(map.find(name) == map.end())
-        map[name] = counts();
+        map[name] = counts_t();
 
     map[name].inc_total();
 
@@ -289,10 +289,10 @@ void srcdiff_summary_handler::update_modified_map(std::map<std::string, counts> 
 
 }
 
-void srcdiff_summary_handler::update_modified_map_summary(std::map<std::string, counts> & map, const std::string & name) {
+void srcdiff_summary_handler::update_modified_map_summary(std::map<std::string, counts_t> & map, const std::string & name) {
 
     if(map.find(name) == map.end())
-        map[name] = counts();
+        map[name] = counts_t();
 
     map[name].total += profile_stack.back().total_count;
 

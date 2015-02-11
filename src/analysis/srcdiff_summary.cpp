@@ -7,7 +7,7 @@ srcdiff_summary::~srcdiff_summary() {}
 
 void srcdiff_summary::summarize(const std::string & srcdiff) {
 
-	srcdiff_summary_handler::profile_t::profile_list_t profile_list(1024);
+	profile_t::profile_list_t profile_list(1024);
 	srcdiff_summary_handler handler(profile_list);
 
 	srcSAXController controller(srcdiff, xml_encoding);
