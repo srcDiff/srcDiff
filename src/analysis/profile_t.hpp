@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <memory>
 
 struct profile_t {
 
@@ -14,7 +15,7 @@ struct profile_t {
 
     public:
 
-        typedef std::vector<profile_t> profile_list_t;
+        typedef std::vector<std::shared_ptr<profile_t>> profile_list_t;
 
         size_t id;
         std::string type_name;

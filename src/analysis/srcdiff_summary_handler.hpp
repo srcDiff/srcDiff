@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <memory>
 
 #include <cstdlib>
 
@@ -42,7 +43,7 @@ protected:
     profile_t::profile_list_t & profile_list;
 
     std::vector<srcdiff> srcdiff_stack;
-    std::vector<profile_t> profile_stack;
+    std::vector<std::shared_ptr<profile_t>> profile_stack;
 
     std::vector<std::pair<size_t, size_t>> counting_profile_pos;
 

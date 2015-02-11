@@ -29,16 +29,16 @@ class summarize_profile {
 
         std::ostream & summarize(std::ostream & out, const size_t profile_pos) const {
 
-            const profile_t & profile = profiles[profile_pos];
+            const std::shared_ptr<profile_t> & profile = profiles[profile_pos];
 
-            if(profile.total_count == 0) return out;
+            if(profile->total_count == 0) return out;
 
             static int depth = 0;
 
-            if(profile.syntax_count == 0) {
+            if(profile->syntax_count == 0) {
 
-                if(profile.whitespace_count) pad(out, depth) << "Whitespace:\t" << profile.whitespace_count;
-                if(profile.comment_count) pad(out, depth) << "Comment:\t" << profile.comment_count;
+                if(profile->whitespace_count) pad(out, depth) << "Whitespace:\t" << profile->whitespace_count;
+                if(profile->comment_count) pad(out, depth) << "Comment:\t" << profile->comment_count;
 
                 out << '\n';
 
@@ -51,44 +51,44 @@ class summarize_profile {
             try {
 
 
-                if(profile.type_name == "unit")
-                    out << reinterpret_cast<const unit_profile_t &>(profile);
-                else if(profile.type_name == "function")
-                    out << reinterpret_cast<const function_profile_t &>(profile);
+                if(profile->type_name == "unit")
+                    out << *reinterpret_cast<const std::shared_ptr<unit_profile_t> &>(profile);
+                else if(profile->type_name == "function")
+                    out << *reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile);
                 else
-                    out << profile;
+                    out << *profile;
 
             } catch(std::bad_cast cast) {fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);}
 
-            if(!profile.inserted.empty()) {
+            if(!profile->inserted.empty()) {
 
                 pad(out, depth + 1) << "--inserted--\n";
 
-                for(std::pair<std::string, counts_t> entry : profile.inserted)
+                for(std::pair<std::string, counts_t> entry : profile->inserted)
                     pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
             }
 
-             if(!profile.deleted.empty()) {
+             if(!profile->deleted.empty()) {
 
                 pad(out, depth + 1) << "--deleted--\n";
 
-                for(std::pair<std::string, counts_t> entry : profile.deleted)
+                for(std::pair<std::string, counts_t> entry : profile->deleted)
                     pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
             }
 
-             if(!profile.modified.empty()) {
+             if(!profile->modified.empty()) {
 
                 pad(out, depth + 1) << "--modified--\n";
 
-                for(std::pair<std::string, counts_t> entry : profile.modified)
+                for(std::pair<std::string, counts_t> entry : profile->modified)
                     pad(out, depth + 1) << entry.first << ":\t" << entry.second << '\n';
 
             }
 
             out << "\n\n";
-            for(size_t child_pos : profile.child_profiles)
+            for(size_t child_pos : profile->child_profiles)
                 summarize(out, child_pos);
 
             return out;
