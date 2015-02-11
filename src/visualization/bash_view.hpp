@@ -78,7 +78,6 @@ public:
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
   void output_additional_context();
-  void output_character_with_strikethrough(const char character);
   void characters(const char * ch, int len);
 
   static void characters(void* ctx, const xmlChar* ch, int len);

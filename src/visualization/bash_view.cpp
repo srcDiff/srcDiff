@@ -12,14 +12,12 @@
 
 #include <cstring>
 
-const char * const DELETE_CODE = "\x1b[48;5;210;1m";
+const char * const DELETE_CODE = "\x1b[9;48;5;210;1m";
 const char * const INSERT_CODE = "\x1b[48;5;120;1m";
 
 const char * const COMMON_CODE = "\x1b[0m";
 
 const char * const LINE_CODE = "\x1b[36m";
-
-const char * const STRIKETHROUGH = "\xCC\xB6";
 
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
@@ -177,12 +175,6 @@ void bash_view::output_additional_context() {
 
 }
 
-void bash_view::output_character_with_strikethrough(const char character) {
-
-  (*output) << character << STRIKETHROUGH;
-
-}
-
 void bash_view::characters(const char * ch, int len) {
 
   const char * code = COMMON_CODE;
@@ -200,9 +192,7 @@ void bash_view::characters(const char * ch, int len) {
     } else {
 
       if(code != COMMON_CODE && ch[i] == '\n') (*output) << COMMON_CODE;
-
-      if(code == DELETE_CODE && ch[i] != '\n') output_character_with_strikethrough(ch[i]);
-      else (*output) << ch[i];
+      (*output) << ch[i];
 
       if(code != COMMON_CODE && ch[i] == '\n') (*output) << code;
 
