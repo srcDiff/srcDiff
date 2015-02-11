@@ -31,6 +31,8 @@ struct function_profile_t : public profile_t {
             out << "\tTotal: " << profile.total_count;
             out << '\n';
 
+            if(!profile.return_type.is_common()) out << "\tReturn type changed: " << profile.return_type.get_original() << " -> " << profile.return_type.get_modified() << '\n';
+
             return out;
 
         }

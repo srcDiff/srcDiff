@@ -58,34 +58,34 @@ class summarize_profile {
                 else
                     out << *profile;
 
-            } catch(std::bad_cast cast) {fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);}
+            } catch(std::bad_cast cast) {}
 
-            if(!profile->inserted.empty()) {
+            // if(!profile->inserted.empty()) {
 
-                pad(out, depth + 1) << "--inserted--\n";
+            //     pad(out, depth + 1) << "--inserted--\n";
 
-                for(std::pair<std::string, counts_t> entry : profile->inserted)
-                    pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
+            //     for(std::pair<std::string, counts_t> entry : profile->inserted)
+            //         pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
-            }
+            // }
 
-             if(!profile->deleted.empty()) {
+            //  if(!profile->deleted.empty()) {
 
-                pad(out, depth + 1) << "--deleted--\n";
+            //     pad(out, depth + 1) << "--deleted--\n";
 
-                for(std::pair<std::string, counts_t> entry : profile->deleted)
-                    pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
+            //     for(std::pair<std::string, counts_t> entry : profile->deleted)
+            //         pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
 
-            }
+            // }
 
-             if(!profile->modified.empty()) {
+            //  if(!profile->modified.empty()) {
 
-                pad(out, depth + 1) << "--modified--\n";
+            //     pad(out, depth + 1) << "--modified--\n";
 
-                for(std::pair<std::string, counts_t> entry : profile->modified)
-                    pad(out, depth + 1) << entry.first << ":\t" << entry.second << '\n';
+            //     for(std::pair<std::string, counts_t> entry : profile->modified)
+            //         pad(out, depth + 1) << entry.first << ":\t" << entry.second << '\n';
 
-            }
+            // }
 
             out << "\n\n";
             for(size_t child_pos : profile->child_profiles)
