@@ -55,19 +55,13 @@ struct profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
 
-        virtual std::ostream & print(std::ostream & out) const {
+        virtual std::ostream & summary(std::ostream & out) const {
 
-            return out << *this;
-
-        }
-
-        friend std::ostream & operator<<(std::ostream & out, const profile_t & profile) {
-
-            out << profile.type_name << ":"; 
-            out << " Whitespace: " << profile.whitespace_count;
-            out << "\tComment: " << profile.comment_count;
-            out << "\tSyntax: " << profile.syntax_count;
-            out << "\tTotal: " << profile.total_count;
+            out << type_name << ":"; 
+            out << " Whitespace: " << whitespace_count;
+            out << "\tComment: " << comment_count;
+            out << "\tSyntax: " << syntax_count;
+            out << "\tTotal: " << total_count;
             out << '\n';
 
             return out;

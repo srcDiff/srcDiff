@@ -22,22 +22,16 @@ struct function_profile_t : public profile_t {
 
         }
 
-        virtual std::ostream & print(std::ostream & out) const {
+        virtual std::ostream & summary(std::ostream & out) const {
 
-            return out << *this;
-
-        }
-
-        friend std::ostream & operator<<(std::ostream & out, const function_profile_t & profile) {
-
-            out << profile.type_name << " '" << profile.name << "':"; 
-            out << " Whitespace: " << profile.whitespace_count;
-            out << "\tComment: " << profile.comment_count;
-            out << "\tSyntax: " << profile.syntax_count;
-            out << "\tTotal: " << profile.total_count;
+            out << type_name << " '" << name << "':"; 
+            out << " Whitespace: " << whitespace_count;
+            out << "\tComment: " << comment_count;
+            out << "\tSyntax: " << syntax_count;
+            out << "\tTotal: " << total_count;
             out << '\n';
 
-            if(!profile.return_type.is_common()) out << "\tReturn type changed: " << profile.return_type.get_original() << " -> " << profile.return_type.get_modified() << '\n';
+            if(!return_type.is_common()) out << "\tReturn type changed: " << return_type.get_original() << " -> " << return_type.get_modified() << '\n';
 
             return out;
 

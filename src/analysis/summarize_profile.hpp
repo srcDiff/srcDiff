@@ -37,7 +37,7 @@ class summarize_profile {
 
             pad(out, depth);
 
-            profile->print(out);
+            profile->summary(out);
 
             out << "\n\n";
             for(size_t child_pos : profile->child_profiles)
