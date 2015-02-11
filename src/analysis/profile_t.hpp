@@ -55,6 +55,12 @@ struct profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
 
+        virtual std::ostream & print(std::ostream & out) const {
+
+            return out << *this;
+
+        }
+
         friend std::ostream & operator<<(std::ostream & out, const profile_t & profile) {
 
             out << profile.type_name << ":"; 

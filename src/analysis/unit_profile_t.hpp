@@ -20,6 +20,12 @@ struct unit_profile_t : public profile_t {
 
         }
 
+        virtual std::ostream & print(std::ostream & out) const {
+
+            return out << *this;
+
+        }
+
         friend std::ostream & operator<<(std::ostream & out, const unit_profile_t & profile) {
 
             out << profile.type_name << " '" << profile.file_name << "':"; 
