@@ -88,7 +88,8 @@ class versioned_string {
 
         friend std::ostream & operator<<(std::ostream & out, const versioned_string & string) {
 
-        	return out << string.get_original() << '|' << string.get_modified();
+        	if(string.is_common()) return out << string.get_original();
+        	else return out << string.get_original() << '|' << string.get_modified();
 
        	}
 

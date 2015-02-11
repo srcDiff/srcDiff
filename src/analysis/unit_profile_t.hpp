@@ -16,8 +16,6 @@ struct unit_profile_t : public profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 
-            fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name.get_original().c_str());
-
             file_name = name;
 
         }
