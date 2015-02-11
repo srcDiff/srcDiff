@@ -4,6 +4,7 @@
 #include <srcdiff_type.hpp>
 #include <profile_t.hpp>
 #include <counts_t.hpp>
+#include <versioned_string.hpp>
 
 #include <srcSAXHandler.hpp>
 
@@ -57,7 +58,7 @@ protected:
     std::string text;
 
     size_t name_count;
-    std::string collected_name;
+    versioned_string collected_name;
 
 private:
 

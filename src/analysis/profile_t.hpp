@@ -2,6 +2,7 @@
 #define INCLUDED_PROFILE_T_HPP
 
 #include <counts_t.hpp>
+#include <versioned_string.hpp>
 
 #include <vector>
 #include <map>
@@ -17,7 +18,6 @@ struct profile_t {
 
         size_t id;
         std::string type_name;
-        std::string name;
         bool is_modified;
         bool is_whitespace;
         bool is_comment;
@@ -37,7 +37,7 @@ struct profile_t {
 
         std::vector<size_t> child_profiles;
 
-        profile_t(std::string type_name = "") : id(0), type_name(type_name), name(), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
+        profile_t(std::string type_name = "") : id(0), type_name(type_name), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
             modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
 
         void set_id(size_t id_count) {
@@ -45,6 +45,8 @@ struct profile_t {
             id = id_count;
 
         }
+
+        virtual void set_name(versioned_string name, const std::string & parent) {}
 
         std::ostream & pad(std::ostream & out, size_t num) const {
 
@@ -112,7 +114,7 @@ struct profile_t {
         friend std::ostream & operator<<(std::ostream & out, const profile_t & profile) {
 
 
-            out << profile.type_name << " '" << profile.name << "':"; 
+            out << profile.type_name << ":"; 
             out << " Whitespace: " << profile.whitespace_count;
             out << "\tComment: " << profile.comment_count;
             out << "\tSyntax: " << profile.syntax_count;

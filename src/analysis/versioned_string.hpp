@@ -14,33 +14,31 @@ class versioned_string {
 		boost::optional<std::string> string_original;
 		boost::optional<std::string> string_modified;
 
-		bool is_common;
-
 	protected:
 
 	public:
 
-		versioned_string(std::string string, enum srcdiff_type version) : string_original(version != SRCDIFF_INSERT ? string : boost::optional<std::string>()),
-																		  string_modified(version != SRCDIFF_DELETE ? string : boost::optional<std::string>()),
-																		  is_common(version == SRCDIFF_COMMON) {}
+		versioned_string() {}
 
-		versioned_string(std::string string_original, std::string string_modified) : string_original(string_original), string_modified(string_modified), is_common(false) {}
+		versioned_string(std::string string) : string_original(string), string_modified(string) {}
+
+		versioned_string(std::string string_original, std::string string_modified) : string_original(string_original), string_modified(string_modified) {}
 
 		bool is_common() const {
 
-			return is_common;
+			return string_original == string_modified;
 
 		}
 
 		bool has_original() const {
 
-			return string_original;
+			return bool(string_original);
 
 		}
 
 		bool has_modified() const {
 
-			return string_modified;
+			return bool(string_modified);
 
 		}
 
@@ -60,6 +58,32 @@ class versioned_string {
 
 		}
 
+		void append(const char * characters, size_t len, enum srcdiff_type version) {
+
+			if(len == 0) return;
+
+			if(version != SRCDIFF_INSERT) {
+
+				if(!bool(string_original)) string_original = std::string(characters, len);
+				else string_original->append(characters, len);
+
+			}
+
+			if(version != SRCDIFF_DELETE) {
+
+				if(!bool(string_modified)) string_modified = std::string(characters, len);
+				else string_modified->append(characters, len);
+
+			}
+
+		}
+
+		void reset() {
+
+			string_original = boost::optional<std::string>();
+			string_modified = boost::optional<std::string>();
+
+		}
 
 };
 

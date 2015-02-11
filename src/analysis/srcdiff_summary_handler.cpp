@@ -709,7 +709,7 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
     for(int i = 0; i < num_attributes; ++i)
         if(attributes[i].localname == std::string("filename")) {
 
-            profile_stack.back().name = attributes[i].value;
+            //profile_stack.back().name = attributes[i].value;
             break;
         }
 
@@ -953,8 +953,8 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
             if(name_count == 0) {
 
-                profile_stack.at(profile_stack.size() - 2).name = collected_name;
-                collected_name = "";
+                profile_stack.at(counting_profile_pos.back().first).set_name(collected_name, profile_stack.at(profile_stack.size() - 2).type_name);
+                collected_name.reset();
 
             }
 
@@ -1055,6 +1055,6 @@ void srcdiff_summary_handler::charactersUnit(const char * ch, int len) {
 
     text.append(ch, len);
 
-    if(name_count) collected_name.append(ch, len);
+    if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
 
 }
