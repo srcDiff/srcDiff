@@ -12,6 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <thread>
 
 #include <uri_stream.hpp>
 
@@ -58,13 +59,13 @@ edit * line_diff_range<T>::get_line_diff() {
 }
 
 template<class T>
-std::vector<std::string> line_diff_range<T>::read_file(const T * input, const char * file) {
+void line_diff_range<T>::read_file(const T * input, const char * file, std::vector<std::string> & lines) {
 
-  std::vector<std::string> lines;
-
-  if(file == 0 || file[0] == 0) return lines;
+  if(file == 0 || file[0] == 0) return;
 
   typename T::input_context * context = input->open(file);
+
+  if(context == nullptr) return;
 
   uri_stream<T> stream(context);
 
@@ -74,8 +75,6 @@ std::vector<std::string> line_diff_range<T>::read_file(const T * input, const ch
     lines.push_back(line);
 
   }
-
-  return lines;
 
 }
 
@@ -118,8 +117,11 @@ std::string line_diff_range<T>::get_line_diff_range() {
 template<class T>
 void line_diff_range<T>::create_line_diff() {
 
-  lines_one = read_file(input, file_one.c_str());
-  lines_two = read_file(input, file_two.c_str());
+  std::thread thread_original(read_file, input, file_one.c_str(), std::ref(lines_one));
+  std::thread thread_modified(read_file, input, file_two.c_str(), std::ref(lines_two));
+
+  thread_original.join();
+  thread_modified.join();
 
   int distance = ses.compute(&lines_one, lines_one.size(), &lines_two, lines_two.size());
 

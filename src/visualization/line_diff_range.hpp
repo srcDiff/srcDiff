@@ -48,7 +48,7 @@ public:
 
   void create_line_diff();
 
-  static std::vector<std::string> read_file(const T * input, const char * file);
+  static void read_file(const T * input, const char * file, std::vector<std::string> & lines);
 
 };
 

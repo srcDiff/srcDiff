@@ -109,7 +109,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
     srcdiff_whitespace whitespace(output);
     whitespace.output_all();
 
-    output.finish(is_original, is_modified, line_diff_range);
+    output.finish(line_diff_range);
 
   }
 
