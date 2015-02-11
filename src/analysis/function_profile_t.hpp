@@ -32,6 +32,7 @@ struct function_profile_t : public profile_t {
             out << '\n';
 
             if(!return_type.is_common()) out << "\tReturn type changed: " << return_type.get_original() << " -> " << return_type.get_modified() << '\n';
+            if(!name.is_common()) out << "\tName changed: " << name.get_original() << " -> " << name.get_modified() << '\n';
 
             return out;
 
