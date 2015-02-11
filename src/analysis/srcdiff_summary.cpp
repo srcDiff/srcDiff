@@ -1,5 +1,7 @@
 #include <srcdiff_summary.hpp>
 
+#include <summarize_profile.hpp>
+
 #include <iostream>
 
 srcdiff_summary::srcdiff_summary(const char * xml_encoding) : xml_encoding(xml_encoding) {}
@@ -15,7 +17,8 @@ void srcdiff_summary::summarize(const std::string & srcdiff) {
 	controller.parse(&handler);
 
 	// should always be unit
-	profile_list[1].print_profile(std::cout, profile_list);
+	summarize_profile summarizer(profile_list);
+	summarizer.summarize(std::cout, 1);
 
 
 }

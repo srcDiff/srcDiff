@@ -713,8 +713,8 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
 
             std::string::size_type pos = file_name.find('|');
 
-            if(pos == std::string::npos) profile_stack.back().set_name(versioned_string(file_name), boost::optional<std::string>());
-            else profile_stack.back().set_name(versioned_string(file_name.substr(0, pos), file_name.substr(pos + 1)), boost::optional<std::string>());
+            if(pos == std::string::npos) profile_stack.back().set_name(versioned_string(file_name));
+            else profile_stack.back().set_name(versioned_string(file_name.substr(0, pos), file_name.substr(pos + 1)));
 
             break;
 

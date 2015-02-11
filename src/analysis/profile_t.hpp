@@ -46,73 +46,15 @@ struct profile_t {
 
         }
 
+        virtual void set_name(versioned_string name) {
+
+            set_name(name, boost::optional<std::string>());
+
+        }
+
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
 
-        std::ostream & pad(std::ostream & out, size_t num) const {
-
-            for(int i = 0; i < num; ++i)
-                out << '\t';
-
-            return out;
-
-        }
-
-        std::ostream & print_profile(std::ostream & out, const profile_list_t & profiles) const {
-
-            if(total_count == 0) return out;
-
-            static int depth = 0;
-
-            if(syntax_count == 0) {
-
-                if(whitespace_count) pad(out, depth) << "Whitespace:\t" << whitespace_count;
-                if(comment_count) pad(out, depth) << "Comment:\t" << comment_count;
-
-                out << '\n';
-
-                return out;
-
-            }
-
-            pad(out, depth) << *this;
-
-            if(!inserted.empty()) {
-
-                pad(out, depth + 1) << "--inserted--\n";
-
-                for(std::pair<std::string, counts_t> entry : inserted)
-                    pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
-
-            }
-
-             if(!deleted.empty()) {
-
-                pad(out, depth + 1) << "--deleted--\n";
-
-                for(std::pair<std::string, counts_t> entry : deleted)
-                    pad(out, depth + 1) << entry.first << ":\t" << entry.second.total << '\n';
-
-            }
-
-             if(!modified.empty()) {
-
-                pad(out, depth + 1) << "--modified--\n";
-
-                for(std::pair<std::string, counts_t> entry : modified)
-                    pad(out, depth + 1) << entry.first << ":\t" << entry.second << '\n';
-
-            }
-
-            out << "\n\n";
-            for(size_t child_pos : child_profiles)
-                profiles[child_pos].print_profile(out, profiles);
-
-            return out;
-
-        }
-
         friend std::ostream & operator<<(std::ostream & out, const profile_t & profile) {
-
 
             out << profile.type_name << ":"; 
             out << " Whitespace: " << profile.whitespace_count;
