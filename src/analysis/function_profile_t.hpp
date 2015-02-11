@@ -15,13 +15,7 @@ struct function_profile_t : public profile_t {
 
         function_profile_t(std::string type_name = "") : profile_t(type_name) {}
 
-        void set_return_type(std::string return_type) {
-
-            return_type = versioned_string(return_type);
-
-        }
-
-        virtual void set_name(versioned_string name, const std::string & parent) {
+        virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 
             if(parent == "type") return_type = name;
             else this->name = name;

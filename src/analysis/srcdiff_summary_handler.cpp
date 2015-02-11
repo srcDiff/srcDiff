@@ -709,8 +709,15 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
     for(int i = 0; i < num_attributes; ++i)
         if(attributes[i].localname == std::string("filename")) {
 
-            //profile_stack.back().name = attributes[i].value;
+            std::string file_name = attributes[i].value;
+
+            std::string::size_type pos = file_name.find('|');
+
+            if(pos == std::string::npos) profile_stack.back().set_name(versioned_string(file_name), boost::optional<std::string>());
+            else profile_stack.back().set_name(versioned_string(file_name.substr(0, pos), file_name.substr(pos + 1)), boost::optional<std::string>());
+
             break;
+
         }
 
     counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, profile_stack.size() - 1));

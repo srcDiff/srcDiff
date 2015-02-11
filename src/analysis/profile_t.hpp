@@ -46,7 +46,7 @@ struct profile_t {
 
         }
 
-        virtual void set_name(versioned_string name, const std::string & parent) {}
+        virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
 
         std::ostream & pad(std::ostream & out, size_t num) const {
 
