@@ -85,7 +85,7 @@ bool is_count(const std::string & type_name) {
 return is_function_type(type_name) || is_class_type(type_name) || is_simple_type(type_name)
     || is_condition_type(type_name) || is_catch(type_name) || is_decl_stmt(type_name)
     || is_call(type_name) || is_preprocessor_special(type_name) || is_expr(type_name)
-    || is_template(type_name);
+    || is_template(type_name) || is_parameter(type_name) || is_lambda(type_name);
 
 }
 
