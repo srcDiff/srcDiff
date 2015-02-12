@@ -4,6 +4,8 @@
 #include <profile_t.hpp>
 #include <versioned_string.hpp>
 
+#include <map>
+
 struct function_profile_t : public profile_t {
 
     private:
@@ -13,7 +15,7 @@ struct function_profile_t : public profile_t {
         versioned_string return_type;
         versioned_string name;
 
-        std::vector<std::pair<std::shared_ptr<profile_t>, srcdiff_type>> parameters;
+        std::multimap<srcdiff_type, std::shared_ptr<profile_t>> parameters;
 
         function_profile_t(std::string type_name = "") : profile_t(type_name) {}
 
@@ -26,7 +28,7 @@ struct function_profile_t : public profile_t {
 
         virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
 
-            if(profile->type_name == "parameter") parameters.push_back(std::make_pair(profile, operation));
+            if(profile->type_name == "parameter") parameters.emplace(operation, profile);
             else child_profiles.push_back(profile->id);
 
         }
