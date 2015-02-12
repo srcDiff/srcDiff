@@ -5,8 +5,8 @@
 
 bool is_simple_type(const std::string & name) {
 
-    return name == "throw" || name == "try" || name == "else" || name == "lit:literal" || name == "op:operator"
-        || name == "type:modifier" || name == "cpp:if" || name == "cpp:elif" || name == "cpp:else"
+    return name == "throw" || name == "try" || name == "else" || name == "literal" || name == "operator"
+        || name == "modifier" || name == "cpp:if" || name == "cpp:elif" || name == "cpp:else"
         || name == "cpp:endif" || name == "cpp:ifdef" || name == "cpp:ifndef" || name == "cpp:pragma" || name == "cpp:error"
         || name == "cpp:region" || name == "cpp:endregion" || name == "case" || name == "default";
 
