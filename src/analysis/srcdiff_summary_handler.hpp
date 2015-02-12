@@ -64,7 +64,7 @@ protected:
 private:
 
     bool is_simple_type(const std::string & name) const;
-    bool is_funct_type(const std::string & name) const;
+    bool is_function_type(const std::string & name) const;
     bool is_class_type(const std::string & name) const;
     bool is_template(const std::string & name) const;
     bool is_condition_type(const std::string & name) const;

@@ -12,7 +12,7 @@ bool srcdiff_summary_handler::is_simple_type(const std::string & name) const {
 
 }
 
-bool srcdiff_summary_handler::is_funct_type(const std::string & name) const {
+bool srcdiff_summary_handler::is_function_type(const std::string & name) const {
 
     return name == "function" || name == "function_decl" || name == "constructor" || name == "constructor_decl"
         || name == "destructor" || name == "destructor_decl";
@@ -70,7 +70,7 @@ return name == "expr";
 
 bool srcdiff_summary_handler::is_count(const std::string & name) const {
 
-return is_funct_type(name) || is_class_type(name) || is_simple_type(name)
+return is_function_type(name) || is_class_type(name) || is_simple_type(name)
     || is_condition_type(name) || is_catch(name) || is_decl_stmt(name)
     || is_call(name) || is_preprocessor_special(name) || is_expr(name)
     || is_template(name);
@@ -79,13 +79,13 @@ return is_funct_type(name) || is_class_type(name) || is_simple_type(name)
 
 bool srcdiff_summary_handler::is_summary(const std::string & name) const {
 
-    return is_class_type(name) || is_funct_type(name);
+    return is_class_type(name) || is_function_type(name);
 
 }
 
 std::shared_ptr<profile_t> srcdiff_summary_handler::make_profile(const std::string & type_name) const {
 
-    if(is_funct_type(type_name)) return  std::make_shared<function_profile_t>(type_name);
+    if(is_function_type(type_name)) return  std::make_shared<function_profile_t>(type_name);
 
     return std::make_shared<profile_t>(type_name);
 
@@ -150,7 +150,7 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
 
         else {
 
-            if(is_funct_type(name)) {
+            if(is_function_type(name)) {
 
                 if((pos + 1) == (profile_stack.size() - 1) && (profile_stack.back()->type_name == "template"))
                     update_diff(name + "/" + profile_stack.back()->type_name, summary_pos, is_whitespace);
@@ -185,7 +185,7 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                         && (profile_stack.at(pos + 2)->type_name == "private" || profile_stack.at(pos + 2)->type_name == "public"
                         || profile_stack.at(pos + 2)->type_name == "protected" || profile_stack.at(pos + 2)->type_name == "signals")))
                         && (profile_stack.back()->type_name == "decl_stmt" || profile_stack.back()->type_name == "template"
-                        || is_funct_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name))) {
+                        || is_function_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name))) {
 
                             if(profile_stack.back()->type_name == "template")
                                 update_diff(name + "/block/" + profile_stack.back()->type_name, summary_pos, is_whitespace);
@@ -202,7 +202,7 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
                         || ((pos + count_template + 4) == (profile_stack.size() - 1) 
                         && (profile_stack.at(pos + 2)->type_name == "private" || profile_stack.at(pos + 2)->type_name == "public"
                         || profile_stack.at(pos + 2)->type_name == "protected" || profile_stack.at(pos + 2)->type_name == "signals")))
-                        && (is_funct_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
+                        && (is_function_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
                              || is_decl_stmt(profile_stack.back()->type_name))) {
 
                             update_diff(name + "/" + profile_stack.back()->type_name, summary_pos, is_whitespace);
@@ -216,7 +216,7 @@ void srcdiff_summary_handler::count_diff(bool is_whitespace) {
 
                 if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1)->type_name == "parameter_list" && profile_stack.back()->type_name == "parameter")
                     update_diff(name + "/parameter", summary_pos, is_whitespace);
-                else if((pos + 1) == (profile_stack.size() - 1) && (is_funct_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
+                else if((pos + 1) == (profile_stack.size() - 1) && (is_function_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
                      || is_decl_stmt(profile_stack.back()->type_name)))
                     update_diff(name + "/" + profile_stack.back()->type_name, summary_pos, is_whitespace);
 
@@ -340,7 +340,7 @@ void srcdiff_summary_handler::count_modified() {
         if(!is_expr(name)) update_modified(name, summary_pos);
         else if(profile_stack.back()->has_assignment) update_modified(name + "/assignment", summary_pos);
 
-        } else if(is_funct_type(name)) {
+        } else if(is_function_type(name)) {
 
             if((pos + 1) == (profile_stack.size() - 1)
                && (profile_stack.at(pos + 1)->type_name == "type"
@@ -385,7 +385,7 @@ void srcdiff_summary_handler::count_modified() {
                 && (profile_stack.at(pos + 2)->type_name == "private" || profile_stack.at(pos + 2)->type_name == "public"
                 || profile_stack.at(pos + 2)->type_name == "protected" || profile_stack.at(pos + 2)->type_name == "signals")))
                     && (profile_stack.back()->type_name == "decl_stmt" || profile_stack.back()->type_name == "template"
-                        || is_funct_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name))) {
+                        || is_function_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name))) {
 
                         if(profile_stack.back()->type_name == "template")
                             update_modified(name + "/block/" + profile_stack.back()->type_name, summary_pos);
@@ -402,7 +402,7 @@ void srcdiff_summary_handler::count_modified() {
                         || ((pos + count_template + 3) == (profile_stack.size() - 1) 
                         && (profile_stack.at(pos + 2)->type_name == "private" || profile_stack.at(pos + 2)->type_name == "public"
                         || profile_stack.at(pos + 2)->type_name == "protected" || profile_stack.at(pos + 2)->type_name == "signals")))
-                        && (is_funct_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
+                        && (is_function_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
                             || is_decl_stmt(profile_stack.back()->type_name))) {
 
                             update_modified(name + "/" + profile_stack.back()->type_name, summary_pos);
@@ -416,7 +416,7 @@ void srcdiff_summary_handler::count_modified() {
 
             if((pos + 1) == (profile_stack.size() - 1) && profile_stack.back()->type_name == "parameter_list")
                 update_modified(name + "/" + profile_stack.back()->type_name, summary_pos);
-            else if((pos + 1) == (profile_stack.size() - 1) && (is_funct_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
+            else if((pos + 1) == (profile_stack.size() - 1) && (is_function_type(profile_stack.back()->type_name) || is_class_type(profile_stack.back()->type_name)
                 || is_decl_stmt(profile_stack.back()->type_name)))
                     update_modified(name + "/" + profile_stack.back()->type_name, summary_pos);
             else if((pos + 1) < (profile_stack.size()) && profile_stack.at(pos + 1)->type_name == "parameter_list"
@@ -882,7 +882,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
                 count_diff(false);
 
             } else if(srcdiff_stack.back().level == 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "template"
-                 && (is_funct_type(full_name) || is_class_type(full_name) || is_decl_stmt(full_name))) {
+                 && (is_function_type(full_name) || is_class_type(full_name) || is_decl_stmt(full_name))) {
 
                 count_diff(false);
 
