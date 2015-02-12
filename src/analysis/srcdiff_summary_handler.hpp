@@ -63,19 +63,21 @@ protected:
 
 private:
 
-    bool is_simple_type(const std::string & name);
-    bool is_funct_type(const std::string & name);
-    bool is_class_type(const std::string & name);
-    bool is_template(const std::string & name);
-    bool is_condition_type(const std::string & name);
-    bool is_catch(const std::string & name);
-    bool is_call(const std::string & name);
-    bool is_decl_stmt(const std::string & name);
-    bool is_preprocessor_special(const std::string & name);
-    bool is_expr(const std::string & name);
-    bool is_count(const std::string & name);
+    bool is_simple_type(const std::string & name) const;
+    bool is_funct_type(const std::string & name) const;
+    bool is_class_type(const std::string & name) const;
+    bool is_template(const std::string & name) const;
+    bool is_condition_type(const std::string & name) const;
+    bool is_catch(const std::string & name) const;
+    bool is_call(const std::string & name) const;
+    bool is_decl_stmt(const std::string & name) const;
+    bool is_preprocessor_special(const std::string & name) const;
+    bool is_expr(const std::string & name) const;
+    bool is_count(const std::string & name) const;
 
-    bool is_summary(const std::string & name);
+    bool is_summary(const std::string & name) const;
+
+    std::shared_ptr<profile_t> make_profile(const std::string & type_name) const;
 
     void update_diff_map(std::map<std::string, counts_t> & map, const std::string & name, bool is_whitespace);
     void update_diff(const std::string & name, size_t profile_pos, bool is_whitespace);
