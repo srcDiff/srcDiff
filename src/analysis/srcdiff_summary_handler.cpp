@@ -3,95 +3,95 @@
 #include <unit_profile_t.hpp>
 #include <function_profile_t.hpp>
 
-bool is_simple_type(const std::string & name) {
+bool is_simple_type(const std::string & type_name) {
 
-    return name == "throw" || name == "try" || name == "else" || name == "literal" || name == "operator"
-        || name == "modifier" || name == "cpp:if" || name == "cpp:elif" || name == "cpp:else"
-        || name == "cpp:endif" || name == "cpp:ifdef" || name == "cpp:ifndef" || name == "cpp:pragma" || name == "cpp:error"
-        || name == "cpp:region" || name == "cpp:endregion" || name == "case" || name == "default";
-
-}
-
-bool is_function_type(const std::string & name) {
-
-    return name == "function" || name == "function_decl" || name == "constructor" || name == "constructor_decl"
-        || name == "destructor" || name == "destructor_decl";
+    return type_name == "throw" || type_name == "try" || type_name == "else" || type_name == "literal" || type_name == "operator"
+        || type_name == "modifier" || type_name == "cpp:if" || type_name == "cpp:elif" || type_name == "cpp:else"
+        || type_name == "cpp:endif" || type_name == "cpp:ifdef" || type_name == "cpp:ifndef" || type_name == "cpp:pragma" || type_name == "cpp:error"
+        || type_name == "cpp:region" || type_name == "cpp:endregion" || type_name == "case" || type_name == "default";
 
 }
 
-bool is_class_type(const std::string & name) {
+bool is_function_type(const std::string & type_name) {
 
-    return name == "class" || name == "class_decl" || name == "struct" || name == "struct_decl"
-        || name == "union" || name == "union_decl" || name == "enum";
-
-}
-
-bool is_template(const std::string & name) {
-
-    return name == "template";
+    return type_name == "function" || type_name == "function_decl" || type_name == "constructor" || type_name == "constructor_decl"
+        || type_name == "destructor" || type_name == "destructor_decl";
 
 }
 
-bool is_condition_type(const std::string & name) {
+bool is_class_type(const std::string & type_name) {
 
-    return name == "if" || name == "switch" || name == "elseif" || name == "while" || name == "do" || name == "for";
-
-}
-
-bool is_catch(const std::string & name) {
-
-    return name == "catch";
+    return type_name == "class" || type_name == "class_decl" || type_name == "struct" || type_name == "struct_decl"
+        || type_name == "union" || type_name == "union_decl" || type_name == "enum";
 
 }
 
-bool is_call(const std::string & name) {
+bool is_template(const std::string & type_name) {
 
-    return name == "call" || name == "macro";
-
-}
-
-bool is_decl_stmt(const std::string & name) {
-
-    return name == "decl_stmt";
+    return type_name == "template";
 
 }
 
-bool is_preprocessor_special(const std::string & name) {
+bool is_condition_type(const std::string & type_name) {
 
-    return name == "cpp:define" || name == "cpp:include" || name == "cpp:line" || name == "cpp:undef" || name == "cpp:ifdef" || name == "cpp:ifndef";
-
-}
-
-bool is_expr(const std::string & name) {
-
-return name == "expr";
+    return type_name == "if" || type_name == "switch" || type_name == "elseif" || type_name == "while" || type_name == "do" || type_name == "for";
 
 }
 
-bool is_lambda(const std::string & name) {
+bool is_catch(const std::string & type_name) {
 
-    return name == "lambda";
-
-}
-
-bool is_parameter(const std::string & name) {
-
-    return name == "parameter";
+    return type_name == "catch";
 
 }
 
-bool is_count(const std::string & name) {
+bool is_call(const std::string & type_name) {
 
-return is_function_type(name) || is_class_type(name) || is_simple_type(name)
-    || is_condition_type(name) || is_catch(name) || is_decl_stmt(name)
-    || is_call(name) || is_preprocessor_special(name) || is_expr(name)
-    || is_template(name);
+    return type_name == "call" || type_name == "macro";
 
 }
 
-bool is_summary(const std::string & name) {
+bool is_decl_stmt(const std::string & type_name) {
 
-    return is_class_type(name) || is_function_type(name);
+    return type_name == "decl_stmt";
+
+}
+
+bool is_preprocessor_special(const std::string & type_name) {
+
+    return type_name == "cpp:define" || type_name == "cpp:include" || type_name == "cpp:line" || type_name == "cpp:undef" || type_name == "cpp:ifdef" || type_name == "cpp:ifndef";
+
+}
+
+bool is_expr(const std::string & type_name) {
+
+return type_name == "expr";
+
+}
+
+bool is_lambda(const std::string & type_name) {
+
+    return type_name == "lambda";
+
+}
+
+bool is_parameter(const std::string & type_name) {
+
+    return type_name == "parameter";
+
+}
+
+bool is_count(const std::string & type_name) {
+
+return is_function_type(type_name) || is_class_type(type_name) || is_simple_type(type_name)
+    || is_condition_type(type_name) || is_catch(type_name) || is_decl_stmt(type_name)
+    || is_call(type_name) || is_preprocessor_special(type_name) || is_expr(type_name)
+    || is_template(type_name);
+
+}
+
+bool is_summary(const std::string & type_name) {
+
+    return is_class_type(type_name) || is_function_type(type_name);
 
 }
 
