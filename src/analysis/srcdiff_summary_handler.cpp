@@ -3,7 +3,7 @@
 #include <unit_profile_t.hpp>
 #include <function_profile_t.hpp>
 
-bool srcdiff_summary_handler::is_simple_type(const std::string & name) const {
+bool is_simple_type(const std::string & name) {
 
     return name == "throw" || name == "try" || name == "else" || name == "lit:literal" || name == "op:operator"
         || name == "type:modifier" || name == "cpp:if" || name == "cpp:elif" || name == "cpp:else"
@@ -12,63 +12,75 @@ bool srcdiff_summary_handler::is_simple_type(const std::string & name) const {
 
 }
 
-bool srcdiff_summary_handler::is_function_type(const std::string & name) const {
+bool is_function_type(const std::string & name) {
 
     return name == "function" || name == "function_decl" || name == "constructor" || name == "constructor_decl"
         || name == "destructor" || name == "destructor_decl";
 
 }
 
-bool srcdiff_summary_handler::is_class_type(const std::string & name) const {
+bool is_class_type(const std::string & name) {
 
     return name == "class" || name == "class_decl" || name == "struct" || name == "struct_decl"
         || name == "union" || name == "union_decl" || name == "enum";
 
 }
 
-bool srcdiff_summary_handler::is_template(const std::string & name) const {
+bool is_template(const std::string & name) {
 
     return name == "template";
 
 }
 
-bool srcdiff_summary_handler::is_condition_type(const std::string & name) const {
+bool is_condition_type(const std::string & name) {
 
     return name == "if" || name == "switch" || name == "elseif" || name == "while" || name == "do" || name == "for";
 
 }
 
-bool srcdiff_summary_handler::is_catch(const std::string & name) const {
+bool is_catch(const std::string & name) {
 
     return name == "catch";
 
 }
 
-bool srcdiff_summary_handler::is_call(const std::string & name) const {
+bool is_call(const std::string & name) {
 
     return name == "call" || name == "macro";
 
 }
 
-bool srcdiff_summary_handler::is_decl_stmt(const std::string & name) const {
+bool is_decl_stmt(const std::string & name) {
 
     return name == "decl_stmt";
 
 }
 
-bool srcdiff_summary_handler::is_preprocessor_special(const std::string & name) const {
+bool is_preprocessor_special(const std::string & name) {
 
     return name == "cpp:define" || name == "cpp:include" || name == "cpp:line" || name == "cpp:undef" || name == "cpp:ifdef" || name == "cpp:ifndef";
 
 }
 
-bool srcdiff_summary_handler::is_expr(const std::string & name) const {
+bool is_expr(const std::string & name) {
 
 return name == "expr";
 
 }
 
-bool srcdiff_summary_handler::is_count(const std::string & name) const {
+bool is_lambda(const std::string & name) {
+
+    return name == "lambda";
+
+}
+
+bool is_parameter(const std::string & name) {
+
+    return name == "parameter";
+
+}
+
+bool is_count(const std::string & name) {
 
 return is_function_type(name) || is_class_type(name) || is_simple_type(name)
     || is_condition_type(name) || is_catch(name) || is_decl_stmt(name)
@@ -77,13 +89,13 @@ return is_function_type(name) || is_class_type(name) || is_simple_type(name)
 
 }
 
-bool srcdiff_summary_handler::is_summary(const std::string & name) const {
+bool is_summary(const std::string & name) {
 
     return is_class_type(name) || is_function_type(name);
 
 }
 
-std::shared_ptr<profile_t> srcdiff_summary_handler::make_profile(const std::string & type_name) const {
+std::shared_ptr<profile_t> make_profile(const std::string & type_name) {
 
     if(is_function_type(type_name)) return  std::make_shared<function_profile_t>(type_name);
 
