@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <utility>
 #include <memory>
 
 struct profile_t {
@@ -37,6 +38,7 @@ struct profile_t {
         std::map<std::string, counts_t> modified;
 
         std::vector<size_t> child_profiles;
+        std::map<std::pair<std::string, srcdiff_type>, std::shared_ptr<profile_t>> children;
 
         profile_t(std::string type_name = "") : id(0), type_name(type_name), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
             modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
@@ -51,6 +53,12 @@ struct profile_t {
 
             set_name(name, boost::optional<std::string>());
 
+        }
+
+        virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
+
+            child_profiles.push_back(profile->id);
+            
         }
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}

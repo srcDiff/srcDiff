@@ -22,6 +22,13 @@ struct function_profile_t : public profile_t {
 
         }
 
+        virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
+
+            if(profile->type_name == "parameter") children[std::make_pair(profile->type_name, operation)] = profile;
+            else child_profiles.push_back(profile->id);
+
+        }
+
         virtual std::ostream & summary(std::ostream & out) const {
 
             out << type_name << " '" << name << "':"; 
