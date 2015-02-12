@@ -13,6 +13,8 @@ struct function_profile_t : public profile_t {
         versioned_string return_type;
         versioned_string name;
 
+        std::map<std::pair<std::string, srcdiff_type>, std::shared_ptr<profile_t>> children;
+
         function_profile_t(std::string type_name = "") : profile_t(type_name) {}
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
