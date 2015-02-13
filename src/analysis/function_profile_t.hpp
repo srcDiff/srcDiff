@@ -71,11 +71,12 @@ struct function_profile_t : public profile_t {
             // body summary
             size_t num_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
             size_t num_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
-            size_t num_conditionals_modified = conditionals.count(SRCDIFF_COMMON);
-            if(num_conditionals_deleted || num_conditionals_inserted || num_conditionals_modified) out << "\tTesting complexity change:\n";
+            if(num_conditionals_deleted || num_conditionals_inserted) out << "\tTesting complexity change:\n";
 
             if(num_conditionals_deleted) out << "\t\tNumber conditionals deleted: " << num_conditionals_deleted << '\n';
             if(num_conditionals_inserted) out << "\t\tNumber conditionals inserted: " << num_conditionals_inserted << '\n';
+
+            size_t num_conditionals_modified = conditionals.count(SRCDIFF_COMMON);
             if(num_conditionals_modified) out << "\t\tNumber conditionals modified: " << num_conditionals_modified << '\n';
 
             return out;
