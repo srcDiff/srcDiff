@@ -21,7 +21,7 @@ protected:
   int stream_source;
 
   char * output_buffer;
-  int output_size;
+  size_t output_size;
 
   static std::mutex mutex;
 
@@ -39,7 +39,7 @@ public:
  	srcml_converter(srcml_archive * archive, int stream_source);
  	~srcml_converter();
 
-	void convert(const std::string & language, void * context, const std::function<int(void *, char *, int)> & read, const std::function<int(void *)> & close, const OPTION_TYPE & options); 
+	void convert(const std::string & language, void * context, const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close, const OPTION_TYPE & options); 
 	srcml_nodes create_nodes() const;
 
 };

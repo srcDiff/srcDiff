@@ -31,7 +31,30 @@ class uri_stream_error {};
 
 template<class T>
 class uri_stream {
-public:
+
+  public:
+
+     struct uri_stream_context {
+
+      typename T::input_context * context;
+      const std::function<int(void *, char *, size_t)> & read;
+      const std::function<int(void *)> & close;
+
+    };
+
+  private:
+
+    xmlParserInputBufferPtr input;
+
+    uri_stream_context uri_context;
+
+    unsigned int startpos;
+    unsigned int endpos;
+    //bool first;
+    bool eof;
+    bool done;
+
+  public:
 
     uri_stream(typename T::input_context * context);
 
@@ -41,13 +64,6 @@ public:
 
     std::string readlines();
 
-private:
-    xmlParserInputBufferPtr input;
-    unsigned int startpos;
-    unsigned int endpos;
-    //bool first;
-    bool eof;
-    bool done;
 };
 
 #include <uri_stream.tcc>

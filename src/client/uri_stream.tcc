@@ -23,11 +23,30 @@
 #include <cstring>
 
 template<class T>
+int uri_stream_read(void * context, char * buffer, int len) {
+
+  typename uri_stream<T>::uri_stream_context & uri_stream_context = *(typename uri_stream<T>::uri_stream_context *)context;
+
+  return uri_stream_context.read(uri_stream_context.context, buffer, (size_t)len);
+
+}
+
+template<class T>
+int uri_stream_close(void * context) {
+
+  typename uri_stream<T>::uri_stream_context & uri_stream_context = *(typename uri_stream<T>::uri_stream_context *)context;
+
+  return uri_stream_context.close(uri_stream_context.context);
+
+}
+
+
+template<class T>
 uri_stream<T>::uri_stream(typename T::input_context * context)
-  : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
+  : uri_context({context, T::read, T::close}), startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
 {
 
-  if (!(input = xmlParserInputBufferCreateIO(T::read, T::close, context, XML_CHAR_ENCODING_NONE)))
+  if (!(input = xmlParserInputBufferCreateIO(uri_stream_read<T>, uri_stream_close<T>, &uri_context, XML_CHAR_ENCODING_NONE)))
     throw uri_stream_error();
 
   // get some data into the buffer

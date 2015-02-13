@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 
   }
 
-  srcml_free_archive(options.archive);
+  srcml_archive_free(options.archive);
   
   return exit_status;
 

@@ -363,7 +363,7 @@ srcdiff_input_source_git::input_context * srcdiff_input_source_git::open(const c
 
 }
 
-int srcdiff_input_source_git::read(void * context, char * buffer, int len) {
+int srcdiff_input_source_git::read(void * context, char * buffer, size_t len) {
 
   input_context * ctx = (input_context *)context;
 

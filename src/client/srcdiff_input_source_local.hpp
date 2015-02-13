@@ -46,7 +46,7 @@ public:
   };
 
   input_context * open(const char * uri) const;
-  static int read(void * context, char * buffer, int len);
+  static int read(void * context, char * buffer, size_t len);
   static int close(void * context);
 
 };

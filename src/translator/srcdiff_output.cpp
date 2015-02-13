@@ -17,7 +17,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
 if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY))
-    srcml_write_open_filename(archive, srcdiff_filename.c_str());
+    srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
 
   // writer state
   if(is_option(flags, OPTION_VISUALIZE)) {
@@ -119,7 +119,7 @@ if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY))
 
  void srcdiff_output::start_unit(const std::string & language_string, const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version) {
 
-  wstate->unit = srcml_create_unit(archive);
+  wstate->unit = srcml_unit_create(archive);
 
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
@@ -145,7 +145,7 @@ void srcdiff_output::close() {
 
   if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY)) {
 
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
 
   }
 

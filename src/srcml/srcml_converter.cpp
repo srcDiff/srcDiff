@@ -99,32 +99,32 @@ srcml_converter::srcml_converter(srcml_archive * archive, int stream_source)
 
 srcml_converter::~srcml_converter() {
 
-  if(output_buffer) srcml_free_memory(output_buffer);
+  if(output_buffer) srcml_memory_free(output_buffer);
 
 }
 
 // converts source code to srcML
 void srcml_converter::convert(const std::string & language, void * context,
-                              const std::function<int(void *, char *, int)> & read, const std::function<int(void *)> & close,
+                              const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close,
                               const OPTION_TYPE & options) {
 
-  srcml_archive * unit_archive = srcml_clone_archive(archive);
+  srcml_archive * unit_archive = srcml_archive_clone(archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
 
-  srcml_write_open_memory(unit_archive, &output_buffer, &output_size);
+  srcml_archive_write_open_memory(unit_archive, &output_buffer, &output_size);
 
-  srcml_unit * unit = srcml_create_unit(unit_archive);
+  srcml_unit * unit = srcml_unit_create(unit_archive);
 
   srcml_unit_set_language(unit, language.c_str());
 
-  srcml_parse_unit_io(unit, context, *read.target<int (*) (void *, char *, int)>(), *close.target<int (*) (void *)>());
+  srcml_unit_parse_io(unit, context, *read.target<int (*) (void *, char *, size_t)>(), *close.target<int (*) (void *)>());
 
   srcml_write_unit(unit_archive, unit);
 
-  srcml_free_unit(unit);
+  srcml_unit_free(unit);
 
-  srcml_close_archive(unit_archive);
-  srcml_free_archive(unit_archive);
+  srcml_archive_close(unit_archive);
+  srcml_archive_free(unit_archive);
 
 }
 
