@@ -20,7 +20,7 @@ struct function_profile_t : public profile_t {
         std::multimap<srcdiff_type, std::shared_ptr<parameter_profile_t>> parameters;
         std::multimap<srcdiff_type, std::shared_ptr<profile_t>> conditionals;
 
-        function_profile_t(std::string type_name, srcdiff_type operationN) : profile_t(type_name, operation) {}
+        function_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 

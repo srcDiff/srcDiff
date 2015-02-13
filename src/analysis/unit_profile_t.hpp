@@ -20,6 +20,9 @@ struct unit_profile_t : public profile_t {
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 
             file_name = name;
+            
+            if(!file_name.has_modified())      operation = SRCDIFF_DELETE;
+            else if(!file_name.has_original()) operation = SRCDIFF_INSERT;
 
         }
 
