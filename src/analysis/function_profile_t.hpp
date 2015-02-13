@@ -39,14 +39,19 @@ struct function_profile_t : public profile_t {
 
         virtual std::ostream & summary(std::ostream & out) const {
 
+            if(operation != SRCDIFF_COMMON) {
+
+                out << type_name << " '" << (name.has_original() ? name.original() : name.modified()) << "'\n";
+                return out;
+
+            }
+
             out << type_name << " '" << name << "':"; 
             out << " Whitespace: " << whitespace_count;
             out << "\tComment: " << comment_count;
             out << "\tSyntax: " << syntax_count;
             out << "\tTotal: " << total_count;
             out << '\n';
-
-            if(total_count == 0) return out;
 
             // function signature
             if(!name.is_common()) out << "\tName changed: " << name.original() << " -> " << name.modified() << '\n';
