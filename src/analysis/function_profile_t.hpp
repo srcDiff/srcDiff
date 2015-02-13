@@ -46,6 +46,8 @@ struct function_profile_t : public profile_t {
             out << "\tTotal: " << total_count;
             out << '\n';
 
+            if(total_count == 0) return out;
+
             // function signature
             if(!name.is_common()) out << "\tName changed: " << name.original() << " -> " << name.modified() << '\n';
 

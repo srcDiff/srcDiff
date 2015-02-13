@@ -2,6 +2,7 @@
 #define INCLUDED_UNIT_PROFILE_T_HPP
 
 #include <profile_t.hpp>
+#include <function_profile_t.hpp>
 #include <versioned_string.hpp>
 
 struct unit_profile_t : public profile_t {
@@ -12,12 +13,21 @@ struct unit_profile_t : public profile_t {
 
         versioned_string file_name;
 
+        std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>> functions;
+
         unit_profile_t(std::string type_name = "") : profile_t(type_name) {}
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 
             file_name = name;
 
+        }
+
+        virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
+
+            if(is_function_type(profile->type_name)) functions.emplace(operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
+            else child_profiles.push_back(profile->id);
+            
         }
 
         virtual std::ostream & summary(std::ostream & out) const {
@@ -28,6 +38,39 @@ struct unit_profile_t : public profile_t {
             out << "\tSyntax: " << syntax_count;
             out << "\tTotal: " << total_count;
             out << '\n';
+
+            size_t num_deleted_function  = functions.count(SRCDIFF_DELETE);
+            if(num_deleted_function) {
+
+                out << '\n';
+
+                out << "Deleted functions: " << num_deleted_function << '\n';
+                for(std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>>::const_iterator citr = functions.find(SRCDIFF_DELETE); citr != functions.upper_bound(SRCDIFF_DELETE); ++citr)
+                    citr->second->summary(out);
+
+            }
+
+            size_t num_inserted_function = functions.count(SRCDIFF_INSERT);
+            if(num_inserted_function) {
+
+                out << '\n';
+
+                out << "Inserted functions: " << num_inserted_function << '\n';
+                for(std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>>::const_iterator citr = functions.find(SRCDIFF_INSERT); citr != functions.upper_bound(SRCDIFF_INSERT); ++citr)
+                    citr->second->summary(out);
+
+            }
+
+            size_t num_modified_function = functions.count(SRCDIFF_COMMON);
+            if(num_modified_function) {
+
+                out << '\n';
+
+                out << "Modified functions: " << num_modified_function << '\n';
+                for(std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>>::const_iterator citr = functions.find(SRCDIFF_COMMON); citr != functions.upper_bound(SRCDIFF_COMMON); ++citr)
+                    citr->second->summary(out);
+
+            }
 
             return out;
 
