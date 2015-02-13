@@ -46,11 +46,11 @@ struct function_profile_t : public profile_t {
 
             }
 
-            out << type_name << " '" << name << "':"; 
-            out << " Whitespace: " << whitespace_count;
-            out << "\tComment: " << comment_count;
-            out << "\tSyntax: " << syntax_count;
-            out << "\tTotal: " << total_count;
+            out << type_name << " '" << name << "':" << " Impact Low/High?"; 
+            // out << " Whitespace: " << whitespace_count;
+            // out << "\tComment: " << comment_count;
+            // out << "\tSyntax: " << syntax_count;
+            // out << "\tTotal: " << total_count;
             out << '\n';
 
             // function signature
