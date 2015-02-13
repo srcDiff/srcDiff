@@ -83,7 +83,7 @@ struct srcdiff_options
   OPTION_TYPE flags;
   METHOD_TYPE methods;
 
-  int number_context_lines;
+  size_t number_context_lines;
 
 #if SVN
   boost::optional<std::string> svn_url;
