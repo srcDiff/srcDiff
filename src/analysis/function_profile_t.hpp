@@ -4,6 +4,7 @@
 #include <profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <versioned_string.hpp>
+#include <type_query.hpp>
 
 #include <map>
 
@@ -30,9 +31,8 @@ struct function_profile_t : public profile_t {
 
         virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
 
-            if(profile->type_name == "parameter") parameters.emplace(operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
-            else if(profile->type_name == "if" || profile->type_name == "while" || profile->type_name == "for" || profile->type_name =="switch" || profile->type_name == "do")
-                conditionals.emplace(operation, profile);
+            if(is_parameter(type_name)) parameters.emplace(operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
+            else if(is_condition_type(type_name)) conditionals.emplace(operation, profile);
             else child_profiles.push_back(profile->id);
 
         }
