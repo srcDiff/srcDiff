@@ -1040,7 +1040,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
             counting_profile_pos.pop_back();
 
             // do not save items with no changes and not inserted/deleted
-            if(profile_stack.back()->total_count) {
+            if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON) {
 
 	            if(profile_list.size() < profile_stack.back()->id)
 	                profile_list.resize(profile_stack.back()->id * 2);
@@ -1048,8 +1048,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 	            profile_list[profile_stack.back()->id] = profile_stack.back();
 
 	            // should always have at least unit
-                if(is_summary(local_name))
-                    profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back(), srcdiff_stack.back().operation);
+                profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back(), srcdiff_stack.back().operation);
 
         	}
 

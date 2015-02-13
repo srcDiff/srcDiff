@@ -39,7 +39,7 @@ class summarize_profile {
 
             profile->summary(out);
 
-            out << "\n\n";
+            out << "\n";
             for(size_t child_pos : profile->child_profiles)
                 summarize(out, child_pos);
 
