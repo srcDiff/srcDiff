@@ -2,6 +2,7 @@
 
 #include <unit_profile_t.hpp>
 #include <function_profile_t.hpp>
+#include <parameter_profile_t.hpp>
 
 bool is_simple_type(const std::string & type_name) {
 
@@ -97,7 +98,8 @@ bool is_summary(const std::string & type_name) {
 
 std::shared_ptr<profile_t> make_profile(const std::string & type_name) {
 
-    if(is_function_type(type_name)) return  std::make_shared<function_profile_t>(type_name);
+    if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name);
+    if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name);
 
     return std::make_shared<profile_t>(type_name);
 

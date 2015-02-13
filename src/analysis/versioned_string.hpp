@@ -42,7 +42,7 @@ class versioned_string {
 
 		}
 
-		std::string get_original() const {
+		std::string original() const {
 
 			if(!has_original()) return "";
 
@@ -50,7 +50,7 @@ class versioned_string {
 
 		}
 
-		std::string get_modified() const {
+		std::string modified() const {
 
 			if(!has_modified()) return "";
 
@@ -88,8 +88,8 @@ class versioned_string {
 
         friend std::ostream & operator<<(std::ostream & out, const versioned_string & string) {
 
-        	if(string.is_common()) return out << string.get_original();
-        	else return out << string.get_original() << '|' << string.get_modified();
+        	if(string.is_common()) return out << string.original();
+        	else return out << string.original() << '|' << string.modified();
 
        	}
 
