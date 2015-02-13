@@ -19,6 +19,8 @@ const char * const COMMON_CODE = "\x1b[0m";
 
 const char * const LINE_CODE = "\x1b[36m";
 
+const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
+
 // forward declarations
 static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
 static void parseDocument(xmlParserCtxtPtr ctxt);
@@ -191,7 +193,7 @@ void bash_view::characters(const char * ch, int len) {
 
     } else {
 
-      if(code != COMMON_CODE && ch[i] == '\n') (*output) << COMMON_CODE;
+      if(code != COMMON_CODE && ch[i] == '\n') (*output) << CARRIAGE_RETURN_SYMBOL << COMMON_CODE;
       (*output) << ch[i];
 
       if(code != COMMON_CODE && ch[i] == '\n') (*output) << code;
