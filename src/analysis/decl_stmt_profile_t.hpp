@@ -24,6 +24,13 @@ struct decl_stmt_profile_t : public profile_t {
 
         virtual std::ostream & summary(std::ostream & out) const {
 
+            if(operation != SRCDIFF_COMMON) {
+
+                out << '\'' << (name.has_original() ? name.original() : name.modified()) << '\'';
+                return out;
+
+            }
+
             out << type_name << " '" << name << "':"; 
             out << " Whitespace: " << whitespace_count;
             out << "\tComment: " << comment_count;

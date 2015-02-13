@@ -72,7 +72,7 @@ struct unit_profile_t : public profile_t {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = map.find(SRCDIFF_COMMON);
 
-            out << "Modified " << citr->second->type_name << "s:" << num_modified << '\n';
+            out << "Modified " << citr->second->type_name << "s: " << num_modified << '\n';
             for(; citr != map.upper_bound(SRCDIFF_COMMON); ++citr)
                 citr->second->summary(out);
 
