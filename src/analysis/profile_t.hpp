@@ -20,6 +20,8 @@ struct profile_t {
 
         size_t id;
         std::string type_name;
+        srcdiff_type operation;
+
         bool is_modified;
         bool is_whitespace;
         bool is_comment;
@@ -39,7 +41,7 @@ struct profile_t {
 
         std::vector<size_t> child_profiles;
 
-        profile_t(std::string type_name = "") : id(0), type_name(type_name), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
+        profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
             modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
 
         void set_id(size_t id_count) {
@@ -54,7 +56,7 @@ struct profile_t {
 
         }
 
-        virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
+        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
 
             child_profiles.push_back(profile->id);
             

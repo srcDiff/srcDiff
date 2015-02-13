@@ -20,7 +20,7 @@ struct function_profile_t : public profile_t {
         std::multimap<srcdiff_type, std::shared_ptr<parameter_profile_t>> parameters;
         std::multimap<srcdiff_type, std::shared_ptr<profile_t>> conditionals;
 
-        function_profile_t(std::string type_name = "") : profile_t(type_name) {}
+        function_profile_t(std::string type_name, srcdiff_type operationN) : profile_t(type_name, operation) {}
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 
@@ -29,10 +29,10 @@ struct function_profile_t : public profile_t {
 
         }
 
-        virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
+        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
 
-            if(is_parameter(profile->type_name)) parameters.emplace(operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
-            else if(is_condition_type(profile->type_name)) conditionals.emplace(operation, profile);
+            if(is_parameter(profile->type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
+            else if(is_condition_type(profile->type_name)) conditionals.emplace(profile->operation, profile);
             else child_profiles.push_back(profile->id);
 
         }

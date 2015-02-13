@@ -13,7 +13,7 @@ struct parameter_profile_t : public profile_t {
         versioned_string type;
         versioned_string name;
 
-        parameter_profile_t(std::string type_name = "") : profile_t(type_name) {}
+        parameter_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 

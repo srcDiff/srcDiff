@@ -21,12 +21,12 @@ bool is_summary(const std::string & type_name) {
 
 }
 
-std::shared_ptr<profile_t> make_profile(const std::string & type_name) {
+std::shared_ptr<profile_t> make_profile(const std::string & type_name, srcdiff_type operation) {
 
-    if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name);
-    if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name);
+    if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name, operation);
+    if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, operation);
 
-    return std::make_shared<profile_t>(type_name);
+    return std::make_shared<profile_t>(type_name, operation);
 
 }
 
@@ -564,7 +564,7 @@ void srcdiff_summary_handler::process_characters() {
 
             total.inc_total();
 
-            profile_stack.push_back(make_profile("text"));
+            profile_stack.push_back(make_profile("text", srcdiff_stack.back().operation));
 
             count_diff(is_whitespace);
 
@@ -654,7 +654,7 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
 
     full_name += localname;
 
-    profile_stack.push_back(std::make_shared<unit_profile_t>(full_name));
+    profile_stack.push_back(std::make_shared<unit_profile_t>(full_name, SRCDIFF_COMMON));
 
     for(int i = 0; i < num_attributes; ++i)
         if(attributes[i].localname == std::string("filename")) {
@@ -740,7 +740,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     full_name += local_name;
 
-    profile_stack.push_back(make_profile(full_name));
+    profile_stack.push_back(make_profile(full_name, srcdiff_stack.back().operation));
 
     if(strcmp(URI, "http://www.sdml.info/srcDiff") != 0) {
 
@@ -975,7 +975,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 	            profile_list[profile_stack.back()->id] = profile_stack.back();
 
 	            // should always have at least unit
-                profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back(), srcdiff_stack.back().operation);
+                profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back());
 
         	}
 
