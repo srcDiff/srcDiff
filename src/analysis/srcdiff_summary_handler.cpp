@@ -5,6 +5,7 @@
 #include <unit_profile_t.hpp>
 #include <function_profile_t.hpp>
 #include <parameter_profile_t.hpp>
+#include <decl_stmt_profile_t.hpp>
 
 bool is_count(const std::string & type_name) {
 
@@ -25,6 +26,7 @@ std::shared_ptr<profile_t> make_profile(const std::string & type_name, srcdiff_t
 
     if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name, operation);
     if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, operation);
+    if(is_decl_stmt(type_name))     return std::make_shared<decl_stmt_profile_t>(type_name, operation);
 
     return std::make_shared<profile_t>(type_name, operation);
 
