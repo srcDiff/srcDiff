@@ -54,7 +54,7 @@ struct function_profile_t : public profile_t {
             size_t num_deleted_parameters  = parameters.count(SRCDIFF_DELETE);
             size_t num_inserted_parameters = parameters.count(SRCDIFF_INSERT);
             size_t num_modified_parameters = parameters.count(SRCDIFF_COMMON);
-            //if(is_return_type_change || num_deleted_parameters || num_inserted_parameters || num_modified_parameters) out << "\tThe following indicate a change of behaviour to the function:\n";
+            if(is_return_type_change || num_deleted_parameters || num_inserted_parameters || num_modified_parameters) out << "\tSignature change:\n";//"\tThe following indicate a change of behaviour to the function:\n";
 
             if(is_return_type_change)   out << "\t\tReturn type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
             if(num_deleted_parameters)  out << "\t\tNumber deleted parameters: " << num_deleted_parameters << '\n';
