@@ -116,6 +116,8 @@ void bash_view::endDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   bash_view * data = (bash_view *)ctxt->_private;
 
+  data->reset();
+
 }
 
 void bash_view::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -156,8 +158,8 @@ void bash_view::endElementNs(void *ctx, const xmlChar *localname, const xmlChar 
 void bash_view::output_additional_context() {
 
 
-  unsigned long line_delete = line_number_delete + 1 - additional_context.size();
-  unsigned long line_insert = line_number_insert + 1 - additional_context.size();
+  size_t line_delete = line_number_delete + 1 - additional_context.size();
+  size_t line_insert = line_number_insert + 1 - additional_context.size();
 
   if(wait_change && last_context_line != (line_number_delete - 1))
     (*output) << COMMON_CODE << LINE_CODE << "@@ -" << line_delete << " +" << line_insert << " @@" << COMMON_CODE;

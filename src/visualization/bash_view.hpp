@@ -24,25 +24,25 @@ private:
 
   std::ostream * output;
 
-  unsigned long line_number_delete;
-  unsigned long line_number_insert;
+  size_t line_number_delete;
+  size_t line_number_insert;
 
   std::string context;
 
   bool is_after_change;
   bool wait_change;
 
-  unsigned long num_context_lines;
+  size_t num_context_lines;
   std::list<std::string>::size_type length;
   std::list<std::string> additional_context;
 
   bool is_after_additional;
-  unsigned long after_edit_count;
-  unsigned long last_context_line;
+  size_t after_edit_count;
+  size_t last_context_line;
 
 public:
 
-  bash_view(const std::string & output_filename, unsigned long num_context_lines) : line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
+  bash_view(const std::string & output_filename, size_t num_context_lines) : line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
     num_context_lines(num_context_lines), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
     if(output_filename != "-")
@@ -60,6 +60,21 @@ public:
       delete output;
 
     }
+  }
+
+  void reset() {
+
+    line_number_delete = 0;
+    line_number_insert = 0;
+    is_after_change = false;
+    wait_change = true;
+    length = 0;
+    additional_context.clear();
+    is_after_additional = false;
+    after_edit_count = 0;
+    last_context_line = -1;
+
+
   }
 
   int transform(const char * srcdiff);
