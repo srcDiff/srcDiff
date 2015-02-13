@@ -46,7 +46,8 @@ struct unit_profile_t : public profile_t {
 
            typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = map.find(operation);
 
-            out << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << citr->second->type_name << "s (" << count << "): { ";
+            const std::string type = is_function_type(citr->second->type_name) ? "function" : citr->second->type_name;
+            out << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type << "s (" << count << "): { ";
             citr->second->summary(out);
             ++citr;
             for(; citr != map.upper_bound(operation); ++citr) {
@@ -72,7 +73,8 @@ struct unit_profile_t : public profile_t {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = map.find(SRCDIFF_COMMON);
 
-            out << "Modified " << citr->second->type_name << "s: " << num_modified << '\n';
+            const std::string type = is_function_type(citr->second->type_name) ? "function" : citr->second->type_name;
+            out << "Modified " << type << "s: " << num_modified << '\n';
             for(; citr != map.upper_bound(SRCDIFF_COMMON); ++citr)
                 citr->second->summary(out);
 
