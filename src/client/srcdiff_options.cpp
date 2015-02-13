@@ -360,7 +360,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
 
-    ("bash", boost::program_options::value<int>()->implicit_value(3)->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text with provided number of contextual lines (no arg defaults to 3 lines of context)")
+    ("bash", boost::program_options::value<int>()->implicit_value(3)->notifier(option_field<&srcdiff_options::number_context_lines>), "Output as colorized bash text with provided number of contextual lines. Put -1 for all lines. (no arg defaults to 3 lines of context)")
     ("summary", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SUMMARY>)->default_value(false), "Output a summary of the differences")
   ;
 
