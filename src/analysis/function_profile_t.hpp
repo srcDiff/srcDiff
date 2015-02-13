@@ -41,7 +41,7 @@ struct function_profile_t : public profile_t {
 
             if(operation != SRCDIFF_COMMON) {
 
-                out << type_name << " '" << (name.has_original() ? name.original() : name.modified()) << "'\n";
+                out << '\'' << (name.has_original() ? name.original() : name.modified()) << '\'';
                 return out;
 
             }

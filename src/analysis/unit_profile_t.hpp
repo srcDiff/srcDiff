@@ -47,9 +47,18 @@ struct unit_profile_t : public profile_t {
 
                 out << '\n';
 
-                out << "Deleted functions: " << num_deleted_function << '\n';
-                for(std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>>::const_iterator citr = functions.find(SRCDIFF_DELETE); citr != functions.upper_bound(SRCDIFF_DELETE); ++citr)
+                out << "Deleted functions (" << num_deleted_function << "): { ";
+                std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>>::const_iterator citr = functions.find(SRCDIFF_DELETE);
+                citr->second->summary(out);
+                ++citr;
+                for(; citr != functions.upper_bound(SRCDIFF_DELETE); ++citr) {
+
+                    out << ", ";
                     citr->second->summary(out);
+
+                }
+
+                out << " }\n";
 
             }
 
@@ -58,9 +67,18 @@ struct unit_profile_t : public profile_t {
 
                 out << '\n';
 
-                out << "Inserted functions: " << num_inserted_function << '\n';
-                for(std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>>::const_iterator citr = functions.find(SRCDIFF_INSERT); citr != functions.upper_bound(SRCDIFF_INSERT); ++citr)
+                out << "Inserted functions (" << num_inserted_function << "): { ";
+                std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>>::const_iterator citr = functions.find(SRCDIFF_INSERT);
+                citr->second->summary(out);
+                ++citr;
+                for(; citr != functions.upper_bound(SRCDIFF_INSERT); ++citr) {
+
+                    out << ", ";
                     citr->second->summary(out);
+
+                }
+
+                out << " }\n";
 
             }
 
