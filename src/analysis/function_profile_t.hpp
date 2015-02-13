@@ -17,6 +17,7 @@ struct function_profile_t : public profile_t {
         versioned_string name;
 
         std::multimap<srcdiff_type, std::shared_ptr<parameter_profile_t>> parameters;
+        std::multimap<srcdiff_type, std::shared_ptr<profile_t>> conditionals;
 
         function_profile_t(std::string type_name = "") : profile_t(type_name) {}
 
@@ -30,6 +31,8 @@ struct function_profile_t : public profile_t {
         virtual void add_child(const std::shared_ptr<profile_t> & profile, srcdiff_type operation) {
 
             if(profile->type_name == "parameter") parameters.emplace(operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
+            else if(profile->type_name == "if" || profile->type_name == "while" || profile->type_name == "for" || profile->type_name =="switch" || profile->type_name == "do")
+                conditionals.emplace(operation, profile);
             else child_profiles.push_back(profile->id);
 
         }
@@ -48,7 +51,7 @@ struct function_profile_t : public profile_t {
 
             // behaviour change
             bool is_return_type_change = !return_type.is_common();
-            size_t num_deleted_parameters = parameters.count(SRCDIFF_DELETE);
+            size_t num_deleted_parameters  = parameters.count(SRCDIFF_DELETE);
             size_t num_inserted_parameters = parameters.count(SRCDIFF_INSERT);
             size_t num_modified_parameters = parameters.count(SRCDIFF_COMMON);
             //if(is_return_type_change || num_deleted_parameters || num_inserted_parameters || num_modified_parameters) out << "\tThe following indicate a change of behaviour to the function:\n";
@@ -57,6 +60,16 @@ struct function_profile_t : public profile_t {
             if(num_deleted_parameters)  out << "\t\tNumber deleted parameters: " << num_deleted_parameters << '\n';
             if(num_inserted_parameters) out << "\t\tNumber inserted parameters: " << num_inserted_parameters << '\n';
             if(num_modified_parameters) out << "\t\tNumber modified parameters: " << num_modified_parameters << '\n';
+
+            // body summary
+            size_t num_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
+            size_t num_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
+            size_t num_conditionals_modified = conditionals.count(SRCDIFF_COMMON);
+            if(num_conditionals_deleted || num_conditionals_inserted || num_conditionals_modified) out << "\tTesting complexity change:\n";
+
+            if(num_conditionals_deleted) out << "\t\tNumber conditionals deleted: " << num_conditionals_deleted << '\n';
+            if(num_conditionals_inserted) out << "\t\tNumber conditionals inserted: " << num_conditionals_inserted << '\n';
+            if(num_conditionals_modified) out << "\t\tNumber conditionals modified: " << num_conditionals_modified << '\n';
 
             return out;
 
