@@ -31,18 +31,13 @@ class decl_stmt_profile_t : public profile_t {
 
             }
 
-            out << type_name << " '" << name << "':"; 
-            out << " Whitespace: " << whitespace_count;
-            out << "\tComment: " << comment_count;
-            out << "\tSyntax: " << syntax_count;
-            out << "\tTotal: " << total_count;
-            out << '\n';
+            out << type_name << " '" << name << "':\n";
 
             // type
-            if(!type.is_common()) out << "Declaration statement type change: " << type.original() << " -> " << type.modified();
+            if(!type.is_common()) out << "\tDeclaration statement type change: " << type.original() << " -> " << type.modified() << '\n';
 
             // name
-            if(!name.is_common()) out << "Declaration statement name change: " << name.original() << " -> " << name.modified();
+            if(!name.is_common()) out << "\tDeclaration statement name change: " << name.original() << " -> " << name.modified() << '\n';
 
             return out;
 

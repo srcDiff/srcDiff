@@ -24,18 +24,13 @@ class parameter_profile_t : public profile_t {
 
         virtual std::ostream & summary(std::ostream & out) const {
 
-            out << type_name << " '" << name << "':"; 
-            out << " Whitespace: " << whitespace_count;
-            out << "\tComment: " << comment_count;
-            out << "\tSyntax: " << syntax_count;
-            out << "\tTotal: " << total_count;
-            out << '\n';
+            out << type_name << " '" << name << "':\n";
 
             // type
-            if(!type.is_common()) out << "Parameter type change: " << type.original() << " -> " << type.modified();
+            if(!type.is_common()) out << "\tParameter type change: " << type.original() << " -> " << type.modified() << '\n';
 
             // name
-            if(!name.is_common()) out << "Parameter name change: " << name.original() << " -> " << name.modified();
+            if(!name.is_common()) out << "\tParameter name change: " << name.original() << " -> " << name.modified() << '\n';
 
             return out;
 
