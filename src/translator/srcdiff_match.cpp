@@ -1203,6 +1203,13 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   }
 
+  if(set_original.size() == 1 || set_modified.size() == 1) {
+
+    /** @todo need to handle this some time */
+    return true;
+
+  }
+
   srcdiff_measure measure(nodes_original, nodes_modified, set_original, set_modified);
   int syntax_similarity, syntax_difference, children_length_original, children_length_modified;
   measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_original, children_length_modified);
@@ -1220,21 +1227,22 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   node_sets child_node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
   node_sets child_node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());    
 
-  if(nodes_original.at(child_node_sets_original.back().at(0))->name == "then") {
+  if(!child_node_sets_original.empty() && nodes_original.at(child_node_sets_original.back().at(0))->name == "then") {
 
     node_sets temp = node_sets(nodes_original, child_node_sets_original.back().at(1), child_node_sets_original.back().back());
     child_node_sets_original = temp;
 
   }
 
-  if(nodes_modified.at(child_node_sets_modified.back().at(0))->name == "then") {
+  if(!child_node_sets_modified.empty() && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "then") {
 
     node_sets temp = node_sets(nodes_modified, child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
     child_node_sets_modified = temp;
 
   }
 
-  if(nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
+  if(!child_node_sets_original.empty() && !child_node_sets_modified.empty()
+    && nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
 
     srcdiff_measure measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
     measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_original, children_length_modified);

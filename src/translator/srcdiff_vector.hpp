@@ -92,14 +92,17 @@ public:
 
 	}
 
-
-
 	const_iterator end() const {
 
 		return data.end();
 
 	}
 
+	bool empty() const {
+
+		return data.empty();
+
+	}
 
 	size_type size() const {
 
