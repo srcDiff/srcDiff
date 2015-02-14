@@ -2,11 +2,14 @@
 #define INCLUDED_UNIT_PROFILE_T_HPP
 
 #include <profile_t.hpp>
-#include <function_profile_t.hpp>
 #include <decl_stmt_profile_t.hpp>
+#include <function_profile_t.hpp>
+#include <class_profile_t.hpp>
 #include <versioned_string.hpp>
+#include <change_entity_map.hpp>
+#include <type_query.hpp>
 
-struct unit_profile_t : public profile_t {
+class unit_profile_t : public profile_t {
 
     private:
 
@@ -14,8 +17,9 @@ struct unit_profile_t : public profile_t {
 
         versioned_string file_name;
 
-        std::multimap<srcdiff_type, std::shared_ptr<decl_stmt_profile_t>> decl_stmts;
-        std::multimap<srcdiff_type, std::shared_ptr<function_profile_t>> functions;
+        change_entity_map<decl_stmt_profile_t> decl_stmts;
+        change_entity_map<function_profile_t>  functions;
+        change_entity_map<class_profile_t>     classes;
 
         unit_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
 
@@ -30,56 +34,11 @@ struct unit_profile_t : public profile_t {
 
         virtual void add_child(const std::shared_ptr<profile_t> & profile) {
 
-            if(is_function_type(profile->type_name))  functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
-            else if(is_decl_stmt(profile->type_name)) decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
+            if(is_decl_stmt(profile->type_name))          decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
+            else if(is_function_type(profile->type_name)) functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
+            else if(is_class_type(profile->type_name))    classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
             else child_profiles.push_back(profile->id);
             
-        }
-
-        template<typename T>
-        static std::ostream & summarize_pure(std::ostream & out, const std::multimap<srcdiff_type, std::shared_ptr<T>> & map, srcdiff_type operation) {
-
-            size_t count = map.count(operation);
-            if(count == 0) return out;
-
-            out << '\n';
-
-           typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = map.find(operation);
-
-            const std::string type = is_function_type(citr->second->type_name) ? "function" : citr->second->type_name;
-            out << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type << "s (" << count << "): { ";
-            citr->second->summary(out);
-            ++citr;
-            for(; citr != map.upper_bound(operation); ++citr) {
-
-                out << ", ";
-                citr->second->summary(out);
-
-            }
-
-            out << " }\n";
-
-            return out;
-
-        }
-
-        template<typename T>
-        static std::ostream & summarize_modified(std::ostream & out, const std::multimap<srcdiff_type, std::shared_ptr<T>> & map) {
-
-            size_t num_modified = map.count(SRCDIFF_COMMON);
-            if(num_modified == 0) return out;
-
-            out << '\n';
-
-            typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = map.find(SRCDIFF_COMMON);
-
-            const std::string type = is_function_type(citr->second->type_name) ? "function" : citr->second->type_name;
-            out << "Modified " << type << "s: " << num_modified << '\n';
-            for(; citr != map.upper_bound(SRCDIFF_COMMON); ++citr)
-                citr->second->summary(out);
-
-            return out;
-
         }
 
         virtual std::ostream & summary(std::ostream & out) const {
@@ -91,16 +50,19 @@ struct unit_profile_t : public profile_t {
             out << "\tTotal: " << total_count;
             out << '\n';
 
-            summarize_pure<decl_stmt_profile_t>(out, decl_stmts, SRCDIFF_DELETE);
-            summarize_pure<decl_stmt_profile_t>(out, decl_stmts, SRCDIFF_INSERT);
-            summarize_modified<decl_stmt_profile_t>(out, decl_stmts);
+            decl_stmts.summarize_pure(out, SRCDIFF_DELETE);
+            decl_stmts.summarize_pure(out, SRCDIFF_INSERT);
+            decl_stmts.summarize_modified(out);
 
-            summarize_pure<function_profile_t>(out, functions, SRCDIFF_DELETE);
-            summarize_pure<function_profile_t>(out, functions, SRCDIFF_INSERT);
-            summarize_modified<function_profile_t>(out, functions);
+            functions.summarize_pure(out, SRCDIFF_DELETE);
+            functions.summarize_pure(out, SRCDIFF_INSERT);
+            functions.summarize_modified(out);
+
+            classes.summarize_pure(out, SRCDIFF_DELETE);
+            classes.summarize_pure(out, SRCDIFF_INSERT);
+            classes.summarize_modified(out);
 
             return out;
-
 
         }
 

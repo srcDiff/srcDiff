@@ -4,11 +4,12 @@
 #include <profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <versioned_string.hpp>
+#include <change_entity_map.hpp>
 #include <type_query.hpp>
 
 #include <map>
 
-struct function_profile_t : public profile_t {
+class function_profile_t : public profile_t {
 
     private:
 
@@ -17,8 +18,8 @@ struct function_profile_t : public profile_t {
         versioned_string return_type;
         versioned_string name;
 
-        std::multimap<srcdiff_type, std::shared_ptr<parameter_profile_t>> parameters;
-        std::multimap<srcdiff_type, std::shared_ptr<profile_t>> conditionals;
+        change_entity_map<parameter_profile_t> parameters;
+        change_entity_map<profile_t>           conditionals;
 
         function_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
 

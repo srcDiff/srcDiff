@@ -10,7 +10,7 @@
 #include <utility>
 #include <memory>
 
-struct profile_t {
+class profile_t {
 
     private:
 

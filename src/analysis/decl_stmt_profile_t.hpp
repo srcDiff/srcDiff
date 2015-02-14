@@ -4,7 +4,7 @@
 #include <profile_t.hpp>
 #include <versioned_string.hpp>
 
-struct decl_stmt_profile_t : public profile_t {
+class decl_stmt_profile_t : public profile_t {
 
     private:
 
