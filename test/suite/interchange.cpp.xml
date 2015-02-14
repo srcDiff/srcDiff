@@ -211,4 +211,30 @@
 }</block></else></diff:insert></elseif></diff:delete></if>
 </unit>
 
+<unit filename="interchange|interchange">
+<diff:delete><class>class<diff:insert><struct>struct<diff:common> <name>foo</name> <block>{<diff:delete type="change"><private type="default"/></diff:delete><diff:insert type="change"><public type="default"/></diff:insert>}</block>;</diff:common></struct></diff:insert></class></diff:delete>
+</unit>
+
+<unit filename="interchange|interchange">
+<diff:delete><struct>struct<diff:insert><class>class<diff:common> <name>function_profile_t</name> <super>: <specifier>public</specifier> <name>profile_t</name></super> <block>{<diff:delete type="change"><public type="default">
+
+    </public></diff:delete><diff:insert type="change"><private type="default">
+
+    </private></diff:insert><private>private:
+
+    </private><public>public:
+
+        <decl_stmt><decl><type><name>versioned_string</name></type> <name>return_type</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>versioned_string</name></type> <name>name</name></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><diff:delete type="change"><name><name>std</name><operator>::</operator><name><name>multimap</name><argument_list type="template">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>, <argument><expr><name><name>std</name><operator>::</operator><name><name>shared_ptr</name><argument_list type="template">&lt;<argument><expr><name>parameter_profile_t</name></expr></argument>&gt;</argument_list></name></name></expr></argument>&gt;</argument_list></name></name></diff:delete><diff:insert type="change"><name><name>change_entity_map</name><argument_list type="template">&lt;<argument><expr><name>parameter_profile_t</name></expr></argument>&gt;</argument_list></name></diff:insert></type> <name>parameters</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><diff:delete type="change"><name><name>std</name><operator>::</operator><name><name>multimap</name><argument_list type="template">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>, <argument><expr><name><name>std</name><operator>::</operator><name><name>shared_ptr</name><argument_list type="template">&lt;<argument><expr><name>profile_t</name></expr></argument>&gt;</argument_list></name></name></expr></argument>&gt;</argument_list></name></name></diff:delete><diff:insert type="change"><name><name>change_entity_map</name><argument_list type="template">&lt;<argument><expr><name>profile_t</name></expr></argument>&gt;</argument_list></name></diff:insert></type> <diff:insert type="whitespace">          </diff:insert><name>conditionals</name></decl>;</decl_stmt>
+
+        <constructor><name>function_profile_t</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>type_name</name></decl></parameter>, <parameter><decl><type><name>srcdiff_type</name></type> <name>operation</name></decl></parameter>)</parameter_list> <member_init_list>: <call><name>profile_t</name><argument_list>(<argument><expr><name>type_name</name></expr></argument>, <argument><expr><name>operation</name></expr></argument>)</argument_list></call> </member_init_list><block>{}</block></constructor>
+
+</public>}</block>;</diff:common></class></diff:insert></struct></diff:delete>
+
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></unit>
+
+
 </unit>

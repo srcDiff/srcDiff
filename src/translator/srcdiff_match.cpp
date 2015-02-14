@@ -920,9 +920,15 @@ struct interchange_list {
 
 };
 
-static const char * const if_interchange[]   = { "if",   "while", "for", "foreach", 0 };
-static const char * const else_interchange[] = { "else", "elseif",                  0 };
+static const char * const class_interchange[] = { "class", "struct", "union", "enum", 0 };
+static const char * const if_interchange[]    = { "if", "while", "for", "foreach",    0 };
+static const char * const else_interchange[]  = { "else", "elseif",                   0 };
 static const interchange_list interchange_lists[] = {
+
+  { "class", class_interchange },
+  { "struct", class_interchange },
+  { "union", class_interchange },
+  { "enum", class_interchange },
 
   { "if",      if_interchange },
   { "while",   if_interchange },
@@ -1124,14 +1130,30 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
   std::string original_tag = nodes_original.at(original_pos)->name;
   std::string modified_tag = nodes_modified.at(modified_pos)->name;
 
-  std::string original_condition = "";
+  std::string original_name;
+  if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
+
+      original_name = get_class_type_name(nodes_original, original_pos);
+
+  }
+
+  std::string modified_name;
+  if(modified_tag == "class" || modified_tag == "struct" || modified_tag == "union" || modified_tag == "enum") {
+
+      modified_name = get_class_type_name(nodes_original, original_pos);
+    
+  }
+
+  if(original_name != "" && original_name == modified_name) return false;
+
+  std::string original_condition;
   if(original_tag == "if" || original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
 
     original_condition = get_condition(nodes_original, original_pos);
 
   }
 
-  std::string modified_condition = "";
+  std::string modified_condition;
   if(modified_tag == "if" || modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
 
     modified_condition = get_condition(nodes_modified, modified_pos);

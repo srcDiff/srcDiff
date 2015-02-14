@@ -114,7 +114,7 @@ def linediff(xml_filename1, xml_filename2) :
 # find differences of two files
 def srcdiff(source_file_version_one, source_file_version_two, encoding, language, directory, filename, prefixlist) :
 
-	command = [globals()["srcdiff_utility"], "-d", directory, "-f", filename]
+	command = [globals()["srcdiff_utility"], "-d", directory, "-f", filename, "--same"]
 
 	temp_file = open("temp_file_one.cpp", "w")
 	temp_file.write(source_file_version_one)
