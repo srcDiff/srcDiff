@@ -225,8 +225,8 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
   class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   // collect subset of nodes
-  node_sets next_node_sets_original(nodes_original, set_original.at(1), set_original.back(), is_significant);
-  node_sets next_node_sets_modified(nodes_modified, set_modified.at(1), set_modified.back(), is_significant);
+  node_sets next_node_sets_original = set_original.size() > 1 ? node_sets(nodes_original, set_original.at(1), set_original.back(), is_significant) : node_sets(nodes_original);
+  node_sets next_node_sets_modified = set_modified.size() > 1 ? node_sets(nodes_modified, set_modified.at(1), set_modified.back(), is_significant) : node_sets(nodes_modified);
   children_original_length = next_node_sets_original.size();
   children_modified_length = next_node_sets_modified.size();
   int distance = ses.compute((const void *)&next_node_sets_original, children_original_length, (const void *)&next_node_sets_modified, children_modified_length);

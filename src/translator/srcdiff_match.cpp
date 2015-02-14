@@ -920,23 +920,28 @@ struct interchange_list {
 
 };
 
-static const char * const class_interchange[] = { "class", "struct", "union", "enum", 0 };
-static const char * const if_interchange[]    = { "if", "while", "for", "foreach",    0 };
-static const char * const else_interchange[]  = { "else", "elseif",                   0 };
+static const char * const class_interchange[]  = { "class", "struct", "union", "enum", 0 };
+static const char * const access_interchange[] = { "public", "protected", "private",   0 };
+static const char * const if_interchange[]     = { "if", "while", "for", "foreach",    0 };
+static const char * const else_interchange[]   = { "else", "elseif",                   0 };
 static const interchange_list interchange_lists[] = {
 
-  { "class", class_interchange },
-  { "struct", class_interchange },
-  { "union", class_interchange },
-  { "enum", class_interchange },
+  { "class",     class_interchange },
+  { "struct",    class_interchange },
+  { "union",     class_interchange },
+  { "enum",      class_interchange },
 
-  { "if",      if_interchange },
-  { "while",   if_interchange },
-  { "for",     if_interchange },
-  { "foreach", if_interchange },
+  { "public",    access_interchange },
+  { "protected", access_interchange },
+  { "private",   access_interchange },
+
+  { "if",        if_interchange },
+  { "while",     if_interchange },
+  { "for",       if_interchange },
+  { "foreach",   if_interchange },
   
-  { "else",    else_interchange },
-  { "elseif",  else_interchange },
+  { "else",      else_interchange },
+  { "elseif",    else_interchange },
 
   { 0, 0 }
 
@@ -1188,6 +1193,15 @@ bool srcdiff_match::reject_match(int similarity, int difference, int text_origin
 
 bool srcdiff_match::reject_similarity(int similarity, int difference, int text_original_length, int text_modified_length,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
+
+  if(set_original.size() == 1 && set_modified.size() == 1) {
+
+    std::string original_tag = nodes_original.at(set_original.front())->name;
+    std::string modified_tag = nodes_modified.at(set_modified.front())->name;
+
+    return original_tag != modified_tag;
+
+  }
 
   srcdiff_measure measure(nodes_original, nodes_modified, set_original, set_modified);
   int syntax_similarity, syntax_difference, children_length_original, children_length_modified;
