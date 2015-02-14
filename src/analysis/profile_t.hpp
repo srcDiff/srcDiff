@@ -18,6 +18,8 @@ class profile_t {
 
         typedef std::vector<std::shared_ptr<profile_t>> profile_list_t;
 
+        static size_t depth;
+
         size_t id;
         std::string type_name;
         srcdiff_type operation;
@@ -66,12 +68,21 @@ class profile_t {
 
         virtual std::ostream & summary(std::ostream & out) const {
 
-            out << type_name << ":"; 
+            pad(out) << type_name << ":"; 
             out << " Whitespace: " << whitespace_count;
             out << "\tComment: " << comment_count;
             out << "\tSyntax: " << syntax_count;
             out << "\tTotal: " << total_count;
             out << '\n';
+
+            return out;
+
+        }
+
+        static std::ostream & pad(std::ostream & out) {
+
+            for(size_t i = 0; i < depth; ++i)
+                out << '\t';
 
             return out;
 

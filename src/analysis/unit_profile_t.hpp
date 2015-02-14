@@ -43,12 +43,14 @@ class unit_profile_t : public profile_t {
 
         virtual std::ostream & summary(std::ostream & out) const {
 
-            out << type_name << " '" << file_name << "':"; 
+            pad(out) << type_name << " '" << file_name << "':"; 
             out << " Whitespace: " << whitespace_count;
             out << "\tComment: " << comment_count;
             out << "\tSyntax: " << syntax_count;
             out << "\tTotal: " << total_count;
             out << '\n';
+
+            //++depth;
 
             decl_stmts.summarize_pure(out, SRCDIFF_DELETE);
             decl_stmts.summarize_pure(out, SRCDIFF_INSERT);
@@ -61,6 +63,8 @@ class unit_profile_t : public profile_t {
             classes.summarize_pure(out, SRCDIFF_DELETE);
             classes.summarize_pure(out, SRCDIFF_INSERT);
             classes.summarize_modified(out);
+
+            //--depth;
 
             return out;
 

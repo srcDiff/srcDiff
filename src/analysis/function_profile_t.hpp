@@ -47,38 +47,48 @@ class function_profile_t : public profile_t {
 
             }
 
-            out << type_name << " '" << name << "':" << " Impact Low/High?"; 
+            pad(out) << type_name << " '" << name << "':" << " Impact Low/High?"; 
             // out << " Whitespace: " << whitespace_count;
             // out << "\tComment: " << comment_count;
             // out << "\tSyntax: " << syntax_count;
             // out << "\tTotal: " << total_count;
             out << '\n';
 
+            ++depth;
+
             // function signature
-            if(!name.is_common()) out << "\tName changed: " << name.original() << " -> " << name.modified() << '\n';
+            if(!name.is_common()) pad(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
             // behaviour change
             bool is_return_type_change = !return_type.is_common();
             size_t num_deleted_parameters  = parameters.count(SRCDIFF_DELETE);
             size_t num_inserted_parameters = parameters.count(SRCDIFF_INSERT);
             size_t num_modified_parameters = parameters.count(SRCDIFF_COMMON);
-            if(is_return_type_change || num_deleted_parameters || num_inserted_parameters || num_modified_parameters) out << "\tSignature change:\n";//"\tThe following indicate a change of behaviour to the function:\n";
+            if(is_return_type_change || num_deleted_parameters || num_inserted_parameters || num_modified_parameters) pad(out) << "Signature change:\n";//"\tThe following indicate a change of behaviour to the function:\n";
 
-            if(is_return_type_change)   out << "\t\tReturn type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
-            if(num_deleted_parameters)  out << "\t\tNumber deleted parameters: " << num_deleted_parameters << '\n';
-            if(num_inserted_parameters) out << "\t\tNumber inserted parameters: " << num_inserted_parameters << '\n';
-            if(num_modified_parameters) out << "\t\tNumber modified parameters: " << num_modified_parameters << '\n';
+            ++depth;
+
+            if(is_return_type_change)   pad(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
+            if(num_deleted_parameters)  pad(out) << "Number deleted parameters: " << num_deleted_parameters << '\n';
+            if(num_inserted_parameters) pad(out) << "Number inserted parameters: " << num_inserted_parameters << '\n';
+            if(num_modified_parameters) pad(out) << "Number modified parameters: " << num_modified_parameters << '\n';
+
+            --depth;
 
             // body summary
             size_t num_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
             size_t num_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
-            if(num_conditionals_deleted || num_conditionals_inserted) out << "\tTesting complexity change:\n";
+            if(num_conditionals_deleted || num_conditionals_inserted) pad(out) << "Testing complexity change:\n";
 
-            if(num_conditionals_deleted) out << "\t\tNumber conditionals deleted: " << num_conditionals_deleted << '\n';
-            if(num_conditionals_inserted) out << "\t\tNumber conditionals inserted: " << num_conditionals_inserted << '\n';
+            ++depth;
+
+            if(num_conditionals_deleted) pad(out) << "Number conditionals deleted: " << num_conditionals_deleted << '\n';
+            if(num_conditionals_inserted) pad(out) << "Number conditionals inserted: " << num_conditionals_inserted << '\n';
 
             size_t num_conditionals_modified = conditionals.count(SRCDIFF_COMMON);
-            if(num_conditionals_modified) out << "\t\tNumber conditionals modified: " << num_conditionals_modified << '\n';
+            if(num_conditionals_modified) pad(out) << "Number conditionals modified: " << num_conditionals_modified << '\n';
+
+            depth -= 2;
 
             return out;
 

@@ -17,25 +17,13 @@ class summarize_profile {
 
         summarize_profile(const profile_t::profile_list_t & profiles) : profiles(profiles) {}
 
-
-        std::ostream & pad(std::ostream & out, size_t num) const {
-
-            for(int i = 0; i < num; ++i)
-                out << '\t';
-
-            return out;
-
-        }
-
         std::ostream & summarize(std::ostream & out, const size_t profile_pos) const {
 
             const std::shared_ptr<profile_t> & profile = profiles[profile_pos];
 
             if(profile->total_count == 0) return out;
 
-            static int depth = 0;
-
-            pad(out, depth);
+            profile_t::depth = 0;
 
             profile->summary(out);
 
