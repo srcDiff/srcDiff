@@ -24,6 +24,7 @@ bool is_summary(const std::string & type_name) {
 
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, srcdiff_type operation) {
 
+    if(is_class_type(type_name))    return std::make_shared<class_profile_t>(type_name, operation);
     if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name, operation);
     if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, operation);
     if(is_decl_stmt(type_name))     return std::make_shared<decl_stmt_profile_t>(type_name, operation);
