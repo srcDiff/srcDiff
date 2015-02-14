@@ -152,7 +152,7 @@ srcml_nodes srcml_converter::create_nodes() const {
 static bool is_separate_token(const char character) {
 
 
-  return character == '(' || character ==')' || character == '[' || character == ']' || character == ',' || character == '"' || character == '\'';
+  return character == '(' || character ==')' || character == '[' || character == ']' || character == ',' || character == '"' || character == '\'' || character == '\\';
 
 }
 
@@ -223,6 +223,21 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
         // separate non whitespace
         else if(is_separate_token(*characters)) {
+
+          if(*characters == '\\') {
+
+            ++characters;
+
+            if(*characters == 'x')
+              characters += 2;
+            else if(isdigit(*characters))
+              characters += 2;
+            else if(*characters == 'u')
+              characters += 4;
+            else if(*characters =='U')
+              characters += 8;
+
+          }
 
           ++characters;
 
