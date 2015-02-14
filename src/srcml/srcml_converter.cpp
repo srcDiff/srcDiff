@@ -78,7 +78,6 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start, const char
 
   }
 
-fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text->content->c_str());
   text->is_empty = true;
   text->parent = boost::optional<std::string>();
   text->free = true;
