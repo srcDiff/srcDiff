@@ -29,6 +29,7 @@ public:
   virtual void output_common(int end_original, int end_modified);
   virtual void output_pure(int end_original, int end_modified);
   virtual void output_change(int end_original, int end_modified);
+  virtual void output_whitespace();
   virtual void output_change_whitespace(int end_original, int end_modified);
 
 };

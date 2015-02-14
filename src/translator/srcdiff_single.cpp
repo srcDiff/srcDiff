@@ -200,7 +200,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_diff diff(out, next_set_original, next_set_modified);
   diff.output();
 
-  output_change_whitespace(node_sets_original.at(start_original).back(), node_sets_modified.at(start_modified).back());
+  output_whitespace();
 
   output_change(out.last_output_original(), node_sets_modified.at(start_modified).back() + 1);
 

@@ -216,11 +216,9 @@
 </unit>
 
 <unit filename="interchange|interchange">
-<diff:delete><struct>struct<diff:insert><class>class<diff:common> <name>function_profile_t</name> <super>: <specifier>public</specifier> <name>profile_t</name></super> <block>{<diff:delete type="change"><public type="default">
+<diff:delete><struct>struct<diff:insert><class>class<diff:common> <name>function_profile_t</name> <super>: <specifier>public</specifier> <name>profile_t</name></super> <block>{<diff:delete><public type="default"><diff:insert><private type="default"><diff:common>
 
-    </public></diff:delete><diff:insert type="change"><private type="default">
-
-    </private></diff:insert><private>private:
+    </diff:common></private></diff:insert></public></diff:delete><private>private:
 
     </private><public>public:
 

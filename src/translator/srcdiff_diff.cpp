@@ -2,6 +2,7 @@
 
 #include <srcdiff_many.hpp>
 #include <srcdiff_change.hpp>
+#include <srcdiff_whitespace.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
 #include <srcdiff_measure.hpp>
@@ -155,6 +156,13 @@ void srcdiff_diff::output_change(int end_original, int end_modified) {
 
   srcdiff_change change(out, end_original, end_modified);
   change.output();
+
+}
+
+void srcdiff_diff::output_whitespace() {
+
+  srcdiff_whitespace whitespace(out);
+  whitespace.output_all();
 
 }
 
