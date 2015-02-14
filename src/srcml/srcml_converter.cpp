@@ -78,6 +78,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start, const char
 
   }
 
+fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text->content->c_str());
   text->is_empty = true;
   text->parent = boost::optional<std::string>();
   text->free = true;
@@ -228,14 +229,33 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
             ++characters;
 
-            if(*characters == 'x')
-              characters += 2;
-            else if(isdigit(*characters))
-              characters += 2;
-            else if(*characters == 'u')
+            if(*characters == 'x') {
+
+              ++characters;
+              size_t pos = 0;
+              while(pos < 2 && ishexnumber(*characters))
+                ++pos, ++characters;
+
+              --characters;
+
+            } else if(isdigit(*characters)) {
+
+              ++characters;
+              size_t pos = 0;
+              while(pos < 2 && *characters >= '0' && *characters <= '7')
+                ++pos, ++characters;
+
+              --characters;
+
+            } else if(*characters == 'u') {
+
               characters += 4;
-            else if(*characters =='U')
+
+            } else if(*characters =='U') {
+
               characters += 8;
+
+            }
 
           }
 
