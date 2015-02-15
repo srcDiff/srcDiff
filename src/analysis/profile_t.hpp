@@ -18,6 +18,14 @@ class profile_t {
 
         typedef std::vector<std::shared_ptr<profile_t>> profile_list_t;
 
+        enum impact_factor {
+
+            LOW,
+            MEDIUM,
+            HIGH
+
+        };
+
         static size_t depth;
 
         size_t id;
@@ -65,6 +73,26 @@ class profile_t {
         }
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
+
+        virtual impact_factor calculate_impact_factor() const {
+
+            return LOW;
+
+        }
+
+        virtual const char * const get_impact_factor() const {
+
+            impact_factor factor = calculate_impact_factor();
+
+            switch(factor) {
+
+                case LOW:    return "Low";
+                case MEDIUM: return "Medium";
+                case HIGH:   return "High";
+
+            }
+
+        }
 
         virtual std::ostream & summary(std::ostream & out) const {
 

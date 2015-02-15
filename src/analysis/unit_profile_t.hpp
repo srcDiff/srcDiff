@@ -41,13 +41,19 @@ class unit_profile_t : public profile_t {
             
         }
 
+        virtual impact_factor calculate_impact_factor() {
+
+            return HIGH;
+
+        }
+
         virtual std::ostream & summary(std::ostream & out) const {
 
-            pad(out) << type_name << " '" << file_name << "':"; 
-            out << " Whitespace: " << whitespace_count;
-            out << "\tComment: " << comment_count;
-            out << "\tSyntax: " << syntax_count;
-            out << "\tTotal: " << total_count;
+            pad(out) << type_name << " '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
+            // out << " Whitespace: " << whitespace_count;
+            // out << "\tComment: " << comment_count;
+            // out << "\tSyntax: " << syntax_count;
+            // out << "\tTotal: " << total_count;
             out << '\n';
 
             //++depth;
