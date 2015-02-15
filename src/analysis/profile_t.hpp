@@ -20,6 +20,7 @@ class profile_t {
 
         enum impact_factor {
 
+            NONE,
             LOW,
             MEDIUM,
             HIGH
@@ -76,7 +77,10 @@ class profile_t {
 
         virtual impact_factor calculate_impact_factor() const {
 
-            return LOW;
+            if(syntax_count == 0) return NONE;
+            if(syntax_count < 10) return LOW;
+            if(syntax_count < 20) return MEDIUM;
+            return HIGH;
 
         }
 
@@ -86,6 +90,7 @@ class profile_t {
 
             switch(factor) {
 
+                case NONE:   return "None";
                 case LOW:    return "Low";
                 case MEDIUM: return "Medium";
                 case HIGH:   return "High";

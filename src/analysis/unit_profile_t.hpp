@@ -41,7 +41,7 @@ class unit_profile_t : public profile_t {
             
         }
 
-        virtual impact_factor calculate_impact_factor() {
+        virtual impact_factor calculate_impact_factor() const {
 
             return HIGH;
 
