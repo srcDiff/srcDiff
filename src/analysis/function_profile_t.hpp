@@ -21,20 +21,24 @@ class function_profile_t : public profile_t {
         change_entity_map<parameter_profile_t> parameters;
         change_entity_map<profile_t>           conditionals;
 
+    private:
+
+        virtual void append_child(const std::shared_ptr<profile_t> & profile) {
+
+            if(is_parameter(profile->type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
+            else if(is_condition_type(profile->type_name)) conditionals.emplace(profile->operation, profile);
+            else child_profiles.push_back(profile->id);
+
+        }
+
+    public:
+
         function_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
 
             if(*parent == "type") return_type = name;
             else this->name = name;
-
-        }
-
-        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
-
-            if(is_parameter(profile->type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
-            else if(is_condition_type(profile->type_name)) conditionals.emplace(profile->operation, profile);
-            else child_profiles.push_back(profile->id);
 
         }
 

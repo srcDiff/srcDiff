@@ -33,7 +33,7 @@ class profile_t {
         std::string type_name;
         srcdiff_type operation;
 
-        size_t num_sub_profiles;
+        size_t num_child_profiles;
 
         bool is_modified;
         bool is_whitespace;
@@ -54,7 +54,17 @@ class profile_t {
 
         std::vector<size_t> child_profiles;
 
-        profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), num_sub_profiles(0),
+    private:
+
+        void append_child(const std::shared_ptr<profile_t> & profile) {
+
+            child_profiles.push_back(profile->id);
+
+        }
+
+    public:
+
+        profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), num_child_profiles(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    has_assignment(false), modified_count(0), whitespace_count(0), comment_count(0),
                                                                    syntax_count(0), assignment_count(0), total_count(0) {}
@@ -62,12 +72,6 @@ class profile_t {
         void set_id(size_t id_count) {
 
             id = id_count;
-
-        }
-
-        void set_num_sub_profiles(size_t count) {
-
-            num_sub_profiles = count;
 
         }
 
@@ -79,15 +83,16 @@ class profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
 
-        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
+        void add_child(const std::shared_ptr<profile_t> & profile) {
 
-            child_profiles.push_back(profile->id);
+            ++num_child_profiles;
+            append_child(profile);
             
         }
 
         virtual impact_factor calculate_impact_factor() const {
 
-            size_t impact_factor_number = syntax_count / num_sub_profiles;
+            size_t impact_factor_number = syntax_count / num_child_profiles;
 
             if(impact_factor_number == 0)    return NONE;
             if(impact_factor_number <  0.1)  return LOW;

@@ -21,6 +21,19 @@ class unit_profile_t : public profile_t {
         change_entity_map<function_profile_t>  functions;
         change_entity_map<class_profile_t>     classes;
 
+    private:
+
+        virtual void append_child(const std::shared_ptr<profile_t> & profile) {
+
+            if(is_decl_stmt(profile->type_name))          decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
+            else if(is_function_type(profile->type_name)) functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
+            else if(is_class_type(profile->type_name))    classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
+            else child_profiles.push_back(profile->id);
+            
+        }
+
+    public:
+
         unit_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
@@ -30,15 +43,6 @@ class unit_profile_t : public profile_t {
             if(!file_name.has_modified())      operation = SRCDIFF_DELETE;
             else if(!file_name.has_original()) operation = SRCDIFF_INSERT;
 
-        }
-
-        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
-
-            if(is_decl_stmt(profile->type_name))          decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
-            else if(is_function_type(profile->type_name)) functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
-            else if(is_class_type(profile->type_name))    classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
-            else child_profiles.push_back(profile->id);
-            
         }
 
         virtual impact_factor calculate_impact_factor() const {
