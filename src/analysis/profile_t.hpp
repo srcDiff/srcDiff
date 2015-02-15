@@ -87,7 +87,7 @@ class profile_t {
             
         }
 
-        virtual impact_factor default_calculate_impact_factor() const {
+        virtual impact_factor calculate_impact_factor() const {
 
             size_t impact_factor_number = syntax_count / num_child_profiles;
 
@@ -95,12 +95,6 @@ class profile_t {
             if(impact_factor_number <  0.1)  return LOW;
             if(impact_factor_number <  0.25) return MEDIUM;
             return HIGH;
-
-        }
-
-        virtual impact_factor calculate_impact_factor() const {
-
-            return default_calculate_impact_factor();
 
         }
 
