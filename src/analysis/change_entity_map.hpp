@@ -21,8 +21,7 @@ class change_entity_map {
         typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::iterator       iterator;
         typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator const_iterator;
 		typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::size_type      size_type;
-
-        typedef typename std::pair<srcdiff_type, std::shared_ptr<T>> pair;
+        typedef typename std::pair<srcdiff_type, std::shared_ptr<T>>                     pair;
 
 		change_entity_map() {}
 
