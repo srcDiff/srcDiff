@@ -967,6 +967,8 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
         if(is_count(full_name)) {
 
+            profile_stack.back()->set_num_sub_profiles(id_count - profile_stack.back()->id);
+
             counting_profile_pos.pop_back();
 
             // do not save items with no changes and not inserted/deleted

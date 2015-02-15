@@ -20,10 +20,10 @@ class profile_t {
 
         enum impact_factor {
 
-            NONE,
-            LOW,
-            MEDIUM,
-            HIGH
+            NONE   = 0,
+            LOW    = 1,
+            MEDIUM = 2,
+            HIGH   = 3
 
         };
 
@@ -32,6 +32,8 @@ class profile_t {
         size_t id;
         std::string type_name;
         srcdiff_type operation;
+
+        size_t num_sub_profiles;
 
         bool is_modified;
         bool is_whitespace;
@@ -52,12 +54,20 @@ class profile_t {
 
         std::vector<size_t> child_profiles;
 
-        profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),  has_assignment(false),
-            modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
+        profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), num_sub_profiles(0),
+                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
+                                                                   has_assignment(false), modified_count(0), whitespace_count(0), comment_count(0),
+                                                                   syntax_count(0), assignment_count(0), total_count(0) {}
 
         void set_id(size_t id_count) {
 
             id = id_count;
+
+        }
+
+        void set_num_sub_profiles(size_t count) {
+
+            num_sub_profiles = count;
 
         }
 
@@ -67,19 +77,21 @@ class profile_t {
 
         }
 
+        virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
+
         virtual void add_child(const std::shared_ptr<profile_t> & profile) {
 
             child_profiles.push_back(profile->id);
             
         }
 
-        virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
-
         virtual impact_factor calculate_impact_factor() const {
 
-            if(syntax_count == 0) return NONE;
-            if(syntax_count < 10) return LOW;
-            if(syntax_count < 20) return MEDIUM;
+            size_t impact_factor_number = syntax_count / num_sub_profiles;
+
+            if(impact_factor_number == 0)    return NONE;
+            if(impact_factor_number <  0.1)  return LOW;
+            if(impact_factor_number <  0.25) return MEDIUM;
             return HIGH;
 
         }
