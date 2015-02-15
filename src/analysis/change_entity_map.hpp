@@ -18,8 +18,11 @@ class change_entity_map {
 
 	public:
 
-		typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::iterator iterator;
-		typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::size_type size_type;
+        typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::iterator       iterator;
+        typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator const_iterator;
+		typedef typename std::multimap<srcdiff_type, std::shared_ptr<T>>::size_type      size_type;
+
+        typedef typename std::pair<srcdiff_type, std::shared_ptr<T>> pair;
 
 		change_entity_map() {}
 
@@ -36,6 +39,17 @@ class change_entity_map {
 
 		}
 
+        const_iterator find(srcdiff_type operation) const {
+
+            return entity.find(operation);
+
+        }
+
+        const_iterator upper_bound(srcdiff_type operation) const {
+
+            return entity.upper_bound(operation);
+
+        }
         std::ostream & summarize_pure(std::ostream & out, srcdiff_type operation) const {
 
             size_t count = entity.count(operation);
