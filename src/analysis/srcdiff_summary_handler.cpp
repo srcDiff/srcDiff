@@ -969,6 +969,8 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
             counting_profile_pos.pop_back();
 
+            profile_stack.at(counting_profile_pos.back().second)->inc_num_child_profiles();
+
             // do not save items with no changes and not inserted/deleted
             if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON) {
 

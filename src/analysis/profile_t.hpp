@@ -54,14 +54,6 @@ class profile_t {
 
         std::vector<size_t> child_profiles;
 
-    private:
-
-        void append_child(const std::shared_ptr<profile_t> & profile) {
-
-            child_profiles.push_back(profile->id);
-
-        }
-
     public:
 
         profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), num_child_profiles(0),
@@ -75,6 +67,12 @@ class profile_t {
 
         }
 
+        void inc_num_child_profiles() {
+
+            ++num_child_profiles;
+
+        }
+
         virtual void set_name(versioned_string name) {
 
             set_name(name, boost::optional<std::string>());
@@ -83,10 +81,9 @@ class profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
 
-        void add_child(const std::shared_ptr<profile_t> & profile) {
+        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
 
-            ++num_child_profiles;
-            append_child(profile);
+            child_profiles.push_back(profile->id);
             
         }
 
