@@ -58,7 +58,9 @@ class unit_profile_t : public profile_t {
                             impact_factor factor = profile_pair.second->calculate_impact_factor();
                             if(factor > max_factor) max_factor = factor; });
 
-            return max_factor;
+            impact_factor factor = default_calculate_impact_factor();
+
+            return factor > max_factor ? factor : max_factor;
 
         }
 

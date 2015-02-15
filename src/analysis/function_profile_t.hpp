@@ -40,6 +40,27 @@ class function_profile_t : public profile_t {
 
         }
 
+         virtual impact_factor calculate_impact_factor() const {
+
+            impact_factor max_factor = NONE;
+            std::for_each(functions.find(SRCDIFF_COMMON), functions.upper_bound(SRCDIFF_COMMON),
+                          [&max_factor](const change_entity_map<function_profile_t>::pair & profile_pair) { 
+                                        if(max_factor == HIGH) return;
+                                        impact_factor factor = profile_pair.second->calculate_impact_factor();
+                                        if(factor > max_factor) max_factor = factor; });
+
+            std::for_each(classes.find(SRCDIFF_COMMON), classes.upper_bound(SRCDIFF_COMMON),
+              [&max_factor](const change_entity_map<class_profile_t>::pair & profile_pair) { 
+                            if(max_factor == HIGH) return;
+                            impact_factor factor = profile_pair.second->calculate_impact_factor();
+                            if(factor > max_factor) max_factor = factor; });
+
+            impact_factor factor = default_calculate_impact_factor();
+
+            return factor > max_factor ? factor : max_factor;
+
+        }
+
         virtual std::ostream & summary(std::ostream & out) const {
 
             if(operation != SRCDIFF_COMMON) {
