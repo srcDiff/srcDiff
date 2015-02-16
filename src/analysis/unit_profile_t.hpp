@@ -70,6 +70,8 @@ class unit_profile_t : public profile_t {
             classes.summarize_pure(out, SRCDIFF_INSERT);
             classes.summarize_modified(out);
 
+            conditionals.summarize_modified(out);
+
             size_t num_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
             if(num_conditionals_deleted) pad(out) << "Number conditionals deleted: " << num_conditionals_deleted << '\n';
 

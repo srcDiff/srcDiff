@@ -702,6 +702,13 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     uri_stack.push_back(strcmp(URI, "http://www.sdml.info/srcDiff") == 0 ? SRCDIFF : (strcmp(URI, "http://www.sdml.info/srcML/src") == 0 ? SRC : CPP));
 
+    // detect if interchange
+    size_t srcml_depth = uri_stack.size();
+    bool is_interchange = (srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+                            && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert")
+                          || (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
+                            && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
+
     if(text != "") process_characters();
 
     if(uri_stack.back() == SRCDIFF) {
@@ -732,7 +739,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
             srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_change, is_move));
 
         if((srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
-           && srcdiff_stack.at(srcdiff_stack.size() - 2).operation == SRCDIFF_COMMON)
+       && (srcdiff_stack.at(srcdiff_stack.size() - 2).operation == SRCDIFF_COMMON || is_interchange))
             profile_stack.back()->is_modified = true;
 
     }
@@ -747,12 +754,6 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
     }
 
     full_name += local_name;
-
-    // detect if interchange
-    size_t srcml_depth = uri_stack.size();
-    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
-                          && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert"
-                          && uri_stack.back() == SRC;
 
     if(is_interchange) {
 
@@ -904,12 +905,18 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     const std::string local_name(localname);
 
+    // detect if interchange
+    size_t srcml_depth = uri_stack.size();
+    bool is_interchange = (srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+                            && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert")
+                          || (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
+                            && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
+
     if(text != "") process_characters();
 
     if(uri_stack.back() == SRCDIFF) {
 
-        if(local_name == "common" || local_name == "delete" || local_name == "insert")
-            srcdiff_stack.pop_back();
+        srcdiff_stack.pop_back();
 
     }
 
@@ -923,12 +930,6 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
     }
 
     full_name += local_name;
-
-    // detect if interchange
-    size_t srcml_depth = uri_stack.size();
-    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
-                          && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert"
-                          && uri_stack.back() == SRC;
 
     if(uri_stack.back() != SRCDIFF) {
 
@@ -951,44 +952,35 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     --srcdiff_stack.back().level;
 
-    if(profile_stack.back()->has_assignment/*
-       && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:delete"
-       && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:insert"
-       && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:common"*/)
+    if(profile_stack.back()->has_assignment)
         profile_stack.at(profile_stack.size() - 2)->has_assignment = true;
 
         if(profile_stack.back()->is_modified) {
 
             count_modified();
 
-            if(true/*profile_stack.at(profile_stack.size() - 2)->type_name != "diff:delete"
-               && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:insert"
-               && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:common"*/) {
+            profile_stack.at(profile_stack.size() - 2)->is_modified = true;
+            profile_stack.at(profile_stack.size() - 2)->modified_count += profile_stack.back()->modified_count;
+            profile_stack.at(profile_stack.size() - 2)->total_count += profile_stack.back()->total_count;
 
-                profile_stack.at(profile_stack.size() - 2)->is_modified = true;
-                profile_stack.at(profile_stack.size() - 2)->modified_count += profile_stack.back()->modified_count;
-                profile_stack.at(profile_stack.size() - 2)->total_count += profile_stack.back()->total_count;
+            if(profile_stack.back()->is_whitespace) {
 
-                if(profile_stack.back()->is_whitespace) {
+                profile_stack.at(profile_stack.size() - 2)->is_whitespace = true;
+                profile_stack.at(profile_stack.size() - 2)->whitespace_count += profile_stack.back()->whitespace_count;
 
-                    profile_stack.at(profile_stack.size() - 2)->is_whitespace = true;
-                    profile_stack.at(profile_stack.size() - 2)->whitespace_count += profile_stack.back()->whitespace_count;
+            }
 
-                }
+            if(profile_stack.back()->is_comment) {
 
-                if(profile_stack.back()->is_comment) {
+                profile_stack.at(profile_stack.size() - 2)->is_comment = true;
+                profile_stack.at(profile_stack.size() - 2)->comment_count += profile_stack.back()->comment_count;
 
-                    profile_stack.at(profile_stack.size() - 2)->is_comment = true;
-                    profile_stack.at(profile_stack.size() - 2)->comment_count += profile_stack.back()->comment_count;
+            }
 
-                }
+            if(profile_stack.back()->is_syntax) {
 
-                if(profile_stack.back()->is_syntax) {
-
-                    profile_stack.at(profile_stack.size() - 2)->is_syntax = true;
-                    profile_stack.at(profile_stack.size() - 2)->syntax_count += profile_stack.back()->syntax_count;
-
-                }
+                profile_stack.at(profile_stack.size() - 2)->is_syntax = true;
+                profile_stack.at(profile_stack.size() - 2)->syntax_count += profile_stack.back()->syntax_count;
 
             }
 
