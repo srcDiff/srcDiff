@@ -49,6 +49,31 @@ class change_entity_map {
             return entity.upper_bound(operation);
 
         }
+
+        static const std::string type_category(const std::string & type_name) {
+
+            if(is_decl_stmt(type_name))      return "decl_stmt";
+            if(is_parameter(type_name))      return "parameter";
+            if(is_function_type(type_name))  return "function";
+            if(is_class_type(type_name))     return "class";
+            if(is_condition_type(type_name)) return "conditional";
+            return type_name;
+     
+        }
+
+        static const std::string type_category(const versioned_string & type_name) {
+
+            if(type_name.is_common()) return type_category(type_name.original());
+
+            const std::string type_original = type_category(type_name.original());
+            const std::string type_modified = type_category(type_name.modified());
+
+            assert(type_original == type_modified);
+
+            return type_original;
+
+        }
+
         std::ostream & summarize_pure(std::ostream & out, srcdiff_type operation) const {
 
             size_t count = entity.count(operation);
@@ -58,7 +83,7 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.find(operation);
 
-            profile_t::pad(out) << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << citr->second->type_name << "(s) (" << count << "): { ";
+            profile_t::pad(out) << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "): { ";
             citr->second->summary(out);
             ++citr;
             for(; citr != entity.upper_bound(operation); ++citr) {
@@ -83,7 +108,7 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.find(SRCDIFF_COMMON);
 
-            profile_t::pad(out) << "Modified " << citr->second->type_name << "(s): " << num_modified << '\n';
+            profile_t::pad(out) << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified << '\n';
             for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr)
                 citr->second->summary(out);
 
