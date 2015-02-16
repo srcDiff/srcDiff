@@ -93,6 +93,44 @@ class versioned_string {
 
        	}
 
+       	operator std::string() const {
+
+       		return has_modified() ? *string_original : *string_modified;
+
+       	}
+
+       	bool operator==(const std::string & str) const {
+
+       		return std::string(*this) == str;
+
+		}
+
+		bool operator!=(const std::string & str) const {
+
+       		return std::string(*this) != str;
+
+		}
+
+		std::string operator+(const char * c_str) const {
+
+
+			return std::string(*this) + c_str;
+
+		}
+
+		friend std::string operator+(const std::string & str, const versioned_string & v_str) {
+
+
+			return str + std::string(v_str);
+
+		}
+
+		friend std::string operator+(const char * c_str, const versioned_string & v_str) {
+
+
+			return c_str + std::string(v_str);
+
+		}
 };
 
 

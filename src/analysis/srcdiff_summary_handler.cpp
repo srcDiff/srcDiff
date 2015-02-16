@@ -913,7 +913,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
             if(name_count == 0) {
 
-                profile_stack.at(counting_profile_pos.back().first)->set_name(collected_name, profile_stack.at(profile_stack.size() - 2)->type_name);
+                profile_stack.at(counting_profile_pos.back().first)->set_name(collected_name, std::string(profile_stack.at(profile_stack.size() - 2)->type_name));
                 collected_name.reset();
 
             }

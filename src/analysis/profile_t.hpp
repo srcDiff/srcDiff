@@ -30,7 +30,7 @@ class profile_t {
         static size_t depth;
 
         size_t id;
-        std::string type_name;
+        versioned_string type_name;
         srcdiff_type operation;
 
         size_t num_child_profiles;
