@@ -49,8 +49,8 @@ class function_profile_t : public profile_t {
             size_t behaviour_modifications = conditionals.count(SRCDIFF_COMMON) + conditionals.count(SRCDIFF_DELETE) + conditionals.count(SRCDIFF_INSERT);
 
             if((weak_modification + feature_modifications + behaviour_modifications) == 0) return NONE;
-            if((feature_modifications + behaviour_modifications) ==  0) return LOW;
-            if(feature_modifications < 3 && behaviour_modifications < 2) return MEDIUM;
+            if((feature_modifications + behaviour_modifications) ==  0)                    return LOW;
+            if(feature_modifications < 3 && behaviour_modifications < 2)                   return MEDIUM;
             return HIGH;
 
         }
