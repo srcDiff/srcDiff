@@ -57,9 +57,8 @@ class profile_t {
     public:
 
         profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), num_child_profiles(0),
-                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
-                                                                   has_assignment(false), modified_count(0), whitespace_count(0), comment_count(0),
-                                                                   syntax_count(0), assignment_count(0), total_count(0) {}
+                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false), has_assignment(false),
+                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
 
         void set_id(size_t id_count) {
 
@@ -89,7 +88,7 @@ class profile_t {
 
         virtual impact_factor calculate_impact_factor() const {
 
-            size_t impact_factor_number = syntax_count / num_child_profiles;
+            double impact_factor_number = (double)syntax_count / num_child_profiles;
 
             if(impact_factor_number == 0)    return NONE;
             if(impact_factor_number <  0.1)  return LOW;
