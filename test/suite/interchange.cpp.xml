@@ -234,5 +234,20 @@
 
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></unit>
 
+<unit filename="interchange|interchange">
+<diff:delete><struct>struct<diff:insert><class>class<diff:common> <name>A</name> <block>{<diff:insert><private type="default">
+
+</private></diff:insert><public type="default|"><diff:insert>public:</diff:insert>
+
+<function><type><name><diff:delete type="change">void</diff:delete><diff:insert type="change">int</diff:insert></name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name><diff:delete type="change">b</diff:delete><diff:insert type="change">c</diff:insert></name></decl></parameter><diff:insert>, <parameter><decl><type><name>int</name></type> <name>d</name></decl></parameter></diff:insert>)</parameter_list> <block>{
+
+<diff:insert>	<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
+		<block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:insert>
+
+}</block></function>
+
+<diff:insert><function><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list> <block>{}</block></function>
+
+</diff:insert></public>}</block>;</diff:common></class></diff:insert></struct></diff:delete></unit>
 
 </unit>
