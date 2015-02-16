@@ -110,7 +110,7 @@ class change_entity_map {
 
             profile_t::pad(out) << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified << '\n';
             for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr)
-                // if(citr->second->syntax_count)
+                if(citr->second->syntax_count)
                         citr->second->summary(out);
 
             return out;

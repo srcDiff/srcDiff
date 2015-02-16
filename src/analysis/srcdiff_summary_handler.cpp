@@ -949,60 +949,60 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
         }
 
-    --srcdiff_stack.back().level;
+        --srcdiff_stack.back().level;
+
+    }
 
     if(profile_stack.back()->has_assignment)
         profile_stack.at(profile_stack.size() - 2)->has_assignment = true;
 
-        if(profile_stack.back()->is_modified) {
-            std::cerr << profile_stack.back()->type_name << "->" << profile_stack.at(profile_stack.size() - 2)->type_name << '\n';
-            count_modified();
+    if(profile_stack.back()->is_modified) {
 
-            profile_stack.at(profile_stack.size() - 2)->is_modified = true;
-            profile_stack.at(profile_stack.size() - 2)->modified_count += profile_stack.back()->modified_count;
-            profile_stack.at(profile_stack.size() - 2)->total_count += profile_stack.back()->total_count;
+        count_modified();
 
-            if(profile_stack.back()->is_whitespace) {
+        profile_stack.at(profile_stack.size() - 2)->is_modified = true;
+        profile_stack.at(profile_stack.size() - 2)->modified_count += profile_stack.back()->modified_count;
+        profile_stack.at(profile_stack.size() - 2)->total_count += profile_stack.back()->total_count;
 
-                profile_stack.at(profile_stack.size() - 2)->is_whitespace = true;
-                profile_stack.at(profile_stack.size() - 2)->whitespace_count += profile_stack.back()->whitespace_count;
+        if(profile_stack.back()->is_whitespace) {
 
-            }
-
-            if(profile_stack.back()->is_comment) {
-
-                profile_stack.at(profile_stack.size() - 2)->is_comment = true;
-                profile_stack.at(profile_stack.size() - 2)->comment_count += profile_stack.back()->comment_count;
-
-            }
-
-            if(profile_stack.back()->is_syntax) {
-
-                profile_stack.at(profile_stack.size() - 2)->is_syntax = true;
-                profile_stack.at(profile_stack.size() - 2)->syntax_count += profile_stack.back()->syntax_count;
-
-            }
+            profile_stack.at(profile_stack.size() - 2)->is_whitespace = true;
+            profile_stack.at(profile_stack.size() - 2)->whitespace_count += profile_stack.back()->whitespace_count;
 
         }
 
-        if(!is_interchange && is_count(full_name)) {
+        if(profile_stack.back()->is_comment) {
 
-            counting_profile_pos.pop_back();
+            profile_stack.at(profile_stack.size() - 2)->is_comment = true;
+            profile_stack.at(profile_stack.size() - 2)->comment_count += profile_stack.back()->comment_count;
 
-            profile_stack.at(counting_profile_pos.back().second)->inc_num_child_profiles();
+        }
 
-            // do not save items with no changes and not inserted/deleted
-            if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON) {
+        if(profile_stack.back()->is_syntax) {
 
-	            if(profile_list.size() < profile_stack.back()->id)
-	                profile_list.resize(profile_stack.back()->id * 2);
+            profile_stack.at(profile_stack.size() - 2)->is_syntax = true;
+            profile_stack.at(profile_stack.size() - 2)->syntax_count += profile_stack.back()->syntax_count;
 
-	            profile_list[profile_stack.back()->id] = profile_stack.back();
+        }
 
-	            // should always have at least unit
-                profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back());
+    }
 
-        	}
+    if(!is_interchange && is_count(full_name)) {
+
+        counting_profile_pos.pop_back();
+
+        profile_stack.at(counting_profile_pos.back().second)->inc_num_child_profiles();
+
+        // do not save items with no changes and not inserted/deleted
+        if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON) {
+
+            if(profile_list.size() < profile_stack.back()->id)
+                profile_list.resize(profile_stack.back()->id * 2);
+
+            profile_list[profile_stack.back()->id] = profile_stack.back();
+
+            // should always have at least unit
+            profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back());
 
         }
 
