@@ -704,10 +704,8 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     // detect if interchange
     size_t srcml_depth = uri_stack.size();
-    bool is_interchange = (srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
-                            && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert")
-                          || (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
-                            && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
+    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+                            && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
 
     if(text != "") process_characters();
 
@@ -738,8 +736,11 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
         else if(local_name == "insert")
             srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_change, is_move));
 
+        bool is_interchange_diff = (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
+                            && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
+
         if((srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
-       && (srcdiff_stack.at(srcdiff_stack.size() - 2).operation == SRCDIFF_COMMON || is_interchange))
+       && (srcdiff_stack.at(srcdiff_stack.size() - 2).operation == SRCDIFF_COMMON || is_interchange_diff))
             profile_stack.back()->is_modified = true;
 
     }
@@ -907,10 +908,8 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     // detect if interchange
     size_t srcml_depth = uri_stack.size();
-    bool is_interchange = (srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
-                            && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert")
-                          || (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
-                            && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
+    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+                            && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
 
     if(text != "") process_characters();
 
@@ -956,7 +955,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
         profile_stack.at(profile_stack.size() - 2)->has_assignment = true;
 
         if(profile_stack.back()->is_modified) {
-
+            std::cerr << profile_stack.back()->type_name << "->" << profile_stack.at(profile_stack.size() - 2)->type_name << '\n';
             count_modified();
 
             profile_stack.at(profile_stack.size() - 2)->is_modified = true;
