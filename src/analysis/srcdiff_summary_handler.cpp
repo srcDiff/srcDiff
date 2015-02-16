@@ -913,11 +913,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     if(text != "") process_characters();
 
-    if(uri_stack.back() == SRCDIFF) {
-
-        srcdiff_stack.pop_back();
-
-    }
+    if(uri_stack.back() == SRCDIFF) srcdiff_stack.pop_back();
 
     std::string full_name = "";
 
@@ -987,7 +983,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     }
 
-    if(!is_interchange && is_count(full_name)) {
+    if(uri_stack.back() != SRCDIFF && !is_interchange && is_count(full_name)) {
 
         counting_profile_pos.pop_back();
 
