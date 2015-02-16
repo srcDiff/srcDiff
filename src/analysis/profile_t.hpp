@@ -3,6 +3,8 @@
 
 #include <counts_t.hpp>
 #include <versioned_string.hpp>
+#include <srcdiff_type.hpp>
+#include <namespace_uri.hpp>
 
 #include <vector>
 #include <map>
@@ -31,6 +33,7 @@ class profile_t {
 
         size_t id;
         versioned_string type_name;
+        namespace_uri uri;
         srcdiff_type operation;
 
         size_t num_child_profiles;
@@ -56,7 +59,7 @@ class profile_t {
 
     public:
 
-        profile_t(std::string type_name, srcdiff_type operation) : id(0), type_name(type_name), operation(operation), num_child_profiles(0),
+        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : id(0), type_name(type_name), uri(uri), operation(operation), num_child_profiles(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false), has_assignment(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
 
@@ -64,6 +67,12 @@ class profile_t {
 
             id = id_count;
 
+        }
+
+        void set_operation(srcdiff_type operation) {
+
+            this->operation = operation;
+                        
         }
 
         void inc_num_child_profiles() {
@@ -74,11 +83,11 @@ class profile_t {
 
         virtual void set_name(versioned_string name) {
 
-            set_name(name, boost::optional<std::string>());
+            set_name(name, boost::optional<versioned_string>());
 
         }
 
-        virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {}
+        virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {}
 
         virtual void add_child(const std::shared_ptr<profile_t> & profile) {
 

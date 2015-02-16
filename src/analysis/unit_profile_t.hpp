@@ -23,9 +23,9 @@ class unit_profile_t : public profile_t {
 
     public:
 
-        unit_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
+        unit_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : profile_t(type_name, uri, operation) {}
 
-        virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
+        virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
             file_name = name;
             
@@ -36,9 +36,11 @@ class unit_profile_t : public profile_t {
 
         virtual void add_child(const std::shared_ptr<profile_t> & profile) {
 
-            if(is_decl_stmt(profile->type_name))          decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
-            else if(is_function_type(profile->type_name)) functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
-            else if(is_class_type(profile->type_name))    classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
+            const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
+
+            if(is_decl_stmt(type_name))          decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
+            else if(is_function_type(type_name)) functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
+            else if(is_class_type(type_name))    classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
             else child_profiles.push_back(profile->id);
             
         }

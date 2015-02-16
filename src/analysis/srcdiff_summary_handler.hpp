@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFF_SUMMARY_HANDLER_HPP
 
 #include <srcdiff_type.hpp>
+#include <namespace_uri.hpp>
 #include <profile_t.hpp>
 #include <counts_t.hpp>
 #include <versioned_string.hpp>
@@ -44,6 +45,7 @@ protected:
 
     std::vector<srcdiff> srcdiff_stack;
     std::vector<std::shared_ptr<profile_t>> profile_stack;
+    std::vector<namespace_uri> uri_stack;
 
     std::vector<std::pair<size_t, size_t>> counting_profile_pos;
 

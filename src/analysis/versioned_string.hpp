@@ -58,6 +58,18 @@ class versioned_string {
 
 		}
 
+		void set_original(const std::string & string_original) {
+
+			this->string_original = string_original;
+
+		}
+
+		void set_modified(const std::string & string_modified) {
+
+			this->string_modified = string_modified;
+
+		}
+
 		void append(const char * characters, size_t len, enum srcdiff_type version) {
 
 			if(len == 0) return;

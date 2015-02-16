@@ -24,14 +24,14 @@ bool is_summary(const std::string & type_name) {
 
 }
 
-std::shared_ptr<profile_t> make_profile(const std::string & type_name, srcdiff_type operation) {
+std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation) {
 
-    if(is_class_type(type_name))    return std::make_shared<class_profile_t>(type_name, operation);
-    if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name, operation);
-    if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, operation);
-    if(is_decl_stmt(type_name))     return std::make_shared<decl_stmt_profile_t>(type_name, operation);
+    if(is_class_type(type_name))    return std::make_shared<class_profile_t>(type_name, uri, operation);
+    if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name, uri, operation);
+    if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, uri, operation);
+    if(is_decl_stmt(type_name))     return std::make_shared<decl_stmt_profile_t>(type_name, uri, operation);
 
-    return std::make_shared<profile_t>(type_name, operation);
+    return std::make_shared<profile_t>(type_name, uri, operation);
 
 }
 
@@ -569,7 +569,7 @@ void srcdiff_summary_handler::process_characters() {
 
             total.inc_total();
 
-            profile_stack.push_back(make_profile("text", srcdiff_stack.back().operation));
+            profile_stack.push_back(make_profile("text", SRC, srcdiff_stack.back().operation));
 
             count_diff(is_whitespace);
 
@@ -646,6 +646,8 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
+    uri_stack.push_back(SRC);
+
     if(text != "") process_characters();
 
     std::string full_name = "";
@@ -659,7 +661,7 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
 
     full_name += localname;
 
-    profile_stack.push_back(std::make_shared<unit_profile_t>(full_name, SRCDIFF_COMMON));
+    profile_stack.push_back(std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
 
     for(int i = 0; i < num_attributes; ++i)
         if(attributes[i].localname == std::string("filename")) {
@@ -677,7 +679,6 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
 
     counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, profile_stack.size() - 1));
     profile_stack.back()->set_id(++id_count);
-
 }
 
 /**
@@ -699,9 +700,11 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     const std::string local_name(localname);
 
+    uri_stack.push_back(strcmp(URI, "http://www.sdml.info/srcDiff") == 0 ? SRCDIFF : (strcmp(URI, "http://www.sdml.info/srcML/src") == 0 ? SRC : CPP));
+
     if(text != "") process_characters();
 
-    if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
+    if(uri_stack.back() == SRCDIFF) {
 
         /* @todo check if move and put as in common */
         bool is_change = false;
@@ -745,9 +748,24 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     full_name += local_name;
 
-    profile_stack.push_back(make_profile(full_name, srcdiff_stack.back().operation));
+    // detect if interchange
+    size_t srcml_depth = uri_stack.size();
+    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+                          && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert"
+                          && uri_stack.back() == SRC;
 
-    if(strcmp(URI, "http://www.sdml.info/srcDiff") != 0) {
+    if(is_interchange) {
+
+        profile_stack.at(counting_profile_pos.back().first)->set_operation(SRCDIFF_COMMON);
+        profile_stack.at(counting_profile_pos.back().first)->type_name.set_modified(full_name);
+
+    } else {
+
+        profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation));
+
+    }
+
+    if(uri_stack.back() != SRCDIFF) {
 
         if(local_name == "name") {
 
@@ -757,8 +775,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
         ++srcdiff_stack.back().level;
 
-        if(is_count(full_name)) {
-
+        if(!is_interchange && is_count(full_name)) {
 
             bool summarize = is_summary(local_name);
             counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, summarize ? profile_stack.size() - 1 : counting_profile_pos.back().second));
@@ -870,6 +887,7 @@ void srcdiff_summary_handler::endUnit(const char * localname, const char * prefi
     profile_list[profile_stack.back()->id] = profile_stack.back();
 
     profile_stack.pop_back();
+    uri_stack.pop_back();
 
 }
 
@@ -888,7 +906,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     if(text != "") process_characters();
 
-    if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
+    if(uri_stack.back() == SRCDIFF) {
 
         if(local_name == "common" || local_name == "delete" || local_name == "insert")
             srcdiff_stack.pop_back();
@@ -906,8 +924,13 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     full_name += local_name;
 
+    // detect if interchange
+    size_t srcml_depth = uri_stack.size();
+    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+                          && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert"
+                          && uri_stack.back() == SRC;
 
-    if(strcmp(URI, "http://www.sdml.info/srcDiff") != 0) {
+    if(uri_stack.back() != SRCDIFF) {
 
         if(local_name == "name") {
 
@@ -915,7 +938,11 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
             if(name_count == 0) {
 
-                profile_stack.at(counting_profile_pos.back().first)->set_name(collected_name, std::string(profile_stack.at(profile_stack.size() - 2)->type_name));
+                size_t parent_pos = profile_stack.size() - 2;
+                while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+                    --parent_pos;
+
+                profile_stack.at(counting_profile_pos.back().first)->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
                 collected_name.reset();
 
             }
@@ -967,7 +994,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
         }
 
-        if(is_count(full_name)) {
+        if(!is_interchange && is_count(full_name)) {
 
             counting_profile_pos.pop_back();
 
@@ -990,7 +1017,8 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     }
 
-    profile_stack.pop_back();
+    if(!is_interchange) profile_stack.pop_back();
+    uri_stack.pop_back();
 
 }
 

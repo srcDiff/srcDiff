@@ -13,9 +13,9 @@ class decl_stmt_profile_t : public profile_t {
         versioned_string type;
         versioned_string name;
 
-        decl_stmt_profile_t(std::string type_name, srcdiff_type operation) : profile_t(type_name, operation) {}
+        decl_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : profile_t(type_name, uri, operation) {}
 
-        virtual void set_name(versioned_string name, const boost::optional<std::string> & parent) {
+        virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
             if(*parent == "type") type = name;
             else this->name = name;
