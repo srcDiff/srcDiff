@@ -7,6 +7,8 @@
 #include <parameter_profile_t.hpp>
 #include <decl_stmt_profile_t.hpp>
 
+#include <cstring>
+
 bool is_count(const std::string & type_name) {
 
 return is_function_type(type_name) || is_class_type(type_name) || is_simple_type(type_name)
