@@ -1,6 +1,7 @@
 #include <srcml_converter.hpp>
 
 #include <string>
+#include <cctype>
 
 #include <libxml/xmlreader.h>
 
@@ -232,7 +233,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
               ++characters;
               size_t pos = 0;
-              while(pos < 2 && ishexnumber(*characters))
+              while(pos < 2 && isxdigit(*characters))
                 ++pos, ++characters;
 
               --characters;
