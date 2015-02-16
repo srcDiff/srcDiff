@@ -95,7 +95,9 @@ class versioned_string {
 
        	operator std::string() const {
 
-       		return has_original() ? *string_original : *string_modified;
+       		if(is_common()) return original();
+
+       		return original() + '|' + modified();
 
        	}
 
