@@ -44,7 +44,8 @@ find_package(LibGit2 REQUIRED)
 add_definitions("-DGIT")
 
 endif()
-set(CMAKE_CXX_FLAGS "-std=c++1y")
+set(CMAKE_CXX_FLAGS "-std=c++1y -fPIC")
+set(CMAKE_C_FLAGS "-fPIC")
 
 # find needed libraries
 find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.a PATHS /usr/local/lib)
