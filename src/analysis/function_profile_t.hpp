@@ -40,6 +40,21 @@ class function_profile_t : public profile_t {
 
         }
 
+        virtual impact_factor calculate_impact_factor() const {
+
+            size_t weak_modification = (return_type.is_common() ? 0 : 1) + (name.is_common() ? 0 : 1) + parameters.count(SRCDIFF_COMMON);
+
+            size_t feature_modifications = parameters.count(SRCDIFF_DELETE) + parameters.count(SRCDIFF_INSERT);
+
+            size_t behaviour_modifications = conditionals.count(SRCDIFF_COMMON) + conditionals.count(SRCDIFF_DELETE) + conditionals.count(SRCDIFF_INSERT);
+
+            if((weak_modification + feature_modifications + behaviour_modifications) == 0) return NONE;
+            if((feature_modifications + behaviour_modifications) ==  0) return LOW;
+            if(feature_modifications < 3 && behaviour_modifications < 2) return MEDIUM;
+            return HIGH;
+
+        }
+
         virtual std::ostream & summary(std::ostream & out) const {
 
             if(operation != SRCDIFF_COMMON) {
