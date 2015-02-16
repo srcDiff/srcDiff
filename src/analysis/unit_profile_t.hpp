@@ -20,6 +20,7 @@ class unit_profile_t : public profile_t {
         change_entity_map<decl_stmt_profile_t> decl_stmts;
         change_entity_map<function_profile_t>  functions;
         change_entity_map<class_profile_t>     classes;
+        change_entity_map<profile_t>           conditionals;
 
     public:
 
@@ -38,9 +39,10 @@ class unit_profile_t : public profile_t {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 
-            if(is_decl_stmt(type_name))          decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
-            else if(is_function_type(type_name)) functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
-            else if(is_class_type(type_name))    classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
+            if(is_decl_stmt(type_name))           decl_stmts.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile));
+            else if(is_function_type(type_name))  functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
+            else if(is_class_type(type_name))     classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
+            else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, profile);
             else child_profiles.push_back(profile->id);
             
         }
@@ -52,7 +54,7 @@ class unit_profile_t : public profile_t {
             // out << "\tComment: " << comment_count;
             // out << "\tSyntax: " << syntax_count;
             // out << "\tTotal: " << total_count;
-            out << '\n';
+            // out << '\n';
 
             //++depth;
 
@@ -67,6 +69,16 @@ class unit_profile_t : public profile_t {
             classes.summarize_pure(out, SRCDIFF_DELETE);
             classes.summarize_pure(out, SRCDIFF_INSERT);
             classes.summarize_modified(out);
+
+            size_t num_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
+            if(num_conditionals_deleted) pad(out) << "Number conditionals deleted: " << num_conditionals_deleted << '\n';
+
+            size_t num_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
+            if(num_conditionals_inserted) pad(out) << "Number conditionals inserted: " << num_conditionals_inserted << '\n';            size_t num_conditionals_modified = 0;
+
+            std::for_each(conditionals.find(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
+                [&num_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++num_conditionals_modified; });
+            if(num_conditionals_modified) pad(out) << "Number conditionals modified: " << num_conditionals_modified << '\n';
 
             //--depth;
 

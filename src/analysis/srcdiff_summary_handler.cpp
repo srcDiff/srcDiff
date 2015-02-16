@@ -949,21 +949,21 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
         }
 
-        --srcdiff_stack.back().level;
+    --srcdiff_stack.back().level;
 
-    if(profile_stack.back()->has_assignment
+    if(profile_stack.back()->has_assignment/*
        && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:delete"
        && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:insert"
-       && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:common")
+       && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:common"*/)
         profile_stack.at(profile_stack.size() - 2)->has_assignment = true;
 
         if(profile_stack.back()->is_modified) {
 
             count_modified();
 
-            if(profile_stack.at(profile_stack.size() - 2)->type_name != "diff:delete"
+            if(true/*profile_stack.at(profile_stack.size() - 2)->type_name != "diff:delete"
                && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:insert"
-               && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:common") {
+               && profile_stack.at(profile_stack.size() - 2)->type_name != "diff:common"*/) {
 
                 profile_stack.at(profile_stack.size() - 2)->is_modified = true;
                 profile_stack.at(profile_stack.size() - 2)->modified_count += profile_stack.back()->modified_count;
