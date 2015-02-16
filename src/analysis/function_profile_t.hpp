@@ -80,17 +80,20 @@ class function_profile_t : public profile_t {
 
             // behaviour change
             bool is_return_type_change = !return_type.is_common();
-            size_t num_deleted_parameters  = parameters.count(SRCDIFF_DELETE);
-            size_t num_inserted_parameters = parameters.count(SRCDIFF_INSERT);
-            size_t num_modified_parameters = parameters.count(SRCDIFF_COMMON);
-            if(is_return_type_change || num_deleted_parameters || num_inserted_parameters || num_modified_parameters) pad(out) << "Signature change:\n";//"\tThe following indicate a change of behaviour to the function:\n";
+            size_t num_parameters_deleted  = parameters.count(SRCDIFF_DELETE);
+            size_t num_parameters_inserted = parameters.count(SRCDIFF_INSERT);
+            size_t num_parameters_modified = 0;
+            std::for_each(parameters.find(SRCDIFF_COMMON), parameters.upper_bound(SRCDIFF_COMMON),
+                [&num_parameters_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++num_parameters_modified; });
+
+            if(is_return_type_change || num_parameters_deleted || num_parameters_inserted || num_parameters_modified) pad(out) << "Signature change:\n";//"\tThe following indicate a change of behaviour to the function:\n";
 
             ++depth;
 
             if(is_return_type_change)   pad(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
-            if(num_deleted_parameters)  pad(out) << "Number deleted parameters: " << num_deleted_parameters << '\n';
-            if(num_inserted_parameters) pad(out) << "Number inserted parameters: " << num_inserted_parameters << '\n';
-            if(num_modified_parameters) pad(out) << "Number modified parameters: " << num_modified_parameters << '\n';
+            if(num_parameters_deleted)  pad(out) << "Number deleted parameters: " << num_parameters_deleted << '\n';
+            if(num_parameters_inserted) pad(out) << "Number inserted parameters: " << num_parameters_inserted << '\n';
+            if(num_parameters_modified) pad(out) << "Number modified parameters: " << num_parameters_modified << '\n';
 
             --depth;
 
@@ -104,7 +107,9 @@ class function_profile_t : public profile_t {
             if(num_conditionals_deleted) pad(out) << "Number conditionals deleted: " << num_conditionals_deleted << '\n';
             if(num_conditionals_inserted) pad(out) << "Number conditionals inserted: " << num_conditionals_inserted << '\n';
 
-            size_t num_conditionals_modified = conditionals.count(SRCDIFF_COMMON);
+            size_t num_conditionals_modified = 0;
+            std::for_each(conditionals.find(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
+                [&num_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++num_conditionals_modified; });
             if(num_conditionals_modified) pad(out) << "Number conditionals modified: " << num_conditionals_modified << '\n';
 
             depth -= 2;
