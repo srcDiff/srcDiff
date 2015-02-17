@@ -445,7 +445,8 @@ void srcdiff_summary_handler::process_characters() {
 
    if(profile_stack.back()->type_name == "op:operator") {
 
-    if(text == "=" || text == "+=" || text == "-=" || text == "*=" || text == "/=" || text == ">>=" || text == "<<=" || text == "%=" || text == "&=" || text == "|=" || text == "^=") {
+    if(text == "=" || text == "+=" || text == "-=" || text == "*=" || text == "/="
+    || text == ">>=" || text == "<<=" || text == "%=" || text == "&=" || text == "|=" || text == "^=") {
 
         profile_stack.back()->has_assignment = true;
         ++profile_stack.back()->assignment_count;
@@ -676,6 +677,7 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
 
     counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, profile_stack.size() - 1));
     profile_stack.back()->set_id(++id_count);
+    
 }
 
 /**
