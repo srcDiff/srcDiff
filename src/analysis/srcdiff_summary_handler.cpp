@@ -277,7 +277,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     const std::string local_name(localname);
 
-    uri_stack.push_back(strcmp(URI, "http://www.sdml.info/srcDiff") == 0 ? SRCDIFF : (strcmp(URI, "http://www.sdml.info/srcML/src") == 0 ? SRC : CPP));
+    uri_stack.push_back(URI == std::string("http://www.sdml.info/srcDiff") ? SRCDIFF : (URI == std::string("http://www.sdml.info/srcML/src") ? SRC : CPP));
 
     // detect if interchange
     size_t srcml_depth = uri_stack.size();
@@ -293,12 +293,12 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
         bool is_move = false;
         for(int i = 0; i < num_attributes; ++i) {
 
-            if(strcmp(attributes[i].localname, "type") == 0) {
+            if(attributes[i].localname == std::string("type")) {
 
                 std::string value = attributes[i].value;
                 if(value == "change") is_change = true;
 
-            } else if(strcmp(attributes[i].localname, "move") == 0) {
+            } else if(attributes[i].localname == std::string("move")) {
 
                 is_move = true;
 
