@@ -44,6 +44,18 @@ class change_entity_map {
 
         }
 
+        const_iterator end() const {
+
+            return entity.end();
+
+        }
+
+        const_iterator lower_bound(srcdiff_type operation) const {
+
+            return entity.lower_bound(operation);
+
+        }
+
         const_iterator upper_bound(srcdiff_type operation) const {
 
             return entity.upper_bound(operation);
@@ -81,7 +93,7 @@ class change_entity_map {
 
             out << '\n';
 
-            typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.find(operation);
+            typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(operation);
 
             profile_t::pad(out) << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "): { ";
             citr->second->summary(out);
@@ -106,7 +118,7 @@ class change_entity_map {
 
             out << '\n';
 
-            typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.find(SRCDIFF_COMMON);
+            typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(SRCDIFF_COMMON);
 
             profile_t::pad(out) << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified << '\n';
             for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr)
