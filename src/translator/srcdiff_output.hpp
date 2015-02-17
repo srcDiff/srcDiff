@@ -86,10 +86,9 @@ public:
 protected:
 
   srcml_archive * archive;
-  std::shared_ptr<color_diff> colordiff;
-  std::shared_ptr<bash_view> bashview;
-  srcdiff_summary summary;
+  const std::string srcdiff_filename;
   const OPTION_TYPE & flags;
+  size_t number_context_lines;
 
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
@@ -157,18 +156,23 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
   if(is_option(flags, OPTION_VISUALIZE)) {
 
     const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
-    colordiff->colorize(xml, line_diff_range);
+    const std::string directory = srcml_archive_get_directory(archive) ? srcml_archive_get_directory(archive) : "";
+    const std::string version = srcml_archive_get_version(archive) ? srcml_archive_get_version(archive) : "";
+    color_diff colordiff(srcdiff_filename, directory, version, flags);
+    colordiff.colorize(xml, line_diff_range);
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_BASH_VIEW)) {
 
     const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
-    bashview->transform(xml, "UTF-8");
+    bash_view bashview(srcdiff_filename, number_context_lines);
+    bashview.transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
     const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
+    srcdiff_summary summary;
     summary.summarize(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
