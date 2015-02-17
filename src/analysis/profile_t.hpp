@@ -51,10 +51,6 @@ class profile_t {
         size_t assignment_count;
         size_t total_count;
 
-        std::map<std::string, counts_t> inserted;
-        std::map<std::string, counts_t> deleted;
-        std::map<std::string, counts_t> modified;
-
         std::vector<size_t> child_profiles;
 
     public:

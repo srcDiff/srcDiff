@@ -49,10 +49,6 @@ protected:
 
     std::vector<std::pair<size_t, size_t>> counting_profile_pos;
 
-    std::map<std::string, counts_t> inserted;
-    std::map<std::string, counts_t> deleted;
-    std::map<std::string, counts_t> modified;
-
     counts_t insert_count;
     counts_t delete_count;
     counts_t change_count;
