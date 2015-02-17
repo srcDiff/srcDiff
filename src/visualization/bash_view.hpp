@@ -77,7 +77,7 @@ private:
 
 public:
 
-  int transform(const std::string & srcdiff, const std::string & xml_encoding);
+  void transform(const std::string & srcdiff, const std::string & xml_encoding);
 
 
   /**
