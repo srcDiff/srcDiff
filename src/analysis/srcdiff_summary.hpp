@@ -11,14 +11,12 @@ protected:
 
 private:
 
-	const char * xml_encoding;
-
 public:
 
-	srcdiff_summary(const char * xml_encoding);
+	srcdiff_summary();
 	~srcdiff_summary();
 
-	void summarize(const std::string & srcdiff);
+	void summarize(const std::string & srcdiff, const std::string & xml_encoding);
 
 };
 

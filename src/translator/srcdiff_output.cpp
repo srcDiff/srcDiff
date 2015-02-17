@@ -12,7 +12,7 @@ int move_operation = SESCOMMON;
 
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
   unsigned long number_context_lines)
- : archive(archive), colordiff(NULL), bashview(NULL), summary(srcml_archive_get_xml_encoding(archive)), flags(flags),
+ : archive(archive), colordiff(NULL), bashview(NULL), summary(), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SESDELETE)), rbuf_modified(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 

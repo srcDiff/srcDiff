@@ -1,14 +1,5 @@
-/*
-  bash_view.cpp
-
-  Michael John Decker
-  mdecker6@kent.edu
-*/
-
 #include <bash_view.hpp>
 #include <shortest_edit_script.hpp>
-
-#include <libxml/parserInternals.h>
 
 #include <cstring>
 
@@ -21,139 +12,150 @@ const char * const LINE_CODE = "\x1b[36m";
 
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-// forward declarations
-static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff);
-static void parseDocument(xmlParserCtxtPtr ctxt);
+int bash_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
 
-int bash_view::transform(const char * srcdiff) {
+  srcSAXController controller(srcdiff, xml_encoding.c_str());
 
-  // create the ctxt
-  xmlParserCtxtPtr ctxt = createURLParserCtxt(srcdiff);
-
-  // setup sax handler
-  xmlSAXHandler sax = bash_view::factory();
-  ctxt->sax = &sax;
-
-  ctxt->_private = this;
-
-  parseDocument(ctxt);
-
-  // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
-
-  // all done with parsing
-  xmlFreeParserCtxt(ctxt);
-
-  return 0;
-}
-
-// create the ctxt
-static xmlParserCtxtPtr createURLParserCtxt(const char * srcdiff) {
-
-  xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(srcdiff, strlen(srcdiff));
-  //xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
-
-  if (ctxt == NULL) {
-
-    // report error
-    xmlErrorPtr ep = xmlGetLastError();
-    fprintf(stderr, "%s: %s", "ExtractsrcML", ep->message);
-    exit(1);
-  }
-
-  return ctxt;
-}
-
-// parse the document
-static void parseDocument(xmlParserCtxtPtr ctxt) {
-
-  // process the document
-  int status;
-  if ((status = xmlParseDocument(ctxt)) == -1) {
-
-    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
-
-    // report error
-    char* partmsg = strdup(ep->message);
-    partmsg[strlen(partmsg) - 1] = '\0';
-
-    fprintf(stderr, "%s: %s in '%s'\n", "ExtractsrcML", partmsg, ep->file);
-    exit(1);
-  }
+  controller.parse(this);
 
 }
 
-xmlSAXHandler bash_view::factory() {
+/**
+ * startDocument
+ *
+ * SAX handler function for start of document.
+ * Overide for desired behaviour.
+ */
+void bash_view::startDocument() {}
 
-  xmlSAXHandler sax = { 0 };
+/**
+ * endDocument
+ *
+ * SAX handler function for end of document.
+ * Overide for desired behaviour.
+ */
+void bash_view::endDocument() {}
 
-  sax.initialized    = XML_SAX2_MAGIC;
+/**
+ * startRoot
+ * @param localname the name of the profile tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ * @param num_namespaces number of namespaces definitions
+ * @param namespaces the defined namespaces
+ * @param num_attributes the number of attributes on the tag
+ * @param attributes list of attributes
+ *
+ * SAX handler function for start of the root profile.
+ * Overide for desired behaviour.
+ */
+void bash_view::startRoot(const char * localname, const char * prefix, const char * URI,
+                       int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                       const struct srcsax_attribute * attributes) {}
 
-  sax.startDocument = &bash_view::startDocument;
-  sax.endDocument = &bash_view::endDocument;
+/**
+ * startUnit
+ * @param localname the name of the profile tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ * @param num_namespaces number of namespaces definitions
+ * @param namespaces the defined namespaces
+ * @param num_attributes the number of attributes on the tag
+ * @param attributes list of attributes
+ *
+ * SAX handler function for start of an unit.
+ * Overide for desired behaviour.
+ */
+void bash_view::startUnit(const char * localname, const char * prefix, const char * URI,
+                       int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                       const struct srcsax_attribute * attributes) {
 
-  sax.startElementNs = &bash_view::startElementNs;
-  sax.endElementNs = &bash_view::endElementNs;
+    diff_stack.push_back(SESCOMMON);
 
-  sax.characters = &bash_view::characters;
-  sax.comment = &bash_view::comment;
-
-  return sax;
 }
 
-void bash_view::startDocument(void* ctx) {
+/**
+ * startElement
+ * @param localname the name of the profile tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ * @param num_namespaces number of namespaces definitions
+ * @param namespaces the defined namespaces
+ * @param num_attributes the number of attributes on the tag
+ * @param attributes list of attributes
+ *
+ * SAX handler function for start of an profile.
+ * Overide for desired behaviour.
+ */
+void bash_view::startElement(const char * localname, const char * prefix, const char * URI,
+                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                            const struct srcsax_attribute * attributes) {
 
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  bash_view * data = (bash_view *)ctxt->_private;
+  if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
 
-  data->diff_stack.push_back(SESCOMMON);
-
-
-}
-
-void bash_view::endDocument(void* ctx) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  bash_view * data = (bash_view *)ctxt->_private;
-
-  data->reset();
-
-}
-
-void bash_view::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                    const xmlChar** attributes) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  bash_view * data = (bash_view *)ctxt->_private;
-
-  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
-
-    if(strcmp((const char *)localname, "common") == 0)
-      data->diff_stack.push_back(SESCOMMON);
-    else if(strcmp((const char *)localname, "delete") == 0)
-      data->diff_stack.push_back(SESDELETE);
-    else if(strcmp((const char *)localname, "insert") == 0)
-      data->diff_stack.push_back(SESINSERT);
+    if(strcmp(localname, "common") == 0)
+     diff_stack.push_back(SESCOMMON);
+    else if(strcmp(localname, "delete") == 0)
+     diff_stack.push_back(SESDELETE);
+    else if(strcmp(localname, "insert") == 0)
+     diff_stack.push_back(SESINSERT);
     
   }
 
 }
 
-void bash_view::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+/**
+ * endRoot
+ * @param localname the name of the profile tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of the root profile.
+ * Overide for desired behaviour.
+ */
+void bash_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
 
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  bash_view * data = (bash_view *)ctxt->_private;
+/**
+ * endUnit
+ * @param localname the name of the profile tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of an unit.
+ * Overide for desired behaviour.
+ */
+void bash_view::endUnit(const char * localname, const char * prefix, const char * URI) {}
 
-  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+/**
+ * endElement
+ * @param localname the name of the profile tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of an profile.
+ * Overide for desired behaviour.
+ */
+void bash_view::endElement(const char * localname, const char * prefix, const char * URI) {
+
+    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
        || strcmp((const char *)localname, "delete") == 0
        || strcmp((const char *)localname, "insert") == 0)
-      data->diff_stack.pop_back();
+     diff_stack.pop_back();
   }
 
 }
+
+/**
+ * charactersRoot
+ * @param ch the characers
+ * @param len number of characters
+ *
+ * SAX handler function for character handling at the root level.
+ * Overide for desired behaviour.
+ */
+void bash_view::charactersRoot(const char * ch, int len) {}
 
 void bash_view::output_additional_context() {
 
@@ -245,29 +247,32 @@ void bash_view::characters(const char * ch, int len) {
 
 }
 
-void bash_view::characters(void* ctx, const xmlChar* ch, int len) {
+/**
+ * charactersUnit
+ * @param ch the characers
+ * @param len number of characters
+ *
+ * SAX handler function for character handling within a unit.
+ * Overide for desired behaviour.
+ */
+void bash_view::charactersUnit(const char * ch, int len) {
 
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
-  bash_view * data = (bash_view *)ctxt->_private;
+  if(diff_stack.back() != SESCOMMON) {
 
-  if(data->diff_stack.back() != SESCOMMON) {
+   output_additional_context();
 
-    data->output_additional_context();
+   is_after_additional = false;
+   is_after_change = false;
+   wait_change = false;
 
-    data->is_after_additional = false;
-    data->is_after_change = false;
-    data->wait_change = false;
-
-    data->output->write(data->context.c_str(), data->context.size());
-    data->context = "";
+   output->write(context.c_str(), context.size());
+   context = "";
 
   }
 
-  data->characters((const char *)ch, len);
+  characters((const char *)ch, len);
 
-  if(data->diff_stack.back() != SESCOMMON) data->is_after_change  = true;
+  if(diff_stack.back() != SESCOMMON) is_after_change  = true;
 
 }
-
-void bash_view::comment(void* ctx, const xmlChar* ch) {}
 

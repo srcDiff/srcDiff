@@ -594,11 +594,7 @@ srcdiff_summary_handler::srcdiff_summary_handler(profile_t::profile_list_t & pro
  * SAX handler function for start of document.
  * Overide for desired behaviour.
  */
-void srcdiff_summary_handler::startDocument() {
-
-    srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, false, false));
-
-}
+void srcdiff_summary_handler::startDocument() {}
 
 /**
  * endDocument
@@ -647,6 +643,7 @@ void srcdiff_summary_handler::startUnit(const char * localname, const char * pre
                        const struct srcsax_attribute * attributes) {
 
     uri_stack.push_back(SRC);
+    srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, false, false));
 
     if(text != "") process_characters();
 

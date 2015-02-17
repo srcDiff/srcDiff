@@ -1,13 +1,13 @@
 #ifndef INCLUDED_SRCDIFF_SUMMARY_HANDLER_HPP
 #define INCLUDED_SRCDIFF_SUMMARY_HANDLER_HPP
 
+#include <srcSAXHandler.hpp>
+
 #include <srcdiff_type.hpp>
 #include <namespace_uri.hpp>
 #include <profile_t.hpp>
 #include <counts_t.hpp>
 #include <versioned_string.hpp>
-
-#include <srcSAXHandler.hpp>
 
 #include <iostream>
 #include <string>

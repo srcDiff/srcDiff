@@ -4,15 +4,15 @@
 
 #include <iostream>
 
-srcdiff_summary::srcdiff_summary(const char * xml_encoding) : xml_encoding(xml_encoding) {}
+srcdiff_summary::srcdiff_summary() {}
 srcdiff_summary::~srcdiff_summary() {}
 
-void srcdiff_summary::summarize(const std::string & srcdiff) {
+void srcdiff_summary::summarize(const std::string & srcdiff, const std::string & xml_encoding) {
 
 	profile_t::profile_list_t profile_list(1024);
 	srcdiff_summary_handler handler(profile_list);
 
-	srcSAXController controller(srcdiff, xml_encoding);
+	srcSAXController controller(srcdiff, xml_encoding.c_str());
 
 	controller.parse(&handler);
 

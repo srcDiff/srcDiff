@@ -163,13 +163,13 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
   } else if(is_option(flags, OPTION_BASH_VIEW)) {
 
     const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
-    bashview->transform(xml);
+    bashview->transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
     const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
-    summary.summarize(xml);
+    summary.summarize(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
   } else {
