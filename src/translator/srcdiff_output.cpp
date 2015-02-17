@@ -12,12 +12,28 @@ int move_operation = SESCOMMON;
 
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
   unsigned long number_context_lines)
- : archive(archive), srcdiff_filename(srcdiff_filename), flags(flags), number_context_lines(number_context_lines),
+ : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SESDELETE)), rbuf_modified(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
-if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY))
+  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY))
     srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
+
+  if(is_option(flags, OPTION_VISUALIZE)) {
+
+    const std::string directory = srcml_archive_get_directory(archive) ? srcml_archive_get_directory(archive) : "";
+    const std::string version = srcml_archive_get_version(archive) ? srcml_archive_get_version(archive) : "";
+    colordiff = std::make_shared<color_diff>(srcdiff_filename, directory, version, flags);
+
+  } else if(is_option(flags, OPTION_BASH_VIEW)) {
+
+     bashview = std::make_shared<bash_view>(srcdiff_filename, number_context_lines);
+
+  } else if(is_option(flags, OPTION_SUMMARY)) {
+
+    summary = std::make_shared<srcdiff_summary>();
+
+  }
 
   wstate->filename = srcdiff_filename;
 
