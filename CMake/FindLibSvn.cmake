@@ -96,7 +96,7 @@ if(LIBSVN_RA_SVN)
 endif()
 
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
-    HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules)
+    HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/local/share/cmake-3.2/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules /usr/share/cmake-3.2/Modules)
 
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
