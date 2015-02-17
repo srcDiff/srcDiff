@@ -37,20 +37,6 @@ std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace
 
 void srcdiff_summary_handler::process_characters() {
 
-   if(profile_stack.back()->type_name == "op:operator") {
-
-    if(text == "=" || text == "+=" || text == "-=" || text == "*=" || text == "/="
-    || text == ">>=" || text == "<<=" || text == "%=" || text == "&=" || text == "|=" || text == "^=") {
-
-        profile_stack.back()->has_assignment = true;
-        ++profile_stack.back()->assignment_count;
-
-    } else
-        profile_stack.back()->has_assignment = false;
-        profile_stack.back()->assignment_count = 0;
-
-   }
-
     const char * ch = text.c_str();
     std::string::size_type len = text.size();
 
@@ -532,9 +518,6 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
         --srcdiff_stack.back().level;
 
     }
-
-    if(profile_stack.back()->has_assignment)
-        profile_stack.at(profile_stack.size() - 2)->has_assignment = true;
 
     if(profile_stack.back()->is_modified) {
 

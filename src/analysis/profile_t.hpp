@@ -42,13 +42,11 @@ class profile_t {
         bool is_whitespace;
         bool is_comment;
         bool is_syntax;
-        bool has_assignment;
 
         size_t modified_count;
         size_t whitespace_count;
         size_t comment_count;
         size_t syntax_count;
-        size_t assignment_count;
         size_t total_count;
 
         std::vector<size_t> child_profiles;
@@ -56,8 +54,8 @@ class profile_t {
     public:
 
         profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : id(0), type_name(type_name), uri(uri), operation(operation), num_child_profiles(0),
-                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false), has_assignment(false),
-                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), assignment_count(0), total_count(0) {}
+                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
+                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
 
         void set_id(size_t id_count) {
 
