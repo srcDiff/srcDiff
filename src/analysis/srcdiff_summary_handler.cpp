@@ -343,6 +343,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
                             || profile_stack.at(counting_profile_pos.back().first)->type_name.modified() == "else" ? 1 : 2;
         parent->syntax_count -= syntax_dec;
         parent->total_count -= syntax_dec;
+        if(parent->syntax_count == 0) parent->is_syntax = false;
 
     } else {
 
