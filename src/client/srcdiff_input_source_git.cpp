@@ -335,7 +335,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
 }
 
-void srcdiff_input_source_git::files_from() {}
+void srcdiff_input_source_git::process_files_from() {}
 
 srcdiff_input_source_git::input_context * srcdiff_input_source_git::open(const char * uri) const {
 

@@ -377,7 +377,7 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
 }
 
 
-void srcdiff_input_source_local::files_from() {
+void srcdiff_input_source_local::process_files_from() {
 
 #define FILELIST_COMMENT '#'
 
@@ -387,7 +387,6 @@ void srcdiff_input_source_local::files_from() {
 
     input_context * context = open(options.files_from_name->c_str());
     uri_stream<srcdiff_input_source_local> uriinput(context);
-
 
     const char * c_line = 0;
     while ((c_line = uriinput.readline())) {

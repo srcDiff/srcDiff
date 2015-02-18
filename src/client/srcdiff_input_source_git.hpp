@@ -44,7 +44,7 @@ public:
                             const boost::optional<std::string> & path_modified, const void * context_modified);
   virtual void process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
                                  const boost::optional<std::string> & directory_modified, const void * context_modified);
-  virtual void files_from();
+  virtual void process_files_from();
 
   struct input_context {
 
