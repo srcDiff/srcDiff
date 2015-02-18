@@ -523,7 +523,7 @@ void srcdiff_input_source_svn::process_files_from() {
       svn_dirent_t * dirent;
       svn_ra_stat(session, path->c_str(), revision, &dirent, pool);
 
-      if(dirent->kind == svn_node_file)         file(path_original, nullptr, path_modified, nullptr);
+      if(dirent->kind == svn_node_file) file(path_original, nullptr, path_modified, nullptr);
 
     }
 
