@@ -316,8 +316,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
         bool is_interchange_diff = (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
                             && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
 
-        if((srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
-       && (srcdiff_stack.at(srcdiff_stack.size() - 2).operation == SRCDIFF_COMMON || is_interchange_diff))
+        if(srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
             profile_stack.back()->is_modified = true;
 
     }
@@ -344,6 +343,8 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
         parent->syntax_count -= syntax_dec;
         parent->total_count -= syntax_dec;
         if(parent->syntax_count == 0) parent->is_syntax = false;
+
+        /* @todo correct totals and possible look at other beside to else to elseif, may be whitespace */
 
     } else {
 
@@ -526,7 +527,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
     }
 
-    if(profile_stack.back()->is_modified) {
+    if(!is_interchange && profile_stack.back()->is_modified) {
 
         profile_stack.at(profile_stack.size() - 2)->is_modified = true;
         profile_stack.at(profile_stack.size() - 2)->modified_count += profile_stack.back()->modified_count;
