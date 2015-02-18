@@ -338,6 +338,12 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
         profile_stack.at(counting_profile_pos.back().first)->set_operation(SRCDIFF_COMMON);
         profile_stack.at(counting_profile_pos.back().first)->type_name.set_modified(full_name);
 
+        std::shared_ptr<profile_t> & parent = profile_stack.at(counting_profile_pos.back().first - 2);
+        size_t syntax_dec = profile_stack.at(counting_profile_pos.back().first)->type_name.original() == "else"
+                            || profile_stack.at(counting_profile_pos.back().first)->type_name.modified() == "else" ? 1 : 2;
+        parent->syntax_count -= syntax_dec;
+        parent->total_count -= syntax_dec;
+
     } else {
 
         profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation));
@@ -352,7 +358,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
         }
 
-        ++srcdiff_stack.back().level;
+        if(!is_interchange) ++srcdiff_stack.back().level;
 
         if(!is_interchange && is_count(full_name)) {
 
@@ -515,7 +521,7 @@ void srcdiff_summary_handler::endElement(const char * localname, const char * pr
 
         }
 
-        --srcdiff_stack.back().level;
+        if(!is_interchange) --srcdiff_stack.back().level;
 
     }
 
