@@ -288,7 +288,6 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     if(uri_stack.back() == SRCDIFF) {
 
-        /* @todo check if move and put as in common */
         bool is_change = false;
         bool is_move = false;
         for(int i = 0; i < num_attributes; ++i) {
@@ -340,10 +339,14 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
         std::shared_ptr<profile_t> & parent = profile_stack.at(counting_profile_pos.back().first - 2);
         size_t syntax_dec = 1;
         parent->syntax_count -= syntax_dec;
-        parent->total_count -= syntax_dec;
+        parent->total_count  -= syntax_dec;
         if(parent->syntax_count == 0) parent->is_syntax = false;
 
         /* @todo correct totals and possible look at other beside to else to elseif, may be whitespace */
+        delete_count.syntax -= syntax_dec;
+        delete_count.total  -= syntax_dec;
+        total.syntax        -= syntax_dec;;
+        total.total         -= syntax_dec;;
 
     } else {
 
