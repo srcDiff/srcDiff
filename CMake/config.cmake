@@ -22,11 +22,13 @@
 #  Build configuration file
 
 # build options
-option(BUILD_UNIT_TESTS "Build unit tests for srcDiff" OFF)
+option(BUILD_TRANSLATOR_TESTS "Build files for testing srcDiff translator" ON)
 
-option(SVN_ENABLED "Build in svn source input support" OFF)
+option(BUILD_UNIT_TESTS       "Build unit tests for srcDiff"              OFF)
 
-option(GIT_ENABLED "Build in git source input support" OFF)
+option(SVN_ENABLED            "Build in svn source input support"         OFF)
+
+option(GIT_ENABLED            "Build in git source input support"         OFF)
 
 if(SVN_ENABLED)
 
