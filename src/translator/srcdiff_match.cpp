@@ -950,6 +950,8 @@ static const interchange_list interchange_lists[] = {
 bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, const std::string & original_uri,
                                              const std::string & modified_tag, const std::string & modified_uri) {
 
+  if(original_uri != modified_uri) return false;
+
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
     if(interchange_lists[list_pos].name == original_tag) {
