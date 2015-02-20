@@ -38,16 +38,16 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   wstate->filename = srcdiff_filename;
 
   diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
-  diff->href = SRCDIFF_DEFAULT_NAMESPACE_HREF;
+  diff->href   = SRCDIFF_DEFAULT_NAMESPACE_HREF;
 
-  unit_tag          = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
+  unit_tag            = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
 
-  diff_common_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SESCOMMON, *diff.get());
-  diff_common_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SESCOMMON, *diff.get());
-  diff_original_start    = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_OLD, *diff.get());
-  diff_original_end      = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_OLD, *diff.get());
-  diff_modified_start    = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, *diff.get());
-  diff_modified_end      = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_NEW, *diff.get());
+  diff_common_start   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SESCOMMON, *diff.get());
+  diff_common_end     = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SESCOMMON, *diff.get());
+  diff_original_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_OLD, *diff.get());
+  diff_original_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_OLD, *diff.get());
+  diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, *diff.get());
+  diff_modified_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_NEW, *diff.get());
 
  }
 
