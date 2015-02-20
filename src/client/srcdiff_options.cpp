@@ -132,9 +132,11 @@ void option_field<&srcdiff_options::bash_view_context>(const std::string & arg) 
 
   try {
 
-    options.bash_view_context = (size_t)std::stoull(arg);
+    options.bash_view_context = (size_t)std::stoll(arg);
 
   } catch(std::invalid_argument) {
+
+    options.bash_view_context = arg;
 
   }
 

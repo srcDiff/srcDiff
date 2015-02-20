@@ -3,6 +3,8 @@
 
 #include <srcSAXHandler.hpp>
 
+#include <boost/any.hpp>
+
 #include <vector>
 #include <string>
 #include <list>
@@ -25,7 +27,7 @@ private:
   bool is_after_change;
   bool wait_change;
 
-  size_t num_context_lines;
+  boost::any context_type;
   std::list<std::string>::size_type length;
   std::list<std::string> additional_context;
 
@@ -35,8 +37,8 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename, size_t num_context_lines) : line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
-    num_context_lines(num_context_lines), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
+  bash_view(const std::string & output_filename, boost::any context_type) : line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
+    context_type(context_type), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());

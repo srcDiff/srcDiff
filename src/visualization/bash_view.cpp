@@ -183,6 +183,9 @@ void bash_view::output_additional_context() {
 
 void bash_view::characters(const char * ch, int len) {
 
+  size_t number_context_lines = -1;
+  if(context_type.type() == typeid(size_t)) number_context_lines = boost::any_cast<size_t>(context_type);
+
   const char * code = COMMON_CODE;
   if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
   else if(diff_stack.back() == SESINSERT) code = INSERT_CODE;
@@ -215,7 +218,7 @@ void bash_view::characters(const char * ch, int len) {
 
         ++after_edit_count;
 
-        if(after_edit_count == num_context_lines) {
+        if(after_edit_count == number_context_lines) {
 
           is_after_additional = false;
           after_edit_count = 0;
@@ -224,9 +227,9 @@ void bash_view::characters(const char * ch, int len) {
 
         }
 
-      } else if(wait_change && num_context_lines != 0) {
+      } else if(wait_change && number_context_lines != 0) {
 
-        if(length >= num_context_lines)
+        if(length >= number_context_lines)
           additional_context.pop_front(), --length;
 
         additional_context.push_back(context);

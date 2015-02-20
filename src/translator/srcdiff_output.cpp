@@ -27,7 +27,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   } else if(is_option(flags, OPTION_BASH_VIEW)) {
 
-     bashview = std::make_shared<bash_view>(srcdiff_filename, boost::any_cast<size_t>(bash_view_context));
+     bashview = std::make_shared<bash_view>(srcdiff_filename, bash_view_context);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
