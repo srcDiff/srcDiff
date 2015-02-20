@@ -8,6 +8,8 @@
 #include <srcdiff_summary.hpp>
 #include <methods.hpp>
 
+#include <boost/any.hpp>
+
 #include <vector>
 #include <memory>
 
@@ -120,7 +122,7 @@ private:
 
 public:
 
-  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, unsigned long number_context_lines);
+  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, boost::any bash_view_context);
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_original, int is_modified);

@@ -128,7 +128,7 @@ void srcdiff_input_source_svn::session_single() {
   srcdiff_translator translator(options.srcdiff_filename,
                                 options.flags, options.methods,
                                 options.archive,
-                                options.number_context_lines);
+                                options.bash_view_context);
 
   this->translator = &translator;
 
@@ -172,7 +172,7 @@ void srcdiff_input_source_svn::session_range() {
     srcdiff_translator translator(full_srcdiff.str(),
                                   options.flags, options.methods,
                                   options.archive,
-                                  options.number_context_lines);
+                                  options.bash_view_context);
 
     this->translator = &translator;
 
@@ -475,7 +475,7 @@ void srcdiff_input_source_svn::process_files_from() {
   srcdiff_translator translator(options.srcdiff_filename,
                                 options.flags, options.methods,
                                 options.archive,
-                                options.number_context_lines);
+                                options.bash_view_context);
 
   this->translator = &translator;
 

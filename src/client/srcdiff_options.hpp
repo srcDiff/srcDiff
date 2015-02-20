@@ -5,6 +5,7 @@
 #include <srcml.h>
 
 #include <boost/optional.hpp>
+#include <boost/any.hpp>
 
 #include <string>
 #include <vector>
@@ -83,7 +84,7 @@ struct srcdiff_options
   OPTION_TYPE flags;
   METHOD_TYPE methods;
 
-  size_t number_context_lines;
+  boost::any bash_view_context;
 
 #if SVN
   boost::optional<std::string> svn_url;

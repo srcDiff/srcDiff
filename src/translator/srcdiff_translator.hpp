@@ -35,6 +35,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#include <boost/any.hpp>
 
 #include <srcml.h>
 
@@ -54,7 +55,7 @@ public:
   srcdiff_translator(const std::string & srcdiff_filename,
                     const OPTION_TYPE & flags, const METHOD_TYPE & method,
                     srcml_archive * archive,
-                    unsigned long number_context_lines);
+                    boost::any bash_view_context);
 
   // destructor
   ~srcdiff_translator();
@@ -62,8 +63,9 @@ public:
   template<class T>
   void translate(const srcdiff_input<T> & input_original, const srcdiff_input<T> & input_modified,
                  line_diff_range<T> & line_diff_range, const std::string & language,
-                 const boost::optional<std::string> & unit_directory = boost::optional<std::string>(), const boost::optional<std::string> & unit_filename = boost::optional<std::string>(),
-                 const boost::optional<std::string> & unit_version = boost::optional<std::string>());
+                 const boost::optional<std::string> & unit_directory = boost::optional<std::string>(),
+                 const boost::optional<std::string> & unit_filename  = boost::optional<std::string>(),
+                 const boost::optional<std::string> & unit_version   = boost::optional<std::string>());
 
 };
 
@@ -75,7 +77,8 @@ public:
 template<class T>
 void srcdiff_translator::translate(const srcdiff_input<T> & input_original, const srcdiff_input<T> & input_modified,
                                   line_diff_range<T> & line_diff_range, const std::string & language,
-                                  const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename,
+                                  const boost::optional<std::string> & unit_directory,
+                                  const boost::optional<std::string> & unit_filename,
                                   const boost::optional<std::string> & unit_version) {
 
   line_diff_range.create_line_diff();

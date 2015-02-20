@@ -58,7 +58,7 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
   translator = new srcdiff_translator(options.srcdiff_filename,
                                 options.flags, options.methods,
                                 options.archive,
-                                options.number_context_lines);
+                                options.bash_view_context);
 
 }
 

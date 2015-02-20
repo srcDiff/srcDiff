@@ -14,7 +14,7 @@ srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & o
   translator = new srcdiff_translator(options.srcdiff_filename,
                                    options.flags, options.methods,
                                    options.archive,
-                                   options.number_context_lines);
+                                   options.bash_view_context);
 
   outstat = { 0 };
   stat(options.srcdiff_filename.c_str(), &outstat);
