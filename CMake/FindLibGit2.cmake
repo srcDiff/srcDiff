@@ -27,7 +27,7 @@
 
 find_path(LIBGIT2_INCLUDE_DIR NAMES git2.h HINTS /usr/local/include /usr/include)
 
-find_library(LIBGIT2_GIT2     NAMES git2     HINTS /usr/local/lib /usr/lib)
+find_library(LIBGIT2_GIT2     NAMES git2     HINTS /usr/local/lib /usr/lib /usr/lib64)
 
 set(LIBGIT2_LIBRARIES "")
 
@@ -36,8 +36,7 @@ if(LIBGIT2_GIT2)
 endif()
 
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
-    HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules)
-
+	HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/local/share/cmake-3.2/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules /usr/share/cmake-3.2/Modules)
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
 find_package_handle_standard_args(LibGit2 REQUIRED_VARS LIBGIT2_LIBRARIES LIBGIT2_INCLUDE_DIR)

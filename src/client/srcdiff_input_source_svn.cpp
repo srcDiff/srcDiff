@@ -104,9 +104,9 @@ srcdiff_input_source_svn::~srcdiff_input_source_svn() {
 
 void srcdiff_input_source_svn::consume() {
 
-  if(options.files_from_name)                             files_from();
+  if(options.files_from_name)                              files_from();
   else if(is_option(options.flags, OPTION_SVN_CONTINUOUS)) session_range();
-  else                                                    session_single();
+  else                                                     session_single();
 
 }
 
@@ -467,7 +467,7 @@ void srcdiff_input_source_svn::process_directory(const boost::optional<std::stri
 
 }
 
-void srcdiff_input_source_svn::files_from() {
+void srcdiff_input_source_svn::process_files_from() {
 
   this->revision_one = options.revision_one;
   this->revision_two = options.revision_two;
@@ -507,8 +507,9 @@ void srcdiff_input_source_svn::files_from() {
 
       }
 
-      std::string path_original = line.substr(0, line.find('|'));
-      std::string path_modified = line.substr(line.find('|') + 1);
+      std::string::size_type sep_pos = line.find('|');
+      std::string path_original = line.substr(0, sep_pos);
+      std::string path_modified = line.substr(sep_pos + 1);
 
       boost::optional<std::string> path = path_original;
       svn_revnum_t revision = options.revision_one;
@@ -522,10 +523,7 @@ void srcdiff_input_source_svn::files_from() {
       svn_dirent_t * dirent;
       svn_ra_stat(session, path->c_str(), revision, &dirent, pool);
 
-      if(dirent->kind == svn_node_file)         file(path_original, nullptr, path_modified, nullptr);
-      else if(dirent->kind == svn_node_dir)     fprintf(stderr, "Skipping directory: %s", path->c_str());
-      else if(dirent->kind == svn_node_none)    fprintf(stderr, "%s\n", "Path does not exist");
-      else if(dirent->kind == svn_node_unknown) fprintf(stderr, "%s\n", "Unknown");
+      if(dirent->kind == svn_node_file) file(path_original, nullptr, path_modified, nullptr);
 
     }
 

@@ -47,3 +47,17 @@ void srcdiff_input_source::directory(const boost::optional<std::string> & direct
   process_directory(directory_original, context_original, directory_modified, context_modified);
 
 }
+
+void srcdiff_input_source::files_from() {
+
+  show_input = !is_option(options.flags, OPTION_QUIET);
+
+  if(show_input) {
+
+    std::cerr << "Processing files from:  " << *options.files_from_name << '\n';
+
+  }
+
+  process_files_from();
+
+}

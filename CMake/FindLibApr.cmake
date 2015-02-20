@@ -28,9 +28,9 @@
 find_path(LIBAPR_INCLUDE_DIR NAMES apr.h HINTS /usr/local/include/apr-1 /usr/include/apr-1
 	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/apr-1/)
 
-find_library(LIBAPR_APR     NAMES apr-1     HINTS /usr/local/lib /usr/lib
+find_library(LIBAPR_APR     NAMES apr-1     HINTS /usr/local/lib /usr/lib /usr/lib64
 	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/)
-find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib 
+find_library(LIBAPR_APRUTIL NAMES aprutil-1 HINTS /usr/local/lib /usr/lib /usr/lib64
 	/Applications/Xcode.app//Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/)
 
 set(LIBAPR_LIBRARIES "")
@@ -44,8 +44,7 @@ if(LIBAPR_APRUTIL)
 endif()
 
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
-    HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules)
-
+	HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/local/share/cmake-3.2/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules /usr/share/cmake-3.2/Modules)
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
 find_package_handle_standard_args(LibApr REQUIRED_VARS LIBAPR_LIBRARIES LIBAPR_INCLUDE_DIR)

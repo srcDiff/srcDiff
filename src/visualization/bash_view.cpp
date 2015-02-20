@@ -12,7 +12,7 @@ const char * const LINE_CODE = "\x1b[36m";
 
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-int bash_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
+void bash_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
 
   srcSAXController controller(srcdiff, xml_encoding.c_str());
 

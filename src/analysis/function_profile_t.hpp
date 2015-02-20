@@ -108,7 +108,7 @@ class function_profile_t : public profile_t {
             if(num_conditionals_inserted) pad(out) << "Number conditionals inserted: " << num_conditionals_inserted << '\n';
 
             size_t num_conditionals_modified = 0;
-            std::for_each(conditionals.find(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
+            std::for_each(conditionals.lower_bound(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
                 [&num_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++num_conditionals_modified; });
             if(num_conditionals_modified) pad(out) << "Number conditionals modified: " << num_conditionals_modified << '\n';
 

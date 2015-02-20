@@ -27,19 +27,19 @@
 
 find_path(LIBSVN_INCLUDE_DIR NAMES svn_types.h HINTS /usr/local/include/subversion-1 /usr/include/subversion-1)
 
-find_library(LIBSVN_CLIENT   NAMES svn_client-1   HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_FS_UTIL  NAMES svn_fs_util-1  HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_REPOS    NAMES svn_repos-1    HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_DELTA    NAMES svn_delta-1    HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA       NAMES svn_ra-1       HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_SUBR     NAMES svn_subr-1     HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_DIFF     NAMES svn_diff-1     HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA_LOCAL NAMES svn_ra_local-1 HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_WC       NAMES svn_wc-1       HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_FS       NAMES svn_fs-1       HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA_SERF  NAMES svn_ra_serf-1  HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_FS_FS    NAMES svn_fs_fs-1    HINTS /usr/local/lib /usr/lib)
-find_library(LIBSVN_RA_SVN   NAMES svn_ra_svn-1   HINTS /usr/local/lib /usr/lib)
+find_library(LIBSVN_CLIENT   NAMES svn_client-1   HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_FS_UTIL  NAMES svn_fs_util-1  HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_REPOS    NAMES svn_repos-1    HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_DELTA    NAMES svn_delta-1    HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_RA       NAMES svn_ra-1       HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_SUBR     NAMES svn_subr-1     HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_DIFF     NAMES svn_diff-1     HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_RA_LOCAL NAMES svn_ra_local-1 HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_WC       NAMES svn_wc-1       HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_FS       NAMES svn_fs-1       HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_RA_SERF  NAMES svn_ra_serf-1  HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_FS_FS    NAMES svn_fs_fs-1    HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBSVN_RA_SVN   NAMES svn_ra_svn-1   HINTS /usr/local/lib /usr/lib /usr/lib64)
 
 set(LIBSVN_LIBRARIES "")
 
@@ -96,7 +96,7 @@ if(LIBSVN_RA_SVN)
 endif()
 
 find_path(FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH NAMES FindPackageHandleStandardArgs.cmake 
-    HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules)
+    HINTS /usr/local/share/cmake/Modules /usr/local/share/cmake-2.8/Modules /usr/local/share/cmake-3.2/Modules /usr/share/cmake/Modules /usr/share/cmake-2.8/Modules /usr/share/cmake-3.2/Modules)
 
 include(${FIND_PACKAGE_HANDLE_STANDARD_ARGS_PATH}/FindPackageHandleStandardArgs.cmake)
 
