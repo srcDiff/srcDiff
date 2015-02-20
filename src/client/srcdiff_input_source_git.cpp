@@ -31,10 +31,16 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
   error = git_repository_open(&repo, clone_path.c_str());
   if(error) throw std::string("Error Opening up cloned repository.");
 
-  error = git_oid_fromstr(&oid_original, options.git_revision_one.c_str());
+  if(options.git_revision_one == "HEAD")
+    error = git_reference_name_to_id(&oid_original, repo, "HEAD");
+  else
+    error = git_oid_fromstr(&oid_original, options.git_revision_one.c_str());
   if(error) throw std::string("Error getting base/original revision: " + options.git_revision_one);
 
-  error = git_oid_fromstr(&oid_modified, options.git_revision_two.c_str());
+  if(options.git_revision_two == "HEAD")
+    error = git_reference_name_to_id(&oid_modified, repo, "HEAD");
+  else
+    error = git_oid_fromstr(&oid_modified, options.git_revision_two.c_str());
   if(error) throw std::string("Error getting base/original revision: " + options.git_revision_two);
 
   git_commit_lookup(&commit_original, repo, &oid_original);
