@@ -15,6 +15,8 @@ class bash_view : public srcSAXHandler {
 
 private:
 
+  enum context_type_id { LINE, FUNCTION, ALL };
+
   std::vector<int> diff_stack;
 
   std::ostream * output;
@@ -75,7 +77,11 @@ public:
 private:
 
   void output_additional_context();
+
+  template<typename T>
   void characters(const char * ch, int len);
+
+  context_type_id context_string_to_id(const std::string & context_type_str) const;
 
 public:
 

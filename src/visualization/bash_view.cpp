@@ -181,7 +181,11 @@ void bash_view::output_additional_context() {
 
 }
 
-void bash_view::characters(const char * ch, int len) {
+template<typename T>
+void bash_view::characters(const char * ch, int len) {}
+
+template<>
+void bash_view::characters<size_t>(const char * ch, int len) {
 
   size_t number_context_lines = -1;
   if(context_type.type() == typeid(size_t)) number_context_lines = boost::any_cast<size_t>(context_type);
@@ -250,6 +254,15 @@ void bash_view::characters(const char * ch, int len) {
 
 }
 
+bash_view::context_type_id bash_view::context_string_to_id(const std::string & context_type_str) const {
+
+  if(context_type_str == "all")      return ALL;
+  if(context_type_str == "function") return FUNCTION;
+  else                               return LINE;
+
+
+}
+
 /**
  * charactersUnit
  * @param ch the characers
@@ -273,7 +286,16 @@ void bash_view::charactersUnit(const char * ch, int len) {
 
   }
 
-  characters((const char *)ch, len);
+  if(context_type.type() == typeid(size_t)) {
+
+    characters<size_t>((const char *)ch, len);
+
+  } else {
+
+    bash_view::context_type_id id = context_string_to_id(boost::any_cast<std::string>(context_type));
+    if(id == ALL) characters<size_t>((const char *)ch, len);
+
+  }
 
   if(diff_stack.back() != SESCOMMON) is_after_change  = true;
 
