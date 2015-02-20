@@ -338,8 +338,7 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
         profile_stack.at(counting_profile_pos.back().first)->type_name.set_modified(full_name);
 
         std::shared_ptr<profile_t> & parent = profile_stack.at(counting_profile_pos.back().first - 2);
-        size_t syntax_dec = profile_stack.at(counting_profile_pos.back().first)->type_name.original() == "else"
-                            || profile_stack.at(counting_profile_pos.back().first)->type_name.modified() == "else" ? 1 : 2;
+        size_t syntax_dec = 1;
         parent->syntax_count -= syntax_dec;
         parent->total_count -= syntax_dec;
         if(parent->syntax_count == 0) parent->is_syntax = false;
