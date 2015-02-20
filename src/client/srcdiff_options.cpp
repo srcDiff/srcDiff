@@ -114,10 +114,10 @@ void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
 template<>
 void option_field<&srcdiff_options::git_url>(const std::string & arg) {
 
-  std::string::size_type atsign = arg.rfind('@');
+  std::string::size_type atsign = arg.find('@');
   options.git_url = arg.substr(0, atsign);
-  options.git_revision_one = arg.substr(atsign + 1);
   std::string::size_type dash = arg.find('-', atsign + 1);
+  options.git_revision_one = arg.substr(atsign + 1, dash - (atsign + 1));
   options.git_revision_two = arg.substr(dash + 1);
   srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
 
