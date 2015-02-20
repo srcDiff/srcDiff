@@ -181,11 +181,11 @@ void bash_view::output_additional_context() {
 
 }
 
-template<typename T>
+template<bash_view::context_type_id T>
 void bash_view::characters(const char * ch, int len) {}
 
 template<>
-void bash_view::characters<size_t>(const char * ch, int len) {
+void bash_view::characters<bash_view::context_type_id::LINE>(const char * ch, int len) {
 
   size_t number_context_lines = -1;
   if(context_type.type() == typeid(size_t)) number_context_lines = boost::any_cast<size_t>(context_type);
@@ -254,6 +254,9 @@ void bash_view::characters<size_t>(const char * ch, int len) {
 
 }
 
+template<>
+void bash_view::characters<bash_view::context_type_id::FUNCTION>(const char * ch, int len) {}
+
 bash_view::context_type_id bash_view::context_string_to_id(const std::string & context_type_str) const {
 
   if(context_type_str == "all")      return ALL;
@@ -288,12 +291,13 @@ void bash_view::charactersUnit(const char * ch, int len) {
 
   if(context_type.type() == typeid(size_t)) {
 
-    characters<size_t>((const char *)ch, len);
+    characters<LINE>((const char *)ch, len);
 
   } else {
 
     bash_view::context_type_id id = context_string_to_id(boost::any_cast<std::string>(context_type));
-    if(id == ALL) characters<size_t>((const char *)ch, len);
+    if(id == ALL)            characters<LINE>((const char *)ch, len);
+    else if (id == FUNCTION) characters<FUNCTION>((const char *)ch, len);
 
   }
 
