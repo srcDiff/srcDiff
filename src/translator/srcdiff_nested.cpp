@@ -330,10 +330,13 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  std::string original_tag = nodes_original.at(original_pos)->name;
-  std::string modified_tag = nodes_modified.at(modified_pos)->name;
+  const std::string & original_tag = nodes_original.at(original_pos)->name;
+  const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
 
-  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, modified_tag)) return true;
+  const std::string & original_uri = nodes_original.at(original_pos)->ns->href;
+  const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
+
+  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) return true;
 
   if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"

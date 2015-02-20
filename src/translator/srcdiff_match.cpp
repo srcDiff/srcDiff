@@ -947,17 +947,16 @@ static const interchange_list interchange_lists[] = {
 
 };
 
-bool srcdiff_match::is_interchangeable_match(const boost::optional<std::string> & original_tag, const boost::optional<std::string> & modified_tag) {
-
-  if(!original_tag || !modified_tag) return false;
+bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, const std::string & original_uri,
+                                             const std::string & modified_tag, const std::string & modified_uri) {
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
-    if(interchange_lists[list_pos].name == *original_tag) {
+    if(interchange_lists[list_pos].name == original_tag) {
 
       for(size_t pos = 0; interchange_lists[list_pos].list[pos]; ++pos) {
 
-        if(interchange_lists[list_pos].list[pos] == *modified_tag)
+        if(interchange_lists[list_pos].list[pos] == modified_tag)
           return true;
 
       }
@@ -977,8 +976,8 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  std::string original_tag = nodes_original.at(original_pos)->name;
-  std::string modified_tag = nodes_modified.at(modified_pos)->name;
+  const std::string & original_tag = nodes_original.at(original_pos)->name;
+  const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
 
   if(original_tag != modified_tag) return true;
 
@@ -1132,8 +1131,8 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  std::string original_tag = nodes_original.at(original_pos)->name;
-  std::string modified_tag = nodes_modified.at(modified_pos)->name;
+  const std::string & original_tag = nodes_original.at(original_pos)->name;
+  const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
 
   std::string original_name;
   if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
@@ -1179,12 +1178,15 @@ bool srcdiff_match::reject_match(int similarity, int difference, int text_origin
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  std::string original_tag = nodes_original.at(original_pos)->name;
-  std::string modified_tag = nodes_modified.at(modified_pos)->name;
+  const std::string & original_tag = nodes_original.at(original_pos)->name;
+  const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
 
-  if(original_tag == modified_tag)
+  const std::string & original_uri = nodes_original.at(original_pos)->ns->href;
+  const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
+
+  if(original_tag == modified_tag && original_uri == modified_uri)
     return reject_match_same(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
-  else if(is_interchangeable_match(original_tag, modified_tag)) 
+  else if(is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) 
     return reject_match_interchangeable(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   else
     return true;
@@ -1196,8 +1198,8 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   if(set_original.size() == 1 && set_modified.size() == 1) {
 
-    std::string original_tag = nodes_original.at(set_original.front())->name;
-    std::string modified_tag = nodes_modified.at(set_modified.front())->name;
+    const std::string & original_tag = nodes_original.at(set_original.front())->name;
+    const std::string & modified_tag = nodes_modified.at(set_modified.front())->name;
 
     return original_tag != modified_tag;
 
