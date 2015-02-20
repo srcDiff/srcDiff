@@ -333,16 +333,18 @@ void srcdiff_summary_handler::startElement(const char * localname, const char * 
 
     if(is_interchange) {
 
+        // update element name/operation
         profile_stack.at(counting_profile_pos.back().first)->set_operation(SRCDIFF_COMMON);
         profile_stack.at(counting_profile_pos.back().first)->type_name.set_modified(full_name);
 
+        // correct element counts
         std::shared_ptr<profile_t> & parent = profile_stack.at(counting_profile_pos.back().first - 2);
         size_t syntax_dec = 1;
         parent->syntax_count -= syntax_dec;
         parent->total_count  -= syntax_dec;
         if(parent->syntax_count == 0) parent->is_syntax = false;
 
-        /* @todo correct totals and possible look at other beside to else to elseif, may be whitespace */
+        // correct global counts
         delete_count.syntax -= syntax_dec;
         delete_count.total  -= syntax_dec;
         total.syntax        -= syntax_dec;;
