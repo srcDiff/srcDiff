@@ -15,13 +15,17 @@ class bash_view : public srcSAXHandler {
 
 private:
 
-  enum context_type_id { LINE, FUNCTION, ALL };
+  typedef unsigned long context_mode;
+
+  static const context_mode LINE     = 1 << 0;
+  static const context_mode FUNCTION = 1 << 1;
+  static const context_mode ALL      = 2 << 1;
 
   std::vector<int> diff_stack;
 
   std::ostream * output;
 
-  context_type_id mode_id;
+  context_mode modes;
 
   size_t line_number_delete;
   size_t line_number_insert;
@@ -42,11 +46,18 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename, boost::any context_type) : mode_id(LINE), line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
+  bash_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
             in_function(false), context_type(context_type), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
-    if(context_type.type() != typeid(size_t))
-      mode_id = context_string_to_id(boost::any_cast<std::string>(context_type));
+    if(context_type.type() != typeid(size_t)) {
+
+      const std::string & context_type_str = boost::any_cast<std::string>(context_type);
+      const std::string::size_type dash_pos = context_type_str.find('-');
+      modes |= context_string_to_id(context_type_str.substr(0, dash_pos));
+      // assume dash is -only /** @todo actually complete this */
+      if(dash_pos != std::string::npos) modes = FUNCTION;
+
+    }
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());
@@ -83,11 +94,13 @@ public:
 
 private:
 
+  bool in_mode(context_mode mode);
+
   void output_additional_context();
 
   void characters(const char * ch, int len);
 
-  context_type_id context_string_to_id(const std::string & context_type_str) const;
+  context_mode context_string_to_id(const std::string & context_type_str) const;
 
 public:
 
