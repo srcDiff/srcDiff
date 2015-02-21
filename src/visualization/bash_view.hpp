@@ -32,6 +32,8 @@ private:
 
   std::string context;
 
+  size_t number_context_lines;
+
   bool is_after_change;
   bool wait_change;
   bool in_function;
@@ -46,10 +48,15 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
-            in_function(false), context_type(context_type), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
+  bash_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
+            is_after_change(false), wait_change(true), in_function(false), context_type(context_type), length(0),
+            is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
-    if(context_type.type() != typeid(size_t)) {
+    if(context_type.type() == typeid(size_t)) {
+
+      number_context_lines = boost::any_cast<size_t>(context_type);
+
+    } else {
 
       const std::string & context_type_str = boost::any_cast<std::string>(context_type);
       const std::string::size_type dash_pos = context_type_str.find('-');

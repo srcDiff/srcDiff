@@ -120,7 +120,13 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
     
   } else {
 
-    if(in_mode(FUNCTION) && is_function_type(local_name)) in_function = true;
+    if(in_mode(FUNCTION) && is_function_type(local_name)) {
+
+      in_function = true;
+      additional_context.clear();
+      length = 0;
+
+    }
 
   }
 
@@ -215,9 +221,6 @@ void bash_view::output_additional_context() {
 
 void bash_view::characters(const char * ch, int len) {
 
-  size_t number_context_lines = -1;
-  if(in_mode(LINE)) number_context_lines = boost::any_cast<size_t>(context_type);
-
   const char * code = COMMON_CODE;
   if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
   else if(diff_stack.back() == SESINSERT) code = INSERT_CODE;
@@ -261,7 +264,7 @@ void bash_view::characters(const char * ch, int len) {
 
       } else if(wait_change && ((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function))) {
 
-        if(in_mode(LINE) && (in_mode(FUNCTION) || !in_function) && length >= number_context_lines)
+        if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function) && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
         additional_context.push_back(context);
