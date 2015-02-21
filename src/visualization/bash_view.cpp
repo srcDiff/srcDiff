@@ -105,7 +105,7 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
     
   } else {
 
-    if(is_function_type(local_name)) in_function = true;
+    if(mode_id == FUNCTION && is_function_type(local_name)) in_function = true;
 
   }
 
@@ -152,10 +152,11 @@ void bash_view::endElement(const char * localname, const char * prefix, const ch
         diff_stack.pop_back();
   } else {
 
-    if(is_function_type(local_name)) {
+    if(mode_id == FUNCTION && is_function_type(local_name)) {
 
       in_function = false;
       additional_context.clear();
+      length = 0;
 
     }
 
@@ -206,10 +207,10 @@ bash_view::context_type_id bash_view::context_string_to_id(const std::string & c
 
 }
 
-void bash_view::characters(const char * ch, int len, context_type_id id) {
+void bash_view::characters(const char * ch, int len) {
 
   size_t number_context_lines = -1;
-  if(id == LINE) number_context_lines = boost::any_cast<size_t>(context_type);
+  if(mode_id == LINE) number_context_lines = boost::any_cast<size_t>(context_type);
 
   const char * code = COMMON_CODE;
   if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
@@ -243,7 +244,7 @@ void bash_view::characters(const char * ch, int len, context_type_id id) {
 
         ++after_edit_count;
 
-        if((id == LINE && after_edit_count == number_context_lines) || (id == FUNCTION && !in_function)) {
+        if((mode_id == LINE && after_edit_count == number_context_lines) || (mode_id == FUNCTION && !in_function)) {
 
           is_after_additional = false;
           after_edit_count = 0;
@@ -252,9 +253,9 @@ void bash_view::characters(const char * ch, int len, context_type_id id) {
 
         }
 
-      } else if(wait_change && ((id == LINE && number_context_lines != 0) || (id == FUNCTION && in_function))) {
+      } else if(wait_change && ((mode_id == LINE && number_context_lines != 0) || (mode_id == FUNCTION && in_function))) {
 
-        if(id == LINE && length >= number_context_lines)
+        if(mode_id == LINE && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
         additional_context.push_back(context);
@@ -298,11 +299,7 @@ void bash_view::charactersUnit(const char * ch, int len) {
 
   }
 
-  context_type_id id = LINE;
-  if(context_type.type() != typeid(size_t))
-    id = context_string_to_id(boost::any_cast<std::string>(context_type));
-
-  characters(ch, len, id);
+  characters(ch, len);
 
   if(diff_stack.back() != SESCOMMON) is_after_change  = true;
 

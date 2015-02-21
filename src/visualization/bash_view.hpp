@@ -21,6 +21,8 @@ private:
 
   std::ostream * output;
 
+  context_type_id mode_id;
+
   size_t line_number_delete;
   size_t line_number_insert;
 
@@ -40,8 +42,11 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename, boost::any context_type) : line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
+  bash_view(const std::string & output_filename, boost::any context_type) : mode_id(LINE), line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
             in_function(false), context_type(context_type), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
+
+    if(context_type.type() != typeid(size_t))
+      mode_id = context_string_to_id(boost::any_cast<std::string>(context_type));
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());
@@ -80,7 +85,7 @@ private:
 
   void output_additional_context();
 
-  void characters(const char * ch, int len, context_type_id id);
+  void characters(const char * ch, int len);
 
   context_type_id context_string_to_id(const std::string & context_type_str) const;
 
