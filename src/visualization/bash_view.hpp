@@ -28,6 +28,7 @@ private:
 
   bool is_after_change;
   bool wait_change;
+  bool in_function;
 
   boost::any context_type;
   std::list<std::string>::size_type length;
@@ -40,7 +41,7 @@ private:
 public:
 
   bash_view(const std::string & output_filename, boost::any context_type) : line_number_delete(0), line_number_insert(0), is_after_change(false), wait_change(true),
-    context_type(context_type), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
+            in_function(false), context_type(context_type), length(0), is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
     if(output_filename != "-")
       output = new std::ofstream(output_filename.c_str());
@@ -65,6 +66,7 @@ public:
     line_number_insert = 0;
     is_after_change = false;
     wait_change = true;
+    in_function = false;
     length = 0;
     additional_context.clear();
     is_after_additional = false;

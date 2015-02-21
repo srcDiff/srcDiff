@@ -91,15 +91,21 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes) {
 
+  const std::string local_name(localname);
+
   if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
 
-    if(strcmp(localname, "common") == 0)
+    if(local_name == "common")
      diff_stack.push_back(SESCOMMON);
-    else if(strcmp(localname, "delete") == 0)
+    else if(local_name == "delete")
      diff_stack.push_back(SESDELETE);
-    else if(strcmp(localname, "insert") == 0)
+    else if(local_name == "insert")
      diff_stack.push_back(SESINSERT);
     
+  } else {
+
+    if(local_name == "function") in_function = true;
+
   }
 
 }
@@ -137,12 +143,21 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
  */
 void bash_view::endElement(const char * localname, const char * prefix, const char * URI) {
 
+    const std::string local_name(localname);
+
     if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
 
-    if(strcmp((const char *)localname, "common") == 0
-       || strcmp((const char *)localname, "delete") == 0
-       || strcmp((const char *)localname, "insert") == 0)
-     diff_stack.pop_back();
+      if(local_name == "common" || local_name == "delete" || local_name == "insert")
+        diff_stack.pop_back();
+  } else {
+
+    if(local_name == "function") {
+
+      in_function = false;
+      additional_context.clear();
+
+    }
+
   }
 
 }
@@ -255,7 +270,65 @@ void bash_view::characters<bash_view::context_type_id::LINE>(const char * ch, in
 }
 
 template<>
-void bash_view::characters<bash_view::context_type_id::FUNCTION>(const char * ch, int len) {}
+void bash_view::characters<bash_view::context_type_id::FUNCTION>(const char * ch, int len) {
+
+  const char * code = COMMON_CODE;
+  if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
+  else if(diff_stack.back() == SESINSERT) code = INSERT_CODE;
+
+  if(code != COMMON_CODE) (*output) << code;
+
+  for(int i = 0; i < len; ++i) {
+
+    if(wait_change) {
+
+      context.append(&ch[i], 1);
+
+    } else {
+
+      if(code != COMMON_CODE && ch[i] == '\n') (*output) << CARRIAGE_RETURN_SYMBOL << COMMON_CODE;
+      (*output) << ch[i];
+
+      if(code != COMMON_CODE && ch[i] == '\n') (*output) << code;
+
+    }
+
+    if(ch[i] == '\n') {
+
+      if(is_after_change) {
+
+        is_after_change = false;
+        is_after_additional = true;
+
+      } else if(is_after_additional) {
+
+        if(!in_function) {
+
+          is_after_additional = false;
+          wait_change = true;
+          last_context_line = line_number_delete;
+
+        }
+
+      } else if(wait_change && in_function) {
+
+        additional_context.push_back(context);
+        ++length;
+
+      }
+
+      if(code == COMMON_CODE || code == DELETE_CODE) ++line_number_delete;
+      if(code == COMMON_CODE || code == INSERT_CODE) ++line_number_insert;
+
+      context = "";
+
+    }
+
+  }
+
+  if(code != COMMON_CODE) (*output) << COMMON_CODE;
+
+}
 
 bash_view::context_type_id bash_view::context_string_to_id(const std::string & context_type_str) const {
 
