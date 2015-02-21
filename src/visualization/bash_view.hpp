@@ -80,8 +80,7 @@ private:
 
   void output_additional_context();
 
-  template<bash_view::context_type_id T>
-  void characters(const char * ch, int len);
+  void characters(const char * ch, int len, context_type_id id);
 
   context_type_id context_string_to_id(const std::string & context_type_str) const;
 

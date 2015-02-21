@@ -196,14 +196,19 @@ void bash_view::output_additional_context() {
 
 }
 
-template<bash_view::context_type_id T>
-void bash_view::characters(const char * ch, int len) {}
+bash_view::context_type_id bash_view::context_string_to_id(const std::string & context_type_str) const {
 
-template<>
-void bash_view::characters<bash_view::context_type_id::LINE>(const char * ch, int len) {
+  if(context_type_str == "all")      return ALL;
+  if(context_type_str == "function") return FUNCTION;
+  else                               return LINE;
+
+
+}
+
+void bash_view::characters(const char * ch, int len, context_type_id id) {
 
   size_t number_context_lines = -1;
-  if(context_type.type() == typeid(size_t)) number_context_lines = boost::any_cast<size_t>(context_type);
+  if(id == LINE) number_context_lines = boost::any_cast<size_t>(context_type);
 
   const char * code = COMMON_CODE;
   if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
@@ -237,7 +242,7 @@ void bash_view::characters<bash_view::context_type_id::LINE>(const char * ch, in
 
         ++after_edit_count;
 
-        if(after_edit_count == number_context_lines) {
+        if((id == LINE && after_edit_count == number_context_lines) || (id == FUNCTION && !in_function)) {
 
           is_after_additional = false;
           after_edit_count = 0;
@@ -246,9 +251,9 @@ void bash_view::characters<bash_view::context_type_id::LINE>(const char * ch, in
 
         }
 
-      } else if(wait_change && number_context_lines != 0) {
+      } else if(wait_change && ((id == LINE && number_context_lines != 0) || (id == FUNCTION && in_function))) {
 
-        if(length >= number_context_lines)
+        if(id == LINE && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
         additional_context.push_back(context);
@@ -266,76 +271,6 @@ void bash_view::characters<bash_view::context_type_id::LINE>(const char * ch, in
   }
 
   if(code != COMMON_CODE) (*output) << COMMON_CODE;
-
-}
-
-template<>
-void bash_view::characters<bash_view::context_type_id::FUNCTION>(const char * ch, int len) {
-
-  const char * code = COMMON_CODE;
-  if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
-  else if(diff_stack.back() == SESINSERT) code = INSERT_CODE;
-
-  if(code != COMMON_CODE) (*output) << code;
-
-  for(int i = 0; i < len; ++i) {
-
-    if(wait_change) {
-
-      context.append(&ch[i], 1);
-
-    } else {
-
-      if(code != COMMON_CODE && ch[i] == '\n') (*output) << CARRIAGE_RETURN_SYMBOL << COMMON_CODE;
-      (*output) << ch[i];
-
-      if(code != COMMON_CODE && ch[i] == '\n') (*output) << code;
-
-    }
-
-    if(ch[i] == '\n') {
-
-      if(is_after_change) {
-
-        is_after_change = false;
-        is_after_additional = true;
-
-      } else if(is_after_additional) {
-
-        if(!in_function) {
-
-          is_after_additional = false;
-          wait_change = true;
-          last_context_line = line_number_delete;
-
-        }
-
-      } else if(wait_change && in_function) {
-
-        additional_context.push_back(context);
-        ++length;
-
-      }
-
-      if(code == COMMON_CODE || code == DELETE_CODE) ++line_number_delete;
-      if(code == COMMON_CODE || code == INSERT_CODE) ++line_number_insert;
-
-      context = "";
-
-    }
-
-  }
-
-  if(code != COMMON_CODE) (*output) << COMMON_CODE;
-
-}
-
-bash_view::context_type_id bash_view::context_string_to_id(const std::string & context_type_str) const {
-
-  if(context_type_str == "all")      return ALL;
-  if(context_type_str == "function") return FUNCTION;
-  else                               return LINE;
-
 
 }
 
@@ -362,17 +297,11 @@ void bash_view::charactersUnit(const char * ch, int len) {
 
   }
 
-  if(context_type.type() == typeid(size_t)) {
+  context_type_id id = LINE;
+  if(context_type.type() != typeid(size_t))
+    id = context_string_to_id(boost::any_cast<std::string>(context_type));
 
-    characters<LINE>((const char *)ch, len);
-
-  } else {
-
-    bash_view::context_type_id id = context_string_to_id(boost::any_cast<std::string>(context_type));
-    if(id == ALL)            characters<LINE>((const char *)ch, len);
-    else if (id == FUNCTION) characters<FUNCTION>((const char *)ch, len);
-
-  }
+  characters(ch, len, id);
 
   if(diff_stack.back() != SESCOMMON) is_after_change  = true;
 
