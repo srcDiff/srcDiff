@@ -1,5 +1,6 @@
 #include <bash_view.hpp>
 #include <shortest_edit_script.hpp>
+#include <type_query.hpp>
 
 #include <cstring>
 
@@ -104,7 +105,7 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
     
   } else {
 
-    if(local_name == "function") in_function = true;
+    if(is_function_type(local_name)) in_function = true;
 
   }
 
@@ -151,7 +152,7 @@ void bash_view::endElement(const char * localname, const char * prefix, const ch
         diff_stack.pop_back();
   } else {
 
-    if(local_name == "function") {
+    if(is_function_type(local_name)) {
 
       in_function = false;
       additional_context.clear();
