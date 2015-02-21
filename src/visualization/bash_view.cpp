@@ -250,7 +250,7 @@ void bash_view::characters(const char * ch, int len) {
 
         ++after_edit_count;
 
-        if((in_mode(LINE) && after_edit_count == number_context_lines) || (in_mode(FUNCTION) && !in_function)) {
+        if((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function) && after_edit_count == number_context_lines) || (in_mode(FUNCTION) && !in_function)) {
 
           is_after_additional = false;
           after_edit_count = 0;
@@ -259,9 +259,9 @@ void bash_view::characters(const char * ch, int len) {
 
         }
 
-      } else if(wait_change && ((in_mode(LINE) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function))) {
+      } else if(wait_change && ((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function))) {
 
-        if(in_mode(LINE) && length >= number_context_lines)
+        if(in_mode(LINE) && (in_mode(FUNCTION) || !in_function) && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
         additional_context.push_back(context);
