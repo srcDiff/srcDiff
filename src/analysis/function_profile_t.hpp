@@ -81,7 +81,18 @@ class function_profile_t : public profile_t {
 
         }
 
-        virtual std::ostream & output_conditional_counts(std::ostream & out) const {
+        virtual std::ostream & output_conditional_counts(std::ostream & out, const std::string & type, size_t deleted_count, size_t inserted_count, size_t modified_count) const {
+
+            pad(out) << std::setw(8) << std::left;
+            out << type;
+            out << std::right;
+            out << std::setw(8) << deleted_count;
+            out << std::setw(9) << inserted_count << '\n';
+
+            return out;
+        }
+
+        virtual std::ostream & output_all_conditional_counts(std::ostream & out) const {
 
             size_t if_count_deleted = 0, while_count_deleted = 0, for_count_deleted = 0, switch_count_deleted = 0, do_count_deleted = 0, foreach_count_deleted = 0;
             conditional_counts(SRCDIFF_DELETE, if_count_deleted, while_count_deleted, for_count_deleted, switch_count_deleted, do_count_deleted, foreach_count_deleted);
@@ -90,13 +101,13 @@ class function_profile_t : public profile_t {
             conditional_counts(SRCDIFF_INSERT, if_count_inserted, while_count_inserted, for_count_inserted, switch_count_inserted, do_count_inserted, foreach_count_inserted);
 
             ++depth;
-                                                                pad(out) << std::setw(8) << std::left << ""         << std::right << std::setw(8) << "Deleted"              << std::setw(9) << "Inserted"             << '\n';
-            if(if_count_deleted      || if_count_inserted)      pad(out) << std::setw(8) << std::left << "if:"      << std::right << std::setw(8) <<  if_count_deleted      << std::setw(9) << if_count_inserted      << '\n';
-            if(while_count_deleted   || while_count_inserted)   pad(out) << std::setw(8) << std::left << "while:"   << std::right << std::setw(8) <<  while_count_deleted   << std::setw(9) << while_count_inserted   << '\n';
-            if(for_count_deleted     || for_count_inserted)     pad(out) << std::setw(8) << std::left << "for:"     << std::right << std::setw(8) <<  for_count_deleted     << std::setw(9) << for_count_inserted     << '\n';
-            if(switch_count_deleted  || switch_count_inserted)  pad(out) << std::setw(8) << std::left << "switch:"  << std::right << std::setw(8) <<  switch_count_deleted  << std::setw(9) << switch_count_inserted  << '\n';
-            if(do_count_deleted      || do_count_inserted)      pad(out) << std::setw(8) << std::left << "do:"      << std::right << std::setw(8) <<  do_count_deleted      << std::setw(9) << do_count_inserted      << '\n';
-            if(foreach_count_deleted || foreach_count_inserted) pad(out) << std::setw(8) << std::left << "foreach:" << std::right << std::setw(8) <<  foreach_count_deleted << std::setw(9) << foreach_count_inserted << '\n';
+            pad(out) << std::setw(8) << std::left << "" << std::right << std::setw(8) << "Deleted" << std::setw(9) << "Inserted" << '\n';
+            if(if_count_deleted      || if_count_inserted)      output_conditional_counts(out, "if",      if_count_deleted,      if_count_inserted, 0);
+            if(while_count_deleted   || while_count_inserted)   output_conditional_counts(out, "while",   while_count_deleted,   while_count_inserted, 0);
+            if(for_count_deleted     || for_count_inserted)     output_conditional_counts(out, "for",     for_count_deleted,     for_count_inserted, 0);
+            if(switch_count_deleted  || switch_count_inserted)  output_conditional_counts(out, "switch",  switch_count_deleted,  switch_count_inserted, 0);
+            if(do_count_deleted      || do_count_inserted)      output_conditional_counts(out, "do",      do_count_deleted,      do_count_inserted, 0);
+            if(foreach_count_deleted || foreach_count_inserted) output_conditional_counts(out, "foreach", foreach_count_deleted, foreach_count_inserted, 0);
 
             --depth;
 
@@ -147,12 +158,12 @@ class function_profile_t : public profile_t {
             // body summary
             size_t num_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
             size_t num_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
-            if(num_conditionals_deleted || num_conditionals_inserted) pad(out) << "Testing complexity change summary:\n", output_conditional_counts(out);
-
             size_t num_conditionals_modified = 0;
             std::for_each(conditionals.lower_bound(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
                 [&num_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++num_conditionals_modified; });
-            if(num_conditionals_modified) pad(out) << "Number conditionals modified: " << num_conditionals_modified << '\n';
+            if(num_conditionals_deleted || num_conditionals_inserted || num_conditionals_modified) pad(out) << "Testing complexity change summary:\n", output_all_conditional_counts(out);
+
+
 
             --depth;
 
