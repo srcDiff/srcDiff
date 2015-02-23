@@ -202,7 +202,7 @@ void bash_view::output_additional_context() {
   size_t line_insert = line_number_insert + 1 - additional_context.size();
 
   if(wait_change && last_context_line != (line_number_delete - 1))
-    (*output) << COMMON_CODE << LINE_CODE << "@@ -" << line_delete << " +" << line_insert << " @@" << COMMON_CODE;
+    (*output) << COMMON_CODE << LINE_CODE << "@@ -" << line_delete << " +" << line_insert << " @@" << COMMON_CODE << '\n';
 
   if(additional_context.empty()) return;
 
