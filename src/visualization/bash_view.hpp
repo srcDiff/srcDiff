@@ -60,7 +60,11 @@ public:
 
       const std::string & context_type_str = boost::any_cast<std::string>(context_type);
       const std::string::size_type dash_pos = context_type_str.find('-');
-      modes |= context_string_to_id(context_type_str.substr(0, dash_pos));
+      context_mode mode = context_string_to_id(context_type_str.substr(0, dash_pos));
+
+      if(mode == ALL) number_context_lines = -1;
+      else modes |= mode;
+
       // assume dash is -only /** @todo actually complete this */
       if(dash_pos != std::string::npos) modes = FUNCTION;
 
