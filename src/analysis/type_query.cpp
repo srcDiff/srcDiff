@@ -31,7 +31,7 @@ bool is_template(const std::string & type_name) {
 
 bool is_condition_type(const std::string & type_name) {
 
-    return type_name == "if" || type_name == "switch" || type_name == "elseif" || type_name == "while" || type_name == "do" || type_name == "for";
+    return type_name == "if" || type_name == "switch" || type_name == "elseif" || type_name == "while" || type_name == "do" || type_name == "for" || type_name == "foreach";
 
 }
 
