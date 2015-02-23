@@ -28,7 +28,7 @@ class function_profile_t : public profile_t {
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
             if(*parent == "type") return_type = name;
-            else this->name = name;
+            else if(is_function_type(*parent)) this->name = name;
 
         }
 
