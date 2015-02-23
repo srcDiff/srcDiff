@@ -65,7 +65,11 @@ class function_profile_t : public profile_t {
 
                 [&](const change_entity_map<profile_t>::pair & pair) {
 
+                    if(operation == SRCDIFF_COMMON && pair.second->syntax_count == 0) return;
+
                     const std::string & type_name = operation == SRCDIFF_DELETE ? pair.second->type_name.original() : pair.second->type_name.modified();
+
+
                     switch(type_name[0]) {
 
                         case 'i': ++if_count;     break;
@@ -87,27 +91,32 @@ class function_profile_t : public profile_t {
             out << type;
             out << std::right;
             out << std::setw(8) << deleted_count;
-            out << std::setw(9) << inserted_count << '\n';
+            out << std::setw(9) << inserted_count;
+            out << std::setw(9) << modified_count;
+            out << '\n';
 
             return out;
         }
 
         virtual std::ostream & output_all_conditional_counts(std::ostream & out) const {
 
-            size_t if_count_deleted = 0, while_count_deleted = 0, for_count_deleted = 0, switch_count_deleted = 0, do_count_deleted = 0, foreach_count_deleted = 0;
-            conditional_counts(SRCDIFF_DELETE, if_count_deleted, while_count_deleted, for_count_deleted, switch_count_deleted, do_count_deleted, foreach_count_deleted);
+            size_t if_deleted = 0, while_deleted = 0, for_deleted = 0, switch_deleted = 0, do_deleted = 0, foreach_deleted = 0;
+            conditional_counts(SRCDIFF_DELETE, if_deleted, while_deleted, for_deleted, switch_deleted, do_deleted, foreach_deleted);
 
-            size_t if_count_inserted = 0, while_count_inserted = 0, for_count_inserted = 0, switch_count_inserted = 0, do_count_inserted = 0, foreach_count_inserted = 0;
-            conditional_counts(SRCDIFF_INSERT, if_count_inserted, while_count_inserted, for_count_inserted, switch_count_inserted, do_count_inserted, foreach_count_inserted);
+            size_t if_inserted = 0, while_inserted = 0, for_inserted = 0, switch_inserted = 0, do_inserted = 0, foreach_inserted = 0;
+            conditional_counts(SRCDIFF_INSERT, if_inserted, while_inserted, for_inserted, switch_inserted, do_inserted, foreach_inserted);
+
+            size_t if_modified = 0, while_modified = 0, for_modified = 0, switch_modified = 0, do_modified = 0, foreach_modified = 0;
+            conditional_counts(SRCDIFF_COMMON, if_modified, while_modified, for_modified, switch_modified, do_modified, foreach_modified);
 
             ++depth;
-            pad(out) << std::setw(8) << std::left << "" << std::right << std::setw(8) << "Deleted" << std::setw(9) << "Inserted" << '\n';
-            if(if_count_deleted      || if_count_inserted)      output_conditional_counts(out, "if",      if_count_deleted,      if_count_inserted, 0);
-            if(while_count_deleted   || while_count_inserted)   output_conditional_counts(out, "while",   while_count_deleted,   while_count_inserted, 0);
-            if(for_count_deleted     || for_count_inserted)     output_conditional_counts(out, "for",     for_count_deleted,     for_count_inserted, 0);
-            if(switch_count_deleted  || switch_count_inserted)  output_conditional_counts(out, "switch",  switch_count_deleted,  switch_count_inserted, 0);
-            if(do_count_deleted      || do_count_inserted)      output_conditional_counts(out, "do",      do_count_deleted,      do_count_inserted, 0);
-            if(foreach_count_deleted || foreach_count_inserted) output_conditional_counts(out, "foreach", foreach_count_deleted, foreach_count_inserted, 0);
+            pad(out) << std::setw(8) << std::left << "" << std::right << std::setw(8) << "Deleted" << std::setw(9) << "Inserted" << std::setw(9) << "Modified" << '\n';
+            if(if_deleted      || if_inserted      || if_modified)      output_conditional_counts(out, "if",      if_deleted,      if_inserted,      if_modified);
+            if(while_deleted   || while_inserted   || while_modified)   output_conditional_counts(out, "while",   while_deleted,   while_inserted,   while_modified);
+            if(for_deleted     || for_inserted     || for_modified)     output_conditional_counts(out, "for",     for_deleted,     for_inserted,     for_modified);
+            if(switch_deleted  || switch_inserted  || switch_modified)  output_conditional_counts(out, "switch",  switch_deleted,  switch_inserted,  switch_modified);
+            if(do_deleted      || do_inserted      || do_modified)      output_conditional_counts(out, "do",      do_deleted,      do_inserted,      do_modified);
+            if(foreach_deleted || foreach_inserted || foreach_modified) output_conditional_counts(out, "foreach", foreach_deleted, foreach_inserted, foreach_modified);
 
             --depth;
 
