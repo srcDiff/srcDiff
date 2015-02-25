@@ -182,6 +182,8 @@ class function_profile_t : public profile_t {
             if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                 output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
+            --depth;
+
             // body summary
             size_t number_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
             size_t number_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
