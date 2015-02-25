@@ -173,11 +173,11 @@ class function_profile_t : public profile_t {
             std::for_each(parameters.find(SRCDIFF_COMMON), parameters.upper_bound(SRCDIFF_COMMON),
                 [&number_parameters_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++number_parameters_modified; });
 
-            if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) pad(out) << "Signature change:\n";//"\tThe following indicate a change of behaviour to the function:\n";
+            if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) pad(out) << "Signature change:\n";
 
             ++depth;
 
-            if(is_return_type_change)      pad(out) << "Return type changed: "        << return_type.original() << " -> " << return_type.modified() << '\n';
+            if(is_return_type_change) pad(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
 
             if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                 output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
