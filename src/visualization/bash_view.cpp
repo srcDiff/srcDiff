@@ -75,6 +75,8 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
 
   controller.parse(this);
 
+  reset();
+
 }
 
 bash_view::context_mode bash_view::context_string_to_id(const std::string & context_type_str) const {

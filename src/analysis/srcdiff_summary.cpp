@@ -187,8 +187,6 @@ srcdiff_summary::~srcdiff_summary() {
 
 void srcdiff_summary::summarize(const std::string & srcdiff, const std::string & xml_encoding) {
 
-	profile_list.clear();
-
     srcSAXController controller(srcdiff, xml_encoding.c_str());
 
     controller.parse(this);
@@ -196,6 +194,8 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
     // should always be unit
     const std::shared_ptr<profile_t> & profile = profile_list[1];
     summarize(profile);
+
+    reset();
 
 }
 
@@ -210,6 +210,20 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
     (*out) << "\n";
     for(size_t child_pos : profile->child_profiles)
         summarize(profile_list[child_pos]);
+
+}
+
+void srcdiff_summary::reset() {
+
+    id_count = 0;
+    profile_list.clear();
+    srcdiff_stack.clear();
+    profile_stack.clear();
+    counting_profile_pos.clear();
+    text.clear();
+    name_count = 0;
+    collected_name.clear();
+
 
 }
 
@@ -567,7 +581,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     --parent_pos;
 
                 profile_stack.at(counting_profile_pos.back().first)->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
-                collected_name.reset();
+                collected_name.clear();
 
             }
 

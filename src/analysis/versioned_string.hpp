@@ -90,7 +90,7 @@ class versioned_string {
 
 		}
 
-		void reset() {
+		void clear() {
 
 			string_original = boost::optional<std::string>();
 			string_modified = boost::optional<std::string>();

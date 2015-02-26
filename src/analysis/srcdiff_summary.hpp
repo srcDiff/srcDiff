@@ -82,6 +82,7 @@ public:
 
     void summarize(const std::string & srcdiff, const std::string & xml_encoding);
     void summarize(const std::shared_ptr<profile_t> & profile);
+    void reset();
 
     /**
      * startDocument
