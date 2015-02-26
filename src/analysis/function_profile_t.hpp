@@ -129,7 +129,7 @@ class function_profile_t : public profile_t {
             if(switch_deleted  || switch_inserted  || switch_modified)  output_counts(out, "switch",  switch_deleted,  switch_inserted,  switch_modified);
             if(do_deleted      || do_inserted      || do_modified)      output_counts(out, "do",      do_deleted,      do_inserted,      do_modified);
             if(foreach_deleted || foreach_inserted || foreach_modified) output_counts(out, "foreach", foreach_deleted, foreach_inserted, foreach_modified);
-            pad(out) << std::setw(10) << std::left << "Total" << std::right << std::setw(9) << number_deleted << std::setw(9) << number_inserted << std::setw(9) << number_modified << '\n';
+            pad(out) << std::setw(10) << std::left << "total" << std::right << std::setw(9) << number_deleted << std::setw(9) << number_inserted << std::setw(9) << number_modified << '\n';
             --depth;
 
             return out;
