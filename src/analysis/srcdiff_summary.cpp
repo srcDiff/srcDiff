@@ -348,8 +348,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
                             && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
 
 
-    bool then_clause_child = std::string(profile_stack.back()->type_name) == "then";
-    if(then_clause_child && local_name != "comment" && local_name != "break" && local_name != "continue" && local_name != "return")
+    bool then_clause_child = profile_stack.size() > 1
+        && (std::string(profile_stack.back()->type_name) == "then" || std::string(profile_stack.at(profile_stack.size() - 2)->type_name) == "then");
+    if(then_clause_child && local_name != "block" && local_name != "comment" && local_name != "break" && local_name != "continue" && local_name != "return")
         reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.back().first))->set_is_guard(false);
 
     if(uri_stack.back() == SRCDIFF) {
