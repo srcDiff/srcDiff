@@ -48,61 +48,11 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
-            is_after_change(false), wait_change(true), in_function(false), context_type(context_type), length(0),
-            is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
+  bash_view(const std::string & output_filename, boost::any context_type);
+  ~bash_view();
 
-    if(context_type.type() == typeid(size_t)) {
-
-      number_context_lines = boost::any_cast<size_t>(context_type);
-
-    } else {
-
-      const std::string & context_type_str = boost::any_cast<std::string>(context_type);
-      const std::string::size_type dash_pos = context_type_str.find('-');
-      context_mode mode = context_string_to_id(context_type_str.substr(0, dash_pos));
-
-      if(mode == ALL) number_context_lines = -1;
-      else modes |= mode;
-
-      // assume dash is -only /** @todo actually complete this */
-      if(dash_pos != std::string::npos) modes = FUNCTION;
-
-    }
-
-    if(output_filename != "-")
-      output = new std::ofstream(output_filename.c_str());
-    else
-      output = &std::cout;
-
-  }
-
-  ~bash_view() {
-
-    if(output != &std::cout) {
-
-      ((std::ofstream *)output)->close();
-      delete output;
-
-    }
-    
-  }
-
-  void reset() {
-
-    line_number_delete = 0;
-    line_number_insert = 0;
-    is_after_change = false;
-    wait_change = true;
-    in_function = false;
-    length = 0;
-    additional_context.clear();
-    is_after_additional = false;
-    after_edit_count = 0;
-    last_context_line = -1;
-
-
-  }
+  void transform(const std::string & srcdiff, const std::string & xml_encoding);
+  void reset();
 
 private:
 
@@ -115,9 +65,6 @@ private:
   context_mode context_string_to_id(const std::string & context_type_str) const;
 
 public:
-
-  void transform(const std::string & srcdiff, const std::string & xml_encoding);
-
 
   /**
    * startDocument
