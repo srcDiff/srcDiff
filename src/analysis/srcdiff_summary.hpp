@@ -10,6 +10,7 @@
 #include <versioned_string.hpp>
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <map>
 #include <memory>
@@ -39,6 +40,8 @@ public:
 private:
 
 protected:
+
+	std::ostream * out;
 
     size_t id_count;
     profile_t::profile_list_t profile_list;
@@ -74,7 +77,8 @@ private:
 
 public:
 
-    srcdiff_summary();
+    srcdiff_summary(const std::string & output_filename);
+    ~srcdiff_summary();
 
     void summarize(const std::string & srcdiff, const std::string & xml_encoding);
     void summarize(const std::shared_ptr<profile_t> & profile);

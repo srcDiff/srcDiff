@@ -31,7 +31,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
-    summary = std::make_shared<srcdiff_summary>();
+    summary = std::make_shared<srcdiff_summary>(srcdiff_filename);
 
   }
 

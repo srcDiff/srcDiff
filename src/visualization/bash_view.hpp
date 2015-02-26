@@ -85,6 +85,7 @@ public:
       delete output;
 
     }
+    
   }
 
   void reset() {

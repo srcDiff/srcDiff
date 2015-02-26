@@ -163,11 +163,31 @@ void srcdiff_summary::process_characters() {
 
 }
 
-srcdiff_summary::srcdiff_summary() 
-    : id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(),
-      insert_count(), delete_count(), change_count(), total(), text(), name_count(0), collected_name() {}
+srcdiff_summary::srcdiff_summary(const std::string & output_filename) 
+    : out(nullptr), id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(),
+      insert_count(), delete_count(), change_count(), total(), text(), name_count(0), collected_name() {
+
+    if(output_filename != "-")
+      out = new std::ofstream(output_filename.c_str());
+    else
+      out = &std::cout;
+
+}
+
+srcdiff_summary::~srcdiff_summary() {
+
+    if(out != &std::cout) {
+
+      ((std::ofstream *)out)->close();
+      delete out;
+
+    }
+
+}
 
 void srcdiff_summary::summarize(const std::string & srcdiff, const std::string & xml_encoding) {
+
+	profile_list.clear();
 
     srcSAXController controller(srcdiff, xml_encoding.c_str());
 
@@ -177,7 +197,6 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
     const std::shared_ptr<profile_t> & profile = profile_list[1];
     summarize(profile);
 
-
 }
 
 void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
@@ -186,9 +205,9 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 
     profile_t::depth = 0;
 
-    profile->summary(std::cout);
+    profile->summary(*out);
 
-    std::cout << "\n";
+    (*out) << "\n";
     for(size_t child_pos : profile->child_profiles)
         summarize(profile_list[child_pos]);
 
