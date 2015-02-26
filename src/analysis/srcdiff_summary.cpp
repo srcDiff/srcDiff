@@ -6,6 +6,7 @@
 #include <function_profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <decl_stmt_profile_t.hpp>
+#include <if_profile_t.hpp>
 
 #include <cstring>
 
@@ -26,12 +27,12 @@ bool is_summary(const std::string & type_name) {
 
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation) {
 
-    if(is_class_type(type_name))    return std::make_shared<class_profile_t>(type_name, uri, operation);
-    if(is_function_type(type_name)) return std::make_shared<function_profile_t>(type_name, uri, operation);
+    if(is_class_type(type_name))    return std::make_shared<class_profile_t>    (type_name, uri, operation);
+    if(is_function_type(type_name)) return std::make_shared<function_profile_t> (type_name, uri, operation);
     if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, uri, operation);
     if(is_decl_stmt(type_name))     return std::make_shared<decl_stmt_profile_t>(type_name, uri, operation);
-
-    return std::make_shared<profile_t>(type_name, uri, operation);
+    if(type_name == "if")           return std::make_shared<if_profile_t>       (type_name, uri, operation);
+    return std::make_shared<profile_t>                                          (type_name, uri, operation);
 
 }
 
@@ -335,6 +336,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes) {
 
+    if(text != "") process_characters();
+
     const std::string local_name(localname);
 
     uri_stack.push_back(URI == std::string("http://www.sdml.info/srcDiff") ? SRCDIFF : (URI == std::string("http://www.sdml.info/srcML/src") ? SRC : CPP));
@@ -344,7 +347,10 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
                             && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
 
-    if(text != "") process_characters();
+
+    bool then_clause_child = std::string(profile_stack.back()->type_name) == "then";
+    if(then_clause_child && local_name != "comment" && local_name != "break" && local_name != "continue" && local_name != "return")
+        reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.back().first))->set_is_guard(false);
 
     if(uri_stack.back() == SRCDIFF) {
 
@@ -546,14 +552,14 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
  */
 void srcdiff_summary::endElement(const char * localname, const char * prefix, const char * URI) {
 
+    if(text != "") process_characters();
+
     const std::string local_name(localname);
 
     // detect if interchange
     size_t srcml_depth = uri_stack.size();
     bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
                             && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
-
-    if(text != "") process_characters();
 
     if(uri_stack.back() == SRCDIFF) srcdiff_stack.pop_back();
 

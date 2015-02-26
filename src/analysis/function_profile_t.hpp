@@ -3,6 +3,7 @@
 
 #include <profile_t.hpp>
 #include <parameter_profile_t.hpp>
+#include <if_profile_t.hpp>
 #include <versioned_string.hpp>
 #include <change_entity_map.hpp>
 #include <type_query.hpp>
@@ -58,7 +59,7 @@ class function_profile_t : public profile_t {
 
         }
 
-        virtual void conditional_counts(srcdiff_type operation, size_t & if_count, size_t & while_count, size_t & for_count,
+        virtual void conditional_counts(srcdiff_type operation, size_t & guard_count, size_t & if_count, size_t & while_count, size_t & for_count,
                                         size_t & switch_count, size_t & do_count, size_t & foreach_count) const {
 
             std::for_each(conditionals.lower_bound(operation), conditionals.upper_bound(operation),
@@ -71,16 +72,19 @@ class function_profile_t : public profile_t {
 
                     switch(type_name[0]) {
 
-                        case 'i': ++if_count;     break;
+                        case 'i': 
+                            reinterpret_cast<const std::shared_ptr<if_profile_t> &>(pair.second)->is_guard() ? ++guard_count : ++if_count;
+                            break;
                         case 'w': ++while_count;  break;
                         case 's': ++switch_count; break;
                         case 'd': ++do_count;     break;
-                        case 'f': type_name == "for" ? ++for_count : ++foreach_count;   break;
+                        case 'f':
+                            type_name == "for" ? ++for_count : ++foreach_count;
+                            break;
 
                     }
 
                 });
-
 
         }
 
@@ -107,17 +111,18 @@ class function_profile_t : public profile_t {
 
             pad(out) << "Testing complexity change summary:\n";
 
-            size_t if_deleted = 0, while_deleted = 0, for_deleted = 0, switch_deleted = 0, do_deleted = 0, foreach_deleted = 0;
-            conditional_counts(SRCDIFF_DELETE, if_deleted, while_deleted, for_deleted, switch_deleted, do_deleted, foreach_deleted);
+            size_t guard_deleted = 0, if_deleted = 0, while_deleted = 0, for_deleted = 0, switch_deleted = 0, do_deleted = 0, foreach_deleted = 0;
+            conditional_counts(SRCDIFF_DELETE, guard_deleted, if_deleted, while_deleted, for_deleted, switch_deleted, do_deleted, foreach_deleted);
 
-            size_t if_inserted = 0, while_inserted = 0, for_inserted = 0, switch_inserted = 0, do_inserted = 0, foreach_inserted = 0;
-            conditional_counts(SRCDIFF_INSERT, if_inserted, while_inserted, for_inserted, switch_inserted, do_inserted, foreach_inserted);
+            size_t guard_inserted = 0, if_inserted = 0, while_inserted = 0, for_inserted = 0, switch_inserted = 0, do_inserted = 0, foreach_inserted = 0;
+            conditional_counts(SRCDIFF_INSERT, guard_inserted, if_inserted, while_inserted, for_inserted, switch_inserted, do_inserted, foreach_inserted);
 
-            size_t if_modified = 0, while_modified = 0, for_modified = 0, switch_modified = 0, do_modified = 0, foreach_modified = 0;
-            conditional_counts(SRCDIFF_COMMON, if_modified, while_modified, for_modified, switch_modified, do_modified, foreach_modified);
+            size_t guard_modified = 0, if_modified = 0, while_modified = 0, for_modified = 0, switch_modified = 0, do_modified = 0, foreach_modified = 0;
+            conditional_counts(SRCDIFF_COMMON, guard_modified, if_modified, while_modified, for_modified, switch_modified, do_modified, foreach_modified);
 
             ++depth;
             output_header(out);
+            if(guard_deleted   || guard_inserted   || guard_modified)   output_counts(out, "guard",   guard_deleted,   guard_inserted,   guard_modified);
             if(if_deleted      || if_inserted      || if_modified)      output_counts(out, "if",      if_deleted,      if_inserted,      if_modified);
             if(while_deleted   || while_inserted   || while_modified)   output_counts(out, "while",   while_deleted,   while_inserted,   while_modified);
             if(for_deleted     || for_inserted     || for_modified)     output_counts(out, "for",     for_deleted,     for_inserted,     for_modified);
