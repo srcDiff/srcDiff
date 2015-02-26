@@ -60,7 +60,7 @@ class function_profile_t : public profile_t {
         }
 
         virtual void conditional_counts(srcdiff_type operation, size_t & guard_count, size_t & if_count, size_t & while_count, size_t & for_count,
-                                        size_t & switch_count, size_t & do_count, size_t & foreach_count) const {
+                                        size_t & switch_count, size_t & do_count, size_t & foreach_count, size_t & forever_count) const {
 
             std::for_each(conditionals.lower_bound(operation), conditionals.upper_bound(operation),
 
@@ -79,7 +79,7 @@ class function_profile_t : public profile_t {
                         case 's': ++switch_count; break;
                         case 'd': ++do_count;     break;
                         case 'f':
-                            type_name == "for" ? ++for_count : ++foreach_count;
+                            type_name == "for" ? ++for_count : (type_name == "foreach" ? ++foreach_count : ++forever_count);
                             break;
 
                     }
@@ -111,14 +111,14 @@ class function_profile_t : public profile_t {
 
             pad(out) << "Testing complexity change summary:\n";
 
-            size_t guard_deleted = 0, if_deleted = 0, while_deleted = 0, for_deleted = 0, switch_deleted = 0, do_deleted = 0, foreach_deleted = 0;
-            conditional_counts(SRCDIFF_DELETE, guard_deleted, if_deleted, while_deleted, for_deleted, switch_deleted, do_deleted, foreach_deleted);
+            size_t guard_deleted = 0, if_deleted = 0, while_deleted = 0, for_deleted = 0, switch_deleted = 0, do_deleted = 0, foreach_deleted = 0, forever_deleted = 0;
+            conditional_counts(SRCDIFF_DELETE, guard_deleted, if_deleted, while_deleted, for_deleted, switch_deleted, do_deleted, foreach_deleted, forever_deleted);
 
-            size_t guard_inserted = 0, if_inserted = 0, while_inserted = 0, for_inserted = 0, switch_inserted = 0, do_inserted = 0, foreach_inserted = 0;
-            conditional_counts(SRCDIFF_INSERT, guard_inserted, if_inserted, while_inserted, for_inserted, switch_inserted, do_inserted, foreach_inserted);
+            size_t guard_inserted = 0, if_inserted = 0, while_inserted = 0, for_inserted = 0, switch_inserted = 0, do_inserted = 0, foreach_inserted = 0, forever_inserted = 0;
+            conditional_counts(SRCDIFF_INSERT, guard_inserted, if_inserted, while_inserted, for_inserted, switch_inserted, do_inserted, foreach_inserted, forever_inserted);
 
-            size_t guard_modified = 0, if_modified = 0, while_modified = 0, for_modified = 0, switch_modified = 0, do_modified = 0, foreach_modified = 0;
-            conditional_counts(SRCDIFF_COMMON, guard_modified, if_modified, while_modified, for_modified, switch_modified, do_modified, foreach_modified);
+            size_t guard_modified = 0, if_modified = 0, while_modified = 0, for_modified = 0, switch_modified = 0, do_modified = 0, foreach_modified = 0, forever_modified = 0;
+            conditional_counts(SRCDIFF_COMMON, guard_modified, if_modified, while_modified, for_modified, switch_modified, do_modified, foreach_modified, forever_modified);
 
             ++depth;
             output_header(out);
@@ -129,6 +129,7 @@ class function_profile_t : public profile_t {
             if(switch_deleted  || switch_inserted  || switch_modified)  output_counts(out, "switch",  switch_deleted,  switch_inserted,  switch_modified);
             if(do_deleted      || do_inserted      || do_modified)      output_counts(out, "do",      do_deleted,      do_inserted,      do_modified);
             if(foreach_deleted || foreach_inserted || foreach_modified) output_counts(out, "foreach", foreach_deleted, foreach_inserted, foreach_modified);
+            if(forever_deleted || forever_inserted || forever_modified) output_counts(out, "forever", forever_deleted, forever_inserted, forever_modified);
             pad(out) << std::setw(10) << std::left << "total" << std::right << std::setw(9) << number_deleted << std::setw(9) << number_inserted << std::setw(9) << number_modified << '\n';
             --depth;
 
