@@ -185,6 +185,9 @@ class function_profile_t : public profile_t {
             --depth;
 
             // body summary
+
+            /** @todo determine guards.  Might be if with only return break or continue probably needs to be detected in sax and set as part of profile will
+                probably have to create an if_profile then when in then check and see if non-comment non-return/break/continue and then set no longer guard */
             size_t number_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
             size_t number_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
             size_t number_conditionals_modified = 0;
