@@ -2,6 +2,7 @@
 #define INCLUDED_UNIT_PROFILE_T_HPP
 
 #include <profile_t.hpp>
+#include <conditionals_addon.hpp>
 #include <decl_stmt_profile_t.hpp>
 #include <function_profile_t.hpp>
 #include <class_profile_t.hpp>
@@ -9,7 +10,7 @@
 #include <change_entity_map.hpp>
 #include <type_query.hpp>
 
-class unit_profile_t : public profile_t {
+class unit_profile_t : public profile_t, public conditionals_addon {
 
     private:
 
@@ -20,11 +21,10 @@ class unit_profile_t : public profile_t {
         change_entity_map<decl_stmt_profile_t> decl_stmts;
         change_entity_map<function_profile_t>  functions;
         change_entity_map<class_profile_t>     classes;
-        change_entity_map<profile_t>           conditionals;
 
     public:
 
-        unit_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : profile_t(type_name, uri, operation) {}
+        unit_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : profile_t(type_name, uri, operation), conditionals_addon() {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
@@ -70,17 +70,13 @@ class unit_profile_t : public profile_t {
             classes.summarize_pure(out, SRCDIFF_INSERT);
             classes.summarize_modified(out);
 
-            // for incomplete code
-            size_t num_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
-            if(num_conditionals_deleted) pad(out) << "Number conditionals deleted: " << num_conditionals_deleted << '\n';
-
-            size_t num_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
-            if(num_conditionals_inserted) pad(out) << "Number conditionals inserted: " << num_conditionals_inserted << '\n';
-
-            size_t num_conditionals_modified = 0;
+            size_t number_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
+            size_t number_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
+            size_t number_conditionals_modified = 0;
             std::for_each(conditionals.lower_bound(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
-                [&num_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++num_conditionals_modified; });
-            if(num_conditionals_modified) pad(out) << "Number conditionals modified: " << num_conditionals_modified << '\n';
+                [&number_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++number_conditionals_modified; });
+            if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
+                output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
 
             //--depth;
 
