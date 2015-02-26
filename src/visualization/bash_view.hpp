@@ -19,7 +19,7 @@ private:
 
   static const context_mode LINE     = 1 << 0;
   static const context_mode FUNCTION = 1 << 1;
-  static const context_mode ALL      = 2 << 1;
+  static const context_mode ALL      = 1 << 2;
 
   std::vector<int> diff_stack;
 
