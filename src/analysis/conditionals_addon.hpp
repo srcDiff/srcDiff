@@ -18,6 +18,17 @@ class conditionals_addon {
 
         conditionals_addon() {}
 
+        template <typename T>
+        void count_operations(change_entity_map<T> map, size_t & number_deleted, size_t & number_inserted, size_t & number_modified) const {
+
+            number_deleted  = map.count(SRCDIFF_DELETE);
+            number_inserted = map.count(SRCDIFF_INSERT);
+            number_modified = 0;
+            std::for_each(map.lower_bound(SRCDIFF_COMMON), map.upper_bound(SRCDIFF_COMMON),
+                [&number_modified](const typename change_entity_map<T>::pair & pair) { if(pair.second->syntax_count) ++number_modified; });
+
+        }
+        
         virtual void conditional_counts(srcdiff_type operation, size_t & guard_count, size_t & if_count, size_t & while_count, size_t & for_count,
                                         size_t & switch_count, size_t & do_count, size_t & foreach_count, size_t & forever_count) const {
 

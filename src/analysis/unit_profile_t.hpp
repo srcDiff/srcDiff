@@ -70,11 +70,8 @@ class unit_profile_t : public profile_t, public conditionals_addon {
             classes.summarize_pure(out, SRCDIFF_INSERT);
             classes.summarize_modified(out);
 
-            size_t number_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
-            size_t number_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
-            size_t number_conditionals_modified = 0;
-            std::for_each(conditionals.lower_bound(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
-                [&number_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++number_conditionals_modified; });
+            size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
+            count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
             if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
                 output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
 
