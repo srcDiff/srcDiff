@@ -15,7 +15,8 @@ bool is_count(const std::string & type_name) {
 return is_function_type(type_name)  || is_class_type(type_name)           || is_simple_type(type_name)
     || is_condition_type(type_name) || is_catch(type_name)                || is_decl_stmt(type_name)
     || is_call(type_name)           || is_preprocessor_special(type_name) || is_expr(type_name)
-    || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name);
+    || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name)
+    || is_specifier(type_name);
 
 }
 
@@ -349,7 +350,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
 
     bool then_clause_child = profile_stack.size() > 1
-        && (std::string(profile_stack.back()->type_name) == "then" || std::string(profile_stack.at(profile_stack.size() - 2)->type_name) == "then");
+        && (profile_stack.back()->type_name == "then" || profile_stack.at(profile_stack.size() - 2)->type_name == "then");
     if(then_clause_child && local_name != "block" && local_name != "comment" && local_name != "break" && local_name != "continue" && local_name != "return")
         reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.back().first))->set_is_guard(false);
 

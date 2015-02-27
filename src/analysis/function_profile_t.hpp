@@ -21,6 +21,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
         versioned_string return_type;
         versioned_string name;
 
+        boost::optional<srcdiff_type> const_specifier;
+
         change_entity_map<parameter_profile_t> parameters;
         change_entity_map<profile_t>           member_initializations;
 
@@ -41,7 +43,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             if(is_parameter(type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, profile);
-            else if(is_call(type_name) && std::string(parent) == "member_init_list") member_initializations.emplace(profile->operation, profile);
+            else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, profile);
+            else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
             else child_profiles.push_back(profile->id);
 
         }
@@ -123,7 +126,10 @@ class function_profile_t : public profile_t, public conditionals_addon {
             if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                 output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
-            // member init list /** @todo may need to add rest of things that can occur here between parameter list and block */
+            // before block summary
+            /** @todo may need to add rest of things that can occur here between parameter list and block */
+            if(const_specifier) pad(out) << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
+
             size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
             count_operations(member_initializations, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
             if(number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified)

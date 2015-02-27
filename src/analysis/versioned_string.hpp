@@ -125,6 +125,20 @@ class versioned_string {
 
 		}
 
+       	bool operator==(const char * c_str) const {
+
+       		return std::string(*this) == c_str;
+
+		}
+
+
+
+       	bool operator!=(const char * c_str) const {
+
+       		return std::string(*this) != c_str;
+
+		}
+
 		std::string operator+(const char * c_str) const {
 
 

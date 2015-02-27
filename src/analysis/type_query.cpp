@@ -77,3 +77,9 @@ bool is_parameter(const std::string & type_name) {
     return type_name == "parameter";
 
 }
+
+bool is_specifier(const std::string & type_name) {
+
+    return type_name == "specifier";
+
+}

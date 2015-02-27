@@ -15,5 +15,6 @@ bool is_preprocessor_special(const std::string & type_name);
 bool is_expr(const std::string & type_name);
 bool is_lambda(const std::string & type_name);
 bool is_parameter(const std::string & type_name);
+bool is_specifier(const std::string & type_name);
 
 #endif
