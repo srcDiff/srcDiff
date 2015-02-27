@@ -83,7 +83,7 @@ class profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {}
 
-        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
+        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             child_profiles.push_back(profile->id);
             

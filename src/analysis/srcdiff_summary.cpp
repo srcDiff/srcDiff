@@ -641,8 +641,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             profile_list[profile_stack.back()->id] = profile_stack.back();
 
+            size_t parent_pos = profile_stack.size() - 2;
+            while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+                --parent_pos;
+
             // should always have at least unit
-            profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back());
+            profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back(), profile_stack.at(parent_pos)->type_name);
 
         }
 

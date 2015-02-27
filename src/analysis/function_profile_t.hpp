@@ -22,6 +22,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
         versioned_string name;
 
         change_entity_map<parameter_profile_t> parameters;
+        change_entity_map<profile_t>           member_initializations;
 
     public:
 
@@ -34,12 +35,13 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         }
 
-        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
+        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 
             if(is_parameter(type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, profile);
+            else if(is_call(type_name) && std::string(parent) == "member_init_list") member_initializations.emplace(profile->operation, profile);
             else child_profiles.push_back(profile->id);
 
         }
@@ -59,6 +61,17 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         }
 
+        template <typename T>
+        void count_operations(change_entity_map<T> map, size_t & number_deleted, size_t & number_inserted, size_t & number_modified) const {
+
+            number_deleted  = map.count(SRCDIFF_DELETE);
+            number_inserted = map.count(SRCDIFF_INSERT);
+            number_modified = 0;
+            std::for_each(map.lower_bound(SRCDIFF_COMMON), map.upper_bound(SRCDIFF_COMMON),
+                [&number_modified](const typename change_entity_map<T>::pair & pair) { if(pair.second->syntax_count) ++number_modified; });
+
+        }
+
         virtual std::ostream & output_all_parameter_counts(std::ostream & out, size_t number_parameters_deleted, size_t number_parameters_inserted, size_t number_parameters_modified) const {
 
             pad(out) << "Parameter list changes:\n";
@@ -66,6 +79,20 @@ class function_profile_t : public profile_t, public conditionals_addon {
             ++depth;
             output_header(out);
             output_counts(out, "Parameters", number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+            --depth;
+
+            return out;
+
+        }
+
+        virtual std::ostream & output_all_member_initialization_counts(std::ostream & out, size_t number_initializations_deleted,
+                                                                      size_t number_initializations_inserted, size_t number_initializations_modified) const {
+
+            pad(out) << "Member intialization list changes:\n";
+
+            ++depth;
+            output_header(out);
+            output_counts(out, "Init", number_initializations_deleted, number_initializations_inserted, number_initializations_modified);
             --depth;
 
             return out;
@@ -95,11 +122,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             // behaviour change
             bool is_return_type_change = !return_type.is_common();
-            size_t number_parameters_deleted  = parameters.count(SRCDIFF_DELETE);
-            size_t number_parameters_inserted = parameters.count(SRCDIFF_INSERT);
-            size_t number_parameters_modified = 0;
-            std::for_each(parameters.find(SRCDIFF_COMMON), parameters.upper_bound(SRCDIFF_COMMON),
-                [&number_parameters_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++number_parameters_modified; });
+            size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0;
+            count_operations(parameters, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
             if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) pad(out) << "Signature change:\n";
 
@@ -110,17 +134,16 @@ class function_profile_t : public profile_t, public conditionals_addon {
             if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                 output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
+            // member init list /** @todo may need to add rest of things that can occur here between parameter list and block */
+            size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
+            count_operations(member_initializations, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+            if(number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified)
+                output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
             --depth;
 
             // body summary
-
-            /** @todo determine guards.  Might be if with only return break or continue probably needs to be detected in sax and set as part of profile will
-                probably have to create an if_profile then when in then check and see if non-comment non-return/break/continue and then set no longer guard */
-            size_t number_conditionals_deleted  = conditionals.count(SRCDIFF_DELETE);
-            size_t number_conditionals_inserted = conditionals.count(SRCDIFF_INSERT);
-            size_t number_conditionals_modified = 0;
-            std::for_each(conditionals.lower_bound(SRCDIFF_COMMON), conditionals.upper_bound(SRCDIFF_COMMON),
-                [&number_conditionals_modified](const change_entity_map<profile_t>::pair & pair) { if(pair.second->syntax_count) ++number_conditionals_modified; });
+            size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
+            count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
             if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
                 output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
 
