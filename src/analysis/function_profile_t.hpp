@@ -45,7 +45,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, profile);
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, profile);
             else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
-            else child_profiles.push_back(profile->id);
+            else descendant_profiles.push_back(profile->id);
 
         }
 

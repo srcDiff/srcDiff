@@ -43,7 +43,7 @@ class unit_profile_t : public profile_t, public conditionals_addon {
             else if(is_function_type(type_name))  functions.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
             else if(is_class_type(type_name))     classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, profile);
-            else child_profiles.push_back(profile->id);
+            else descendant_profiles.push_back(profile->id);
             
         }
 
