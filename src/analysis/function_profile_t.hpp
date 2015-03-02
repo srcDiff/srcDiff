@@ -149,10 +149,12 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                 if(profile->parent_id == id) {
 
+                    if(profile->operation == SRCDIFF_COMMON) continue;
+
                     if(is_guard_clause) pad(out) << "guard clause ";
                     else                pad(out) << profile->type_name << " statement ";
 
-                    out << (profile->operation == SRCDIFF_DELETE ? "removed from" : (profile->operation == SRCDIFF_INSERT ? "added to " : "modified in "));
+                    out << (profile->operation == SRCDIFF_DELETE ? "removed from" : "added to ");
                     out << "function\n";
 
                 } else {
@@ -161,7 +163,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
                     bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
 
                     if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
-                    else                       pad(out) << profile->type_name << " statement was modified ";
+                    else                       pad(out) << parent_profile->type_name << " statement was modified ";
 
                     out << (profile->operation == SRCDIFF_DELETE ? "removing a " : (profile->operation == SRCDIFF_INSERT ? "adding a " : "modifying a "));
 
