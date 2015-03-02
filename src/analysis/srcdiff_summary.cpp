@@ -32,7 +32,8 @@ std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace
     if(is_function_type(type_name)) return std::make_shared<function_profile_t> (type_name, uri, operation);
     if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, uri, operation);
     if(is_decl_stmt(type_name))     return std::make_shared<decl_stmt_profile_t>(type_name, uri, operation);
-    if(type_name == "if")           return std::make_shared<if_profile_t>       (type_name, uri, operation);
+    if(type_name == "if" 
+        || type_name == "ternary")  return std::make_shared<if_profile_t>       (type_name, uri, operation);
     return std::make_shared<profile_t>                                          (type_name, uri, operation);
 
 }
