@@ -13,7 +13,7 @@ class if_profile_t : public profile_t {
 
     public:
 
-        if_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : profile_t(type_name, uri, operation), guard(true) {}
+        if_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id), guard(true) {}
 
 
         bool is_guard() const {

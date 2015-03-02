@@ -35,6 +35,7 @@ class profile_t {
         versioned_string type_name;
         namespace_uri uri;
         srcdiff_type operation;
+        size_t parent_id;
 
         bool is_modified;
         bool is_whitespace;
@@ -55,7 +56,7 @@ class profile_t {
 
     public:
 
-        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : id(0), type_name(type_name), uri(uri), operation(operation),
+        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : id(0), type_name(type_name), uri(uri), operation(operation), parent_id(parent_id),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
                                                                    number_descendant_profiles(0),  number_child_profiles(0) {}
