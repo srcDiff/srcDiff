@@ -161,7 +161,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
                     out << "function\n";
 
                 } else {
-
+                    /** todo so if parent is deleted/inserted then should report as part of base or new document or say context */
                     std::function<std::string (const std::shared_ptr<profile_t> & profile)> get_article 
                         = [](const std::shared_ptr<profile_t> & profile) 
                     { 
