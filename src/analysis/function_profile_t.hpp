@@ -67,6 +67,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         virtual std::ostream & output_all_parameter_counts(std::ostream & out, size_t number_parameters_deleted, size_t number_parameters_inserted, size_t number_parameters_modified) const {
 
+            out << '\n';
             pad(out) << "Parameter list changes:\n";
 
             ++depth;
@@ -81,6 +82,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
         virtual std::ostream & output_all_member_initialization_counts(std::ostream & out, size_t number_initializations_deleted,
                                                                       size_t number_initializations_inserted, size_t number_initializations_modified) const {
 
+            out << '\n';
             pad(out) << "Member intialization list changes:\n";
 
             ++depth;

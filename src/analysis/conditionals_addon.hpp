@@ -79,7 +79,8 @@ class conditionals_addon {
 
         virtual std::ostream & output_all_conditional_counts(std::ostream & out, size_t number_deleted, size_t number_inserted, size_t number_modified) const {
 
-            profile_t::pad(out) << "Testing complexity change summary:\n";
+            out << '\n';
+            profile_t::pad(out) << "Conditional Change Overview:\n";
 
             size_t guard_deleted = 0, if_deleted = 0, while_deleted = 0, for_deleted = 0, switch_deleted = 0, do_deleted = 0, foreach_deleted = 0, forever_deleted = 0;
             conditional_counts(SRCDIFF_DELETE, guard_deleted, if_deleted, while_deleted, for_deleted, switch_deleted, do_deleted, foreach_deleted, forever_deleted);
