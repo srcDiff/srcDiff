@@ -14,6 +14,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <tuple>
 
 #include <cstdlib>
 
@@ -50,7 +51,7 @@ protected:
     std::vector<std::shared_ptr<profile_t>> profile_stack;
     std::vector<namespace_uri> uri_stack;
 
-    std::vector<std::pair<size_t, size_t>> counting_profile_pos;
+    std::vector<std::tuple<size_t, size_t, size_t>> counting_profile_pos;
 
     counts_t insert_count;
     counts_t delete_count;

@@ -37,7 +37,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         }
 
-        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 

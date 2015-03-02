@@ -315,7 +315,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
         }
 
-    counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, profile_stack.size() - 1));
+    counting_profile_pos.emplace_back(profile_stack.size() - 1, profile_stack.size() - 1, profile_stack.size() - 1);
     profile_stack.back()->set_id(++id_count);
 
 }
@@ -352,7 +352,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     bool then_clause_child = profile_stack.size() > 1
         && (profile_stack.back()->type_name == "then" || profile_stack.at(profile_stack.size() - 2)->type_name == "then");
     if(then_clause_child && local_name != "block" && local_name != "comment" && local_name != "break" && local_name != "continue" && local_name != "return")
-        reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.back().first))->set_is_guard(false);
+        reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_is_guard(false);
 
     if(uri_stack.back() == SRCDIFF) {
 
@@ -402,11 +402,11 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     if(is_interchange) {
 
         // update element name/operation
-        profile_stack.at(counting_profile_pos.back().first)->set_operation(SRCDIFF_COMMON);
-        profile_stack.at(counting_profile_pos.back().first)->type_name.set_modified(full_name);
+        profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_operation(SRCDIFF_COMMON);
+        profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name.set_modified(full_name);
 
         // correct element counts
-        std::shared_ptr<profile_t> & parent = profile_stack.at(counting_profile_pos.back().first - 2);
+        std::shared_ptr<profile_t> & parent = profile_stack.at(std::get<0>(counting_profile_pos.back()) - 2);
         size_t syntax_dec = 1;
         parent->syntax_count -= syntax_dec;
         parent->total_count  -= syntax_dec;
@@ -437,7 +437,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         if(!is_interchange && is_count(full_name)) {
 
             bool summarize = is_summary(local_name);
-            counting_profile_pos.push_back(std::make_pair<size_t, size_t>(profile_stack.size() - 1, summarize ? profile_stack.size() - 1 : counting_profile_pos.back().second));
+            counting_profile_pos.emplace_back(profile_stack.size() - 1, std::get<0>(counting_profile_pos.back()),
+                                              summarize ? profile_stack.size() - 1 : std::get<2>(counting_profile_pos.back()));
             profile_stack.back()->set_id(++id_count);
 
         }
@@ -588,7 +589,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
                     --parent_pos;
 
-                profile_stack.at(counting_profile_pos.back().first)->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
+                profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
                 collected_name.clear();
 
             }
@@ -632,7 +633,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         counting_profile_pos.pop_back();
 
-        profile_stack.at(counting_profile_pos.back().second)->inc_num_child_profiles();
+        profile_stack.at(std::get<2>(counting_profile_pos.back()))->inc_number_descendant_profiles();
 
         // do not save items with no changes and not inserted/deleted
         if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON) {
@@ -647,7 +648,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 --parent_pos;
 
             // should always have at least unit
-            profile_stack.at(counting_profile_pos.back().second)->add_child(profile_stack.back(), profile_stack.at(parent_pos)->type_name);
+            profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_child(profile_stack.back(), profile_stack.at(parent_pos)->type_name);
+            profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant(profile_stack.back(), profile_stack.at(parent_pos)->type_name);
 
         }
 

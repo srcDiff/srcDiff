@@ -36,8 +36,6 @@ class profile_t {
         namespace_uri uri;
         srcdiff_type operation;
 
-        size_t num_child_profiles;
-
         bool is_modified;
         bool is_whitespace;
         bool is_comment;
@@ -49,13 +47,18 @@ class profile_t {
         size_t syntax_count;
         size_t total_count;
 
+        size_t number_child_profiles;
         std::vector<size_t> child_profiles;
+
+        size_t number_descendant_profiles;
+        std::vector<size_t> descendant_profiles;        
 
     public:
 
-        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : id(0), type_name(type_name), uri(uri), operation(operation), num_child_profiles(0),
+        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : id(0), type_name(type_name), uri(uri), operation(operation),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
-                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
+                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
+                                                                   number_descendant_profiles(0),  number_child_profiles(0) {}
 
         void set_id(size_t id_count) {
 
@@ -69,12 +72,6 @@ class profile_t {
                         
         }
 
-        void inc_num_child_profiles() {
-
-            ++num_child_profiles;
-
-        }
-
         virtual void set_name(versioned_string name) {
 
             set_name(name, boost::optional<versioned_string>());
@@ -83,15 +80,33 @@ class profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {}
 
+        void inc_number_child_profiles() {
+
+            ++number_child_profiles;
+
+        }
+        
         virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             child_profiles.push_back(profile->id);
             
         }
 
+        void inc_number_descendant_profiles() {
+
+            ++number_descendant_profiles;
+
+        }
+
+        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+
+            descendant_profiles.push_back(profile->id);
+            
+        }
+
         virtual impact_factor calculate_impact_factor() const {
 
-            double impact_factor_number = (double)syntax_count / num_child_profiles;
+            double impact_factor_number = (double)syntax_count / number_descendant_profiles;
 
             if(impact_factor_number == 0)    return NONE;
             if(impact_factor_number <  0.1)  return LOW;
