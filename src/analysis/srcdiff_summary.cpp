@@ -633,6 +633,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         counting_profile_pos.pop_back();
 
+        profile_stack.at(std::get<1>(counting_profile_pos.back()))->inc_number_child_profiles();
         profile_stack.at(std::get<2>(counting_profile_pos.back()))->inc_number_descendant_profiles();
 
         // do not save items with no changes and not inserted/deleted
