@@ -416,7 +416,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     } else {
 
-        profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, std::get<0>(counting_profile_pos.back())));
+        profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))->id));
 
     }
 

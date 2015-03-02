@@ -138,6 +138,40 @@ class function_profile_t : public profile_t, public conditionals_addon {
             --depth;
 
             // body summary
+            for(size_t profile_pos : descendant_profiles) {
+
+                const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
+
+                if(!is_condition_type(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
+                    continue;
+
+                bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+
+                if(profile->parent_id == id) {
+
+                    if(is_guard_clause) pad(out) << "guard clause ";
+                    else                pad(out) << profile->type_name << " statement ";
+
+                    out << (profile->operation == SRCDIFF_DELETE ? "removed from" : (profile->operation == SRCDIFF_INSERT ? "added to " : "modified in "));
+                    out << "function\n";
+
+                } else {
+
+                    const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
+                    bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
+
+                    if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
+                    else                       pad(out) << profile->type_name << " statement was modified ";
+
+                    out << (profile->operation == SRCDIFF_DELETE ? "removing a " : (profile->operation == SRCDIFF_INSERT ? "adding a " : "modifying a "));
+
+                    if(is_guard_clause) out << "guard clause\n";
+                    else                out << profile->type_name << " statement\n";
+
+                }
+
+            }
+
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
             count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
             if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
