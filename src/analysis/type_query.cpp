@@ -31,7 +31,7 @@ bool is_template(const std::string & type_name) {
 
 bool is_condition_type(const std::string & type_name) {
 
-    return type_name == "if" || type_name == "ternary" || type_name == "switch" || type_name == "elseif" || type_name == "while"
+    return has_then_clause(type_name) || type_name == "switch" || type_name == "elseif" || type_name == "while"
         || type_name == "do" || type_name == "for" || type_name == "foreach" || type_name == "forever";
 
 }
@@ -81,5 +81,11 @@ bool is_parameter(const std::string & type_name) {
 bool is_specifier(const std::string & type_name) {
 
     return type_name == "specifier";
+
+}
+
+bool has_then_clause(const std::string & type_name) {
+
+    return type_name == "if" || type_name == "ternary";
 
 }
