@@ -86,7 +86,7 @@ class change_entity_map {
 
         }
 
-        std::ostream & summarize_pure(std::ostream & out, srcdiff_type operation) const {
+        std::ostream & summarize_pure(std::ostream & out, srcdiff_type operation, const profile_t::profile_list_t & profile_list) const {
 
             size_t count = entity.count(operation);
             if(count == 0) return out;
@@ -96,12 +96,12 @@ class change_entity_map {
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(operation);
 
             profile_t::pad(out) << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "): { ";
-            citr->second->summary(out);
+            citr->second->summary(out, profile_list);
             ++citr;
             for(; citr != entity.upper_bound(operation); ++citr) {
 
                 out << ", ";
-                citr->second->summary(out);
+                citr->second->summary(out, profile_list);
 
             }
 
@@ -111,7 +111,7 @@ class change_entity_map {
 
         }
 
-        std::ostream & summarize_modified(std::ostream & out) const {
+        std::ostream & summarize_modified(std::ostream & out, const profile_t::profile_list_t & profile_list) const {
 
             size_t num_modified = entity.count(SRCDIFF_COMMON);
             if(num_modified == 0) return out;
@@ -123,7 +123,7 @@ class change_entity_map {
             profile_t::pad(out) << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified << '\n';
             for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr)
                 if(citr->second->syntax_count)
-                        citr->second->summary(out);
+                        citr->second->summary(out, profile_list);
 
             return out;
 

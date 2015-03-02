@@ -131,7 +131,7 @@ class profile_t {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out) const {
+        virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
 
             pad(out) << type_name << ":"; 
             out << " Whitespace: " << whitespace_count;

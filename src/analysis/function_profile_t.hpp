@@ -45,7 +45,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, profile);
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, profile);
             else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
-            else descendant_profiles.push_back(profile->id);
+            
+            descendant_profiles.push_back(profile->id);
 
         }
 
@@ -91,7 +92,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out) const {
+        virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
 
             if(operation != SRCDIFF_COMMON) {
 
@@ -137,9 +138,6 @@ class function_profile_t : public profile_t, public conditionals_addon {
             --depth;
 
             // body summary
-
-
-
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
             count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
             if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
