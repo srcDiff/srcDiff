@@ -11,6 +11,7 @@
 
 #include <map>
 #include <iomanip>
+#include <functional>
 
 class function_profile_t : public profile_t, public conditionals_addon {
 
@@ -161,16 +162,46 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                 } else {
 
+                    std::function<std::string (const std::shared_ptr<profile_t> & profile)> get_article 
+                        = [](const std::shared_ptr<profile_t> & profile) 
+                    { 
+
+                        bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+                        if(is_guard_clause) return "a";
+
+                        const char letter = std::string(profile->type_name)[0];
+
+                        if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
+                            return "an";
+                        else
+                            return "a";
+                    };
+
                     const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
                     bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
 
-                    if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
-                    else                       pad(out) << parent_profile->type_name << " statement was modified ";
+                    if(profile->operation != SRCDIFF_COMMON) {
 
-                    out << (profile->operation == SRCDIFF_DELETE ? "removing a " : (profile->operation == SRCDIFF_INSERT ? "adding a " : "modifying a "));
+                        if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
+                        else                       pad(out) << parent_profile->type_name << " statement was modified ";
 
-                    if(is_guard_clause) out << "guard clause\n";
-                    else                out << profile->type_name << " statement\n";
+                        out << (profile->operation == SRCDIFF_DELETE ? "removing " : (profile->operation == SRCDIFF_INSERT ? "adding " : "modifying "));
+
+                        out << get_article(profile) << ' ';
+
+                        if(is_guard_clause) out << "guard clause\n";
+                        else                out << profile->type_name << " statement\n";
+
+                    } else {
+
+                        if(is_guard_clause) pad(out) << "guard clause within ";
+                        else                pad(out) << profile->type_name << " statement within ";
+
+                        if(is_parent_guard_clause) out << " guard clause was modified\n";
+                        else                       out << get_article(parent_profile) << ' ' << parent_profile->type_name << " statement was modified\n";
+
+
+                    }
 
                 }
 
