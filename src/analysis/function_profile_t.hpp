@@ -195,7 +195,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                         out << get_article(profile) << ' ';
 
-                        if(is_guard_clause) out << "guard clause\n";
+                        if(is_guard_clause) out << "guard clause";
                         else                out << profile->type_name << " statement";
 
                         if(has_common) out << (profile->operation == SRCDIFF_DELETE ? " from " : " ") << "around existing code";
