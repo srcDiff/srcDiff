@@ -70,7 +70,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
         virtual std::ostream & output_all_parameter_counts(std::ostream & out, size_t number_parameters_deleted, size_t number_parameters_inserted, size_t number_parameters_modified) const {
 
             out << '\n';
-            pad(out) << "Parameter list changes:\n";
+            begin_line(out) << "Parameter list changes:\n";
 
             ++depth;
             output_header(out);
@@ -85,7 +85,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
                                                                       size_t number_initializations_inserted, size_t number_initializations_modified) const {
 
             out << '\n';
-            pad(out) << "Member intialization list changes:\n";
+            begin_line(out) << "Member intialization list changes:\n";
 
             ++depth;
             output_header(out);
@@ -105,7 +105,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             }
 
-            pad(out) << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
+            begin_line(out) << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
 
             ++depth;
 
@@ -113,7 +113,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                 size_t non_syntax_changes = whitespace_count + comment_count;
 
-                pad(out) << "only ";
+                begin_line(out) << "only ";
 
                 if(non_syntax_changes == 1) out << "a single ";
 
@@ -130,25 +130,25 @@ class function_profile_t : public profile_t, public conditionals_addon {
             }
 
             // function signature
-            if(!name.is_common()) pad(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
+            if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
             // behaviour change
             bool is_return_type_change = !return_type.is_common();
             size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0;
             count_operations(parameters, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
-            if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) pad(out) << "Signature change:\n";
+            if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) begin_line(out) << "Signature change:\n";
 
             ++depth;
 
-            if(is_return_type_change) pad(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
+            if(is_return_type_change) begin_line(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
 
             if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                 output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
             // before block summary
             /** @todo may need to add rest of things that can occur here between parameter list and block */
-            if(const_specifier) pad(out) << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
+            if(const_specifier) begin_line(out) << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
 
             size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
             count_operations(member_initializations, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
@@ -173,8 +173,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                         if(profile->operation == SRCDIFF_COMMON) continue;
 
-                        if(is_guard_clause) pad(out) << "guard clause was ";
-                        else                pad(out) << profile->type_name << " statement was ";
+                        if(is_guard_clause) begin_line(out) << "guard clause was ";
+                        else                begin_line(out) << profile->type_name << " statement was ";
 
                         out << (profile->operation == SRCDIFF_DELETE ? "removed from " : (has_common ? "added " : "added to "));
 
@@ -206,8 +206,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                         if(profile->operation != SRCDIFF_COMMON) {
 
-                            if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
-                            else                       pad(out) << parent_profile->type_name << " statement was modified ";
+                            if(is_parent_guard_clause) begin_line(out) << "guard clause was modified ";
+                            else                       begin_line(out) << parent_profile->type_name << " statement was modified ";
 
                             out << (profile->operation == SRCDIFF_DELETE ? "removing " : "adding ");
 
@@ -222,7 +222,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                         } else {
 
-                            pad(out);
+                            begin_line(out);
 
                             if(parent_profile->operation != SRCDIFF_COMMON) out << "common ";
 

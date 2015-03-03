@@ -32,15 +32,15 @@ class decl_stmt_profile_t : public profile_t {
 
             }
 
-            pad(out) << type_name << " '" << name << "':\n";
+            begin_line(out) << type_name << " '" << name << "':\n";
 
             ++depth;
 
             // type
-            if(!type.is_common()) pad(out) << "Declaration statement type change: " << type.original() << " -> " << type.modified() << '\n';
+            if(!type.is_common()) begin_line(out) << "Declaration statement type change: " << type.original() << " -> " << type.modified() << '\n';
 
             // name
-            if(!name.is_common()) pad(out) << "Declaration statement name change: " << name.original() << " -> " << name.modified() << '\n';
+            if(!name.is_common()) begin_line(out) << "Declaration statement name change: " << name.original() << " -> " << name.modified() << '\n';
 
             --depth;
 

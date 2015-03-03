@@ -25,15 +25,15 @@ class parameter_profile_t : public profile_t {
 
         virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
-            pad(out) << type_name << " '" << name << "':\n";
+            begin_line(out) << type_name << " '" << name << "':\n";
 
             ++depth;
 
             // type
-            if(!type.is_common()) pad(out) << "Parameter type change: " << type.original() << " -> " << type.modified() << '\n';
+            if(!type.is_common()) begin_line(out) << "Parameter type change: " << type.original() << " -> " << type.modified() << '\n';
 
             // name
-            if(!name.is_common()) pad(out) << "Parameter name change: " << name.original() << " -> " << name.modified() << '\n';
+            if(!name.is_common()) begin_line(out) << "Parameter name change: " << name.original() << " -> " << name.modified() << '\n';
 
             --depth;
 

@@ -17,6 +17,8 @@ class profile_t {
 
     private:
 
+        static constexpr const char * const BULLET = "\u2022";
+
     public:
 
         typedef std::vector<std::shared_ptr<profile_t>> profile_list_t;
@@ -152,6 +154,12 @@ class profile_t {
                 out << '\t';
 
             return out;
+
+        }
+
+        static std::ostream & begin_line(std::ostream & out) {
+
+            return pad(out) << BULLET << ' ';
 
         }
 
