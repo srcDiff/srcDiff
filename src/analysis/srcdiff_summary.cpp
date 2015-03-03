@@ -382,6 +382,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         if(srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
             profile_stack.back()->is_modified = true;
 
+        if(srcdiff_stack.back().operation == SRCDIFF_COMMON && !srcdiff_stack.back().is_move)
+            profile_stack.at(std::get<0>(counting_profile_pos.back()))->has_common = true;
+
     }
 
     std::string full_name = "";

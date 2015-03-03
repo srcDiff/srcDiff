@@ -148,16 +148,20 @@ class function_profile_t : public profile_t, public conditionals_addon {
                 if(!is_condition_type(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
                     continue;
 
-                bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+                const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+                const bool has_common = profile->has_common;
 
                 if(profile->parent_id == id) {
 
                     if(profile->operation == SRCDIFF_COMMON) continue;
 
-                    if(is_guard_clause) pad(out) << "guard clause ";
-                    else                pad(out) << profile->type_name << " statement ";
+                    if(is_guard_clause) pad(out) << "guard clause was ";
+                    else                pad(out) << profile->type_name << " statement was ";
 
-                    out << (profile->operation == SRCDIFF_DELETE ? "removed from" : "added to ");
+                    out << (profile->operation == SRCDIFF_DELETE ? "removed from " : (has_common ? "added " : "added to "));
+
+                    if(has_common) out << " around existing code in ";
+
                     out << "function\n";
 
                 } else {
@@ -166,7 +170,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
                         = [](const std::shared_ptr<profile_t> & profile) 
                     { 
 
-                        bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+                        const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
                         if(is_guard_clause) return "a";
 
                         const char letter = std::string(profile->type_name)[0];
@@ -178,19 +182,24 @@ class function_profile_t : public profile_t, public conditionals_addon {
                     };
 
                     const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
-                    bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
+                    const bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
+                    const bool has_common = profile->has_common;
 
                     if(profile->operation != SRCDIFF_COMMON) {
 
                         if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
                         else                       pad(out) << parent_profile->type_name << " statement was modified ";
 
-                        out << (profile->operation == SRCDIFF_DELETE ? "removing " : (profile->operation == SRCDIFF_INSERT ? "adding " : "modifying "));
+                        out << (profile->operation == SRCDIFF_DELETE ? "removing " : "adding ");
 
                         out << get_article(profile) << ' ';
 
                         if(is_guard_clause) out << "guard clause\n";
-                        else                out << profile->type_name << " statement\n";
+                        else                out << profile->type_name << " statement";
+
+                        if(has_common) out << (profile->operation == SRCDIFF_DELETE ? " from " : " ") << "around existing code";
+
+                        out << '\n';
 
                     } else {
 
