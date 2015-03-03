@@ -49,7 +49,7 @@ class unit_profile_t : public profile_t, public conditionals_addon {
 
         virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
-            begin_line(out) << type_name << " '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
+            begin_line(out) << "file '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
 
             decl_stmts.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
             decl_stmts.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
