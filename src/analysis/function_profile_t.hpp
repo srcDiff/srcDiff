@@ -48,7 +48,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, profile);
             else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
             
-            descendant_profiles.push_back(profile->id);
+            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile->id), profile->id);
 
         }
 
@@ -142,9 +142,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
             --depth;
 
             // body summary
-            std::vector<size_t> descendants(descendant_profiles);
-            std::sort(descendants.begin(), descendants.end());
-            for(size_t profile_pos : descendants) {
+            for(size_t profile_pos : descendant_profiles) {
 
                 const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
