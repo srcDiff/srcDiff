@@ -114,6 +114,14 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             ++depth;
 
+            if(syntax_count == 0) {
+
+                pad(out) << "only " << (whitespace_count != 0 ? "whitespace " : "") << (whitespace_count != 0 && comment_count != 0 ? "and " : "") 
+                                    << (comment_count != 0 ? "comment " : "") << "changes\n";
+                return out;
+
+            }
+
             // function signature
             if(!name.is_common()) pad(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
