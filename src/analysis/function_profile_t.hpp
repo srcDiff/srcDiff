@@ -111,8 +111,20 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             if(syntax_count == 0) {
 
-                pad(out) << "only " << (whitespace_count != 0 ? "whitespace " : "") << (whitespace_count != 0 && comment_count != 0 ? "and " : "") 
-                                    << (comment_count != 0 ? "comment " : "") << "changes\n";
+                size_t non_syntax_changes = whitespace_count + comment_count;
+
+                pad(out) << "only ";
+
+                if(non_syntax_changes == 1) out << "a single ";
+
+                out << (whitespace_count != 0 ? "whitespace " : "");
+
+                out << (whitespace_count != 0 && comment_count != 0 ? "and " : "");
+
+                out << (comment_count != 0 ? "comment " : "") << "change";
+
+                out << (non_syntax_changes == 1 ? "\n" : "s\n");
+
                 return out;
 
             }
