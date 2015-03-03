@@ -12,6 +12,7 @@
 #include <map>
 #include <iomanip>
 #include <functional>
+#include <algorithm>
 
 class function_profile_t : public profile_t, public conditionals_addon {
 
@@ -141,7 +142,9 @@ class function_profile_t : public profile_t, public conditionals_addon {
             --depth;
 
             // body summary
-            for(size_t profile_pos : descendant_profiles) {
+            std::vector<size_t> descendants(descendant_profiles);
+            std::sort(descendants.begin(), descendants.end());
+            for(size_t profile_pos : descendants) {
 
                 const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
