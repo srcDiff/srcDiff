@@ -50,13 +50,6 @@ class unit_profile_t : public profile_t, public conditionals_addon {
         virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
 
             pad(out) << type_name << " '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
-            // out << " Whitespace: " << whitespace_count;
-            // out << "\tComment: " << comment_count;
-            // out << "\tSyntax: " << syntax_count;
-            // out << "\tTotal: " << total_count;
-            // out << '\n';
-
-            //++depth;
 
             decl_stmts.summarize_pure(out, SRCDIFF_DELETE, profile_list);
             decl_stmts.summarize_pure(out, SRCDIFF_INSERT, profile_list);
@@ -74,8 +67,6 @@ class unit_profile_t : public profile_t, public conditionals_addon {
             count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
             if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
                 output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
-
-            //--depth;
 
             return out;
 

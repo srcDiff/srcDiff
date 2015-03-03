@@ -46,13 +46,6 @@ class class_profile_t : public profile_t {
         virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
 
             pad(out) << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
-            // out << " Whitespace: " << whitespace_count;
-            // out << "\tComment: " << comment_count;
-            // out << "\tSyntax: " << syntax_count;
-            // out << "\tTotal: " << total_count;
-            // out << '\n';
-
-            //++depth;
 
             members.summarize_pure(out, SRCDIFF_DELETE, profile_list);
             members.summarize_pure(out, SRCDIFF_INSERT, profile_list);
@@ -65,8 +58,6 @@ class class_profile_t : public profile_t {
             classes.summarize_pure(out, SRCDIFF_DELETE, profile_list);
             classes.summarize_pure(out, SRCDIFF_INSERT, profile_list);
             classes.summarize_modified(out, profile_list);
-
-            //--depth;
 
             return out;
 

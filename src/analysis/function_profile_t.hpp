@@ -106,11 +106,6 @@ class function_profile_t : public profile_t, public conditionals_addon {
             }
 
             pad(out) << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
-            // out << " Whitespace: " << whitespace_count;
-            // out << "\tComment: " << comment_count;
-            // out << "\tSyntax: " << syntax_count;
-            // out << "\tTotal: " << total_count;
-            // out << '\n';
 
             ++depth;
 
