@@ -96,7 +96,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
             if(operation != SRCDIFF_COMMON) {
 
@@ -156,89 +156,96 @@ class function_profile_t : public profile_t, public conditionals_addon {
                 output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
             --depth;
 
-            // body summary
-            for(size_t profile_pos : descendant_profiles) {
+            if(is_summary_type(summary_types, summary_type::TEXT)) {
 
-                const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
+                // body summary
+                for(size_t profile_pos : descendant_profiles) {
 
-                if(!is_condition_type(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
-                    continue;
+                    const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
-                const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-                const bool has_common = profile->has_common;
+                    if(!is_condition_type(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
+                        continue;
 
-                if(profile->parent_id == id) {
-
-                    if(profile->operation == SRCDIFF_COMMON) continue;
-
-                    if(is_guard_clause) pad(out) << "guard clause was ";
-                    else                pad(out) << profile->type_name << " statement was ";
-
-                    out << (profile->operation == SRCDIFF_DELETE ? "removed from " : (has_common ? "added " : "added to "));
-
-                    if(has_common) out << " around existing code in ";
-
-                    out << "function\n";
-
-                } else {
-                    /** todo so if parent is deleted/inserted then should report as part of base or new document or say context */
-                    std::function<std::string (const std::shared_ptr<profile_t> & profile)> get_article 
-                        = [](const std::shared_ptr<profile_t> & profile) 
-                    { 
-
-                        const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-                        if(is_guard_clause) return "a";
-
-                        const char letter = std::string(profile->type_name)[0];
-
-                        if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
-                            return "an";
-                        else
-                            return "a";
-                    };
-
-                    const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
-                    const bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
+                    const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
                     const bool has_common = profile->has_common;
 
-                    if(profile->operation != SRCDIFF_COMMON) {
+                    if(profile->parent_id == id) {
 
-                        if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
-                        else                       pad(out) << parent_profile->type_name << " statement was modified ";
+                        if(profile->operation == SRCDIFF_COMMON) continue;
 
-                        out << (profile->operation == SRCDIFF_DELETE ? "removing " : "adding ");
+                        if(is_guard_clause) pad(out) << "guard clause was ";
+                        else                pad(out) << profile->type_name << " statement was ";
 
-                        out << get_article(profile) << ' ';
+                        out << (profile->operation == SRCDIFF_DELETE ? "removed from " : (has_common ? "added " : "added to "));
 
-                        if(is_guard_clause) out << "guard clause";
-                        else                out << profile->type_name << " statement";
+                        if(has_common) out << " around existing code in ";
 
-                        if(has_common) out << (profile->operation == SRCDIFF_DELETE ? " from " : " ") << "around existing code";
-
-                        out << '\n';
+                        out << "function\n";
 
                     } else {
 
-                        pad(out);
+                        /** todo so if parent is deleted/inserted then should report as part of base or new document or say context */
+                        std::function<std::string (const std::shared_ptr<profile_t> & profile)> get_article 
+                            = [](const std::shared_ptr<profile_t> & profile) 
+                        { 
 
-                        if(parent_profile->operation != SRCDIFF_COMMON) out << "common ";
+                            const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+                            if(is_guard_clause) return "a";
 
-                        if(is_guard_clause) out << "guard clause within ";
-                        else                out << profile->type_name << " statement within ";
+                            const char letter = std::string(profile->type_name)[0];
 
-                        if(parent_profile->operation != SRCDIFF_COMMON) out << (parent_profile->operation == SRCDIFF_DELETE ? "the deleted " : "the inserted ");
-                        else if(!is_parent_guard_clause) out << get_article(parent_profile) << ' ';
+                            if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
+                                return "an";
+                            else
+                                return "a";
+                        };
 
-                        if(is_parent_guard_clause) out << " guard clause ";
-                        else                       out << parent_profile->type_name << " statement ";
+                        const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
+                        const bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
+                        const bool has_common = profile->has_common;
 
-                        out << "was modified\n";
+                        if(profile->operation != SRCDIFF_COMMON) {
+
+                            if(is_parent_guard_clause) pad(out) << "guard clause was modified ";
+                            else                       pad(out) << parent_profile->type_name << " statement was modified ";
+
+                            out << (profile->operation == SRCDIFF_DELETE ? "removing " : "adding ");
+
+                            out << get_article(profile) << ' ';
+
+                            if(is_guard_clause) out << "guard clause";
+                            else                out << profile->type_name << " statement";
+
+                            if(has_common) out << (profile->operation == SRCDIFF_DELETE ? " from " : " ") << "around existing code";
+
+                            out << '\n';
+
+                        } else {
+
+                            pad(out);
+
+                            if(parent_profile->operation != SRCDIFF_COMMON) out << "common ";
+
+                            if(is_guard_clause) out << "guard clause within ";
+                            else                out << profile->type_name << " statement within ";
+
+                            if(parent_profile->operation != SRCDIFF_COMMON) out << (parent_profile->operation == SRCDIFF_DELETE ? "the deleted " : "the inserted ");
+                            else if(!is_parent_guard_clause) out << get_article(parent_profile) << ' ';
+
+                            if(is_parent_guard_clause) out << " guard clause ";
+                            else                       out << parent_profile->type_name << " statement ";
+
+                            out << "was modified\n";
+
+                        }
 
                     }
 
                 }
 
             }
+
+            if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
 
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
             count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);

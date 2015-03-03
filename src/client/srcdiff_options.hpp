@@ -85,6 +85,7 @@ struct srcdiff_options
   METHOD_TYPE methods;
 
   boost::any bash_view_context;
+  boost::optional<std::string> summary_type_str;
 
 #if SVN
   boost::optional<std::string> svn_url;

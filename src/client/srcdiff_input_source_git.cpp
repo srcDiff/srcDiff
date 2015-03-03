@@ -55,11 +55,8 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
    error = git_commit_tree(&tree_modified, commit_modified);
   if(error) throw std::string("Error accessing modified git commit tree.");
 
-  translator = new srcdiff_translator(options.srcdiff_filename,
-                                options.flags, options.methods,
-                                options.archive,
-                                options.bash_view_context);
-
+  translator = new srcdiff_translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
+                                      options.bash_view_context, options.summary_type_str);
 }
 
 srcdiff_input_source_git::~srcdiff_input_source_git() {

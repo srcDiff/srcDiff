@@ -47,21 +47,23 @@ class unit_profile_t : public profile_t, public conditionals_addon {
             
         }
 
-        virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
             pad(out) << type_name << " '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
 
-            decl_stmts.summarize_pure(out, SRCDIFF_DELETE, profile_list);
-            decl_stmts.summarize_pure(out, SRCDIFF_INSERT, profile_list);
-            decl_stmts.summarize_modified(out, profile_list);
+            decl_stmts.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
+            decl_stmts.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
+            decl_stmts.summarize_modified(out, summary_types, profile_list);
 
-            functions.summarize_pure(out, SRCDIFF_DELETE, profile_list);
-            functions.summarize_pure(out, SRCDIFF_INSERT, profile_list);
-            functions.summarize_modified(out, profile_list);
+            functions.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
+            functions.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
+            functions.summarize_modified(out, summary_types, profile_list);
 
-            classes.summarize_pure(out, SRCDIFF_DELETE, profile_list);
-            classes.summarize_pure(out, SRCDIFF_INSERT, profile_list);
-            classes.summarize_modified(out, profile_list);
+            classes.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
+            classes.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
+            classes.summarize_modified(out, summary_types, profile_list);
+
+            if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
 
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
             count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);

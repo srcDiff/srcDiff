@@ -23,7 +23,7 @@ class parameter_profile_t : public profile_t {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
             pad(out) << type_name << " '" << name << "':\n";
 

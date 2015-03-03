@@ -4,6 +4,7 @@
 #include <counts_t.hpp>
 #include <versioned_string.hpp>
 #include <srcdiff_type.hpp>
+#include <summary_type.hpp>
 #include <namespace_uri.hpp>
 
 #include <vector>
@@ -132,7 +133,7 @@ class profile_t {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out, const profile_list_t & profile_list) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
             pad(out) << type_name << ":"; 
             out << " Whitespace: " << whitespace_count;

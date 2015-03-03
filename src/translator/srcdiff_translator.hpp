@@ -36,6 +36,9 @@
 #include <libxml/xmlwriter.h>
 
 #include <boost/any.hpp>
+#include <boost/optional.hpp>
+
+#include <string>
 
 #include <srcml.h>
 
@@ -52,10 +55,8 @@ private:
 public:
 
   // constructor
-  srcdiff_translator(const std::string & srcdiff_filename,
-                    const OPTION_TYPE & flags, const METHOD_TYPE & method,
-                    srcml_archive * archive,
-                    boost::any bash_view_context);
+  srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
+                    const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str);
 
   // destructor
   ~srcdiff_translator();

@@ -25,11 +25,9 @@
 #include <srcdiff_translator.hpp>
 
 // constructor
-srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
-                                       const OPTION_TYPE & flags, const METHOD_TYPE & method,
-                                       srcml_archive * archive,
-                                       boost::any bash_view_context)
-  : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method, bash_view_context) {}
+srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
+                                       const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
+  : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method, bash_view_context, summary_type_str) {}
 
 
 // destructor

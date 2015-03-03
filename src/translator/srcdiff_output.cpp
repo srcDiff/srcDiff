@@ -11,7 +11,7 @@
 int move_operation = SESCOMMON;
 
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
-  boost::any bash_view_context)
+  const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
  : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SESDELETE)), rbuf_modified(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
@@ -31,7 +31,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
-    summary = std::make_shared<srcdiff_summary>(srcdiff_filename);
+    summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);
 
   }
 

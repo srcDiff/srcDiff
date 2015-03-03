@@ -4,6 +4,7 @@
 #include <srcSAXHandler.hpp>
 
 #include <srcdiff_type.hpp>
+#include <summary_type.hpp>
 #include <namespace_uri.hpp>
 #include <profile_t.hpp>
 #include <counts_t.hpp>
@@ -44,6 +45,8 @@ protected:
 
 	std::ostream * out;
 
+    size_t summary_types;    
+
     size_t id_count;
     profile_t::profile_list_t profile_list;
 
@@ -65,20 +68,11 @@ protected:
 
 private:
 
-    void update_diff_map(std::map<std::string, counts_t> & map, const std::string & name, bool is_whitespace);
-    void update_diff(const std::string & name, size_t profile_pos, bool is_whitespace);
-    void count_diff(bool is_whitespace);
-
-    void update_modified_map(std::map<std::string, counts_t> & map, const std::string & name);
-    void update_modified_map_summary(std::map<std::string, counts_t> & map, const std::string & name);
-    void update_modified(const std::string & name, size_t profile_pos);
-    void count_modified();
-
     void process_characters();
 
 public:
 
-    srcdiff_summary(const std::string & output_filename);
+    srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str);
     ~srcdiff_summary();
 
     void summarize(const std::string & srcdiff, const std::string & xml_encoding);

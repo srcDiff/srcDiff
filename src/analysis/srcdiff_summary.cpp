@@ -161,14 +161,29 @@ void srcdiff_summary::process_characters() {
 
 }
 
-srcdiff_summary::srcdiff_summary(const std::string & output_filename) 
-    : out(nullptr), id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(),
+srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
+    : out(nullptr), summary_types(summary_type::NONE), id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(),
       insert_count(), delete_count(), change_count(), total(), text(), name_count(0), collected_name() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
     else
       out = &std::cout;
+
+    if(!summary_type_str || (*summary_type_str)[0] == '\0') return;
+
+    std::string summary_type_str_copy = *summary_type_str;
+    while(!summary_type_str_copy.empty()) {
+
+        std::string::size_type end_pos = summary_type_str_copy.find(',');
+
+        std::string type_str = summary_type_str_copy.substr(0, end_pos);
+        if(type_str == "text")       summary_types |= summary_type::TEXT;
+        else if(type_str == "table") summary_types |= summary_type::TABLE;
+
+        summary_type_str_copy.erase(0, end_pos == std::string::npos ? end_pos : end_pos + 1);
+
+    }
 
 }
 
@@ -203,7 +218,7 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 
     profile_t::depth = 0;
 
-    profile->summary(*out, profile_list);
+    profile->summary(*out, summary_types, profile_list);
 
     (*out) << "\n";
     for(size_t child_pos : profile->child_profiles)

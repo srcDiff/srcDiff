@@ -9,9 +9,11 @@
 #include <methods.hpp>
 
 #include <boost/any.hpp>
+#include <boost/optional.hpp>
 
 #include <vector>
 #include <memory>
+#include <string>
 
 class srcdiff_output {
 
@@ -122,7 +124,8 @@ private:
 
 public:
 
-  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, boost::any bash_view_context);
+  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
+                 const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_original, int is_modified);

@@ -87,6 +87,15 @@ void option_field(const std::string & arg) { options.*field = arg; }
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
+template<>
+void option_field<&srcdiff_options::summary_type_str>(const std::string & arg) {
+
+  options.summary_type_str = arg;
+
+  options.flags |= OPTION_SUMMARY;
+
+}
+
 #if SVN
 template<>
 void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
@@ -371,7 +380,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
     ("bash", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::bash_view_context>),
         "Output as colorized bash text with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-    ("summary", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SUMMARY>)->default_value(false), "Output a summary of the differences")
+    ("summary", boost::program_options::value<std::string>()->implicit_value("text,table")->notifier(option_field<&srcdiff_options::summary_type_str>),
+        "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text,table'  ")
   ;
 
   input_file.add("input", -1);
