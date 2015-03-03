@@ -205,7 +205,12 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
     controller.parse(this);
 
     // should always be unit
+    static bool first = true;
     const std::shared_ptr<profile_t> & profile = profile_list[1];
+
+    if(!first) (*out) << '\n';
+    else first = false;
+    
     summarize(profile);
 
     reset();
