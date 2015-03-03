@@ -204,12 +204,20 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                     } else {
 
-                        if(is_guard_clause) pad(out) << "guard clause within ";
-                        else                pad(out) << profile->type_name << " statement within ";
+                        pad(out);
 
-                        if(is_parent_guard_clause) out << " guard clause was modified\n";
-                        else                       out << get_article(parent_profile) << ' ' << parent_profile->type_name << " statement was modified\n";
+                        if(parent_profile->operation != SRCDIFF_COMMON) out << "common ";
 
+                        if(is_guard_clause) out << "guard clause within ";
+                        else                out << profile->type_name << " statement within ";
+
+                        if(parent_profile->operation != SRCDIFF_COMMON) out << (parent_profile->operation == SRCDIFF_DELETE ? "the deleted " : "the inserted ");
+                        else if(!is_parent_guard_clause) out << get_article(parent_profile) << ' ';
+
+                        if(is_parent_guard_clause) out << " guard clause ";
+                        else                       out << parent_profile->type_name << " statement ";
+
+                        out << "was modified\n";
 
                     }
 
