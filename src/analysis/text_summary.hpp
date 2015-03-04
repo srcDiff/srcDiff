@@ -36,7 +36,6 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
             if(is_leaf) summary_profiles.push_back(child);
 
-
         }
 
     }
