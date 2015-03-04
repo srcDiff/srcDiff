@@ -43,7 +43,22 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
     }
 
-    for(size_t profile_pos : descendant_profiles) {
+        /** todo so if parent is deleted/inserted then should report as part of base or new document or say context */
+    std::function<std::string (const std::shared_ptr<profile_t> & profile)> get_article 
+        = [](const std::shared_ptr<profile_t> & profile) { 
+
+            const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+            if(is_guard_clause) return "a";
+
+            const char letter = std::string(profile->type_name)[0];
+
+            if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
+                return "an";
+            else
+                return "a";
+        };
+
+    for(size_t profile_pos : summary_profiles) {
 
         const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
@@ -53,36 +68,22 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
         const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
         const bool has_common = profile->has_common;
 
+        begin_line(out);
+
         if(profile->parent_id == id) {
 
             if(profile->operation == SRCDIFF_COMMON) continue;
 
-            if(is_guard_clause) begin_line(out) << "guard clause was ";
-            else                begin_line(out) << profile->type_name << " statement was ";
+            if(is_guard_clause) out << "guard clause was ";
+            else                out << profile->type_name << " statement was ";
 
             out << (profile->operation == SRCDIFF_DELETE ? "removed from " : (has_common ? "added " : "added to "));
 
             if(has_common) out << " around existing code in ";
 
-            out << "function\n";
+            out << "function block\n";
 
         } else {
-
-            /** todo so if parent is deleted/inserted then should report as part of base or new document or say context */
-            std::function<std::string (const std::shared_ptr<profile_t> & profile)> get_article 
-                = [](const std::shared_ptr<profile_t> & profile) 
-            { 
-
-                const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-                if(is_guard_clause) return "a";
-
-                const char letter = std::string(profile->type_name)[0];
-
-                if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
-                    return "an";
-                else
-                    return "a";
-            };
 
             const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
             const bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
@@ -90,8 +91,8 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
             if(profile->operation != SRCDIFF_COMMON) {
 
-                if(is_parent_guard_clause) begin_line(out) << "guard clause was modified ";
-                else                       begin_line(out) << parent_profile->type_name << " statement was modified ";
+                if(is_parent_guard_clause) out << "guard clause was modified ";
+                else                       out << parent_profile->type_name << " statement was modified ";
 
                 out << (profile->operation == SRCDIFF_DELETE ? "removing " : "adding ");
 
@@ -105,10 +106,6 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
                 out << '\n';
 
             } else {
-
-                begin_line(out);
-
-                if(parent_profile->operation != SRCDIFF_COMMON) out << "common ";
 
                 if(is_guard_clause) out << "guard clause within ";
                 else                out << profile->type_name << " statement within ";
