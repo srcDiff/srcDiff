@@ -224,10 +224,7 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
     profile_t::depth = 0;
 
     profile->summary(*out, summary_types, profile_list);
-
     (*out) << "\n";
-    for(size_t child_pos : profile->child_profiles)
-        summarize(profile_list[child_pos]);
 
 }
 
