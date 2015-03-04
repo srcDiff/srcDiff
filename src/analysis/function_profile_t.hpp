@@ -96,6 +96,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         }
 
+        #include <text_summary.hpp>
+
         virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
             if(operation != SRCDIFF_COMMON) {
@@ -158,7 +160,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             // body summary
             if(is_summary_type(summary_types, summary_type::TEXT))
-                conditional_text_summary(out, id, descendant_profiles, profile_list);
+                conditional_text_summary(out, profile_list);
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
 
