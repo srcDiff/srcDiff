@@ -9,6 +9,38 @@
 
 std::ostream & conditional_text_summary(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
+    /** recursively look throught children to find leaf profiles, no children or no modified children */
+    std::vector<size_t> summary_profiles;
+    for(size_t profile_pos : child_profiles) {
+
+       std::vector<size_t> child_visits;
+       child_visits.push_back(profile_pos);
+        while(!child_visits.empty()) {
+
+            size_t child = child_visits.back();
+            child_visits.pop_back();
+            const std::shared_ptr<profile_t> & profile = profile_list[child];
+
+            bool is_leaf = true;
+            for(size_t child_pos : profile->child_profiles) {
+
+                const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+                if(child_profile->syntax_count > 0 || child_profile->operation != SRCDIFF_COMMON) {
+
+                    is_leaf = false;
+                    child_visits.push_back(child_pos);
+
+                }
+
+            }
+
+            if(is_leaf) summary_profiles.push_back(child);
+
+
+        }
+
+    }
+
     for(size_t profile_pos : descendant_profiles) {
 
         const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
