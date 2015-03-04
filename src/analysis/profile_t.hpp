@@ -93,8 +93,8 @@ class profile_t {
         
         virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
-            child_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile->id), profile->id);
-            
+            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile->id), profile->id);
+
         }
 
         void inc_number_descendant_profiles() {
