@@ -74,6 +74,8 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
             if(profile->operation == SRCDIFF_COMMON) continue;
 
+            out << get_article(profile) << ' ';
+
             if(is_guard_clause) out << "guard clause was ";
             else                out << profile->type_name << " statement was ";
 
@@ -81,7 +83,7 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
             if(has_common) out << " around existing code in ";
 
-            out << "function block\n";
+            out << "the function body\n";
 
         } else {
 
@@ -91,21 +93,23 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
             if(profile->operation != SRCDIFF_COMMON) {
 
-                if(is_parent_guard_clause) out << "guard clause was modified ";
-                else                       out << parent_profile->type_name << " statement was modified ";
+            	out << get_article(profile) << ' ';
 
-                out << (profile->operation == SRCDIFF_DELETE ? "removing " : "adding ");
+                if(is_guard_clause) out << "guard clause was ";
+                else                out << profile->type_name << " statement was ";
 
-                out << get_article(profile) << ' ';
+                out << (profile->operation == SRCDIFF_DELETE ? "removed from " : "added to ");
 
-                if(is_guard_clause) out << "guard clause";
-                else                out << profile->type_name << " statement";
+                out << "the body of " << get_article(parent_profile) << ' ';
 
-                if(has_common) out << (profile->operation == SRCDIFF_DELETE ? " from " : " ") << "around existing code";
+                if(is_parent_guard_clause) out << "guard clause";
+                else                       out << parent_profile->type_name << " statement";
 
                 out << '\n';
 
             } else {
+
+            	out << "the body of " << get_article(profile) << ' ';
 
                 if(is_guard_clause) out << "guard clause within ";
                 else                out << profile->type_name << " statement within ";
