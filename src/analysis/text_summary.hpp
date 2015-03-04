@@ -58,6 +58,13 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
                 return "a";
         };
 
+    /**
+    	Probably should be on child profiles and summarize top down, nesting when needed.
+
+    	If only one deep print out added/deleted to function.
+
+    	Else print out modified and report modifications recursively.
+    */
     for(size_t profile_pos : summary_profiles) {
 
         const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
@@ -109,7 +116,7 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 		        	out << get_article(current_profile) << ' ';
 		        else {
 
-		        	out << "then the ";
+		        	out << "the same ";
 
 		        }
 
@@ -128,10 +135,10 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
 	       		out << "the body of ";
 
-	       		if(parent_profile->operation != SRCDIFF_COMMON)
-	       			out << (parent_profile->operation == SRCDIFF_DELETE ? "a deleted " : "an insereted ");
-	       		else 
-	       			out << get_article(parent_profile) << ' ';
+	       		if(current_profile->type_name == parent_profile->type_name)
+	       			out << "another ";
+	       		else
+	      			out << get_article(parent_profile) << ' ';
 
 	            if(is_parent_guard_clause) out << "guard clause ";
 		        else                       out << parent_profile->type_name << " statement ";
