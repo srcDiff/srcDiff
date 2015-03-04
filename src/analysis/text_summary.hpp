@@ -25,7 +25,7 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
             for(size_t child_pos : profile->child_profiles) {
 
                 const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
-                if(child_profile->syntax_count > 0 || child_profile->operation != SRCDIFF_COMMON) {
+                if((child_profile->syntax_count > 0 || child_profile->operation != SRCDIFF_COMMON) && is_condition_type(child_profile->type_name)) {
 
                     is_leaf = false;
                     child_visits.push_back(child_pos);
