@@ -616,12 +616,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(!is_interchange) --srcdiff_stack.back().level;
 
-        if(full_name == "condition" && profile_stack.back()->total_count > 0) 
+        if(full_name == "condition" && profile_stack.back()->total_count > 0)
             reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition_modified(true);
         else if(full_name == "block" && profile_stack.back()->total_count > 0 && (profile_stack.at(profile_stack.size() - 2)->type_name == "then"
                                         || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.original())))
             reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_body_modified(true);            
-
 
     }
 
