@@ -4,6 +4,7 @@
 #include <profile_t.hpp>
 #include <conditionals_addon.hpp>
 #include <parameter_profile_t.hpp>
+#include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
 #include <versioned_string.hpp>
 #include <change_entity_map.hpp>
@@ -44,7 +45,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 
             if(is_parameter(type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
-            else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, profile);
+            else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile));
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, profile);
             else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
             

@@ -1,11 +1,9 @@
 #ifndef INCLUDED_IF_PROFILE_T_HPP
 #define INCLUDED_IF_PROFILE_T_HPP
 
-#include <profile_t.hpp>
-#include <versioned_string.hpp>
-#include <type_query.hpp>
+#include <conditional_profile_t.hpp>
 
-class if_profile_t : public profile_t {
+class if_profile_t : public conditional_profile_t {
 
     private:
 
@@ -13,7 +11,7 @@ class if_profile_t : public profile_t {
 
     public:
 
-        if_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id), guard(true) {}
+        if_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : conditional_profile_t(type_name, uri, operation, parent_id), guard(true) {}
 
 
         bool is_guard() const {

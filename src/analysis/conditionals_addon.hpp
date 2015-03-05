@@ -1,7 +1,7 @@
 #ifndef INCLUDED_CONDITIONALS_ADDON_HPP
 #define INCLUDED_CONDITIONALS_ADDON_HPP
 
-#include <profile_t.hpp>
+#include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
 #include <change_entity_map.hpp>
 
@@ -13,7 +13,7 @@ class conditionals_addon {
     private:
 
     public:
-        change_entity_map<profile_t> conditionals;
+        change_entity_map<conditional_profile_t> conditionals;
 
     public:
 
@@ -35,7 +35,7 @@ class conditionals_addon {
 
             std::for_each(conditionals.lower_bound(operation), conditionals.upper_bound(operation),
 
-                [&](const change_entity_map<profile_t>::pair & pair) {
+                [&](const change_entity_map<conditional_profile_t>::pair & pair) {
 
                     if(operation == SRCDIFF_COMMON && pair.second->syntax_count == 0) return;
 

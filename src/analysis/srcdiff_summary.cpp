@@ -6,6 +6,7 @@
 #include <function_profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <decl_stmt_profile_t.hpp>
+#include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
 
 #include <cstring>
@@ -28,12 +29,13 @@ bool is_summary(const std::string & type_name) {
 
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) {
 
-    if(is_class_type(type_name))    return std::make_shared<class_profile_t>    (type_name, uri, operation, parent_id);
-    if(is_function_type(type_name)) return std::make_shared<function_profile_t> (type_name, uri, operation, parent_id);
-    if(is_parameter(type_name))     return std::make_shared<parameter_profile_t>(type_name, uri, operation, parent_id);
-    if(is_decl_stmt(type_name))     return std::make_shared<decl_stmt_profile_t>(type_name, uri, operation, parent_id);
-    if(has_then_clause(type_name))  return std::make_shared<if_profile_t>       (type_name, uri, operation, parent_id);
-    return std::make_shared<profile_t>                                          (type_name, uri, operation, parent_id);
+    if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent_id);
+    if(is_function_type(type_name))  return std::make_shared<function_profile_t>   (type_name, uri, operation, parent_id);
+    if(is_parameter(type_name))      return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent_id);
+    if(is_decl_stmt(type_name))      return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent_id);
+    if(has_then_clause(type_name))   return std::make_shared<if_profile_t>         (type_name, uri, operation, parent_id);
+    if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent_id);
+    return std::make_shared<profile_t>                                             (type_name, uri, operation, parent_id);
 
 }
 
@@ -613,6 +615,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         }
 
         if(!is_interchange) --srcdiff_stack.back().level;
+
+        if(full_name == "condition") 
+            reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition_modified(true);
+        else if(full_name == "block" && (profile_stack.at(profile_stack.size() - 2)->type_name == "then"
+                                        || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.original())))
+            reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_body_modified(true);            
+
 
     }
 
