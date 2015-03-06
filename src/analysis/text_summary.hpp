@@ -47,19 +47,14 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
          out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
     else out << "modified";
 
-    if(profile->parent_id == id) {
+    if(profile->operation != SRCDIFF_COMMON && has_common) {
 
-        if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-        else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-        else                                          out << " within ";
+        if(profile->total_count == 0) out << " retaining ";
+        else                          out << " modifying ";
 
-        out << "the function body";
+        out << "the statement body";
 
     }
-
-    if(profile->operation != SRCDIFF_COMMON && has_common) out << " retaining the statement body";
-
-    out << '\n';
 
     bool is_leaf = true;
     for(size_t child_pos : profile->child_profiles) {
@@ -72,7 +67,8 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
 
             if(is_leaf) {
 
-                pad(out) << "  this includes:\n";
+                out << '\n';
+                pad(out) << "  which includes:\n";
                 is_leaf = false;
 
             }
@@ -86,6 +82,21 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
     }
 
     // after children
+    if(is_leaf) {
+
+        if(profile->parent_id == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
+
+            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+            else                                          out << " within ";
+
+            out << "the function body";
+
+        }
+
+        out << '\n';
+
+    }
 
     return out;
 
