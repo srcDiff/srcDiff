@@ -36,7 +36,7 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
 
         if(conditional_profile->is_condition_modified()
             && conditional_profile->is_body_modified())       out << "condition and body ";
-        else if(conditional_profile->is_condition_modified()) out << "conditiion ";
+        else if(conditional_profile->is_condition_modified()) out << "condition ";
         else if(conditional_profile->is_body_modified())      out << "body ";
 
         out << "of ";
