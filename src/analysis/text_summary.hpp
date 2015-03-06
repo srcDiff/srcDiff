@@ -75,13 +75,6 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
 
 std::ostream & conditional_text_summary(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
-    /**
-    	Probably should be on child profiles and summarize top down, nesting when needed.
-
-    	If only one deep print out added/deleted to function.
-
-    	Else print out modified and report modifications recursively.
-    */
     for(size_t profile_pos : child_profiles) {
 
         const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
@@ -89,31 +82,7 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
         if(!is_condition_type(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
             continue;
 
-        if(false && profile->parent_id == id) {
-
-		    const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-
-	        begin_line(out);
-
-        	/** ? modified ? */
-            if(profile->operation == SRCDIFF_COMMON) continue;
-
-            out << get_article(profile) << ' ';
-
-            if(is_guard_clause) out << "guard clause was ";
-            else                out << profile->type_name << " statement was ";
-
-            out << (profile->operation == SRCDIFF_DELETE ? "removed from " : (has_common ? "added " : "added to "));
-
-            if(has_common) out << " around existing code in ";
-
-            out << "the function body\n";
-
-        } else {
-
             summary_visitor(out, profile, profile_list);
-
-        }
 
     }
 
