@@ -32,8 +32,14 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
 
         const std::shared_ptr<conditional_profile_t> & conditional_profile = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile);
 
-        if(conditional_profile->is_condition_modified()) out << "the condition of ";
-        if(conditional_profile->is_body_modified())      out << "the body of ";
+        out << "the ";
+
+        if(conditional_profile->is_condition_modified()
+            && conditional_profile->is_body_modified())       out << "condition and body ";
+        else if(conditional_profile->is_condition_modified()) out << "conditiion ";
+        else if(conditional_profile->is_body_modified())      out << "body ";
+
+        out << "of ";
 
     }
 
