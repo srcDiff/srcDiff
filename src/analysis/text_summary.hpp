@@ -7,56 +7,49 @@
 #include <vector>
 #include <memory>
 
-std::ostream & conditional_text_summary(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+std::string get_article(const std::shared_ptr<profile_t> & profile) const  { 
 
-    /** recursively look throught children to find leaf profiles, no children or no modified children */
-    std::vector<size_t> summary_profiles;
-    for(size_t profile_pos : child_profiles) {
+    const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+    if(is_guard_clause) return "a";
 
-       std::vector<size_t> child_visits;
-       child_visits.push_back(profile_pos);
-        while(!child_visits.empty()) {
+    const char letter = std::string(profile->type_name)[0];
 
-            size_t child = child_visits.back();
-            child_visits.pop_back();
-            const std::shared_ptr<profile_t> & profile = profile_list[child];
+    if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
+        return "an";
+    else
+        return "a";
+}
 
-            bool is_leaf = true;
-            for(size_t child_pos : profile->child_profiles) {
+std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
-                const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+    // before children 
 
-                /** @todo check this condition */
-                if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-                     && is_condition_type(child_profile->type_name)) {
+    bool is_leaf = true;
+    for(size_t child_pos : profile->child_profiles) {
 
-                    is_leaf = false;
-                    child_visits.push_back(child_pos);
+        const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
 
-                }
+        /** @todo check this condition */
+        if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+             && is_condition_type(child_profile->type_name)) {
 
-            }
-
-            if(is_leaf) summary_profiles.push_back(child);
+            is_leaf = false;
+            summary_visitor(out, child_profile, profile_list);
 
         }
 
     }
 
-        /** todo so if parent is deleted/inserted then should report as part of base or new document or say context */
-    std::function<std::string (const std::shared_ptr<profile_t> & profile)> get_article 
-        = [](const std::shared_ptr<profile_t> & profile) { 
+    if(is_leaf)
+        ;
 
-            const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-            if(is_guard_clause) return "a";
+    // after children
 
-            const char letter = std::string(profile->type_name)[0];
+    return out;
 
-            if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
-                return "an";
-            else
-                return "a";
-        };
+}
+
+std::ostream & conditional_text_summary(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
     /**
     	Probably should be on child profiles and summarize top down, nesting when needed.
@@ -65,7 +58,7 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
     	Else print out modified and report modifications recursively.
     */
-    for(size_t profile_pos : summary_profiles) {
+    for(size_t profile_pos : child_profiles) {
 
         const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
@@ -94,62 +87,63 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
 
         } else {
 
+            summary_visitor(out, profile, profile_list);
 
-			size_t current_id = profile->id;
-			size_t parent_id = profile->parent_id;
-			size_t parent_level = 0;
+			// size_t current_id = profile->id;
+			// size_t parent_id = profile->parent_id;
+			// size_t parent_level = 0;
 
-			while(parent_id != id) {
+			// while(parent_id != id) {
 
-	       		const std::shared_ptr<profile_t> & current_profile = profile_list[current_id];
-	       		const std::shared_ptr<profile_t> & parent_profile = profile_list[parent_id];
-		        const bool is_guard_clause = current_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(current_profile)->is_guard() : false;
-		        const bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
+	  //      		const std::shared_ptr<profile_t> & current_profile = profile_list[current_id];
+	  //      		const std::shared_ptr<profile_t> & parent_profile = profile_list[parent_id];
+		 //        const bool is_guard_clause = current_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(current_profile)->is_guard() : false;
+		 //        const bool is_parent_guard_clause = parent_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(parent_profile)->is_guard() : false;
 
-	            const bool has_common = current_profile->has_common;
+	  //           const bool has_common = current_profile->has_common;
 
-		        begin_line(out);
+		 //        begin_line(out);
 
-	        	if(current_profile->operation == SRCDIFF_COMMON) out << "the body of ";
+	  //       	if(current_profile->operation == SRCDIFF_COMMON) out << "the body of ";
 
-	        	if(parent_level == 0)
-		        	out << get_article(current_profile) << ' ';
-		        else {
+	  //       	if(parent_level == 0)
+		 //        	out << get_article(current_profile) << ' ';
+		 //        else {
 
-		        	out << "the same ";
+		 //        	out << "the same ";
 
-		        }
+		 //        }
 
-	            if(is_guard_clause) out << "guard clause was ";
-	            else                out << current_profile->type_name << " statement was ";
+	  //           if(is_guard_clause) out << "guard clause was ";
+	  //           else                out << current_profile->type_name << " statement was ";
 
-	            if(current_profile->operation != SRCDIFF_COMMON) {
+	  //           if(current_profile->operation != SRCDIFF_COMMON) {
 
-		            out << (current_profile->operation == SRCDIFF_DELETE ? "removed from " : "added to ");
+		 //            out << (current_profile->operation == SRCDIFF_DELETE ? "removed from " : "added to ");
 
-	            } else {
+	  //           } else {
 
-		            out << "modified from within ";
+		 //            out << "modified from within ";
 
-				}
+			// 	}
 
-	       		out << "the body of ";
+	  //      		out << "the body of ";
 
-	       		if(current_profile->type_name == parent_profile->type_name)
-	       			out << "another ";
-	       		else
-	      			out << get_article(parent_profile) << ' ';
+	  //      		if(current_profile->type_name == parent_profile->type_name)
+	  //      			out << "another ";
+	  //      		else
+	  //     			out << get_article(parent_profile) << ' ';
 
-	            if(is_parent_guard_clause) out << "guard clause ";
-		        else                       out << parent_profile->type_name << " statement ";
+	  //           if(is_parent_guard_clause) out << "guard clause ";
+		 //        else                       out << parent_profile->type_name << " statement ";
 
-		        out << '\n';
+		 //        out << '\n';
 
-		        current_id = parent_id;
-		        parent_id = parent_profile->parent_id;
-		        ++parent_level;
+		 //        current_id = parent_id;
+		 //        parent_id = parent_profile->parent_id;
+		 //        ++parent_level;
 
-	    	}
+	  //   	}
 
         }
 
