@@ -88,6 +88,14 @@ template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
 template<>
+void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
+
+    options.files_from_name = arg;
+    srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+
+}
+
+template<>
 void option_field<&srcdiff_options::summary_type_str>(const std::string & arg) {
 
   options.summary_type_str = arg;
