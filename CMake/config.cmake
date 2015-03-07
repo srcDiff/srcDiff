@@ -46,8 +46,6 @@ find_package(LibGit2 REQUIRED)
 add_definitions("-DGIT")
 
 endif()
-set(CMAKE_CXX_FLAGS "-std=c++1y -fPIC")
-set(CMAKE_C_FLAGS "-fPIC")
 
 # find needed libraries
 find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.a PATHS /usr/local/lib)
@@ -77,3 +75,43 @@ endif()
 # include needed includes
 include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR} ${LIBGIT2_INCLUDE_DIR})
 
+# The default configuration is to compile in DEBUG mode. These flags can be directly
+# overridden by setting the property of a target you wish to change them for.
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
+if(${CMAKE_COMPILER_IS_GNUCXX})
+
+    string(FIND ${CMAKE_CXX_COMPILER} "mingw32" IS_MINGW32)
+    if(IS_MINGW32 EQUAL -1)
+      set(USE_FPIC -fPIC)
+    endif()
+
+    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
+    # Adding global compiler definitions.                                                                                      
+    set(CMAKE_CXX_FLAGS "${USE_FPIC} -std=c++1y ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
+
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+
+    # Configuring the Clang compiler
+    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
+    set(CMAKE_CXX_FLAGS "-fPIC -std=c++1y ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
+    
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+
+    message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
+    
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") 
+
+    message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
+
+else()
+
+    message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
+    
+endif()
