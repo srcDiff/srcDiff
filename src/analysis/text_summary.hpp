@@ -20,7 +20,7 @@ std::string get_article(const std::shared_ptr<profile_t> & profile) const {
         return "a";
 }
 
-std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+std::ostream & conditional_summary_visitor(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
     const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
     const bool has_common = profile->has_common;
@@ -55,10 +55,10 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
 
     if(profile->operation != SRCDIFF_COMMON && has_common) {
 
-        if(profile->total_count == 0) out << " retaining ";
-        else                          out << " modifying ";
+        out << " retaining ";
+        if(profile->total_count != 0)  out << "and modifying ";
 
-        out << "the statement body";
+        out << "its body";
 
     }
 
@@ -74,13 +74,13 @@ std::ostream & summary_visitor(std::ostream & out, const std::shared_ptr<profile
             if(is_leaf) {
 
                 out << '\n';
-                pad(out) << "  which includes:\n";
+                pad(out) << "  this modification included:\n";
                 is_leaf = false;
 
             }
 
             ++depth;
-            summary_visitor(out, child_profile, profile_list);
+            conditional_summary_visitor(out, child_profile, profile_list);
             --depth;
 
         }
@@ -117,7 +117,7 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::vector<st
         if(!is_condition_type(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
             continue;
 
-            summary_visitor(out, profile, profile_list);
+            conditional_summary_visitor(out, profile, profile_list);
 
     }
 
