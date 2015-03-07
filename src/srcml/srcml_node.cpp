@@ -133,7 +133,7 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
 }
 
 srcml_node::srcml_node(xmlElementType type, const std::string & name, const boost::optional<srcml_ns> & ns, const boost::optional<std::string> & content,
-const std::list<srcml_attr> & properties, unsigned short extra, const boost::optional<std::string> & parent, bool is_empty, bool free, int move)
+const std::list<srcml_attr> & properties, unsigned short extra, const boost::optional<std::string> & parent, bool is_empty)
   : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0) {}
 
 srcml_node::srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns) : type(type), name(name), ns(ns),

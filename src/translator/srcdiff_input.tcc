@@ -36,7 +36,7 @@ srcml_nodes srcdiff_input<T>::input_nodes(int stream_source) const {
 
   typename T::input_context * context = input.open(input_path->c_str());
 
-  converter.convert(language_string, (void *)context, T::read, T::close, options);
+  converter.convert(language_string, (void *)context, T::read, T::close);
 
   return converter.create_nodes();
 

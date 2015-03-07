@@ -10,7 +10,7 @@ std::mutex srcml_converter::mutex;
 std::map<std::string, std::shared_ptr<srcml_node>> srcml_converter::start_tags;
 std::map<std::string, std::shared_ptr<srcml_node>> srcml_converter::end_tags;
 
-std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context) {
+std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
 
@@ -106,8 +106,7 @@ srcml_converter::~srcml_converter() {
 
 // converts source code to srcML
 void srcml_converter::convert(const std::string & language, void * context,
-                              const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close,
-                              const OPTION_TYPE & options) {
+                              const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close) {
 
   srcml_archive * unit_archive = srcml_archive_clone(archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
@@ -131,7 +130,7 @@ void srcml_converter::convert(const std::string & language, void * context,
 
 srcml_nodes srcml_converter::create_nodes() const {
   
-  xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, output_size, 0, 0, XML_PARSE_HUGE);
+  xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, (int)output_size, 0, 0, XML_PARSE_HUGE);
 
   if (reader == NULL) throw std::string("Unable to open srcML output_buffer as XML");
 
@@ -156,31 +155,6 @@ static bool is_separate_token(const char character) {
   return character == '(' || character ==')' || character == '[' || character == ']' || character == ',' || character == '"' || character == '\'' || character == '\\';
 
 }
-
-// check if node is a indivisable group of three (atomic)
-static bool is_atomic_srcml(srcml_nodes & nodes, unsigned start) {
-
-  static const char * atomic[] = { "name", "operator", "literal", "modifier", 0 };
-
-  if((start + 2) >= nodes.size())
-    return false;
-
-  if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT)
-    return false;
-
-  if((xmlReaderTypes)nodes.at(start + 2)->type != XML_READER_TYPE_END_ELEMENT)
-    return false;
-
-  if(nodes.at(start)->name != nodes.at(start + 2)->name)
-    return false;
-
-  for(int i = 0; atomic[i]; ++i)
-    if(nodes.at(start)->name == atomic[i])
-      return true;
-
-  return false;
-}
-
 
 // collect the differences
 srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
@@ -282,7 +256,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       // text node does not need to be copied.
       mutex.lock();
-      std::shared_ptr<srcml_node> node = get_current_node(reader, srcml_archive_get_options(archive), stream_source);
+      std::shared_ptr<srcml_node> node = get_current_node(reader, srcml_archive_get_options(archive));
       mutex.unlock();
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT)

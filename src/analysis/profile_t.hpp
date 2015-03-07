@@ -6,6 +6,7 @@
 #include <srcdiff_type.hpp>
 #include <summary_type.hpp>
 #include <namespace_uri.hpp>
+#include <srcdiff_macros.hpp>
 
 #include <vector>
 #include <map>
@@ -61,9 +62,9 @@ class profile_t {
     public:
 
         profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : id(0), type_name(type_name), uri(uri), operation(operation), parent_id(parent_id),
-                                                                   is_modified(false), is_whitespace(false), has_common(false), is_comment(false), is_syntax(false),
+                                                                   has_common(false), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
-                                                                   number_descendant_profiles(0),  number_child_profiles(0) {}
+                                                                   number_child_profiles(0), number_descendant_profiles(0) {}
 
         void set_id(size_t id_count) {
 
@@ -83,7 +84,7 @@ class profile_t {
 
         }
 
-        virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {}
+        virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
 
         void inc_number_child_profiles() {
 
@@ -91,7 +92,7 @@ class profile_t {
 
         }
         
-        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
             child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile->id), profile->id);
 
@@ -103,7 +104,7 @@ class profile_t {
 
         }
 
-        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
             descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile->id), profile->id);
             
@@ -120,7 +121,7 @@ class profile_t {
 
         }
 
-        virtual const char * const get_impact_factor() const {
+        virtual const char * get_impact_factor() const {
 
             impact_factor factor = calculate_impact_factor();
 
@@ -135,7 +136,7 @@ class profile_t {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types UNUSED, const profile_list_t & profile_list UNUSED) const {
 
             pad(out) << type_name << ":"; 
             out << " Whitespace: " << whitespace_count;

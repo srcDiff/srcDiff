@@ -32,14 +32,14 @@ private:
 
 	srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
 
-	static std::shared_ptr<srcml_node> get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options, int context);
+	static std::shared_ptr<srcml_node> get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options);
 
 public:
 
  	srcml_converter(srcml_archive * archive, int stream_source);
  	~srcml_converter();
 
-	void convert(const std::string & language, void * context, const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close, const OPTION_TYPE & options); 
+	void convert(const std::string & language, void * context, const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close); 
 	srcml_nodes create_nodes() const;
 
 };

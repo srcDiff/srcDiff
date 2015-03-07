@@ -5,13 +5,15 @@
 
 #include <node_set.hpp>
 
+#include <srcdiff_macros.hpp>
+
 class node_sets : public srcdiff_vector<node_set> {
 
 private:
 
 	const srcml_nodes & nodes;
 
-	static bool is_non_white_space(const std::shared_ptr<srcml_node> & node, const void * context) {
+	static bool is_non_white_space(const std::shared_ptr<srcml_node> & node, const void * context UNUSED) {
 
 	  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
 	  return !((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space());

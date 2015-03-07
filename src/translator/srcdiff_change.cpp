@@ -27,9 +27,6 @@ srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_orig
 */
 void srcdiff_change::output_whitespace() {
 
-  int oend = end_original;
-  int nend = end_modified;
-
   srcdiff_whitespace whitespace(*this);
   whitespace.output_prefix();
 
