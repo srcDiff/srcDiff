@@ -48,6 +48,7 @@ class class_profile_t : public profile_t {
 
             begin_line(out) << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
 
+            /** Change these to text and table summaries */
             members.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
             members.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
             members.summarize_modified(out, summary_types, profile_list);
