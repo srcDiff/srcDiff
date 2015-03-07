@@ -35,6 +35,7 @@ std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace
     if(is_decl_stmt(type_name))      return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent_id);
     if(has_then_clause(type_name))   return std::make_shared<if_profile_t>         (type_name, uri, operation, parent_id);
     if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent_id);
+    if(is_call(type_name))           return std::make_shared<call_profile_t>       (type_name, uri, operation, parent_id);
     return std::make_shared<profile_t>                                             (type_name, uri, operation, parent_id);
 
 }

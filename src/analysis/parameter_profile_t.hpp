@@ -3,7 +3,6 @@
 
 #include <profile_t.hpp>
 #include <versioned_string.hpp>
-#include <type_query.hpp>
 
 class parameter_profile_t : public profile_t {
 
@@ -20,24 +19,6 @@ class parameter_profile_t : public profile_t {
 
             if(*parent == "type")      type = name;
             else if(*parent == "decl") this->name = name;
-
-        }
-
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
-
-            begin_line(out) << type_name << " '" << name << "':\n";
-
-            ++depth;
-
-            // type
-            if(!type.is_common()) begin_line(out) << "Parameter type change: " << type.original() << " -> " << type.modified() << '\n';
-
-            // name
-            if(!name.is_common()) begin_line(out) << "Parameter name change: " << name.original() << " -> " << name.modified() << '\n';
-
-            --depth;
-
-            return out;
 
         }
 

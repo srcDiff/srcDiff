@@ -3,7 +3,6 @@
 
 #include <profile_t.hpp>
 #include <versioned_string.hpp>
-#include <type_query.hpp>
 
 class decl_stmt_profile_t : public profile_t {
 

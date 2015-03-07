@@ -6,6 +6,7 @@
 #include <parameter_profile_t.hpp>
 #include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
+#include <call_profile_t.hpp>
 #include <versioned_string.hpp>
 #include <change_entity_map.hpp>
 #include <type_query.hpp>
@@ -27,7 +28,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
         boost::optional<srcdiff_type> const_specifier;
 
         change_entity_map<parameter_profile_t> parameters;
-        change_entity_map<profile_t>           member_initializations;
+        change_entity_map<call_profile_t>      member_initializations;
 
     public:
 
@@ -46,7 +47,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             if(is_parameter(type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile));
-            else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, profile);
+            else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
             else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
             
             descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile->id), profile->id);
@@ -153,14 +154,20 @@ class function_profile_t : public profile_t, public conditionals_addon {
             if(is_summary_type(summary_types, summary_type::TABLE) && (number_parameters_deleted || number_parameters_inserted || number_parameters_modified))
                 output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
-            // before block summary
+            // before body summary
             /** @todo may need to add rest of things that can occur here between parameter list and block */
             if(const_specifier) begin_line(out) << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
 
             size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
             count_operations(member_initializations, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
-            if(number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified)
+
+
+            if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
+                member_initialization_text_summary(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+
+            if(is_summary_type(summary_types, summary_type::TABLE) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                 output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+
             --depth;
 
             // body summary
