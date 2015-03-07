@@ -18,8 +18,8 @@ class parameter_profile_t : public profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
-            if(*parent == "type") type = name;
-            else if(is_parameter(*parent)) this->name = name;
+            if(*parent == "type")      type = name;
+            else if(*parent == "decl") this->name = name;
 
         }
 

@@ -19,32 +19,7 @@ class decl_stmt_profile_t : public profile_t {
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
             if(*parent == "type") type = name;
-            else if(is_decl_stmt(*parent)) this->name = name;
-
-        }
-
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
-
-            if(operation != SRCDIFF_COMMON) {
-
-                out << '\'' << (name.has_original() ? name.original() : name.modified()) << '\'';
-                return out;
-
-            }
-
-            begin_line(out) << type_name << " '" << name << "':\n";
-
-            ++depth;
-
-            // type
-            if(!type.is_common()) begin_line(out) << "Declaration statement type change: " << type.original() << " -> " << type.modified() << '\n';
-
-            // name
-            if(!name.is_common()) begin_line(out) << "Declaration statement name change: " << name.original() << " -> " << name.modified() << '\n';
-
-            --depth;
-
-            return out;
+            else if(*parent == "decl") this->name = name;
 
         }
 

@@ -105,13 +105,6 @@ class versioned_string {
 
        	}
 
-       	/** warning this is of a temp do not store */
-       	const char * c_str() const {
-
-       		return std::string(*this).c_str();
-
-       	}
-
        	operator std::string() const {
 
        		if(is_common()) return original();

@@ -146,7 +146,11 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             if(is_return_type_change) begin_line(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
 
-            if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
+
+            if(is_summary_type(summary_types, summary_type::TEXT) && (number_parameters_deleted || number_parameters_inserted || number_parameters_modified))
+                parameter_text_summary(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+
+            if(is_summary_type(summary_types, summary_type::TABLE) && (number_parameters_deleted || number_parameters_inserted || number_parameters_modified))
                 output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
             // before block summary
