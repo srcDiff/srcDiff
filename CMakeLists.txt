@@ -28,7 +28,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(srcdiff)
 
 # setup project includes
-include_directories(src/shortest_edit_script src/translator src/windows src/client src/srcml src/visualization src/analysis src/srcSAX/src/srcsax src/srcSAX/src/cpp src/srcSAX/src/windows)
+include_directories(src/shortest_edit_script src/translator src/windows src/client src/srcml src/visualization src/analysis src/srcSAX/src/srcsax src/srcSAX/src/cpp src/srcSAX/src/windows src/project)
 
 # get version and revision
 add_definitions(-DVERSION=\"1\")
