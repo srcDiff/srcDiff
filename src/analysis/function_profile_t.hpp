@@ -129,6 +129,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                 out << (non_syntax_changes == 1 ? "\n" : "s\n");
 
+                --depth;
+
                 return out;
 
             }
@@ -142,8 +144,6 @@ class function_profile_t : public profile_t, public conditionals_addon {
             count_operations(parameters, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
             if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) begin_line(out) << "Signature change:\n";
-
-            ++depth;
 
             if(is_return_type_change) begin_line(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
 
@@ -168,13 +168,16 @@ class function_profile_t : public profile_t, public conditionals_addon {
             if(is_summary_type(summary_types, summary_type::TABLE) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                 output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
-            --depth;
-
             // body summary
             if(is_summary_type(summary_types, summary_type::TEXT))
                 conditional_text_summary(out, profile_list);
 
-            if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
+            if(!is_summary_type(summary_types, summary_type::TABLE)) {
+
+                --depth;
+                return out;
+
+            }
 
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
             count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);

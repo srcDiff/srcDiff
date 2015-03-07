@@ -125,7 +125,7 @@ std::ostream & member_initialization_text_summary(std::ostream & out, size_t num
         if(number_member_initializations_deleted == 1) {
 
             change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_DELETE);
-            out << "the member initilization for '" << member_iterator->second->name.original() << "' was removed\n";
+            out << "a member initilization for '" << member_iterator->second->name.original() << "' was removed\n";
 
         } else {
 
@@ -151,7 +151,7 @@ std::ostream & member_initialization_text_summary(std::ostream & out, size_t num
         if(number_member_initializations_inserted == 1) {
 
             change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_INSERT);
-            out << "the member initilization for '" << member_iterator->second->name.modified() << "' was added\n";
+            out << "a member initilization for '" << member_iterator->second->name.modified() << "' was added\n";
 
         } else {
 

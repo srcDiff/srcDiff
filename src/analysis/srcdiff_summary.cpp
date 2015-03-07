@@ -27,6 +27,7 @@ bool is_summary(const std::string & type_name) {
 
 }
 
+/** @todo consider collecting info on assignments maybe just assignment statements */
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) {
 
     if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent_id);
