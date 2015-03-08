@@ -27,7 +27,7 @@ bool is_summary(const std::string & type_name) {
 
 }
 
-/** @todo consider collecting info on assignments maybe just assignment statements */
+/** @todo collect expr_stmt and expr and check if an assignment operator and if it changed. */
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) {
 
     if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent_id);
@@ -167,7 +167,8 @@ void srcdiff_summary::process_characters() {
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(),
-      insert_count(), delete_count(), change_count(), total(), text(), name_count(0), collected_name() {
+      insert_count(), delete_count(), change_count(), total(),
+      text(), name_count(0), collected_name(), condition_count(0), collected_condition() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -242,6 +243,8 @@ void srcdiff_summary::reset() {
     text.clear();
     name_count = 0;
     collected_name.clear();
+    condition_count = 0;
+    collected_condition.clear();
 
 
 }
@@ -446,11 +449,10 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(uri_stack.back() != SRCDIFF) {
 
-        if(local_name == "name") {
-
+        if(local_name == "name")
             ++name_count;
-
-        }
+        else if(local_name == "condition")
+            ++condition_count;
 
         if(!is_interchange) ++srcdiff_stack.back().level;
 
@@ -614,6 +616,16 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
+        } else if(local_name == "condition") {
+
+            --condition_count;
+
+            if(condition_count == 0) {
+
+                reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition(collected_condition);
+
+            }
+
         }
 
         if(!is_interchange) --srcdiff_stack.back().level;
@@ -712,5 +724,8 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     text.append(ch, len);
 
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
+    if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
+
+
 
 }

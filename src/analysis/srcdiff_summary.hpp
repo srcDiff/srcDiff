@@ -66,6 +66,9 @@ protected:
     size_t name_count;
     versioned_string collected_name;
 
+    size_t condition_count;
+    versioned_string collected_condition;
+
 private:
 
     void process_characters();

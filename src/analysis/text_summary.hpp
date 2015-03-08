@@ -255,7 +255,11 @@ std::ostream & conditional_text_summary(std::ostream & out, const std::shared_pt
 
     if(profile->operation != SRCDIFF_COMMON && has_common) {
 
-        out << " retaining ";
+        if(profile->operation == SRCDIFF_DELETE)
+            out << " retaining ";
+        else
+            out << " around ";
+        
         if(profile->total_count != 0)  out << "and modifying ";
 
         out << "its body";
