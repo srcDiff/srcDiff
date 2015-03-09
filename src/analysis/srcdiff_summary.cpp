@@ -622,6 +622,16 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             if(condition_count == 0) {
 
+                if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original()[0] == '(')
+                    collected_condition.original().erase(collected_condition.original().begin());
+                if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original().back() == ')')
+                    collected_condition.original().pop_back();
+
+                if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified()[0] == '(')
+                    collected_condition.modified().erase(collected_condition.modified().begin());
+                if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified().back() == ')')
+                    collected_condition.modified().pop_back();
+
                 reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition(collected_condition);
 
             }
@@ -633,7 +643,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         if(full_name == "condition" && profile_stack.back()->total_count > 0)
             reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition_modified(true);
         else if(full_name == "block" && profile_stack.back()->total_count > 0 && (profile_stack.at(profile_stack.size() - 2)->type_name == "then"
-                                        || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.original())))
+                                        || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.first_active())))
             reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_body_modified(true);            
 
     }

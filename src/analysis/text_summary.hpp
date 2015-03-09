@@ -244,19 +244,20 @@ public:
         const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
         const bool has_common = profile->has_common;
 
+        const bool condition_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_condition_modified();
+        const bool body_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_body_modified();
+        const versioned_string & condition = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->get_condition();
+
         profile_t::begin_line(out);
 
         // before children
         if(profile->operation == SRCDIFF_COMMON) {
 
-            const std::shared_ptr<conditional_profile_t> & conditional_profile = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile);
-
             out << "the ";
 
-            if(conditional_profile->is_condition_modified()
-                && conditional_profile->is_body_modified())       out << "condition and body ";
-            else if(conditional_profile->is_condition_modified()) out << "condition ";
-            else if(conditional_profile->is_body_modified())      out << "body ";
+            if(condition_modified && body_modified) out << "condition and body ";
+            else if(condition_modified)             out << "condition ";
+            else if(body_modified)                  out << "body ";
 
             out << "of ";
 
@@ -275,17 +276,25 @@ public:
         if(profile->operation != SRCDIFF_COMMON && has_common) {
 
             if(profile->operation == SRCDIFF_DELETE)
-                out << " retaining ";
+                out << " from around existing code ";
             else
-                out << " around ";
+                out << " around existing code ";
             
-            if(profile->total_count != 0)  out << "and modifying ";
-
-            out << "its body";
+            if(profile->total_count != 0)  out << "and the existing code was then modified ";
 
         }
 
         bool is_leaf = true;
+
+        if(condition_modified) {
+
+            is_leaf = false;
+            out << '\n';
+            ++profile_t::depth;
+            profile_t::begin_line(out) << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
+            --profile_t::depth;
+        }
+
         for(size_t child_pos : profile->child_profiles) {
 
             const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];

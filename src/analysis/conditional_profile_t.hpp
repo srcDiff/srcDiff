@@ -36,6 +36,12 @@ class conditional_profile_t : public profile_t {
 
         }
 
+        const versioned_string & get_condition() const {
+
+            return condition;
+
+        }
+
         bool is_condition_modified() const {
 
             return condition_modified;
