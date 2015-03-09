@@ -56,6 +56,8 @@ protected:
 
     std::vector<std::tuple<size_t, size_t, size_t>> counting_profile_pos;
 
+    size_t expr_stmt_pos;
+
     counts_t insert_count;
     counts_t delete_count;
     counts_t change_count;

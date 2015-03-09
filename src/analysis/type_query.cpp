@@ -89,3 +89,9 @@ bool has_then_clause(const std::string & type_name) {
     return type_name == "if" || type_name == "ternary";
 
 }
+
+bool is_expr_stmt(const std::string & type_name) {
+
+    return type_name == "expr_stmt";
+
+}

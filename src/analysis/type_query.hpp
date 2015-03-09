@@ -17,5 +17,6 @@ bool is_lambda(const std::string & type_name);
 bool is_parameter(const std::string & type_name);
 bool is_specifier(const std::string & type_name);
 bool has_then_clause(const std::string & type_name);
+bool is_expr_stmt(const std::string & type_name);
 
 #endif

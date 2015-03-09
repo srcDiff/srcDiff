@@ -8,6 +8,7 @@
 #include <decl_stmt_profile_t.hpp>
 #include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
+#include <expr_stmt_profile_t.hpp>
 
 #include <cstring>
 
@@ -17,7 +18,7 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_condition_type(type_name) || is_catch(type_name)                || is_decl_stmt(type_name)
     || is_call(type_name)           || is_preprocessor_special(type_name) || is_expr(type_name)
     || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name)
-    || is_specifier(type_name);
+    || is_specifier(type_name)      || is_expr_stmt(type_name);
 
 }
 
@@ -37,11 +38,21 @@ std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace
     if(has_then_clause(type_name))   return std::make_shared<if_profile_t>         (type_name, uri, operation, parent_id);
     if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent_id);
     if(is_call(type_name))           return std::make_shared<call_profile_t>       (type_name, uri, operation, parent_id);
+    if(is_expr_stmt(type_name))      return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent_id);
     return std::make_shared<profile_t>                                             (type_name, uri, operation, parent_id);
 
 }
 
 void srcdiff_summary::process_characters() {
+
+    if(text.empty()) return;
+
+    if(expr_stmt_pos > 0 && profile_stack.back()->type_name.first_active_string() == "operator"
+        && text[0] == '=' && (text.size() == 1 || text.back() != '=')) {
+
+        reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_assignment(true);
+
+    }
 
     const char * ch = text.c_str();
     std::string::size_type len = text.size();
@@ -166,7 +177,7 @@ void srcdiff_summary::process_characters() {
 }
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
-    : out(nullptr), summary_types(summary_type::NONE), id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(),
+    : out(nullptr), summary_types(summary_type::NONE), id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), name_count(0), collected_name(), condition_count(0), collected_condition() {
 
@@ -240,6 +251,7 @@ void srcdiff_summary::reset() {
     srcdiff_stack.clear();
     profile_stack.clear();
     counting_profile_pos.clear();
+    expr_stmt_pos = 0;
     text.clear();
     name_count = 0;
     collected_name.clear();
@@ -282,7 +294,7 @@ void srcdiff_summary::startRoot(const char * localname, const char * prefix, con
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
-    if(text != "") process_characters();
+    process_characters();
 
 }
 
@@ -306,7 +318,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
     uri_stack.push_back(SRC);
     srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, false, false));
 
-    if(text != "") process_characters();
+    process_characters();
 
     std::string full_name = "";
 
@@ -357,7 +369,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes) {
 
-    if(text != "") process_characters();
+    process_characters();
 
     const std::string local_name(localname);
 
@@ -453,6 +465,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
             ++name_count;
         else if(local_name == "condition")
             ++condition_count;
+        else if(local_name == "expr_stmt")
+            expr_stmt_pos = profile_stack.size() - 1;
 
         if(!is_interchange) ++srcdiff_stack.back().level;
 
@@ -541,7 +555,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
  */
 void srcdiff_summary::endRoot(const char * localname, const char * prefix, const char * URI) {
 
-    if(text != "") process_characters();        
+    process_characters();        
 
 }
 
@@ -556,7 +570,7 @@ void srcdiff_summary::endRoot(const char * localname, const char * prefix, const
  */
 void srcdiff_summary::endUnit(const char * localname, const char * prefix, const char * URI) {
 
-    if(text != "") process_characters();
+    process_characters();
 
     counting_profile_pos.pop_back();
     profile_list[profile_stack.back()->id] = profile_stack.back();
@@ -577,7 +591,7 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
  */
 void srcdiff_summary::endElement(const char * localname, const char * prefix, const char * URI) {
 
-    if(text != "") process_characters();
+    process_characters();
 
     const std::string local_name(localname);
 
@@ -635,6 +649,10 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition(collected_condition);
 
             }
+
+        } else if(local_name == "expr_stmt") {
+
+            expr_stmt_pos = 0;
 
         }
 
