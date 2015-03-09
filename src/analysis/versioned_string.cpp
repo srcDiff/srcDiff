@@ -58,7 +58,7 @@ const std::string & versioned_string::modified() const {
 
 }
 
-const std::string & versioned_string::first_active() const {
+const std::string & versioned_string::first_active_string() const {
 
 	if(has_original()) return original();
 

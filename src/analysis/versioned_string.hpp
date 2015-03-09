@@ -33,7 +33,7 @@ class versioned_string {
 		const std::string & original() const;
 		std::string & modified();
 		const std::string & modified() const;
-		const std::string & first_active() const;
+		const std::string & first_active_string() const;
 
 		void set_original(const std::string & string_original);
 		void set_modified(const std::string & string_modified);
