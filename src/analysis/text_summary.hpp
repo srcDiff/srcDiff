@@ -2,6 +2,8 @@
 #define INCLUDED_TEXT_SUMMARY_HPP
 
 #include <profile_t.hpp>
+#include <conditional_profile_t.hpp>
+#include <expr_stmt_profile_t.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -301,7 +303,8 @@ public:
 
             /** @todo check this condition */
             if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-                 && is_condition_type(child_profile->type_name)) {
+                 && (is_condition_type(child_profile->type_name) || (is_expr_stmt(child_profile->type_name)
+                    && reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(child_profile)->assignment()))) {
 
                 if(is_leaf) {
 
@@ -312,7 +315,13 @@ public:
                 }
 
                 ++profile_t::depth;
-                conditional(out, child_profile, profile_list);
+
+                if(is_condition_type(child_profile->type_name))
+                    conditional(out, child_profile, profile_list);
+                else
+                    profile_t::begin_line(out) << "an assignment statement was " 
+                        << (child_profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (child_profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
+
                 --profile_t::depth;
 
             }
