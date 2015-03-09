@@ -13,7 +13,10 @@ class call_profile_t : public profile_t {
 
         versioned_string name;
 
-        call_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id) {}
+        bool argument_list_modified;
+
+        call_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id)
+        	: profile_t(type_name, uri, operation, parent_id), argument_list_modified(false) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 

@@ -615,7 +615,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     if(uri_stack.back() != SRCDIFF) {
 
-        if(local_name == "name") {
+        if(!is_interchange) --srcdiff_stack.back().level;
+
+        if(full_name == "name") {
 
             --name_count;
 
@@ -630,7 +632,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-        } else if(local_name == "condition") {
+        } else if(full_name == "condition") {
 
             --condition_count;
 
@@ -650,17 +652,19 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-        } else if(local_name == "expr_stmt") {
+            if(profile_stack.back()->total_count > 0)
+                reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition_modified(true);
+
+        } else if(full_name == "expr_stmt") {
 
             expr_stmt_pos = 0;
 
-        }
+        } else if(full_name == "argument_list" && is_call(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())
+                  && profile_stack.back()->total_count > 0) {
 
-        if(!is_interchange) --srcdiff_stack.back().level;
+            reinterpret_cast<std::shared_ptr<call_profile_t> &>(profile_stack.at(profile_stack.size() - 2))->argument_list_modified = true;
 
-        if(full_name == "condition" && profile_stack.back()->total_count > 0)
-            reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition_modified(true);
-        else if(full_name == "block" && profile_stack.back()->total_count > 0 && (profile_stack.at(profile_stack.size() - 2)->type_name == "then"
+        } else if(full_name == "block" && profile_stack.back()->total_count > 0 && (profile_stack.at(profile_stack.size() - 2)->type_name == "then"
                                         || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())))
             reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_body_modified(true);            
 

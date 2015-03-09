@@ -247,20 +247,17 @@ public:
 
             const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
 
-            if(child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
+            if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
 
                 const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
+
                 profile_t::begin_line(out);
-                if(!call_profile->name.is_common()) {
-
-                    out << "a function call was renamed";
-
-                }
-
-                /** @todo report argument list was modified */
-                //if()
-
-                out << '\n';
+                if(!call_profile->name.is_common() && call_profile->argument_list_modified)
+                    out << "a function call was renamed and its argument list was modified\n";
+                else if(!call_profile->name.is_common())
+                    out << "a function call was renamed\n";
+                else if(call_profile->argument_list_modified)
+                    out << "a function call's argument_list was modified\n";
 
             }
 
