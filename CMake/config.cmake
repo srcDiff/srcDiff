@@ -96,7 +96,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
 
     set(CMAKE_C_FLAGS "${USE_FPIC} ${GCC_WARNINGS}")
     set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
-    set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
+    set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -DDEBUG")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
@@ -108,7 +108,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     set(CMAKE_C_FLAGS "${USE_FPIC} ${CLANG_WARNINGS}")
     set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
-    set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
+    set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -DDEBUG")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
