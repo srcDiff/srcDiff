@@ -28,7 +28,6 @@ bool is_summary(const std::string & type_name) {
 
 }
 
-/** @todo collect expr_stmt and expr and check if an assignment operator and if it changed. */
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) {
 
     if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent_id);

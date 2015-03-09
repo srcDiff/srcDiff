@@ -356,7 +356,7 @@ public:
 
                 if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile, profile_list);
-                else
+                else if(is_expr_stmt(child_profile->type_name))
                     expr_stmt(out, child_profile, profile_list);
 
                 --profile_t::depth;
