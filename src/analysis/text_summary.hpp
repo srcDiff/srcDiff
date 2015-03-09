@@ -4,6 +4,7 @@
 #include <profile_t.hpp>
 #include <conditional_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
+#include <call_profile_t.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -228,6 +229,50 @@ public:
 
     }
 
+    std::ostream & expr_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+
+        const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+
+        profile_t::begin_line(out);
+
+        if(expr_stmt_profile->assignment())
+            out << "an assignment statement was ";
+        else
+            out << "an expression statement was ";
+
+         out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
+
+         if(child_profiles.empty()) return out;
+
+        ++profile_t::depth;
+        for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
+
+            const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+
+            if(child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
+
+                const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
+                profile_t::begin_line(out);
+                if(!call_profile->name.is_common()) {
+
+                    out << "a function call was renamed ";
+
+                }
+
+                /** @todo report argument list was modified */
+                //if()
+
+                out << '\n';
+
+            }
+
+         }
+         --profile_t::depth;
+
+         return out;
+
+    }
+
     std::string get_article(const std::shared_ptr<profile_t> & profile) const { 
 
         const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
@@ -303,8 +348,7 @@ public:
 
             /** @todo check this condition */
             if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-                 && (is_condition_type(child_profile->type_name) || (is_expr_stmt(child_profile->type_name)
-                    && reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(child_profile)->assignment()))) {
+                 && (is_condition_type(child_profile->type_name) || is_expr_stmt(child_profile->type_name))) {
 
                 if(is_leaf) {
 
@@ -319,8 +363,7 @@ public:
                 if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile, profile_list);
                 else
-                    profile_t::begin_line(out) << "an assignment statement was " 
-                        << (child_profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (child_profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
+                    expr_stmt(out, child_profile, profile_list);
 
                 --profile_t::depth;
 
