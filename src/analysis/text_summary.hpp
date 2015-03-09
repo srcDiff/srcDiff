@@ -233,18 +233,16 @@ public:
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-        profile_t::begin_line(out);
+        if(expr_stmt_profile->assignment()) {
+    
+            profile_t::begin_line(out) << "an assignment statement was ";
 
-        if(expr_stmt_profile->assignment())
-            out << "an assignment statement was ";
-        else
-            out << "an expression statement was ";
+            out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
 
-         out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
+        }
 
-         if(child_profiles.empty()) return out;
+        if(child_profiles.empty()) return out;
 
-        ++profile_t::depth;
         for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
 
             const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
@@ -255,7 +253,7 @@ public:
                 profile_t::begin_line(out);
                 if(!call_profile->name.is_common()) {
 
-                    out << "a function call was renamed ";
+                    out << "a function call was renamed";
 
                 }
 
@@ -267,7 +265,6 @@ public:
             }
 
          }
-         --profile_t::depth;
 
          return out;
 
