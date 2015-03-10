@@ -543,6 +543,8 @@ public:
 
     }
 
+    /** need to look if there was a common rename going on and report that */
+
     std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
         for(size_t profile_pos : child_profiles) {
