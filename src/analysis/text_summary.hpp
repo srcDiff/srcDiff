@@ -334,6 +334,12 @@ public:
 
     }
 
+    std::ostream & decl_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+
+        return out;
+
+    }
+
     std::string get_article(const std::shared_ptr<profile_t> & profile) const { 
 
         const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
@@ -410,7 +416,7 @@ public:
 
             /** @todo check this condition */
             if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-                 && (is_condition_type(child_profile->type_name) || is_expr_stmt(child_profile->type_name))) {
+                 && is_body_summary(child_profile->type_name)) {
 
                 if(is_leaf) {
 
@@ -454,19 +460,27 @@ public:
 
     }
 
+    bool is_body_summary(const std::string & type) const {
+
+        return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type);
+
+    }
+
     std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
         for(size_t profile_pos : child_profiles) {
 
             const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
-            if((!is_condition_type(profile->type_name) && !is_expr_stmt(profile->type_name)) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
+            if(!is_body_summary(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
                 continue;
 
             if(is_condition_type(profile->type_name))
                 conditional(out, profile, profile_list);
             else if(is_expr_stmt(profile->type_name))
                 expr_stmt(out, profile, profile_list);
+            else if(is_decl_stmt(profile->type_name))
+                decl_stmt(out, profile, profile_list);
 
         }
 
