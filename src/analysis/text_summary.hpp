@@ -243,6 +243,9 @@ public:
 
         if(child_profiles.empty()) return out;
 
+        size_t number_calls = 0;
+        size_t number_renames = 0;
+        size_t number_argument_list_modified = 0;
         for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
 
             const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
@@ -251,17 +254,47 @@ public:
 
                 const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
-                profile_t::begin_line(out);
-                if(!call_profile->name.is_common() && call_profile->argument_list_modified)
-                    out << "a function call was renamed and its argument list was modified\n";
-                else if(!call_profile->name.is_common())
-                    out << "a function call was renamed\n";
-                else if(call_profile->argument_list_modified)
-                    out << "a function call's argument_list was modified\n";
+                ++number_calls;
+                if(!call_profile->name.is_common())      ++number_renames;
+                if(call_profile->argument_list_modified) ++number_argument_list_modified;
+
 
             }
 
          }
+
+        profile_t::begin_line(out);
+        if(number_renames && number_argument_list_modified) {
+
+            if(number_calls == 1) {
+
+                out << "a function call was renamed and its arguments modified\n";
+
+            } else {
+             
+                if(number_renames == 1) out << "a function call was ";
+                else                    out << number_renames << " function calls were ";
+                out << "renamed and ";
+
+                if(number_argument_list_modified == 1) out << "a function call's arguments ";
+                else                                   out << number_renames << " function calls' arguments ";
+                out << " were modified\n";
+
+            }
+
+        } else if(number_renames) {
+
+            if(number_renames == 1) out << "a function call was ";
+            else                    out << number_renames << " function calls were ";
+            out << "renamed\n";
+
+        } else if(number_argument_list_modified) {
+
+            if(number_argument_list_modified == 1) out << "a function call's arguments was ";
+            else                                   out << number_renames << " function calls' arguments were ";
+            out << " modified\n";
+
+        }
 
          return out;
 
