@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <functional>
 #include <list>
+#include <set>
 
 class text_summary {
 
@@ -349,9 +350,9 @@ public:
 
             } else if(number_argument_list_modified) {
 
-                if(number_argument_list_modified == 1) out << "a function call's arguments was ";
-                else                                   out << number_renames << " function calls' argument lists were ";
-                out << " modified\n";
+                if(number_argument_list_modified == 1) out << "a function call's arguments";
+                else                                   out << number_renames << " function calls' argument lists";
+                out << " were modified\n";
 
             }
 
@@ -499,12 +500,18 @@ public:
 
     }
 
-    /** need to look if there was a common rename going on and report that */
-    std::map<std::string, size_t> analyze_body(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    /** 
+        need to look if there was a common rename going on and report that
+        might want to have profiles for identifiers. Which have a versioned string for name.
+        Then have set_name take identifier_profile_t maybe, but probably not.  Then looking for renames,
+        would just recurse throught children looking for identifier profiles.
 
-        std::map<std::string, size_t> change_count;
+    */
+    std::set<versioned_string> analyze_body(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
-        for(size_t profile_pos : child_profiles) {
+        std::map<versioned_string, size_t> change_count;
+
+        for(size_t profile_pos : profile->child_profiles) {
 
             const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
@@ -513,7 +520,7 @@ public:
 
         }
 
-        return change_count;
+        return std::set<versioned_string>();
 
     }
 
