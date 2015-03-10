@@ -243,58 +243,88 @@ public:
 
         if(child_profiles.empty()) return out;
 
-        size_t number_calls = 0;
-        size_t number_renames = 0;
-        size_t number_argument_list_modified = 0;
-        for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
+        if(profile->operation != SRCDIFF_COMMON) {
 
-            const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+            for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
 
-            if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
+                const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
 
-                const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
+                if(is_call(child_profile->type_name)) {
 
-                ++number_calls;
-                if(!call_profile->name.is_common())      ++number_renames;
-                if(call_profile->argument_list_modified) ++number_argument_list_modified;
+                    const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
+                    profile_t::begin_line(out);
+                    if(profile->operation == SRCDIFF_DELETE) out << "removed ";
+                    else                                     out << "added ";
+
+                    out << "a call to '";
+
+                    if(profile->operation == SRCDIFF_DELETE) out << call_profile->name.original();
+                    else                                     out << call_profile->name.modified();
+
+                    out << "'\n";
+
+
+                }
 
             }
 
-         }
+        } else {
 
-         if(number_calls == 0) return out;
+            size_t number_calls = 0;
+            size_t number_renames = 0;
+            size_t number_argument_list_modified = 0;
+            for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
 
-        profile_t::begin_line(out);
-        if(number_renames && number_argument_list_modified) {
+                const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
 
-            if(number_calls == 1) {
+                if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
 
-                out << "a function call was renamed and its arguments modified\n";
+                    const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
-            } else {
-             
+                    ++number_calls;
+                    if(!call_profile->name.is_common())      ++number_renames;
+                    if(call_profile->argument_list_modified) ++number_argument_list_modified;
+
+
+                }
+
+             }
+
+             if(number_calls == 0) return out;
+
+            profile_t::begin_line(out);
+            if(number_renames && number_argument_list_modified) {
+
+                if(number_calls == 1) {
+
+                    out << "a function call was renamed and its arguments modified\n";
+
+                } else {
+                 
+                    if(number_renames == 1) out << "a function call was ";
+                    else                    out << number_renames << " function calls were ";
+                    out << "renamed and ";
+
+                    if(number_argument_list_modified == 1) out << "a function call's arguments ";
+                    else                                   out << number_renames << " function calls' argument lists ";
+                    out << " were modified\n";
+
+                }
+
+            } else if(number_renames) {
+
                 if(number_renames == 1) out << "a function call was ";
                 else                    out << number_renames << " function calls were ";
-                out << "renamed and ";
+                out << "renamed\n";
 
-                if(number_argument_list_modified == 1) out << "a function call's arguments ";
-                else                                   out << number_renames << " function calls' argument lists ";
-                out << " were modified\n";
+            } else if(number_argument_list_modified) {
+
+                if(number_argument_list_modified == 1) out << "a function call's arguments was ";
+                else                                   out << number_renames << " function calls' argument lists were ";
+                out << " modified\n";
 
             }
-
-        } else if(number_renames) {
-
-            if(number_renames == 1) out << "a function call was ";
-            else                    out << number_renames << " function calls were ";
-            out << "renamed\n";
-
-        } else if(number_argument_list_modified) {
-
-            if(number_argument_list_modified == 1) out << "a function call's arguments was ";
-            else                                   out << number_renames << " function calls' argument lists were ";
-            out << " modified\n";
 
         }
 
@@ -431,10 +461,10 @@ public:
             if((!is_condition_type(profile->type_name) && !is_expr_stmt(profile->type_name)) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
                 continue;
 
-                if(is_condition_type(profile->type_name))
-                    conditional(out, profile, profile_list);
-                else if(is_expr_stmt(profile->type_name))
-                    expr_stmt(out, profile, profile_list);
+            if(is_condition_type(profile->type_name))
+                conditional(out, profile, profile_list);
+            else if(is_expr_stmt(profile->type_name))
+                expr_stmt(out, profile, profile_list);
 
         }
 
