@@ -263,6 +263,8 @@ public:
 
          }
 
+         if(number_calls == 0) return out;
+
         profile_t::begin_line(out);
         if(number_renames && number_argument_list_modified) {
 
