@@ -244,6 +244,7 @@ public:
 
         if(child_profiles.empty()) return out;
 
+        // this needs flushed out
         if(profile->operation != SRCDIFF_COMMON) {
 
             std::list<std::string> deleted_calls;
@@ -268,75 +269,30 @@ public:
             if(!deleted_calls.empty() || !inserted_calls.empty()) {
 
                 profile_t::begin_line(out);
-                if(!deleted_calls.empty() && !inserted_calls.empty()) {
 
-                    if(deleted_calls.size() == 1) {
+                std::list<std::string> & call_names = !deleted_calls.empty() ? deleted_calls : inserted_calls;
 
-                        out << "a call to '" << deleted_calls.front() << "' was replaced with ";
+                if(call_names.size() == 1) {
 
-                    } else {
+                    out << "a call to '" << call_names.front() << "' was ";
 
-                        out << "calls to ";
-
-                        std::string ending = deleted_calls.size() == 2 ? "' " : "', ";
-                        while(deleted_calls.size() != 1) {
-
-                            out << '\'' << deleted_calls.front() << ending;
-                            deleted_calls.pop_back();
-
-                        }
-
-                        out << "and \'" << deleted_calls.front() << "' were replaced with ";
-
-                    }
-
-                    if(inserted_calls.size() == 1) {
-
-                        out << "a call to '" << inserted_calls.front() << "'\n";
-
-                    } else {
-
-                        out << "calls to ";
-
-                        std::string ending = inserted_calls.size() == 2 ? "' " : "', ";
-                        while(inserted_calls.size() != 1) {
-
-                            out << '\'' << inserted_calls.front() << ending;
-                            inserted_calls.pop_back();
-
-                        }
-
-                        out << "and \'" << inserted_calls.front() << "'\n";
-
-                    }
+                    out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
 
                 } else {
 
-                    std::list<std::string> & call_names = !deleted_calls.empty() ? deleted_calls : inserted_calls;
+                    out << "calls to ";
 
-                    if(call_names.size() == 1) {
+                    std::string ending = call_names.size() == 2 ? "' " : "', ";
+                    while(call_names.size() != 1) {
 
-                        out << "a call to '" << call_names.front() << "' was ";
-
-                        out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
-
-                    } else {
-
-                        out << "calls to ";
-
-                        std::string ending = call_names.size() == 2 ? "' " : "', ";
-                        while(call_names.size() != 1) {
-
-                            out << '\'' << call_names.front() << ending;
-                            call_names.pop_back();
-
-                        }
-
-                        out << "and \'" << call_names.front() << "' were ";
-
-                        out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
+                        out << '\'' << call_names.front() << ending;
+                        call_names.pop_back();
 
                     }
+
+                    out << "and \'" << call_names.front() << "' were ";
+
+                    out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
 
                 }
 
