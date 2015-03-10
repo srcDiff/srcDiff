@@ -500,6 +500,22 @@ public:
     }
 
     /** need to look if there was a common rename going on and report that */
+    std::map<std::string, size_t> analyze_body(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+
+        std::map<std::string, size_t> change_count;
+
+        for(size_t profile_pos : child_profiles) {
+
+            const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
+
+            if(is_expr_stmt(profile->type_name))
+                ;
+
+        }
+
+        return change_count;
+
+    }
 
     std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
