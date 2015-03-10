@@ -277,7 +277,7 @@ public:
                 out << "renamed and ";
 
                 if(number_argument_list_modified == 1) out << "a function call's arguments ";
-                else                                   out << number_renames << " function calls' arguments ";
+                else                                   out << number_renames << " function calls' argument lists ";
                 out << " were modified\n";
 
             }
@@ -291,7 +291,7 @@ public:
         } else if(number_argument_list_modified) {
 
             if(number_argument_list_modified == 1) out << "a function call's arguments was ";
-            else                                   out << number_renames << " function calls' arguments were ";
+            else                                   out << number_renames << " function calls' argument lists were ";
             out << " modified\n";
 
         }
@@ -369,6 +369,7 @@ public:
             --profile_t::depth;
         }
 
+        /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
         for(size_t child_pos : profile->child_profiles) {
 
             const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
