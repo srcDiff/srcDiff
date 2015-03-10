@@ -12,6 +12,7 @@
 #include <memory>
 #include <algorithm>
 #include <functional>
+#include <list>
 
 class text_summary {
 
@@ -245,6 +246,8 @@ public:
 
         if(profile->operation != SRCDIFF_COMMON) {
 
+            std::list<std::string> deleted_calls;
+            std::list<std::string> inserted_calls;
             for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
 
                 const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
@@ -253,19 +256,87 @@ public:
 
                     const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
-                    profile_t::begin_line(out);
+                    if(profile->operation == SRCDIFF_DELETE)
+                        deleted_calls.push_back(call_profile->name.original());
+                    else
+                        inserted_calls.push_back(call_profile->name.modified());
 
-                    out << "a call to '";
+                }
 
-                    if(profile->operation == SRCDIFF_DELETE) out << call_profile->name.original();
-                    else                                     out << call_profile->name.modified();
+            }
 
-                    out << "\' was ";
+            if(!deleted_calls.empty() || !inserted_calls.empty()) {
 
-                    if(profile->operation == SRCDIFF_DELETE) out << "removed";
-                    else                                     out << "added";
+                profile_t::begin_line(out);
+                if(!deleted_calls.empty() && !inserted_calls.empty()) {
 
-                    out << '\n';
+                    if(deleted_calls.size() == 1) {
+
+                        out << "a call to '" << deleted_calls.front() << "' was replaced with ";
+
+                    } else {
+
+                        out << "calls to ";
+
+                        std::string ending = deleted_calls.size() == 2 ? "' " : "', ";
+                        while(deleted_calls.size() != 1) {
+
+                            out << '\'' << deleted_calls.front() << ending;
+                            deleted_calls.pop_back();
+
+                        }
+
+                        out << "and \'" << deleted_calls.front() << "' were replaced with ";
+
+                    }
+
+                    if(inserted_calls.size() == 1) {
+
+                        out << "a call to '" << inserted_calls.front() << "'\n";
+
+                    } else {
+
+                        out << "calls to ";
+
+                        std::string ending = inserted_calls.size() == 2 ? "' " : "', ";
+                        while(inserted_calls.size() != 1) {
+
+                            out << '\'' << inserted_calls.front() << ending;
+                            inserted_calls.pop_back();
+
+                        }
+
+                        out << "and \'" << inserted_calls.front() << "'\n";
+
+                    }
+
+                } else {
+
+                    std::list<std::string> & call_names = !deleted_calls.empty() ? deleted_calls : inserted_calls;
+
+                    if(call_names.size() == 1) {
+
+                        out << "a call to '" << call_names.front() << "' was ";
+
+                        out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
+
+                    } else {
+
+                        out << "calls to ";
+
+                        std::string ending = call_names.size() == 2 ? "' " : "', ";
+                        while(call_names.size() != 1) {
+
+                            out << '\'' << call_names.front() << ending;
+                            call_names.pop_back();
+
+                        }
+
+                        out << "and \'" << call_names.front() << "' were ";
+
+                        out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
+
+                    }
 
                 }
 
