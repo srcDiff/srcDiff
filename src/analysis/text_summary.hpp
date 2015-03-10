@@ -254,16 +254,18 @@ public:
                     const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
                     profile_t::begin_line(out);
-                    if(profile->operation == SRCDIFF_DELETE) out << "removed ";
-                    else                                     out << "added ";
 
                     out << "a call to '";
 
                     if(profile->operation == SRCDIFF_DELETE) out << call_profile->name.original();
                     else                                     out << call_profile->name.modified();
 
-                    out << "'\n";
+                    out << "\' was ";
 
+                    if(profile->operation == SRCDIFF_DELETE) out << "removed";
+                    else                                     out << "added";
+
+                    out << '\n';
 
                 }
 
