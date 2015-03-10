@@ -204,6 +204,21 @@ static bool is_significant(size_t node_pos, const srcml_nodes & nodes, const voi
 
   const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
+  if(node->name == "argument_list") {
+
+    size_t pos = node_pos + 1;
+    while(pos < nodes.size() && (nodes[pos]->type == XML_READER_TYPE_ELEMENT || nodes[pos]->name != "argument_list")) {
+
+      if(!nodes[pos]->is_text()) return true;
+
+      ++pos;
+
+    }
+
+    return false;
+
+  }
+
   return !node->is_text() && node->name != "operator"
       && node->name != "literal" && node->name != "modifier";
 
