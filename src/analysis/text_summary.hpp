@@ -286,7 +286,7 @@ public:
                     while(call_names.size() != 1) {
 
                         out << '\'' << call_names.front() << ending;
-                        call_names.pop_back();
+                        call_names.pop_front();
 
                     }
 
