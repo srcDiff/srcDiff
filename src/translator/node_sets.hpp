@@ -13,14 +13,16 @@ private:
 
 	const srcml_nodes & nodes;
 
-	static bool is_non_white_space(const std::shared_ptr<srcml_node> & node, const void * context UNUSED) {
+	static bool is_non_white_space(size_t node_pos, const srcml_nodes & nodes, const void * context UNUSED) {
+
+		const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
 	  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
 	  return !((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space());
 
 	}
 
-	typedef bool (*node_set_filter)(const std::shared_ptr<srcml_node> & node, const void * context);
+	typedef bool (*node_set_filter)(size_t node_pos, const srcml_nodes & nodes, const void * context);
 
 public:
 
@@ -53,7 +55,7 @@ public:
 	  for(int i = start; i < end; ++i) {
 
 	    // skip whitespace
-	    if(filter(nodes.at(i), context)) {
+	    if(filter(i, nodes, context)) {
 
 	      // text is separate node if not surrounded by a tag in range
 	      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {

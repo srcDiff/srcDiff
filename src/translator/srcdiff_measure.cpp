@@ -200,7 +200,9 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
 }
 
-static bool is_significant(const std::shared_ptr<srcml_node> & node, const void * context) {
+static bool is_significant(size_t node_pos, const srcml_nodes & nodes, const void * context) {
+
+  const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
   return !node->is_text() && node->name != "operator"
       && node->name != "literal" && node->name != "modifier";

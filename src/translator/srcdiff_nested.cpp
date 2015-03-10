@@ -120,7 +120,9 @@ bool is_nest_type(const node_set & structure, const srcml_nodes & nodes
   return false;
 }
 
-bool is_match(const std::shared_ptr<srcml_node> & node, const void * context) {
+bool is_match(size_t node_pos, const srcml_nodes & nodes, const void * context) {
+
+  const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
   return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && srcdiff_compare::node_compare(node, *(const std::shared_ptr<srcml_node> *)context) == 0;
 
