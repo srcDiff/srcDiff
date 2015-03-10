@@ -171,7 +171,7 @@ void srcdiff_summary::process_characters() {
 
     }
 
-    text = "";
+    text.clear();
 
 }
 

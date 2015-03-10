@@ -171,7 +171,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             // body summary
             if(is_summary_type(summary_types, summary_type::TEXT))
-                text.conditional(out, profile_list);
+                text.body(out, profile_list);
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) {
 

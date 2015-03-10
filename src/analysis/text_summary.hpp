@@ -422,16 +422,19 @@ public:
 
     }
 
-    std::ostream & conditional(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
         for(size_t profile_pos : child_profiles) {
 
             const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
-            if(!is_condition_type(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
+            if((!is_condition_type(profile->type_name) && !is_expr_stmt(profile->type_name)) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
                 continue;
 
-                conditional(out, profile, profile_list);
+                if(is_condition_type(profile->type_name))
+                    conditional(out, profile, profile_list);
+                else if(is_expr_stmt(profile->type_name))
+                    expr_stmt(out, profile, profile_list);
 
         }
 
