@@ -506,6 +506,8 @@ public:
         Then have set_name take identifier_profile_t maybe, but probably not.  Then looking for renames,
         would just recurse throught children looking for identifier profiles.
 
+        This should probably be collected part of function_profile_t in set or map when parsing.
+
     */
     std::set<versioned_string> analyze_body(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
