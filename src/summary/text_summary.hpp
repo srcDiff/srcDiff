@@ -526,11 +526,11 @@ public:
 
     }
 
-    std::ostream & body(std::ostream & out, const std::map<versioned_string, std::set<versioned_string>> & identifiers, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & body(std::ostream & out, const std::map<versioned_string, size_t> & identifiers, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
-        for(std::pair<versioned_string, std::set<versioned_string>> identifier : identifiers) {
+        for(std::pair<versioned_string, size_t> identifier : identifiers) {
 
-            if(identifier.second.size() <= 1) continue;
+            if(identifier.second <= 1) continue;
 
             profile_t::begin_line(out) << "the identifier '";
 

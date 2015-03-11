@@ -59,7 +59,8 @@ class profile_t {
         std::vector<size_t> descendant_profiles;      
 
         // probably want these on conditions and insersection on way up.
-        std::map<versioned_string, std::set<versioned_string>> identifiers;  
+        std::map<versioned_string, size_t> identifiers;
+        std::map<versioned_string, size_t> intersecting_identifiers;
 
     public:
 
@@ -93,14 +94,14 @@ class profile_t {
 
                 ident_diff.compute_diff();
 
-                std::map<versioned_string, std::set<versioned_string>>::iterator itr = identifiers.find(ident_diff.get_diff());
-                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), std::set<versioned_string>{ identifier }));
-                else                         itr->second.insert(identifier);
+                std::map<versioned_string, size_t>::iterator itr = identifiers.find(ident_diff.get_diff());
+                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), 1));
+                else                         ++itr->second;
 
             }
 
         }
-        
+
         virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
         
         virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {

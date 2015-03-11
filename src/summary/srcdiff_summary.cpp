@@ -739,6 +739,36 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON)
             update_anscestor_profile(profile_stack.back());
 
+        if(has_body(full_name)) {
+
+            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.at(std::get<1>(counting_profile_pos.back()));
+
+            // add to identifier list looking for intersections and adding
+            for(std::pair<versioned_string, size_t> identifier : profile_stack.back()->identifiers) {
+
+                std::map<versioned_string, size_t>::iterator itr = parent_body_profile->identifiers.find(identifier.first);
+                if(itr == parent_body_profile->identifiers.end()) {
+
+                    parent_body_profile->identifiers.insert(itr, identifier);
+
+                } else {
+
+                    itr->second += identifier.second;
+
+                    std::map<versioned_string, size_t>::iterator itersect_itr = parent_body_profile->intersecting_identifiers.find(itr->first);
+                    if(itersect_itr == parent_body_profile->intersecting_identifiers.end())
+                        parent_body_profile->intersecting_identifiers.insert(itersect_itr, *itr);
+                    else
+                        itersect_itr->second += itr->second;
+
+                }
+
+
+            }
+
+
+        }
+
     }
 
     if(!is_interchange) profile_stack.pop_back();
