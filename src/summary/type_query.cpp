@@ -95,3 +95,9 @@ bool is_expr_stmt(const std::string & type_name) {
     return type_name == "expr_stmt";
 
 }
+
+bool is_identifier(const std::string & type_name) {
+
+    return type_name == "name";
+
+}

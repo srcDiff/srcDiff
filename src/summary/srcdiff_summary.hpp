@@ -74,7 +74,7 @@ protected:
 private:
 
     void process_characters();
-
+    void update_anscestor_profile(const std::shared_ptr<profile_t> & profile);
 public:
 
     srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str);

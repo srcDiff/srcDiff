@@ -45,6 +45,7 @@ class versioned_string {
 		bool operator!=(const std::string & str) const;
        	bool operator==(const char * c_str) const;
        	bool operator!=(const char * c_str) const;
+       	bool operator<(const versioned_string & v_str) const;
 		std::string operator+(const std::string & str) const;
 		std::string operator+(const char * c_str) const;
 

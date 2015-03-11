@@ -53,18 +53,14 @@ class profile_t {
         size_t syntax_count;
         size_t total_count;
 
-        size_t number_child_profiles;
         std::vector<size_t> child_profiles;
-
-        size_t number_descendant_profiles;
         std::vector<size_t> descendant_profiles;        
 
     public:
 
         profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : id(0), type_name(type_name), uri(uri), operation(operation), parent_id(parent_id),
                                                                    has_common(false), is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
-                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
-                                                                   number_child_profiles(0), number_descendant_profiles(0) {}
+                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
 
         void set_id(size_t id_count) {
 
@@ -85,22 +81,10 @@ class profile_t {
         }
 
         virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
-
-        void inc_number_child_profiles() {
-
-            ++number_child_profiles;
-
-        }
         
         virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
             child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile->id), profile->id);
-
-        }
-
-        void inc_number_descendant_profiles() {
-
-            ++number_descendant_profiles;
 
         }
 
@@ -112,7 +96,7 @@ class profile_t {
 
         virtual impact_factor calculate_impact_factor() const {
 
-            double impact_factor_number = (double)syntax_count / number_descendant_profiles;
+            double impact_factor_number = (double)syntax_count / descendant_profiles.size();
 
             if(impact_factor_number == 0)    return NONE;
             if(impact_factor_number <  0.1)  return LOW;

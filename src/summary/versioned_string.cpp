@@ -139,6 +139,12 @@ bool versioned_string::operator!=(const char * c_str) const {
 
 }
 
+bool versioned_string::operator<(const versioned_string & v_str) const {
+
+		return std::string(*this) < std::string(v_str);
+
+}
+
 std::string versioned_string::operator+(const std::string & str) const {
 
 

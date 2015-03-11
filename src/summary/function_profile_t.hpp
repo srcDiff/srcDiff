@@ -16,6 +16,7 @@
 #include <iomanip>
 #include <functional>
 #include <algorithm>
+#include <utility>
 
 class function_profile_t : public profile_t, public conditionals_addon {
 
@@ -31,6 +32,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
         change_entity_map<parameter_profile_t> parameters;
         change_entity_map<call_profile_t>      member_initializations;
 
+        std::map<versioned_string, size_t> identifiers;
+
     public:
 
         function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id), conditionals_addon() {}
@@ -39,6 +42,15 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             if(*parent == "type") return_type = name;
             else if(is_function_type(*parent)) this->name = name;
+
+        }
+
+        virtual void add_identifier(const versioned_string & identifier) {
+
+            std::map<versioned_string, size_t>::iterator itr = identifiers.find(identifier);
+            if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(identifier, 1));
+            else                         ++itr->second;
+
 
         }
 

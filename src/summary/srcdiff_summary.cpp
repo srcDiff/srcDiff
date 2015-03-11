@@ -579,6 +579,23 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
 
 }
 
+void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> & profile) {
+
+            if(profile_list.size() < profile->id)
+                profile_list.resize(profile->id * 2);
+
+            profile_list[profile->id] = profile;
+
+            size_t parent_pos = profile_stack.size() - 2;
+            while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+                --parent_pos;
+
+            // should always have at least unit
+            profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile, profile_stack.at(parent_pos)->type_name);
+            profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant(profile, profile_stack.at(parent_pos)->type_name);
+
+}
+
 /**
  * endElement
  * @param localname the name of the profile tag
@@ -627,6 +644,15 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     --parent_pos;
 
                 profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
+
+                if((srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common())
+                    && is_function_type(profile_stack.at(std::get<2>(counting_profile_pos.back()))->type_name)) {
+
+                    std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(std::get<2>(counting_profile_pos.back())));
+//                    function_profile
+
+                }
+
                 collected_name.clear();
 
             }
@@ -702,26 +728,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         counting_profile_pos.pop_back();
 
-        profile_stack.at(std::get<0>(counting_profile_pos.back()))->inc_number_child_profiles();
-        profile_stack.at(std::get<2>(counting_profile_pos.back()))->inc_number_descendant_profiles();
-
         // do not save items with no changes and not inserted/deleted
-        if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON) {
-
-            if(profile_list.size() < profile_stack.back()->id)
-                profile_list.resize(profile_stack.back()->id * 2);
-
-            profile_list[profile_stack.back()->id] = profile_stack.back();
-
-            size_t parent_pos = profile_stack.size() - 2;
-            while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
-                --parent_pos;
-
-            // should always have at least unit
-            profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile_stack.back(), profile_stack.at(parent_pos)->type_name);
-            profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant(profile_stack.back(), profile_stack.at(parent_pos)->type_name);
-
-        }
+        if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON)
+            update_anscestor_profile(profile_stack.back());
 
     }
 
