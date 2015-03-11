@@ -4,6 +4,7 @@
 #include <versioned_string.hpp>
 
 #include <string>
+#include <vector>
 
 class identifier_diff {
 
@@ -85,7 +86,6 @@ public:
         if(start_pos < end_modified) ident.set_modified(identifier.modified().substr(start_pos, end_modified - start_pos));
 
         diff = ident;
-
 
     }
 

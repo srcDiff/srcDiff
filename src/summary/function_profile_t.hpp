@@ -11,10 +11,8 @@
 #include <change_entity_map.hpp>
 #include <type_query.hpp>
 #include <text_summary.hpp>
-#include <identifier_diff.hpp>
 
 #include <map>
-#include <set>
 #include <iomanip>
 #include <functional>
 #include <algorithm>
@@ -35,9 +33,6 @@ class function_profile_t : public profile_t, public conditionals_addon {
         change_entity_map<parameter_profile_t> parameters;
         change_entity_map<call_profile_t>      member_initializations;
 
-        // probably want these on conditions and insersection on way up.
-        std::map<versioned_string, std::set<versioned_string>> identifiers;
-
     private:
 
     public:
@@ -48,22 +43,6 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             if(*parent == "type") return_type = name;
             else if(is_function_type(*parent)) this->name = name;
-
-        }
-
-        virtual void add_identifier(const versioned_string & identifier) {
-
-            if(identifier.has_original() && identifier.has_modified() && !identifier.is_common()) {
-
-                identifier_diff ident_diff(identifier);
-
-                ident_diff.compute_diff();
-
-                std::map<versioned_string, std::set<versioned_string>>::iterator itr = identifiers.find(ident_diff.get_diff());
-                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), std::set<versioned_string>{ identifier }));
-                else                         itr->second.insert(identifier);
-
-            }
 
         }
 

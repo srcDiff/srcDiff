@@ -7,9 +7,11 @@
 #include <summary_type.hpp>
 #include <namespace_uri.hpp>
 #include <srcdiff_macros.hpp>
+#include <identifier_diff.hpp>
 
 #include <vector>
 #include <map>
+#include <set>
 #include <iostream>
 #include <utility>
 #include <memory>
@@ -54,7 +56,10 @@ class profile_t {
         size_t total_count;
 
         std::vector<size_t> child_profiles;
-        std::vector<size_t> descendant_profiles;        
+        std::vector<size_t> descendant_profiles;      
+
+        // probably want these on conditions and insersection on way up.
+        std::map<versioned_string, std::set<versioned_string>> identifiers;  
 
     public:
 
@@ -80,6 +85,22 @@ class profile_t {
 
         }
 
+        virtual void add_identifier(const versioned_string & identifier) {
+
+            if(identifier.has_original() && identifier.has_modified() && !identifier.is_common()) {
+
+                identifier_diff ident_diff(identifier);
+
+                ident_diff.compute_diff();
+
+                std::map<versioned_string, std::set<versioned_string>>::iterator itr = identifiers.find(ident_diff.get_diff());
+                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), std::set<versioned_string>{ identifier }));
+                else                         itr->second.insert(identifier);
+
+            }
+
+        }
+        
         virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
         
         virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {

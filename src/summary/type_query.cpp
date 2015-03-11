@@ -84,12 +84,6 @@ bool is_specifier(const std::string & type_name) {
 
 }
 
-bool has_then_clause(const std::string & type_name) {
-
-    return type_name == "if" || type_name == "ternary";
-
-}
-
 bool is_expr_stmt(const std::string & type_name) {
 
     return type_name == "expr_stmt";
@@ -100,4 +94,15 @@ bool is_identifier(const std::string & type_name) {
 
     return type_name == "name";
 
+}
+
+bool has_then_clause(const std::string & type_name) {
+
+    return type_name == "if" || type_name == "ternary";
+
+}
+
+bool has_body(const std::string & type_name) {
+
+    return (type_name != "ternary" && is_condition_type(type_name)) || is_function_type(type_name) || is_class_type(type_name);
 }

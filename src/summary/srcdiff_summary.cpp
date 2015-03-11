@@ -472,7 +472,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         if(!is_interchange && is_count(full_name)) {
 
             bool summarize = is_summary(local_name);
-            counting_profile_pos.emplace_back(profile_stack.size() - 1, std::get<0>(counting_profile_pos.back()),
+            bool a_body    = has_body(local_name);
+            counting_profile_pos.emplace_back(profile_stack.size() - 1, 
+                                              a_body    ? profile_stack.size() - 1 : std::get<1>(counting_profile_pos.back()),
                                               summarize ? profile_stack.size() - 1 : std::get<2>(counting_profile_pos.back()));
             profile_stack.back()->set_id(++id_count);
 
@@ -645,11 +647,16 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                 profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
 
-                if((srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common())
-                    && is_function_type(profile_stack.at(std::get<2>(counting_profile_pos.back()))->type_name)) {
+                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common()) {
 
-                    std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(std::get<2>(counting_profile_pos.back())));
-                    function_profile->add_identifier(collected_name);
+                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_name);
+
+                    if(is_function_type(profile_stack.at(std::get<2>(counting_profile_pos.back()))->type_name)) {
+
+                        std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(std::get<2>(counting_profile_pos.back())));
+                        function_profile->add_identifier(collected_name);
+
+                    }
 
                 }
 
