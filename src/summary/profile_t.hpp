@@ -98,6 +98,10 @@ class profile_t {
                 if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), 1));
                 else                         ++itr->second;
 
+                std::map<versioned_string, size_t>::iterator itersect_itr = identifiers.find(ident_diff.get_diff());
+                if(itersect_itr == identifiers.end()) identifiers.insert(itersect_itr, std::make_pair(ident_diff.get_diff(), 1));
+                else                                  ++itersect_itr->second;
+
             }
 
         }
