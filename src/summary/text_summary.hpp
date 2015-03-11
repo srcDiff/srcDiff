@@ -526,7 +526,28 @@ public:
 
     }
 
-    std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & body(std::ostream & out, const std::map<versioned_string, std::set<versioned_string>> & identifiers, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+
+        for(std::pair<versioned_string, std::set<versioned_string>> identifier : identifiers) {
+
+            if(identifier.second.size() <= 1) continue;
+
+            profile_t::begin_line(out) << "the identifier '";
+
+            if(identifier.first.has_original()) out << identifier.first.original() << "' ";
+
+            if(identifier.first.has_original() && identifier.first.has_modified()) out << " was replaced with '";
+
+            if(identifier.first.has_modified()) out << identifier.first.modified() << "' ";
+
+            if(identifier.first.has_original() && !identifier.first.has_modified())
+                out << "was removed ";
+            else if(!identifier.first.has_original() && identifier.first.has_modified())
+                out << "was added ";
+
+            out << "in several places\n";
+
+        }
 
         for(size_t profile_pos : child_profiles) {
 

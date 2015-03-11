@@ -35,6 +35,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
         change_entity_map<parameter_profile_t> parameters;
         change_entity_map<call_profile_t>      member_initializations;
 
+        // probably want these on conditions and insersection on way up.
         std::map<versioned_string, std::set<versioned_string>> identifiers;
 
     private:
@@ -195,7 +196,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             // body summary
             if(is_summary_type(summary_types, summary_type::TEXT))
-                text.body(out, profile_list);
+                text.body(out, identifiers, profile_list);
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) {
 
