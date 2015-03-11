@@ -17,6 +17,7 @@
 #include <functional>
 #include <algorithm>
 #include <utility>
+#include <cctype>
 
 class function_profile_t : public profile_t, public conditionals_addon {
 
@@ -34,6 +35,35 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         std::map<versioned_string, size_t> identifiers;
 
+
+    private:
+
+        bool is_identifier_char(char character) const {
+
+            return character == '_' || isalnum(character);
+
+        }
+
+        std::vector<std::string> split_complex_identifier(const std::string & identifier) const {
+
+            std::vector<std::string> split_identifiers;
+            for(std::string::size_type pos = 0; pos < identifier.size(); ++pos) {
+
+                std::string::size_type start_pos = pos;
+                bool is_identifier_character = is_identifier_char(identifier[start_pos]);
+                while(pos < identifier.size() && is_identifier_char(identifier[pos]) == is_identifier_character)
+                    ++pos;
+
+                if(pos == identifier.size()) break;
+
+                split_identifiers.push_back(identifier.substr(start_pos, pos - start_pos));
+
+            }
+
+            return split_identifiers;
+
+        }
+
     public:
 
         function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id), conditionals_addon() {}
@@ -47,10 +77,45 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         virtual void add_identifier(const versioned_string & identifier) {
 
-            std::map<versioned_string, size_t>::iterator itr = identifiers.find(identifier);
-            if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(identifier, 1));
-            else                         ++itr->second;
+            if(identifier.has_original() && identifier.has_modified() && !identifier.is_common()) {
 
+                std::vector<std::string> original_identifiers = split_complex_identifier(identifier.original());
+                std::vector<std::string> modified_identifiers = split_complex_identifier(identifier.modified());
+
+                size_t pos = 0;
+                std::string::size_type start_pos = 0;
+                while(pos < original_identifiers.size() && pos < modified_identifiers.size() && original_identifiers[pos] == modified_identifiers[pos]) {
+
+                    start_pos += original_identifiers[pos].size();
+                    ++pos;
+
+                }
+
+                size_t end_offset = 1;
+                std::string::size_type end_original = identifier.original().size(), end_modified = identifier.modified().size();
+                while(end_offset <= original_identifiers.size() && end_offset <= modified_identifiers.size()
+                      && original_identifiers[original_identifiers.size() - end_offset] == modified_identifiers[modified_identifiers.size() - end_offset]) {
+
+                    end_original -= original_identifiers[original_identifiers.size() - end_offset].size();
+                    end_modified -= modified_identifiers[modified_identifiers.size() - end_offset].size();
+                    ++end_offset;
+
+                }
+
+                versioned_string ident;
+
+                if(start_pos < end_original) ident.set_original(identifier.original().substr(start_pos, end_original = start_pos));
+                if(start_pos < end_modified) ident.set_modified(identifier.modified().substr(start_pos, end_modified = start_pos));
+
+                std::cerr << ident << '\n';
+
+            } else {
+
+                std::map<versioned_string, size_t>::iterator itr = identifiers.find(identifier);
+                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(identifier, 1));
+                else                         ++itr->second;
+
+            }
 
         }
 
