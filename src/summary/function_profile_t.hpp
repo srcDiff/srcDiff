@@ -13,6 +13,7 @@
 #include <text_summary.hpp>
 
 #include <map>
+#include <set>
 #include <iomanip>
 #include <functional>
 #include <algorithm>
@@ -33,8 +34,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
         change_entity_map<parameter_profile_t> parameters;
         change_entity_map<call_profile_t>      member_initializations;
 
-        std::map<versioned_string, size_t> identifiers;
-
+        std::map<versioned_string, std::set<versioned_string>> identifiers;
 
     private:
 
@@ -107,11 +107,9 @@ class function_profile_t : public profile_t, public conditionals_addon {
                 if(start_pos < end_original) ident.set_original(identifier.original().substr(start_pos, end_original - start_pos));
                 if(start_pos < end_modified) ident.set_modified(identifier.modified().substr(start_pos, end_modified - start_pos));
 
-            } else {
-
-                std::map<versioned_string, size_t>::iterator itr = identifiers.find(identifier);
-                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(identifier, 1));
-                else                         ++itr->second;
+                std::map<versioned_string, std::set<versioned_string>>::iterator itr = identifiers.find(ident);
+                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(ident, std::set<versioned_string>{ identifier }));
+                else                         itr->second.insert(identifier);
 
             }
 
