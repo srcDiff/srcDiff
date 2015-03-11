@@ -54,9 +54,9 @@ class function_profile_t : public profile_t, public conditionals_addon {
                 while(pos < identifier.size() && is_identifier_char(identifier[pos]) == is_identifier_character)
                     ++pos;
 
-                if(pos == identifier.size()) break;
-
                 split_identifiers.push_back(identifier.substr(start_pos, pos - start_pos));
+
+                --pos;
 
             }
 
@@ -104,10 +104,8 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
                 versioned_string ident;
 
-                if(start_pos < end_original) ident.set_original(identifier.original().substr(start_pos, end_original = start_pos));
-                if(start_pos < end_modified) ident.set_modified(identifier.modified().substr(start_pos, end_modified = start_pos));
-
-                std::cerr << ident << '\n';
+                if(start_pos < end_original) ident.set_original(identifier.original().substr(start_pos, end_original - start_pos));
+                if(start_pos < end_modified) ident.set_modified(identifier.modified().substr(start_pos, end_modified - start_pos));
 
             } else {
 
