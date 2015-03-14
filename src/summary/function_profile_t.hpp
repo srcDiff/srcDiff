@@ -139,7 +139,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             }
 
-            text_summary text(id, child_profiles, parameters, member_initializations);
+            text_summary text(id, child_profiles, parameters, member_initializations, identifiers, intersecting_identifiers);
 
             // function signature
             if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
@@ -175,7 +175,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
             // body summary
             if(is_summary_type(summary_types, summary_type::TEXT))
-                text.body(out, identifiers, profile_list);
+                text.body(out, profile_list);
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) {
 

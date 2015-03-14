@@ -766,7 +766,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-
         }
 
     }

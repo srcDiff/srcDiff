@@ -45,6 +45,12 @@ public:
 
 	identifier_diff(const versioned_string & identifier) : identifier(identifier) {}
 
+    bool has_diff() const {
+
+        return bool(diff);
+
+    }
+
 	const versioned_string & get_diff() const {
 
 		assert(diff);

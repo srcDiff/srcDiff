@@ -5,6 +5,7 @@
 #include <conditional_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
 #include <call_profile_t.hpp>
+#include <identifier_diff.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -28,11 +29,17 @@ protected:
         const change_entity_map<parameter_profile_t> & parameters;
         const change_entity_map<call_profile_t>      & member_initializations;
 
+        const std::map<versioned_string, size_t> & identifiers;
+        const std::map<versioned_string, size_t> & intersecting_identifiers;
 public:
 
+
     text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
-                 const change_entity_map<call_profile_t> & member_initializations)
-        : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations) {}
+                 const change_entity_map<call_profile_t> & member_initializations,
+                 const std::map<versioned_string, size_t> & identifiers, 
+                 const std::map<versioned_string, size_t> & intersecting_identifiers)
+        : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
+          identifiers(identifiers), intersecting_identifiers(intersecting_identifiers) {}
 
     std::ostream & parameter(std::ostream & out, size_t number_parameters_deleted,
                                           size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -301,6 +308,17 @@ public:
 
         } else {
 
+            // there is probably a better way
+            std::map<versioned_string, size_t> diff_set;
+            std::set_difference(intersecting_identifiers.begin(), intersecting_identifiers.end(),
+                                profile->identifiers.begin(), profile->identifiers.end(),
+                                std::inserter(diff_set, diff_set.begin()));
+
+            std::map<versioned_string, size_t> new_set;
+            std::set_difference(profile->identifiers.begin(), profile->identifiers.end(),
+                                diff_set.begin(), diff_set.end(),
+                                std::inserter(new_set, new_set.begin()));
+
             size_t number_calls = 0;
             size_t number_renames = 0;
             size_t number_argument_list_modified = 0;
@@ -312,10 +330,18 @@ public:
 
                     const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
+                    if(!call_profile->name.is_common()) {
+
+                        identifier_diff ident_diff(call_profile->name);
+                        ident_diff.compute_diff();
+
+                        if(!new_set.count(ident_diff.get_diff())) continue;
+
+                    }
+
                     ++number_calls;
                     if(!call_profile->name.is_common())      ++number_renames;
                     if(call_profile->argument_list_modified) ++number_argument_list_modified;
-
 
                 }
 
@@ -509,26 +535,9 @@ public:
         This should probably be collected part of function_profile_t in set or map when parsing.
 
     */
-    std::set<versioned_string> analyze_body(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
-        std::map<versioned_string, size_t> change_count;
-
-        for(size_t profile_pos : profile->child_profiles) {
-
-            const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
-
-            if(is_expr_stmt(profile->type_name))
-                ;
-
-        }
-
-        return std::set<versioned_string>();
-
-    }
-
-    std::ostream & body(std::ostream & out, const std::map<versioned_string, size_t> & identifiers, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
-
-        for(std::pair<versioned_string, size_t> identifier : identifiers) {
+        for(std::pair<versioned_string, size_t> identifier : intersecting_identifiers) {
 
             if(identifier.second <= 1) continue;
 
