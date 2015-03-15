@@ -5,7 +5,10 @@
 #include <conditional_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
 #include <call_profile_t.hpp>
+#include <parameter_profile_t.hpp>
+#include <if_profile_t.hpp>
 #include <identifier_diff.hpp>
+#include <change_entity_map.hpp>
 
 #include <cstdlib>
 #include <iostream>
