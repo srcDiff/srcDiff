@@ -583,6 +583,8 @@ public:
                     conditional(out, child_profile, profile_list);
                 else if(is_expr_stmt(child_profile->type_name))
                     expr_stmt(out, child_profile, profile_list);
+                else if(is_decl_stmt(child_profile->type_name))
+                    decl_stmt(out, child_profile, profile_list);
 
                 --profile_t::depth;
 
