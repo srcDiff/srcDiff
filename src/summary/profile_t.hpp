@@ -58,7 +58,6 @@ class profile_t {
         std::vector<size_t> child_profiles;
         std::vector<size_t> descendant_profiles;      
 
-        // probably want these on conditions and insersection on way up.
         std::map<versioned_string, size_t> identifiers;
         std::map<versioned_string, size_t> intersecting_identifiers;
 

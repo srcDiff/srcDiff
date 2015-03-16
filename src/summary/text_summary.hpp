@@ -241,6 +241,63 @@ public:
 
     }
 
+    void modified_call(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list, const std::map<versioned_string, size_t> & identifier_set,
+              size_t number_calls, size_t number_renames, size_t number_argument_list_modified) const {
+
+            // there is probably a better way
+            for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
+
+                const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+
+                if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
+
+                    const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
+
+                    bool report_name = !call_profile->name.is_common();
+                    if(report_name) {
+
+                        identifier_diff ident_diff(call_profile->name);
+                        ident_diff.compute_diff();
+
+                        if(!identifier_set.count(ident_diff.get_diff())) report_name = false;
+
+                    }
+
+                    bool report_argument_list = call_profile->argument_list_modified;
+                    if(report_argument_list) {
+
+                        size_t number_arguments_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
+                        size_t number_arguments_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
+
+                        size_t number_arguments_modified = 0;
+                        std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
+                            [&number_arguments_modified](const typename change_entity_map<profile_t>::pair & pair)
+                                {
+
+                                    if(pair.second->syntax_count) {
+
+
+                                        ++number_arguments_modified; 
+
+                                    }
+
+
+                                });
+
+                    }
+
+                    if(!report_name && !report_argument_list) continue;
+
+                    ++number_calls;
+                    if(report_name)          ++number_renames;
+                    if(report_argument_list) ++number_argument_list_modified;
+
+                }
+
+             }
+
+    }
+
     std::ostream & expr_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
@@ -313,7 +370,6 @@ public:
 
         } else {
 
-            // there is probably a better way
             std::map<versioned_string, size_t> diff_set;
             std::set_difference(intersecting_identifiers.begin(), intersecting_identifiers.end(),
                                 profile->identifiers.begin(), profile->identifiers.end(),
@@ -324,57 +380,10 @@ public:
                                 diff_set.begin(), diff_set.end(),
                                 std::inserter(new_set, new_set.begin()));
 
-            size_t number_calls = 0;
-            size_t number_renames = 0;
-            size_t number_argument_list_modified = 0;
-            for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
+            size_t number_calls = 0, number_renames = 0, number_argument_list_modified = 0;
+            modified_call(profile, profile_list, new_set, number_calls, number_renames, number_argument_list_modified);
 
-                const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
-
-                if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
-
-                    const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
-
-                    if(!call_profile->name.is_common()) {
-
-                        identifier_diff ident_diff(call_profile->name);
-                        ident_diff.compute_diff();
-
-                        if(!new_set.count(ident_diff.get_diff())) continue;
-
-                    }
-
-                    if(call_profile->argument_list_modified) {
-
-                        size_t number_arguments_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
-                        size_t number_arguments_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
-
-                        size_t number_arguments_modified = 0;
-                        std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
-                            [&number_arguments_modified](const typename change_entity_map<profile_t>::pair & pair)
-                                {
-
-                                    if(pair.second->syntax_count) {
-
-
-                                        ++number_arguments_modified; 
-
-                                    }
-
-
-                                });
-
-                    }
-
-                    ++number_calls;
-                    if(!call_profile->name.is_common())      ++number_renames;
-                    if(call_profile->argument_list_modified) ++number_argument_list_modified;
-
-                }
-
-             }
-
-             if(number_calls == 0) return out;
+            if(number_calls == 0) return out;
 
             profile_t::begin_line(out);
             if(number_renames && number_argument_list_modified) {
