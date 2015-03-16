@@ -1,0 +1,314 @@
+### Test 1 ###
+ORIGINAL
+void f() {
+
+	if(1) {}
+
+}
+END_ORIGINAL
+
+MODIFIED
+void f() {
+
+	if(2) {}
+
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'f': Impact = Medium
+	• the condition of a guard clause was modified
+		• the condition was changed from '1' to '2'
+
+END_SUMMARY
+
+### Test 2 ###
+ORIGINAL
+void TextTool::repaintSelection(int startPosition, int endPosition)
+{
+    if (startPosition > endPosition)
+        qSwap(startPosition, endPosition);
+    QList<TextShape *> shapes;
+    KoTextDocumentLayout *lay = dynamic_cast<KoTextDocumentLayout*>(m_textShapeData->document()->documentLayout());
+    Q_ASSERT(lay);
+    foreach(KoShape* shape, lay->shapes()) {
+        TextShape *textShape = dynamic_cast<TextShape*>(shape);
+        Q_ASSERT(textShape);
+
+        const int from = textShape->textShapeData()->position();
+        const int end = textShape->textShapeData()->endPosition();
+        if ((from <= startPosition && end >= startPosition && end <= endPosition)
+            || (from >= startPosition && end <= endPosition) // shape totally included
+            || (from <= endPosition && end >= endPosition)
+            )
+            shapes.append(textShape);
+    }
+
+    // loop over all shapes that contain the text and update per shape.
+    QRectF repaintRect = textRect(startPosition, endPosition);
+    foreach(TextShape *ts, shapes) {
+        QRectF rect = repaintRect;
+        rect.moveTop(rect.y() - ts->textShapeData()->documentOffset());
+        rect = ts->absoluteTransformation(0).mapRect(rect);
+        m_canvas->updateCanvas(ts->boundingRect().intersected(rect));
+    }
+}
+END_ORIGINAL
+
+MODIFIED
+void TextTool::repaintSelection(int startPosition, int endPosition)
+{
+    if (startPosition == endPosition)
+        return;
+    if (startPosition > endPosition)
+        qSwap(startPosition, endPosition);
+    QList<TextShape *> shapes;
+    KoTextDocumentLayout *lay = dynamic_cast<KoTextDocumentLayout*>(m_textShapeData->document()->documentLayout());
+    Q_ASSERT(lay);
+    foreach(KoShape* shape, lay->shapes()) {
+        TextShape *textShape = dynamic_cast<TextShape*>(shape);
+        if (textShape == 0) // when the shape is being deleted its no longer a TextShape but a KoShape
+            continue;
+
+        const int from = textShape->textShapeData()->position();
+        const int end = textShape->textShapeData()->endPosition();
+        if ((from <= startPosition && end >= startPosition && end <= endPosition)
+            || (from >= startPosition && end <= endPosition) // shape totally included
+            || (from <= endPosition && end >= endPosition)
+            )
+            shapes.append(textShape);
+    }
+
+    // loop over all shapes that contain the text and update per shape.
+    QRectF repaintRect = textRect(startPosition, endPosition);
+    foreach(TextShape *ts, shapes) {
+        QRectF rect = repaintRect;
+        rect.moveTop(rect.y() - ts->textShapeData()->documentOffset());
+        rect = ts->absoluteTransformation(0).mapRect(rect);
+        m_canvas->updateCanvas(ts->boundingRect().intersected(rect));
+    }
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'TextTool::repaintSelection': Impact = High
+	• a guard clause was added to the function body
+	• the body of a foreach statement was modified
+	  this modification included:
+		• an expr_stmt was replaced with a if
+
+END_SUMMARY
+
+### Test 3 ###
+ORIGINAL
+QWidget * KoZoomAction::createWidget( QWidget * _parent )
+{
+    // create the custom widget only if we add the action to the status bar
+    if( ! qobject_cast<QStatusBar*>(_parent) )
+        return KSelectAction::createWidget(_parent);
+
+    QWidget * group = new QWidget(_parent);
+    QHBoxLayout *layout = new QHBoxLayout(group);
+    layout->setSizeConstraint(QLayout::SetFixedSize);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    // this is wrong; createWidget() implies this is a factory method, so we should be able to be called
+    // multiple times without problems.  The 'new' here means we can't do that.
+    // TODO refactor this method to use connections instead of d-pointer members to communicate so it becomes reentrant.
+    d->input = new KoZoomInput(group);
+    regenerateItems( d->effectiveZoom, true );
+    connect(d->input, SIGNAL(zoomLevelChanged(const QString&)), this, SLOT(triggered(const QString&)));
+    layout->addWidget(d->input);
+
+    d->slider = new QSlider(Qt::Horizontal);
+    d->slider->setToolTip(i18n("Zoom"));
+    d->slider->setMinimum(0);
+    d->slider->setMaximum(32);
+    d->slider->setValue(16);
+    d->slider->setSingleStep(1);
+    d->slider->setPageStep(1);
+    d->slider->setMinimumWidth(80);
+    d->slider->setMaximumWidth(80);
+    layout->addWidget(d->slider);
+
+    if (d->specialButtons & AspectMode) {
+        QToolButton * aspectButton = new QToolButton(group);
+        aspectButton->setIcon(KIcon("zoom-pixels").pixmap(22));
+        aspectButton->setCheckable(true);
+        aspectButton->setChecked(true);
+        aspectButton->setAutoRaise(true);
+        aspectButton->setToolTip(i18n("Use same aspect as pixels"));
+        connect(aspectButton, SIGNAL(toggled(bool)), this, SIGNAL(aspectModeChanged(bool)));
+        layout->addWidget(aspectButton);
+    }
+    if (d->specialButtons & ZoomToSelection) {
+        QToolButton * zoomToSelectionButton = new QToolButton(group);
+        zoomToSelectionButton->setIcon(KIcon("zoom-selection").pixmap(22));
+        zoomToSelectionButton->setAutoRaise(true);
+        zoomToSelectionButton->setToolTip(i18n("Zoom to Selection"));
+        connect(zoomToSelectionButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToSelection()));
+        layout->addWidget(zoomToSelectionButton);
+    }
+    if (d->specialButtons & ZoomToAll) {
+        QToolButton * zoomToAllButton = new QToolButton(group);
+        zoomToAllButton->setIcon(KIcon("zoom-all").pixmap(22));
+        zoomToAllButton->setAutoRaise(true);
+        zoomToAllButton->setToolTip(i18n("Zoom to All"));
+        connect(zoomToAllButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToAll()));
+        layout->addWidget(zoomToAllButton);
+    }
+
+    connect(d->slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+
+    return group;
+}
+END_ORIGINAL
+
+MODIFIED
+QWidget * KoZoomAction::createWidget( QWidget * _parent )
+{
+    // create the custom widget only if we add the action to the status bar
+    if( ! qobject_cast<QStatusBar*>(_parent) )
+        return KSelectAction::createWidget(_parent);
+
+    QWidget * group = new QWidget(_parent);
+    QHBoxLayout *layout = new QHBoxLayout(group);
+    layout->setSizeConstraint(QLayout::SetFixedSize);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    // this is wrong; createWidget() implies this is a factory method, so we should be able to be called
+    // multiple times without problems.  The 'new' here means we can't do that.
+    // TODO refactor this method to use connections instead of d-pointer members to communicate so it becomes reentrant.
+    d->input = new KoZoomInput(group);
+    regenerateItems( d->effectiveZoom, true );
+    connect(d->input, SIGNAL(zoomLevelChanged(const QString&)), this, SLOT(triggered(const QString&)));
+    layout->addWidget(d->input);
+
+    d->slider = new QSlider(Qt::Horizontal);
+    d->slider->setToolTip(i18n("Zoom"));
+    d->slider->setMinimum(0);
+    d->slider->setMaximum(32);
+    d->slider->setValue(16);
+    d->slider->setSingleStep(1);
+    d->slider->setPageStep(1);
+    d->slider->setMinimumWidth(80);
+    d->slider->setMaximumWidth(80);
+    layout->addWidget(d->slider);
+
+    if (d->specialButtons & AspectMode) {
+        d->aspectButton = new QToolButton(group);
+        d->aspectButton->setIcon(KIcon("zoom-pixels").pixmap(22));
+        d->aspectButton->setCheckable(true);
+        d->aspectButton->setChecked(true);
+        d->aspectButton->setAutoRaise(true);
+        d->aspectButton->setToolTip(i18n("Use same aspect as pixels"));
+        connect(d->aspectButton, SIGNAL(toggled(bool)), this, SIGNAL(aspectModeChanged(bool)));
+        layout->addWidget(d->aspectButton);
+    }
+    if (d->specialButtons & ZoomToSelection) {
+        QToolButton * zoomToSelectionButton = new QToolButton(group);
+        zoomToSelectionButton->setIcon(KIcon("zoom-selection").pixmap(22));
+        zoomToSelectionButton->setAutoRaise(true);
+        zoomToSelectionButton->setToolTip(i18n("Zoom to Selection"));
+        connect(zoomToSelectionButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToSelection()));
+        layout->addWidget(zoomToSelectionButton);
+    }
+    if (d->specialButtons & ZoomToAll) {
+        QToolButton * zoomToAllButton = new QToolButton(group);
+        zoomToAllButton->setIcon(KIcon("zoom-all").pixmap(22));
+        zoomToAllButton->setAutoRaise(true);
+        zoomToAllButton->setToolTip(i18n("Zoom to All"));
+        connect(zoomToAllButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToAll()));
+        layout->addWidget(zoomToAllButton);
+    }
+
+    connect(d->slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+
+    return group;
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'KoZoomAction::createWidget': Impact = Medium
+	• the identifier 'd->' was added in several places
+	• the body of an if statement was modified
+	  this modification included:
+		• a decl_stmt was replaced with an expr_stmt
+
+END_SUMMARY
+
+### Test 4 ###
+ORIGINAL
+void KoMainWindow::slotCloseAllViews()
+{
+    // Attention: Very touchy code... you know what you're doing? Goooood :)
+    d->forQuit = true;
+    if (queryClose()) {
+        // In case the document is embedded we close all open "extra-shells"
+        if (d->rootDoc && d->rootDoc->isEmbedded()) {
+            hide();
+            d->rootDoc->removeShell(this);
+            QList<KoMainWindow*> shells = d->rootDoc->shells();
+            while (!shells.isEmpty()) {
+                KoMainWindow* window = shells.takeFirst();
+                window->hide();
+                delete window;
+                d->rootDoc = 0;
+            }
+        }
+        // not embedded -> destroy the document and all shells/views ;)
+        else {
+            setRootDocument(0);
+        }
+        close();  // close this window (and quit the app if necessary)
+    }
+    d->forQuit = false;
+}
+END_ORIGINAL
+
+MODIFIED
+void KoMainWindow::slotCloseAllViews()
+{
+    d->forQuit = true;
+    if (queryClose()) {
+        hide();
+        d->rootDoc->removeShell(this);
+        QList<KoMainWindow*> shells = d->rootDoc->shells();
+        d->rootDoc = 0;
+        while (!shells.isEmpty()) {
+            KoMainWindow* window = shells.takeFirst();
+            window->hide();
+            delete window;
+        }
+        close();  // close this window (and quit the app if necessary)
+    }
+    d->forQuit = false;
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'KoMainWindow::slotCloseAllViews': Impact = High
+	• the body of an if statement was modified
+	  this modification included:
+		• an if statement was removed from around existing code and the existing code was then modified 
+		  this modification included:
+			• an assignment statement was added
+			• the body of a while statement was modified
+			  this modification included:
+				• an assignment statement was deleted
+
+END_SUMMARY

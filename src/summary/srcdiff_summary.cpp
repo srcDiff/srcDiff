@@ -649,6 +649,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     --parent_pos;
 
                 profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
+                profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
 
                 if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common()) {
 
@@ -785,6 +786,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     }
 
     if(!is_interchange) profile_stack.pop_back();
+
     uri_stack.pop_back();
 
 }

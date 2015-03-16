@@ -5,7 +5,7 @@ import subprocess
 import difflib
 
 source_dir = "suite"
-FILE_WIDTH = 10
+FILE_WIDTH = 24
 test_count = 1
 errors = []
 
@@ -21,7 +21,7 @@ def get_next_test(test_file) :
 	original = ""
 	line = test_file.readline()
 	while "END_ORIGINAL" not in line :
-		original = original + line
+		original += line
 		line = test_file.readline()
 
 	line = test_file.readline()
@@ -31,7 +31,7 @@ def get_next_test(test_file) :
 	modified = ""
 	line = test_file.readline()
 	while "END_MODIFIED" not in line :
-		modified = modified + line
+		modified += line
 		line = test_file.readline()
 
 	line = test_file.readline()
@@ -41,7 +41,7 @@ def get_next_test(test_file) :
 	summary = ""
 	line = test_file.readline()
 	while "END_SUMMARY" not in line :
-		summary = summary + line
+		summary += line
 		line = test_file.readline()
 
 	return original, modified, summary
@@ -71,9 +71,11 @@ def run_test(original, modified, summary) :
 
 	if diff != [] :
 		print "\033[0;31m" + str(globals()['test_count']) + "\033[0m",
-		globals['errors'].append(diff)
+		globals()['errors'].append(diff)
 	else :
 		print "\033[0;33m" + str(globals()['test_count']) + "\033[0m",
+
+	globals()['test_count'] += 1
 
  
 def run_test_file(file_name) :
@@ -90,12 +92,13 @@ def run_test_file(file_name) :
 
 	test_file.close()
 
+	print
+
 for root, dirs, files in os.walk(source_dir, topdown=True) :
 
 	for name in files :
 
 		run_test_file(name)
 
-
 for error in errors :
-	print diff[0], diff[1], "".join(diff[3:])
+	print error[0], error[1], "".join(error[3:])
