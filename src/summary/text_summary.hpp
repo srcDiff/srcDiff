@@ -251,6 +251,8 @@ public:
 
             out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
 
+            return out;
+
         }
 
         if(child_profiles.empty()) return out;
@@ -318,7 +320,7 @@ public:
                                 std::inserter(diff_set, diff_set.begin()));
 
             std::map<versioned_string, size_t> new_set;
-            std::set_difference(profile->identifiers.begin(), profile->identifiers.end(),
+            std::set_intersection(profile->identifiers.begin(), profile->identifiers.end(),
                                 diff_set.begin(), diff_set.end(),
                                 std::inserter(new_set, new_set.begin()));
 
@@ -339,6 +341,28 @@ public:
                         ident_diff.compute_diff();
 
                         if(!new_set.count(ident_diff.get_diff())) continue;
+
+                    }
+
+                    if(call_profile->argument_list_modified) {
+
+                        size_t number_arguments_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
+                        size_t number_arguments_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
+
+                        size_t number_arguments_modified = 0;
+                        std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
+                            [&number_arguments_modified](const typename change_entity_map<profile_t>::pair & pair)
+                                {
+
+                                    if(pair.second->syntax_count) {
+
+
+                                        ++number_arguments_modified; 
+
+                                    }
+
+
+                                });
 
                     }
 

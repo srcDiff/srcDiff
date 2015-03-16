@@ -18,7 +18,7 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_condition_type(type_name) || is_catch(type_name)                || is_decl_stmt(type_name)
     || is_call(type_name)           || is_preprocessor_special(type_name) || is_expr(type_name)
     || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name)
-    || is_specifier(type_name)      || is_expr_stmt(type_name);
+    || is_specifier(type_name)      || is_expr_stmt(type_name)            || is_argument(type_name);
 
 }
 
@@ -736,7 +736,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         counting_profile_pos.pop_back();
 
         // do not save items with no changes and not inserted/deleted
-        if(profile_stack.back()->total_count || srcdiff_stack.back().operation != SRCDIFF_COMMON)
+        if(profile_stack.back()->total_count
+            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().operation != profile_stack.at(profile_stack.size() - 2)->operation))
             update_anscestor_profile(profile_stack.back());
 
         if(has_body(full_name)) {
