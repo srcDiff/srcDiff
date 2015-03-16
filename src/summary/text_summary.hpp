@@ -271,13 +271,53 @@ public:
 
                         size_t number_arguments_modified = 0;
                         std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
-                            [&number_arguments_modified](const typename change_entity_map<profile_t>::pair & pair)
+                            [&, this](const typename change_entity_map<profile_t>::pair & pair)
                                 {
 
                                     if(pair.second->syntax_count) {
 
+                                        bool report_change = false;
+                                        for(size_t argument_child_pos : profile_list[pair.second->child_profiles[0]]->child_profiles) {
 
-                                        ++number_arguments_modified; 
+                                            const std::shared_ptr<profile_t> & argument_child_profile = profile_list[argument_child_pos];
+std::cerr << argument_child_profile->type_name << '\n';
+                                            if(argument_child_profile->operation != SRCDIFF_COMMON) { 
+
+                                                    report_change = true;
+                                                    break;
+
+                                            }
+
+                                            if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
+
+                                                size_t num_calls = 0, num_renames = 0, num_argument_list_modified = 0;
+                                                modified_call(argument_child_profile, profile_list, identifier_set, num_calls, num_renames, num_argument_list_modified);
+
+                                                if(num_calls || num_renames || number_argument_list_modified) {
+
+                                                    report_change = true;
+                                                    break;
+
+                                                }
+
+                                            } else {
+
+                                                if(argument_child_profile->type_name != "name") {
+
+                                                    report_change = true;
+                                                    break;
+
+                                                } else {
+
+                                                    /** @todo */
+
+                                                }
+
+                                            }
+
+                                        }
+
+                                        if(report_change) ++number_arguments_modified; 
 
                                     }
 
