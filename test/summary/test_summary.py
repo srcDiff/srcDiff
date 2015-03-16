@@ -6,7 +6,8 @@ import difflib
 
 source_dir = "suite"
 FILE_WIDTH = 24
-test_count = 1
+test_number = 1
+test_count = 0
 errors = []
 
 def get_next_test(test_file) :
@@ -70,18 +71,18 @@ def run_test(original, modified, summary) :
 	diff = list(difflib.unified_diff(output.splitlines(1), summary.splitlines(1)))
 
 	if diff != [] :
-		print "\033[0;31m" + str(globals()['test_count']) + "\033[0m",
+		print "\033[0;31m" + str(globals()['test_number']) + "\033[0m",
 		globals()['errors'].append(diff)
 	else :
-		print "\033[0;33m" + str(globals()['test_count']) + "\033[0m",
+		print "\033[0;33m" + str(globals()['test_number']) + "\033[0m",
 
+	globals()['test_number'] += 1
 	globals()['test_count'] += 1
-
  
 def run_test_file(file_name) :
 
 	print file_name.ljust(globals()['FILE_WIDTH']), " ",
-	globals()['test_count'] = 1
+	globals()['test_number'] = 1
 
 	test_file = open(os.path.join(globals()['source_dir'], file_name), "r");
 
@@ -100,5 +101,7 @@ for root, dirs, files in os.walk(source_dir, topdown=True) :
 
 		run_test_file(name)
 
+print
+print len(errors), "errors out of", test_count, "tests"
 for error in errors :
 	print error[0], error[1], "".join(error[3:])
