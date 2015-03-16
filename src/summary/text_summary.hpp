@@ -7,6 +7,7 @@
 #include <call_profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <if_profile_t.hpp>
+#include <identifier_profile_t.hpp>
 #include <identifier_diff.hpp>
 #include <change_entity_map.hpp>
 
@@ -242,7 +243,7 @@ public:
     }
 
     void modified_call(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list, const std::map<versioned_string, size_t> & identifier_set,
-              size_t number_calls, size_t number_renames, size_t number_argument_list_modified) const {
+              size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const {
 
             // there is probably a better way
             for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
@@ -280,7 +281,7 @@ public:
                                         for(size_t argument_child_pos : profile_list[pair.second->child_profiles[0]]->child_profiles) {
 
                                             const std::shared_ptr<profile_t> & argument_child_profile = profile_list[argument_child_pos];
-std::cerr << argument_child_profile->type_name << '\n';
+
                                             if(argument_child_profile->operation != SRCDIFF_COMMON) { 
 
                                                     report_change = true;
@@ -302,14 +303,25 @@ std::cerr << argument_child_profile->type_name << '\n';
 
                                             } else {
 
-                                                if(argument_child_profile->type_name != "name") {
+                                                if(!is_identifier(argument_child_profile->type_name)) {
 
                                                     report_change = true;
                                                     break;
 
                                                 } else {
 
-                                                    /** @todo */
+                                                    const std::shared_ptr<identifier_profile_t> & identifier_profile
+                                                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
+
+                                                    identifier_diff ident_diff(identifier_profile->name);
+                                                    ident_diff.compute_diff();
+
+                                                    if(identifier_set.count(ident_diff.get_diff())) {
+
+                                                        report_change = true;
+                                                        break;
+
+                                                    }
 
                                                 }
 
@@ -323,6 +335,9 @@ std::cerr << argument_child_profile->type_name << '\n';
 
 
                                 });
+
+                        if(number_arguments_deleted == 0 && number_arguments_inserted == 0 && number_arguments_modified == 0)
+                            report_argument_list = false;
 
                     }
 

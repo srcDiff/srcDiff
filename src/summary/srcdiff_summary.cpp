@@ -9,6 +9,7 @@
 #include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
+#include <identifier_profile_t.hpp>
 
 #include <cstring>
 
@@ -30,6 +31,7 @@ bool is_summary(const std::string & type_name) {
 
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) {
 
+    if(is_identifier(type_name))     return std::make_shared<identifier_profile_t> (type_name, uri, operation, parent_id);
     if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent_id);
     if(is_function_type(type_name))  return std::make_shared<function_profile_t>   (type_name, uri, operation, parent_id);
     if(is_parameter(type_name))      return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent_id);
@@ -469,7 +471,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         if(!is_interchange) ++srcdiff_stack.back().level;
 
-        if(!is_interchange && is_count(full_name)) {
+        if(!is_interchange && (is_count(full_name) || (is_identifier(full_name) && name_count == 1))) {
 
             bool summarize = is_summary(local_name);
             bool a_body    = has_body(local_name);
@@ -583,18 +585,18 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
 
 void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> & profile) {
 
-            if(profile_list.size() < profile->id)
-                profile_list.resize(profile->id * 2);
+    if(profile_list.size() < profile->id)
+        profile_list.resize(profile->id * 2);
 
-            profile_list[profile->id] = profile;
+    profile_list[profile->id] = profile;
 
-            size_t parent_pos = profile_stack.size() - 2;
-            while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
-                --parent_pos;
+    size_t parent_pos = profile_stack.size() - 2;
+    while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+        --parent_pos;
 
-            // should always have at least unit
-            profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile, profile_stack.at(parent_pos)->type_name);
-            profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant(profile, profile_stack.at(parent_pos)->type_name);
+    // should always have at least unit
+    profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile, profile_stack.at(parent_pos)->type_name);
+    profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant(profile, profile_stack.at(parent_pos)->type_name);
 
 }
 
@@ -731,13 +733,23 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
-    if(uri_stack.back() != SRCDIFF && !is_interchange && is_count(full_name)) {
+    if(is_identifier(full_name) && name_count == 0) {
+
+        std::shared_ptr<identifier_profile_t> & identifier_profile = reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back());
+
+
+        if(identifier_profile->operation != SRCDIFF_COMMON && identifier_profile->name.has_original() && identifier_profile->name.has_modified())
+            identifier_profile->operation = SRCDIFF_COMMON;
+
+    }
+
+    if(uri_stack.back() != SRCDIFF && !is_interchange && (is_count(full_name) || (is_identifier(full_name) && name_count == 0))) {
 
         counting_profile_pos.pop_back();
 
         // do not save items with no changes and not inserted/deleted
         if(profile_stack.back()->total_count
-            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().operation != profile_stack.at(profile_stack.size() - 2)->operation))
+            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0))
             update_anscestor_profile(profile_stack.back());
 
         if(has_body(full_name)) {
