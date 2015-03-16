@@ -561,7 +561,9 @@ public:
         }
 
         /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
-        for(size_t child_pos : profile->child_profiles) {
+        for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
+
+            size_t child_pos = profile->child_profiles[pos];
 
             const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
 
@@ -579,12 +581,28 @@ public:
 
                 ++profile_t::depth;
 
-                if(is_condition_type(child_profile->type_name))
-                    conditional(out, child_profile, profile_list);
-                else if(is_expr_stmt(child_profile->type_name))
-                    expr_stmt(out, child_profile, profile_list);
-                else if(is_decl_stmt(child_profile->type_name))
-                    decl_stmt(out, child_profile, profile_list);
+                if(child_profile->operation == SRCDIFF_REPLACE && ((pos + 1) < profile->child_profiles.size())) {
+
+                    profile_t::begin_line(out) << get_article(child_profile) << ' ' << child_profile->type_name;
+
+                    out << " was replaced with ";
+
+                    const std::shared_ptr<profile_t> & next_profile = profile_list[profile->child_profiles[pos + 1]];
+
+                    out << get_article(next_profile) << ' ' << next_profile->type_name << '\n';
+
+                    ++pos;
+
+                } else {
+
+                    if(is_condition_type(child_profile->type_name))
+                        conditional(out, child_profile, profile_list);
+                    else if(is_expr_stmt(child_profile->type_name))
+                        expr_stmt(out, child_profile, profile_list);
+                    else if(is_decl_stmt(child_profile->type_name))
+                        decl_stmt(out, child_profile, profile_list);
+
+                }
 
                 --profile_t::depth;
 

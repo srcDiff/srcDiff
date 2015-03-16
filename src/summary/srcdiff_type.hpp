@@ -6,6 +6,7 @@ enum srcdiff_type {
     SRCDIFF_COMMON,
     SRCDIFF_INSERT,
     SRCDIFF_DELETE,
+    SRCDIFF_REPLACE,
 
 };
 
