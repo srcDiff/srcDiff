@@ -498,7 +498,7 @@ public:
 
         const char letter = std::string(profile->type_name)[0];
 
-        if(letter == 'a' || letter == 'i' || letter == 'o' || letter == 'u')
+        if(letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u')
             return "an";
         else
             return "a";
