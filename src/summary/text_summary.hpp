@@ -75,7 +75,7 @@ private:
 
     }
 
-    std::ostream & summarize_replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos,
+    std::ostream & replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos,
                                          const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
         const std::shared_ptr<profile_t> & start_profile = profile_list[profile->child_profiles[pos]];
@@ -729,7 +729,7 @@ public:
 
                 if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
 
-                    summarize_replacement(out, profile, pos, profile_list);
+                    replacement(out, profile, pos, profile_list);
 
                 } else {
 
@@ -808,7 +808,7 @@ public:
 
             if(profile->is_replacement && ((pos + 1) < child_profiles.size())) {
 
-                summarize_replacement(out, profile_list[id], pos, profile_list);
+                replacement(out, profile_list[id], pos, profile_list);
 
             } else {
 
