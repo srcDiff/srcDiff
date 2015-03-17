@@ -669,7 +669,10 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
                     --parent_pos;
 
+                // set identifier_profile_t name
                 profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
+
+                // set name of identifiers parent profile
                 profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
 
                 if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common()) {
