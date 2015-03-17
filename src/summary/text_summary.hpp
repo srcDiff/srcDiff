@@ -75,6 +75,115 @@ private:
 
     }
 
+    std::ostream & summarize_replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos,
+                                         const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+
+        const std::shared_ptr<profile_t> & start_profile = profile_list[profile->child_profiles[pos]];
+
+        size_t expr_stmt_deleted  = 0, decl_stmt_deleted  = 0, conditionals_deleted  = 0;
+        size_t expr_stmt_inserted = 0, decl_stmt_inserted = 0, conditionals_inserted = 0; 
+        for(; pos < profile->child_profiles.size() && profile_list[profile->child_profiles[pos]]->is_replacement; ++pos) {
+
+            const std::shared_ptr<profile_t> & replacement_profile = profile_list[profile->child_profiles[pos]];                    
+
+            if(is_condition_type(replacement_profile->type_name)) {
+
+                if(replacement_profile->operation == SRCDIFF_DELETE) ++conditionals_deleted;
+                else                                                 ++conditionals_inserted;
+
+            } else if(is_expr_stmt(replacement_profile->type_name)) {
+
+                if(replacement_profile->operation == SRCDIFF_DELETE) ++expr_stmt_deleted;
+                else                                                 ++expr_stmt_inserted;
+
+            } else if(is_decl_stmt(replacement_profile->type_name)){
+
+                if(replacement_profile->operation == SRCDIFF_DELETE) ++decl_stmt_deleted;
+                else                                                 ++decl_stmt_inserted;
+
+            }
+
+
+        }
+
+        --pos;
+
+        profile_t::begin_line(out);
+        if((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted) == 1) {
+
+            out << get_article(start_profile) << ' ' << get_type_string(start_profile) << " was";
+
+        } else {
+
+            if(expr_stmt_deleted == 1)
+                out << "an expression statement";
+            else if(expr_stmt_deleted > 1)
+                out << "several expression statements";
+
+            if(expr_stmt_deleted && decl_stmt_deleted && conditionals_deleted)
+                out << ", ";
+            else if(expr_stmt_deleted && (decl_stmt_deleted || conditionals_deleted))
+                out << " and ";
+
+            if(decl_stmt_deleted == 1)
+                out << "a declaration statement";
+            else if(decl_stmt_deleted > 1)
+                out << "several declaration statements";
+
+            if(expr_stmt_deleted && decl_stmt_deleted && conditionals_deleted)
+                out << ", and ";
+            else if(expr_stmt_deleted == 0 && decl_stmt_deleted && conditionals_deleted)
+                out << " and ";
+
+            if(conditionals_deleted == 1)
+                out << "a declaration statement";
+            else if(conditionals_deleted > 1)
+                out << "several conditional statements";
+
+            out << " were";
+
+        }
+
+        out << " replaced with ";
+
+        if((expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 1) {
+     
+           const std::shared_ptr<profile_t> & next_profile = profile_list[profile->child_profiles[pos]];
+           out << get_article(next_profile) << ' ' << get_type_string(next_profile) << '\n';
+
+        } else {
+
+            if(expr_stmt_inserted == 1)
+                out << "an expression statement";
+            else if(expr_stmt_inserted > 1)
+                out << "several expression statements";
+
+            if(expr_stmt_inserted && decl_stmt_inserted && conditionals_inserted)
+                out << ", ";
+            else if(expr_stmt_inserted && (decl_stmt_inserted || conditionals_inserted))
+                out << " and ";
+
+            if(decl_stmt_inserted == 1)
+                out << "a declaration statement";
+            else if(decl_stmt_inserted > 1)
+                out << "several declaration statements";
+
+            if(expr_stmt_inserted && decl_stmt_inserted && conditionals_inserted)
+                out << ", and ";
+            else if(expr_stmt_inserted == 0 && decl_stmt_inserted && conditionals_inserted)
+                out << " and ";
+
+            if(conditionals_inserted == 1)
+                out << "a declaration statement";
+            else if(conditionals_inserted > 1)
+                out << "several conditional statements";
+
+        }
+
+        return out;
+
+    }
+
 public:
 
     text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
@@ -620,15 +729,7 @@ public:
 
                 if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
 
-                    profile_t::begin_line(out) << get_article(child_profile) << ' ' << get_type_string(child_profile);
-
-                    out << " was replaced with ";
-
-                    const std::shared_ptr<profile_t> & next_profile = profile_list[profile->child_profiles[pos + 1]];
-
-                    out << get_article(next_profile) << ' ' << get_type_string(next_profile) << '\n';
-
-                    ++pos;
+                    summarize_replacement(out, profile, pos, profile_list);
 
                 } else {
 
@@ -674,16 +775,7 @@ public:
 
     }
 
-    /** 
-        need to look if there was a common rename going on and report that
-        might want to have profiles for identifiers. Which have a versioned string for name.
-        Then have set_name take identifier_profile_t maybe, but probably not.  Then looking for renames,
-        would just recurse throught children looking for identifier profiles.
-
-        This should probably be collected part of function_profile_t in set or map when parsing.
-
-    */
-    std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+  std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
         for(std::pair<versioned_string, size_t> identifier : intersecting_identifiers) {
 
@@ -716,15 +808,7 @@ public:
 
             if(profile->is_replacement && ((pos + 1) < child_profiles.size())) {
 
-                profile_t::begin_line(out) << get_article(profile) << ' ' << get_type_string(profile);
-
-                out << " was replaced with ";
-
-                const std::shared_ptr<profile_t> & next_profile = profile_list[child_profiles[pos + 1]];
-
-                out << get_article(next_profile) << ' ' << get_type_string(next_profile) << '\n';
-
-                ++pos;
+                summarize_replacement(out, profile_list[id], pos, profile_list);
 
             } else {
 
