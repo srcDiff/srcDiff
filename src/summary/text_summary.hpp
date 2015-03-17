@@ -35,8 +35,47 @@ protected:
 
         const std::map<versioned_string, size_t> & identifiers;
         const std::map<versioned_string, size_t> & intersecting_identifiers;
-public:
 
+private:
+
+    std::string get_article(const std::shared_ptr<profile_t> & profile) const { 
+
+        const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+        if(is_guard_clause) return "a";
+
+        if(is_expr_stmt(profile->type_name)
+            && reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile)->get_delete())
+            return "a";
+
+        const char letter = std::string(profile->type_name)[0];
+
+        if(letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u')
+            return "an";
+        else
+            return "a";
+    }
+
+    std::string get_type_string(const std::shared_ptr<profile_t> & profile) const {
+
+        const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
+        if(is_guard_clause) return "guard clause";
+
+        if(is_decl_stmt(profile->type_name)) return "declaration statement";
+
+        if(is_expr_stmt(profile->type_name)) {
+
+            const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+            if(expr_stmt_profile->assignment()) return "assignment statement";
+            if(expr_stmt_profile->get_delete()) return "delete statement";
+            return "expression statement";
+
+        }
+
+        return profile->type_name + " statement";
+
+    }
+
+public:
 
     text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
@@ -491,22 +530,8 @@ public:
 
     }
 
-    std::string get_article(const std::shared_ptr<profile_t> & profile) const { 
-
-        const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-        if(is_guard_clause) return "a";
-
-        const char letter = std::string(profile->type_name)[0];
-
-        if(letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u')
-            return "an";
-        else
-            return "a";
-    }
-
     std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
-        const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
         const bool has_common = profile->common_profiles.size() > 0;
 
         const bool condition_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_condition_modified();
@@ -529,10 +554,7 @@ public:
         }
 
         out << get_article(profile) << ' ';
-
-        if(is_guard_clause) out << "guard clause was ";
-        else                out << profile->type_name << " statement was ";
-
+        out << get_type_string(profile) << " was ";
 
         if(profile->operation != SRCDIFF_COMMON)
              out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
@@ -549,30 +571,8 @@ public:
             if(profile->common_profiles.size() == 1) {
 
                 const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
-
-                if(is_expr_stmt(common_profile->type_name)) {
-
-                    const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(common_profile);
-                    if(expr_stmt_profile->assignment()) {
-
-                        out << "an ";
-                        common_summary = "assignment statement";
-
-                    } else if(expr_stmt_profile->get_delete()) {
-
-                        out << "a ";
-                        common_summary = "delete statement";
-
-                    }
-
-                } else {
-
-                    const bool is_common_guard_clause = common_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(common_profile)->is_guard() : false;
-                    out <<  get_article(common_profile) << ' ';
-                    if(is_common_guard_clause) common_summary = "guard clause";
-                    else                       common_summary = common_profile->type_name + " statement";
-
-                }
+                out <<  get_article(common_profile) << ' ';
+                common_summary = get_type_string(common_profile);
 
             } else {
 
