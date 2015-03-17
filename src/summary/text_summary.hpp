@@ -406,7 +406,7 @@ public:
 
         }
 
-        if(child_profiles.empty()) return out;
+        if(profile->child_profiles.empty()) return out;
 
         // this needs flushed out
         if(profile->operation != SRCDIFF_COMMON) {
