@@ -75,6 +75,11 @@ private:
 
     }
 
+    /**
+     * @todo
+     * Should have assignment, and delete also summarized specially.  May also want to do conditionals separate as well.
+     * Consider adding is_call to expressions to check if a single call or sequence of calls.
+     */
     std::ostream & replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos,
                                          const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
