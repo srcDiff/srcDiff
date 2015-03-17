@@ -68,6 +68,9 @@ def run_test(original, modified, summary) :
 			sperrorlist.append((command, inp, errornum, strerror))
 			raise
 
+	os.remove("original.cpp")
+	os.remove("modified.cpp")
+
 	diff = list(difflib.unified_diff(output.splitlines(1), summary.splitlines(1)))
 
 	if diff != [] :
