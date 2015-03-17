@@ -81,6 +81,8 @@ private:
      * Consider adding is_call to expressions to check if a single call or sequence of calls.
      *
      * Also, this may only be wanted at statement level.  Think causing a bug when not. Anyway bug with slotLoadingFinished I think.
+     *
+     * Also want to know when code replaced with comment so report commented out.
      */
     std::ostream & replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos,
                                          const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
