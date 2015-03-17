@@ -10,6 +10,7 @@
 #include <if_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
 #include <identifier_profile_t.hpp>
+#include <expr_profile_t.hpp>
 
 #include <cstring>
 
@@ -40,6 +41,7 @@ std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace
     if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent_id);
     if(is_call(type_name))           return std::make_shared<call_profile_t>       (type_name, uri, operation, parent_id);
     if(is_expr_stmt(type_name))      return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent_id);
+    if(is_expr(type_name))           return std::make_shared<expr_profile_t>       (type_name, uri, operation, parent_id);
     return std::make_shared<profile_t>                                             (type_name, uri, operation, parent_id);
 
 }
@@ -51,7 +53,14 @@ void srcdiff_summary::process_characters() {
     if(expr_stmt_pos > 0 && profile_stack.back()->type_name.first_active_string() == "operator"
         && text[0] == '=' && (text.size() == 1 || text.back() != '=')) {
 
-        reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_assignment(true);
+        size_t expr_pos = profile_stack.size() - 2;
+        while(!is_expr(profile_stack.at(expr_pos)->type_name))
+            --expr_pos;
+
+        reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_assignment(true);
+
+        if((expr_pos - 1) == expr_stmt_pos)
+            reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_assignment(true);
 
     }
 
