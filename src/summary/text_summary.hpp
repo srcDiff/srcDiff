@@ -396,9 +396,9 @@ public:
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-        if(expr_stmt_profile->assignment()) {
+        if(expr_stmt_profile->assignment() || expr_stmt_profile->get_delete()) {
     
-            profile_t::begin_line(out) << "an assignment statement was ";
+            profile_t::begin_line(out) << get_article(profile) << ' ' << get_type_string(profile) << " was ";
 
             out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
 
