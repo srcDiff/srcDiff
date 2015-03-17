@@ -507,7 +507,7 @@ public:
     std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
         const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-        const bool has_common = profile->has_common;
+        const bool has_common = profile->common_profiles.size() > 0;
 
         const bool condition_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_condition_modified();
         const bool body_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_body_modified();
@@ -541,11 +541,48 @@ public:
         if(profile->operation != SRCDIFF_COMMON && has_common) {
 
             if(profile->operation == SRCDIFF_DELETE)
-                out << " from around existing code ";
+                out << " from around ";
             else
-                out << " around existing code ";
+                out << " around ";
+
+            std::string common_summary;
+            if(profile->common_profiles.size() == 1) {
+
+                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
+
+                if(is_expr_stmt(common_profile->type_name)) {
+
+                    const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(common_profile);
+                    if(expr_stmt_profile->assignment()) {
+
+                        out << "an ";
+                        common_summary = "assignment statement";
+
+                    } else if(expr_stmt_profile->get_delete()) {
+
+                        out << "a ";
+                        common_summary = "delete statement";
+
+                    }
+
+                } else {
+
+                    const bool is_common_guard_clause = common_profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(common_profile)->is_guard() : false;
+                    out <<  get_article(common_profile) << ' ';
+                    if(is_common_guard_clause) common_summary = "guard clause";
+                    else                       common_summary = common_profile->type_name + " statement";
+
+                }
+
+            } else {
+
+                common_summary = "existing code";
+
+            }
+
+            out << common_summary << ' ';
             
-            if(profile->total_count != 0)  out << "and the existing code was then modified ";
+            if(profile->total_count != 0)  out << "and the " << common_summary << " was then modified ";
 
         }
 

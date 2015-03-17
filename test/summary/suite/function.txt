@@ -1,131 +1,131 @@
-### Test 3 ###
+### Test 1 ###
 ORIGINAL
 QWidget * KoZoomAction::createWidget( QWidget * _parent )
 {
-    // create the custom widget only if we add the action to the status bar
-    if( ! qobject_cast<QStatusBar*>(_parent) )
-        return KSelectAction::createWidget(_parent);
+	// create the custom widget only if we add the action to the status bar
+	if( ! qobject_cast<QStatusBar*>(_parent) )
+		return KSelectAction::createWidget(_parent);
 
-    QWidget * group = new QWidget(_parent);
-    QHBoxLayout *layout = new QHBoxLayout(group);
-    layout->setSizeConstraint(QLayout::SetFixedSize);
-    layout->setMargin(0);
-    layout->setSpacing(0);
+	QWidget * group = new QWidget(_parent);
+	QHBoxLayout *layout = new QHBoxLayout(group);
+	layout->setSizeConstraint(QLayout::SetFixedSize);
+	layout->setMargin(0);
+	layout->setSpacing(0);
 
-    // this is wrong; createWidget() implies this is a factory method, so we should be able to be called
-    // multiple times without problems.  The 'new' here means we can't do that.
-    // TODO refactor this method to use connections instead of d-pointer members to communicate so it becomes reentrant.
-    d->input = new KoZoomInput(group);
-    regenerateItems( d->effectiveZoom, true );
-    connect(d->input, SIGNAL(zoomLevelChanged(const QString&)), this, SLOT(triggered(const QString&)));
-    layout->addWidget(d->input);
+	// this is wrong; createWidget() implies this is a factory method, so we should be able to be called
+	// multiple times without problems.  The 'new' here means we can't do that.
+	// TODO refactor this method to use connections instead of d-pointer members to communicate so it becomes reentrant.
+	d->input = new KoZoomInput(group);
+	regenerateItems( d->effectiveZoom, true );
+	connect(d->input, SIGNAL(zoomLevelChanged(const QString&)), this, SLOT(triggered(const QString&)));
+	layout->addWidget(d->input);
 
-    d->slider = new QSlider(Qt::Horizontal);
-    d->slider->setToolTip(i18n("Zoom"));
-    d->slider->setMinimum(0);
-    d->slider->setMaximum(32);
-    d->slider->setValue(16);
-    d->slider->setSingleStep(1);
-    d->slider->setPageStep(1);
-    d->slider->setMinimumWidth(80);
-    d->slider->setMaximumWidth(80);
-    layout->addWidget(d->slider);
+	d->slider = new QSlider(Qt::Horizontal);
+	d->slider->setToolTip(i18n("Zoom"));
+	d->slider->setMinimum(0);
+	d->slider->setMaximum(32);
+	d->slider->setValue(16);
+	d->slider->setSingleStep(1);
+	d->slider->setPageStep(1);
+	d->slider->setMinimumWidth(80);
+	d->slider->setMaximumWidth(80);
+	layout->addWidget(d->slider);
 
-    if (d->specialButtons & AspectMode) {
-        QToolButton * aspectButton = new QToolButton(group);
-        aspectButton->setIcon(KIcon("zoom-pixels").pixmap(22));
-        aspectButton->setCheckable(true);
-        aspectButton->setChecked(true);
-        aspectButton->setAutoRaise(true);
-        aspectButton->setToolTip(i18n("Use same aspect as pixels"));
-        connect(aspectButton, SIGNAL(toggled(bool)), this, SIGNAL(aspectModeChanged(bool)));
-        layout->addWidget(aspectButton);
-    }
-    if (d->specialButtons & ZoomToSelection) {
-        QToolButton * zoomToSelectionButton = new QToolButton(group);
-        zoomToSelectionButton->setIcon(KIcon("zoom-selection").pixmap(22));
-        zoomToSelectionButton->setAutoRaise(true);
-        zoomToSelectionButton->setToolTip(i18n("Zoom to Selection"));
-        connect(zoomToSelectionButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToSelection()));
-        layout->addWidget(zoomToSelectionButton);
-    }
-    if (d->specialButtons & ZoomToAll) {
-        QToolButton * zoomToAllButton = new QToolButton(group);
-        zoomToAllButton->setIcon(KIcon("zoom-all").pixmap(22));
-        zoomToAllButton->setAutoRaise(true);
-        zoomToAllButton->setToolTip(i18n("Zoom to All"));
-        connect(zoomToAllButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToAll()));
-        layout->addWidget(zoomToAllButton);
-    }
+	if (d->specialButtons & AspectMode) {
+		QToolButton * aspectButton = new QToolButton(group);
+		aspectButton->setIcon(KIcon("zoom-pixels").pixmap(22));
+		aspectButton->setCheckable(true);
+		aspectButton->setChecked(true);
+		aspectButton->setAutoRaise(true);
+		aspectButton->setToolTip(i18n("Use same aspect as pixels"));
+		connect(aspectButton, SIGNAL(toggled(bool)), this, SIGNAL(aspectModeChanged(bool)));
+		layout->addWidget(aspectButton);
+	}
+	if (d->specialButtons & ZoomToSelection) {
+		QToolButton * zoomToSelectionButton = new QToolButton(group);
+		zoomToSelectionButton->setIcon(KIcon("zoom-selection").pixmap(22));
+		zoomToSelectionButton->setAutoRaise(true);
+		zoomToSelectionButton->setToolTip(i18n("Zoom to Selection"));
+		connect(zoomToSelectionButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToSelection()));
+		layout->addWidget(zoomToSelectionButton);
+	}
+	if (d->specialButtons & ZoomToAll) {
+		QToolButton * zoomToAllButton = new QToolButton(group);
+		zoomToAllButton->setIcon(KIcon("zoom-all").pixmap(22));
+		zoomToAllButton->setAutoRaise(true);
+		zoomToAllButton->setToolTip(i18n("Zoom to All"));
+		connect(zoomToAllButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToAll()));
+		layout->addWidget(zoomToAllButton);
+	}
 
-    connect(d->slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+	connect(d->slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
 
-    return group;
+	return group;
 }
 END_ORIGINAL
 
 MODIFIED
 QWidget * KoZoomAction::createWidget( QWidget * _parent )
 {
-    // create the custom widget only if we add the action to the status bar
-    if( ! qobject_cast<QStatusBar*>(_parent) )
-        return KSelectAction::createWidget(_parent);
+	// create the custom widget only if we add the action to the status bar
+	if( ! qobject_cast<QStatusBar*>(_parent) )
+		return KSelectAction::createWidget(_parent);
 
-    QWidget * group = new QWidget(_parent);
-    QHBoxLayout *layout = new QHBoxLayout(group);
-    layout->setSizeConstraint(QLayout::SetFixedSize);
-    layout->setMargin(0);
-    layout->setSpacing(0);
+	QWidget * group = new QWidget(_parent);
+	QHBoxLayout *layout = new QHBoxLayout(group);
+	layout->setSizeConstraint(QLayout::SetFixedSize);
+	layout->setMargin(0);
+	layout->setSpacing(0);
 
-    // this is wrong; createWidget() implies this is a factory method, so we should be able to be called
-    // multiple times without problems.  The 'new' here means we can't do that.
-    // TODO refactor this method to use connections instead of d-pointer members to communicate so it becomes reentrant.
-    d->input = new KoZoomInput(group);
-    regenerateItems( d->effectiveZoom, true );
-    connect(d->input, SIGNAL(zoomLevelChanged(const QString&)), this, SLOT(triggered(const QString&)));
-    layout->addWidget(d->input);
+	// this is wrong; createWidget() implies this is a factory method, so we should be able to be called
+	// multiple times without problems.  The 'new' here means we can't do that.
+	// TODO refactor this method to use connections instead of d-pointer members to communicate so it becomes reentrant.
+	d->input = new KoZoomInput(group);
+	regenerateItems( d->effectiveZoom, true );
+	connect(d->input, SIGNAL(zoomLevelChanged(const QString&)), this, SLOT(triggered(const QString&)));
+	layout->addWidget(d->input);
 
-    d->slider = new QSlider(Qt::Horizontal);
-    d->slider->setToolTip(i18n("Zoom"));
-    d->slider->setMinimum(0);
-    d->slider->setMaximum(32);
-    d->slider->setValue(16);
-    d->slider->setSingleStep(1);
-    d->slider->setPageStep(1);
-    d->slider->setMinimumWidth(80);
-    d->slider->setMaximumWidth(80);
-    layout->addWidget(d->slider);
+	d->slider = new QSlider(Qt::Horizontal);
+	d->slider->setToolTip(i18n("Zoom"));
+	d->slider->setMinimum(0);
+	d->slider->setMaximum(32);
+	d->slider->setValue(16);
+	d->slider->setSingleStep(1);
+	d->slider->setPageStep(1);
+	d->slider->setMinimumWidth(80);
+	d->slider->setMaximumWidth(80);
+	layout->addWidget(d->slider);
 
-    if (d->specialButtons & AspectMode) {
-        d->aspectButton = new QToolButton(group);
-        d->aspectButton->setIcon(KIcon("zoom-pixels").pixmap(22));
-        d->aspectButton->setCheckable(true);
-        d->aspectButton->setChecked(true);
-        d->aspectButton->setAutoRaise(true);
-        d->aspectButton->setToolTip(i18n("Use same aspect as pixels"));
-        connect(d->aspectButton, SIGNAL(toggled(bool)), this, SIGNAL(aspectModeChanged(bool)));
-        layout->addWidget(d->aspectButton);
-    }
-    if (d->specialButtons & ZoomToSelection) {
-        QToolButton * zoomToSelectionButton = new QToolButton(group);
-        zoomToSelectionButton->setIcon(KIcon("zoom-selection").pixmap(22));
-        zoomToSelectionButton->setAutoRaise(true);
-        zoomToSelectionButton->setToolTip(i18n("Zoom to Selection"));
-        connect(zoomToSelectionButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToSelection()));
-        layout->addWidget(zoomToSelectionButton);
-    }
-    if (d->specialButtons & ZoomToAll) {
-        QToolButton * zoomToAllButton = new QToolButton(group);
-        zoomToAllButton->setIcon(KIcon("zoom-all").pixmap(22));
-        zoomToAllButton->setAutoRaise(true);
-        zoomToAllButton->setToolTip(i18n("Zoom to All"));
-        connect(zoomToAllButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToAll()));
-        layout->addWidget(zoomToAllButton);
-    }
+	if (d->specialButtons & AspectMode) {
+		d->aspectButton = new QToolButton(group);
+		d->aspectButton->setIcon(KIcon("zoom-pixels").pixmap(22));
+		d->aspectButton->setCheckable(true);
+		d->aspectButton->setChecked(true);
+		d->aspectButton->setAutoRaise(true);
+		d->aspectButton->setToolTip(i18n("Use same aspect as pixels"));
+		connect(d->aspectButton, SIGNAL(toggled(bool)), this, SIGNAL(aspectModeChanged(bool)));
+		layout->addWidget(d->aspectButton);
+	}
+	if (d->specialButtons & ZoomToSelection) {
+		QToolButton * zoomToSelectionButton = new QToolButton(group);
+		zoomToSelectionButton->setIcon(KIcon("zoom-selection").pixmap(22));
+		zoomToSelectionButton->setAutoRaise(true);
+		zoomToSelectionButton->setToolTip(i18n("Zoom to Selection"));
+		connect(zoomToSelectionButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToSelection()));
+		layout->addWidget(zoomToSelectionButton);
+	}
+	if (d->specialButtons & ZoomToAll) {
+		QToolButton * zoomToAllButton = new QToolButton(group);
+		zoomToAllButton->setIcon(KIcon("zoom-all").pixmap(22));
+		zoomToAllButton->setAutoRaise(true);
+		zoomToAllButton->setToolTip(i18n("Zoom to All"));
+		connect(zoomToAllButton, SIGNAL(clicked(bool)), this, SIGNAL(zoomedToAll()));
+		layout->addWidget(zoomToAllButton);
+	}
 
-    connect(d->slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+	connect(d->slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
 
-    return group;
+	return group;
 }
 END_MODIFIED
 
@@ -140,3 +140,37 @@ SUMMARY
 		• a decl_stmt was replaced with an expr_stmt
 
 END_SUMMARY
+
+### Test 2 ###
+ORIGINAL
+KWTextFrameSet::~KWTextFrameSet()
+{
+	delete m_document;
+}
+END_ORIGINAL
+
+MODIFIED
+KWTextFrameSet::~KWTextFrameSet()
+{
+	// first remove the doc from all our frames so they won't try to use it after we delete it.
+	if (m_frames.isEmpty()) {
+		delete m_document;
+	} else {
+		// we transfer ownership of the doc to our last shape so it will keep being alive until nobody references it anymore.
+		KoTextShapeData *tsd = qobject_cast<KoTextShapeData*>(m_frames.last()->shape()->userData());
+		Q_ASSERT(tsd);
+		tsd->setDocument(m_document);
+		m_document = 0;
+	}
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• destructor 'KWTextFrameSet::~KWTextFrameSet': Impact = Medium
+	• an if statement was added around a delete statement 
+
+END_SUMMARY
+

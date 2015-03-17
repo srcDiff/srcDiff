@@ -50,19 +50,34 @@ void srcdiff_summary::process_characters() {
 
     if(text.empty()) return;
 
-    if(profile_stack.back()->type_name.first_active_string() == "operator"
-        && text[0] == '=' && (text.size() == 1 || text.back() != '=')) {
+    if(profile_stack.back()->type_name.first_active_string() == "operator") {
 
         size_t expr_pos = profile_stack.size() - 2;
-        while(!is_expr(profile_stack.at(expr_pos)->type_name))
+        while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name))
             --expr_pos;
 
-        reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_assignment(true);
+        if(expr_pos == 0) goto no_expr;
 
-        if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
-            reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_assignment(true);
+        if(text[0] == '=' && (text.size() == 1 || text.back() != '=')) {
+
+            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_assignment(true);
+
+            if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
+                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_assignment(true);
+
+        } else if(text == "delete") {
+
+            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_delete(true);
+
+            if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
+                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_delete(true);
+
+
+        }
 
     }
+
+no_expr:
 
     const char * ch = text.c_str();
     std::string::size_type len = text.size();
@@ -428,9 +443,6 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         if(srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
             profile_stack.back()->is_modified = true;
 
-        if(srcdiff_stack.back().operation == SRCDIFF_COMMON && !srcdiff_stack.back().is_move)
-            profile_stack.at(std::get<0>(counting_profile_pos.back()))->has_common = true;
-
     }
 
     std::string full_name = "";
@@ -791,6 +803,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             }
 
         }
+
+    }
+
+    if(srcdiff_stack.size() > 1 && srcdiff_stack.back().operation == SRCDIFF_COMMON) {
+
+        profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile_stack.back());
 
     }
 
