@@ -618,7 +618,7 @@ public:
 
                 ++profile_t::depth;
 
-                if(child_profile->operation == SRCDIFF_REPLACE && ((pos + 1) < profile->child_profiles.size())) {
+                if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
 
                     profile_t::begin_line(out) << get_article(child_profile) << ' ' << get_type_string(child_profile);
 
@@ -714,7 +714,7 @@ public:
             if(!is_body_summary(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
                 continue;
 
-            if(profile->operation == SRCDIFF_REPLACE && ((pos + 1) < child_profiles.size())) {
+            if(profile->is_replacement && ((pos + 1) < child_profiles.size())) {
 
                 profile_t::begin_line(out) << get_article(profile) << ' ' << get_type_string(profile);
 
