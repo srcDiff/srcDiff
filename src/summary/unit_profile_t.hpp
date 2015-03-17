@@ -2,15 +2,15 @@
 #define INCLUDED_UNIT_PROFILE_T_HPP
 
 #include <profile_t.hpp>
-#include <conditionals_addon.hpp>
 #include <decl_stmt_profile_t.hpp>
 #include <function_profile_t.hpp>
 #include <class_profile_t.hpp>
 #include <versioned_string.hpp>
 #include <change_entity_map.hpp>
 #include <type_query.hpp>
+#include <table_summary.hpp>
 
-class unit_profile_t : public profile_t, public conditionals_addon {
+class unit_profile_t : public profile_t {
 
     private:
 
@@ -18,13 +18,14 @@ class unit_profile_t : public profile_t, public conditionals_addon {
 
         versioned_string file_name;
 
-        change_entity_map<decl_stmt_profile_t> decl_stmts;
-        change_entity_map<function_profile_t>  functions;
-        change_entity_map<class_profile_t>     classes;
+        change_entity_map<decl_stmt_profile_t>   decl_stmts;
+        change_entity_map<function_profile_t>    functions;
+        change_entity_map<class_profile_t>       classes;
+        change_entity_map<conditional_profile_t> conditionals;
 
     public:
 
-        unit_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id), conditionals_addon() {}
+        unit_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
@@ -67,10 +68,12 @@ class unit_profile_t : public profile_t, public conditionals_addon {
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
 
+            table_summary table(conditionals);
+
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
-            count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+            conditionals.count_operations(number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
             if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
-                output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+                table.output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
 
             return out;
 

@@ -73,6 +73,16 @@ class change_entity_map {
      
         }
 
+        void count_operations(size_t & number_deleted, size_t & number_inserted, size_t & number_modified) const {
+
+            number_deleted  = entity.count(SRCDIFF_DELETE);
+            number_inserted = entity.count(SRCDIFF_INSERT);
+            number_modified = 0;
+            std::for_each(entity.lower_bound(SRCDIFF_COMMON), entity.upper_bound(SRCDIFF_COMMON),
+                [&number_modified](const typename change_entity_map<T>::pair & pair) { if(pair.second->syntax_count) ++number_modified; });
+
+        }
+
         static const std::string type_category(const versioned_string & type_name) {
 
             if(type_name.is_common()) return type_category(type_name.original());

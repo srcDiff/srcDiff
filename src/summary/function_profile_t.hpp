@@ -2,7 +2,6 @@
 #define INCLUDED_FUNCTION_PROFILE_T_HPP
 
 #include <profile_t.hpp>
-#include <conditionals_addon.hpp>
 #include <parameter_profile_t.hpp>
 #include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
@@ -11,15 +10,16 @@
 #include <change_entity_map.hpp>
 #include <type_query.hpp>
 #include <text_summary.hpp>
+#include <table_summary.hpp>
+
 
 #include <map>
-#include <iomanip>
 #include <functional>
 #include <algorithm>
 #include <utility>
 #include <cctype>
 
-class function_profile_t : public profile_t, public conditionals_addon {
+class function_profile_t : public profile_t {
 
     private:
 
@@ -30,14 +30,15 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         boost::optional<srcdiff_type> const_specifier;
 
-        change_entity_map<parameter_profile_t> parameters;
-        change_entity_map<call_profile_t>      member_initializations;
+        change_entity_map<conditional_profile_t> conditionals;
+        change_entity_map<parameter_profile_t>   parameters;
+        change_entity_map<call_profile_t>        member_initializations;
 
     private:
 
     public:
 
-        function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id), conditionals_addon() {}
+        function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
@@ -74,36 +75,7 @@ class function_profile_t : public profile_t, public conditionals_addon {
 
         }
 
-        virtual std::ostream & output_all_parameter_counts(std::ostream & out, size_t number_parameters_deleted, size_t number_parameters_inserted, size_t number_parameters_modified) const {
-
-            out << '\n';
-            begin_line(out) << "Parameter list changes:\n";
-
-            ++depth;
-            output_header(out);
-            output_counts(out, "Parameters", number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
-            --depth;
-
-            return out;
-
-        }
-
-        virtual std::ostream & output_all_member_initialization_counts(std::ostream & out, size_t number_initializations_deleted,
-                                                                      size_t number_initializations_inserted, size_t number_initializations_modified) const {
-
-            out << '\n';
-            begin_line(out) << "Member intialization list changes:\n";
-
-            ++depth;
-            output_header(out);
-            output_counts(out, "Init", number_initializations_deleted, number_initializations_inserted, number_initializations_modified);
-            --depth;
-
-            return out;
-
-        }
-
-
+        /** @todo may need to add rest of things that can occur here between parameter list and block */
         virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
 
             if(operation != SRCDIFF_COMMON) {
@@ -138,56 +110,53 @@ class function_profile_t : public profile_t, public conditionals_addon {
                 return out;
 
             }
-
-            text_summary text(id, child_profiles, parameters, member_initializations, identifiers, intersecting_identifiers);
-
-            // function signature
-            if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
-
-            // behaviour change
+          
+            // get counts and set flags
             bool is_return_type_change = !return_type.is_common();
             size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0;
-            count_operations(parameters, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
-
-            if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) begin_line(out) << "Signature change:\n";
-
-            if(is_return_type_change) begin_line(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
-
-            if(is_summary_type(summary_types, summary_type::TEXT) && (number_parameters_deleted || number_parameters_inserted || number_parameters_modified))
-                text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
-
-            if(is_summary_type(summary_types, summary_type::TABLE) && (number_parameters_deleted || number_parameters_inserted || number_parameters_modified))
-                output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
-
-            // before body summary
-            /** @todo may need to add rest of things that can occur here between parameter list and block */
-            if(const_specifier) begin_line(out) << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
+            parameters.count_operations(number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
             size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
-            count_operations(member_initializations, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+            member_initializations.count_operations(number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
+            if(is_summary_type(summary_types, summary_type::TEXT)) {
 
-            if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
-                text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+                text_summary text(id, child_profiles, parameters, member_initializations, identifiers, intersecting_identifiers);
 
-            if(is_summary_type(summary_types, summary_type::TABLE) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
-                output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+                if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
-            // body summary
-            if(is_summary_type(summary_types, summary_type::TEXT))
+                if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) begin_line(out) << "Signature change:\n";
+
+                if(is_return_type_change) begin_line(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
+
+                if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
+                    text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+
+                if(const_specifier) begin_line(out) << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
+
+                if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
+                    text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+
                 text.body(out, profile_list);
-
-            if(!is_summary_type(summary_types, summary_type::TABLE)) {
-
-                --depth;
-                return out;
 
             }
 
-            size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
-            count_operations(conditionals, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
-            if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
-                output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+            if(is_summary_type(summary_types, summary_type::TABLE)) {
+
+                table_summary table(conditionals);
+
+                if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
+                    table.output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+
+                if(is_summary_type(summary_types, summary_type::TABLE) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
+                    table.output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+
+                size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
+                conditionals.count_operations(number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+                if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
+                    table.output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+
+            }
 
             --depth;
 
