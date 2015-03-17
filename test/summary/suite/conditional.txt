@@ -101,7 +101,7 @@ SUMMARY
 	• a guard clause was added to the function body
 	• the body of a foreach statement was modified
 	  this modification included:
-		• an expr_stmt was replaced with a if
+		• an expression statement was replaced with a guard clause
 
 END_SUMMARY
 

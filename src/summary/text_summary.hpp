@@ -620,13 +620,13 @@ public:
 
                 if(child_profile->operation == SRCDIFF_REPLACE && ((pos + 1) < profile->child_profiles.size())) {
 
-                    profile_t::begin_line(out) << get_article(child_profile) << ' ' << child_profile->type_name;
+                    profile_t::begin_line(out) << get_article(child_profile) << ' ' << get_type_string(child_profile);
 
                     out << " was replaced with ";
 
                     const std::shared_ptr<profile_t> & next_profile = profile_list[profile->child_profiles[pos + 1]];
 
-                    out << get_article(next_profile) << ' ' << next_profile->type_name << '\n';
+                    out << get_article(next_profile) << ' ' << get_type_string(next_profile) << '\n';
 
                     ++pos;
 
@@ -706,19 +706,36 @@ public:
 
         }
 
-        for(size_t profile_pos : child_profiles) {
+        for(size_t pos = 0; pos < child_profiles.size(); ++pos) {
 
+            const size_t profile_pos = child_profiles[pos];
             const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
 
             if(!is_body_summary(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
                 continue;
 
-            if(is_condition_type(profile->type_name))
-                conditional(out, profile, profile_list);
-            else if(is_expr_stmt(profile->type_name))
-                expr_stmt(out, profile, profile_list);
-            else if(is_decl_stmt(profile->type_name))
-                decl_stmt(out, profile, profile_list);
+            if(profile->operation == SRCDIFF_REPLACE && ((pos + 1) < child_profiles.size())) {
+
+                profile_t::begin_line(out) << get_article(profile) << ' ' << get_type_string(profile);
+
+                out << " was replaced with ";
+
+                const std::shared_ptr<profile_t> & next_profile = profile_list[child_profiles[pos + 1]];
+
+                out << get_article(next_profile) << ' ' << get_type_string(next_profile) << '\n';
+
+                ++pos;
+
+            } else {
+
+                if(is_condition_type(profile->type_name))
+                    conditional(out, profile, profile_list);
+                else if(is_expr_stmt(profile->type_name))
+                    expr_stmt(out, profile, profile_list);
+                else if(is_decl_stmt(profile->type_name))
+                    decl_stmt(out, profile, profile_list);
+
+            }
 
         }
 
