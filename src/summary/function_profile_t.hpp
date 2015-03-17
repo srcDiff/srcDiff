@@ -12,11 +12,6 @@
 #include <text_summary.hpp>
 #include <table_summary.hpp>
 
-
-#include <map>
-#include <functional>
-#include <algorithm>
-#include <utility>
 #include <cctype>
 
 class function_profile_t : public profile_t {

@@ -5,6 +5,9 @@
 #include <change_entity_map.hpp>
 
 #include <iomanip>
+#include <functional>
+#include <algorithm>
+#include <utility>
 
 class table_summary {
 
