@@ -50,7 +50,7 @@ void srcdiff_summary::process_characters() {
 
     if(text.empty()) return;
 
-    if(expr_stmt_pos > 0 && profile_stack.back()->type_name.first_active_string() == "operator"
+    if(profile_stack.back()->type_name.first_active_string() == "operator"
         && text[0] == '=' && (text.size() == 1 || text.back() != '=')) {
 
         size_t expr_pos = profile_stack.size() - 2;
@@ -59,7 +59,7 @@ void srcdiff_summary::process_characters() {
 
         reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_assignment(true);
 
-        if((expr_pos - 1) == expr_stmt_pos)
+        if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
             reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_assignment(true);
 
     }
