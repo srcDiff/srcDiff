@@ -680,12 +680,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                     profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_name);
 
-                    if(is_function_type(profile_stack.at(std::get<2>(counting_profile_pos.back()))->type_name)) {
+                    // not sure why this is here.   Should be added on way up.
+                    // if(is_function_type(profile_stack.at(std::get<2>(counting_profile_pos.back()))->type_name)) {
 
-                        std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(std::get<2>(counting_profile_pos.back())));
-                        function_profile->add_identifier(collected_name);
+                    //     std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(std::get<2>(counting_profile_pos.back())));
+                    //     function_profile->add_identifier(collected_name);
 
-                    }
+                    // }
 
                 }
 

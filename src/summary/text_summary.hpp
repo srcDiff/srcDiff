@@ -584,17 +584,12 @@ public:
 
             // there is probably a better way
             std::map<versioned_string, size_t> diff_set;
-            std::set_difference(intersecting_identifiers.begin(), intersecting_identifiers.end(),
-                                profile->identifiers.begin(), profile->identifiers.end(),
+            std::set_difference(profile->identifiers.begin(), profile->identifiers.end(),
+                                intersecting_identifiers.begin(), intersecting_identifiers.end(),
                                 std::inserter(diff_set, diff_set.begin()));
 
-            std::map<versioned_string, size_t> new_set;
-            std::set_intersection(profile->identifiers.begin(), profile->identifiers.end(),
-                                diff_set.begin(), diff_set.end(),
-                                std::inserter(new_set, new_set.begin()));
-
             size_t number_calls = 0, number_renames = 0, number_argument_list_modified = 0;
-            call_check(profile, profile_list, new_set, number_calls, number_renames, number_argument_list_modified);
+            call_check(profile, profile_list, diff_set, number_calls, number_renames, number_argument_list_modified);
 
             if(number_calls == 0) return out;
 
