@@ -1,7 +1,7 @@
 ##
 #  CMakeLists.txt
 #
-#  Copyright (C) 2011-2011  SDML (www.sdml.info)
+#  Copyright (C) 2015  SDML (www.sdml.info)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -19,8 +19,8 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB ANALYSIS_HEADERS *.hpp)
-file(GLOB ANALYSIS_SOURCE  *.cpp)
+file(GLOB SUMMARY_HEADERS *.hpp)
+file(GLOB SUMMARY_SOURCE  *.cpp)
 
-add_library(analysis OBJECT ${ANALYSIS_HEADERS} ${ANALYSIS_SOURCE})
+add_library(summary OBJECT ${SUMMARY_HEADERS} ${SUMMARY_SOURCE})
 
