@@ -399,86 +399,83 @@ public:
 
     }
 
-    void modified_call(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list, const std::map<versioned_string, size_t> & identifier_set,
-              size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const {
+    void call_check(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list, const std::map<versioned_string, size_t> & identifier_set,
+                    size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const {
 
-            // there is probably a better way
-            for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
+        for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
 
-                const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+            const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
 
-                if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
+            if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
 
-                    const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
+                const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
-                    bool report_name = !call_profile->name.is_common();
-                    if(report_name) {
+                bool report_name = !call_profile->name.is_common();
+                if(report_name) {
 
-                        identifier_diff ident_diff(call_profile->name);
-                        ident_diff.compute_diff();
+                    identifier_diff ident_diff(call_profile->name);
+                    ident_diff.compute_diff();
 
-                        if(!identifier_set.count(ident_diff.get_diff())) report_name = false;
+                    if(!identifier_set.count(ident_diff.get_diff())) report_name = false;
 
-                    }
+                }
 
-                    bool report_argument_list = call_profile->argument_list_modified;
-                    if(report_argument_list) {
+                bool report_argument_list = call_profile->argument_list_modified;
+                if(report_argument_list) {
 
-                        size_t number_arguments_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
-                        size_t number_arguments_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
+                    size_t number_arguments_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
+                    size_t number_arguments_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
 
-                        size_t number_arguments_modified = 0;
-                        std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
-                            [&, this](const typename change_entity_map<profile_t>::pair & pair)
-                                {
+                    size_t number_arguments_modified = 0;
+                    std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
+                        [&, this](const typename change_entity_map<profile_t>::pair & pair)
+                            {
 
-                                    if(pair.second->syntax_count) {
+                                if(pair.second->syntax_count) {
 
-                                        bool report_change = false;
-                                        for(size_t argument_child_pos : profile_list[pair.second->child_profiles[0]]->child_profiles) {
+                                    bool report_change = false;
+                                    for(size_t argument_child_pos : profile_list[pair.second->child_profiles[0]]->child_profiles) {
 
-                                            const std::shared_ptr<profile_t> & argument_child_profile = profile_list[argument_child_pos];
+                                        const std::shared_ptr<profile_t> & argument_child_profile = profile_list[argument_child_pos];
 
-                                            if(argument_child_profile->operation != SRCDIFF_COMMON) { 
+                                        if(argument_child_profile->operation != SRCDIFF_COMMON) { 
 
-                                                    report_change = true;
-                                                    break;
+                                                report_change = true;
+                                                break;
+
+                                        }
+
+                                        if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
+
+                                            size_t num_calls = 0, num_renames = 0, num_argument_list_modified = 0;
+                                            call_check(argument_child_profile, profile_list, identifier_set, num_calls, num_renames, num_argument_list_modified);
+
+                                            if(num_calls || num_renames || number_argument_list_modified) {
+
+                                                report_change = true;
+                                                break;
 
                                             }
 
-                                            if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
+                                        } else {
 
-                                                size_t num_calls = 0, num_renames = 0, num_argument_list_modified = 0;
-                                                modified_call(argument_child_profile, profile_list, identifier_set, num_calls, num_renames, num_argument_list_modified);
+                                            if(!is_identifier(argument_child_profile->type_name)) {
 
-                                                if(num_calls || num_renames || number_argument_list_modified) {
-
-                                                    report_change = true;
-                                                    break;
-
-                                                }
+                                                report_change = true;
+                                                break;
 
                                             } else {
 
-                                                if(!is_identifier(argument_child_profile->type_name)) {
+                                                const std::shared_ptr<identifier_profile_t> & identifier_profile
+                                                    = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
+
+                                                identifier_diff ident_diff(identifier_profile->name);
+                                                ident_diff.compute_diff();
+
+                                                if(identifier_set.count(ident_diff.get_diff())) {
 
                                                     report_change = true;
                                                     break;
-
-                                                } else {
-
-                                                    const std::shared_ptr<identifier_profile_t> & identifier_profile
-                                                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
-
-                                                    identifier_diff ident_diff(identifier_profile->name);
-                                                    ident_diff.compute_diff();
-
-                                                    if(identifier_set.count(ident_diff.get_diff())) {
-
-                                                        report_change = true;
-                                                        break;
-
-                                                    }
 
                                                 }
 
@@ -486,27 +483,29 @@ public:
 
                                         }
 
-                                        if(report_change) ++number_arguments_modified; 
-
                                     }
 
+                                    if(report_change) ++number_arguments_modified; 
 
-                                });
+                                }
 
-                        if(number_arguments_deleted == 0 && number_arguments_inserted == 0 && number_arguments_modified == 0)
-                            report_argument_list = false;
 
-                    }
+                            });
 
-                    if(!report_name && !report_argument_list) continue;
-
-                    ++number_calls;
-                    if(report_name)          ++number_renames;
-                    if(report_argument_list) ++number_argument_list_modified;
+                    if(number_arguments_deleted == 0 && number_arguments_inserted == 0 && number_arguments_modified == 0)
+                        report_argument_list = false;
 
                 }
 
-             }
+                if(!report_name && !report_argument_list) continue;
+
+                ++number_calls;
+                if(report_name)          ++number_renames;
+                if(report_argument_list) ++number_argument_list_modified;
+
+            }
+
+         }
 
     }
 
@@ -514,7 +513,7 @@ public:
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-        if(expr_stmt_profile->assignment() || expr_stmt_profile->get_delete()) {
+        if(expr_stmt_profile->assignment() || expr_stmt_profile->get_delete() || profile->child_profiles.empty()) {
     
             profile_t::begin_line(out) << get_article(profile) << ' ' << get_type_string(profile) << " was ";
 
@@ -524,6 +523,7 @@ public:
 
         }
 
+        // may no longe be needed
         if(profile->child_profiles.empty()) return out;
 
         // this needs flushed out
@@ -582,6 +582,7 @@ public:
 
         } else {
 
+            // there is probably a better way
             std::map<versioned_string, size_t> diff_set;
             std::set_difference(intersecting_identifiers.begin(), intersecting_identifiers.end(),
                                 profile->identifiers.begin(), profile->identifiers.end(),
@@ -593,7 +594,7 @@ public:
                                 std::inserter(new_set, new_set.begin()));
 
             size_t number_calls = 0, number_renames = 0, number_argument_list_modified = 0;
-            modified_call(profile, profile_list, new_set, number_calls, number_renames, number_argument_list_modified);
+            call_check(profile, profile_list, new_set, number_calls, number_renames, number_argument_list_modified);
 
             if(number_calls == 0) return out;
 

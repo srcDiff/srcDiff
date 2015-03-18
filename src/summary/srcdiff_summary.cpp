@@ -13,6 +13,7 @@
 #include <expr_profile_t.hpp>
 
 #include <cstring>
+#include <algorithm>
 
 bool is_count(const std::string & type_name) {
 
@@ -802,8 +803,17 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                 }
 
-
             }
+
+            for(std::map<versioned_string, size_t>::iterator itr = profile_stack.back()->intersecting_identifiers.begin();
+                itr != profile_stack.back()->intersecting_identifiers.end();) {
+    
+                if(itr->second <= 1) 
+                   profile_stack.back()->intersecting_identifiers.erase(itr++);
+               else
+                ++itr;
+
+           }
 
         }
 
