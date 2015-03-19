@@ -134,9 +134,9 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoZoomAction::createWidget': Impact = Medium
-	• the identifier 'd->' was added in several places
 	• the body of an if statement was modified
 	  this modification included:
+		• the identifier 'd->' was added in several places
 		• a declaration statement was replaced with an assignment statement
 
 END_SUMMARY

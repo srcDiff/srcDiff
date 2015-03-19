@@ -97,12 +97,19 @@ class profile_t {
                 ident_diff.compute_diff();
 
                 std::map<versioned_string, size_t>::iterator itr = identifiers.find(ident_diff.get_diff());
-                if(itr == identifiers.end()) identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), 1));
-                else                         ++itr->second;
+                if(itr == identifiers.end()) {
 
-                std::map<versioned_string, size_t>::iterator itersect_itr = identifiers.find(ident_diff.get_diff());
-                if(itersect_itr == identifiers.end()) identifiers.insert(itersect_itr, std::make_pair(ident_diff.get_diff(), 1));
-                else                                  ++itersect_itr->second;
+                    identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), 1));
+
+                } else {
+
+                    ++itr->second;
+
+                    std::map<versioned_string, size_t>::iterator itersect_itr = intersecting_identifiers.find(ident_diff.get_diff());
+                    if(itersect_itr == intersecting_identifiers.end()) intersecting_identifiers.insert(itersect_itr, *itr);                     
+                    else                                               ++itersect_itr->second;
+
+                }
 
             }
 

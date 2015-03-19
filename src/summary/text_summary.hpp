@@ -34,7 +34,7 @@ protected:
         const change_entity_map<call_profile_t>      & member_initializations;
 
         const std::map<versioned_string, size_t> & identifiers;
-        const std::map<versioned_string, size_t> & intersecting_identifiers;
+        std::map<versioned_string, size_t> intersecting_identifiers;
 
 private:
 
@@ -72,6 +72,43 @@ private:
         }
 
         return profile->type_name + " statement";
+
+    }
+
+    std::ostream & repeated_identifiers(std::ostream & out, const std::map<versioned_string, size_t> & identifiers) {
+
+        for(std::pair<versioned_string, size_t> identifier : identifiers) {
+
+            if(identifier.second <= 1) continue;
+
+            profile_t::begin_line(out) << "the identifier '";
+
+            if(identifier.first.has_original()) out << identifier.first.original() << "' ";
+
+            if(identifier.first.has_original() && identifier.first.has_modified()) out << " was replaced with '";
+
+            if(identifier.first.has_modified()) out << identifier.first.modified() << "' ";
+
+            if(identifier.first.has_original() && !identifier.first.has_modified())
+                out << "was removed ";
+            else if(!identifier.first.has_original() && identifier.first.has_modified())
+                out << "was added ";
+
+            out << "in several places\n";
+
+        }
+
+        for(std::map<versioned_string, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
+
+            std::map<versioned_string, size_t>::iterator itersect_itr = intersecting_identifiers.find(itr->first);
+            if(itersect_itr == intersecting_identifiers.end())
+                intersecting_identifiers.insert(itersect_itr, *itr);
+            else
+                itersect_itr->second += itr->second;
+
+        }
+
+        return out;
 
     }
 
@@ -582,9 +619,13 @@ public:
 
         } else {
 
+            /** @todo I need to update the intersect once output new ones or least look into that make sure doing this correctly */
+
+
             // there is probably a better way
+            const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
             std::map<versioned_string, size_t> diff_set;
-            std::set_difference(profile->identifiers.begin(), profile->identifiers.end(),
+            std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
                                 intersecting_identifiers.begin(), intersecting_identifiers.end(),
                                 std::inserter(diff_set, diff_set.begin()));
 
@@ -644,7 +685,7 @@ public:
 
     }
 
-    std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) {
 
         const bool has_common = profile->common_profiles.size() > 0;
 
@@ -704,11 +745,23 @@ public:
 
         if(condition_modified) {
 
-            is_leaf = false;
             out << '\n';
+            profile_t::pad(out) << "  this modification included:\n";            
+            is_leaf = false;
             ++profile_t::depth;
             profile_t::begin_line(out) << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
             --profile_t::depth;
+        }
+
+        if(profile->intersecting_identifiers.size() > 0) {
+
+            out << '\n';
+            profile_t::pad(out) << "  this modification included:\n";            
+            is_leaf = false;
+            ++profile_t::depth;
+            repeated_identifiers(out, profile->intersecting_identifiers);
+            --profile_t::depth;
+
         }
 
         /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
@@ -780,28 +833,9 @@ public:
 
     }
 
-  std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+  std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) {
 
-        for(std::pair<versioned_string, size_t> identifier : intersecting_identifiers) {
-
-            if(identifier.second <= 1) continue;
-
-            profile_t::begin_line(out) << "the identifier '";
-
-            if(identifier.first.has_original()) out << identifier.first.original() << "' ";
-
-            if(identifier.first.has_original() && identifier.first.has_modified()) out << " was replaced with '";
-
-            if(identifier.first.has_modified()) out << identifier.first.modified() << "' ";
-
-            if(identifier.first.has_original() && !identifier.first.has_modified())
-                out << "was removed ";
-            else if(!identifier.first.has_original() && identifier.first.has_modified())
-                out << "was added ";
-
-            out << "in several places\n";
-
-        }
+        repeated_identifiers(out, intersecting_identifiers);
 
         for(size_t pos = 0; pos < child_profiles.size(); ++pos) {
 
