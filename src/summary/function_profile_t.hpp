@@ -116,7 +116,7 @@ class function_profile_t : public profile_t {
 
             if(is_summary_type(summary_types, summary_type::TEXT)) {
 
-                text_summary text(id, child_profiles, parameters, member_initializations, identifiers, intersecting_identifiers);
+                text_summary text(id, child_profiles, parameters, member_initializations, intersecting_identifiers);
 
                 if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 

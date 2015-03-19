@@ -33,8 +33,9 @@ protected:
         const change_entity_map<parameter_profile_t> & parameters;
         const change_entity_map<call_profile_t>      & member_initializations;
 
-        const std::map<versioned_string, size_t> & identifiers;
-        std::map<versioned_string, size_t> intersecting_identifiers;
+        const std::map<versioned_string, size_t> & intersecting_identifiers;
+
+        std::map<versioned_string, size_t> repeated_identifiers;
 
 private:
 
@@ -75,7 +76,7 @@ private:
 
     }
 
-    std::ostream & repeated_identifiers(std::ostream & out, const std::map<versioned_string, size_t> & identifiers) {
+    std::ostream & identifiers(std::ostream & out, const std::map<versioned_string, size_t> & identifiers) {
 
         for(std::pair<versioned_string, size_t> identifier : identifiers) {
 
@@ -100,9 +101,9 @@ private:
 
         for(std::map<versioned_string, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
 
-            std::map<versioned_string, size_t>::iterator itersect_itr = intersecting_identifiers.find(itr->first);
-            if(itersect_itr == intersecting_identifiers.end())
-                intersecting_identifiers.insert(itersect_itr, *itr);
+            std::map<versioned_string, size_t>::iterator itersect_itr = repeated_identifiers.find(itr->first);
+            if(itersect_itr == repeated_identifiers.end())
+                repeated_identifiers.insert(itersect_itr, *itr);
             else
                 itersect_itr->second += itr->second;
 
@@ -234,10 +235,9 @@ public:
 
     text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<versioned_string, size_t> & identifiers, 
                  const std::map<versioned_string, size_t> & intersecting_identifiers)
         : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
-          identifiers(identifiers), intersecting_identifiers(intersecting_identifiers) {}
+          intersecting_identifiers(intersecting_identifiers) {}
 
     std::ostream & parameter(std::ostream & out, size_t number_parameters_deleted,
                                           size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -626,7 +626,7 @@ public:
             const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
             std::map<versioned_string, size_t> diff_set;
             std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-                                intersecting_identifiers.begin(), intersecting_identifiers.end(),
+                                repeated_identifiers.begin(), repeated_identifiers.end(),
                                 std::inserter(diff_set, diff_set.begin()));
 
             size_t number_calls = 0, number_renames = 0, number_argument_list_modified = 0;
@@ -759,7 +759,7 @@ public:
             profile_t::pad(out) << "  this modification included:\n";            
             is_leaf = false;
             ++profile_t::depth;
-            repeated_identifiers(out, profile->intersecting_identifiers);
+            identifiers(out, profile->intersecting_identifiers);
             --profile_t::depth;
 
         }
@@ -835,28 +835,28 @@ public:
 
   std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) {
 
-        repeated_identifiers(out, intersecting_identifiers);
+        identifiers(out, intersecting_identifiers);
 
         for(size_t pos = 0; pos < child_profiles.size(); ++pos) {
 
-            const size_t profile_pos = child_profiles[pos];
-            const std::shared_ptr<profile_t> & profile = profile_list[profile_pos];
+            const size_t child_profile_pos = child_profiles[pos];
+            const std::shared_ptr<profile_t> & child_profile = profile_list[child_profile_pos];
 
-            if(!is_body_summary(profile->type_name) || (profile->operation == SRCDIFF_COMMON && profile->syntax_count == 0))
+            if(!is_body_summary(child_profile->type_name) || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0))
                 continue;
 
-            if(profile->is_replacement && ((pos + 1) < child_profiles.size())) {
+            if(child_profile->is_replacement && ((pos + 1) < child_profiles.size())) {
 
                 replacement(out, profile_list[id], pos, profile_list);
 
             } else {
 
-                if(is_condition_type(profile->type_name))
-                    conditional(out, profile, profile_list);
-                else if(is_expr_stmt(profile->type_name))
-                    expr_stmt(out, profile, profile_list);
-                else if(is_decl_stmt(profile->type_name))
-                    decl_stmt(out, profile, profile_list);
+                if(is_condition_type(child_profile->type_name))
+                    conditional(out, child_profile, profile_list);
+                else if(is_expr_stmt(child_profile->type_name))
+                    expr_stmt(out, child_profile, profile_list);
+                else if(is_decl_stmt(child_profile->type_name))
+                    decl_stmt(out, child_profile, profile_list);
 
             }
 
