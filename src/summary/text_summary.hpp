@@ -45,7 +45,8 @@ private:
         if(is_guard_clause) return "a";
 
         if(is_expr_stmt(profile->type_name)
-            && reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile)->is_delete())
+            && (reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile)->is_delete()
+                || reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile)->call()))
             return "a";
 
         const char letter = std::string(profile->type_name)[0];
@@ -68,7 +69,7 @@ private:
             const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
             if(expr_stmt_profile->assignment()) return "assignment statement";
             if(expr_stmt_profile->is_delete())  return "delete statement";
-            if(expr_stmt_profile->call())    return "call statement";
+            if(expr_stmt_profile->call())       return "call statement";
             return "expression statement";
 
         }
@@ -116,10 +117,7 @@ private:
 
     /**
      * @todo
-     * Should have assignment, and delete also summarized specially.  May also want to do conditionals separate as well.
-     * Consider adding is_call to expressions to check if a single call or sequence of calls.
-     *
-     * Also, this may only be wanted at statement level.  Think causing a bug when not. Anyway bug with slotLoadingFinished I think.
+     * Should have assignment, delete, call also summarized specially.  May also want to do conditionals separate as well.
      *
      * Also want to know when code replaced with comment so report commented out.
      */
@@ -437,6 +435,7 @@ public:
 
     }
 
+    /** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
     void call_check(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list, const std::map<versioned_string, size_t> & identifier_set,
                     size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const {
 

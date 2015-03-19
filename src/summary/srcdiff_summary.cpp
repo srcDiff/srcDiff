@@ -73,7 +73,6 @@ void srcdiff_summary::process_characters() {
             if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
                 reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_delete(true);
 
-
         } else if(expr_stmt_pos > 0) {
 
             if(text != "." && text != "->" && text != ".*" && text != "->*")
@@ -478,8 +477,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         // correct global counts
         delete_count.syntax -= syntax_dec;
         delete_count.total  -= syntax_dec;
-        total.syntax        -= syntax_dec;;
-        total.total         -= syntax_dec;;
+        total.syntax        -= syntax_dec;
+        total.total         -= syntax_dec;
 
     } else {
 
@@ -681,19 +680,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 // set name of identifiers parent profile
                 profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
 
-                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common()) {
-
+                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common())
                     profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_name);
-
-                    // not sure why this is here.   Should be added on way up.
-                    // if(is_function_type(profile_stack.at(std::get<2>(counting_profile_pos.back()))->type_name)) {
-
-                    //     std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(std::get<2>(counting_profile_pos.back())));
-                    //     function_profile->add_identifier(collected_name);
-
-                    // }
-
-                }
 
                 collected_name.clear();
 
