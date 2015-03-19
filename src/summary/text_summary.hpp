@@ -67,7 +67,8 @@ private:
 
             const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
             if(expr_stmt_profile->assignment()) return "assignment statement";
-            if(expr_stmt_profile->is_delete()) return "delete statement";
+            if(expr_stmt_profile->is_delete())  return "delete statement";
+            if(expr_stmt_profile->call())    return "call statement";
             return "expression statement";
 
         }
