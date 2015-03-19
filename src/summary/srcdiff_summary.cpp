@@ -74,6 +74,11 @@ void srcdiff_summary::process_characters() {
                 reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_delete(true);
 
 
+        } else if(expr_stmt_pos > 0) {
+
+            if(text != "." && text != "->" && text != ".*" && text != "->*")
+                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_call(false);
+
         }
 
     }
@@ -732,6 +737,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
+    if(expr_stmt_pos != 0 && ((profile_stack.size() - 1) - expr_stmt_pos) > 1 && !is_call(full_name) && full_name != "operator")
+         reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_call(false);
+
     if(!is_interchange && profile_stack.back()->is_modified) {
 
         profile_stack.at(profile_stack.size() - 2)->is_modified = true;
@@ -764,7 +772,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     if(is_identifier(full_name) && name_count == 0) {
 
         std::shared_ptr<identifier_profile_t> & identifier_profile = reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back());
-
 
         if(identifier_profile->operation != SRCDIFF_COMMON && identifier_profile->name.has_original() && identifier_profile->name.has_modified())
             identifier_profile->operation = SRCDIFF_COMMON;

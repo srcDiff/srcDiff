@@ -45,7 +45,7 @@ private:
         if(is_guard_clause) return "a";
 
         if(is_expr_stmt(profile->type_name)
-            && reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile)->get_delete())
+            && reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile)->is_delete())
             return "a";
 
         const char letter = std::string(profile->type_name)[0];
@@ -67,7 +67,7 @@ private:
 
             const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
             if(expr_stmt_profile->assignment()) return "assignment statement";
-            if(expr_stmt_profile->get_delete()) return "delete statement";
+            if(expr_stmt_profile->is_delete()) return "delete statement";
             return "expression statement";
 
         }
@@ -550,7 +550,7 @@ public:
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-        if(expr_stmt_profile->assignment() || expr_stmt_profile->get_delete() || profile->child_profiles.empty()) {
+        if(expr_stmt_profile->assignment() || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
     
             profile_t::begin_line(out) << get_article(profile) << ' ' << get_type_string(profile) << " was ";
 

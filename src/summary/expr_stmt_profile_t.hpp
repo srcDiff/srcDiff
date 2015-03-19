@@ -9,12 +9,13 @@ class expr_stmt_profile_t : public profile_t {
     private:
 
     	bool is_assignment;
-        bool is_delete;
+        bool isdelete;
+        bool is_call;
 
     public:
 
         expr_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id)
-            : profile_t(type_name, uri, operation, parent_id), is_assignment(false), is_delete(false) {}
+            : profile_t(type_name, uri, operation, parent_id), is_assignment(false), isdelete(false), is_call(true) {}
 
         bool assignment() const {
 
@@ -28,15 +29,27 @@ class expr_stmt_profile_t : public profile_t {
 
         }
 
-        bool get_delete() const {
+        bool is_delete() const {
 
-            return is_delete;
+            return isdelete;
 
         }
 
-        void set_delete(bool is_delete) {
+        void set_delete(bool isdelete) {
 
-            this->is_delete = is_delete;
+            this->isdelete = isdelete;
+
+        }
+
+        bool call() const {
+
+            return is_call;
+
+        }
+
+        void set_call(bool is_call) {
+
+            this->is_call = is_call;
 
         }
 
