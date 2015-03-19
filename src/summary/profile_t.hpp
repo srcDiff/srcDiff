@@ -59,7 +59,7 @@ class profile_t {
         std::vector<size_t> descendant_profiles;      
 
         std::map<versioned_string, size_t> identifiers;
-        std::map<versioned_string, size_t> intersecting_identifiers;
+        std::map<versioned_string, size_t> summary_identifiers;
 
         std::vector<std::shared_ptr<profile_t>> common_profiles;
 
@@ -105,8 +105,8 @@ class profile_t {
 
                     ++itr->second;
 
-                    std::map<versioned_string, size_t>::iterator itersect_itr = intersecting_identifiers.find(ident_diff.get_diff());
-                    if(itersect_itr == intersecting_identifiers.end()) intersecting_identifiers.insert(itersect_itr, *itr);                     
+                    std::map<versioned_string, size_t>::iterator itersect_itr = summary_identifiers.find(ident_diff.get_diff());
+                    if(itersect_itr == summary_identifiers.end()) summary_identifiers.insert(itersect_itr, *itr);                     
                     else                                               ++itersect_itr->second;
 
                 }

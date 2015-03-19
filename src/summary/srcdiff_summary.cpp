@@ -796,9 +796,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                     itr->second += identifier.second;
 
-                    std::map<versioned_string, size_t>::iterator itersect_itr = parent_body_profile->intersecting_identifiers.find(itr->first);
-                    if(itersect_itr == parent_body_profile->intersecting_identifiers.end())
-                        parent_body_profile->intersecting_identifiers.insert(itersect_itr, *itr);
+                    std::map<versioned_string, size_t>::iterator itersect_itr = parent_body_profile->summary_identifiers.find(itr->first);
+                    if(itersect_itr == parent_body_profile->summary_identifiers.end())
+                        parent_body_profile->summary_identifiers.insert(itersect_itr, *itr);
                     else
                         itersect_itr->second += itr->second;
 
@@ -806,11 +806,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-            for(std::map<versioned_string, size_t>::iterator itr = profile_stack.back()->intersecting_identifiers.begin();
-                itr != profile_stack.back()->intersecting_identifiers.end();) {
+            for(std::map<versioned_string, size_t>::iterator itr = profile_stack.back()->summary_identifiers.begin();
+                itr != profile_stack.back()->summary_identifiers.end();) {
     
                 if(itr->second <= 1) 
-                   profile_stack.back()->intersecting_identifiers.erase(itr++);
+                   profile_stack.back()->summary_identifiers.erase(itr++);
                else
                 ++itr;
 

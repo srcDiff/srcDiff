@@ -33,7 +33,7 @@ protected:
         const change_entity_map<parameter_profile_t> & parameters;
         const change_entity_map<call_profile_t>      & member_initializations;
 
-        const std::map<versioned_string, size_t> & intersecting_identifiers;
+        const std::map<versioned_string, size_t> & summary_identifiers;
 
         std::map<versioned_string, size_t> repeated_identifiers;
 
@@ -235,9 +235,9 @@ public:
 
     text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<versioned_string, size_t> & intersecting_identifiers)
+                 const std::map<versioned_string, size_t> & summary_identifiers)
         : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
-          intersecting_identifiers(intersecting_identifiers) {}
+          summary_identifiers(summary_identifiers) {}
 
     std::ostream & parameter(std::ostream & out, size_t number_parameters_deleted,
                                           size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -753,13 +753,13 @@ public:
             --profile_t::depth;
         }
 
-        if(profile->intersecting_identifiers.size() > 0) {
+        if(profile->summary_identifiers.size() > 0) {
 
             out << '\n';
             profile_t::pad(out) << "  this modification included:\n";            
             is_leaf = false;
             ++profile_t::depth;
-            identifiers(out, profile->intersecting_identifiers);
+            identifiers(out, profile->summary_identifiers);
             --profile_t::depth;
 
         }
@@ -835,7 +835,7 @@ public:
 
   std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) {
 
-        identifiers(out, intersecting_identifiers);
+        identifiers(out, summary_identifiers);
 
         for(size_t pos = 0; pos < child_profiles.size(); ++pos) {
 
