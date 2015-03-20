@@ -894,7 +894,7 @@ public:
 
             /** @todo check this condition */
             if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-                 && is_body_summary(child_profile->type_name)) {
+                 && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
                 if(is_leaf) {
 
@@ -948,9 +948,9 @@ public:
 
     }
 
-    bool is_body_summary(const std::string & type) const {
+    bool is_body_summary(const std::string & type, bool is_replacement) const {
 
-        return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type);
+        return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement);
 
     }
 
@@ -963,7 +963,7 @@ public:
             const size_t child_profile_pos = child_profiles[pos];
             const std::shared_ptr<profile_t> & child_profile = profile_list[child_profile_pos];
 
-            if(!is_body_summary(child_profile->type_name) || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0))
+            if(!is_body_summary(child_profile->type_name, child_profile->is_replacement) || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0))
                 continue;
 
             if(child_profile->is_replacement && ((pos + 1) < child_profiles.size())) {
