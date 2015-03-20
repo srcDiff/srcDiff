@@ -166,7 +166,7 @@ private:
                         article_conditional_str_inserted = "several";
                         std::string conditional_temp = get_type_string(replacement_profile);
                         if(conditional_temp != conditional_str_inserted)
-                            conditional_str_inserted = "expression statements";
+                            conditional_str_inserted = "conditional statements";
 
                     }
 
@@ -248,11 +248,11 @@ private:
             && (comment_deleted >= 1 || comment_inserted >= 1)) {
 
             if(expr_stmt_deleted || expr_stmt_inserted)
-                out << (expr_stmt_deleted ? article_expr_stmt_str_deleted + " " + expr_stmt_str_deleted : article_expr_stmt_str_inserted + " " +expr_stmt_str_inserted);
+                out << (expr_stmt_deleted ? article_expr_stmt_str_deleted + " " + expr_stmt_str_deleted : article_expr_stmt_str_inserted + " " + expr_stmt_str_inserted);
             else if(decl_stmt_deleted || decl_stmt_inserted)
                 out << "a declaration statement";
             else if(conditionals_deleted || conditionals_inserted)
-                out << "a conditional statement";
+                out << (conditionals_deleted ? article_conditional_str_deleted + " " + conditional_str_deleted : article_conditional_str_inserted + " " + conditional_str_inserted);
 
             out << " was ";
 
@@ -301,10 +301,8 @@ private:
 
             if(conditionals_deleted) {
 
-                if(conditionals_deleted == 1)
-                    out << "a conditional statement";
-                else if(conditionals_deleted > 1)
-                    out << "several conditional statements";
+                out << article_conditional_str_deleted << " " << conditional_str_deleted;
+                if(conditionals_deleted > 1) out << 's';
 
                 if(number_deleted_types > 2)
                     out << ", and ";
@@ -361,10 +359,8 @@ private:
 
             if(conditionals_inserted) {
 
-                if(conditionals_inserted == 1)
-                    out << "a conditional statement";
-                else if(conditionals_inserted > 1)
-                    out << "several conditional statements";
+                out << article_conditional_str_inserted << " " << conditional_str_inserted;
+                if(conditionals_inserted > 1) out << 's';
 
                 if(number_inserted_types > 2)
                     out << ", and ";
