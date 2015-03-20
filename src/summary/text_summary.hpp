@@ -126,8 +126,8 @@ private:
 
         const std::shared_ptr<profile_t> & start_profile = profile_list[profile->child_profiles[pos]];
 
-        size_t expr_stmt_deleted  = 0, decl_stmt_deleted  = 0, conditionals_deleted  = 0;
-        size_t expr_stmt_inserted = 0, decl_stmt_inserted = 0, conditionals_inserted = 0; 
+        size_t expr_stmt_deleted  = 0, decl_stmt_deleted  = 0, conditionals_deleted  = 0, comment_deleted  = 0;
+        size_t expr_stmt_inserted = 0, decl_stmt_inserted = 0, conditionals_inserted = 0, comment_inserted = 0; 
         for(; pos < profile->child_profiles.size() && profile_list[profile->child_profiles[pos]]->is_replacement; ++pos) {
 
             const std::shared_ptr<profile_t> & replacement_profile = profile_list[profile->child_profiles[pos]];                    
@@ -147,50 +147,91 @@ private:
                 if(replacement_profile->operation == SRCDIFF_DELETE) ++decl_stmt_deleted;
                 else                                                 ++decl_stmt_inserted;
 
-            }
+            } else if(is_comment(replacement_profile->type_name)) {
 
+                if(replacement_profile->operation == SRCDIFF_DELETE) ++comment_deleted;
+                else                                                 ++comment_inserted;
+
+            }
 
         }
 
         --pos;
 
         profile_t::begin_line(out);
-        if((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted) == 1) {
+
+        size_t number_deleted_types  = 0;
+        if(expr_stmt_deleted)    ++number_deleted_types;
+        if(decl_stmt_deleted)    ++number_deleted_types;
+        if(conditionals_deleted) ++number_deleted_types;
+        if(comment_deleted)      ++number_deleted_types;
+
+        if((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted + comment_deleted) == 1) {
 
             out << get_article(start_profile) << ' ' << get_type_string(start_profile) << " was";
 
         } else {
 
-            if(expr_stmt_deleted == 1)
-                out << "an expression statement";
-            else if(expr_stmt_deleted > 1)
-                out << "several expression statements";
+            if(expr_stmt_deleted) {
 
-            if(expr_stmt_deleted && decl_stmt_deleted && conditionals_deleted)
-                out << ", ";
-            else if(expr_stmt_deleted && (decl_stmt_deleted || conditionals_deleted))
-                out << " and ";
+                if(expr_stmt_deleted == 1)
+                    out << "an expression statement";
+                else if(expr_stmt_deleted > 1)
+                    out << "several expression statements";
 
-            if(decl_stmt_deleted == 1)
-                out << "a declaration statement";
-            else if(decl_stmt_deleted > 1)
-                out << "several declaration statements";
+                if(number_deleted_types == 2)
+                    out << " and ";
+                else if(number_deleted_types > 2)
+                    out << ", ";
 
-            if(expr_stmt_deleted && decl_stmt_deleted && conditionals_deleted)
-                out << ", and ";
-            else if(expr_stmt_deleted == 0 && decl_stmt_deleted && conditionals_deleted)
-                out << " and ";
+            }
 
-            if(conditionals_deleted == 1)
-                out << "a declaration statement";
-            else if(conditionals_deleted > 1)
-                out << "several conditional statements";
+            if(decl_stmt_deleted) {
+
+                if(decl_stmt_deleted == 1)
+                    out << "a declaration statement";
+                else if(decl_stmt_deleted > 1)
+                    out << "several declaration statements";
+
+                if(expr_stmt_deleted && number_deleted_types == 3)
+                    out << ", and ";
+                else if(expr_stmt_deleted == 0 && number_deleted_types == 2)
+                    out << " and ";
+                else if(number_deleted_types > 2)
+                    out << ", ";
+
+            }
+
+            if(conditionals_deleted) {
+
+                if(conditionals_deleted == 1)
+                    out << "a conditional statement";
+                else if(conditionals_deleted > 1)
+                    out << "several conditional statements";
+
+                if(number_deleted_types > 2)
+                    out << ", and ";
+                else if(comment_deleted == 0 && number_deleted_types == 2)
+                    out << " and ";
+
+            }
+
+            if(comment_deleted == 1)
+                out << "a comment";
+            else if(comment_deleted > 1)
+                out << "several comments";
 
             out << " were";
 
         }
 
         out << " replaced with ";
+
+        size_t number_inserted_types = 0;
+        if(expr_stmt_inserted)    ++number_inserted_types;
+        if(decl_stmt_inserted)    ++number_inserted_types;
+        if(conditionals_inserted) ++number_inserted_types;
+        if(comment_inserted)      ++number_inserted_types;
 
         if((expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 1) {
      
@@ -199,30 +240,54 @@ private:
 
         } else {
 
-            if(expr_stmt_inserted == 1)
-                out << "an expression statement";
-            else if(expr_stmt_inserted > 1)
-                out << "several expression statements";
+            if(expr_stmt_inserted) {
 
-            if(expr_stmt_inserted && decl_stmt_inserted && conditionals_inserted)
-                out << ", ";
-            else if(expr_stmt_inserted && (decl_stmt_inserted || conditionals_inserted))
-                out << " and ";
+                if(expr_stmt_inserted == 1)
+                    out << "an expression statement";
+                else if(expr_stmt_inserted > 1)
+                    out << "several expression statements";
 
-            if(decl_stmt_inserted == 1)
-                out << "a declaration statement";
-            else if(decl_stmt_inserted > 1)
-                out << "several declaration statements";
+                if(number_inserted_types == 2)
+                    out << " and ";
+                else if(number_inserted_types > 2)
+                    out << ", ";
 
-            if(expr_stmt_inserted && decl_stmt_inserted && conditionals_inserted)
-                out << ", and ";
-            else if(expr_stmt_inserted == 0 && decl_stmt_inserted && conditionals_inserted)
-                out << " and ";
+            }
 
-            if(conditionals_inserted == 1)
-                out << "a declaration statement";
-            else if(conditionals_inserted > 1)
-                out << "several conditional statements";
+            if(decl_stmt_inserted) {
+
+                if(decl_stmt_inserted == 1)
+                    out << "a declaration statement";
+                else if(decl_stmt_inserted > 1)
+                    out << "several declaration statements";
+
+                if(expr_stmt_inserted && number_inserted_types == 3)
+                    out << ", and ";
+                else if(expr_stmt_inserted == 0 && number_inserted_types == 2)
+                    out << " and ";
+                else if(number_inserted_types > 2)
+                    out << ", ";
+
+            }
+
+            if(conditionals_inserted) {
+
+                if(conditionals_inserted == 1)
+                    out << "a conditional statement";
+                else if(conditionals_inserted > 1)
+                    out << "several conditional statements";
+
+                if(number_inserted_types > 2)
+                    out << ", and ";
+                else if(comment_inserted == 0 && number_inserted_types == 2)
+                    out << " and ";
+
+            }
+
+            if(comment_inserted == 1)
+                out << "a comment statement";
+            else if(comment_inserted > 1)
+                out << "several comments statements";
 
         }
 

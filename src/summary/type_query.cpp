@@ -102,6 +102,11 @@ bool is_argument(const std::string & type_name) {
 
 }
 
+bool is_comment(const std::string & type_name) {
+
+    return type_name == "comment";
+}
+
 bool has_then_clause(const std::string & type_name) {
 
     return type_name == "if" || type_name == "ternary";
