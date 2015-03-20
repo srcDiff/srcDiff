@@ -127,7 +127,10 @@ private:
         const std::shared_ptr<profile_t> & start_profile = profile_list[profile->child_profiles[pos]];
 
         size_t expr_stmt_deleted  = 0, decl_stmt_deleted  = 0, conditionals_deleted  = 0, comment_deleted  = 0;
-        size_t expr_stmt_inserted = 0, decl_stmt_inserted = 0, conditionals_inserted = 0, comment_inserted = 0; 
+        size_t expr_stmt_inserted = 0, decl_stmt_inserted = 0, conditionals_inserted = 0, comment_inserted = 0;
+
+        std::string article_str_deleted, article_str_inserted;
+        std::string expr_stmt_str_deleted, expr_stmt_str_inserted;
         for(; pos < profile->child_profiles.size() && profile_list[profile->child_profiles[pos]]->is_replacement; ++pos) {
 
             const std::shared_ptr<profile_t> & replacement_profile = profile_list[profile->child_profiles[pos]];                    
@@ -139,8 +142,43 @@ private:
 
             } else if(is_expr_stmt(replacement_profile->type_name)) {
 
-                if(replacement_profile->operation == SRCDIFF_DELETE) ++expr_stmt_deleted;
-                else                                                 ++expr_stmt_inserted;
+                if(replacement_profile->operation == SRCDIFF_DELETE) {
+
+                    if(expr_stmt_deleted == 0) {
+
+                        article_str_deleted = get_article(replacement_profile);
+                        expr_stmt_str_deleted = get_type_string(replacement_profile);
+
+                    } else {
+
+                        article_str_deleted = "several";
+                        std::string expr_stmt_temp = get_type_string(replacement_profile);
+                        if(expr_stmt_temp != expr_stmt_str_deleted)
+                            expr_stmt_str_deleted = "expression statements";
+
+                    }
+
+                    ++expr_stmt_deleted;
+
+                } else {
+
+                   if(expr_stmt_inserted == 0) {
+
+                        article_str_inserted = get_article(replacement_profile);
+                        expr_stmt_str_inserted = get_type_string(replacement_profile);
+
+                    } else {
+
+                        article_str_inserted = "several";
+                        std::string expr_stmt_temp = get_type_string(replacement_profile);
+                        if(expr_stmt_temp != expr_stmt_str_inserted)
+                            expr_stmt_str_inserted = "expression statements";
+
+                    }
+
+                    ++expr_stmt_inserted;
+
+                }
 
             } else if(is_decl_stmt(replacement_profile->type_name)){
 
@@ -171,7 +209,7 @@ private:
             && (comment_deleted == 1 || comment_inserted == 1)) {
 
             if(expr_stmt_deleted || expr_stmt_inserted)
-                out << "an expression statement";
+                out << (expr_stmt_deleted ? article_str_deleted + " " + expr_stmt_str_deleted : article_str_inserted + " " +expr_stmt_str_inserted);
             else if(decl_stmt_deleted || decl_stmt_inserted)
                 out << "a declaration statement";
             else if(conditionals_deleted || conditionals_inserted)
@@ -196,10 +234,8 @@ private:
 
             if(expr_stmt_deleted) {
 
-                if(expr_stmt_deleted == 1)
-                    out << "an expression statement";
-                else if(expr_stmt_deleted > 1)
-                    out << "several expression statements";
+                out << article_str_deleted << " " << expr_stmt_str_deleted;
+                if(expr_stmt_deleted > 1) out << 's';
 
                 if(number_deleted_types == 2)
                     out << " and ";
@@ -264,10 +300,8 @@ private:
 
             if(expr_stmt_inserted) {
 
-                if(expr_stmt_inserted == 1)
-                    out << "an expression statement";
-                else if(expr_stmt_inserted > 1)
-                    out << "several expression statements";
+                out << article_str_inserted << " " << expr_stmt_str_inserted;
+                if(expr_stmt_inserted > 1) out << 's';
 
                 if(number_inserted_types == 2)
                     out << " and ";
