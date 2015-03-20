@@ -74,6 +74,8 @@ private:
 
         }
 
+        if(is_comment(profile->type_name)) return profile->type_name;
+
         return profile->type_name + " statement";
 
     }
@@ -206,7 +208,7 @@ private:
 
         if((((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted) == 1 && (expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 0)
             || ((expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 1 && (expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted) == 0))
-            && (comment_deleted == 1 || comment_inserted == 1)) {
+            && (comment_deleted >= 1 || comment_inserted >= 1)) {
 
             if(expr_stmt_deleted || expr_stmt_inserted)
                 out << (expr_stmt_deleted ? article_str_deleted + " " + expr_stmt_str_deleted : article_str_inserted + " " +expr_stmt_str_inserted);
@@ -335,9 +337,9 @@ private:
             }
 
             if(comment_inserted == 1)
-                out << "a comment statement";
+                out << "a comment";
             else if(comment_inserted > 1)
-                out << "several comments statements";
+                out << "several comments";
 
         }
 
