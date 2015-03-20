@@ -166,6 +166,28 @@ private:
         if(conditionals_deleted) ++number_deleted_types;
         if(comment_deleted)      ++number_deleted_types;
 
+        if(((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted) == 1
+            || (expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 1)
+            && (comment_deleted == 1 || comment_inserted == 1)) {
+
+            if(expr_stmt_deleted || expr_stmt_inserted)
+                out << "an expression statement";
+            else if(decl_stmt_deleted || decl_stmt_inserted)
+                out << "a declaration statement";
+            else if(conditionals_deleted || conditionals_inserted)
+                out << "a conditional statement";
+
+            out << " was ";
+
+            if(comment_deleted)
+                out << "uncommented\n";
+            else
+                out << "commented out\n";
+
+            return out;
+
+        }
+
         if((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted + comment_deleted) == 1) {
 
             out << get_article(start_profile) << ' ' << get_type_string(start_profile) << " was";
@@ -233,7 +255,7 @@ private:
         if(conditionals_inserted) ++number_inserted_types;
         if(comment_inserted)      ++number_inserted_types;
 
-        if((expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 1) {
+        if((expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted + comment_inserted) == 1) {
      
            const std::shared_ptr<profile_t> & next_profile = profile_list[profile->child_profiles[pos]];
            out << get_article(next_profile) << ' ' << get_type_string(next_profile) << '\n';
