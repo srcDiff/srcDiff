@@ -35,7 +35,7 @@ protected:
 
         const std::map<versioned_string, size_t> & summary_identifiers;
 
-        std::map<versioned_string, size_t> repeated_identifiers;
+        std::map<versioned_string, size_t> output_identifiers;
 
 private:
 
@@ -103,9 +103,9 @@ private:
 
         for(std::map<versioned_string, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
 
-            std::map<versioned_string, size_t>::iterator itersect_itr = repeated_identifiers.find(itr->first);
-            if(itersect_itr == repeated_identifiers.end())
-                repeated_identifiers.insert(itersect_itr, *itr);
+            std::map<versioned_string, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
+            if(itersect_itr == output_identifiers.end())
+                output_identifiers.insert(itersect_itr, *itr);
             else
                 itersect_itr->second += itr->second;
 
@@ -115,12 +115,6 @@ private:
 
     }
 
-    /**
-     * @todo
-     * Should have assignment, delete, call also summarized specially.  May also want to do conditionals separate as well.
-     *
-     * Also want to know when code replaced with comment so report commented out.
-     */
     std::ostream & replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos,
                                          const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
@@ -740,14 +734,11 @@ public:
 
         } else {
 
-            /** @todo I need to update the intersect once output new ones or least look into that make sure doing this correctly */
-
-
             // there is probably a better way
             const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
             std::map<versioned_string, size_t> diff_set;
             std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-                                repeated_identifiers.begin(), repeated_identifiers.end(),
+                                output_identifiers.begin(), output_identifiers.end(),
                                 std::inserter(diff_set, diff_set.begin()));
 
             size_t number_calls = 0, number_renames = 0, number_argument_list_modified = 0;
