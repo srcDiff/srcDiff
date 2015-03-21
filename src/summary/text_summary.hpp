@@ -122,106 +122,39 @@ private:
 
         const std::shared_ptr<profile_t> & start_profile = profile_list[profile->child_profiles[pos]];
 
-        size_t expr_stmt_deleted  = 0, decl_stmt_deleted  = 0, conditionals_deleted  = 0, comment_deleted  = 0;
-        size_t expr_stmt_inserted = 0, decl_stmt_inserted = 0, conditionals_inserted = 0, comment_inserted = 0;
-
-        std::string article_expr_stmt_str_deleted, article_expr_stmt_str_inserted;
-        std::string expr_stmt_str_deleted, expr_stmt_str_inserted;
-
-        std::string article_conditional_str_deleted, article_conditional_str_inserted;
-        std::string conditional_str_deleted, conditional_str_inserted;
+        std::vector<const std::shared_ptr<expr_stmt_profile_t> *>   expr_stmt_deleted,    expr_stmt_inserted;
+        std::vector<const std::shared_ptr<decl_stmt_profile_t> *>   decl_stmt_deleted,    decl_stmt_inserted;
+        std::vector<const std::shared_ptr<conditional_profile_t> *> conditionals_deleted, conditionals_inserted;
+        std::vector<const std::shared_ptr<profile_t> *>             comment_deleted,      comment_inserted;
         for(; pos < profile->child_profiles.size() && profile_list[profile->child_profiles[pos]]->is_replacement; ++pos) {
 
             const std::shared_ptr<profile_t> & replacement_profile = profile_list[profile->child_profiles[pos]];                    
 
             if(is_condition_type(replacement_profile->type_name)) {
 
-                if(replacement_profile->operation == SRCDIFF_DELETE) {
+                if(replacement_profile->operation == SRCDIFF_DELETE)
+                    conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> *>(&replacement_profile));
+                else
+                    conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> *>(&replacement_profile));
 
-                    if(conditionals_deleted == 0) {
-
-                        article_conditional_str_deleted = get_article(replacement_profile);
-                        conditional_str_deleted = get_type_string(replacement_profile);
-
-                    } else {
-
-                        article_conditional_str_deleted = "several";
-                        std::string conditional_temp = get_type_string(replacement_profile);
-                        if(conditional_temp != conditional_str_deleted)
-                            conditional_str_deleted = "expression statements";
-
-                    }
-
-                    ++conditionals_deleted;
-
-                } else {
-
-                   if(conditionals_inserted == 0) {
-
-                        article_conditional_str_inserted = get_article(replacement_profile);
-                        conditional_str_inserted = get_type_string(replacement_profile);
-
-                    } else {
-
-                        article_conditional_str_inserted = "several";
-                        std::string conditional_temp = get_type_string(replacement_profile);
-                        if(conditional_temp != conditional_str_inserted)
-                            conditional_str_inserted = "conditional statements";
-
-                    }
-
-                    ++conditionals_inserted;
-
-                }
             } else if(is_expr_stmt(replacement_profile->type_name)) {
 
-                if(replacement_profile->operation == SRCDIFF_DELETE) {
-
-                    if(expr_stmt_deleted == 0) {
-
-                        article_expr_stmt_str_deleted = get_article(replacement_profile);
-                        expr_stmt_str_deleted = get_type_string(replacement_profile);
-
-                    } else {
-
-                        article_expr_stmt_str_deleted = "several";
-                        std::string expr_stmt_temp = get_type_string(replacement_profile);
-                        if(expr_stmt_temp != expr_stmt_str_deleted)
-                            expr_stmt_str_deleted = "expression statements";
-
-                    }
-
-                    ++expr_stmt_deleted;
-
-                } else {
-
-                   if(expr_stmt_inserted == 0) {
-
-                        article_expr_stmt_str_inserted = get_article(replacement_profile);
-                        expr_stmt_str_inserted = get_type_string(replacement_profile);
-
-                    } else {
-
-                        article_expr_stmt_str_inserted = "several";
-                        std::string expr_stmt_temp = get_type_string(replacement_profile);
-                        if(expr_stmt_temp != expr_stmt_str_inserted)
-                            expr_stmt_str_inserted = "expression statements";
-
-                    }
-
-                    ++expr_stmt_inserted;
-
-                }
+                if(replacement_profile->operation == SRCDIFF_DELETE)
+                    expr_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> *>(&replacement_profile));
+                else
+                    expr_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> *>(&replacement_profile));
 
             } else if(is_decl_stmt(replacement_profile->type_name)){
 
-                if(replacement_profile->operation == SRCDIFF_DELETE) ++decl_stmt_deleted;
-                else                                                 ++decl_stmt_inserted;
+                if(replacement_profile->operation == SRCDIFF_DELETE)
+                    decl_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> *>(&replacement_profile));
+                else
+                    decl_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> *>(&replacement_profile));
 
             } else if(is_comment(replacement_profile->type_name)) {
 
-                if(replacement_profile->operation == SRCDIFF_DELETE) ++comment_deleted;
-                else                                                 ++comment_inserted;
+                if(replacement_profile->operation == SRCDIFF_DELETE) comment_deleted.push_back(&replacement_profile);
+                else                                                 comment_inserted.push_back(&replacement_profile);
 
             }
 
@@ -232,31 +165,39 @@ private:
         profile_t::begin_line(out);
 
         size_t number_deleted_types  = 0;
-        if(expr_stmt_deleted)    ++number_deleted_types;
-        if(decl_stmt_deleted)    ++number_deleted_types;
-        if(conditionals_deleted) ++number_deleted_types;
-        if(comment_deleted)      ++number_deleted_types;
+        if(expr_stmt_deleted.size() != 0)    ++number_deleted_types;
+        if(decl_stmt_deleted.size() != 0)    ++number_deleted_types;
+        if(conditionals_deleted.size() != 0) ++number_deleted_types;
+        if(comment_deleted.size() != 0)      ++number_deleted_types;
 
         size_t number_inserted_types = 0;
-        if(expr_stmt_inserted)    ++number_inserted_types;
-        if(decl_stmt_inserted)    ++number_inserted_types;
-        if(conditionals_inserted) ++number_inserted_types;
-        if(comment_inserted)      ++number_inserted_types;
+        if(expr_stmt_inserted.size() != 0)    ++number_inserted_types;
+        if(decl_stmt_inserted.size() != 0)    ++number_inserted_types;
+        if(conditionals_inserted.size() != 0) ++number_inserted_types;
+        if(comment_inserted.size() != 0)      ++number_inserted_types;
 
-        if((((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted) == 1 && (expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 0)
-            || ((expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted) == 1 && (expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted) == 0))
-            && (comment_deleted >= 1 || comment_inserted >= 1)) {
+        if((((expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size()) == 1 
+                && (expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size()) == 0)
+            || ((expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size()) == 1
+                && (expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size()) == 0))
+            && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
 
-            if(expr_stmt_deleted || expr_stmt_inserted)
-                out << (expr_stmt_deleted ? article_expr_stmt_str_deleted + " " + expr_stmt_str_deleted : article_expr_stmt_str_inserted + " " + expr_stmt_str_inserted);
-            else if(decl_stmt_deleted || decl_stmt_inserted)
-                out << "a declaration statement";
-            else if(conditionals_deleted || conditionals_inserted)
-                out << (conditionals_deleted ? article_conditional_str_deleted + " " + conditional_str_deleted : article_conditional_str_inserted + " " + conditional_str_inserted);
+            if(expr_stmt_deleted.size())
+                out << get_article(*expr_stmt_deleted.back()) << ' ' << get_type_string(*expr_stmt_deleted.back());
+            else if(expr_stmt_inserted.size())
+                out << get_article(*expr_stmt_inserted.back()) << ' ' << get_type_string(*expr_stmt_inserted.back());
+            else if(decl_stmt_deleted.size())
+                out << get_article(*decl_stmt_deleted.back()) << ' ' << get_type_string(*decl_stmt_deleted.back());
+            else if(decl_stmt_inserted.size())
+                out << get_article(*decl_stmt_inserted.back()) << ' ' << get_type_string(*decl_stmt_inserted.back());
+            else if(conditionals_deleted.size())
+                out << get_article(*conditionals_deleted.back()) << ' ' << get_type_string(*conditionals_deleted.back());
+            else if(conditionals_inserted.size())
+                out << get_article(*conditionals_inserted.back()) << ' ' << get_type_string(*conditionals_inserted.back());
 
             out << " was ";
 
-            if(comment_deleted)
+            if(comment_deleted.size())
                 out << "uncommented\n";
             else
                 out << "commented out\n";
@@ -265,16 +206,29 @@ private:
 
         }
 
-        if((expr_stmt_deleted + decl_stmt_deleted + conditionals_deleted + comment_deleted) == 1) {
+        if((expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size() + comment_deleted.size()) == 1) {
 
-            out << get_article(start_profile) << ' ' << get_type_string(start_profile) << " was";
+            if(expr_stmt_deleted.size())
+                out << get_article(*expr_stmt_deleted.back()) << ' ' << get_type_string(*expr_stmt_deleted.back());
+            else if(decl_stmt_deleted.size())
+                out << get_article(*decl_stmt_deleted.back()) << ' ' << get_type_string(*decl_stmt_deleted.back())
+                    << " declaring '" << (*decl_stmt_deleted.back())->name.original() << "' of type '"
+                    << (*decl_stmt_deleted.back())->type.original() << '\'';
+            else if(conditionals_deleted.size())
+                out << get_article(*conditionals_deleted.back()) << ' ' << get_type_string(*conditionals_deleted.back());
+            else
+                out << get_article(*comment_deleted.back()) << ' ' << get_type_string(*comment_deleted.back());
+
+            out << " was";
 
         } else {
 
-            if(expr_stmt_deleted) {
+            if(expr_stmt_deleted.size()) {
 
-                out << article_expr_stmt_str_deleted << " " << expr_stmt_str_deleted;
-                if(expr_stmt_deleted > 1) out << 's';
+                if(expr_stmt_deleted.size() == 1)
+                    out << get_article(*expr_stmt_deleted.back()) << ' ' << get_type_string(*expr_stmt_deleted.back());
+                else
+                    out << "several expression statements";
 
                 if(number_deleted_types == 2)
                     out << " and ";
@@ -283,37 +237,41 @@ private:
 
             }
 
-            if(decl_stmt_deleted) {
+            if(decl_stmt_deleted.size()) {
 
-                if(decl_stmt_deleted == 1)
-                    out << "a declaration statement";
-                else if(decl_stmt_deleted > 1)
+                if(decl_stmt_deleted.size() == 1)
+                    out << get_article(*decl_stmt_deleted.back()) << ' ' << get_type_string(*decl_stmt_deleted.back())
+                        << " declaring '" << (*decl_stmt_deleted.back())->name.original() << "' of type '"
+                        << (*decl_stmt_deleted.back())->type.original() << '\'';
+                else
                     out << "several declaration statements";
 
-                if(expr_stmt_deleted && number_deleted_types == 3)
+                if(expr_stmt_deleted.size() && number_deleted_types == 3)
                     out << ", and ";
-                else if(expr_stmt_deleted == 0 && number_deleted_types == 2)
+                else if(expr_stmt_deleted.size() == 0 && number_deleted_types == 2)
                     out << " and ";
                 else if(number_deleted_types > 2)
                     out << ", ";
 
             }
 
-            if(conditionals_deleted) {
+            if(conditionals_deleted.size()) {
 
-                out << article_conditional_str_deleted << " " << conditional_str_deleted;
-                if(conditionals_deleted > 1) out << 's';
+                if(conditionals_deleted.size() == 1)
+                    out << get_article(*conditionals_deleted.back()) << ' ' << get_type_string(*conditionals_deleted.back());
+                else
+                    out << "several conditional statements";
 
                 if(number_deleted_types > 2)
                     out << ", and ";
-                else if(comment_deleted == 0 && number_deleted_types == 2)
+                else if(comment_deleted.size() == 0 && number_deleted_types == 2)
                     out << " and ";
 
             }
 
-            if(comment_deleted == 1)
+            if(comment_deleted.size() == 1)
                 out << "a comment";
-            else if(comment_deleted > 1)
+            else if(comment_deleted.size() > 1)
                 out << "several comments";
 
             out << " were";
@@ -322,17 +280,29 @@ private:
 
         out << " replaced with ";
 
-        if((expr_stmt_inserted + decl_stmt_inserted + conditionals_inserted + comment_inserted) == 1) {
+        if((expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size() + comment_inserted.size()) == 1) {
      
-           const std::shared_ptr<profile_t> & next_profile = profile_list[profile->child_profiles[pos]];
-           out << get_article(next_profile) << ' ' << get_type_string(next_profile) << '\n';
+            if(expr_stmt_inserted.size())
+                out << get_article(*expr_stmt_inserted.back()) << ' ' << get_type_string(*expr_stmt_inserted.back());
+            else if(decl_stmt_inserted.size())
+                out << get_article(*decl_stmt_inserted.back()) << ' ' << get_type_string(*decl_stmt_inserted.back())
+                    << " declaring '" << (*decl_stmt_inserted.back())->name.original() << "' of type '"
+                    << (*decl_stmt_inserted.back())->type.original() << '\'';
+            else if(conditionals_inserted.size())
+                out << get_article(*conditionals_inserted.back()) << ' ' << get_type_string(*conditionals_inserted.back());
+            else
+                out << get_article(*comment_inserted.back()) << ' ' << get_type_string(*comment_inserted.back());
 
         } else {
 
-            if(expr_stmt_inserted) {
+            if(expr_stmt_inserted.size()) {
 
-                out << article_expr_stmt_str_inserted << " " << expr_stmt_str_inserted;
-                if(expr_stmt_inserted > 1) out << 's';
+                if(expr_stmt_inserted.size() == 1)
+                    out << get_article(*expr_stmt_inserted.back()) << ' ' << get_type_string(*expr_stmt_inserted.back());
+                else
+                    out << "several expression statements";
+
+                if(expr_stmt_inserted.size() > 1) out << 's';
 
                 if(number_inserted_types == 2)
                     out << " and ";
@@ -341,40 +311,48 @@ private:
 
             }
 
-            if(decl_stmt_inserted) {
+            if(decl_stmt_inserted.size()) {
 
-                if(decl_stmt_inserted == 1)
-                    out << "a declaration statement";
-                else if(decl_stmt_inserted > 1)
+                if(decl_stmt_inserted.size() == 1)
+                    out << get_article(*decl_stmt_inserted.back()) << ' ' << get_type_string(*decl_stmt_inserted.back())
+                        << " declaring '" << (*decl_stmt_inserted.back())->name.original() << "' of type '"
+                        << (*decl_stmt_inserted.back())->type.original() << '\'';
+                else
                     out << "several declaration statements";
 
-                if(expr_stmt_inserted && number_inserted_types == 3)
+                if(expr_stmt_inserted.size() && number_inserted_types == 3)
                     out << ", and ";
-                else if(expr_stmt_inserted == 0 && number_inserted_types == 2)
+                else if(expr_stmt_inserted.size() == 0 && number_inserted_types == 2)
                     out << " and ";
                 else if(number_inserted_types > 2)
                     out << ", ";
 
             }
 
-            if(conditionals_inserted) {
+            if(conditionals_inserted.size()) {
 
-                out << article_conditional_str_inserted << " " << conditional_str_inserted;
-                if(conditionals_inserted > 1) out << 's';
+                if(conditionals_inserted.size() == 1)
+                    out << get_article(*conditionals_inserted.back()) << ' ' << get_type_string(*conditionals_inserted.back());
+                else
+                    out << "several conditional statements";
+
+                if(conditionals_inserted.size() > 1) out << 's';
 
                 if(number_inserted_types > 2)
                     out << ", and ";
-                else if(comment_inserted == 0 && number_inserted_types == 2)
+                else if(comment_inserted.size() == 0 && number_inserted_types == 2)
                     out << " and ";
 
             }
 
-            if(comment_inserted == 1)
+            if(comment_inserted.size() == 1)
                 out << "a comment";
-            else if(comment_inserted > 1)
+            else if(comment_inserted.size() > 1)
                 out << "several comments";
 
         }
+
+        out << '\n';
 
         return out;
 
