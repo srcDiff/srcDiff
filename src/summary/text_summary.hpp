@@ -34,6 +34,7 @@ protected:
         const change_entity_map<call_profile_t>      & member_initializations;
 
         const std::map<versioned_string, size_t> & summary_identifiers;
+        const std::vector<std::shared_ptr<profile_t>> & profile_list;
 
         std::map<versioned_string, size_t> output_identifiers;
 
@@ -98,6 +99,19 @@ private:
 
         }
 
+        if(is_expr_stmt(profile->type_name)) {
+
+            const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+            if(expr_stmt_profile->call()) {
+
+//                if(expr_stmt_profile.child_profiles[0])
+
+                return get_article(profile) + ' ' + get_type_string(profile) + " to '";
+
+            }
+
+        }
+
         return get_article(profile) + ' ' + get_type_string(profile);
 
     }
@@ -139,8 +153,7 @@ private:
 
     }
 
-    std::ostream & replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos,
-                                         const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos) const {
 
         const std::shared_ptr<profile_t> & start_profile = profile_list[profile->child_profiles[pos]];
 
@@ -376,9 +389,10 @@ public:
 
     text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<versioned_string, size_t> & summary_identifiers)
+                 const std::map<versioned_string, size_t> & summary_identifiers,
+                 const std::vector<std::shared_ptr<profile_t>> & profile_list)
         : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
-          summary_identifiers(summary_identifiers) {}
+          summary_identifiers(summary_identifiers), profile_list(profile_list) {}
 
     std::ostream & parameter(std::ostream & out, size_t number_parameters_deleted,
                                           size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -578,7 +592,7 @@ public:
     }
 
     /** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
-    void call_check(const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list, const std::map<versioned_string, size_t> & identifier_set,
+    void call_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
                     size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const {
 
         for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
@@ -627,7 +641,7 @@ public:
                                         if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
 
                                             size_t num_calls = 0, num_renames = 0, num_argument_list_modified = 0;
-                                            call_check(argument_child_profile, profile_list, identifier_set, num_calls, num_renames, num_argument_list_modified);
+                                            call_check(argument_child_profile, identifier_set, num_calls, num_renames, num_argument_list_modified);
 
                                             if(num_calls || num_renames || number_argument_list_modified) {
 
@@ -688,7 +702,7 @@ public:
 
     }
 
-    std::ostream & expr_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & expr_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const {
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
@@ -769,7 +783,7 @@ public:
                                 std::inserter(diff_set, diff_set.begin()));
 
             size_t number_calls = 0, number_renames = 0, number_argument_list_modified = 0;
-            call_check(profile, profile_list, diff_set, number_calls, number_renames, number_argument_list_modified);
+            call_check(profile, diff_set, number_calls, number_renames, number_argument_list_modified);
 
             if(number_calls == 0) return out;
 
@@ -812,7 +826,7 @@ public:
 
     }
 
-    std::ostream & decl_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
+    std::ostream & decl_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const {
 
         const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
@@ -826,7 +840,7 @@ public:
 
     }
 
-    std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) {
+    std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile) {
 
         const bool has_common = profile->common_profiles.size() > 0;
 
@@ -927,16 +941,16 @@ public:
 
                 if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
 
-                    replacement(out, profile, pos, profile_list);
+                    replacement(out, profile, pos);
 
                 } else {
 
                     if(is_condition_type(child_profile->type_name))
-                        conditional(out, child_profile, profile_list);
+                        conditional(out, child_profile);
                     else if(is_expr_stmt(child_profile->type_name))
-                        expr_stmt(out, child_profile, profile_list);
+                        expr_stmt(out, child_profile);
                     else if(is_decl_stmt(child_profile->type_name))
-                        decl_stmt(out, child_profile, profile_list);
+                        decl_stmt(out, child_profile);
 
                 }
 
@@ -973,7 +987,7 @@ public:
 
     }
 
-  std::ostream & body(std::ostream & out, const std::vector<std::shared_ptr<profile_t>> & profile_list) {
+  std::ostream & body(std::ostream & out) {
 
         identifiers(out, summary_identifiers);
 
@@ -987,16 +1001,16 @@ public:
 
             if(child_profile->is_replacement && ((pos + 1) < child_profiles.size())) {
 
-                replacement(out, profile_list[id], pos, profile_list);
+                replacement(out, profile_list[id], pos);
 
             } else {
 
                 if(is_condition_type(child_profile->type_name))
-                    conditional(out, child_profile, profile_list);
+                    conditional(out, child_profile);
                 else if(is_expr_stmt(child_profile->type_name))
-                    expr_stmt(out, child_profile, profile_list);
+                    expr_stmt(out, child_profile);
                 else if(is_decl_stmt(child_profile->type_name))
-                    decl_stmt(out, child_profile, profile_list);
+                    decl_stmt(out, child_profile);
 
             }
 

@@ -116,7 +116,7 @@ class function_profile_t : public profile_t {
 
             if(is_summary_type(summary_types, summary_type::TEXT)) {
 
-                text_summary text(id, child_profiles, parameters, member_initializations, summary_identifiers);
+                text_summary text(id, child_profiles, parameters, member_initializations, summary_identifiers, profile_list);
 
                 if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
@@ -132,7 +132,7 @@ class function_profile_t : public profile_t {
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
-                text.body(out, profile_list);
+                text.body(out);
 
             }
 
