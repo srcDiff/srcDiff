@@ -726,8 +726,19 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
-    if(expr_stmt_pos > 0 && ((profile_stack.size() - 1) - expr_stmt_pos) == 2 && !is_call(full_name) && full_name != "operator")
-        reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_call(false);
+    // inner expr_stmt handling
+    if(expr_stmt_pos > 0 && ((profile_stack.size() - 1) - expr_stmt_pos) == 2) {
+
+        std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos));
+
+        if(!is_call(full_name) && full_name != "operator")
+            expr_stmt_profile->set_call(false);
+
+        if(is_call(full_name))
+            expr_stmt_profile->add_call_profile(reinterpret_cast<std::shared_ptr<call_profile_t> &>(profile_stack.back()));
+
+
+    }
 
     if(!is_interchange && profile_stack.back()->is_modified) {
 

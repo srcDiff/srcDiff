@@ -12,6 +12,8 @@ class expr_stmt_profile_t : public profile_t {
         bool isdelete;
         bool is_call;
 
+        std::vector<std::shared_ptr<call_profile_t>> call_profiles;
+
     public:
 
         expr_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id)
@@ -50,6 +52,18 @@ class expr_stmt_profile_t : public profile_t {
         void set_call(bool is_call) {
 
             this->is_call = is_call;
+
+        }
+
+        std::vector<std::shared_ptr<call_profile_t>> & get_call_profiles() {
+
+            return call_profiles;
+
+        }
+
+        void add_call_profile(const std::shared_ptr<call_profile_t> & call_profile) {
+
+            call_profiles.push_back(call_profile);
 
         }
 

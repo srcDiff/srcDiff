@@ -102,7 +102,7 @@ SUMMARY
 	• a guard clause was added to the function body
 	• the body of a foreach statement was modified
 	  this modification included:
-		• a call statement was replaced with a guard clause
+		• a call to 'Q_ASSERT' was replaced with a guard clause
 
 END_SUMMARY
 

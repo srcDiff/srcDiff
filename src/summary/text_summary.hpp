@@ -87,15 +87,15 @@ private:
 
             const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
-            std::string decl_summary = get_article(decl_stmt_profile) + ' ' + get_type_string(decl_stmt_profile) + " declaring '";
+            std::string decl_stmt_summary = get_article(decl_stmt_profile) + ' ' + get_type_string(decl_stmt_profile) + " declaring '";
             if(decl_stmt_profile->operation == SRCDIFF_DELETE)
-                decl_summary += decl_stmt_profile->name.original() + "' of type '" + decl_stmt_profile->type.original() + '\'';
+                decl_stmt_summary += decl_stmt_profile->name.original() + "' of type '" + decl_stmt_profile->type.original() + '\'';
             else if(decl_stmt_profile->operation == SRCDIFF_INSERT)
-                decl_summary += decl_stmt_profile->name.modified() + "' of type '" + decl_stmt_profile->type.modified() + '\'';
+                decl_stmt_summary += decl_stmt_profile->name.modified() + "' of type '" + decl_stmt_profile->type.modified() + '\'';
             else 
-                decl_summary += decl_stmt_profile->name + "' of type '" + decl_stmt_profile->type + '\'';
+                decl_stmt_summary += decl_stmt_profile->name + "' of type '" + decl_stmt_profile->type + '\'';
 
-            return decl_summary;
+            return decl_stmt_summary;
 
         }
 
@@ -104,9 +104,18 @@ private:
             const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
             if(expr_stmt_profile->call()) {
 
-//                if(expr_stmt_profile.child_profiles[0])
+                if(expr_stmt_profile->get_call_profiles().size() == 1) {
 
-                return get_article(profile) + ' ' + get_type_string(profile) + " to '";
+                    const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[0];
+
+                    std::string expr_stmt_summary = get_article(profile) + " call to '";
+                    if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += call_profile->name.original() + '\'';
+                    else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += call_profile->name.modified() + '\'';
+                    else                                                    expr_stmt_summary += std::string(call_profile->name) + '\'';
+
+                    return expr_stmt_summary;
+
+                }
 
             }
 
