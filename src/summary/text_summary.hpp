@@ -822,9 +822,13 @@ public:
 
     std::ostream & decl_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile, const std::vector<std::shared_ptr<profile_t>> & profile_list) const {
 
-        const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+        const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
-        profile_t::begin_line(out) << "a declaration statement was ";
+        profile_t::begin_line(out) << "a declaration statment declaring '";
+        out << (decl_stmt_profile->name.has_original() ? decl_stmt_profile->name.original() : decl_stmt_profile->name.modified());
+        out << "' of type '";
+        out << (decl_stmt_profile->type.has_original() ? decl_stmt_profile->type.original() : decl_stmt_profile->type.modified());
+        out << "' was ";
 
         out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
 
