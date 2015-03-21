@@ -137,7 +137,7 @@ SUMMARY
 	• the body of an if statement was modified
 	  this modification included:
 		• the identifier 'd->' was added in several places
-		• a declaration statement was replaced with an assignment statement
+		• a declaration statement declaring 'aspectButton' of type 'QToolButton' was replaced with an assignment statement
 
 END_SUMMARY
 

@@ -694,7 +694,7 @@ public:
 
         if(expr_stmt_profile->assignment() || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
     
-            profile_t::begin_line(out) << get_article(profile) << ' ' << get_type_string(profile) << " was ";
+            profile_t::begin_line(out) << get_profile_string(profile) << " was ";
 
             out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
 
@@ -849,8 +849,7 @@ public:
 
         }
 
-        out << get_article(profile) << ' ';
-        out << get_type_string(profile) << " was ";
+        out << get_profile_string(profile) << " was ";
 
         if(profile->operation != SRCDIFF_COMMON)
              out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
