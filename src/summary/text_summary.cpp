@@ -79,18 +79,32 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
         if(expr_stmt_profile->call()) {
 
-            if(expr_stmt_profile->get_call_profiles().size() == 1) {
+                std::string expr_stmt_summary;
+                if(expr_stmt_profile->get_call_profiles().size() == 1)
+                    expr_stmt_summary = get_article(profile) + " call to '";
+                else
+                    expr_stmt_summary = "a call sequence consisting of '";
 
-                const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[0];
+                size_t count = 0;
 
-                std::string expr_stmt_summary = get_article(profile) + " call to '";
-                if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += call_profile->name.original() + '\'';
-                else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += call_profile->name.modified() + '\'';
-                else                                                    expr_stmt_summary += std::string(call_profile->name) + '\'';
+                for(const std::shared_ptr<call_profile_t> & call_profile : expr_stmt_profile->get_call_profiles()) {
+
+                    if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += call_profile->name.original() + '\'';
+                    else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += call_profile->name.modified() + '\'';
+                    else                                                    expr_stmt_summary += std::string(call_profile->name) + '\'';
+
+                    ++count;
+
+                    if(expr_stmt_profile->get_call_profiles().size() == 2 && count == 1)
+                        expr_stmt_summary += " and ";
+                    else if(expr_stmt_profile->get_call_profiles().size() > 2 && count != expr_stmt_profile->get_call_profiles().size())
+                        expr_stmt_summary += ", ";
+                    else if(expr_stmt_profile->get_call_profiles().size() > 2 && count == expr_stmt_profile->get_call_profiles().size())
+                        expr_stmt_summary += ", and ";
+
+                }
 
                 return expr_stmt_summary;
-
-            }
 
         }
 
