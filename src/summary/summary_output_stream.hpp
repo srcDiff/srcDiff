@@ -29,6 +29,9 @@ private:
 
 	std::ostream & output(const std::string & str) {
 
+		// in case too much correct wrapping avoid outputting word on line
+		if((depth * 8) > (MAX_WIDTH / 2)) return out << str;
+
 		size_t start_pos = 0, pos = 0;
 		for(; pos < str.size(); ++pos) {
 
