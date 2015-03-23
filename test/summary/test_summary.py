@@ -104,6 +104,8 @@ def run_test_file(file_name) :
 	print
 
 # main
+os.environ['COLUMNS'] = "130"
+
 for root, dirs, files in os.walk(source_dir, topdown=True) :
 
 	for name in files :

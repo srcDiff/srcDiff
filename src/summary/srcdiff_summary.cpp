@@ -14,6 +14,7 @@
 
 #include <cstring>
 #include <algorithm>
+#include <sys/ioctl.h>
 
 bool is_count(const std::string & type_name) {
 
@@ -288,6 +289,20 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
 void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 
 	if(profile->total_count == 0) return;
+
+    const char * columns_str = std::getenv("COLUMNS");
+
+    size_t columns = 0;
+    if(columns_str)
+        columns = std::stoull(columns_str);
+
+    if(columns == 0) {
+
+        struct winsize win_size;
+        ioctl(0, TIOCGWINSZ, &win_size);
+        columns = win_size.ws_col;
+
+    }
 
     summary_output_stream output_stream(*out);
  
