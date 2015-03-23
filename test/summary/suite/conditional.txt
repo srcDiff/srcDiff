@@ -162,7 +162,8 @@ SUMMARY
 • function 'KoMainWindow::slotCloseAllViews': Impact = High
 	• the body of an if statement was modified
 	  this modification included:
-		• an if statement was removed from around existing code and the existing code was then modified 
+		• an if statement was removed from around existing code and the existing code was 
+		  then modified 
 		  this modification included:
 			• an assignment to 'd->rootDoc' was added
 			• the body of a while statement was modified

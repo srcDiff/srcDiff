@@ -19,7 +19,7 @@ private:
 
     static constexpr const char * const BULLET = "\u2022";
 
-    static constexpr size_t MAX_WIDTH = 50;
+    static constexpr size_t MAX_WIDTH = 100;
 
 	class iomanip_type {};
 
@@ -29,21 +29,64 @@ private:
 
 	std::ostream & output(const std::string & str) {
 
-		if((number_characters_output + str.size()) > MAX_WIDTH) {
+		size_t start_pos = 0, pos = 0;
+		for(; pos < str.size(); ++pos) {
 
-			out << '\n';
-			pad();
-			number_characters_output = str.size();
+			if(isspace(str[pos])) {
+
+				if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < MAX_WIDTH) {
+
+					out << str.substr(start_pos, (pos - start_pos) + 1);
+					if(str[pos] == '\n') number_characters_output = 0;
+					else                 number_characters_output += (pos - start_pos) + 1;
+
+				} else {
+
+					out << '\n';
+					number_characters_output = 0;
+					pad();
+					out << "  ";
+
+					out << str.substr(start_pos, (pos - start_pos) + 1);
+					number_characters_output = (pos - start_pos) + 1;
+
+				}
+
+				start_pos = pos + 1;
+
+			}
 
 		}
 
-		return out << str;
+		if(pos - start_pos) {
+
+			if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < MAX_WIDTH) {
+
+				out << str.substr(start_pos, pos - start_pos);
+				if(str[pos] == '\n') number_characters_output = 0;
+				else                 number_characters_output += pos - start_pos;
+
+			} else {
+
+				out << '\n';
+				number_characters_output = 0;
+				pad();
+				out << "  ";
+
+				out << str.substr(start_pos, pos - start_pos);
+				number_characters_output = pos - start_pos;
+
+			}
+
+		}
+
+		return out;
 
 	}
 
 public:
 
-	summary_output_stream(std::ostream & out) : out(out), depth(0) {}
+	summary_output_stream(std::ostream & out) : out(out), depth(0), number_characters_output(0) {}
 
 	iomanip_type setw(int n) {
 
@@ -86,13 +129,20 @@ public:
         for(size_t i = 0; i < depth; ++i)
             out << '\t';
 
+        number_characters_output += depth * 8;
+
         return *this;
 
     }
 
     summary_output_stream & begin_line() {
 
-        return pad() << BULLET << ' ';
+        pad();
+        out << BULLET << ' ';
+
+        number_characters_output += 2;
+
+        return *this;
 
     }
 
