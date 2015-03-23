@@ -71,7 +71,7 @@ class function_profile_t : public profile_t {
         }
 
         /** @todo may need to add rest of things that can occur here between parameter list and block */
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types) const {
 
             if(operation != SRCDIFF_COMMON) {
 
@@ -116,7 +116,7 @@ class function_profile_t : public profile_t {
 
             if(is_summary_type(summary_types, summary_type::TEXT)) {
 
-                text_summary text(id, child_profiles, parameters, member_initializations, summary_identifiers, profile_list);
+                text_summary text(id, child_profiles, parameters, member_initializations, summary_identifiers);
 
                 if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 

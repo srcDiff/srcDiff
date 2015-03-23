@@ -65,7 +65,7 @@ class profile_t {
 
     public:
 
-        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) :
+        profile_t(std::string type_name  = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON) :
                                                                    id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
@@ -166,7 +166,7 @@ class profile_t {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types UNUSED, const profile_list_t & profile_list UNUSED) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types UNUSED) const {
 
             pad(out) << type_name << ":"; 
             out << " Whitespace: " << whitespace_count;

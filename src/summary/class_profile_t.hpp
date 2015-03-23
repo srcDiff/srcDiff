@@ -44,22 +44,22 @@ class class_profile_t : public profile_t {
             
         }
 
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types, const profile_list_t & profile_list) const {
+        virtual std::ostream & summary(std::ostream & out, size_t summary_types) const {
 
             begin_line(out) << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
 
             /** Change these to text and table summaries */
-            members.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
-            members.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
-            members.summarize_modified(out, summary_types, profile_list);
+            members.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            members.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            members.summarize_modified(out, summary_types);
 
-            methods.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
-            methods.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
-            methods.summarize_modified(out, summary_types, profile_list);
+            methods.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            methods.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            methods.summarize_modified(out, summary_types);
 
-            classes.summarize_pure(out, summary_types, profile_list, SRCDIFF_DELETE);
-            classes.summarize_pure(out, summary_types, profile_list, SRCDIFF_INSERT);
-            classes.summarize_modified(out, summary_types, profile_list);
+            classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            classes.summarize_modified(out, summary_types);
 
             return out;
 

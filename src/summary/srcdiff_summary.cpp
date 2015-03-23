@@ -209,7 +209,7 @@ no_expr:
 }
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
-    : out(nullptr), summary_types(summary_type::NONE), id_count(0), profile_list(1024), srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0),
+    : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(), srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), name_count(0), collected_name(), condition_count(0), collected_condition() {
 
@@ -252,14 +252,11 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
 
     controller.parse(this);
 
-    // should always be unit
     static bool first = true;
-    const std::shared_ptr<profile_t> & profile = profile_list[1];
-
     if(!first) (*out) << '\n';
     else first = false;
     
-    summarize(profile);
+    summarize(unit_profile);
 
     reset();
 
@@ -271,7 +268,7 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 
     profile_t::depth = 0;
 
-    profile->summary(*out, summary_types, profile_list);
+    profile->summary(*out, summary_types);
     (*out) << "\n";
 
 }
@@ -279,7 +276,6 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 void srcdiff_summary::reset() {
 
     id_count = 0;
-    profile_list.clear();
     srcdiff_stack.clear();
     profile_stack.clear();
     counting_profile_pos.clear();
@@ -363,7 +359,8 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
     full_name += localname;
 
-    profile_stack.push_back(std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
+    unit_profile = std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON);
+    profile_stack.push_back(unit_profile);
 
     for(int i = 0; i < num_attributes; ++i)
         if(attributes[i].localname == std::string("filename")) {
@@ -605,7 +602,6 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
     process_characters();
 
     counting_profile_pos.pop_back();
-    profile_list[profile_stack.back()->id] = profile_stack.back();
 
     profile_stack.pop_back();
     uri_stack.pop_back();
@@ -613,11 +609,6 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
 }
 
 void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> & profile) {
-
-    if(profile_list.size() < profile->id)
-        profile_list.resize(profile->id * 2);
-
-    profile_list[profile->id] = profile;
 
     size_t parent_pos = profile_stack.size() - 2;
     while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)

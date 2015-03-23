@@ -44,8 +44,7 @@ public:
 
     text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<versioned_string, size_t> & summary_identifiers,
-                 const std::vector<std::shared_ptr<profile_t>> & profile_list);
+                 const std::map<versioned_string, size_t> & summary_identifiers);
 
     std::ostream & parameter(std::ostream & out, size_t number_parameters_deleted,
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;
