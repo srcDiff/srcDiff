@@ -185,15 +185,33 @@ class profile_t {
 
         }
 
+        friend bool operator<(const std::shared_ptr<profile_t> & profile_one, const std::shared_ptr<profile_t> & profile_two) {
+
+            return profile_one->id < profile_two->id;
+
+        }
+
         bool operator==(const profile_t & profile) const {
 
             return id == profile.id;
 
         }
 
+        friend bool operator==(const std::shared_ptr<profile_t> & profile_one, const std::shared_ptr<profile_t> & profile_two) {
+
+            return profile_one->id == profile_two->id;
+
+        }
+
         bool operator==(int profile_id) const {
 
             return id == profile_id;
+
+        }
+
+        friend bool operator==(const std::shared_ptr<profile_t> & profile_one, size_t profile_id) {
+
+            return profile_one->id == profile_id;
 
         }
 

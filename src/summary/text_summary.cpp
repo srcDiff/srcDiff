@@ -968,7 +968,7 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
     // after children
     if(is_leaf) {
 
-        if(*profile->parent.get() == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
+        if(profile->parent == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
