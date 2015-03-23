@@ -95,7 +95,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
                 if(expr_stmt_profile->get_call_profiles().size() == 1)
                     expr_stmt_summary = get_article(profile) + " call to '";
                 else
-                    expr_stmt_summary = "a chain of calls consisting of '";
+                    expr_stmt_summary = "a call chain consisting of '";
 
                 size_t count = 0;
 
