@@ -13,13 +13,14 @@ private:
 
 	std::ostream & out;
 
+    size_t max_width;
+
 	size_t depth;
 
 	int number_characters_output;
 
     static constexpr const char * const BULLET = "\u2022";
 
-    static constexpr size_t MAX_WIDTH = 100;
 
 	class iomanip_type {};
 
@@ -30,14 +31,14 @@ private:
 	std::ostream & output(const std::string & str) {
 
 		// in case too much correct wrapping avoid outputting word on line
-		if((depth * 8) > (MAX_WIDTH / 2)) return out << str;
+		if((depth * 8) > (max_width / 2)) return out << str;
 
 		size_t start_pos = 0, pos = 0;
 		for(; pos < str.size(); ++pos) {
 
 			if(isspace(str[pos])) {
 
-				if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < MAX_WIDTH) {
+				if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < max_width) {
 
 					out << str.substr(start_pos, (pos - start_pos) + 1);
 					if(str[pos] == '\n') number_characters_output = 0;
@@ -63,7 +64,7 @@ private:
 
 		if(pos - start_pos) {
 
-			if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < MAX_WIDTH) {
+			if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < max_width) {
 
 				out << str.substr(start_pos, pos - start_pos);
 				if(str[pos] == '\n') number_characters_output = 0;
@@ -89,7 +90,7 @@ private:
 
 public:
 
-	summary_output_stream(std::ostream & out) : out(out), depth(0), number_characters_output(0) {}
+	summary_output_stream(std::ostream & out, size_t max_width = 100) : out(out), max_width(max_width), depth(0), number_characters_output(0) {}
 
 	iomanip_type setw(int n) {
 
