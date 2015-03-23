@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 class summary_output_stream {
 
@@ -14,13 +15,31 @@ private:
 
 	size_t depth;
 
+	int number_characters_output;
+
     static constexpr const char * const BULLET = "\u2022";
+
+    static constexpr size_t MAX_WIDTH = 50;
 
 	class iomanip_type {};
 
 protected:
 
-public:
+private:
+
+	std::ostream & output(const std::string & str) {
+
+		if((number_characters_output + str.size()) > MAX_WIDTH) {
+
+			out << '\n';
+			pad();
+			number_characters_output = str.size();
+
+		}
+
+		return out << str;
+
+	}
 
 public:
 
@@ -79,7 +98,11 @@ public:
 
 	summary_output_stream & operator<<(const versioned_string & v_str) {
 
-		out << v_str;
+		std::ostringstream ostr_stream;
+
+		ostr_stream << v_str;
+
+		output(ostr_stream.str());
 
 		return *this;
 
@@ -87,7 +110,7 @@ public:
 
 	summary_output_stream & operator<<(const std::string & str) {
 
-		out << str;
+		output(str);
 
 		return *this;
 
@@ -95,7 +118,7 @@ public:
 
 	summary_output_stream & operator<<(const char * c_str) {
 
-		out << c_str;
+		output(c_str);
 
 		return *this;
 
@@ -103,7 +126,10 @@ public:
 
 	summary_output_stream & operator<<(char character) {
 
-		out << character;
+		std::string str;
+		str.append(&character, 1);
+
+		output(str);
 
 		return *this;
 
@@ -111,7 +137,7 @@ public:
 
 	summary_output_stream & operator<<(size_t number) {
 
-		out << number;
+		output(std::to_string(number));
 
 		return *this;
 
