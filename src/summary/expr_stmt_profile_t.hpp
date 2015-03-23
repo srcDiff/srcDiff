@@ -14,10 +14,13 @@ class expr_stmt_profile_t : public profile_t {
 
         std::vector<std::shared_ptr<call_profile_t>> call_profiles;
 
+        versioned_string left;
+        versioned_string right;
+
     public:
 
         expr_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
-            : profile_t(type_name, uri, operation, parent), is_assignment(false), isdelete(false), is_call(true) {}
+            : profile_t(type_name, uri, operation, parent), is_assignment(false), isdelete(false), is_call(true), left(), right() {}
 
         bool assignment() const {
 
@@ -64,6 +67,30 @@ class expr_stmt_profile_t : public profile_t {
         void add_call_profile(const std::shared_ptr<call_profile_t> & call_profile) {
 
             call_profiles.push_back(call_profile);
+
+        }
+
+        const versioned_string & lhs() const {
+
+            return left;
+
+        }
+
+        void set_lhs(const versioned_string & left) {
+
+            this->left = left;
+
+        }
+
+        const versioned_string & rhs() const {
+
+            return right;
+
+        }
+
+        void set_rhs(const versioned_string & right) {
+
+            this->right = right;
 
         }
 

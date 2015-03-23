@@ -65,8 +65,31 @@ void srcdiff_summary::process_characters() {
 
             reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_assignment(true);
 
-            if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
-                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_assignment(true);
+            if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos) {
+
+                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos));
+                expr_stmt_profile->set_assignment(true);
+
+                for(size_t pos = text.size(); pos > 0; --pos) {
+
+                    if(collect_lhs.has_original() && !collect_lhs.original().empty() && collect_lhs.original().back() == text[pos - 1])
+                        collect_lhs.original().pop_back();
+
+                    if(collect_lhs.has_modified() && !collect_lhs.modified().empty() && collect_lhs.modified().back() == text[pos - 1])
+                        collect_lhs.modified().pop_back();
+                }
+
+                while(collect_lhs.has_original() && !collect_lhs.original().empty() && isspace(collect_lhs.original().back()))
+                    collect_lhs.original().pop_back();
+
+                while(collect_lhs.has_modified() && !collect_lhs.modified().empty() && isspace(collect_lhs.modified().back()))
+                    collect_lhs.modified().pop_back();
+
+                expr_stmt_profile->set_lhs(collect_lhs);
+                collect_lhs.clear();
+
+
+            }
 
         } else if(text == "delete") {
 
@@ -211,7 +234,7 @@ no_expr:
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(), srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0),
       insert_count(), delete_count(), change_count(), total(),
-      text(), name_count(0), collected_name(), condition_count(0), collected_condition() {
+      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), collect_lhs() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -706,6 +729,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         } else if(full_name == "expr_stmt") {
 
             expr_stmt_pos = 0;
+            collect_lhs.clear();
 
         } else if(full_name == "argument_list" && is_call(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())
                   && profile_stack.back()->total_count > 0) {
@@ -857,6 +881,7 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
+    if(expr_stmt_pos) collect_lhs.append(ch, len, srcdiff_stack.back().operation);
 
 
 

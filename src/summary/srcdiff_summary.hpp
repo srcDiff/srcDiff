@@ -10,6 +10,7 @@
 #include <counts_t.hpp>
 #include <versioned_string.hpp>
 
+#include <cctype>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -70,6 +71,8 @@ protected:
 
     size_t condition_count;
     versioned_string collected_condition;
+
+    versioned_string collect_lhs;
 
 private:
 

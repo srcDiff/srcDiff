@@ -77,6 +77,18 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
     if(is_expr_stmt(profile->type_name)) {
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+
+        if(expr_stmt_profile->assignment()) {
+
+            std::string expr_stmt_summary = "an assignment to '";
+            if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += expr_stmt_profile->lhs().original() + '\'';
+            else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += expr_stmt_profile->lhs().modified() + '\'';
+            else                                                    expr_stmt_summary += std::string(expr_stmt_profile->lhs()) + '\'';
+
+            return expr_stmt_summary;
+
+        }
+
         if(expr_stmt_profile->call()) {
 
                 std::string expr_stmt_summary;
