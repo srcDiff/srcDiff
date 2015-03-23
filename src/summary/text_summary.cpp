@@ -126,13 +126,13 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
 }
 
-std::ostream & text_summary::identifiers(std::ostream & out, const std::map<versioned_string, size_t> & identifiers) {
+summary_output_stream & text_summary::identifiers(summary_output_stream & out, const std::map<versioned_string, size_t> & identifiers) {
 
     for(std::pair<versioned_string, size_t> identifier : identifiers) {
 
         if(identifier.second <= 1) continue;
 
-        profile_t::begin_line(out) << "the identifier '";
+        out.begin_line() << "the identifier '";
 
         if(identifier.first.has_original()) out << identifier.first.original() << "' ";
 
@@ -163,7 +163,7 @@ std::ostream & text_summary::identifiers(std::ostream & out, const std::map<vers
 
 }
 
-std::ostream & text_summary::replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos) const {
+summary_output_stream & text_summary::replacement(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & pos) const {
 
     const std::shared_ptr<profile_t> & start_profile = profile->child_profiles[pos];
 
@@ -207,7 +207,7 @@ std::ostream & text_summary::replacement(std::ostream & out, const std::shared_p
 
     --pos;
 
-    profile_t::begin_line(out);
+    out.begin_line();
 
     size_t number_deleted_types  = 0;
     if(expr_stmt_deleted.size() != 0)    ++number_deleted_types;
@@ -407,12 +407,12 @@ text_summary::text_summary(const size_t id, const profile_t::profile_list_t & ch
     : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
       summary_identifiers(summary_identifiers) {}
 
-std::ostream & text_summary::parameter(std::ostream & out, size_t number_parameters_deleted,
+summary_output_stream & text_summary::parameter(summary_output_stream & out, size_t number_parameters_deleted,
                                        size_t number_parameters_inserted, size_t number_parameters_modified) const {
 
     if(number_parameters_deleted > 0) {
 
-        profile_t::begin_line(out);
+        out.begin_line();
 
         if(number_parameters_deleted == 1) {
 
@@ -423,14 +423,14 @@ std::ostream & text_summary::parameter(std::ostream & out, size_t number_paramet
 
             out << "the following parameters were removed:\n";
 
-            ++profile_t::depth;
+            out.increment_depth();
             std::for_each(parameters.lower_bound(SRCDIFF_DELETE), parameters.upper_bound(SRCDIFF_DELETE),
                 [&out](const change_entity_map<parameter_profile_t>::pair & parameter) {
 
-                    profile_t::begin_line(out) << '\'' << parameter.second->name.original() << "' of type '" << parameter.second->type.original() << "'\n";
+                    out.begin_line() << '\'' << parameter.second->name.original() << "' of type '" << parameter.second->type.original() << "'\n";
 
                 });
-            --profile_t::depth;
+            out.decrement_depth();
 
         }
 
@@ -438,7 +438,7 @@ std::ostream & text_summary::parameter(std::ostream & out, size_t number_paramet
 
     if(number_parameters_inserted > 0) {
 
-        profile_t::begin_line(out);
+        out.begin_line();
 
         if(number_parameters_inserted == 1) {
 
@@ -449,14 +449,14 @@ std::ostream & text_summary::parameter(std::ostream & out, size_t number_paramet
 
             out << "the following parameters were added:\n";
 
-            ++profile_t::depth;
+            out.increment_depth();
             std::for_each(parameters.lower_bound(SRCDIFF_INSERT), parameters.upper_bound(SRCDIFF_INSERT),
                 [&out](const change_entity_map<parameter_profile_t>::pair & parameter) {
 
-                    profile_t::begin_line(out) << '\'' << parameter.second->name.modified() << "' of type '" << parameter.second->type.modified() << "'\n";
+                    out.begin_line() << '\'' << parameter.second->name.modified() << "' of type '" << parameter.second->type.modified() << "'\n";
 
                 });
-            --profile_t::depth;
+            out.decrement_depth();
 
         }
 
@@ -464,7 +464,7 @@ std::ostream & text_summary::parameter(std::ostream & out, size_t number_paramet
 
     if(number_parameters_modified > 0) {
 
-        profile_t::begin_line(out);
+        out.begin_line();
 
         if(number_parameters_modified == 1) {
 
@@ -485,11 +485,11 @@ std::ostream & text_summary::parameter(std::ostream & out, size_t number_paramet
 
             out << "the following parameters were modified:\n";
 
-            ++profile_t::depth;
+            out.increment_depth();
             std::for_each(parameters.lower_bound(SRCDIFF_COMMON), parameters.upper_bound(SRCDIFF_COMMON),
                 [&out](const change_entity_map<parameter_profile_t>::pair & parameter) {
 
-                    profile_t::begin_line(out) << "the parameter ";
+                    out.begin_line() << "the parameter ";
                     if(parameter.second->name.is_common() && !parameter.second->type.is_common())
                         out << '\'' << parameter.second->name << "' had its type changed from '" 
                             << parameter.second->type.original() << "' to '" << parameter.second->type.modified() << '\'';
@@ -502,7 +502,7 @@ std::ostream & text_summary::parameter(std::ostream & out, size_t number_paramet
                             out << '\n';
 
                 });
-            --profile_t::depth;
+            out.decrement_depth();
 
         }
 
@@ -512,12 +512,12 @@ std::ostream & text_summary::parameter(std::ostream & out, size_t number_paramet
 
 }
 
-std::ostream & text_summary::member_initialization(std::ostream & out, size_t number_member_initializations_deleted,
+summary_output_stream & text_summary::member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                                    size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const {
 
     if(number_member_initializations_deleted > 0) {
 
-        profile_t::begin_line(out);
+        out.begin_line();
 
         if(number_member_initializations_deleted == 1) {
 
@@ -528,14 +528,14 @@ std::ostream & text_summary::member_initialization(std::ostream & out, size_t nu
 
             out << "the following member initializations were removed:\n";
 
-            ++profile_t::depth;
+            out.increment_depth();
             std::for_each(member_initializations.lower_bound(SRCDIFF_DELETE), member_initializations.upper_bound(SRCDIFF_DELETE),
                 [&out](const change_entity_map<call_profile_t>::pair & member) {
 
-                    profile_t::begin_line(out) << '\'' << member.second->name.original() << "'\n";
+                    out.begin_line() << '\'' << member.second->name.original() << "'\n";
 
                 });
-            --profile_t::depth;
+            out.decrement_depth();
 
         }
 
@@ -543,7 +543,7 @@ std::ostream & text_summary::member_initialization(std::ostream & out, size_t nu
 
     if(number_member_initializations_inserted > 0) {
 
-        profile_t::begin_line(out);
+        out.begin_line();
 
         if(number_member_initializations_inserted == 1) {
 
@@ -554,14 +554,14 @@ std::ostream & text_summary::member_initialization(std::ostream & out, size_t nu
 
             out << "the following member initializations were added:\n";
 
-            ++profile_t::depth;
+            out.increment_depth();
             std::for_each(member_initializations.lower_bound(SRCDIFF_INSERT), member_initializations.upper_bound(SRCDIFF_INSERT),
                 [&out](const change_entity_map<call_profile_t>::pair & member) {
 
-                    profile_t::begin_line(out) << '\'' << member.second->name.modified() << "'\n";
+                    out.begin_line() << '\'' << member.second->name.modified() << "'\n";
 
                 });
-            --profile_t::depth;
+            out.decrement_depth();
 
         }
 
@@ -569,7 +569,7 @@ std::ostream & text_summary::member_initialization(std::ostream & out, size_t nu
 
     if(number_member_initializations_modified > 0) {
 
-        profile_t::begin_line(out);
+        out.begin_line();
 
         if(number_member_initializations_modified == 1) {
 
@@ -583,18 +583,18 @@ std::ostream & text_summary::member_initialization(std::ostream & out, size_t nu
 
             out << "the following member initializations were modified:\n";
 
-            ++profile_t::depth;
+            out.increment_depth();
             std::for_each(member_initializations.lower_bound(SRCDIFF_COMMON), member_initializations.upper_bound(SRCDIFF_COMMON),
                 [&out](const change_entity_map<call_profile_t>::pair & member) {
 
-                    profile_t::begin_line(out);
+                    out.begin_line();
                     if(member.second->name.is_common())
                         out << '\'' << member.second->name << "'\n";
                     else
                         out << "the name of a member initilization was changed from '" << member.second->name.original() << "' to '" << member.second->name.modified() << "'\n";
 
                 });
-            --profile_t::depth;
+            out.decrement_depth();
 
         }
 
@@ -711,13 +711,13 @@ void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const 
 
 }
 
-std::ostream & text_summary::expr_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const {
+summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     if(expr_stmt_profile->assignment() || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
 
-        profile_t::begin_line(out) << get_profile_string(profile) << " was ";
+        out.begin_line() << get_profile_string(profile) << " was ";
 
         out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
 
@@ -750,7 +750,7 @@ std::ostream & text_summary::expr_stmt(std::ostream & out, const std::shared_ptr
 
         if(!deleted_calls.empty() || !inserted_calls.empty()) {
 
-            profile_t::begin_line(out);
+            out.begin_line();
 
             std::list<std::string> & call_names = !deleted_calls.empty() ? deleted_calls : inserted_calls;
 
@@ -794,7 +794,7 @@ std::ostream & text_summary::expr_stmt(std::ostream & out, const std::shared_ptr
 
         if(number_calls == 0) return out;
 
-        profile_t::begin_line(out);
+        out.begin_line();
         if(number_renames && number_argument_list_modified) {
 
             if(number_calls == 1) {
@@ -833,11 +833,11 @@ std::ostream & text_summary::expr_stmt(std::ostream & out, const std::shared_ptr
 
 }
 
-std::ostream & text_summary::decl_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const {
+summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
 
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
-    profile_t::begin_line(out) << get_profile_string(decl_stmt_profile);
+    out.begin_line() << get_profile_string(decl_stmt_profile);
 
     out << " was ";
 
@@ -847,7 +847,7 @@ std::ostream & text_summary::decl_stmt(std::ostream & out, const std::shared_ptr
 
 }
 
-std::ostream & text_summary::conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile) {
+summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
 
     const bool has_common = profile->common_profiles.size() > 0;
 
@@ -855,7 +855,7 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
     const bool body_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_body_modified();
     const versioned_string & condition = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->get_condition();
 
-    profile_t::begin_line(out);
+    out.begin_line();
 
     // before children
     if(profile->operation == SRCDIFF_COMMON) {
@@ -907,21 +907,21 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
     if(condition_modified) {
 
         out << '\n';
-        profile_t::pad(out) << "  this modification included:\n";            
+        out.pad() << "  this modification included:\n";            
         is_leaf = false;
-        ++profile_t::depth;
-        profile_t::begin_line(out) << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
-        --profile_t::depth;
+        out.increment_depth();
+        out.begin_line() << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
+        out.decrement_depth();
     }
 
     if(profile->summary_identifiers.size() > 0) {
 
         out << '\n';
-        profile_t::pad(out) << "  this modification included:\n";            
+        out.pad() << "  this modification included:\n";            
         is_leaf = false;
-        ++profile_t::depth;
+        out.increment_depth();
         identifiers(out, profile->summary_identifiers);
-        --profile_t::depth;
+        out.decrement_depth();
 
     }
 
@@ -937,12 +937,12 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
             if(is_leaf) {
 
                 out << '\n';
-                profile_t::pad(out) << "  this modification included:\n";
+                out.pad() << "  this modification included:\n";
                 is_leaf = false;
 
             }
 
-            ++profile_t::depth;
+            out.increment_depth();
 
             if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
 
@@ -959,7 +959,7 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
 
             }
 
-            --profile_t::depth;
+            out.decrement_depth();
 
         }
 
@@ -986,7 +986,7 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
 
 }
 
-std::ostream & text_summary::body(std::ostream & out, const profile_t & profile) {
+summary_output_stream & text_summary::body(summary_output_stream & out, const profile_t & profile) {
 
     identifiers(out, summary_identifiers);
 

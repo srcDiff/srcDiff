@@ -49,9 +49,9 @@ class unit_profile_t : public profile_t {
             
         }
 
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types) const {
+        virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
-            begin_line(out) << "file '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
+            out.begin_line() << "file '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
 
             /** might want to have table summaries.  Decl may need to be changed how output */
             // decl_stmts.summarize_pure(out, summary_types, SRCDIFF_DELETE);

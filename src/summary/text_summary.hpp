@@ -5,9 +5,9 @@
 #include <parameter_profile_t.hpp>
 #include <call_profile_t.hpp>
 #include <change_entity_map.hpp>
+#include <summary_output_stream.hpp>
 
 #include <cstdlib>
-#include <iostream>
 #include <vector>
 #include <memory>
 #include <map>
@@ -35,8 +35,8 @@ private:
     std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
     std::string get_profile_string(const std::shared_ptr<profile_t> & profile) const;
 
-    std::ostream & identifiers(std::ostream & out, const std::map<versioned_string, size_t> & identifiers);
-    std::ostream & replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos) const;
+    summary_output_stream & identifiers(summary_output_stream & out, const std::map<versioned_string, size_t> & identifiers);
+    summary_output_stream & replacement(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & pos) const;
 
     bool is_body_summary(const std::string & type, bool is_replacement) const;
 
@@ -46,16 +46,16 @@ public:
                  const change_entity_map<call_profile_t> & member_initializations,
                  const std::map<versioned_string, size_t> & summary_identifiers);
 
-    std::ostream & parameter(std::ostream & out, size_t number_parameters_deleted,
+    summary_output_stream & parameter(summary_output_stream & out, size_t number_parameters_deleted,
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;
-    std::ostream & member_initialization(std::ostream & out, size_t number_member_initializations_deleted,
+    summary_output_stream & member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
     void call_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
                     size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const;
-    std::ostream & expr_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const;
-    std::ostream & decl_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const;
-    std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile);
-    std::ostream & body(std::ostream & out, const profile_t & profile);
+    summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
+    summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
+    summary_output_stream & conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile);
+    summary_output_stream & body(summary_output_stream & out, const profile_t & profile);
 
 };
 

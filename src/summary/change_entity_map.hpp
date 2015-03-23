@@ -96,7 +96,7 @@ class change_entity_map {
 
         }
 
-        std::ostream & summarize_pure(std::ostream & out, size_t summary_types, srcdiff_type operation) const {
+        summary_output_stream & summarize_pure(summary_output_stream & out, size_t summary_types, srcdiff_type operation) const {
 
             size_t count = entity.count(operation);
             if(count == 0) return out;
@@ -105,7 +105,7 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(operation);
 
-            profile_t::begin_line(out) << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "): { ";
+            out.begin_line() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "): { ";
             citr->second->summary(out, summary_types);
             ++citr;
             for(; citr != entity.upper_bound(operation); ++citr) {
@@ -121,7 +121,7 @@ class change_entity_map {
 
         }
 
-        std::ostream & summarize_modified(std::ostream & out, size_t summary_types) const {
+        summary_output_stream & summarize_modified(summary_output_stream & out, size_t summary_types) const {
 
             size_t num_modified = entity.count(SRCDIFF_COMMON);
             if(num_modified == 0) return out;
@@ -130,7 +130,7 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(SRCDIFF_COMMON);
 
-            profile_t::begin_line(out) << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified << '\n';
+            out.begin_line() << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified << '\n';
             for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr)
                 if(citr->second->total_count != 0)
                         citr->second->summary(out, summary_types);

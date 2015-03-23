@@ -3,6 +3,7 @@
 
 #include <profile_t.hpp>
 #include <change_entity_map.hpp>
+#include <summary_output_stream.hpp>
 
 #include <iomanip>
 #include <functional>
@@ -21,20 +22,20 @@ public:
 
 	table_summary(const change_entity_map<conditional_profile_t> & conditionals) : conditionals(conditionals) {}
 
-    virtual std::ostream & output_header(std::ostream & out) const {
+    virtual summary_output_stream & output_header(summary_output_stream & out) const {
 
-        return profile_t::pad(out) << std::setw(10) << std::left << "" << std::right << std::setw(9) << "Deleted" << std::setw(9) << "Inserted" << std::setw(9) << "Modified" << '\n';
+        return out.pad() << out.setw(10) << out.left() << "" << out.right() << out.setw(9) << "Deleted" << out.setw(9) << "Inserted" << out.setw(9) << "Modified" << '\n';
 
     }
 
-    virtual std::ostream & output_counts(std::ostream & out, const std::string & type, size_t deleted_count, size_t inserted_count, size_t modified_count) const {
+    virtual summary_output_stream & output_counts(summary_output_stream & out, const std::string & type, size_t deleted_count, size_t inserted_count, size_t modified_count) const {
 
-        profile_t::pad(out) << std::setw(10) << std::left;
+        out.pad() << out.setw(10) << out.left();
         out << type;
-        out << std::right;
-        out << std::setw(9) << deleted_count;
-        out << std::setw(9) << inserted_count;
-        out << std::setw(9) << modified_count;
+        out << out.right();
+        out << out.setw(9) << deleted_count;
+        out << out.setw(9) << inserted_count;
+        out << out.setw(9) << modified_count;
         out << '\n';
 
         return out;
@@ -69,10 +70,10 @@ public:
 
     }
 
-    virtual std::ostream & output_all_conditional_counts(std::ostream & out, size_t number_deleted, size_t number_inserted, size_t number_modified) const {
+    virtual summary_output_stream & output_all_conditional_counts(summary_output_stream & out, size_t number_deleted, size_t number_inserted, size_t number_modified) const {
 
         out << '\n';
-        profile_t::profile_t::begin_line(out) << "Conditional Change Overview:\n";
+        out.begin_line() << "Conditional Change Overview:\n";
 
         size_t guard_deleted = 0, if_deleted = 0, while_deleted = 0, for_deleted = 0, switch_deleted = 0, do_deleted = 0, foreach_deleted = 0, forever_deleted = 0;
         conditional_counts(SRCDIFF_DELETE, guard_deleted, if_deleted, while_deleted, for_deleted, switch_deleted, do_deleted, foreach_deleted, forever_deleted);
@@ -83,7 +84,7 @@ public:
         size_t guard_modified = 0, if_modified = 0, while_modified = 0, for_modified = 0, switch_modified = 0, do_modified = 0, foreach_modified = 0, forever_modified = 0;
         conditional_counts(SRCDIFF_COMMON, guard_modified, if_modified, while_modified, for_modified, switch_modified, do_modified, foreach_modified, forever_modified);
 
-        ++profile_t::depth;
+        out.increment_depth();
         output_header(out);
         if(guard_deleted   || guard_inserted   || guard_modified)   output_counts(out, "guard",   guard_deleted,   guard_inserted,   guard_modified);
         if(if_deleted      || if_inserted      || if_modified)      output_counts(out, "if",      if_deleted,      if_inserted,      if_modified);
@@ -93,37 +94,37 @@ public:
         if(do_deleted      || do_inserted      || do_modified)      output_counts(out, "do",      do_deleted,      do_inserted,      do_modified);
         if(foreach_deleted || foreach_inserted || foreach_modified) output_counts(out, "foreach", foreach_deleted, foreach_inserted, foreach_modified);
         if(forever_deleted || forever_inserted || forever_modified) output_counts(out, "forever", forever_deleted, forever_inserted, forever_modified);
-        profile_t::pad(out) << std::setw(10) << std::left << "total" << std::right << std::setw(9) << number_deleted << std::setw(9) << number_inserted << std::setw(9) << number_modified << '\n';
-        --profile_t::depth;
+        out.pad() << out.setw(10) << out.left() << "total" << out.right() << out.setw(9) << number_deleted << out.setw(9) << number_inserted << out.setw(9) << number_modified << '\n';
+        out.decrement_depth();
 
         return out;
 
     }
 
-    virtual std::ostream & output_all_parameter_counts(std::ostream & out, size_t number_parameters_deleted, size_t number_parameters_inserted, size_t number_parameters_modified) const {
+    virtual summary_output_stream & output_all_parameter_counts(summary_output_stream & out, size_t number_parameters_deleted, size_t number_parameters_inserted, size_t number_parameters_modified) const {
 
         out << '\n';
-        profile_t::begin_line(out) << "Parameter list changes:\n";
+        out.begin_line() << "Parameter list changes:\n";
 
-        ++profile_t::depth;
+        out.increment_depth();
         output_header(out);
         output_counts(out, "Parameters", number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
-        --profile_t::depth;
+        out.decrement_depth();
 
         return out;
 
     }
 
-    virtual std::ostream & output_all_member_initialization_counts(std::ostream & out, size_t number_initializations_deleted,
+    virtual summary_output_stream & output_all_member_initialization_counts(summary_output_stream & out, size_t number_initializations_deleted,
                                                                   size_t number_initializations_inserted, size_t number_initializations_modified) const {
 
         out << '\n';
-        profile_t::begin_line(out) << "Member intialization list changes:\n";
+        out.begin_line() << "Member intialization list changes:\n";
 
-        ++profile_t::depth;
+        out.increment_depth();
         output_header(out);
         output_counts(out, "Init", number_initializations_deleted, number_initializations_inserted, number_initializations_modified);
-        --profile_t::depth;
+        out.decrement_depth();
 
         return out;
 

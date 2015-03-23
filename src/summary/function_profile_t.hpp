@@ -71,7 +71,7 @@ class function_profile_t : public profile_t {
         }
 
         /** @todo may need to add rest of things that can occur here between parameter list and block */
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types) const {
+        virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
             if(operation != SRCDIFF_COMMON) {
 
@@ -80,15 +80,15 @@ class function_profile_t : public profile_t {
 
             }
 
-            begin_line(out) << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
+            out.begin_line() << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
 
-            ++depth;
+           out.increment_depth();
 
             if(syntax_count == 0) {
 
                 size_t non_syntax_changes = whitespace_count + comment_count;
 
-                begin_line(out) << "only ";
+                out.begin_line() << "only ";
 
                 if(non_syntax_changes == 1) out << "a single ";
 
@@ -100,7 +100,7 @@ class function_profile_t : public profile_t {
 
                 out << (non_syntax_changes == 1 ? "\n" : "s\n");
 
-                --depth;
+                out.decrement_depth();
 
                 return out;
 
@@ -118,16 +118,16 @@ class function_profile_t : public profile_t {
 
                 text_summary text(id, child_profiles, parameters, member_initializations, summary_identifiers);
 
-                if(!name.is_common()) begin_line(out) << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
+                if(!name.is_common()) out.begin_line() << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
-                if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) begin_line(out) << "Signature change:\n";
+                if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) out.begin_line() << "Signature change:\n";
 
-                if(is_return_type_change) begin_line(out) << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
+                if(is_return_type_change) out.begin_line() << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
 
                 if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                     text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
-                if(const_specifier) begin_line(out) << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
+                if(const_specifier) out.begin_line() << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
 
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
@@ -153,7 +153,7 @@ class function_profile_t : public profile_t {
 
             }
 
-            --depth;
+            out.decrement_depth();
 
             return out;
 

@@ -8,19 +8,17 @@
 #include <namespace_uri.hpp>
 #include <srcdiff_macros.hpp>
 #include <identifier_diff.hpp>
+#include <summary_output_stream.hpp>
 
 #include <vector>
 #include <map>
 #include <set>
-#include <iostream>
 #include <utility>
 #include <memory>
 
 class profile_t {
 
     private:
-
-        static constexpr const char * const BULLET = "\u2022";
 
     public:
 
@@ -34,8 +32,6 @@ class profile_t {
             HIGH   = 3
 
         };
-
-        static size_t depth;
 
         size_t id;
         versioned_string type_name;
@@ -166,9 +162,9 @@ class profile_t {
 
         }
 
-        virtual std::ostream & summary(std::ostream & out, size_t summary_types UNUSED) const {
+        virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types UNUSED) const {
 
-            pad(out) << type_name << ":"; 
+            out.pad() << type_name << ":"; 
             out << " Whitespace: " << whitespace_count;
             out << "\tComment: " << comment_count;
             out << "\tSyntax: " << syntax_count;
@@ -212,21 +208,6 @@ class profile_t {
         friend bool operator==(const std::shared_ptr<profile_t> & profile_one, size_t profile_id) {
 
             return profile_one->id == profile_id;
-
-        }
-
-        static std::ostream & pad(std::ostream & out) {
-
-            for(size_t i = 0; i < depth; ++i)
-                out << '\t';
-
-            return out;
-
-        }
-
-        static std::ostream & begin_line(std::ostream & out) {
-
-            return pad(out) << BULLET << ' ';
 
         }
 

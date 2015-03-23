@@ -289,9 +289,9 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 
 	if(profile->total_count == 0) return;
 
-    profile_t::depth = 0;
-
-    profile->summary(*out, summary_types);
+    summary_output_stream output_stream(*out);
+ 
+    profile->summary(output_stream, summary_types);
     (*out) << "\n";
 
 }
