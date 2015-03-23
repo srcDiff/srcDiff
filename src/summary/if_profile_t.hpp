@@ -11,7 +11,7 @@ class if_profile_t : public conditional_profile_t {
 
     public:
 
-        if_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : conditional_profile_t(type_name, uri, operation, parent_id), guard(true) {}
+        if_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : conditional_profile_t(type_name, uri, operation, parent), guard(true) {}
 
 
         bool is_guard() const {

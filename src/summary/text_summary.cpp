@@ -153,15 +153,15 @@ std::ostream & text_summary::identifiers(std::ostream & out, const std::map<vers
 
 std::ostream & text_summary::replacement(std::ostream & out, const std::shared_ptr<profile_t> & profile, size_t & pos) const {
 
-    const std::shared_ptr<profile_t> & start_profile = profile_list[profile->child_profiles[pos]];
+    const std::shared_ptr<profile_t> & start_profile = profile->child_profiles[pos];
 
     std::vector<const std::shared_ptr<expr_stmt_profile_t> *>   expr_stmt_deleted,    expr_stmt_inserted;
     std::vector<const std::shared_ptr<decl_stmt_profile_t> *>   decl_stmt_deleted,    decl_stmt_inserted;
     std::vector<const std::shared_ptr<conditional_profile_t> *> conditionals_deleted, conditionals_inserted;
     std::vector<const std::shared_ptr<profile_t> *>             comment_deleted,      comment_inserted;
-    for(; pos < profile->child_profiles.size() && profile_list[profile->child_profiles[pos]]->is_replacement; ++pos) {
+    for(; pos < profile->child_profiles.size() && profile->child_profiles[pos]->is_replacement; ++pos) {
 
-        const std::shared_ptr<profile_t> & replacement_profile = profile_list[profile->child_profiles[pos]];                    
+        const std::shared_ptr<profile_t> & replacement_profile = profile->child_profiles[pos];                    
 
         if(is_condition_type(replacement_profile->type_name)) {
 
@@ -389,12 +389,12 @@ bool text_summary::is_body_summary(const std::string & type, bool is_replacement
 
 }
 
-text_summary::text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
+text_summary::text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
              const change_entity_map<call_profile_t> & member_initializations,
              const std::map<versioned_string, size_t> & summary_identifiers,
              const std::vector<std::shared_ptr<profile_t>> & profile_list)
     : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
-      summary_identifiers(summary_identifiers), profile_list(profile_list) {}
+      summary_identifiers(summary_identifiers) {}
 
 std::ostream & text_summary::parameter(std::ostream & out, size_t number_parameters_deleted,
                                        size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -597,9 +597,7 @@ std::ostream & text_summary::member_initialization(std::ostream & out, size_t nu
 void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
                               size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const {
 
-    for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
-
-        const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+    for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
 
         if(child_profile->operation == SRCDIFF_COMMON && child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
 
@@ -629,9 +627,7 @@ void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const 
                             if(pair.second->syntax_count) {
 
                                 bool report_change = false;
-                                for(size_t argument_child_pos : profile_list[pair.second->child_profiles[0]]->child_profiles) {
-
-                                    const std::shared_ptr<profile_t> & argument_child_profile = profile_list[argument_child_pos];
+                                for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
 
                                     if(argument_child_profile->operation != SRCDIFF_COMMON) { 
 
@@ -726,9 +722,7 @@ std::ostream & text_summary::expr_stmt(std::ostream & out, const std::shared_ptr
 
         std::list<std::string> deleted_calls;
         std::list<std::string> inserted_calls;
-        for(size_t child_pos : profile_list[profile->child_profiles[0]]->child_profiles) {
-
-            const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+        for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
 
             if(is_call(child_profile->type_name)) {
 
@@ -778,7 +772,7 @@ std::ostream & text_summary::expr_stmt(std::ostream & out, const std::shared_ptr
     } else {
 
         // there is probably a better way
-        const std::shared_ptr<profile_t> & parent_profile = profile_list[profile->parent_id];
+        const std::shared_ptr<profile_t> & parent_profile = profile->parent;
         std::map<versioned_string, size_t> diff_set;
         std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
                             output_identifiers.begin(), output_identifiers.end(),
@@ -923,9 +917,7 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
     /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
     for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
 
-        size_t child_pos = profile->child_profiles[pos];
-
-        const std::shared_ptr<profile_t> & child_profile = profile_list[child_pos];
+        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
         /** @todo check this condition */
         if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
@@ -965,7 +957,7 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
     // after children
     if(is_leaf) {
 
-        if(profile->parent_id == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
+        if(*profile->parent.get() == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
@@ -983,21 +975,20 @@ std::ostream & text_summary::conditional(std::ostream & out, const std::shared_p
 
 }
 
-std::ostream & text_summary::body(std::ostream & out) {
+std::ostream & text_summary::body(std::ostream & out, const profile_t & profile) {
 
     identifiers(out, summary_identifiers);
 
     for(size_t pos = 0; pos < child_profiles.size(); ++pos) {
 
-        const size_t child_profile_pos = child_profiles[pos];
-        const std::shared_ptr<profile_t> & child_profile = profile_list[child_profile_pos];
+        const std::shared_ptr<profile_t> & child_profile = child_profiles[pos];
 
         if(!is_body_summary(child_profile->type_name, child_profile->is_replacement) || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0))
             continue;
 
         if(child_profile->is_replacement && ((pos + 1) < child_profiles.size())) {
 
-            replacement(out, profile_list[id], pos);
+            replacement(out, std::make_shared<profile_t>(profile), pos);
 
         } else {
 

@@ -32,19 +32,20 @@ bool is_summary(const std::string & type_name) {
 
 }
 
-std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) {
+std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation,
+                                        const std::shared_ptr<profile_t> & parent) {
 
-    if(is_identifier(type_name))     return std::make_shared<identifier_profile_t> (type_name, uri, operation, parent_id);
-    if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent_id);
-    if(is_function_type(type_name))  return std::make_shared<function_profile_t>   (type_name, uri, operation, parent_id);
-    if(is_parameter(type_name))      return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent_id);
-    if(is_decl_stmt(type_name))      return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent_id);
-    if(has_then_clause(type_name))   return std::make_shared<if_profile_t>         (type_name, uri, operation, parent_id);
-    if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent_id);
-    if(is_call(type_name))           return std::make_shared<call_profile_t>       (type_name, uri, operation, parent_id);
-    if(is_expr_stmt(type_name))      return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent_id);
-    if(is_expr(type_name))           return std::make_shared<expr_profile_t>       (type_name, uri, operation, parent_id);
-    return std::make_shared<profile_t>                                             (type_name, uri, operation, parent_id);
+    if(is_identifier(type_name))     return std::make_shared<identifier_profile_t> (type_name, uri, operation, parent);
+    if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent);
+    if(is_function_type(type_name))  return std::make_shared<function_profile_t>   (type_name, uri, operation, parent);
+    if(is_parameter(type_name))      return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent);
+    if(is_decl_stmt(type_name))      return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent);
+    if(has_then_clause(type_name))   return std::make_shared<if_profile_t>         (type_name, uri, operation, parent);
+    if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent);
+    if(is_call(type_name))           return std::make_shared<call_profile_t>       (type_name, uri, operation, parent);
+    if(is_expr_stmt(type_name))      return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent);
+    if(is_expr(type_name))           return std::make_shared<expr_profile_t>       (type_name, uri, operation, parent);
+    return std::make_shared<profile_t>                                             (type_name, uri, operation, parent);
 
 }
 
@@ -362,7 +363,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
     full_name += localname;
 
-    profile_stack.push_back(std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON, 0));
+    profile_stack.push_back(std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
 
     for(int i = 0; i < num_attributes; ++i)
         if(attributes[i].localname == std::string("filename")) {
@@ -483,7 +484,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     } else {
 
-        profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))->id));
+        profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
         if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
 
     }

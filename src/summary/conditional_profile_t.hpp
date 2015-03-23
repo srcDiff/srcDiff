@@ -15,7 +15,7 @@ class conditional_profile_t : public profile_t {
 
     public:
 
-        conditional_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id),
+        conditional_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent),
                               condition_modified(false), body_modified(false) {}
 
         virtual void set_condition(versioned_string condition) {

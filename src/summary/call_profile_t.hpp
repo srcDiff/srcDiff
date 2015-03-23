@@ -18,8 +18,8 @@ class call_profile_t : public profile_t {
   	    change_entity_map<profile_t> arguments;
         bool argument_list_modified;
 
-        call_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id)
-        	: profile_t(type_name, uri, operation, parent_id), argument_list_modified(false) {}
+        call_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
+        	: profile_t(type_name, uri, operation, parent), argument_list_modified(false) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
@@ -31,7 +31,7 @@ class call_profile_t : public profile_t {
 
         	if(is_argument(profile->type_name)) arguments.emplace(profile->operation, profile);
 
-            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile->id), profile->id);
+            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile), profile);
             
         }
 

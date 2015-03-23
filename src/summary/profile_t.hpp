@@ -42,7 +42,7 @@ class profile_t {
         namespace_uri uri;
         srcdiff_type operation;
         bool is_replacement;
-        size_t parent_id;
+        std::shared_ptr<profile_t> parent;
 
         bool is_modified;
         bool is_whitespace;
@@ -55,18 +55,23 @@ class profile_t {
         size_t syntax_count;
         size_t total_count;
 
-        std::vector<size_t> child_profiles;
-        std::vector<size_t> descendant_profiles;      
+        profile_list_t child_profiles;
+        profile_list_t descendant_profiles;      
 
         std::map<versioned_string, size_t> identifiers;
         std::map<versioned_string, size_t> summary_identifiers;
 
-        std::vector<std::shared_ptr<profile_t>> common_profiles;
+        profile_list_t common_profiles;
 
     public:
 
-        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), parent_id(parent_id),
+        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) :
+                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false),
+                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
+                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
+
+        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) :
+                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), parent(parent),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
 
@@ -119,13 +124,13 @@ class profile_t {
         
         virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
-            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile->id), profile->id);
+            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile), profile);
 
         }
 
         virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
-            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile->id), profile->id);
+            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
             
         }
 
@@ -171,6 +176,24 @@ class profile_t {
             out << '\n';
 
             return out;
+
+        }
+
+        bool operator<(const profile_t & profile) const {
+
+            return id < profile.id;
+
+        }
+
+        bool operator==(const profile_t & profile) const {
+
+            return id == profile.id;
+
+        }
+
+        bool operator==(int profile_id) const {
+
+            return id == profile_id;
 
         }
 

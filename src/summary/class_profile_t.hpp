@@ -22,7 +22,7 @@ class class_profile_t : public profile_t {
 
     public:
 
-        class_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id) : profile_t(type_name, uri, operation, parent_id) {}
+        class_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
@@ -40,7 +40,7 @@ class class_profile_t : public profile_t {
             else if(is_function_type(type_name)) methods.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile));
             else if(is_class_type(type_name))    classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
 
-            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile->id), profile->id);
+            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
             
         }
 

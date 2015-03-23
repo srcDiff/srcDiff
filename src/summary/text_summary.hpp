@@ -20,13 +20,12 @@ protected:
 
         const size_t id;
 
-        const std::vector<size_t> & child_profiles;
+        const profile_t::profile_list_t & child_profiles;
 
         const change_entity_map<parameter_profile_t> & parameters;
         const change_entity_map<call_profile_t>      & member_initializations;
 
         const std::map<versioned_string, size_t> & summary_identifiers;
-        const std::vector<std::shared_ptr<profile_t>> & profile_list;
 
         std::map<versioned_string, size_t> output_identifiers;
 
@@ -43,7 +42,7 @@ private:
 
 public:
 
-    text_summary(const size_t id, const std::vector<size_t> & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
+    text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
                  const std::map<versioned_string, size_t> & summary_identifiers,
                  const std::vector<std::shared_ptr<profile_t>> & profile_list);
@@ -57,7 +56,7 @@ public:
     std::ostream & expr_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const;
     std::ostream & decl_stmt(std::ostream & out, const std::shared_ptr<profile_t> & profile) const;
     std::ostream & conditional(std::ostream & out, const std::shared_ptr<profile_t> & profile);
-    std::ostream & body(std::ostream & out);
+    std::ostream & body(std::ostream & out, const profile_t & profile);
 
 };
 

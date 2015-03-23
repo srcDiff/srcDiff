@@ -16,8 +16,8 @@ class expr_stmt_profile_t : public profile_t {
 
     public:
 
-        expr_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id)
-            : profile_t(type_name, uri, operation, parent_id), is_assignment(false), isdelete(false), is_call(true) {}
+        expr_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
+            : profile_t(type_name, uri, operation, parent), is_assignment(false), isdelete(false), is_call(true) {}
 
         bool assignment() const {
 

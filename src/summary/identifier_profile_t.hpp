@@ -18,8 +18,8 @@ class identifier_profile_t : public profile_t {
   	    change_entity_map<profile_t> arguments;
         bool argument_list_modified;
 
-        identifier_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, size_t parent_id)
-        	: profile_t(type_name, uri, operation, parent_id), argument_list_modified(false) {}
+        identifier_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
+        	: profile_t(type_name, uri, operation, parent), argument_list_modified(false) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
