@@ -952,6 +952,9 @@ bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, c
 
   if(original_uri != modified_uri) return false;
 
+  if(original_tag == "if" && original_uri != "http://www.sdml.info/srcML/src") return false;
+  if(modified_tag == "if" && modified_uri != "http://www.sdml.info/srcML/src") return false;
+
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
     if(interchange_lists[list_pos].name == original_tag) {
@@ -980,6 +983,9 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   const std::string & original_tag = nodes_original.at(original_pos)->name;
   const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
+
+  const std::string & original_uri = nodes_original.at(original_pos)->ns->href;
+  const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
 
   if(original_tag != modified_tag) return true;
 
@@ -1079,7 +1085,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
     if(original_name == modified_name) return false;
 
-  } else if(original_tag == "if") {
+  } else if(original_tag == "if" && original_uri == "http://www.sdml.info/srcML/src") {
 
     std::string original_condition = get_condition(nodes_original, original_pos);
     std::string modified_condition = get_condition(nodes_modified, modified_pos);
@@ -1135,6 +1141,9 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
 
   const std::string & original_tag = nodes_original.at(original_pos)->name;
   const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
+
+  const std::string & original_uri = nodes_original.at(original_pos)->ns->href;
+  const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
 
   std::string original_name;
   if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
