@@ -82,10 +82,10 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
                                   const boost::optional<std::string> & unit_filename,
                                   const boost::optional<std::string> & unit_version) {
 
-  line_diff_range.create_line_diff();
+  // line_diff_range.create_line_diff();
 
-  if(!is_option(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
-    return;
+  // if(!is_option(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
+  //   return;
 
   int is_original = 0;
   std::thread thread_original(std::ref(input_original), SESDELETE, std::ref(output.get_nodes_original()), std::ref(is_original));
