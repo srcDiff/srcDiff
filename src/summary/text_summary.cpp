@@ -841,8 +841,8 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
             }
 
-            if(deleted_calls.size() == 1) out << " was deleted";
-            else                          out << " were deleted";
+            if(deleted_calls.size() == 1) out << " was deleted from a call chain";
+            else                          out << " were deleted from a call chain";
 
             if(inserted_calls.size() || modified_calls.size())
                 out << " and ";
@@ -867,8 +867,8 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
             }
 
-            if(inserted_calls.size() == 1) out << " was added";
-            else                           out << " were added";
+            if(inserted_calls.size() == 1) out << " was added to a call chain";
+            else                           out << " were added to a call chain";
 
             if(modified_calls.size())
                 out << " and ";
