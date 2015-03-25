@@ -51,9 +51,11 @@ public:
     summary_output_stream & member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
     void expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
-                    std::vector<std::shared_ptr<call_profile_t>> & calls,
-                    std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                    std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
+                        std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
+                        std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
+                        std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
+                        std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
+                        std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
     summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
     summary_output_stream & conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile);
