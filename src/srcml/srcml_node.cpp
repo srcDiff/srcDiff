@@ -84,7 +84,6 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
     while(is_archive && node_ns && (const char *)node_ns->href != std::string("http://www.sdml.info/srcML/cpp"))
         node_ns = node_ns->next;
 
-
     std::string ns_name = "xmlns";
     if(node_ns->prefix) {
 
@@ -140,15 +139,13 @@ srcml_node::srcml_node(xmlElementType type, const std::string & name, const srcm
  properties(0), extra(0), is_empty(false), free(false), move(0) {}
 
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.name), content(node.content), extra(node.extra),
-  is_empty(node.is_empty), free(true), move(0) {
+  parent(node.parent), is_empty(node.is_empty), free(true), move(0) {
 
   if(node.ns)
     ns = srcml_ns(node.ns->href, node.ns->prefix);
 
   for(const srcml_attr & attr : node.properties)
     properties.push_back(attr);
-
-  parent = node.parent;
 
 }
 

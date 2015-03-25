@@ -25,7 +25,7 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
   full_name += (const char*)curnode->name;
 
   std::shared_ptr<srcml_node> node;
-  if (!xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
+  if (false && !xmlTextReaderIsEmptyElement(reader) && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT && curnode->properties == 0) {
 
     std::map<std::string, std::shared_ptr<srcml_node>>::iterator lb = start_tags.lower_bound(full_name);
     if (lb != start_tags.end() && !(start_tags.key_comp()(full_name, lb->first))) {
@@ -269,7 +269,6 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       if(node->name == "unit") return nodes;
 
-      // save non-text node and get next node
       nodes.push_back(node);
 
     }
