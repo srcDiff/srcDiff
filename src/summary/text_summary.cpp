@@ -612,8 +612,8 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 }
 
 /** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
-void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
-                              size_t & number_calls,
+void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
+                              std::vector<std::shared_ptr<call_profile_t>> & calls,
                               std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const {
 
@@ -641,8 +641,7 @@ void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const 
 
                 size_t number_arguments_modified = 0;
                 std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
-                    [&, this](const typename change_entity_map<profile_t>::pair & pair)
-                        {
+                    [&, this](const typename change_entity_map<profile_t>::pair & pair) {
 
                             if(pair.second->syntax_count) {
 
@@ -659,11 +658,12 @@ void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const 
                                     if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
 
                                         size_t num_calls = 0;
-                                        std::vector<std::shared_ptr<call_profile_t>> inner_renamed_calls, inner_modified_argument_lists;
-                                        call_check(argument_child_profile, identifier_set, num_calls,
+                                        std::vector<std::shared_ptr<call_profile_t>> inner_calls, inner_renamed_calls,
+                                            inner_modified_argument_lists;
+                                        expr_stmt_call(argument_child_profile, identifier_set, inner_calls,
                                             inner_renamed_calls, inner_modified_argument_lists);
 
-                                        if(num_calls || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
+                                        if(inner_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
 
                                             report_change = true;
                                             break;
@@ -712,7 +712,7 @@ void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const 
 
             if(!report_name && !report_argument_list) continue;
 
-            ++number_calls;
+            calls.push_back(call_profile);
             if(report_name) renamed_calls.push_back(call_profile);
             if(report_argument_list) modified_argument_lists.push_back(call_profile);
 
@@ -800,16 +800,15 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
                             output_identifiers.begin(), output_identifiers.end(),
                             std::inserter(diff_set, diff_set.begin()));
 
-        size_t number_calls = 0;
-        std::vector<std::shared_ptr<call_profile_t>> renamed_calls, modified_argument_lists;
-        call_check(profile, diff_set, number_calls, renamed_calls, modified_argument_lists);
+        std::vector<std::shared_ptr<call_profile_t>> calls, renamed_calls, modified_argument_lists;
+        expr_stmt_call(profile, diff_set, calls, renamed_calls, modified_argument_lists);
 
-        if(number_calls == 0) return out;
+        if(calls.size() == 0) return out;
 
         out.begin_line();
         if(renamed_calls.size() && modified_argument_lists.size()) {
 
-            if(number_calls == 1) {
+            if(calls.size() == 1) {
 
                 out << get_profile_string(renamed_calls[0]) << " and its arguments modified\n";
 
