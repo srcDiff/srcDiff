@@ -54,6 +54,11 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
 
     //   if(nodes_original.at(set_original.at(i))->extra & 0x1) continue;
 
+    //   if(nodes_original.at(set_original.at(i))->parent && *nodes_original.at(set_original.at(i))->parent != "name") continue;
+
+    //   if((set_original.at(i) + 1) < nodes_original.size() && nodes_original.at(set_original.at(i) + 1)->is_text()
+    //     && (*nodes_original.at(set_original.at(i) + 1)->content == "::")) continue;
+
     //   while(nodes_original.at(set_original.at(i))->type != XML_READER_TYPE_END_ELEMENT)
     //     ++i;
 
@@ -77,6 +82,11 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
     //   || nodes_modified.at(set_modified.at(i))->name == "modifier") {
 
     //   if(nodes_modified.at(set_modified.at(i))->extra & 0x1) continue;
+
+    //   if(nodes_modified.at(set_modified.at(i))->parent && *nodes_modified.at(set_modified.at(i))->parent != "name") continue;
+
+    //   if((set_modified.at(i) + 1) < nodes_modified.size() && nodes_modified.at(set_modified.at(i) + 1)->is_text()
+    //     && (*nodes_modified.at(set_modified.at(i) + 1)->content == "::")) continue;
 
     //   while(nodes_modified.at(set_modified.at(i))->type != XML_READER_TYPE_END_ELEMENT)
     //     ++i;

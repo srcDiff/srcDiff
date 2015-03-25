@@ -26,6 +26,5 @@
 <unit filename="call|call">
 <expr_stmt><expr><diff:delete><name>treeRoot</name> <operator>&lt;&lt;</operator></diff:delete><diff:insert><call><name><name>treeRoot</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>index</name></expr></argument>,<diff:common> </diff:common><argument><expr><diff:common><call><name><name>root</name><operator>-&gt;</operator><name>styleId</name></name><argument_list>()</argument_list></call></diff:common></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt>
 </unit>
-</unit>
 
 </unit>
