@@ -606,7 +606,9 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 /** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
 void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
-                              size_t & number_calls, size_t & number_renames, size_t & number_argument_list_modified) const {
+                              size_t & number_calls,
+                              std::vector<std::shared_ptr<profile_t>> & renamed_calls,
+                              std::vector<std::shared_ptr<profile_t>> & modified_argument_lists) const {
 
     for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
 
@@ -649,10 +651,12 @@ void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const 
 
                                     if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
 
-                                        size_t num_calls = 0, num_renames = 0, num_argument_list_modified = 0;
-                                        call_check(argument_child_profile, identifier_set, num_calls, num_renames, num_argument_list_modified);
+                                        size_t num_calls = 0;
+                                        std::vector<std::shared_ptr<profile_t>> inner_renamed_calls, inner_modified_argument_lists;
+                                        call_check(argument_child_profile, identifier_set, num_calls,
+                                            inner_renamed_calls, inner_modified_argument_lists);
 
-                                        if(num_calls || num_renames || number_argument_list_modified) {
+                                        if(num_calls || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
 
                                             report_change = true;
                                             break;
@@ -702,8 +706,8 @@ void text_summary::call_check(const std::shared_ptr<profile_t> & profile, const 
             if(!report_name && !report_argument_list) continue;
 
             ++number_calls;
-            if(report_name)          ++number_renames;
-            if(report_argument_list) ++number_argument_list_modified;
+            if(report_name) renamed_calls.push_back(call_profile);
+            if(report_argument_list) modified_argument_lists.push_back(call_profile);
 
         }
 
@@ -789,13 +793,14 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
                             output_identifiers.begin(), output_identifiers.end(),
                             std::inserter(diff_set, diff_set.begin()));
 
-        size_t number_calls = 0, number_renames = 0, number_argument_list_modified = 0;
-        call_check(profile, diff_set, number_calls, number_renames, number_argument_list_modified);
+        size_t number_calls = 0;
+        std::vector<std::shared_ptr<profile_t>> renamed_calls, modified_argument_lists;
+        call_check(profile, diff_set, number_calls, renamed_calls, modified_argument_lists);
 
         if(number_calls == 0) return out;
 
         out.begin_line();
-        if(number_renames && number_argument_list_modified) {
+        if(renamed_calls.size() && modified_argument_lists.size()) {
 
             if(number_calls == 1) {
 
@@ -803,26 +808,26 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
             } else {
              
-                if(number_renames == 1) out << "a function call was ";
-                else                    out << number_renames << " function calls were ";
+                if(renamed_calls.size() == 1) out << "a function call was ";
+                else                    out << renamed_calls.size() << " function calls were ";
                 out << "renamed and ";
 
-                if(number_argument_list_modified == 1) out << "a function call's arguments ";
-                else                                   out << number_renames << " function calls' argument lists ";
+                if(modified_argument_lists.size() == 1) out << "a function call's arguments ";
+                else                                   out << renamed_calls.size() << " function calls' argument lists ";
                 out << " were modified\n";
 
             }
 
-        } else if(number_renames) {
+        } else if(renamed_calls.size()) {
 
-            if(number_renames == 1) out << "a function call was ";
-            else                    out << number_renames << " function calls were ";
+            if(renamed_calls.size() == 1) out << "a function call was ";
+            else                    out << renamed_calls.size() << " function calls were ";
             out << "renamed\n";
 
-        } else if(number_argument_list_modified) {
+        } else if(modified_argument_lists.size()) {
 
-            if(number_argument_list_modified == 1) out << "a function call's arguments";
-            else                                   out << number_renames << " function calls' argument lists";
+            if(modified_argument_lists.size() == 1) out << "a function call's arguments";
+            else                                   out << renamed_calls.size() << " function calls' argument lists";
             out << " were modified\n";
 
         }
