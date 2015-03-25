@@ -52,8 +52,8 @@ public:
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
     void call_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
                     size_t & number_calls,
-                    std::vector<std::shared_ptr<profile_t>> & renamed_calls,
-                    std::vector<std::shared_ptr<profile_t>> & modified_argument_lists) const;
+                    std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
+                    std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
     summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
     summary_output_stream & conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile);
