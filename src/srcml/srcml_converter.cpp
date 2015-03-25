@@ -80,7 +80,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start, const char
   }
 
   text->is_empty = true;
-  text->parent = boost::optional<std::string>();
+  text->parent = boost::optional<std::shared_ptr<srcml_node>>();
   text->free = true;
   text->move = 0;
 
@@ -161,8 +161,8 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
   srcml_nodes nodes;
 
-  std::vector<std::string> element_stack;
-  element_stack.push_back("unit");
+  srcml_nodes element_stack;
+  element_stack.push_back(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, "unit"));
 
   int not_done = 1;
   while(not_done) {
@@ -263,7 +263,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         node->parent = element_stack.back();
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (node->extra & 0x1) == 0)
-        element_stack.push_back(node->name);
+        element_stack.push_back(node);
       else if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         element_stack.pop_back();
 

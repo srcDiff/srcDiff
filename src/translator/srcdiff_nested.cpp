@@ -180,7 +180,7 @@ bool is_nestable_internal(const node_set & structure_one, const srcml_nodes & no
 
   /** Only can nest a block into another block if it's parent is a block */
   bool is_block = nodes_one.at(structure_one.at(0))->name == "block" && nodes_two.at(structure_two.at(0))->name == "block";
-  bool parent_is_block = nodes_one.at(structure_one.at(0))->parent && *nodes_one.at(structure_one.at(0))->parent == "block";
+  bool parent_is_block = nodes_one.at(structure_one.at(0))->parent && (*nodes_one.at(structure_one.at(0))->parent)->name == "block";
   if(is_block && !parent_is_block) return false;
 
   if(is_nest_type(structure_one, nodes_one, structure_two, nodes_two, block)) {
@@ -400,14 +400,14 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
           continue;
 
         if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name"
-          && nodes_modified.at(node_sets_modified.at(j).at(0))->parent && *nodes_modified.at(node_sets_modified.at(j).at(0))->parent == "expr"
-          && nodes_original.at(node_sets_original.at(i).at(0))->parent && *nodes_original.at(node_sets_original.at(i).at(0))->parent == "expr"
+          && nodes_modified.at(node_sets_modified.at(j).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(j).at(0))->parent)->name == "expr"
+          && nodes_original.at(node_sets_original.at(i).at(0))->parent && (*nodes_original.at(node_sets_original.at(i).at(0))->parent)->name == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
           continue;
 
         if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name"
           && (!nodes_modified.at(node_sets_modified.at(j).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent
-            || *nodes_modified.at(node_sets_modified.at(j).at(0))->parent != *nodes_original.at(set.at(match).at(0))->parent))
+            || (*nodes_modified.at(node_sets_modified.at(j).at(0))->parent)->name != (*nodes_original.at(set.at(match).at(0))->parent)->name))
           continue;
 
         valid_nests_original.push_back(j);
@@ -437,14 +437,14 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
             continue;
 
           if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name"
-            && nodes_modified.at(node_sets_modified.at(k).at(0))->parent && *nodes_modified.at(node_sets_modified.at(k).at(0))->parent == "expr"
-            && nodes_original.at(node_sets_original.at(i).at(0))->parent && *nodes_original.at(node_sets_original.at(i).at(0))->parent == "expr"
+            && nodes_modified.at(node_sets_modified.at(k).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(k).at(0))->parent)->name == "expr"
+            && nodes_original.at(node_sets_original.at(i).at(0))->parent && (*nodes_original.at(node_sets_original.at(i).at(0))->parent)->name == "expr"
             && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
             continue;
 
-          if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name"
-            && (!nodes_modified.at(node_sets_modified.at(j).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent
-              || *nodes_modified.at(node_sets_modified.at(j).at(0))->parent != *nodes_original.at(set.at(match).at(0))->parent))
+          if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name"
+            && (!nodes_modified.at(node_sets_modified.at(k).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent
+              || (*nodes_modified.at(node_sets_modified.at(k).at(0))->parent)->name != (*nodes_original.at(set.at(match).at(0))->parent)->name))
             continue;
 
           valid_nests_original.push_back(k);
@@ -488,15 +488,23 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
           continue;
 
         if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name"
-          && nodes_original.at(node_sets_original.at(j).at(0))->parent && *nodes_original.at(node_sets_original.at(j).at(0))->parent == "expr"
-          && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && *nodes_modified.at(node_sets_modified.at(i).at(0))->parent == "expr"
+          && nodes_original.at(node_sets_original.at(j).at(0))->parent && (*nodes_original.at(node_sets_original.at(j).at(0))->parent)->name == "expr"
+          && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(i).at(0))->parent)->name == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
           continue;
 
-        if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name"
-            && (!nodes_original.at(node_sets_original.at(j).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent
-              || *nodes_original.at(node_sets_original.at(j).at(0))->parent != *nodes_modified.at(set.at(match).at(0))->parent))
-          continue;
+//         if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name" {
+
+//             if(!nodes_original.at(node_sets_original.at(j).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent)
+//               continue;
+
+//             boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(node_sets_original.at(j).at(0))->parent;
+// //          while(parent_original == "name")
+
+//             boost::optional<std::shared_ptr<srcml_node>> = nodes_modified.at(set.at(match).at(0))->parent;
+
+
+//         }
 
         valid_nests_modified.push_back(j);
 
@@ -525,14 +533,14 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
               continue;
 
             if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name" 
-              && nodes_original.at(node_sets_original.at(k).at(0))->parent && *nodes_original.at(node_sets_original.at(k).at(0))->parent == "expr"
-              && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && *nodes_modified.at(node_sets_modified.at(i).at(0))->parent == "expr"
+              && nodes_original.at(node_sets_original.at(k).at(0))->parent && (*nodes_original.at(node_sets_original.at(k).at(0))->parent)->name == "expr"
+              && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(i).at(0))->parent)->name == "expr"
               && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
               continue;
 
-            if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name"
-                && (!nodes_original.at(node_sets_original.at(j).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent
-                  || *nodes_original.at(node_sets_original.at(j).at(0))->parent != *nodes_modified.at(set.at(match).at(0))->parent))
+            if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name"
+                && (!nodes_original.at(node_sets_original.at(k).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent
+                  || (*nodes_original.at(node_sets_original.at(k).at(0))->parent)->name != (*nodes_modified.at(set.at(match).at(0))->parent)->name))
               continue;
 
           valid_nests_modified.push_back(k);
