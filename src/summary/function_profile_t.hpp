@@ -57,15 +57,32 @@ class function_profile_t : public profile_t {
 
         virtual impact_factor calculate_impact_factor() const {
 
-            size_t weak_modification = (return_type.is_common() ? 0 : 1) + (name.is_common() ? 0 : 1) + parameters.count(SRCDIFF_COMMON);
+            size_t total_child_profiles = common_profiles.size() + child_profiles.size();
 
-            size_t feature_modifications = parameters.count(SRCDIFF_DELETE) + parameters.count(SRCDIFF_INSERT);
+            size_t impact = 0;
+            for(const std::shared_ptr<profile_t> & child : child_profiles) {
 
-            size_t behaviour_modifications = conditionals.count(SRCDIFF_COMMON) + conditionals.count(SRCDIFF_DELETE) + conditionals.count(SRCDIFF_INSERT);
+                if(child->syntax_count == 0) continue;
 
-            if((weak_modification + feature_modifications + behaviour_modifications) == 0) return NONE;
-            if((feature_modifications + behaviour_modifications) ==  0)                    return LOW;
-            if(feature_modifications < 3 && behaviour_modifications < 2)                   return MEDIUM;
+                if(child->type_name == "type" || child->type_name == "name" || child->type_name == "parameter" || !is_condition_type(child->type_name)) {
+
+                    ++impact;
+
+                } else {
+
+                    const std::shared_ptr<conditional_profile_t> & condition = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(child);
+                    if(condition->is_condition_modified())
+                        impact += 3;
+                    else
+                        impact += 2;
+
+                }
+
+            }
+            
+            if(impact == 0)                        return NONE;
+            if(impact * 4 <= total_child_profiles) return LOW;
+            if(impact * 2 <= total_child_profiles) return MEDIUM;
             return HIGH;
 
         }

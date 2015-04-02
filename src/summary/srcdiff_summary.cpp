@@ -817,6 +817,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         if(profile_stack.back()->total_count
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0))
             update_anscestor_profile(profile_stack.back());
+        else if(profile_stack.back()->total_count == 0 && srcdiff_stack.back().operation == SRCDIFF_COMMON)
+                profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile_stack.back());
 
         if(has_body(full_name)) {
 
@@ -855,12 +857,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
            }
 
         }
-
-    }
-
-    if(srcdiff_stack.size() > 1 && srcdiff_stack.back().operation == SRCDIFF_COMMON) {
-
-        profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile_stack.back());
 
     }
 
