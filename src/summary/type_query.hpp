@@ -23,5 +23,6 @@ bool is_comment(const std::string & type_name);
 
 bool has_then_clause(const std::string & type_name);
 bool has_body(const std::string & type_name);
+bool is_statement(const std::string & type_name);
 
 #endif

@@ -29,11 +29,14 @@ class function_profile_t : public profile_t {
         change_entity_map<parameter_profile_t>   parameters;
         change_entity_map<call_profile_t>        member_initializations;
 
+        size_t total_statements;
+
     private:
 
     public:
 
-        function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent) {}
+        function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
+            : profile_t(type_name, uri, operation, parent), total_statements(0) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
@@ -57,22 +60,16 @@ class function_profile_t : public profile_t {
 
         virtual impact_factor calculate_impact_factor() const {
 
-            size_t total_child_profiles = 0;
-            std::for_each(common_profiles.begin(), common_profiles.end(),
-                [&total_child_profiles](const std::shared_ptr<profile_t> & profile) {
+            size_t total_statements = 0;
+            std::function<void  (const std::shared_ptr<profile_t> & profile)> count_profiles
+                = [&total_statements](const std::shared_ptr<profile_t> & profile) {
 
-                    if(profile->type_name != "comment") ++total_child_profiles;
+                    if(profile->type_name != "comment") ++total_statements;
 
-                }
-            );
+                };
 
-            std::for_each(child_profiles.begin(), child_profiles.end(),
-                [&total_child_profiles](const std::shared_ptr<profile_t> & profile) {
-
-                    if(profile->type_name != "comment") ++total_child_profiles;
-
-                }
-            );
+            std::for_each(common_profiles.begin(), common_profiles.end(), count_profiles);
+            std::for_each(child_profiles.begin(), child_profiles.end(), count_profiles);
 
             size_t impact = 0;
             for(const std::shared_ptr<profile_t> & child : child_profiles) {
@@ -106,9 +103,9 @@ class function_profile_t : public profile_t {
 
             }
 
-            if(impact == 0)                             return NONE;
-            if(impact * 5 <= total_child_profiles)      return LOW;
-            if(impact * 10 <= 4 * total_child_profiles) return MEDIUM;
+            if(impact == 0)                         return NONE;
+            if(impact * 5 <= total_statements)      return LOW;
+            if(impact * 10 <= 4 * total_statements) return MEDIUM;
             return HIGH;
 
         }
