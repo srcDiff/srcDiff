@@ -28,7 +28,7 @@ class expr_stmt_profile_t : public profile_t {
 
         }
 
-        void set_assignment(bool is_assignment) {
+        void assignment(bool is_assignment) {
 
         	this->is_assignment = is_assignment;
 
@@ -40,7 +40,7 @@ class expr_stmt_profile_t : public profile_t {
 
         }
 
-        void set_delete(bool isdelete) {
+        void is_delete(bool isdelete) {
 
             this->isdelete = isdelete;
 
@@ -52,7 +52,7 @@ class expr_stmt_profile_t : public profile_t {
 
         }
 
-        void set_call(bool is_call) {
+        void call(bool is_call) {
 
             this->is_call = is_call;
 
@@ -76,7 +76,7 @@ class expr_stmt_profile_t : public profile_t {
 
         }
 
-        void set_lhs(const versioned_string & left) {
+        void lhs(const versioned_string & left) {
 
             this->left = left;
 
@@ -88,7 +88,7 @@ class expr_stmt_profile_t : public profile_t {
 
         }
 
-        void set_rhs(const versioned_string & right) {
+        void rhs(const versioned_string & right) {
 
             this->right = right;
 

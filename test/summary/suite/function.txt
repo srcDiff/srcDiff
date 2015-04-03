@@ -133,7 +133,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KoZoomAction::createWidget': Impact = Medium
+• function 'KoZoomAction::createWidget': Impact = Low
 	• the body of an if statement was modified
 	  this modification included:
 		• the identifier 'd->' was added in several places
@@ -170,8 +170,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• destructor 'KWTextFrameSet::~KWTextFrameSet': Impact = Medium
-	• an if statement was added around a delete statement 
+• destructor 'KWTextFrameSet::~KWTextFrameSet': Impact = High
+	• an if statement with an else-clause was added around a delete statement 
 
 END_SUMMARY
 
@@ -194,7 +194,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• destructor 'KWTextFrameSet::~KWTextFrameSet': Impact = None
+• destructor 'KWTextFrameSet::~KWTextFrameSet': Impact = High
 	• a delete statement was replaced with an assignment to 'a'
 
 END_SUMMARY

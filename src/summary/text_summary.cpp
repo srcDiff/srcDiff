@@ -35,8 +35,12 @@ std::string text_summary::get_article(const std::shared_ptr<profile_t> & profile
 
 std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
-    const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
-    if(is_guard_clause) return "guard clause";
+    if(profile->type_name == "if") {
+
+        const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
+        if(if_profile->is_guard())    return "guard clause";
+
+    }
 
     if(is_decl_stmt(profile->type_name)) return "declaration statement";
 
@@ -57,6 +61,13 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
 }
 
 std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & profile) const {
+
+    if(profile->type_name == "if") {
+
+        const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
+        if(if_profile->else_clause()) return "an if statement with an else-clause";
+
+    }
 
     if(is_decl_stmt(profile->type_name)) {
 

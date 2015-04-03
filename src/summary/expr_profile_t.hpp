@@ -22,19 +22,19 @@ class expr_profile_t : public profile_t {
 
         }
 
-        void set_assignment(bool has_assignment) {
+        void assignment(bool has_assignment) {
 
         	this->has_assignment = has_assignment;
 
         }
 
-        bool get_delete() const {
+        bool is_delete() const {
 
             return has_delete;
 
         }
 
-        void set_delete(bool has_delete) {
+        void is_delete(bool has_delete) {
 
             this->has_delete = has_delete;
 

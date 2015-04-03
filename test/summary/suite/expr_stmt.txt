@@ -77,7 +77,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisView2::slotLoadingFinished': Impact = None
+• function 'KisView2::slotLoadingFinished': Impact = Low
 	• a call to 'm_d->zoomManager->zoomController' was deleted from a call chain and a call to 
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
 	• a call chain consisting of 'm_d->zoomManager->zoomController' and setAspectMode' was 

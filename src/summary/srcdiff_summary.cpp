@@ -64,12 +64,12 @@ void srcdiff_summary::process_characters() {
 
         if(text[0] == '=' && (text.size() == 1 || text.back() != '=')) {
 
-            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_assignment(true);
+            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->assignment(true);
 
             if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos) {
 
                 std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos));
-                expr_stmt_profile->set_assignment(true);
+                expr_stmt_profile->assignment(true);
 
                 for(size_t pos = text.size(); pos > 0; --pos) {
 
@@ -86,7 +86,7 @@ void srcdiff_summary::process_characters() {
                 while(collect_lhs.has_modified() && !collect_lhs.modified().empty() && isspace(collect_lhs.modified().back()))
                     collect_lhs.modified().pop_back();
 
-                expr_stmt_profile->set_lhs(collect_lhs);
+                expr_stmt_profile->lhs(collect_lhs);
                 collect_lhs.clear();
 
 
@@ -94,15 +94,15 @@ void srcdiff_summary::process_characters() {
 
         } else if(text == "delete") {
 
-            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->set_delete(true);
+            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->is_delete(true);
 
             if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
-                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_delete(true);
+                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->is_delete(true);
 
         } else if(expr_stmt_pos > 0) {
 
             if(text != "." && text != "->" && text != ".*" && text != "->*")
-                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->set_call(false);
+                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->call(false);
 
         }
 
@@ -451,7 +451,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         && (profile_stack.back()->type_name == "then" || profile_stack.at(profile_stack.size() - 2)->type_name == "then")
         && has_then_clause(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name);
     if(then_clause_child && local_name != "block" && local_name != "comment" && local_name != "break" && local_name != "continue" && local_name != "return")
-        reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_is_guard(false);
+        reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->is_guard(false);
 
     if(uri_stack.back() == SRCDIFF) {
 
@@ -752,8 +752,18 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             reinterpret_cast<std::shared_ptr<call_profile_t> &>(profile_stack.at(profile_stack.size() - 2))->argument_list_modified = true;
 
         } else if(full_name == "block" && profile_stack.back()->total_count > 0 && (profile_stack.at(profile_stack.size() - 2)->type_name == "then"
-                                        || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())))
-            reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_body_modified(true);            
+                                        || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string()))) {
+
+            reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_body_modified(true);
+
+        } else if(full_name == "else" && counting_profile_pos.size() > 1
+            && profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->type_name == "if") {
+
+            reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_clause(true);
+            reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->is_guard(false);
+
+        }
+
 
     }
 
@@ -763,7 +773,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos));
 
         if(!is_call(full_name) && full_name != "operator")
-            expr_stmt_profile->set_call(false);
+            expr_stmt_profile->call(false);
 
         if(is_call(full_name))
             expr_stmt_profile->add_call_profile(reinterpret_cast<std::shared_ptr<call_profile_t> &>(profile_stack.back()));
