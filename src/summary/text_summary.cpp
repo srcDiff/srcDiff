@@ -67,8 +67,15 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
     if(profile->type_name == "if") {
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
-        /** @todo need to and with else-clause when adding or deleting I think */
-        if(if_profile->else_clause()) return "an if statement";
+        if(if_profile->else_clause()) {
+
+            /** @todo check if this ok */
+            if(if_profile->operation == SRCDIFF_COMMON)
+                return "an if statement with an else-clause";
+            else
+                return "an if statement";
+
+        }
 
     }
 
