@@ -941,6 +941,8 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
 summary_output_stream & text_summary::else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
 
+    const bool has_common = profile->common_profiles.size() > 0;
+
     out.begin_line();
 
     out << get_profile_string(profile) << " was ";
@@ -949,31 +951,31 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
          out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
     else out << "modified";
 
-    // if(profile->operation != SRCDIFF_COMMON && has_common) {
+    if(profile->operation != SRCDIFF_COMMON && has_common) {
 
-    //     if(profile->operation == SRCDIFF_DELETE)
-    //         out << " from around ";
-    //     else
-    //         out << " around ";
+        if(profile->operation == SRCDIFF_DELETE)
+            out << " from around ";
+        else
+            out << " around ";
 
-    //     std::string common_summary;
-    //     if(profile->common_profiles.size() == 1) {
+        std::string common_summary;
+        if(profile->common_profiles.size() == 1) {
 
-    //         const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
-    //         out <<  get_article(common_profile) << ' ';
-    //         common_summary = get_type_string(common_profile);
+            const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
+            out <<  get_article(common_profile) << ' ';
+            common_summary = get_type_string(common_profile);
 
-    //     } else {
+        } else {
 
-    //         common_summary = "existing code";
+            common_summary = "existing code";
 
-    //     }
+        }
 
-    //     out << common_summary << ' ';
+        out << common_summary << ' ';
         
-    //     if(profile->total_count != 0)  out << "and the " << common_summary << " was then modified ";
+        if(profile->total_count != 0)  out << "and the " << common_summary << " was then modified ";
 
-    // }
+    }
 
     bool is_leaf = true;
 
@@ -1031,7 +1033,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
     // after children
     if(is_leaf) {
 
-        if(profile->parent == id && (profile->operation == SRCDIFF_COMMON/* || !has_common*/)) {
+        if(profile->parent == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
