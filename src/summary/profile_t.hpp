@@ -40,6 +40,9 @@ class profile_t {
         bool is_replacement;
         std::shared_ptr<profile_t> parent;
 
+        size_t statement_count;
+        size_t statement_churn;
+
         bool is_modified;
         bool is_whitespace;
         bool is_comment;
@@ -62,12 +65,14 @@ class profile_t {
     public:
 
         profile_t(std::string type_name  = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false),
+                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), parent(),
+                                                                   statement_count(0), statement_churn(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
 
         profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) :
                                                                    id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), parent(parent),
+                                                                   statement_count(0), statement_churn(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
 
