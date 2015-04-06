@@ -60,52 +60,9 @@ class function_profile_t : public profile_t {
 
         virtual impact_factor calculate_impact_factor() const {
 
-            size_t total_statements = 0;
-            std::function<void  (const std::shared_ptr<profile_t> & profile)> count_profiles
-                = [&total_statements](const std::shared_ptr<profile_t> & profile) {
-
-                    if(profile->type_name != "comment") ++total_statements;
-
-                };
-
-            std::for_each(common_profiles.begin(), common_profiles.end(), count_profiles);
-            std::for_each(child_profiles.begin(), child_profiles.end(), count_profiles);
-
-            size_t impact = 0;
-            for(const std::shared_ptr<profile_t> & child : child_profiles) {
-
-                if(child->operation == SRCDIFF_COMMON && child->syntax_count == 0) continue;
-
-                if(child->type_name == "comment") continue;
-
-                if(child->type_name == "type" || child->type_name == "name" || child->type_name == "parameter" || !is_condition_type(child->type_name)) {
-
-                    ++impact;
-
-                } else if(is_condition_type(child->type_name)) {
-
-                    if(child->operation != SRCDIFF_COMMON) {
-
-                        // may refine by size of condition statement.
-                        impact += 2;
-
-                    } else {
-
-                        const std::shared_ptr<conditional_profile_t> & condition = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(child);
-                        if(condition->is_condition_modified())
-                            impact += 3;
-                        else
-                            impact += 2;
-
-                    }
-
-                }
-
-            }
-
-            if(impact == 0)                         return NONE;
-            if(impact * 5 <= total_statements)      return LOW;
-            if(impact * 10 <= 4 * total_statements) return MEDIUM;
+            if(statement_churn == 0)                         return NONE;
+            if(statement_churn * 4 <= statement_count)       return LOW;
+            if(statement_churn * 10 <= 4 * statement_count)  return MEDIUM;
             return HIGH;
 
         }

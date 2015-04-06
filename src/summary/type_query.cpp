@@ -118,8 +118,10 @@ bool has_body(const std::string & type_name) {
     return (type_name != "ternary" && is_condition_type(type_name)) || is_function_type(type_name) || is_class_type(type_name);
 }
 
+/** @todo what should I consider a statement. */
 bool is_statement(const std::string & type_name) {
 
-    return (type_name != "ternary" && is_condition_type(type_name)) || is_decl_stmt(type_name) || is_expr_stmt(type_name);
+    return (type_name != "ternary" && is_condition_type(type_name)) || is_decl_stmt(type_name) || is_expr_stmt(type_name)
+        || type_name == "return" || type_name == "break" || type_name == "continue" || type_name == "try" || type_name == "catch" || type_name == "case";
 
 }

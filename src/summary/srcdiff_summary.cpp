@@ -319,6 +319,7 @@ void srcdiff_summary::reset() {
     profile_stack.clear();
     counting_profile_pos.clear();
     expr_stmt_pos = 0;
+    function_pos = 0;
     text.clear();
     name_count = 0;
     collected_name.clear();
@@ -884,7 +885,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         if(parent_pos != function_pos)
             ++profile_stack.at(parent_pos)->statement_count;
 
-       if(profile_stack.back()->syntax_count) {
+       if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
 
         bool condition_change = false;
         if(is_condition_type(full_name))
