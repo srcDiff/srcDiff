@@ -836,6 +836,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         if(profile_stack.back()->total_count
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0))
             update_anscestor_profile(profile_stack.back());
+        /** @todo may want this even if total_count or syntax_count are not 0 */
         else if(profile_stack.back()->total_count == 0 && srcdiff_stack.back().operation == SRCDIFF_COMMON)
                 profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile_stack.back());
 
