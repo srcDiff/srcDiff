@@ -42,6 +42,8 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
 
     }
 
+    if(profile->type_name == "else") return "else-clause";
+
     if(is_decl_stmt(profile->type_name)) return "declaration statement";
 
     if(is_expr_stmt(profile->type_name)) {
@@ -937,24 +939,144 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
 }
 
+summary_output_stream & text_summary::else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
+
+    out.begin_line();
+
+    out << get_profile_string(profile) << " was ";
+
+    if(profile->operation != SRCDIFF_COMMON)
+         out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
+    else out << "modified";
+
+    // if(profile->operation != SRCDIFF_COMMON && has_common) {
+
+    //     if(profile->operation == SRCDIFF_DELETE)
+    //         out << " from around ";
+    //     else
+    //         out << " around ";
+
+    //     std::string common_summary;
+    //     if(profile->common_profiles.size() == 1) {
+
+    //         const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
+    //         out <<  get_article(common_profile) << ' ';
+    //         common_summary = get_type_string(common_profile);
+
+    //     } else {
+
+    //         common_summary = "existing code";
+
+    //     }
+
+    //     out << common_summary << ' ';
+        
+    //     if(profile->total_count != 0)  out << "and the " << common_summary << " was then modified ";
+
+    // }
+
+    bool is_leaf = true;
+
+    if(profile->summary_identifiers.size() > 0) {
+
+        out << '\n';
+        out.pad() << "  this modification included:\n";            
+        is_leaf = false;
+        out.increment_depth();
+        identifiers(out, profile->summary_identifiers);
+        out.decrement_depth();
+
+    }
+
+    /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
+    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
+
+        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
+
+        /** @todo check this condition */
+        if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
+
+            if(is_leaf) {
+
+                out << '\n';
+                out.pad() << "  this modification included:\n";
+                is_leaf = false;
+
+            }
+
+            out.increment_depth();
+
+            if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
+
+                replacement(out, profile, pos);
+
+            } else {
+
+                if(is_condition_type(child_profile->type_name))
+                    conditional(out, child_profile);
+                else if(is_expr_stmt(child_profile->type_name))
+                    expr_stmt(out, child_profile);
+                else if(is_decl_stmt(child_profile->type_name))
+                    decl_stmt(out, child_profile);
+
+            }
+
+            out.decrement_depth();
+
+        }
+
+    }
+
+    // after children
+    if(is_leaf) {
+
+        if(profile->parent == id && (profile->operation == SRCDIFF_COMMON/* || !has_common*/)) {
+
+            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+            else                                          out << " within ";
+
+            out << "the function body";
+
+        }
+
+        out << '\n';
+
+    }
+
+    return out;
+
+}
+
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
 
     const bool has_common = profile->common_profiles.size() > 0;
 
-    const bool condition_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_condition_modified();
-    const bool body_modified = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->is_body_modified();
-    const versioned_string & condition = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile)->get_condition();
+    const std::shared_ptr<conditional_profile_t> & conditional_profile = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile);
+    const bool condition_modified = conditional_profile->is_condition_modified();
+    const bool body_modified = conditional_profile->is_body_modified();
+    boost::optional<srcdiff_type> else_operation;
+    if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
+    const bool else_modified = bool(else_operation) && else_operation == SRCDIFF_COMMON;
+    const versioned_string & condition = conditional_profile->get_condition();
+
+    if(!condition_modified && !body_modified && bool(else_operation))
+        return else_clause(out, profile->child_profiles[0]);
 
     out.begin_line();
 
     // before children
-    if(profile->operation == SRCDIFF_COMMON) {
+    if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified)) {
 
         out << "the ";
 
-        if(condition_modified && body_modified) out << "condition and body ";
-        else if(condition_modified)             out << "condition ";
-        else if(body_modified)                  out << "body ";
+        if(condition_modified && body_modified && else_modified) out << "condition, body, and else-clause ";
+        else if(condition_modified && body_modified)             out << "condition and body ";
+        else if(condition_modified && else_modified)             out << "condition and else-clause ";
+        else if(body_modified && else_modified)                  out << "body and else-clause ";
+        else if(condition_modified)                              out << "condition ";
+        else if(body_modified)                                   out << "body ";
 
         out << "of ";
 

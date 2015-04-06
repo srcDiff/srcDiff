@@ -764,6 +764,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_clause(true);
             reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->is_guard(false);
 
+            if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count != 0)
+                reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_operation(profile_stack.back()->operation);
+    
         } else if(is_function_type(full_name)) {
 
             function_pos = 0;

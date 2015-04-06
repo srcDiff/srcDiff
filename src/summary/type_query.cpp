@@ -120,7 +120,7 @@ bool has_then_clause(const std::string & type_name) {
 
 bool has_body(const std::string & type_name) {
 
-    return (type_name != "ternary" && is_condition_type(type_name)) || is_function_type(type_name) || is_class_type(type_name);
+    return (type_name != "ternary" && is_condition_type(type_name)) || is_function_type(type_name) || is_class_type(type_name) || type_name == "else";
 }
 
 /** @todo what should I consider a statement. */
