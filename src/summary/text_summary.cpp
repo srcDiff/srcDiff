@@ -1075,7 +1075,8 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     const bool else_modified = bool(else_operation) && else_operation == SRCDIFF_COMMON;
     const versioned_string & condition = conditional_profile->get_condition();
 
-    if(!condition_modified && !body_modified && bool(else_operation))
+    if(!condition_modified && !body_modified && bool(else_operation)
+        && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
         return else_clause(out, profile->child_profiles[0]);
 
     out.begin_line();

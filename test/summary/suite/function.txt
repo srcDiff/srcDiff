@@ -171,7 +171,7 @@ SUMMARY
 
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet': Impact = High
-	• an if statement with an else-clause was added around a delete statement 
+	• an if statement with an else-clause was added around a delete statement
 
 END_SUMMARY
 
