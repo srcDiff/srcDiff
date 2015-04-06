@@ -20,6 +20,7 @@ bool is_expr_stmt(const std::string & type_name);
 bool is_identifier(const std::string & type_name);
 bool is_argument(const std::string & type_name);
 bool is_comment(const std::string & type_name);
+bool is_emit(const std::string & type_name);
 
 bool has_then_clause(const std::string & type_name);
 bool has_body(const std::string & type_name);

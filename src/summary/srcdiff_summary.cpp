@@ -23,7 +23,7 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_call(type_name)           || is_preprocessor_special(type_name) || is_expr(type_name)
     || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name)
     || is_specifier(type_name)      || is_expr_stmt(type_name)            || is_argument(type_name)
-    || is_comment(type_name);
+    || is_comment(type_name)        || is_emit(type_name);
 
 }
 
