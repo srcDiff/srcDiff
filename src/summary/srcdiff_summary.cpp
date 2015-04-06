@@ -834,10 +834,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         // do not save items with no changes and not inserted/deleted
         if(profile_stack.back()->total_count
-            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0))
+            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0)
+            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1) && full_name == "else")
             update_anscestor_profile(profile_stack.back());
         /** @todo may want this even if total_count or syntax_count are not 0 */
-        else if(profile_stack.back()->total_count == 0 && srcdiff_stack.back().operation == SRCDIFF_COMMON)
+        else if(/**profile_stack.back()->total_count == 0 && */srcdiff_stack.back().operation == SRCDIFF_COMMON)
                 profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile_stack.back());
 
         if(has_body(full_name)) {

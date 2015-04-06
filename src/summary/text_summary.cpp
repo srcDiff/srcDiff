@@ -943,9 +943,21 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
     const bool has_common = profile->common_profiles.size() > 0;
 
+    if(profile->parent->operation != SRCDIFF_COMMON) {
+
+        out.begin_line();
+        out << "an if statement with an else-clause was ";
+        out << (profile->parent->operation == SRCDIFF_DELETE ? "removed" : "added");
+        out << '\n';
+
+    }
+
     out.begin_line();
 
-    out << get_profile_string(profile) << " was ";
+    if(profile->parent->operation != SRCDIFF_COMMON)
+        out << "the " << get_type_string(profile) << " was ";
+    else
+        out << get_profile_string(profile) << " was ";
 
     if(profile->operation != SRCDIFF_COMMON)
          out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
@@ -1110,7 +1122,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         }
 
-        out << common_summary << ' ';
+        out << common_summary;
         
         if(profile->total_count != 0)  out << "and the " << common_summary << " was then modified ";
 
