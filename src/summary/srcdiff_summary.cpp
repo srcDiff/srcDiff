@@ -835,7 +835,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         // do not save items with no changes and not inserted/deleted
         if(profile_stack.back()->total_count
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0)
-            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1 && full_name == "else"))
+            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1 && full_name == "else")
+            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list"))
             update_anscestor_profile(profile_stack.back());
         /** @todo may want this even if total_count or syntax_count are not 0 */
         else if(/**profile_stack.back()->total_count == 0 && */srcdiff_stack.back().operation == SRCDIFF_COMMON)
