@@ -67,15 +67,8 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
     if(profile->type_name == "if") {
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
-        if(if_profile->else_clause()) {
-
-            /** @todo check if this ok */
-            if(if_profile->operation == SRCDIFF_COMMON)
-                return "an if statement with an else-clause";
-            else
-                return "an if statement";
-
-        }
+        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
+            return "an if statement with an else-clause";
 
     }
 
@@ -1076,11 +1069,14 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     const bool has_common = profile->common_profiles.size() > 0;
 
     const std::shared_ptr<conditional_profile_t> & conditional_profile = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile);
+
     const bool condition_modified = conditional_profile->is_condition_modified();
     const bool body_modified = conditional_profile->is_body_modified();
+
     boost::optional<srcdiff_type> else_operation;
     if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
     const bool else_modified = bool(else_operation) && else_operation == SRCDIFF_COMMON;
+
     const versioned_string & condition = conditional_profile->get_condition();
 
     if(!condition_modified && !body_modified && bool(else_operation)
@@ -1112,6 +1108,18 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     else out << "modified";
 
     if(profile->operation != SRCDIFF_COMMON && has_common) {
+
+        if(profile->type_name == "if") {
+
+            const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
+            if(if_profile->else_clause()) {
+
+                out << " with the if-statement's body ";
+                out << (profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
+
+            }
+
+        }
 
         if(profile->operation == SRCDIFF_DELETE)
             out << " from around ";
