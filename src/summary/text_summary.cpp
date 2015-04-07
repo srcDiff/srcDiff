@@ -957,6 +957,9 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
 summary_output_stream & text_summary::else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
 
+    if(!profile->type_name.is_common())
+        return interchange(out, profile);
+
     const bool has_common = profile->common_profiles.size() > 0;
 
     if(profile->parent->operation != SRCDIFF_COMMON) {
@@ -1043,7 +1046,9 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
             } else {
 
-                if(is_condition_type(child_profile->type_name))
+                if(!child_profile->type_name.is_common())
+                    interchange(out, child_profile);
+                else if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile);
                 else if(is_expr_stmt(child_profile->type_name))
                     expr_stmt(out, child_profile);
@@ -1101,12 +1106,6 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     out.begin_line();
 
     // before children
-    if(!profile->type_name.is_common()) {
-
-        out << get_profile_string(profile);
-
-    }
-
     if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified)) {
 
         out << "the ";
@@ -1122,8 +1121,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
     }
 
-    if(profile->type_name.is_common())
-        out << get_profile_string(profile) << " was ";
+    out << get_profile_string(profile) << " was ";
 
     if(profile->operation != SRCDIFF_COMMON)
          out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
@@ -1251,6 +1249,16 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
 }
 
+summary_output_stream & text_summary::interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
+
+    out.begin_line();
+
+    out << get_profile_string(profile);
+
+    return out;
+
+}
+
 summary_output_stream & text_summary::body(summary_output_stream & out, const profile_t & profile) {
 
     identifiers(out, summary_identifiers);
@@ -1268,7 +1276,9 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
 
         } else {
 
-            if(is_condition_type(child_profile->type_name))
+            if(!child_profile->type_name.is_common())
+                interchange(out, child_profile);
+            else if(is_condition_type(child_profile->type_name))
                 conditional(out, child_profile);
             else if(is_expr_stmt(child_profile->type_name))
                 expr_stmt(out, child_profile);

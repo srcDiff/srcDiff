@@ -61,6 +61,7 @@ public:
     summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
     summary_output_stream & else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile);
     summary_output_stream & conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile);
+    summary_output_stream & interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile);
     summary_output_stream & body(summary_output_stream & out, const profile_t & profile);
 
 };
