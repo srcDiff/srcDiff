@@ -31,6 +31,7 @@ protected:
 
 private:
 
+    std::string get_article(const std::string & type_name) const;
     std::string get_article(const std::shared_ptr<profile_t> & profile) const;
     std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
     std::string get_profile_string(const std::shared_ptr<profile_t> & profile) const;

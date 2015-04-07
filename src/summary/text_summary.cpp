@@ -15,6 +15,16 @@
 #include <list>
 #include <set>
 
+std::string text_summary::get_article(const std::string & type_name) const { 
+
+    const char letter = type_name[0];
+
+    if(letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u')
+        return "an";
+    else
+        return "a";
+}
+
 std::string text_summary::get_article(const std::shared_ptr<profile_t> & profile) const { 
 
     const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
@@ -25,12 +35,8 @@ std::string text_summary::get_article(const std::shared_ptr<profile_t> & profile
             || reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile)->call()))
         return "a";
 
-    const char letter = std::string(profile->type_name)[0];
+    return get_article(std::string(profile->type_name));
 
-    if(letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u')
-        return "an";
-    else
-        return "a";
 }
 
 std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & profile) const {
@@ -63,6 +69,15 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
 }
 
 std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & profile) const {
+
+    if(!profile->type_name.is_common()) {
+
+        std::string original = get_article(profile->type_name.original()) + " " + profile->type_name.original();
+        std::string modified = get_article(profile->type_name.modified()) + " " + profile->type_name.modified();
+
+        return original + " was converted to " + modified;
+
+    }
 
     if(profile->type_name == "if") {
 
@@ -1086,6 +1101,12 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     out.begin_line();
 
     // before children
+    if(!profile->type_name.is_common()) {
+
+        out << get_profile_string(profile);
+
+    }
+
     if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified)) {
 
         out << "the ";
@@ -1101,7 +1122,8 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
     }
 
-    out << get_profile_string(profile) << " was ";
+    if(profile->type_name.is_common())
+        out << get_profile_string(profile) << " was ";
 
     if(profile->operation != SRCDIFF_COMMON)
          out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
