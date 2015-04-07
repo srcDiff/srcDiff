@@ -986,7 +986,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
         out << common_summary;
         
-        if(profile->total_count != 0)  out << " and the " << common_summary << " was then modified ";
+        if(profile->total_count != 0)  out << ".  Then, the " << common_summary << " was modified ";
 
     }
 
@@ -1141,7 +1141,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out << common_summary;
         
-        if(profile->total_count != 0)  out << " and the " << common_summary << " was then modified ";
+        if(profile->total_count != 0)  out << ".  Then, the " << common_summary << " was modified ";
 
     }
 

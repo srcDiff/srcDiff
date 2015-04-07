@@ -163,7 +163,7 @@ SUMMARY
 	• the body of an if statement was modified
 	  this modification included:
 		• an if statement with an else-clause was removed with the if-statement's body 
-		  taken from around existing code and the existing code was then modified 
+		  taken from around existing code.  Then, the existing code was modified
 		  this modification included:
 			• an assignment to 'd->rootDoc' was added
 			• the body of a while statement was modified
