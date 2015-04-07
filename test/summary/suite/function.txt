@@ -223,6 +223,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'PageProcessingQueue::PageProcessingQueue': Impact = Low
+	• a member initilization for 'QObject' was added
 
 END_SUMMARY
 

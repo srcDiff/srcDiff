@@ -882,29 +882,30 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
-    if(is_statement(full_name)) {
+    bool is_prototype = full_name == "parameter" || (full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list");
+    if(is_statement(full_name) || is_prototype) {
 
         if(function_pos)
             ++profile_stack.at(function_pos)->statement_count;
 
         size_t parent_pos = std::get<0>(counting_profile_pos.back());
-        if(parent_pos != function_pos)
+        if(parent_pos != function_pos && !is_prototype)
             ++profile_stack.at(parent_pos)->statement_count;
 
-       if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
+        if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
 
-        bool condition_change = false;
-        if(is_condition_type(full_name))
-            condition_change = reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.back())->is_condition_modified();
+            bool condition_change = false;
+            if(is_condition_type(full_name))
+                condition_change = reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.back())->is_condition_modified();
 
-        size_t increment_amount = 1;
-        if(condition_change) increment_amount = 2;
+            size_t increment_amount = 1;
+            if(condition_change) increment_amount = 2;
 
-        if(function_pos)
-            profile_stack.at(function_pos)->statement_churn += increment_amount;
+            if(function_pos)
+                profile_stack.at(function_pos)->statement_churn += increment_amount;
 
-        if(parent_pos != function_pos)
-            profile_stack.at(parent_pos)->statement_churn += increment_amount;        
+            if(parent_pos != function_pos && !is_prototype)
+                profile_stack.at(parent_pos)->statement_churn += increment_amount;        
 
        }
 
