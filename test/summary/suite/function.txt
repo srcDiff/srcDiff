@@ -199,3 +199,118 @@ SUMMARY
 	• a delete statement was replaced with an assignment to 'a'
 
 END_SUMMARY
+
+### Test 4 ###
+ORIGINAL
+PageProcessingQueue::PageProcessingQueue(KWDocument *parent)
+{
+    m_document = parent;
+    m_triggered = false;
+}
+END_ORIGINAL
+
+MODIFIED
+PageProcessingQueue::PageProcessingQueue(KWDocument *parent)
+    : QObject(parent)
+{
+    m_document = parent;
+    m_triggered = false;
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• constructor 'PageProcessingQueue::PageProcessingQueue': Impact = Low
+
+END_SUMMARY
+
+### Test 5 ###
+ORIGINAL
+void TextShape::paintComponent(QPainter &painter, const KoViewConverter &converter)
+{
+    if (background()) {
+        QPainterPath p;
+        p.addRect(converter.documentToView(QRectF(QPointF(), size())));
+        background()->paint(painter, p);
+    }
+    QTextDocument *doc = m_textShapeData->document();
+    Q_ASSERT(doc);
+    KoTextDocumentLayout *lay = dynamic_cast<KoTextDocumentLayout*>(doc->documentLayout());
+    if (m_textShapeData->endPosition() < 0) { // not layouted yet.
+        if (lay == 0)
+            kWarning(32500) << "Painting shape that doesn't have a kotext doc-layout, which can't work";
+        else if (! lay->hasLayouter())
+            lay->setLayout(new Layout(lay));
+        return;
+    }
+    Q_ASSERT(lay);
+    applyConversion(painter, converter);
+    QAbstractTextDocumentLayout::PaintContext pc;
+    KoTextDocumentLayout::PaintContext context;
+    context.textContext = pc;
+    context.viewConverter = &converter;
+
+    QRectF rect(0, 0, size().width(), size().height());
+    rect.adjust(-5, 0, 5, 0);
+    painter.setClipRect(rect, Qt::IntersectClip);
+    painter.save();
+    painter.translate(0, -m_textShapeData->documentOffset());
+    lay->draw(&painter, context);
+    painter.restore();
+
+    if (m_footnotes) {
+        painter.translate(0, size().height() - m_footnotes->size().height());
+        m_footnotes->documentLayout()->draw(&painter, pc);
+    }
+}
+END_ORIGINAL
+
+MODIFIED
+void TextShape::paintComponent(QPainter &painter, const KoViewConverter &converter)
+{
+    applyConversion(painter, converter);
+    if (background()) {
+        QPainterPath p;
+        p.addRect(QRectF(QPointF(), size()));
+        background()->paint(painter, p);
+    }
+    QTextDocument *doc = m_textShapeData->document();
+    Q_ASSERT(doc);
+    KoTextDocumentLayout *lay = dynamic_cast<KoTextDocumentLayout*>(doc->documentLayout());
+    if (m_textShapeData->endPosition() < 0) { // not layouted yet.
+        if (lay == 0)
+            kWarning(32500) << "Painting shape that doesn't have a kotext doc-layout, which can't work";
+        else if (! lay->hasLayouter())
+            lay->setLayout(new Layout(lay));
+        return;
+    }
+    Q_ASSERT(lay);
+    QAbstractTextDocumentLayout::PaintContext pc;
+    KoTextDocumentLayout::PaintContext context;
+    context.textContext = pc;
+    context.viewConverter = &converter;
+
+    QRectF rect(0, 0, size().width(), size().height());
+    rect.adjust(-5, 0, 5, 0);
+    painter.setClipRect(rect, Qt::IntersectClip);
+    painter.save();
+    painter.translate(0, -m_textShapeData->documentOffset());
+    lay->draw(&painter, context);
+    painter.restore();
+
+    if (m_footnotes) {
+        painter.translate(0, size().height() - m_footnotes->size().height());
+        m_footnotes->documentLayout()->draw(&painter, pc);
+    }
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• constructor 'PageProcessingQueue::PageProcessingQueue': Impact = Low
+
+END_SUMMARY
