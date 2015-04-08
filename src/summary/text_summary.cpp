@@ -707,6 +707,8 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                             if(inner_deleted_calls.size() || inner_inserted_calls.size()
                                                 || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
 
+
+
                                                 report_change = true;
                                                 break;
 
