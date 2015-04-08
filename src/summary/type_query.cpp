@@ -112,6 +112,12 @@ bool is_emit(const std::string & type_name) {
     return type_name == "emit";
 }
 
+bool is_jump(const std::string & type_name) {
+
+    return type_name == "return" || type_name == "break" || type_name == "continue" || type_name == "goto";
+
+}
+
 bool has_then_clause(const std::string & type_name) {
 
     return type_name == "if" || type_name == "ternary";
@@ -126,8 +132,7 @@ bool has_body(const std::string & type_name) {
 /** @todo what should I consider a statement. */
 bool is_statement(const std::string & type_name) {
 
-    return (type_name != "ternary" && is_condition_type(type_name)) || is_decl_stmt(type_name) || is_expr_stmt(type_name) 
-        || type_name == "return" || type_name == "break" || type_name == "continue" || type_name == "try" || type_name == "catch"
-        || type_name == "case"   || type_name == "default" || type_name == "goto";
+    return (type_name != "ternary" && is_condition_type(type_name)) || is_decl_stmt(type_name) || is_expr_stmt(type_name) || is_jump(type_name)
+        || type_name == "try" || type_name == "catch" || type_name == "case"   || type_name == "default";
 
 }
