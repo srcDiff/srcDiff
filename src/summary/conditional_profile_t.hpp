@@ -18,6 +18,14 @@ class conditional_profile_t : public profile_t {
         conditional_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent),
                               condition_modified(false), body_modified(false) {}
 
+        virtual void add_common(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
+
+            if(is_expr(profile->type_name) && parent == "condition") return;
+
+            common_profiles.push_back(profile);
+
+        }  
+
         virtual void set_condition(versioned_string condition) {
 
             this->condition = condition;

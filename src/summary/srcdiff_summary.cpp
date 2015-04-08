@@ -660,6 +660,17 @@ void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> 
 
 }
 
+void srcdiff_summary::update_common_profiles(const std::shared_ptr<profile_t> & profile) {
+
+    size_t parent_pos = profile_stack.size() - 2;
+    while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+        --parent_pos;
+
+    // should always have at least unit
+    profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile, profile_stack.at(parent_pos)->type_name);
+
+}
+
 /**
  * endElement
  * @param localname the name of the profile tag
@@ -840,7 +851,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             update_anscestor_profile(profile_stack.back());
         /** @todo may want this even if total_count or syntax_count are not 0 */
         else if(/**profile_stack.back()->total_count == 0 && */srcdiff_stack.back().operation == SRCDIFF_COMMON)
-                profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile_stack.back());
+                update_common_profiles(profile_stack.back());
 
         if(has_body(full_name)) {
 
