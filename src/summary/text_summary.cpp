@@ -72,8 +72,8 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
     if(!profile->type_name.is_common()) {
 
-        std::string original = get_article(profile->type_name.original()) + " " + profile->type_name.original();
-        std::string modified = get_article(profile->type_name.modified()) + " " + profile->type_name.modified();
+        std::string original = get_article(profile->type_name.original()) + " " + profile->type_name.original() + " statement";
+        std::string modified = get_article(profile->type_name.modified()) + " " + profile->type_name.modified() + " statement";
 
         return original + " was converted to " + modified;
 
@@ -1254,6 +1254,66 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
     out.begin_line();
 
     out << get_profile_string(profile);
+
+
+    bool is_leaf = true;
+
+    /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
+    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
+
+        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
+
+        /** @todo check this condition */
+        if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
+
+            if(is_leaf) {
+
+                out << '\n';
+                out.pad() << "  this modification included:\n";
+                is_leaf = false;
+
+            }
+
+            out.increment_depth();
+
+            if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
+
+                replacement(out, profile, pos);
+
+            } else {
+
+                if(is_condition_type(child_profile->type_name))
+                    conditional(out, child_profile);
+                else if(is_expr_stmt(child_profile->type_name))
+                    expr_stmt(out, child_profile);
+                else if(is_decl_stmt(child_profile->type_name))
+                    decl_stmt(out, child_profile);
+
+            }
+
+            out.decrement_depth();
+
+        }
+
+    }
+
+    // after children
+    if(is_leaf) {
+
+        if(profile->parent == id && (profile->operation == SRCDIFF_COMMON /*|| !has_common*/)) {
+
+            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+            else                                          out << " within ";
+
+            out << "the function body";
+
+        }
+
+        out << '\n';
+
+    }
 
     return out;
 

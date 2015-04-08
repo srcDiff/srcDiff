@@ -695,7 +695,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     if(uri_stack.back() != SRCDIFF) {
 
-        if(!is_interchange) --srcdiff_stack.back().level;
+        if(!is_interchange && srcdiff_stack.back().level > 0) --srcdiff_stack.back().level;
 
         if(full_name == "name") {
 
