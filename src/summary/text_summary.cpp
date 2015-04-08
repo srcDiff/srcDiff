@@ -650,9 +650,9 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
 
     for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
 
-        const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
-
         if(child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
+
+            const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
 
             if(child_profile->operation == SRCDIFF_DELETE) {
 
@@ -837,7 +837,6 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
     } else {
 
-        // there is probably a better way
         const std::shared_ptr<profile_t> & parent_profile = profile->parent;
         std::map<versioned_string, size_t> diff_set;
         std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
