@@ -206,5 +206,8 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoMainWindow::currentView': Impact = High
+	• an else statement was converted to an elseif statement
+	  this includes:
+		• an if statement was added around a return statement
 
 END_SUMMARY
