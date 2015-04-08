@@ -694,7 +694,7 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                             size_t num_calls = 0;
                                             std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
                                                 inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
-                                            expr_stmt_call(argument_child_profile, identifier_set, inner_deleted_calls, inner_inserted_calls,
+                                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set, inner_deleted_calls, inner_inserted_calls,
                                                 inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists);
 
                                             if(inner_deleted_calls.size() || inner_inserted_calls.size()
