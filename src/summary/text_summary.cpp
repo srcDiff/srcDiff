@@ -1255,7 +1255,6 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
     out << get_profile_string(profile);
 
-
     bool is_leaf = true;
 
     /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
@@ -1270,7 +1269,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
             if(is_leaf) {
 
                 out << '\n';
-                out.pad() << "  this modification included:\n";
+                out.pad() << "  this includes:\n";
                 is_leaf = false;
 
             }
@@ -1301,7 +1300,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
     // after children
     if(is_leaf) {
 
-        if(profile->parent == id && (profile->operation == SRCDIFF_COMMON /*|| !has_common*/)) {
+        if(profile->parent == id && profile->operation == SRCDIFF_COMMON) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
