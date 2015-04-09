@@ -2,33 +2,33 @@
 ORIGINAL
 void KisView2::slotLoadingFinished()
 {
-    KisImageSP img = image();
-    slotImageSizeChanged();
+	KisImageSP img = image();
+	slotImageSizeChanged();
 
-    if (m_d->statusBar) {
-        m_d->statusBar->imageSizeChanged(img->width(), img->height());
-    }
-    m_d->resourceProvider->slotImageSizeChanged();
+	if (m_d->statusBar) {
+		m_d->statusBar->imageSizeChanged(img->width(), img->height());
+	}
+	m_d->resourceProvider->slotImageSizeChanged();
 
-    m_d->nodeManager->nodesUpdated();
+	m_d->nodeManager->nodesUpdated();
 
-    connectCurrentImage();
+	connectCurrentImage();
 
-    if (img->locked()) {
-        // If this is the first view on the image, the image will have been locked
-        // so unlock it.
-        img->blockSignals(false);
-        img->unlock();
-    }
+	if (img->locked()) {
+		// If this is the first view on the image, the image will have been locked
+		// so unlock it.
+		img->blockSignals(false);
+		img->unlock();
+	}
 
-    if (KisNodeSP node = img->rootLayer()->firstChild()) {
-        m_d->layerBox->setCurrentNode(node);
-        m_d->nodeManager->activateNode(node);
-    }
+	if (KisNodeSP node = img->rootLayer()->firstChild()) {
+		m_d->layerBox->setCurrentNode(node);
+		m_d->nodeManager->activateNode(node);
+	}
 
-    m_d->zoomManager->zoomController()->setZoomMode(KoZoomMode::ZOOM_PAGE);
+	m_d->zoomManager->zoomController()->setZoomMode(KoZoomMode::ZOOM_PAGE);
 
-    updateGUI();
+	updateGUI();
 //     dbgUI <<"image finished loading, active layer:" << img->activeLayer() <<", root layer:" << img->rootLayer();
 
 }
@@ -37,37 +37,37 @@ END_ORIGINAL
 MODIFIED
 void KisView2::slotLoadingFinished()
 {
-    KisImageSP img = image();
-    slotImageSizeChanged();
+	KisImageSP img = image();
+	slotImageSizeChanged();
 
-    if (m_d->statusBar) {
-        m_d->statusBar->imageSizeChanged(img->width(), img->height());
-    }
-    m_d->resourceProvider->slotImageSizeChanged();
+	if (m_d->statusBar) {
+		m_d->statusBar->imageSizeChanged(img->width(), img->height());
+	}
+	m_d->resourceProvider->slotImageSizeChanged();
 
-    m_d->nodeManager->nodesUpdated();
+	m_d->nodeManager->nodesUpdated();
 
-    connectCurrentImage();
+	connectCurrentImage();
 
-    if (img->locked()) {
-        // If this is the first view on the image, the image will have been locked
-        // so unlock it.
-        img->blockSignals(false);
-        img->unlock();
-    }
+	if (img->locked()) {
+		// If this is the first view on the image, the image will have been locked
+		// so unlock it.
+		img->blockSignals(false);
+		img->unlock();
+	}
 
-    if (KisNodeSP node = img->rootLayer()->firstChild()) {
-        m_d->layerBox->setCurrentNode(node);
-        m_d->nodeManager->activateNode(node);
-    }
+	if (KisNodeSP node = img->rootLayer()->firstChild()) {
+		m_d->layerBox->setCurrentNode(node);
+		m_d->nodeManager->activateNode(node);
+	}
 
-    /**
-     * Dirty hack alert
-     */
-    m_d->viewConverter->setZoomMode(KoZoomMode::ZOOM_PAGE);
-    m_d->zoomManager->zoomController()->setAspectMode(true);
+	/**
+	 * Dirty hack alert
+	 */
+	m_d->viewConverter->setZoomMode(KoZoomMode::ZOOM_PAGE);
+	m_d->zoomManager->zoomController()->setAspectMode(true);
 
-    updateGUI();
+	updateGUI();
 //     dbgUI <<"image finished loading, active layer:" << img->activeLayer() <<", root layer:" << img->rootLayer();
 
 }
@@ -82,5 +82,55 @@ SUMMARY
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
 	• a call chain consisting of 'm_d->zoomManager->zoomController' and setAspectMode' was 
 	  added
+
+END_SUMMARY
+
+### Test 2 ###
+ORIGINAL
+void TextShape::paintComponent(QPainter &painter, const KoViewConverter &converter)
+{
+	p.addRect(converter.documentToView(QRectF(QPointF(), size())));
+}
+END_ORIGINAL
+
+MODIFIED
+void TextShape::paintComponent(QPainter &painter, const KoViewConverter &converter)
+{
+	p.addRect(QRectF(QPointF(), size()));
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'TextShape::paintComponent': Impact = Medium
+	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
+	  'converter.documentToView' was deleted and its arguments were retained
+
+END_SUMMARY
+
+### Test 3 ###
+ORIGINAL
+void TextShape::paintComponent(QPainter &painter, const KoViewConverter &converter)
+{
+	p.addRect(QRectF(QPointF(), size()));
+}
+END_ORIGINAL
+
+MODIFIED
+void TextShape::paintComponent(QPainter &painter, const KoViewConverter &converter)
+{
+	p.addRect(converter.documentToView(QRectF(QPointF(), size())));
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'TextShape::paintComponent': Impact = Medium
+	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
+	  'converter.documentToView' was added and it was placed around an existing argument
 
 END_SUMMARY
