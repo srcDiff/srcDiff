@@ -1151,7 +1151,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
             } else if(child_profile->move_id) {
 
-                out.begin_line() << get_profile_string(child_profile) << "was moved";
+                out.begin_line() << get_profile_string(child_profile) << " was moved";
 
             } else if(!child_profile->type_name.is_common()) {
 
@@ -1325,7 +1325,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             } else if(child_profile->move_id) {
 
-                out.begin_line() << get_profile_string(child_profile) << "was moved";
+                out.begin_line() << get_profile_string(child_profile) << " was moved";
 
             } else if(!child_profile->type_name.is_common()) {
 
@@ -1403,7 +1403,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
             } else if(child_profile->move_id) {
 
-                out.begin_line() << get_profile_string(child_profile) << "was moved\n";
+                out.begin_line() << get_profile_string(child_profile) << " was moved\n";
 
             } else if(!child_profile->type_name.is_common()) {
 
@@ -1466,7 +1466,7 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
 
         } else if(child_profile->move_id) {
 
-            out.begin_line() << get_profile_string(child_profile) << "was moved\n";
+            out.begin_line() << get_profile_string(child_profile) << " was moved\n";
 
         } else if(!child_profile->type_name.is_common()) {
 

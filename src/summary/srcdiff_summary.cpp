@@ -234,7 +234,7 @@ no_expr:
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
-      srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0), function_pos(0),
+      srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0), function_pos(0), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), name_count(0), collected_name(), condition_count(0), collected_condition(), collect_lhs() {
 
@@ -320,6 +320,7 @@ void srcdiff_summary::reset() {
     counting_profile_pos.clear();
     expr_stmt_pos = 0;
     function_pos = 0;
+    current_move_id = 0;
     text.clear();
     name_count = 0;
     collected_name.clear();
@@ -521,7 +522,12 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
         if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
-        if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0) profile_stack.back()->move_id = srcdiff_stack.back().move_id;
+        if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0 && uri_stack.back() != SRCDIFF && current_move_id < srcdiff_stack.back().move_id) {
+
+            profile_stack.back()->move_id = srcdiff_stack.back().move_id;
+            current_move_id = srcdiff_stack.back().move_id;
+
+        }
 
     }
 

@@ -59,6 +59,7 @@ protected:
 
     size_t expr_stmt_pos;
     size_t function_pos;
+    size_t current_move_id;
 
     counts_t insert_count;
     counts_t delete_count;
