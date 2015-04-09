@@ -1148,11 +1148,17 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
                 replacement(out, profile, pos);
 
-            } else {
+            } else if(child_profile->move_id) {
 
-                if(!child_profile->type_name.is_common())
-                    interchange(out, child_profile);
-                else if(is_condition_type(child_profile->type_name))
+                out.begin_line() << get_profile_string(child_profile) << "was moved";
+
+            } else if(!child_profile->type_name.is_common()) {
+
+                interchange(out, child_profile);
+
+            }  else {
+
+                if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile);
                 else if(is_expr_stmt(child_profile->type_name))
                     expr_stmt(out, child_profile);
@@ -1315,7 +1321,15 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
                 replacement(out, profile, pos);
 
-            } else {
+            } else if(child_profile->move_id) {
+
+                out.begin_line() << get_profile_string(child_profile) << "was moved";
+
+            } else if(!child_profile->type_name.is_common()) {
+
+                interchange(out, child_profile);
+
+            }  else {
 
                 if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile);
@@ -1384,7 +1398,15 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
                 replacement(out, profile, pos);
 
-            } else {
+            } else if(child_profile->move_id) {
+
+                out.begin_line() << get_profile_string(child_profile) << "was moved";
+
+            } else if(!child_profile->type_name.is_common()) {
+
+                interchange(out, child_profile);
+
+            }  else {
 
                 if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile);
@@ -1437,11 +1459,17 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
 
             replacement(out, std::make_shared<profile_t>(profile), pos);
 
+        } else if(child_profile->move_id) {
+
+            out.begin_line() << get_profile_string(child_profile) << "was moved";
+
+        } else if(!child_profile->type_name.is_common()) {
+
+            interchange(out, child_profile);
+
         } else {
 
-            if(!child_profile->type_name.is_common())
-                interchange(out, child_profile);
-            else if(is_condition_type(child_profile->type_name))
+            if(is_condition_type(child_profile->type_name))
                 conditional(out, child_profile);
             else if(is_expr_stmt(child_profile->type_name))
                 expr_stmt(out, child_profile);

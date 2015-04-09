@@ -467,7 +467,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     if(uri_stack.back() == SRCDIFF) {
 
         bool is_change = false;
-        bool is_move = false;
+        size_t move_id = 0;
         for(int i = 0; i < num_attributes; ++i) {
 
             if(attributes[i].localname == std::string("type")) {
@@ -477,18 +477,18 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
             } else if(attributes[i].localname == std::string("move")) {
 
-                is_move = true;
+                move_id = std::stoull(attributes[i].value);
 
             }
 
         }
 
-        if(local_name == "common" || is_move)
-            srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, is_change, is_move));
+        if(local_name == "common" || move_id)
+            srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, is_change, move_id));
         else if(local_name == "delete")
-            srcdiff_stack.push_back(srcdiff(SRCDIFF_DELETE, is_change, is_move));
+            srcdiff_stack.push_back(srcdiff(SRCDIFF_DELETE, is_change, move_id));
         else if(local_name == "insert")
-            srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_change, is_move));
+            srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_change, move_id));
 
         bool is_interchange_diff = (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
                             && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
@@ -521,6 +521,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
         if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
+        if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0) profile_stack.back()->move_id = srcdiff_stack.back().move_id;
 
     }
 
@@ -852,6 +853,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         // do not save items with no changes and not inserted/deleted
         if(profile_stack.back()->total_count
+            || profile_stack.back()->move_id
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0)
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1 && full_name == "else")
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list")
