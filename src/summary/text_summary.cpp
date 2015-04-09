@@ -647,7 +647,7 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
-                              std::vector<std::vector<std::shared_ptr<call_profile_t>>> & argument_list_modifications) const {
+                              std::vector<std::vector<std::string>> & argument_list_modifications) const {
 
     for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
 
@@ -678,7 +678,7 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                 bool report_argument_list = call_profile->argument_list_modified;
                 if(report_argument_list) {
 
-                    argument_list_modifications.push_back(std::vector<std::shared_ptr<call_profile_t>>());
+                    argument_list_modifications.push_back(std::vector<std::string>());
 
                     size_t number_arguments_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
                     size_t number_arguments_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
@@ -697,21 +697,15 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                             size_t num_calls = 0;
                                             std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
                                                 inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
-                                            std::vector<std::vector<std::shared_ptr<call_profile_t>>> inner_argument_list_modifications;
+                                            std::vector<std::vector<std::string>> inner_argument_list_modifications;
                                             expr_stmt_call(argument_child_profile->parent->parent, identifier_set, inner_deleted_calls, inner_inserted_calls,
                                                 inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists, inner_argument_list_modifications);
 
                                             if(inner_deleted_calls.size() || inner_inserted_calls.size()
                                                 || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
 
-                                                for(const std::shared_ptr<call_profile_t> call_profile : inner_deleted_calls)
-                                                    argument_list_modifications.back().push_back(call_profile);
-
-                                                for(const std::shared_ptr<call_profile_t> call_profile : inner_inserted_calls)
-                                                    argument_list_modifications.back().push_back(call_profile);
-
-                                                for(const std::shared_ptr<call_profile_t> call_profile : inner_modified_calls)
-                                                    argument_list_modifications.back().push_back(call_profile);
+                                                argument_list_modifications.back().push_back(summarize_calls(inner_deleted_calls, inner_inserted_calls, inner_modified_calls,
+                                                        inner_renamed_calls, inner_modified_argument_lists, inner_argument_list_modifications));
 
                                                 report_change = true;
                                                 break;
@@ -784,7 +778,7 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
                                           std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                                           std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
                                           std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
-                                          std::vector<std::vector<std::shared_ptr<call_profile_t>>> & argument_list_modifications) const {
+                                          std::vector<std::vector<std::string>> & argument_list_modifications) const {
 
     std::string summary;
 
@@ -844,7 +838,7 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
         if(modified_calls.size() == 1) {
 
-            summary += get_profile_string(renamed_calls[0]) + " and its arguments modified\n";
+            summary += get_profile_string(renamed_calls[0]) + " and its arguments modified";
 
         } else {
          
@@ -856,14 +850,14 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
             if(modified_argument_lists.size() == 1) summary += "the argument list to '" + call_profile->name + "' was";
             else                                    summary += std::to_string(modified_argument_lists.size()) + " function calls' argument lists were";
-            summary += " modified\n";
+            summary += " modified";
 
         }
 
     } else if(renamed_calls.size()) {
 
-        if(renamed_calls.size() == 1) summary += get_profile_string(renamed_calls[0]) + '\n';
-        else                          summary += std::to_string(modified_argument_lists.size()) + " function calls were renamed\n";
+        if(renamed_calls.size() == 1) summary += get_profile_string(renamed_calls[0]);
+        else                          summary += std::to_string(modified_argument_lists.size()) + " function calls were renamed";
 
     } else if(modified_argument_lists.size()) {
 
@@ -871,7 +865,16 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
         if(modified_argument_lists.size() == 1) summary += "the argument list to '" + call_profile->name + "' was";
         else                                    summary += std::to_string(modified_argument_lists.size()) + " function calls' argument lists were";
-        summary += " modified\n";
+        summary += " modified";
+
+        if(modified_argument_lists.size() == 1) {
+
+            summary += ".  The modifications were: ";
+
+            for(std::string argument_summary : argument_list_modifications.back())
+                summary += argument_summary;
+
+        }
 
     }
 
@@ -958,14 +961,14 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls,
             modified_calls, renamed_calls, modified_argument_lists;
-        std::vector<std::vector<std::shared_ptr<call_profile_t>>> argument_list_modifications;
+        std::vector<std::vector<std::string>> argument_list_modifications;
         expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
 
         if(modified_calls.size() == 0) return out;
 
         out.begin_line();
 
-        out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
+        out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications) << '\n';
 
     }
 
