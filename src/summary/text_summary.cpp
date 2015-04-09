@@ -911,10 +911,22 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
             if(modified_argument_lists.size() == 1) {
 
-            summary += ".  The modifications were: ";
+                summary += ".  The modifications were: ";
 
-            for(std::string argument_summary : argument_list_modifications.back())
-                summary += argument_summary;
+                size_t number_argument_modifications = argument_list_modifications.back().size();
+                for(size_t pos = 0;  pos < number_argument_modifications; ++pos) {
+
+                    const std::string & argument_summary = argument_list_modifications.back()[pos];
+                    summary += argument_summary;
+
+                    if(number_argument_modifications == 2 && pos == 0)
+                        summary += " and ";
+                    else if(number_argument_modifications > 3 && pos != (number_argument_modifications - 1))
+                        summary += ", ";
+                    else if(number_argument_modifications > 3 && pos == (number_argument_modifications - 1))
+                        summary += ", and ";
+
+                }
 
             }
 
@@ -934,8 +946,20 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
                 summary += ".  The argument list modifications were: ";
 
-                for(std::string argument_summary : argument_list_modifications.back())
+                size_t number_argument_modifications = argument_list_modifications.back().size();
+                for(size_t pos = 0;  pos < number_argument_modifications; ++pos) {
+
+                    const std::string & argument_summary = argument_list_modifications.back()[pos];
                     summary += argument_summary;
+
+                    if(number_argument_modifications == 2 && pos == 0)
+                        summary += " and ";
+                    else if(number_argument_modifications > 3 && pos != (number_argument_modifications - 1))
+                        summary += ", ";
+                    else if(number_argument_modifications > 3 && pos == (number_argument_modifications - 1))
+                        summary += ", and ";
+
+                }
 
             }
 
@@ -958,8 +982,20 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
             summary += ".  The modifications were: ";
 
-            for(std::string argument_summary : argument_list_modifications.back())
+            size_t number_argument_modifications = argument_list_modifications.back().size();
+            for(size_t pos = 0;  pos < number_argument_modifications; ++pos) {
+
+                const std::string & argument_summary = argument_list_modifications.back()[pos];
                 summary += argument_summary;
+
+                if(number_argument_modifications == 2 && pos == 0)
+                    summary += " and ";
+                else if(number_argument_modifications > 3 && pos != (number_argument_modifications - 1))
+                    summary += ", ";
+                else if(number_argument_modifications > 3 && pos == (number_argument_modifications - 1))
+                    summary += ", and ";
+
+            }
 
         }
 
