@@ -912,25 +912,30 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
             } else {
              
                 if(renamed_calls.size() == 1) out << get_profile_string(renamed_calls[0]);
-                else                    out << renamed_calls.size() << " function calls were renamed";
+                else                          out << renamed_calls.size() << " function calls were renamed";
                 out << " and ";
 
-                if(modified_argument_lists.size() == 1) out << "a function call's arguments ";
-                else                                   out << renamed_calls.size() << " function calls' argument lists ";
-                out << " were modified\n";
+
+                const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(modified_argument_lists[0]);
+
+                if(modified_argument_lists.size() == 1) out << "the argument list to '" << call_profile->name << "' was";
+                else                                    out << modified_argument_lists.size() << " function calls' argument lists were";
+                out << " modified\n";
 
             }
 
         } else if(renamed_calls.size()) {
 
             if(renamed_calls.size() == 1) out << get_profile_string(renamed_calls[0]) << '\n';
-            else                    out << renamed_calls.size() << " function calls were renamed\n";
+            else                          out << modified_argument_lists.size() << " function calls were renamed\n";
 
         } else if(modified_argument_lists.size()) {
 
-            if(modified_argument_lists.size() == 1) out << "a function call's arguments";
-            else                                   out << renamed_calls.size() << " function calls' argument lists";
-            out << " were modified\n";
+            const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(modified_argument_lists[0]);
+
+            if(modified_argument_lists.size() == 1) out << "the argument list to '" << call_profile->name << "' was";
+            else                                    out << modified_argument_lists.size() << " function calls' argument lists were";
+            out << " modified\n";
 
         }
 
