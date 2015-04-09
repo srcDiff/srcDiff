@@ -781,8 +781,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             function_pos = 0;
 
-        }
+        } else if(is_call(full_name) && is_expr(profile_stack.at(profile_stack.size() - 2)->type_name)) {
 
+            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(profile_stack.size() - 2))->increment_calls();
+
+        }
 
     }
 

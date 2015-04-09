@@ -10,11 +10,12 @@ class expr_profile_t : public profile_t {
 
     	bool has_assignment;
         bool has_delete;
+        size_t number_calls;
 
     public:
 
         expr_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
-            : profile_t(type_name, uri, operation, parent), has_assignment(false), has_delete(false) {}
+            : profile_t(type_name, uri, operation, parent), has_assignment(false), has_delete(false), number_calls(0) {}
 
         bool assignment() const {
 
@@ -37,6 +38,18 @@ class expr_profile_t : public profile_t {
         void is_delete(bool has_delete) {
 
             this->has_delete = has_delete;
+
+        }
+
+        size_t calls() const {
+
+            return number_calls;
+
+        }
+
+        void increment_calls() {
+
+            ++number_calls;
 
         }
 

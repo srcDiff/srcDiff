@@ -6,9 +6,10 @@
 #include <call_profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <if_profile_t.hpp>
+#include <call_profile_t.hpp>
+#include <expr_profile_t.hpp>
 #include <identifier_profile_t.hpp>
 #include <identifier_diff.hpp>
-#include <call_profile_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -800,8 +801,12 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
         }
 
-        if(deleted_calls.size() == 1) summary += " was deleted from a call chain";
-        else                          summary += " were deleted from a call chain";
+        if(deleted_calls.size() == 1) summary += " was deleted";
+        else                          summary += " were deleted";
+
+        // should always be expr
+        if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(deleted_calls.front()->parent)->calls() > 1)
+            summary += " from a call chain";
 
         if(inserted_calls.size() || modified_calls.size())
             summary += " and ";
@@ -826,8 +831,12 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
         }
 
-        if(inserted_calls.size() == 1) summary += " was added to a call chain";
-        else                           summary += " were added to a call chain";
+        if(inserted_calls.size() == 1) summary += " was added";
+        else                           summary += " were added";
+
+        // should always be expr
+        if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(inserted_calls.front()->parent)->calls() > 1)
+            summary += " to a call chain";
 
         if(modified_calls.size())
             summary += " and ";
