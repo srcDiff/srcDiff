@@ -909,6 +909,15 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
             summary += get_profile_string(renamed_calls[0]) + " and its arguments modified";
 
+            if(modified_argument_lists.size() == 1) {
+
+            summary += ".  The modifications were: ";
+
+            for(std::string argument_summary : argument_list_modifications.back())
+                summary += argument_summary;
+
+            }
+
         } else {
          
             if(renamed_calls.size() == 1) summary += get_profile_string(renamed_calls[0]);
@@ -920,6 +929,15 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
             if(modified_argument_lists.size() == 1) summary += "the argument list to '" + call_profile->name + "' was";
             else                                    summary += std::to_string(modified_argument_lists.size()) + " function calls' argument lists were";
             summary += " modified";
+
+            if(modified_argument_lists.size() == 1) {
+
+                summary += ".  The argument list modifications were: ";
+
+                for(std::string argument_summary : argument_list_modifications.back())
+                    summary += argument_summary;
+
+            }
 
         }
 
