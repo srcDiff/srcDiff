@@ -781,9 +781,14 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             function_pos = 0;
 
-        } else if(is_call(full_name) && is_expr(profile_stack.at(profile_stack.size() - 2)->type_name)) {
+        } else if(is_call(full_name)) {
 
-            reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(profile_stack.size() - 2))->increment_calls();
+             size_t expr_pos = profile_stack.size() - 2;
+             while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name) && profile_stack.at(expr_pos)->type_name != "member_init_list")
+                --expr_pos;
+
+            if(is_expr(profile_stack.at(expr_pos)->type_name))
+                reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->increment_calls();
 
         }
 
