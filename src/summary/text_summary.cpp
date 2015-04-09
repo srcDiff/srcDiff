@@ -808,7 +808,36 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
         if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(deleted_calls.front()->parent)->calls() > 1)
             summary += " from a call chain";
 
-        if(deleted_calls.size() == 1 && deleted_calls[0]->common_profiles.size() > 1) summary += " and its arguments remained";
+        if(deleted_calls.size() == 1) {
+
+            size_t number_arguments = 0;
+            size_t common_arguments = 0;
+            std::for_each(deleted_calls[0]->arguments.lower_bound(SRCDIFF_DELETE), deleted_calls[0]->arguments.upper_bound(SRCDIFF_DELETE),
+                        [&, this](const typename change_entity_map<profile_t>::pair & pair) {
+
+                            ++number_arguments;
+
+                            if(pair.second->common_profiles.size() > 0) {
+
+                                ++common_arguments;
+
+                            }
+
+                        });
+
+
+            if(common_arguments) {
+
+                if(common_arguments == number_arguments)
+                    summary += " and its arguments were retained";
+                else if(common_arguments == 1)
+                    summary += " and one of its arguments was retained";
+                else
+                    summary += " and a few of its arguments were retained";
+
+            }
+
+        } 
 
         if(inserted_calls.size() || modified_calls.size())
             summary += " and ";
@@ -840,7 +869,34 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
         if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(inserted_calls.front()->parent)->calls() > 1)
             summary += " to a call chain";
 
-        if(inserted_calls.size() == 1 && inserted_calls[0]->common_profiles.size() > 1) summary += " and its arguments remained";
+        if(inserted_calls.size() == 1) {
+
+            size_t number_arguments = 0;
+            size_t common_arguments = 0;
+            std::for_each(inserted_calls[0]->arguments.lower_bound(SRCDIFF_INSERT), inserted_calls[0]->arguments.upper_bound(SRCDIFF_INSERT),
+                        [&, this](const typename change_entity_map<profile_t>::pair & pair) {
+
+                            ++number_arguments;
+
+                            if(pair.second->common_profiles.size() > 0) {
+
+                                ++common_arguments;
+
+                            }
+
+                        });
+
+
+            if(common_arguments) {
+
+                if(common_arguments == 1)
+                    summary += " and it was placed around an existing argument";
+                else if(common_arguments)
+                    summary += " and it was placed around existing arguments";
+
+            }
+
+        } 
 
         if(modified_calls.size())
             summary += " and ";
