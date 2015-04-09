@@ -1131,8 +1131,9 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
         const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
         /** @todo check this condition */
-        if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
+        if((child_profile->syntax_count > 0 || child_profile->move_id
+            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+            && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
             if(is_leaf) {
 
@@ -1304,8 +1305,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
         /** @todo check this condition */
-        if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
+        if((child_profile->syntax_count > 0 || child_profile->move_id
+            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+            && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
             if(is_leaf) {
 
@@ -1381,8 +1383,9 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
         const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
         /** @todo check this condition */
-        if((child_profile->syntax_count > 0 || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
+        if((child_profile->syntax_count > 0 || child_profile->move_id
+            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+            && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
             if(is_leaf) {
 
@@ -1400,7 +1403,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
             } else if(child_profile->move_id) {
 
-                out.begin_line() << get_profile_string(child_profile) << "was moved";
+                out.begin_line() << get_profile_string(child_profile) << "was moved\n";
 
             } else if(!child_profile->type_name.is_common()) {
 
@@ -1452,7 +1455,9 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
 
         const std::shared_ptr<profile_t> & child_profile = child_profiles[pos];
 
-        if(!is_body_summary(child_profile->type_name, child_profile->is_replacement) || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0))
+        if(!is_body_summary(child_profile->type_name, child_profile->is_replacement)
+            || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0
+                && child_profile->move_id == 0))
             continue;
 
         if(child_profile->is_replacement && ((pos + 1) < child_profiles.size())) {
@@ -1461,7 +1466,7 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
 
         } else if(child_profile->move_id) {
 
-            out.begin_line() << get_profile_string(child_profile) << "was moved";
+            out.begin_line() << get_profile_string(child_profile) << "was moved\n";
 
         } else if(!child_profile->type_name.is_common()) {
 
