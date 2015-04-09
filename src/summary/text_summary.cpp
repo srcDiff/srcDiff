@@ -808,6 +808,8 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
         if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(deleted_calls.front()->parent)->calls() > 1)
             summary += " from a call chain";
 
+        if(deleted_calls.size() == 1 && deleted_calls[0]->common_profiles.size() > 1) summary += " and its arguments remained";
+
         if(inserted_calls.size() || modified_calls.size())
             summary += " and ";
 
@@ -837,6 +839,8 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
         // should always be expr
         if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(inserted_calls.front()->parent)->calls() > 1)
             summary += " to a call chain";
+
+        if(inserted_calls.size() == 1 && inserted_calls[0]->common_profiles.size() > 1) summary += " and its arguments remained";
 
         if(modified_calls.size())
             summary += " and ";
