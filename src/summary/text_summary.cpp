@@ -265,7 +265,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
         && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
 
         if(expr_stmt_deleted.size())
-            out << get_profile_string(*expr_stmt_inserted.back());
+            out << get_profile_string(*expr_stmt_deleted.back());
         else if(expr_stmt_inserted.size())
             out << get_profile_string(*expr_stmt_inserted.back());
         else if(decl_stmt_deleted.size())
