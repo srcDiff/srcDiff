@@ -81,7 +81,7 @@ SUMMARY
 	• a call to 'm_d->zoomManager->zoomController' was deleted from a call chain and a call to 
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
 	• a call chain consisting of 'm_d->zoomManager->zoomController' and setAspectMode' was 
-	  added
+	  added to the function body
 
 END_SUMMARY
 

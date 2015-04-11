@@ -1013,7 +1013,19 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         out.begin_line() << get_profile_string(profile) << " was ";
 
-        out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
+        out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+
+        if(profile->parent == id) {
+
+            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+            else                                          out << " within ";
+
+            out << "the function body";
+
+        }
+
+        out << '\n';
 
         return out;
 
@@ -1052,7 +1064,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
                 out << "a call to '" << call_names.front() << "' was ";
 
-                out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
+                out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
 
             } else {
 
@@ -1068,7 +1080,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
                 out << "and \'" << call_names.front() << "' were ";
 
-                out << (profile->operation == SRCDIFF_DELETE ? "removed\n" : "added\n");
+                out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
 
             }
 
@@ -1091,11 +1103,23 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         out.begin_line();
 
-        out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications) << '\n';
+        out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
 
     }
 
-     return out;
+    // if(profile->parent == id) {
+
+    //     if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+    //     else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+    //     else                                          out << " within ";
+
+    //     out << "the function body";
+
+    // }
+
+    out << '\n';
+
+    return out;
 
 }
 
@@ -1107,7 +1131,19 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
     out << " was ";
 
-    out << (profile->operation == SRCDIFF_DELETE ?  "deleted\n" : (profile->operation == SRCDIFF_INSERT ? "added\n" : "modified\n"));
+    out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+
+    if(profile->parent == id) {
+
+        if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+        else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+        else                                          out << " within ";
+
+        out << "the function body";
+
+    }
+
+    out << '\n';
 
     return out;
 
@@ -1483,7 +1519,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
     // after children
     if(is_leaf) {
 
-        if(profile->parent == id && profile->operation == SRCDIFF_COMMON) {
+        if(profile->parent == id) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
