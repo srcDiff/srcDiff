@@ -434,7 +434,8 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
 bool text_summary::is_body_summary(const std::string & type, bool is_replacement) const {
 
-    return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement);
+    return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
+        || is_jump(type);
 
 }
 
@@ -1249,7 +1250,9 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
             }  else {
 
-                if(is_condition_type(child_profile->type_name))
+                if(is_jump(child_profile->type_name))
+                    jump(out, child_profile);
+                else if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile);
                 else if(is_expr_stmt(child_profile->type_name))
                     expr_stmt(out, child_profile);
@@ -1423,7 +1426,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             }  else {
 
-                if(is_condition_type(child_profile->type_name))
+                if(is_jump(child_profile->type_name))
+                    jump(out, child_profile);
+                else if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile);
                 else if(is_expr_stmt(child_profile->type_name))
                     expr_stmt(out, child_profile);
@@ -1501,7 +1506,9 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
             }  else {
 
-                if(is_condition_type(child_profile->type_name))
+                if(is_jump(child_profile->type_name))
+                    jump(out, child_profile);
+                else if(is_condition_type(child_profile->type_name))
                     conditional(out, child_profile);
                 else if(is_expr_stmt(child_profile->type_name))
                     expr_stmt(out, child_profile);
@@ -1537,6 +1544,31 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
 }
 
+
+summary_output_stream & text_summary::jump(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
+
+    out.begin_line() << get_profile_string(profile);
+
+    out << " was ";
+
+    out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+
+    if(profile->parent == id) {
+
+        if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+        else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+        else                                          out << " within ";
+
+        out << "the function body";
+
+    }
+
+    out << '\n';
+
+    return out;
+
+}
+
 summary_output_stream & text_summary::body(summary_output_stream & out, const profile_t & profile) {
 
     identifiers(out, summary_identifiers);
@@ -1564,7 +1596,9 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
 
         } else {
 
-            if(is_condition_type(child_profile->type_name))
+            if(is_jump(child_profile->type_name))
+                jump(out, child_profile);
+            else if(is_condition_type(child_profile->type_name))
                 conditional(out, child_profile);
             else if(is_expr_stmt(child_profile->type_name))
                 expr_stmt(out, child_profile);
