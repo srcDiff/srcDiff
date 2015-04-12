@@ -162,19 +162,25 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
   if(is_option(flags, OPTION_VISUALIZE)) {
 
-    const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
+    char * xml = 0;
+    size_t size = 0;
+    srcml_unit_get_standalone_xml(wstate->unit, "UTF-8", &xml, &size);
     colordiff->colorize(xml, line_diff_range);
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_BASH_VIEW)) {
 
-    const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
+    char * xml = 0;
+    size_t size = 0;
+    srcml_unit_get_standalone_xml(wstate->unit, "UTF-8", &xml, &size);
     bashview->transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
-    const char * xml = srcml_unit_get_standalone_xml(wstate->unit, "UTF-8");
+    char * xml = 0;
+    size_t size = 0;
+    srcml_unit_get_standalone_xml(wstate->unit, "UTF-8", &xml, &size);
     summary->summarize(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
