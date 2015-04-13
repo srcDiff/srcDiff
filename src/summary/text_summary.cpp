@@ -1221,7 +1221,22 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
         out << common_summary;
         
-        if(profile->total_count != 0)  out << ".  Then, the " << common_summary << " was modified";
+        if(profile->syntax_count != 0) {
+
+            size_t number_modified = 0;
+            for(const std::shared_ptr<profile_t> & common_profile : profile->common_profiles) {
+             
+                if(common_profile->syntax_count)
+                    ++number_modified;
+
+            }
+
+            if(number_modified > 0)
+                out << ".  Then, the " << common_summary << " was modified";
+
+            if(profile->common_profiles.size() == 1 && profile->child_profiles.size() == 1) return out;
+
+        }
 
     }
 
@@ -1387,7 +1402,22 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out << common_summary;
         
-        if(profile->total_count != 0)  out << ".  Then, the " << common_summary << " was modified";
+        if(profile->syntax_count != 0) {
+
+            size_t number_modified = 0;
+            for(const std::shared_ptr<profile_t> & common_profile : profile->common_profiles) {
+             
+                if(common_profile->syntax_count)
+                    ++number_modified;
+
+            }
+
+            if(number_modified > 0)
+                out << ".  Then, the " << common_summary << " was modified";
+
+            if(profile->common_profiles.size() == 1 && profile->child_profiles.size() == 1) return out;
+
+        }
 
     }
 
