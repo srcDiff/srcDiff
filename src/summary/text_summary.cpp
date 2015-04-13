@@ -1067,6 +1067,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
+    /** @todo think want to summarize lhs as well.  Basically, probably need use below this if and add message about assignment. */
     if(expr_stmt_profile->assignment() || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
 
         out.begin_line() << get_profile_string(profile) << " was ";
