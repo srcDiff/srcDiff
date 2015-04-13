@@ -42,6 +42,8 @@ private:
 
     bool is_body_summary(const std::string & type, bool is_replacement) const;
 
+    summary_output_stream & statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos);
+
 public:
 
     text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,

@@ -461,6 +461,39 @@ bool text_summary::is_body_summary(const std::string & type, bool is_replacement
 
 }
 
+summary_output_stream & text_summary::statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos) {
+
+    const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
+
+    if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
+
+        replacement(out, profile, child_pos);
+
+    } else if(child_profile->move_id) {
+
+        out.begin_line() << get_profile_string(child_profile) << " was moved\n";
+
+    } else if(!child_profile->type_name.is_common()) {
+
+        interchange(out, child_profile);
+
+    } else {
+
+        if(is_jump(child_profile->type_name))
+            jump(out, child_profile);
+        else if(is_condition_type(child_profile->type_name))
+            conditional(out, child_profile);
+        else if(is_expr_stmt(child_profile->type_name))
+            expr_stmt(out, child_profile);
+        else if(is_decl_stmt(child_profile->type_name))
+            decl_stmt(out, child_profile);
+
+    }
+
+    return out;
+
+}
+
 text_summary::text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
              const change_entity_map<call_profile_t> & member_initializations,
              const std::map<versioned_string, size_t> & summary_identifiers)
@@ -1240,14 +1273,8 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
                 std::ostringstream string_out;
                 summary_output_stream sout(string_out, (size_t)-1);
 
-                if(is_jump(profile->common_profiles[0]->type_name))
-                    jump(sout, profile->common_profiles[0]);
-                else if(is_condition_type(profile->common_profiles[0]->type_name))
-                    conditional(sout, profile->common_profiles[0]);
-                else if(is_expr_stmt(profile->common_profiles[0]->type_name))
-                    expr_stmt(sout, profile->common_profiles[0]);
-                else if(is_decl_stmt(profile->common_profiles[0]->type_name))
-                    decl_stmt(sout, profile->common_profiles[0]);                
+                size_t pos = 0;
+                statement_dispatch(sout, profile, pos);
 
                 if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
                     return out << '\n';
@@ -1291,30 +1318,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
             out.increment_depth();
 
-            if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
-
-                replacement(out, profile, pos);
-
-            } else if(child_profile->move_id) {
-
-                out.begin_line() << get_profile_string(child_profile) << " was moved";
-
-            } else if(!child_profile->type_name.is_common()) {
-
-                interchange(out, child_profile);
-
-            }  else {
-
-                if(is_jump(child_profile->type_name))
-                    jump(out, child_profile);
-                else if(is_condition_type(child_profile->type_name))
-                    conditional(out, child_profile);
-                else if(is_expr_stmt(child_profile->type_name))
-                    expr_stmt(out, child_profile);
-                else if(is_decl_stmt(child_profile->type_name))
-                    decl_stmt(out, child_profile);
-
-            }
+            statement_dispatch(out, profile, pos);
 
             out.decrement_depth();
 
@@ -1439,14 +1443,8 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
                 std::ostringstream string_out;
                 summary_output_stream sout(string_out, (size_t)-1);
 
-                if(is_jump(profile->common_profiles[0]->type_name))
-                    jump(sout, profile->common_profiles[0]);
-                else if(is_condition_type(profile->common_profiles[0]->type_name))
-                    conditional(sout, profile->common_profiles[0]);
-                else if(is_expr_stmt(profile->common_profiles[0]->type_name))
-                    expr_stmt(sout, profile->common_profiles[0]);
-                else if(is_decl_stmt(profile->common_profiles[0]->type_name))
-                    decl_stmt(sout, profile->common_profiles[0]);                
+                size_t pos = 0;
+                statement_dispatch(sout, profile, pos);
 
                 if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
                     return out << '\n';
@@ -1500,30 +1498,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             out.increment_depth();
 
-            if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
-
-                replacement(out, profile, pos);
-
-            } else if(child_profile->move_id) {
-
-                out.begin_line() << get_profile_string(child_profile) << " was moved";
-
-            } else if(!child_profile->type_name.is_common()) {
-
-                interchange(out, child_profile);
-
-            }  else {
-
-                if(is_jump(child_profile->type_name))
-                    jump(out, child_profile);
-                else if(is_condition_type(child_profile->type_name))
-                    conditional(out, child_profile);
-                else if(is_expr_stmt(child_profile->type_name))
-                    expr_stmt(out, child_profile);
-                else if(is_decl_stmt(child_profile->type_name))
-                    decl_stmt(out, child_profile);
-
-            }
+            statement_dispatch(out, profile, pos);
 
             out.decrement_depth();
 
@@ -1580,30 +1555,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
             out.increment_depth();
 
-            if(child_profile->is_replacement && ((pos + 1) < profile->child_profiles.size())) {
-
-                replacement(out, profile, pos);
-
-            } else if(child_profile->move_id) {
-
-                out.begin_line() << get_profile_string(child_profile) << " was moved\n";
-
-            } else if(!child_profile->type_name.is_common()) {
-
-                interchange(out, child_profile);
-
-            }  else {
-
-                if(is_jump(child_profile->type_name))
-                    jump(out, child_profile);
-                else if(is_condition_type(child_profile->type_name))
-                    conditional(out, child_profile);
-                else if(is_expr_stmt(child_profile->type_name))
-                    expr_stmt(out, child_profile);
-                else if(is_decl_stmt(child_profile->type_name))
-                    decl_stmt(out, child_profile);
-
-            }
+            statement_dispatch(out, profile, pos);
 
             out.decrement_depth();
 
@@ -1670,30 +1622,7 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
                 && child_profile->move_id == 0))
             continue;
 
-        if(child_profile->is_replacement && ((pos + 1) < child_profiles.size())) {
-
-            replacement(out, std::make_shared<profile_t>(profile), pos);
-
-        } else if(child_profile->move_id) {
-
-            out.begin_line() << get_profile_string(child_profile) << " was moved\n";
-
-        } else if(!child_profile->type_name.is_common()) {
-
-            interchange(out, child_profile);
-
-        } else {
-
-            if(is_jump(child_profile->type_name))
-                jump(out, child_profile);
-            else if(is_condition_type(child_profile->type_name))
-                conditional(out, child_profile);
-            else if(is_expr_stmt(child_profile->type_name))
-                expr_stmt(out, child_profile);
-            else if(is_decl_stmt(child_profile->type_name))
-                decl_stmt(out, child_profile);
-
-        }
+        statement_dispatch(out, std::make_shared<profile_t>(profile), pos);
 
     }
 
