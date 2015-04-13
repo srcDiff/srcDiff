@@ -754,6 +754,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     collected_condition.modified().pop_back();
 
                 reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition(collected_condition);
+                collected_condition.clear();
 
             }
 
