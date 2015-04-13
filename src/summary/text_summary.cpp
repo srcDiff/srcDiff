@@ -80,9 +80,9 @@ std::string text_summary::get_type_string_with_count(const std::shared_ptr<profi
 
     }
 
-    if((profile->statement_count - 1) == 0)
+    if(profile->statement_count == 0)
         return "empty " + get_type_string(profile);
-    else if((profile->statement_count - 1) == 1)
+    else if(profile->statement_count == 1)
         return get_type_string(profile) + " with a single statement";
     else
         return get_type_string(profile) + " with " + std::to_string(profile->statement_count) + " statements";   
