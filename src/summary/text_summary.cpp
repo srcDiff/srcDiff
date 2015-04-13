@@ -83,8 +83,19 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
     if(profile->type_name == "if") {
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
+
+        std::string if_summary = "an ";
+        if((if_profile->statement_count - 1) == 0)
+            if_summary += "empty if statement";
+        else if((if_profile->statement_count - 1) == 1)
+            if_summary += "if statement with a single statement";
+        else
+            if_summary += "if statement with " + std::to_string(if_profile->statement_count - 1) + " statements";
+
         if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
-            return "an if statement with an else-clause";
+            if_summary += " and with an else-clause";
+
+        return if_summary;
 
     }
 
