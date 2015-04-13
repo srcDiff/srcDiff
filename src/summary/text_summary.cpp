@@ -71,9 +71,16 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
 
 std::string text_summary::get_type_string_with_count(const std::shared_ptr<profile_t> & profile) const {
 
-    if(!has_body(profile->type_name)) return get_type_string(profile);
+    if(!has_body(profile->type_name) || profile->operation == SRCDIFF_COMMON) return get_type_string(profile);
 
-     if((profile->statement_count - 1) == 0)
+    if(profile->type_name == "if") {
+
+        const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
+        if(if_profile->is_guard()) return "guard clause";
+
+    }
+
+    if((profile->statement_count - 1) == 0)
         return "empty " + get_type_string(profile);
     else if((profile->statement_count - 1) == 1)
         return get_type_string(profile) + " with a single statement";
@@ -98,7 +105,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
 
         if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
-            return "an" + get_type_string_with_count(profile) + " and with an else-clause";
+            return "an " + get_type_string_with_count(profile) + " and with an else-clause";
 
     }
 
