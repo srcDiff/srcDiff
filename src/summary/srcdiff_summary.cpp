@@ -914,6 +914,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     if(is_statement(full_name) || is_prototype) {
 
         size_t parent_pos = std::get<0>(counting_profile_pos.back());
+
+        if(profile_stack.back()->operation == SRCDIFF_COMMON || profile_stack.back()->operation == SRCDIFF_DELETE)
+            ++profile_stack.at(parent_pos)->statement_count_original;
+
+        if(profile_stack.back()->operation == SRCDIFF_COMMON || profile_stack.back()->operation == SRCDIFF_INSERT)
+            ++profile_stack.at(parent_pos)->statement_count_modified;
+
         ++profile_stack.at(parent_pos)->statement_count;
 
         if(profile_stack.back()->operation == SRCDIFF_COMMON)
@@ -935,6 +942,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
    if(has_body(full_name)) {
 
+        profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_count_original += profile_stack.back()->statement_count_original;
+        profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_count_modified += profile_stack.back()->statement_count_modified;
         profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_count += profile_stack.back()->statement_count;
         profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_churn += profile_stack.back()->statement_churn;
         profile_stack.at(std::get<0>(counting_profile_pos.back()))->common_statements += profile_stack.back()->common_statements;
