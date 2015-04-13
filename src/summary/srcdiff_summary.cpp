@@ -867,7 +867,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && full_name == "argument"))
             update_anscestor_profile(profile_stack.back());
         /** @todo may want this even if total_count or syntax_count are not 0 */
-        else if(/**profile_stack.back()->total_count == 0 && */srcdiff_stack.back().operation == SRCDIFF_COMMON)
+        if(/**profile_stack.back()->total_count == 0 && */srcdiff_stack.back().operation == SRCDIFF_COMMON)
                 update_common_profiles(profile_stack.back());
 
         if(has_body(full_name)) {
