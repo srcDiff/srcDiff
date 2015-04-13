@@ -72,7 +72,7 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
 std::string text_summary::get_type_string_with_count(const std::shared_ptr<profile_t> & profile) const {
 
     if(!has_body(profile->type_name) || profile->operation == SRCDIFF_COMMON
-        || (profile->statement_count == 1 && profile->common_profiles.size() == 1)) return get_type_string(profile);
+        || (profile->statement_count == 1 && profile->common_statements == 1)) return get_type_string(profile);
 
     if(profile->type_name == "if") {
 

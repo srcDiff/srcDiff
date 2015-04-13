@@ -916,6 +916,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         size_t parent_pos = std::get<0>(counting_profile_pos.back());
         ++profile_stack.at(parent_pos)->statement_count;
 
+        if(profile_stack.back()->operation == SRCDIFF_COMMON)
+            ++profile_stack.at(parent_pos)->common_statements;
+
         if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
 
             bool condition_change = false;
@@ -934,6 +937,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_count += profile_stack.back()->statement_count;
         profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_churn += profile_stack.back()->statement_churn;
+        profile_stack.at(std::get<0>(counting_profile_pos.back()))->common_statements += profile_stack.back()->common_statements;
 
    }
 
