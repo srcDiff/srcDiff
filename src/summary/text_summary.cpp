@@ -1349,6 +1349,8 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
 }
 
+/** @todo need to bound depth somehow. Perhaps after first conditional, if only one child and it has body, then do not output? */
+
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
 
     const bool has_common = profile->common_profiles.size() > 0;
