@@ -1235,7 +1235,24 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
                 out << ".  Then, the " << common_summary << " was modified";
 
             if(profile->common_profiles.size() == 1
-                && profile->child_profiles.size() == 1 && is_jump(profile->common_profiles[0]->type_name)) return out << '\n';
+                && profile->child_profiles.size() == 1) {
+
+                std::ostringstream string_out;
+                summary_output_stream sout(string_out, (size_t)-1);
+
+                if(is_jump(profile->common_profiles[0]->type_name))
+                    jump(sout, profile->common_profiles[0]);
+                else if(is_condition_type(profile->common_profiles[0]->type_name))
+                    conditional(sout, profile->common_profiles[0]);
+                else if(is_expr_stmt(profile->common_profiles[0]->type_name))
+                    expr_stmt(sout, profile->common_profiles[0]);
+                else if(is_decl_stmt(profile->common_profiles[0]->type_name))
+                    decl_stmt(sout, profile->common_profiles[0]);                
+
+                if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
+                    return out << '\n';
+
+            }
 
         }
 
@@ -1416,9 +1433,25 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             if(number_modified > 0)
                 out << ".  Then, the " << common_summary << " was modified";
 
-            /** @todo may want to make this a bit more precise.  If results is just x was modified then do not report. */
             if(profile->common_profiles.size() == 1
-                && profile->child_profiles.size() == 1 && is_jump(profile->common_profiles[0]->type_name)) return out << '\n';
+                && profile->child_profiles.size() == 1) {
+
+                std::ostringstream string_out;
+                summary_output_stream sout(string_out, (size_t)-1);
+
+                if(is_jump(profile->common_profiles[0]->type_name))
+                    jump(sout, profile->common_profiles[0]);
+                else if(is_condition_type(profile->common_profiles[0]->type_name))
+                    conditional(sout, profile->common_profiles[0]);
+                else if(is_expr_stmt(profile->common_profiles[0]->type_name))
+                    expr_stmt(sout, profile->common_profiles[0]);
+                else if(is_decl_stmt(profile->common_profiles[0]->type_name))
+                    decl_stmt(sout, profile->common_profiles[0]);                
+
+                if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
+                    return out << '\n';
+
+            }
 
         }
 
