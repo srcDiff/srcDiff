@@ -930,12 +930,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
-   if(has_body(full_name)) {
-std::cerr << full_name + ": " << profile_stack.back()->statement_count << '\n';
-
+   if(has_body(full_name))
         profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_count += profile_stack.back()->statement_count;
-   }
-
 
     if(!is_interchange) profile_stack.pop_back();
 
