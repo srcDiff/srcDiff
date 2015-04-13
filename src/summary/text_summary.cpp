@@ -1234,7 +1234,8 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
             if(number_modified > 0)
                 out << ".  Then, the " << common_summary << " was modified";
 
-            if(profile->common_profiles.size() == 1 && profile->child_profiles.size() == 1) return out;
+            if(profile->common_profiles.size() == 1
+                && profile->child_profiles.size() == 1 && is_jump(profile->common_profiles[0]->type_name)) return out << '\n';
 
         }
 
@@ -1415,7 +1416,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             if(number_modified > 0)
                 out << ".  Then, the " << common_summary << " was modified";
 
-            if(profile->common_profiles.size() == 1 && profile->child_profiles.size() == 1) return out;
+            /** @todo may want to make this a bit more precise.  If results is just x was modified then do not report. */
+            if(profile->common_profiles.size() == 1
+                && profile->child_profiles.size() == 1 && is_jump(profile->common_profiles[0]->type_name)) return out << '\n';
 
         }
 
