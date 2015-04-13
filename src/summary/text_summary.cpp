@@ -69,6 +69,19 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
 
 }
 
+std::string text_summary::get_type_string_with_count(const std::shared_ptr<profile_t> & profile) const {
+
+    if(!has_body(profile->type_name)) return get_type_string(profile);
+
+     if((profile->statement_count - 1) == 0)
+        return "empty " + get_type_string(profile);
+    else if((profile->statement_count - 1) == 1)
+        return get_type_string(profile) + " with a single statement";
+    else
+        return get_type_string(profile) + " with " + std::to_string(profile->statement_count) + " statements";   
+
+}
+
 std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & profile) const {
 
     if(!profile->type_name.is_common()) {
@@ -84,18 +97,8 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
 
-        std::string if_summary = "an ";
-        if((if_profile->statement_count - 1) == 0)
-            if_summary += "empty if statement";
-        else if((if_profile->statement_count - 1) == 1)
-            if_summary += "if statement with a single statement";
-        else
-            if_summary += "if statement with " + std::to_string(if_profile->statement_count - 1) + " statements";
-
         if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
-            if_summary += " and with an else-clause";
-
-        return if_summary;
+            return "an" + get_type_string_with_count(profile) + " and with an else-clause";
 
     }
 
@@ -170,7 +173,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
     }
 
-    return get_article(profile) + ' ' + get_type_string(profile);
+    return get_article(profile) + ' ' + get_type_string_with_count(profile);
 
 }
 

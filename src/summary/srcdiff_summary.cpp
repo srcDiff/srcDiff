@@ -913,12 +913,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     bool is_prototype = full_name == "parameter" || (full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list");
     if(is_statement(full_name) || is_prototype) {
 
-        if(function_pos)
-            ++profile_stack.at(function_pos)->statement_count;
-
         size_t parent_pos = std::get<0>(counting_profile_pos.back());
-        if(parent_pos != function_pos && !is_prototype)
-            ++profile_stack.at(parent_pos)->statement_count;
+        ++profile_stack.at(parent_pos)->statement_count;
 
         if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
 
@@ -928,16 +924,18 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             size_t increment_amount = 1;
             if(condition_change) increment_amount = 2;
-
-            if(function_pos)
-                profile_stack.at(function_pos)->statement_churn += increment_amount;
-
-            if(parent_pos != function_pos && !is_prototype)
-                profile_stack.at(parent_pos)->statement_churn += increment_amount;        
+            profile_stack.at(parent_pos)->statement_churn += increment_amount;        
 
        }
 
     }
+
+   if(has_body(full_name)) {
+std::cerr << full_name + ": " << profile_stack.back()->statement_count << '\n';
+
+        profile_stack.at(std::get<0>(counting_profile_pos.back()))->statement_count += profile_stack.back()->statement_count;
+   }
+
 
     if(!is_interchange) profile_stack.pop_back();
 
