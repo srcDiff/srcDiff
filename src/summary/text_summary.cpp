@@ -1394,10 +1394,10 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
     boost::optional<srcdiff_type> else_operation;
     if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
-    const bool else_modified = bool(else_operation) && else_operation == SRCDIFF_COMMON;
+    const bool else_modified = bool(else_operation) && *else_operation == SRCDIFF_COMMON;
 
-    bool elseif_modified = false;
-    if(profile->type_name == "if") elseif_modified = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_clause();
+    boost::optional<srcdiff_type> elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
+    const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
 
     const versioned_string & condition = conditional_profile->get_condition();
 
