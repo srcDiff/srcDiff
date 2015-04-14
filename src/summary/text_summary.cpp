@@ -16,6 +16,8 @@
 #include <list>
 #include <set>
 
+const char * ELLIPSIS = "\u2026";
+
 std::string text_summary::get_article(const std::string & type_name) const { 
 
     const char letter = type_name[0];
@@ -1228,7 +1230,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
     }
 
     if(!output_else)
-        out.begin_line() << "\u2026\n";
+        out.begin_line() << ELLIPSIS << '\n';
 
     bool is_leaf = true;
     if(output_else) {
@@ -1393,7 +1395,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
 
     if(!output_conditional)
-        out.begin_line() << "\u2026\n";
+        out.begin_line() << ELLIPSIS << '\n';
 
     // before children
     bool is_leaf = true;
