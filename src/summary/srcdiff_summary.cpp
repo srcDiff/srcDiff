@@ -237,7 +237,7 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0), function_pos(0), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
-      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(false), collect_lhs() {
+      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(false), collect_lhs(), collect_rhs() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -329,7 +329,7 @@ void srcdiff_summary::reset() {
     collected_condition.clear();
     left_hand_side = false;
     collect_lhs.clear();
-
+    collect_rhs.clear();
 
 }
 
@@ -782,8 +782,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         } else if(full_name == "expr_stmt") {
 
+            if(!left_hand_side) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->rhs(collect_rhs);
+
             expr_stmt_pos = 0;
             collect_lhs.clear();
+            collect_rhs.clear();
 
         } else if(full_name == "argument_list" && is_call(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())
                   && profile_stack.back()->total_count > 0) {
@@ -1010,7 +1013,8 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
-    if(expr_stmt_pos && left_hand_side) collect_lhs.append(ch, len, srcdiff_stack.back().operation);
+    if(expr_stmt_pos && left_hand_side)  collect_lhs.append(ch, len, srcdiff_stack.back().operation);
+    if(expr_stmt_pos && !left_hand_side) collect_rhs.append(ch, len, srcdiff_stack.back().operation);
 
 
 

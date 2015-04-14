@@ -76,6 +76,7 @@ protected:
 
     bool left_hand_side;
     versioned_string collect_lhs;
+    versioned_string collect_rhs;
 
 private:
 
