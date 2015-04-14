@@ -138,16 +138,18 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
             std::string expr_stmt_summary;
 
-            if(!expr_stmt_profile->lhs().is_common() && !expr_stmt_profile->rhs().is_common())
+            if(expr_stmt_profile->operation != SRCDIFF_COMMON)
                 expr_stmt_summary += "an assignment to '";
+            else if(!expr_stmt_profile->lhs().is_common() && !expr_stmt_profile->rhs().is_common())
+                expr_stmt_summary += "an assignment statement";
             else if(!expr_stmt_profile->lhs().is_common())
-                expr_stmt_summary += "the left-hand side of an assignment to '";
+                expr_stmt_summary += "the left-hand side of an assignment statement'";
             else
                 expr_stmt_summary += "the right-hand side of an assignment to '";
 
             if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += expr_stmt_profile->lhs().original() + '\'';
             else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += expr_stmt_profile->lhs().modified() + '\'';
-            else                                                    expr_stmt_summary += std::string(expr_stmt_profile->lhs()) + '\'';
+            else if(expr_stmt_profile->lhs().is_common())           expr_stmt_summary += std::string(expr_stmt_profile->lhs()) + '\'';
 
             return expr_stmt_summary;
 
