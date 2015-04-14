@@ -1375,6 +1375,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
     const bool else_modified = bool(else_operation) && else_operation == SRCDIFF_COMMON;
 
+    bool elseif_modified = false;
+    if(profile->type_name == "if") elseif_modified = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_clause();
+
     const versioned_string & condition = conditional_profile->get_condition();
 
     if(!condition_modified && !body_modified && bool(else_operation)
@@ -1390,16 +1393,17 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out.begin_line();
 
-        if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified)) {
+        if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified || elseif_modified)) {
 
             out << "the ";
 
-            if(condition_modified && body_modified && else_modified) out << "condition, body, and else-clause ";
-            else if(condition_modified && body_modified)             out << "condition and body ";
-            else if(condition_modified && else_modified)             out << "condition and else-clause ";
-            else if(body_modified && else_modified)                  out << "body and else-clause ";
-            else if(condition_modified)                              out << "condition ";
-            else if(body_modified)                                   out << "body ";
+            if(condition_modified && body_modified && (else_modified || elseif_modified)) out << "condition, body, and " << (else_modified ? "else-clause " : "elseif-clause ");
+            else if(condition_modified && body_modified)                                  out << "condition and body ";
+            else if(condition_modified && (else_modified || elseif_modified))             out << "condition and " << (else_modified ? "else-clause " : "elseif-clause ");
+            else if(body_modified && (else_modified || elseif_modified))                  out << "body and " << (else_modified ? "else-clause " : "elseif-clause ");
+            else if(condition_modified)                                                   out << "condition ";
+            else if(body_modified)                                                        out << "body ";
+            else if(elseif_modified)                                                      out << "elseif-clause ";
 
             out << "of ";
 
