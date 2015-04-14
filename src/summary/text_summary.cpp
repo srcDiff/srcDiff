@@ -84,6 +84,7 @@ std::string text_summary::get_type_string_with_count(const std::shared_ptr<profi
     }
 
     size_t statement_count = profile->operation == SRCDIFF_DELETE ? profile->statement_count_original : profile->statement_count_modified;
+    if(profile->type_name == "elseif") --statement_count;
 
     if(statement_count == 0)
         return "empty " + get_type_string(profile);
