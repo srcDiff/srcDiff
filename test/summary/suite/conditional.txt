@@ -220,7 +220,7 @@ bool KisExifIO::loadFrom(KisMetaData::Store* store, QIODevice* ioDevice) const
 
     for (const_iterator it = exifData.begin(); it != exifData.end(); ++it) {
 
-        if (it->key() == "MakerNote") { foo(); }
+        if (it->key() == "MakerNote") {}
         else if (it->groupName() == "Photo" || (it->groupName() == "GPS")) {
 
             if( it->key() == "InteroperabilityTag" ) {}
@@ -238,7 +238,7 @@ bool KisExifIO::loadFrom(KisMetaData::Store* store, QIODevice* ioDevice) const
 
     for (const_iterator it = exifData.begin(); it != exifData.end(); ++it) {
 
-        if (it->key() == "MakerNote") { foo(); }
+        if (it->key() == "MakerNote") {}
         else if (it->groupName() == "Photo" || (it->groupName() == "GPS")) {
 
             if( it->key() == "InteroperabilityTag" || it->key() == "0xea1d" ) {}

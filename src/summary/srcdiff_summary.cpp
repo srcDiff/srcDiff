@@ -779,13 +779,17 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             if((std::get<0>(counting_profile_pos.back()) - 1) > 0 && profile_stack.at(std::get<0>(counting_profile_pos.back()) - 1)->type_name.first_active_string() == "elseif")
                 reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back()) - 1))->set_body_modified(true);
 
-        } else if(full_name == "else" && counting_profile_pos.size() > 1
+        } else if((full_name == "else" || full_name == "elseif") && counting_profile_pos.size() > 1
             && profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->type_name == "if") {
 
-            reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_clause(true);
+            if(full_name == "else")
+                reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_clause(true);
+            else
+                reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->elseif_clause(true);
+
             reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->is_guard(false);
 
-            if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count != 0)
+            if(full_name == "else" && (profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count != 0))
                 reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_operation(profile_stack.back()->operation);
     
         } else if(is_function_type(full_name)) {

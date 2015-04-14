@@ -9,12 +9,14 @@ class if_profile_t : public conditional_profile_t {
 
         bool guard;
         bool has_else;
+        bool has_elseif;
         boost::optional<srcdiff_type> else_operation_type;
 
     public:
 
         if_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) :
-            conditional_profile_t(type_name, uri, operation, parent), guard(true), has_else(false), else_operation_type(boost::optional<srcdiff_type>()) {}
+            conditional_profile_t(type_name, uri, operation, parent), guard(true),
+            has_else(false), else_operation_type(boost::optional<srcdiff_type>()), has_elseif(false) {}
 
 
         bool is_guard() const {
@@ -50,6 +52,18 @@ class if_profile_t : public conditional_profile_t {
         void else_operation(srcdiff_type else_type) {
 
             this->else_operation_type = else_type;
+
+        }
+
+        bool elseif_clause() const {
+
+            return has_elseif;
+
+        }
+
+        void elseif_clause(bool has_elseif) {
+
+            this->has_elseif = has_elseif;
 
         }
 
