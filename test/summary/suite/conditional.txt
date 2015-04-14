@@ -259,6 +259,7 @@ SUMMARY
 	  this modification included:
 		• the elseif-clause of an if statement was modified
 		  this modification included:
+			• …
 			• the condition of a guard clause was modified
 			  this modification included:
 				• the condition was changed from ' it->key() == 

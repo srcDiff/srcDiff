@@ -1227,6 +1227,9 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
     }
 
+    if(!output_else)
+        out.begin_line() << "\u2026\n";
+
     bool is_leaf = true;
     if(output_else) {
 
@@ -1388,6 +1391,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
+
+    if(!output_conditional)
+        out.begin_line() << "\u2026\n";
 
     // before children
     bool is_leaf = true;
