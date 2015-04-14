@@ -772,9 +772,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             reinterpret_cast<std::shared_ptr<call_profile_t> &>(profile_stack.at(profile_stack.size() - 2))->argument_list_modified = true;
 
         } else if(full_name == "block" && profile_stack.back()->total_count > 0 && (profile_stack.at(profile_stack.size() - 2)->type_name == "then"
-                                        || is_condition_type(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string()))) {
+                                        || is_condition_type(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name.first_active_string()))) {
 
             reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_body_modified(true);
+
+            if((std::get<0>(counting_profile_pos.back()) - 1) > 0 && profile_stack.at(std::get<0>(counting_profile_pos.back()) - 1)->type_name.first_active_string() == "elseif")
+                reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back()) - 1))->set_body_modified(true);
 
         } else if(full_name == "else" && counting_profile_pos.size() > 1
             && profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->type_name == "if") {
