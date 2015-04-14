@@ -16,7 +16,7 @@
 #include <list>
 #include <set>
 
-const char * ELLIPSIS = "\u2026";
+const char * ELLIPSIS = "\u22EF";
 
 std::string text_summary::get_article(const std::string & type_name) const { 
 
