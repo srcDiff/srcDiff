@@ -20,9 +20,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f': Impact = High
-	• the condition of a guard clause was modified
-	  this modification included:
-		• the condition was changed from '1' to '2'
+	• the condition of a guard clause was changed from '1' to '2' within the function body
 
 END_SUMMARY
 
@@ -259,10 +257,8 @@ SUMMARY
 	  this modification included:
 		• the elseif-clause of an if statement was modified
 		  this modification included:
-			• …
-			• the condition of a guard clause was modified
-			  this modification included:
-				• the condition was changed from ' it->key() == 
-				  "InteroperabilityTag" ' to ' it->key() == "InteroperabilityTag" || it->key() == "0xea1d" '
+			• ⋯
+			• the condition of a guard clause was changed from ' it->key() == 
+			  "InteroperabilityTag" ' to ' it->key() == "InteroperabilityTag" || it->key() == "0xea1d" '
 
 END_SUMMARY

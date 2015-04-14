@@ -1423,6 +1423,8 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         if(profile->operation != SRCDIFF_COMMON)
              out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
+        else if(condition_modified && !body_modified && !else_modified && !elseif_modified)
+            out << "changed from '" << condition.original() << "' to '" << condition.modified() << '\'';
         else out << "modified";
 
         if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
@@ -1490,7 +1492,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         }
 
-        if(condition_modified) {
+        if(condition_modified && (body_modified || else_modified || elseif_modified)) {
 
             out << '\n';
             out.pad() << "  this modification included:\n";            
