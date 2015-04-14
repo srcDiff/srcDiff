@@ -87,6 +87,7 @@ void srcdiff_summary::process_characters() {
                     collect_lhs.modified().pop_back();
 
                 expr_stmt_profile->lhs(collect_lhs);
+                left_hand_side = false;
                 collect_lhs.clear();
 
 
@@ -236,7 +237,7 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0), function_pos(0), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
-      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), collect_lhs() {
+      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(false), collect_lhs() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -326,6 +327,8 @@ void srcdiff_summary::reset() {
     collected_name.clear();
     condition_count = 0;
     collected_condition.clear();
+    left_hand_side = false;
+    collect_lhs.clear();
 
 
 }
@@ -528,19 +531,35 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
             current_move_id = srcdiff_stack.back().move_id;
 
         }
+        if(expr_stmt_pos) {
+
+            if(left_hand_side) profile_stack.back()->left_hand_side = true;
+            else               profile_stack.back()->right_hand_side = true;
+
+        }
 
     }
 
     if(uri_stack.back() != SRCDIFF) {
 
-        if(full_name == "name")
+        if(full_name == "name") {
+
             ++name_count;
-        else if(full_name == "condition")
+
+        } else if(full_name == "condition") {
+
             ++condition_count;
-        else if(full_name == "expr_stmt")
+
+        } else if(full_name == "expr_stmt") {
+
             expr_stmt_pos = profile_stack.size() - 1;
-        else if(is_function_type(full_name))
+            left_hand_side = true;
+
+        } else if(is_function_type(full_name)) {
+
             function_pos = profile_stack.size() - 1;
+
+        }
 
         if(!is_interchange) ++srcdiff_stack.back().level;
 
@@ -991,7 +1010,7 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
-    if(expr_stmt_pos) collect_lhs.append(ch, len, srcdiff_stack.back().operation);
+    if(expr_stmt_pos && left_hand_side) collect_lhs.append(ch, len, srcdiff_stack.back().operation);
 
 
 

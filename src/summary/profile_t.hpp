@@ -58,6 +58,9 @@ class profile_t {
         size_t syntax_count;
         size_t total_count;
 
+        bool left_hand_side;
+        bool right_hand_side;
+
         profile_list_t child_profiles;
         profile_list_t descendant_profiles;      
 
@@ -72,13 +75,15 @@ class profile_t {
                                                                    id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
                                                                    parent(), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
-                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
+                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
+                                                                   left_hand_side(false), right_hand_side(false) {}
 
         profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) :
                                                                    id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
                                                                    parent(parent), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
-                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0) {}
+                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
+                                                                   left_hand_side(false), right_hand_side(false) {}
 
         void set_id(size_t id_count) {
 

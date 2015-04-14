@@ -74,6 +74,7 @@ protected:
     size_t condition_count;
     versioned_string collected_condition;
 
+    bool left_hand_side;
     versioned_string collect_lhs;
 
 private:
