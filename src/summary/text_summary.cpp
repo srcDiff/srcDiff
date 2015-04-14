@@ -1080,7 +1080,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     /** @todo think want to summarize lhs as well.  Basically, probably need use below this if and add message about assignment. */
-    if(expr_stmt_profile->assignment() || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
+    if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
 
         out.begin_line() << get_profile_string(profile) << " was ";
 
@@ -1173,6 +1173,12 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
         if(modified_calls.size() == 0) return out;
 
         out.begin_line();
+
+        if(expr_stmt_profile->assignment()) {
+
+            out << get_profile_string(profile) << " was modified. The modification was ";
+
+        }
 
         out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
 

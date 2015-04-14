@@ -165,3 +165,47 @@ SUMMARY
 	• an if statement with a single statement was removed from the function body
 
 END_SUMMARY
+
+### Test 4 ###
+ORIGINAL
+KoFallBackColorTransformation::KoFallBackColorTransformation(KoColorConversionTransformation* _csToFallBack, KoColorConversionTransformation* _fallBackToCs, KoColorTransformation* _transfo) : d(new Private)
+{
+    Q_ASSERT(*_csToFallBack->srcColorSpace() == *_fallBackToCs->dstColorSpace());
+    Q_ASSERT(*_fallBackToCs->srcColorSpace() == *_csToFallBack->dstColorSpace());
+    d->fallBackColorSpace = _fallBackToCs->dstColorSpace();
+    d->csToFallBack = _csToFallBack;
+    d->fallBackToCs = _fallBackToCs;
+    d->csToFallBackCache = 0;
+    d->fallBackToCsCache = 0;
+    d->colorTransformation = _transfo;
+    d->buff = 0;
+    d->buffSize = 0;
+}
+END_ORIGINAL
+
+MODIFIED
+KoFallBackColorTransformation::KoFallBackColorTransformation(KoColorConversionTransformation* _csToFallBack, KoColorConversionTransformation* _fallBackToCs, KoColorTransformation* _transfo) : d(new Private)
+{
+    Q_ASSERT(*_csToFallBack->srcColorSpace() == *_fallBackToCs->dstColorSpace());
+    Q_ASSERT(*_fallBackToCs->srcColorSpace() == *_csToFallBack->dstColorSpace());
+    d->fallBackColorSpace = _fallBackToCs->srcColorSpace();
+    d->csToFallBack = _csToFallBack;
+    d->fallBackToCs = _fallBackToCs;
+    d->csToFallBackCache = 0;
+    d->fallBackToCsCache = 0;
+    d->colorTransformation = _transfo;
+    d->buff = 0;
+    d->buffSize = 0;
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation': Impact = Low
+	• the right-hand side of an assignment to 'd->fallBackColorSpace' was modified. The 
+	  modification was a call to '_fallBackToCs->dstColorSpace' was renamed to 
+	  '_fallBackToCs->srcColorSpace
+
+END_SUMMARY
