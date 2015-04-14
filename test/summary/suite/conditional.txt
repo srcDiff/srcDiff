@@ -253,13 +253,8 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisExifIO::loadFrom': Impact = High
-	• the body of a for statement was modified
-	  this modification included:
-		• the elseif-clause of an if statement was modified
-		  this modification included:
-			• ⋯
-			• the condition of a guard clause was changed from ' it->key() == 
-			  "InteroperabilityTag" ' to ' it->key() == "InteroperabilityTag" || it->key() == "0xea1d" '
+	• the condition of a guard clause was changed from ' it->key() == "InteroperabilityTag" ' 
+	  to ' it->key() == "InteroperabilityTag" || it->key() == "0xea1d" '
 
 END_SUMMARY
 
