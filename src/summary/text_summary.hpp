@@ -29,6 +29,8 @@ protected:
 
         std::map<versioned_string, size_t> output_identifiers;
 
+        size_t body_depth;
+
 private:
 
     std::string get_article(const std::string & type_name) const;

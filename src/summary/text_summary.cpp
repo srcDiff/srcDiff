@@ -500,7 +500,7 @@ text_summary::text_summary(const size_t id, const profile_t::profile_list_t & ch
              const change_entity_map<call_profile_t> & member_initializations,
              const std::map<versioned_string, size_t> & summary_identifiers)
     : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
-      summary_identifiers(summary_identifiers) {}
+      summary_identifiers(summary_identifiers), body_depth(0) {}
 
 summary_output_stream & text_summary::parameter(summary_output_stream & out, size_t number_parameters_deleted,
                                        size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -1215,6 +1215,9 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
     const bool has_common = profile->common_profiles.size() > 0;
 
+    const bool output_else = !(profile->operation == SRCDIFF_COMMON && body_depth > 1
+        && profile->child_profiles.size() == 1 && has_body(profile->child_profiles[0]->type_name));
+
     if(profile->parent->operation != SRCDIFF_COMMON) {
 
         out.begin_line();
@@ -1224,82 +1227,87 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
     }
 
-    out.begin_line();
-
-    if(profile->parent->operation != SRCDIFF_COMMON)
-        out << "the " << get_type_string(profile) << " was ";
-    else
-        out << get_profile_string(profile) << " was ";
-
-    if(profile->operation != SRCDIFF_COMMON)
-         out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
-    else out << "modified";
-
-    if(profile->operation != SRCDIFF_COMMON && has_common) {
-
-        if(profile->operation == SRCDIFF_DELETE)
-            out << " from around ";
-        else
-            out << " around ";
-
-        std::string common_summary;
-        if(profile->common_profiles.size() == 1) {
-
-            const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
-            out <<  get_article(common_profile) << ' ';
-            common_summary = get_type_string(common_profile);
-
-        } else {
-
-            common_summary = "existing code";
-
-        }
-
-        out << common_summary;
-        
-        if(profile->syntax_count != 0) {
-
-            size_t number_modified = 0;
-            for(const std::shared_ptr<profile_t> & common_profile : profile->common_profiles) {
-             
-                if(common_profile->syntax_count)
-                    ++number_modified;
-
-            }
-
-            if(number_modified > 0)
-                out << ".  Then, the " << common_summary << " was modified";
-
-            if(profile->common_profiles.size() == 1
-                && profile->child_profiles.size() == 1) {
-
-                std::ostringstream string_out;
-                summary_output_stream sout(string_out, (size_t)-1);
-
-                size_t pos = 0;
-                statement_dispatch(sout, profile, pos);
-
-                if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
-                    return out << '\n';
-
-            }
-
-        }
-
-    }
-
     bool is_leaf = true;
+    if(output_else) {
 
-    if(profile->summary_identifiers.size() > 0) {
+        out.begin_line();
 
-        out << '\n';
-        out.pad() << "  this modification included:\n";            
-        is_leaf = false;
-        out.increment_depth();
-        identifiers(out, profile->summary_identifiers);
-        out.decrement_depth();
+        if(profile->parent->operation != SRCDIFF_COMMON)
+            out << "the " << get_type_string(profile) << " was ";
+        else
+            out << get_profile_string(profile) << " was ";
+
+        if(profile->operation != SRCDIFF_COMMON)
+             out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
+        else out << "modified";
+
+        if(profile->operation != SRCDIFF_COMMON && has_common) {
+
+            if(profile->operation == SRCDIFF_DELETE)
+                out << " from around ";
+            else
+                out << " around ";
+
+            std::string common_summary;
+            if(profile->common_profiles.size() == 1) {
+
+                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
+                out <<  get_article(common_profile) << ' ';
+                common_summary = get_type_string(common_profile);
+
+            } else {
+
+                common_summary = "existing code";
+
+            }
+
+            out << common_summary;
+            
+            if(profile->syntax_count != 0) {
+
+                size_t number_modified = 0;
+                for(const std::shared_ptr<profile_t> & common_profile : profile->common_profiles) {
+                 
+                    if(common_profile->syntax_count)
+                        ++number_modified;
+
+                }
+
+                if(number_modified > 0)
+                    out << ".  Then, the " << common_summary << " was modified";
+
+                if(profile->common_profiles.size() == 1
+                    && profile->child_profiles.size() == 1) {
+
+                    std::ostringstream string_out;
+                    summary_output_stream sout(string_out, (size_t)-1);
+
+                    size_t pos = 0;
+                    statement_dispatch(sout, profile, pos);
+
+                    if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
+                        return out << '\n';
+
+                }
+
+            }
+
+        }
+
+        if(profile->summary_identifiers.size() > 0) {
+
+            out << '\n';
+            out.pad() << "  this modification included:\n";            
+            is_leaf = false;
+            out.increment_depth();
+            identifiers(out, profile->summary_identifiers);
+            out.decrement_depth();
+
+        }
 
     }
+
+    ++body_depth;
 
     /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
     for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
@@ -1311,7 +1319,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            if(is_leaf) {
+            if(output_else && is_leaf) {
 
                 out << '\n';
                 out.pad() << "  this modification included:\n";
@@ -1319,18 +1327,20 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
             }
 
-            out.increment_depth();
+            if(output_else) out.increment_depth();
 
             statement_dispatch(out, profile, pos);
 
-            out.decrement_depth();
+            if(output_else) out.decrement_depth();
 
         }
 
     }
 
+    --body_depth;
+
     // after children
-    if(is_leaf) {
+    if(output_else && is_leaf) {
 
         if(profile->parent == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
 
@@ -1351,7 +1361,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 }
 
 /** @todo need to bound depth somehow. Perhaps after first conditional, if only one child and it has body, then do not output? */
-
+/** @todo if elseif probably report if of elseif and not two levels */
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
 
     const bool has_common = profile->common_profiles.size() > 0;
@@ -1371,117 +1381,125 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
         return else_clause(out, profile->child_profiles[0]);
 
-    out.begin_line();
+    const bool output_conditional = !(profile->operation == SRCDIFF_COMMON && body_depth > 1 && body_modified && !condition_modified
+        && profile->child_profiles.size() == 1 && has_body(profile->child_profiles[0]->type_name));
 
     // before children
-    if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified)) {
-
-        out << "the ";
-
-        if(condition_modified && body_modified && else_modified) out << "condition, body, and else-clause ";
-        else if(condition_modified && body_modified)             out << "condition and body ";
-        else if(condition_modified && else_modified)             out << "condition and else-clause ";
-        else if(body_modified && else_modified)                  out << "body and else-clause ";
-        else if(condition_modified)                              out << "condition ";
-        else if(body_modified)                                   out << "body ";
-
-        out << "of ";
-
-    }
-
-    out << get_profile_string(profile) << " was ";
-
-    if(profile->operation != SRCDIFF_COMMON)
-         out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
-    else out << "modified";
-
-    if(profile->operation != SRCDIFF_COMMON && has_common) {
-
-        if(profile->type_name == "if") {
-
-            const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
-            if(if_profile->else_clause()) {
-
-                out << " with the if-statement's body ";
-                out << (profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
-
-            }
-
-        }
-
-        if(profile->operation == SRCDIFF_DELETE)
-            out << " from around ";
-        else
-            out << " around ";
-
-        std::string common_summary;
-        if(profile->common_profiles.size() == 1) {
-
-            const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
-            out <<  get_article(common_profile) << ' ';
-            common_summary = get_type_string(common_profile);
-
-        } else {
-
-            common_summary = "existing code";
-
-        }
-
-        out << common_summary;
-        
-        if(profile->syntax_count != 0) {
-
-            size_t number_modified = 0;
-            for(const std::shared_ptr<profile_t> & common_profile : profile->common_profiles) {
-             
-                if(common_profile->syntax_count)
-                    ++number_modified;
-
-            }
-
-            if(number_modified > 0)
-                out << ".  Then, the " << common_summary << " was modified";
-
-            if(profile->common_profiles.size() == 1
-                && profile->child_profiles.size() == 1) {
-
-                std::ostringstream string_out;
-                summary_output_stream sout(string_out, (size_t)-1);
-
-                size_t pos = 0;
-                statement_dispatch(sout, profile, pos);
-
-                if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
-                    return out << '\n';
-
-            }
-
-        }
-
-    }
-
     bool is_leaf = true;
+    if(output_conditional) {
 
-    if(condition_modified) {
+        out.begin_line();
 
-        out << '\n';
-        out.pad() << "  this modification included:\n";            
-        is_leaf = false;
-        out.increment_depth();
-        out.begin_line() << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
-        out.decrement_depth();
+        if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified)) {
+
+            out << "the ";
+
+            if(condition_modified && body_modified && else_modified) out << "condition, body, and else-clause ";
+            else if(condition_modified && body_modified)             out << "condition and body ";
+            else if(condition_modified && else_modified)             out << "condition and else-clause ";
+            else if(body_modified && else_modified)                  out << "body and else-clause ";
+            else if(condition_modified)                              out << "condition ";
+            else if(body_modified)                                   out << "body ";
+
+            out << "of ";
+
+        }
+
+        out << get_profile_string(profile) << " was ";
+
+        if(profile->operation != SRCDIFF_COMMON)
+             out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
+        else out << "modified";
+
+        if(profile->operation != SRCDIFF_COMMON && has_common) {
+
+            if(profile->type_name == "if") {
+
+                const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
+                if(if_profile->else_clause()) {
+
+                    out << " with the if-statement's body ";
+                    out << (profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
+
+                }
+
+            }
+
+            if(profile->operation == SRCDIFF_DELETE)
+                out << " from around ";
+            else
+                out << " around ";
+
+            std::string common_summary;
+            if(profile->common_profiles.size() == 1) {
+
+                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
+                out <<  get_article(common_profile) << ' ';
+                common_summary = get_type_string(common_profile);
+
+            } else {
+
+                common_summary = "existing code";
+
+            }
+
+            out << common_summary;
+            
+            if(profile->syntax_count != 0) {
+
+                size_t number_modified = 0;
+                for(const std::shared_ptr<profile_t> & common_profile : profile->common_profiles) {
+                 
+                    if(common_profile->syntax_count)
+                        ++number_modified;
+
+                }
+
+                if(number_modified > 0)
+                    out << ".  Then, the " << common_summary << " was modified";
+
+                if(profile->common_profiles.size() == 1
+                    && profile->child_profiles.size() == 1) {
+
+                    std::ostringstream string_out;
+                    summary_output_stream sout(string_out, (size_t)-1);
+
+                    size_t pos = 0;
+                    statement_dispatch(sout, profile, pos);
+
+                    if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
+                        return out << '\n';
+
+                }
+
+            }
+
+        }
+
+        if(condition_modified) {
+
+            out << '\n';
+            out.pad() << "  this modification included:\n";            
+            is_leaf = false;
+            out.increment_depth();
+            out.begin_line() << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
+            out.decrement_depth();
+        }
+
+        if(profile->summary_identifiers.size() > 0) {
+
+            out << '\n';
+            out.pad() << "  this modification included:\n";            
+            is_leaf = false;
+            out.increment_depth();
+            identifiers(out, profile->summary_identifiers);
+            out.decrement_depth();
+
+        }
+
     }
 
-    if(profile->summary_identifiers.size() > 0) {
-
-        out << '\n';
-        out.pad() << "  this modification included:\n";            
-        is_leaf = false;
-        out.increment_depth();
-        identifiers(out, profile->summary_identifiers);
-        out.decrement_depth();
-
-    }
+    ++body_depth;
 
     /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
     for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
@@ -1493,7 +1511,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            if(is_leaf) {
+            if(output_conditional && is_leaf) {
 
                 out << '\n';
                 out.pad() << "  this modification included:\n";
@@ -1501,18 +1519,20 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             }
 
-            out.increment_depth();
+            if(output_conditional) out.increment_depth();
 
             statement_dispatch(out, profile, pos);
 
-            out.decrement_depth();
+            if(output_conditional) out.decrement_depth();
 
         }
 
     }
 
+    --body_depth;
+
     // after children
-    if(is_leaf) {
+    if(output_conditional && is_leaf) {
 
         if(profile->parent == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
 
@@ -1539,6 +1559,8 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
     out << get_profile_string(profile);
 
     bool is_leaf = true;
+
+    ++body_depth;
 
     /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
     for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
@@ -1567,6 +1589,8 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
         }
 
     }
+
+    --body_depth;
 
     // after children
     if(is_leaf) {
