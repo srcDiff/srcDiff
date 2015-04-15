@@ -72,11 +72,13 @@ class function_profile_t : public profile_t {
 
         virtual void gather_move_candidates(const std::shared_ptr<profile_t> & profile, profile_list_t & move_candidates) const {
 
+            /** might be able to use descendant profiles */
             for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
 
-                if(child_profile->operation != SRCDIFF_COMMON)
-                    move_candidates.push_back(profile);
-                else if(child_profile->child_profiles.size() > 0)
+                if(is_statement(child_profile->type_name) && child_profile->operation != SRCDIFF_COMMON)
+                    move_candidates.push_back(child_profile);
+
+                if(is_statement(child_profile->type_name) && child_profile->child_profiles.size() > 0)
                     gather_move_candidates(child_profile, move_candidates);
 
             }
@@ -88,12 +90,10 @@ class function_profile_t : public profile_t {
             for(size_t first = 0; first < move_candidates.size(); ++first) {
 
                 std::shared_ptr<profile_t> & first_profile = move_candidates[first];
-                if(!is_statement(first_profile->type_name)) continue;
 
                 for(size_t second = first + 1; second < move_candidates.size(); ++second) {
 
                     std::shared_ptr<profile_t> & second_profile = move_candidates[second];
-
                     if(first_profile->operation == second_profile->operation) continue;
                     if(first_profile->type_name != second_profile->type_name) continue;
 
@@ -199,6 +199,7 @@ class function_profile_t : public profile_t {
 
                 profile_list_t move_candidates;
                 gather_move_candidates(std::make_shared<profile_t>(*this), move_candidates);
+                detect_moves(move_candidates);
 
                 text.body(out, *this);
 
