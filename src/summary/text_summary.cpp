@@ -1431,6 +1431,38 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
 }
 
+std::string text_summary::condition_summary(const versioned_string & condition, const bool condition_only) const {
+
+    const std::string & original = condition.original();
+    const std::string & modified = condition.modified();
+
+    size_t start_pos = 0;
+    for(; start_pos < original.size() && start_pos < modified.size() && original[start_pos] == modified[start_pos]; ++start_pos)
+        ;
+
+    size_t end_pos = 1;
+    for(; end_pos <= original.size() && end_pos <= modified.size() && original[original.size() - end_pos] == modified[modified.size() - end_pos]; ++end_pos)
+        ;
+
+    if(start_pos == original.size() || end_pos > original.size()) {
+
+        if(condition_only) return "was changed adding the clause '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "'";
+        else               return "the clause '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "' was added to the condition\n";
+
+    } else if(start_pos == modified.size() || end_pos > modified.size()) {
+
+        if(condition_only) return "was changed removing the clause '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "'";
+        else               return "the clause '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "' was deleted from the condition\n";
+
+    } else {
+
+        if(condition_only) return "changed from '" + original + "' to '" + modified + "'";
+        else               return "the condition was changed from '" + original + "' to '" + modified + "'\n";
+
+    }
+
+}
+
 /** @todo need to bound depth somehow. Perhaps after first conditional, if only one child and it has body, then do not output? */
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
@@ -1486,7 +1518,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         if(profile->operation != SRCDIFF_COMMON)
              out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
         else if(condition_modified && !body_modified && !else_modified && !elseif_modified)
-            out << "changed from '" << condition.original() << "' to '" << condition.modified() << '\'';
+            out << condition_summary(condition, true);
         else out << "modified";
 
         if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
@@ -1561,27 +1593,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             is_leaf = false;
 
             out.increment_depth();
-
-            const std::string & original = condition.original();
-            const std::string & modified = condition.modified();
-
-            size_t start_pos = 0;
-            for(; start_pos < original.size() && start_pos < modified.size() && original[start_pos] == modified[start_pos]; ++start_pos)
-                ;
-
-            size_t end_pos = 1;
-            for(; end_pos <= original.size() && end_pos <= modified.size() && original[original.size() - end_pos] == modified[modified.size() - end_pos]; ++end_pos)
-                ;
-
-            out.begin_line();
-
-            if(start_pos == original.size() || end_pos > original.size())
-                out << "the clause '" << modified.substr(start_pos, (modified.size() - end_pos) - start_pos) << "' was added to the condition\n";
-            else if(start_pos == modified.size() || end_pos > modified.size())
-                out << "the clause '" << original.substr(start_pos, (original.size() - end_pos) - start_pos) << "' was added to the condition\n";            
-            else
-                out << "the condition was changed from '" << original << "' to '" << modified << "'\n";
-
+            out.begin_line() << condition_summary(condition, false);
             out.decrement_depth();
         }
 

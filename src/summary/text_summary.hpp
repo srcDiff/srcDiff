@@ -74,6 +74,7 @@ public:
     summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
+    std::string condition_summary(const versioned_string & condition, const bool condition_only) const;
     summary_output_stream & conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
     summary_output_stream & interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
     summary_output_stream & jump(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
