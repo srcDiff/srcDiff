@@ -782,7 +782,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         } else if(full_name == "expr_stmt") {
 
-            if(!left_hand_side) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->rhs(collect_rhs);
+            if(left_hand_side) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->lhs(collect_lhs);
+            else               reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->rhs(collect_rhs);
 
             expr_stmt_pos = 0;
             collect_lhs.clear();
