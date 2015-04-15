@@ -80,6 +80,25 @@ class function_profile_t : public profile_t {
 
         }
 
+        virtual void detect_moves(profile_list_t & move_candidates) const {
+
+            for(size_t first = 0; first < move_candidates.size(); ++first) {
+
+                std::shared_ptr<profile_t> & first_profile = move_candidates[first];
+
+                for(size_t second = first + 1; second < move_candidates.size(); ++second) {
+
+                    std::shared_ptr<profile_t> & second_profile = move_candidates[second];
+
+                    if(first_profile->operation == second_profile->operation) continue;
+                    if(first_profile->type_name != second_profile->type_name) continue;
+
+                }
+
+            }
+
+        }
+
         /** @todo may need to add rest of things that can occur here between parameter list and block */
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
@@ -92,7 +111,7 @@ class function_profile_t : public profile_t {
 
             out.begin_line() << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
 
-           out.increment_depth();
+            out.increment_depth();
 
             if(syntax_count == 0) {
 
