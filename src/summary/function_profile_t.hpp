@@ -142,6 +142,9 @@ class function_profile_t : public profile_t {
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
+                profile_list_t move_candidates;
+                gather_move_candidates(std::make_shared<profile_t>(*this), move_candidates);
+
                 text.body(out, *this);
 
             }
