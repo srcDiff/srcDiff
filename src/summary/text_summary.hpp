@@ -46,7 +46,7 @@ private:
 
     summary_output_stream & statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos);
 
-    bool is_child_change(const profile_t::profile_list_t & child_profiles) const;
+    size_t number_child_changes(const profile_t::profile_list_t & child_profiles) const;
 
 public:
 

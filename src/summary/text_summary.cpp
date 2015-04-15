@@ -509,21 +509,22 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
 
 }
 
-bool text_summary::is_child_change(const profile_t::profile_list_t & child_profiles) const {
+size_t text_summary::number_child_changes(const profile_t::profile_list_t & child_profiles) const {
 
+    size_t num_child_changes = 0;
     for(const std::shared_ptr<profile_t> & child_profile : child_profiles) {
 
         if(child_profile->type_name == "comment" && !child_profile->is_replacement) continue;
 
         if(!has_body(child_profile->type_name)) {
 
-            return true;
+            ++num_child_changes;
 
         }
 
     }
 
-    return false;
+    return num_child_changes;
 
 }
 
@@ -1252,8 +1253,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
     const bool has_common = profile->common_profiles.size() > 0;
 
-    const bool output_else = !(profile->operation == SRCDIFF_COMMON
-        && profile->child_profiles.size() == 1 && has_body(profile->child_profiles[0]->type_name));
+    const bool output_else = profile->operation != SRCDIFF_COMMON || number_child_changes(profile->child_profiles) > 0;
 
     if(profile->parent->operation != SRCDIFF_COMMON) {
 
@@ -1423,8 +1423,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
         return else_clause(out, profile->child_profiles[0]);
 
-    const bool output_conditional = !(profile->operation == SRCDIFF_COMMON && !condition_modified
-        && !is_child_change(profile->child_profiles));
+
+    const bool output_conditional = profile->operation != SRCDIFF_COMMON || condition_modified
+        || number_child_changes(profile->child_profiles) > 0;
 
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
