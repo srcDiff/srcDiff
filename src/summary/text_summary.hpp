@@ -46,6 +46,8 @@ private:
 
     summary_output_stream & statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos);
 
+    bool is_child_change(const profile_t::profile_list_t & child_profiles) const;
+
 public:
 
     text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,

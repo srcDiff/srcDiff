@@ -509,6 +509,24 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
 
 }
 
+bool text_summary::is_child_change(const profile_t::profile_list_t & child_profiles) const {
+
+    for(const std::shared_ptr<profile_t> & child_profile : child_profiles) {
+
+        if(child_profile->type_name == "comment" && !child_profile->is_replacement) continue;
+
+        if(!has_body(child_profile->type_name)) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
 text_summary::text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
              const change_entity_map<call_profile_t> & member_initializations,
              const std::map<versioned_string, size_t> & summary_identifiers)
@@ -1406,7 +1424,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         return else_clause(out, profile->child_profiles[0]);
 
     const bool output_conditional = !(profile->operation == SRCDIFF_COMMON && !condition_modified
-        && profile->child_profiles.size() == 1 && has_body(profile->child_profiles[0]->type_name));
+        && !is_child_change(profile->child_profiles));
 
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
