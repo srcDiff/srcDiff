@@ -1658,6 +1658,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
 }
 
+/** @todo If only a single operation such as wrapping, possible no other changes, then report a single sentence no this includes */
 summary_output_stream & text_summary::interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
     out.begin_line();
