@@ -12,6 +12,9 @@
 #include <text_summary.hpp>
 #include <table_summary.hpp>
 
+// move detection includes. Probably should move this to another file.
+#include <expr_stmt_profile_t.hpp>
+
 #include <cctype>
 
 class function_profile_t : public profile_t {
@@ -85,6 +88,7 @@ class function_profile_t : public profile_t {
             for(size_t first = 0; first < move_candidates.size(); ++first) {
 
                 std::shared_ptr<profile_t> & first_profile = move_candidates[first];
+                if(!is_statement(first_profile->type_name)) continue;
 
                 for(size_t second = first + 1; second < move_candidates.size(); ++second) {
 
@@ -92,6 +96,38 @@ class function_profile_t : public profile_t {
 
                     if(first_profile->operation == second_profile->operation) continue;
                     if(first_profile->type_name != second_profile->type_name) continue;
+
+                    bool is_match = false;
+
+                    if(first_profile->type_name == "expr_stmt") {
+
+                        std::shared_ptr<expr_stmt_profile_t> & first_expr_stmt_profile  = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(first_profile);
+                        std::shared_ptr<expr_stmt_profile_t> & second_expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(second_profile);
+
+                        if(first_expr_stmt_profile->lhs() == second_expr_stmt_profile->lhs() && first_expr_stmt_profile->rhs() == second_expr_stmt_profile->rhs()) {
+
+                            is_match = true;
+
+                        }
+
+                    }
+
+                    if(is_match) {
+
+                        first_profile->move_id = (size_t)-1;
+
+                        for(profile_list_t::iterator itr = second_profile->parent->child_profiles.begin(); itr != second_profile->parent->child_profiles.end(); ++itr) {
+
+                            if(second_profile == *itr) {
+
+
+                                second_profile->parent->child_profiles.erase(itr);
+                                break;
+                            }
+
+                        }
+
+                    }
 
                 }
 
