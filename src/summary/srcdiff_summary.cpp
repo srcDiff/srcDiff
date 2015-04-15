@@ -807,12 +807,14 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             if(full_name == "else") {
 
                 reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_clause(true);
-                reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_operation(profile_stack.back()->operation);
+                if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count)
+                    reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->else_operation(profile_stack.back()->operation);
 
             } else {
 
                 reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->elseif_clause(true);
-                reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->elseif_operation(profile_stack.back()->operation);
+                if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count)
+                    reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->elseif_operation(profile_stack.back()->operation);
 
             }
 
