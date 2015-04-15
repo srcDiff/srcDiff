@@ -16,6 +16,8 @@
 #include <list>
 #include <set>
 
+/** @todo survey suggested highlighting important details. Not sure if they mean bold or background color */
+
 std::string text_summary::get_article(const std::string & type_name) const { 
 
     const char letter = type_name[0];
