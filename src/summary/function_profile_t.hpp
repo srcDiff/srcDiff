@@ -104,11 +104,10 @@ class function_profile_t : public profile_t {
                         std::shared_ptr<expr_stmt_profile_t> & first_expr_stmt_profile  = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(first_profile);
                         std::shared_ptr<expr_stmt_profile_t> & second_expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(second_profile);
 
-                        if(first_expr_stmt_profile->lhs() == second_expr_stmt_profile->lhs() && first_expr_stmt_profile->rhs() == second_expr_stmt_profile->rhs()) {
-
+                        if(first_expr_stmt_profile->assignment() && second_expr_stmt_profile->assignment()
+                            && first_expr_stmt_profile->lhs().original() == second_expr_stmt_profile->lhs().modified()
+                            && first_expr_stmt_profile->rhs().original() == second_expr_stmt_profile->rhs().modified())
                             is_match = true;
-
-                        }
 
                     }
 

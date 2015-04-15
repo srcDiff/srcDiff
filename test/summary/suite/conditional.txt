@@ -159,8 +159,7 @@ SUMMARY
 	• an if statement with 9 statements and with an else-clause was removed with the 
 	  if-statement's body taken from around existing code.  Then, the existing code was modified
 	  this modification included:
-		• an assignment to 'd->rootDoc' was added
-		• an assignment to 'd->rootDoc' was deleted from a nested while statement
+		• an assignment to 'd->rootDoc' was moved
 
 END_SUMMARY
 
