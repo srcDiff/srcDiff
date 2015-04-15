@@ -1710,6 +1710,7 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
 
 }
 
+/** @todo look for some moves, maybe pure across children.  Then, rewrite the lists accordingly. */
 summary_output_stream & text_summary::body(summary_output_stream & out, const profile_t & profile) {
 
     identifiers(out, summary_identifiers);
