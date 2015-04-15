@@ -247,8 +247,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisExifIO::loadFrom': Impact = High
-	• the condition of a guard clause was was changed adding the clause '|| it->key() == 
-	  "0xea1'
+	• the condition of a guard clause was changed adding the clause '|| it->key() == "0xea1'
 
 END_SUMMARY
 
