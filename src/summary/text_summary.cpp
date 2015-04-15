@@ -512,19 +512,44 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
 size_t text_summary::number_child_changes(const profile_t::profile_list_t & child_profiles) const {
 
     size_t num_child_changes = 0;
-    for(const std::shared_ptr<profile_t> & child_profile : child_profiles) {
+    size_t num_body_changes = 0;
 
-        if(child_profile->type_name == "comment" && !child_profile->is_replacement) continue;
+    for(size_t child_pos = 0; child_pos < child_profiles.size(); ++child_pos) {
 
-        if(!has_body(child_profile->type_name)) {
+        const std::shared_ptr<profile_t> & child_profile = child_profiles[child_pos];
+
+        if(child_profile->is_replacement && ((child_pos + 1) < child_profiles.size())) {
+
+            for(; child_pos < child_profiles.size() && child_profiles[child_pos]->is_replacement; ++child_pos)
+                ;
+            --child_pos;
 
             ++num_child_changes;
+
+        } else if(child_profile->move_id) {
+
+            ++num_child_changes;
+
+        } else if(!child_profile->type_name.is_common()) {
+
+            ++num_child_changes;
+
+        } else {
+
+            if(is_jump(child_profile->type_name))
+                ++num_child_changes;
+            else if(is_condition_type(child_profile->type_name))
+                ++num_body_changes;
+            else if(is_expr_stmt(child_profile->type_name))
+                ++num_child_changes;
+            else if(is_decl_stmt(child_profile->type_name))
+                ++num_child_changes;
 
         }
 
     }
 
-    return num_child_changes;
+    return num_child_changes > 0 ? num_child_changes + num_body_changes : num_child_changes;
 
 }
 
