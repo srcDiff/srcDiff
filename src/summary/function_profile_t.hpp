@@ -67,7 +67,7 @@ class function_profile_t : public profile_t {
 
         }
 
-        virtual void gather_move_candidates(const std::shared_ptr<profile_t> & profile, profile_list_t & move_candidates) {
+        virtual void gather_move_candidates(const std::shared_ptr<profile_t> & profile, profile_list_t & move_candidates) const {
 
             for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
 
