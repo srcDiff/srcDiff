@@ -98,9 +98,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextTool::repaintSelection': Impact = Low
 	• a guard clause was added to the function body
-	• the body of a foreach statement was modified
-	  this modification included:
-		• a call to 'Q_ASSERT' was replaced with a guard clause
+	• a call to 'Q_ASSERT' was replaced with a guard clause
 
 END_SUMMARY
 

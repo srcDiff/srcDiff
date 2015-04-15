@@ -314,10 +314,8 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextShape::paintComponent': Impact = Low
 	• a call to 'applyConversion' was moved
-	• the body of an if statement was modified
-	  this modification included:
-		• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
-		  'converter.documentToView' was deleted and its arguments were retained
+	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
+	  'converter.documentToView' was deleted and its arguments were retained
 
 END_SUMMARY
 
