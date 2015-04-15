@@ -67,6 +67,19 @@ class function_profile_t : public profile_t {
 
         }
 
+        virtual void gather_move_candidates(const std::shared_ptr<profile_t> & profile, profile_list_t & move_candidates) {
+
+            for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
+
+                if(child_profile->operation != SRCDIFF_COMMON)
+                    move_candidates.push_back(profile);
+                else if(child_profile->child_profiles.size() > 0)
+                    gather_move_candidates(child_profile, move_candidates);
+
+            }
+
+        }
+
         /** @todo may need to add rest of things that can occur here between parameter list and block */
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
