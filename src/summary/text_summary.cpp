@@ -1131,13 +1131,16 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-        if(profile->parent == id) {
+        if(profile->parent == id || !parent_output) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
             else                                          out << " within ";
 
-            out << "the function body";
+            if(profile->parent == id)
+                out << "the function body";
+            else
+                out << "a nested " << get_type_string(profile->parent);
 
         }
 
@@ -1255,13 +1258,16 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-    if(profile->parent == id) {
+    if(profile->parent == id || !parent_output) {
 
         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
         else                                          out << " within ";
 
-        out << "the function body";
+        if(profile->parent == id)
+            out << "the function body";
+        else
+            out << "a nested " << get_type_string(profile->parent);
 
     }
 
@@ -1694,13 +1700,16 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
 
     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-    if(profile->parent == id) {
+    if(profile->parent == id || !parent_output) {
 
         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
         else                                          out << " within ";
 
-        out << "the function body";
+        if(profile->parent == id)
+            out << "the function body";
+        else
+            out << "a nested " << get_type_string(profile->parent);
 
     }
 
