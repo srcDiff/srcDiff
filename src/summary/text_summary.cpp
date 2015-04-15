@@ -16,8 +16,6 @@
 #include <list>
 #include <set>
 
-const char * ELLIPSIS = "\u22EF";
-
 std::string text_summary::get_article(const std::string & type_name) const { 
 
     const char letter = type_name[0];
@@ -1294,9 +1292,6 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
         out << '\n';
 
     }
-
-    if(!output_else)
-        out.begin_line() << ELLIPSIS << '\n';
 
     bool is_leaf = true;
     if(output_else) {
