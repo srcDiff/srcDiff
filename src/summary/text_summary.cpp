@@ -1559,8 +1559,29 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             out << '\n';
             out.pad() << "  this modification included:\n";            
             is_leaf = false;
+
             out.increment_depth();
-            out.begin_line() << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
+
+            const std::string & original = condition.original();
+            const std::string & modified = condition.modified();
+
+            size_t start_pos = 0;
+            for(; start_pos < original.size() && start_pos < modified.size() && original[start_pos] == modified[start_pos]; ++start_pos)
+                ;
+
+            size_t end_pos = 1;
+            for(; end_pos <= original.size() && end_pos <= modified.size() && original[original.size() - end_pos] == modified[modified.size() - end_pos]; ++end_pos)
+                ;
+
+            out.begin_line();
+
+            if(start_pos == original.size() || end_pos > original.size())
+                out << "the clause '" << modified.substr(start_pos, (modified.size() - end_pos) - start_pos) << "' was added to the condition\n";
+            else if(start_pos == modified.size() || end_pos > modified.size())
+                out << "the clause '" << original.substr(start_pos, (original.size() - end_pos) - start_pos) << "' was added to the condition\n";            
+            else
+                out << "the condition was changed from '" << original << "' to '" << modified << "'\n";
+
             out.decrement_depth();
         }
 
