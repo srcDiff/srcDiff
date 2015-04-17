@@ -486,7 +486,20 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
 
     } else if(child_profile->move_id) {
 
-        out.begin_line() << get_profile_string(child_profile) << " was moved\n";
+        out.begin_line() << get_profile_string(child_profile) << " was moved";
+        // if(child_profile->move_parent) {
+
+        //     out << " from " << get_article(child_profile->parent) << ' ' << get_type_string(child_profile->parent);
+        //     out << " to ";
+
+        //     if(child_profile->parent->type_name == child_profile->move_parent->type_name)
+        //         out << " another " << get_type_string(child_profile->move_parent);
+        //     else
+        //         out<< get_article(child_profile->move_parent) << ' ' << get_type_string(child_profile->move_parent);
+
+        // }
+
+        out << '\n';
 
     } else if(!child_profile->type_name.is_common()) {
 
