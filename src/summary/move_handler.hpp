@@ -21,13 +21,27 @@ private:
 
 	}
 
-	void set_move(std::shared_ptr<profile_t> & profile, const std::pair<versioned_string, versioned_string> & first_pair, const std::pair<versioned_string, versioned_string> & second_pair) {
+	void set_move(std::shared_ptr<profile_t> & first_profile, std::shared_ptr<profile_t> & second_profile,
+		const std::pair<versioned_string, versioned_string> & first_pair, const std::pair<versioned_string, versioned_string> & second_pair) {
 
 		if(first_pair.first.has_original() == first_pair.second.has_modified()
                 && first_pair.first.original() == first_pair.second.modified()
                 && second_pair.first.has_original() == second_pair.second.has_modified()
-                && second_pair.first.original() == second_pair.second.modified())
-			profile->move_id = (size_t)-1;
+                && second_pair.first.original() == second_pair.second.modified()) {
+
+			first_profile->move_id = (size_t)-1;
+        	first_profile->move_parent = second_profile->parent;
+            for(profile_t::profile_list_t::iterator itr = second_profile->parent->child_profiles.begin(); itr != second_profile->parent->child_profiles.end(); ++itr) {
+
+                if(second_profile == *itr) {
+
+
+                    second_profile->parent->child_profiles.erase(itr);
+                    break;
+                }
+
+            }
+		}
 
 	}
 
@@ -68,7 +82,7 @@ public:
                     versioned_string original_rhs, modified_rhs;
                     set_strings(first_profile->operation, first_expr_stmt_profile->rhs(), second_expr_stmt_profile->rhs(), original_rhs, modified_rhs);
 
-                    set_move(first_profile, std::make_pair(original_lhs, modified_lhs), std::make_pair(original_rhs, modified_rhs));
+                    set_move(first_profile, second_profile, std::make_pair(original_lhs, modified_lhs), std::make_pair(original_rhs, modified_rhs));
 
                 } else if(first_profile->type_name == "decl_stmt") {
 
@@ -80,22 +94,7 @@ public:
                     versioned_string original_name, modified_name;
                     set_strings(first_profile->operation, first_decl_stmt_profile->name, second_decl_stmt_profile->name, original_name, modified_name);
 
-                    set_move(first_profile, std::make_pair(original_type, modified_type), std::make_pair(original_name, modified_name));
-
-                }
-
-                if(first_profile->move_id) {
-
-                    for(profile_t::profile_list_t::iterator itr = second_profile->parent->child_profiles.begin(); itr != second_profile->parent->child_profiles.end(); ++itr) {
-
-                        if(second_profile == *itr) {
-
-
-                            second_profile->parent->child_profiles.erase(itr);
-                            break;
-                        }
-
-                    }
+                    set_move(first_profile, second_profile, std::make_pair(original_type, modified_type), std::make_pair(original_name, modified_name));
 
                 }
 
