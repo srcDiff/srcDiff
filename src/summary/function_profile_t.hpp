@@ -11,9 +11,7 @@
 #include <type_query.hpp>
 #include <text_summary.hpp>
 #include <table_summary.hpp>
-
-// move detection includes. Probably should move this to another file.
-#include <expr_stmt_profile_t.hpp>
+#include <move_handler.hpp>
 
 #include <cctype>
 
@@ -67,78 +65,6 @@ class function_profile_t : public profile_t {
             if(statement_churn * 4 <= statement_count)       return LOW;
             if(statement_churn * 10 <= 4 * statement_count)  return MEDIUM;
             return HIGH;
-
-        }
-
-        virtual void gather_move_candidates(const std::shared_ptr<profile_t> & profile, profile_list_t & move_candidates) const {
-
-            /** might be able to use descendant profiles */
-            for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
-
-                if(is_statement(child_profile->type_name) && child_profile->operation != SRCDIFF_COMMON)
-                    move_candidates.push_back(child_profile);
-
-                if(is_statement(child_profile->type_name) && child_profile->child_profiles.size() > 0)
-                    gather_move_candidates(child_profile, move_candidates);
-
-            }
-
-        }
-
-        virtual void detect_moves(profile_list_t & move_candidates) const {
-
-            for(size_t first = 0; first < move_candidates.size(); ++first) {
-
-                std::shared_ptr<profile_t> & first_profile = move_candidates[first];
-
-                for(size_t second = first + 1; second < move_candidates.size(); ++second) {
-
-                    std::shared_ptr<profile_t> & second_profile = move_candidates[second];
-                    if(first_profile->operation == second_profile->operation) continue;
-                    if(first_profile->type_name != second_profile->type_name) continue;
-
-                    bool is_match = false;
-
-                    if(first_profile->type_name == "expr_stmt") {
-
-                        std::shared_ptr<expr_stmt_profile_t> & first_expr_stmt_profile  = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(first_profile);
-                        std::shared_ptr<expr_stmt_profile_t> & second_expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(second_profile);
-
-                        versioned_string original_lhs = first_expr_stmt_profile->operation == SRCDIFF_DELETE ? first_expr_stmt_profile->lhs()  : second_expr_stmt_profile->lhs();
-                        versioned_string modified_lhs = first_expr_stmt_profile->operation == SRCDIFF_DELETE ? second_expr_stmt_profile->lhs() : first_expr_stmt_profile->lhs();
-
-                        versioned_string original_rhs = first_expr_stmt_profile->operation == SRCDIFF_DELETE ? first_expr_stmt_profile->rhs()  : second_expr_stmt_profile->rhs();
-                        versioned_string modified_rhs = first_expr_stmt_profile->operation == SRCDIFF_DELETE ? second_expr_stmt_profile->rhs() : first_expr_stmt_profile->rhs();
-
-
-                        if(original_lhs.has_original() == modified_lhs.has_modified()
-                            && original_lhs.original() == modified_lhs.modified()
-                            && original_rhs.has_original() == modified_rhs.has_modified()
-                            && original_rhs.original() == modified_rhs.modified())
-                            is_match = true;
-
-                    }
-
-                    if(is_match) {
-
-                        first_profile->move_id = (size_t)-1;
-
-                        for(profile_list_t::iterator itr = second_profile->parent->child_profiles.begin(); itr != second_profile->parent->child_profiles.end(); ++itr) {
-
-                            if(second_profile == *itr) {
-
-
-                                second_profile->parent->child_profiles.erase(itr);
-                                break;
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
 
         }
 
@@ -204,9 +130,9 @@ class function_profile_t : public profile_t {
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
-                profile_list_t move_candidates;
-                gather_move_candidates(std::make_shared<profile_t>(*this), move_candidates);
-                detect_moves(move_candidates);
+                move_handler m_handler;
+                m_handler.gather_candidates(std::make_shared<profile_t>(*this));
+                m_handler.detect();
 
                 text.body(out, *this);
 
