@@ -131,7 +131,7 @@ class function_profile_t : public profile_t {
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
                 move_handler m_handler;
-                m_handler.gather_candidates(std::make_shared<profile_t>(*this));
+                m_handler.gather_candidates(descendant_profiles);
                 m_handler.detect();
 
                 text.body(out, *this);

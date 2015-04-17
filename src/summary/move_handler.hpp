@@ -18,16 +18,12 @@ public:
 
 	move_handler() {}
 
-    virtual void gather_candidates(const std::shared_ptr<profile_t> & profile) {
+    virtual void gather_candidates(const profile_t::profile_list_t & descendant_profiles) {
 
-        /** might be able to use descendant profiles */
-        for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
+        for(const std::shared_ptr<profile_t> & descendant_profile : descendant_profiles) {
 
-            if(is_statement(child_profile->type_name) && child_profile->operation != SRCDIFF_COMMON)
-                move_candidates.push_back(child_profile);
-
-            if(is_statement(child_profile->type_name) && child_profile->child_profiles.size() > 0)
-                gather_candidates(child_profile);
+            if(is_statement(descendant_profile->type_name) && descendant_profile->operation != SRCDIFF_COMMON)
+                move_candidates.push_back(descendant_profile);
 
         }
 
@@ -45,8 +41,6 @@ public:
                 if(first_profile->operation == second_profile->operation) continue;
                 if(first_profile->type_name != second_profile->type_name) continue;
 
-                bool is_match = false;
-
                 if(first_profile->type_name == "expr_stmt") {
 
                     std::shared_ptr<expr_stmt_profile_t> & first_expr_stmt_profile  = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(first_profile);
@@ -63,13 +57,11 @@ public:
                         && original_lhs.original() == modified_lhs.modified()
                         && original_rhs.has_original() == modified_rhs.has_modified()
                         && original_rhs.original() == modified_rhs.modified())
-                        is_match = true;
+                        first_profile->move_id = (size_t)-1;
 
                 }
 
-                if(is_match) {
-
-                    first_profile->move_id = (size_t)-1;
+                if(first_profile->move_id) {
 
                     for(profile_t::profile_list_t::iterator itr = second_profile->parent->child_profiles.begin(); itr != second_profile->parent->child_profiles.end(); ++itr) {
 
