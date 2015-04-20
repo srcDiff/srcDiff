@@ -1525,7 +1525,12 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         }
 
-        out << get_profile_string(profile) << " was ";
+        out << get_profile_string(profile);
+
+        if(profile->common_statements > 0 && profile->common_statements != profile->statement_count)
+            out << " and " << profile->statement_count - profile->common_statements <<  " of its statemens were ";
+        else
+            out << " was ";
 
         if(profile->operation != SRCDIFF_COMMON)
              out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
@@ -1553,7 +1558,13 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
                 out << " around ";
 
             std::string common_summary;
-            if(summary_profile->common_profiles.size() == 1) {
+            if(summary_profile->statement_count == 1 && summary_profile->common_statements == 1) {
+
+                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
+                out <<  get_article(common_profile) << ' ';
+                common_summary = get_type_string(common_profile);
+
+            } else if(summary_profile->common_statements == 1) {
 
                 const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
                 out <<  get_article(common_profile) << ' ';
