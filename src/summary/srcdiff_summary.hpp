@@ -78,6 +78,8 @@ protected:
     versioned_string collect_lhs;
     versioned_string collect_rhs;
 
+    std::map<size_t, std::string &> raw_statements;
+
 private:
 
     void process_characters();

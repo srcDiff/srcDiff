@@ -237,7 +237,7 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0), function_pos(0), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
-      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(false), collect_lhs(), collect_rhs() {
+      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(false), collect_lhs(), collect_rhs(), raw_statements() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -572,6 +572,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
                                               summarize ? profile_stack.size() - 1 : std::get<2>(counting_profile_pos.back()));
             profile_stack.back()->set_id(++id_count);
 
+            if(is_statement(full_name) && srcdiff_stack.back().operation != SRCDIFF_COMMON) raw_statements.emplace(profile_stack.back()->id, profile_stack.back()->raw);
+
         }
 
         if(srcdiff_stack.back().operation != SRCDIFF_COMMON) {
@@ -892,6 +894,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     if(uri_stack.back() != SRCDIFF && !is_interchange && (is_count(full_name) || (is_identifier(full_name) && name_count == 0))) {
 
+        if(is_statement(full_name) && srcdiff_stack.back().operation != SRCDIFF_COMMON) raw_statements.erase(profile_stack.back()->id);
+
         counting_profile_pos.pop_back();
 
         // do not save items with no changes and not inserted/deleted
@@ -1024,6 +1028,7 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     if(expr_stmt_pos && left_hand_side)  collect_lhs.append(ch, len, srcdiff_stack.back().operation);
     if(expr_stmt_pos && !left_hand_side) collect_rhs.append(ch, len, srcdiff_stack.back().operation);
 
-
+    for(std::pair<const size_t, std::string &> & raw_statement : raw_statements)
+        raw_statement.second.append(ch, len);
 
 }
