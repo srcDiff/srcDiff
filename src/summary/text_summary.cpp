@@ -1133,6 +1133,7 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
 }
 
+/** @todo probably should make this work for like conditional.  Report either change to top level call or directly affected call. */
 summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
@@ -1487,7 +1488,8 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
     const bool else_modified = bool(else_operation) && *else_operation == SRCDIFF_COMMON;
 
-    boost::optional<srcdiff_type> elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
+    boost::optional<srcdiff_type> elseif_operation;
+    if(profile->type_name == "if") else_operation =  reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
     const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
 
     const versioned_string & condition = conditional_profile->get_condition();
