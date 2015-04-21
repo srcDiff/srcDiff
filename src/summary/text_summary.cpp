@@ -1245,7 +1245,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
         std::vector<std::vector<std::string>> argument_list_modifications;
         expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
 
-        if(modified_calls.size() == 0) return out;
+        if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
 
         out.begin_line();
 

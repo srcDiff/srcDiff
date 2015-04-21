@@ -214,6 +214,9 @@ END_SUMMARY
 ORIGINAL
 void KisView2::createGUI()
 {
+
+    m_d->layerBox = qobject_cast<KisLayerBox*>(createDockWidget(&layerboxFactory));
+
     show();
 
     connect(m_d->layerBox, SIGNAL(sigRequestNewNode(const QString &)),
@@ -236,6 +239,9 @@ END_ORIGINAL
 MODIFIED
 void KisView2::createGUI()
 {
+
+    createDockWidget(&layerboxFactory);
+
     show();
 
     connect(m_d->nodeManager, SIGNAL(sigNodeActivated(KisNodeSP)),
@@ -248,6 +254,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisView2::createGUI': Impact = High
+	• a call to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
 	• a call to 'connect' was deleted from the function body
 	• a call to 'connect' was deleted from the function body
 	• a call to 'connect' was deleted from the function body
