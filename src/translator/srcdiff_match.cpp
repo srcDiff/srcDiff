@@ -1000,6 +1000,9 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   if((original_tag == "expr" || original_tag == "expr_stmt") && similarity > 0) return false;
 
+  // may need to refine to if child only single name
+  if(original_tag == "expr" && nodes_original.at(original_pos)->parent && (*nodes_original.at(original_pos)->parent)->name == "argument") return false;
+
   if(original_tag == "block") {
 
     bool is_pseudo_original = find_attribute(nodes_original.at(original_pos), "type") != 0;
