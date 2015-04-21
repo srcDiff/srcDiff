@@ -88,6 +88,8 @@ std::string text_summary::get_type_string_with_count(const std::shared_ptr<profi
 
     if(statement_count == 0)
         return "empty " + get_type_string(profile);
+    else if(profile->common_statements != profile->statement_count)
+        return get_type_string(profile);
     else if(statement_count == 1)
         return get_type_string(profile) + " with a single statement";
     else
@@ -1528,7 +1530,8 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         out << get_profile_string(profile);
 
         if(profile->common_statements > 0 && profile->common_statements != profile->statement_count)
-            out << " and " << profile->statement_count - profile->common_statements <<  " of its statemens were ";
+            out << " and " << profile->statement_count - profile->common_statements <<  " of its " 
+                << profile->statement_count << " statements were ";
         else
             out << " was ";
 
@@ -1540,22 +1543,30 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
 
-            if(summary_profile->type_name == "if") {
+            if(summary_profile->common_statements == summary_profile->statement_count) {
 
-                const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(summary_profile);
-                if(if_profile->else_clause()) {
+                if(summary_profile->type_name == "if") {
 
-                    out << " with the if-statement's body ";
-                    out << (summary_profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
+                    const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(summary_profile);
+                    if(if_profile->else_clause()) {
+
+                        out << " with the if-statement's body ";
+                        out << (summary_profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
+
+                    }
 
                 }
 
-            }
+                if(summary_profile->operation == SRCDIFF_DELETE)
+                    out << " from around ";
+                else
+                    out << " around ";
 
-            if(summary_profile->operation == SRCDIFF_DELETE)
-                out << " from around ";
-            else
-                out << " around ";
+            } else {
+
+                out << " with ";
+
+            }
 
             std::string common_summary;
             if(summary_profile->statement_count == 1 && summary_profile->common_statements == 1) {
@@ -1572,11 +1583,17 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             } else {
 
-                common_summary = "existing code";
+                if(summary_profile->common_statements != summary_profile->statement_count)
+                    common_summary = "remaining code";
+                else
+                    common_summary = "existing code";
 
             }
 
             out << common_summary;
+
+            if(summary_profile->common_statements != summary_profile->statement_count)
+                out << " retained";
             
             if(summary_profile->syntax_count != 0) {
 
