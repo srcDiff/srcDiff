@@ -88,7 +88,7 @@ std::string text_summary::get_type_string_with_count(const std::shared_ptr<profi
 
     if(statement_count == 0)
         return "empty " + get_type_string(profile);
-    else if(profile->common_statements != profile->statement_count)
+    else if(profile->common_statements != statement_count)
         return get_type_string(profile);
     else if(statement_count == 1)
         return get_type_string(profile) + " with a single statement";
@@ -112,8 +112,17 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
 
-        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
-            return "an " + get_type_string_with_count(profile) + " and with an else-clause";
+        size_t statement_count = profile->operation == SRCDIFF_DELETE ? profile->statement_count_original : profile->statement_count_modified;
+        if(profile->type_name == "elseif") --statement_count;
+
+        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON) {
+
+            if(statement_count == 0 || profile->common_statements != statement_count)
+                return "an " + get_type_string_with_count(profile) + " with an else-clause";
+            else                
+                return "an " + get_type_string_with_count(profile) + " and with an else-clause";
+
+        }
 
     }
 
@@ -1505,6 +1514,10 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
 
+    size_t statement_count = summary_profile->operation == SRCDIFF_DELETE ? summary_profile->statement_count_original : summary_profile->statement_count_modified;
+    if(profile->type_name == "elseif") --statement_count;
+    const size_t common_statements = summary_profile->common_statements;
+
     // before children
     bool is_leaf = true;
     if(output_conditional) {
@@ -1529,9 +1542,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out << get_profile_string(profile);
 
-        if(profile->common_statements > 0 && profile->common_statements != profile->statement_count)
-            out << " and " << profile->statement_count - profile->common_statements <<  " of its " 
-                << profile->statement_count << " statements were ";
+        if(common_statements > 0 && common_statements != statement_count)
+            out << " and " << statement_count - common_statements <<  " of its " 
+                << statement_count << " statements were ";
         else
             out << " was ";
 
@@ -1543,7 +1556,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
 
-            if(summary_profile->common_statements == summary_profile->statement_count) {
+            if(common_statements == statement_count) {
 
                 if(summary_profile->type_name == "if") {
 
@@ -1569,13 +1582,13 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             }
 
             std::string common_summary;
-            if(summary_profile->statement_count == 1 && summary_profile->common_statements == 1) {
+            if(statement_count == 1 && common_statements == 1) {
 
                 const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
                 out <<  get_article(common_profile) << ' ';
                 common_summary = get_type_string(common_profile);
 
-            } else if(summary_profile->common_statements == 1) {
+            } else if(common_statements == 1) {
 
                 const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
                 out <<  get_article(common_profile) << ' ';
@@ -1583,7 +1596,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             } else {
 
-                if(summary_profile->common_statements != summary_profile->statement_count)
+                if(common_statements != statement_count)
                     common_summary = "remaining code";
                 else
                     common_summary = "existing code";
@@ -1592,7 +1605,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             out << common_summary;
 
-            if(summary_profile->common_statements != summary_profile->statement_count)
+            if(common_statements != statement_count)
                 out << " retained";
             
             if(summary_profile->syntax_count != 0) {
