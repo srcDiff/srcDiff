@@ -88,7 +88,7 @@ std::string text_summary::get_type_string_with_count(const std::shared_ptr<profi
 
     if(statement_count == 0)
         return "empty " + get_type_string(profile);
-    else if(profile->common_statements != statement_count)
+    else if(profile->common_statements > 0 && profile->common_statements != statement_count)
         return get_type_string(profile);
     else if(statement_count == 1)
         return get_type_string(profile) + " with a single statement";
@@ -117,7 +117,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
         if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON) {
 
-            if(statement_count == 0 || profile->common_statements != statement_count)
+            if(statement_count == 0 || (profile->common_statements > 0 && profile->common_statements != statement_count))
                 return "an " + get_type_string_with_count(profile) + " with an else-clause";
             else                
                 return "an " + get_type_string_with_count(profile) + " and with an else-clause";
