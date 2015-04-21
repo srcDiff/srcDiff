@@ -337,3 +337,49 @@ SUMMARY
 	• the parameter 'bar' of type 'foo' was added
 
 END_SUMMARY
+
+### Test 7 ###
+ORIGINAL
+KisRecordedFilterActionEditor::KisRecordedFilterActionEditor( QWidget* parent, KisRecordedAction* action) :
+        m_action(dynamic_cast<KisRecordedFilterAction*>(action)),
+        m_gridLayout(new QGridLayout(this))
+{
+    Q_ASSERT(m_action);
+    m_configWidget = m_action->filter()->createConfigurationWidget(this, 0 ,0);
+    if(m_configWidget)
+    {
+        m_gridLayout->addWidget(m_configWidget);
+        connect(m_configWidget, SIGNAL(sigConfigChanged()), SLOT(configurationUpdated()));
+        m_configWidget->setConfiguration(m_action->filterConfiguration());
+    } else {
+        m_gridLayout->addWidget(new QLabel("No configuration option.", this ));
+    }
+}
+END_ORIGINAL
+
+MODIFIED
+KisRecordedFilterActionEditor::KisRecordedFilterActionEditor( QWidget* parent, KisRecordedAction* action) :
+        m_action(dynamic_cast<KisRecordedFilterAction*>(action)),
+        m_gridLayout(new QGridLayout(this))
+{
+    Q_ASSERT(m_action);
+    m_configWidget = m_action->filter()->createConfigurationWidget(this, 0 ,0);
+    if(m_configWidget)
+    {
+        m_gridLayout->addWidget(m_configWidget);
+        m_configWidget->setConfiguration(m_action->filterConfiguration());
+        connect(m_configWidget, SIGNAL(sigConfigChanged()), SLOT(configurationUpdated()));
+    } else {
+        m_gridLayout->addWidget(new QLabel("No configuration option.", this ));
+    }
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• constructor 'KisRecordedFilterActionEditor::KisRecordedFilterActionEditor': Impact = Low
+	• a call to 'connect' was moved
+
+END_SUMMARY

@@ -487,7 +487,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         }
 
-        if(local_name == "common" || move_id)
+        if(local_name == "common")
             srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, is_change, move_id));
         else if(local_name == "delete")
             srcdiff_stack.push_back(srcdiff(SRCDIFF_DELETE, is_change, move_id));
