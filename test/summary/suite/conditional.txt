@@ -338,5 +338,16 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'RotateImage::RotateImage': Impact = High
+	• the body of an if statement was modified
+	  this modification included:
+		• the argument list to 'addAction' was modified.  The modifications were: 
+		• the argument list to 'connect' was modified.  The modifications were: 
+		• the argument list to 'addAction' was modified.  The modifications were: 
+		• the argument list to 'connect' was modified.  The modifications were: 
+		• the argument list to 'addAction' was modified.  The modifications were: 
+		• the argument list to 'connect' was modified.  The modifications were: 
+		• the argument list to 'addAction' was modified.  The modifications were: 
+		• the argument list to 'connect' was modified.  The modifications were: 
+		• a call to 'connect' was added
 
 END_SUMMARY

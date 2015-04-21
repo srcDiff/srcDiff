@@ -1544,7 +1544,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out << get_profile_string(profile);
 
-        if(common_statements > 0 && common_statements != statement_count)
+        if(profile->operation != SRCDIFF_COMMON && common_statements > 0 && common_statements != statement_count)
             out << " and " << statement_count - common_statements <<  " of its " 
                 << statement_count << " statements were ";
         else
@@ -1558,7 +1558,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
 
-            if(common_statements == statement_count) {
+            if(summary_profile->operation == SRCDIFF_INSERT || common_statements == statement_count) {
 
                 if(summary_profile->type_name == "if") {
 
@@ -1598,7 +1598,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             } else {
 
-                if(common_statements != statement_count)
+                if(summary_profile->operation == SRCDIFF_DELETE && common_statements != statement_count)
                     common_summary = "remaining code";
                 else
                     common_summary = "existing code";
@@ -1607,7 +1607,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
             out << common_summary;
 
-            if(common_statements != statement_count)
+            if(summary_profile->operation == SRCDIFF_DELETE && common_statements != statement_count)
                 out << " retained";
             
             if(summary_profile->syntax_count != 0) {
