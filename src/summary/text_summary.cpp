@@ -88,12 +88,14 @@ std::string text_summary::get_type_string_with_count(const std::shared_ptr<profi
 
     if(statement_count == 0)
         return "empty " + get_type_string(profile);
-    else if(profile->common_statements > 0 && profile->common_statements != statement_count)
+
+    if(profile->common_statements > 0 && profile->common_statements != statement_count)
         return get_type_string(profile);
-    else if(statement_count == 1)
+
+    if(statement_count == 1)
         return get_type_string(profile) + " with a single statement";
-    else
-        return get_type_string(profile) + " with " + std::to_string(statement_count) + " statements";   
+
+    return get_type_string(profile) + " with " + std::to_string(statement_count) + " statements";   
 
 }
 
@@ -1500,7 +1502,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     const bool else_modified = bool(else_operation) && *else_operation == SRCDIFF_COMMON;
 
     boost::optional<srcdiff_type> elseif_operation;
-    if(profile->type_name == "if") else_operation =  reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
+    if(profile->type_name == "if") elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
     const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
 
     const versioned_string & condition = conditional_profile->get_condition();
