@@ -100,7 +100,7 @@ void srcdiff_summary::process_characters() {
             if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
                 reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->is_delete(true);
 
-        } else if(expr_stmt_pos > 0) {
+        } else if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos) {
 
             if(text != "." && text != "->" && text != ".*" && text != "->*")
                 reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->call(false);
