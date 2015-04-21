@@ -1487,7 +1487,7 @@ std::string text_summary::condition_summary(const versioned_string & condition, 
 
 }
 
-/** @todo need to bound depth somehow. Perhaps after first conditional, if only one child and it has body, then do not output? */
+/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to some in one line. */
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
     const bool has_common = profile->common_profiles.size() > 0;
