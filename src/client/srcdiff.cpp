@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 
       std::cerr << "Error: " << e.what() << '\n';
 
-    } catch(std::string & s) {
+    } catch(const std::string & s) {
 
       std::cerr << "Error: " << s << '\n';
 

@@ -44,7 +44,16 @@ void srcdiff_input_source::directory(const boost::optional<std::string> & direct
 
   }
 
-  process_directory(directory_original, context_original, directory_modified, context_modified);
+  try {
+
+    process_directory(directory_original, context_original, directory_modified, context_modified);
+
+  } catch(const std::string & error) {
+
+    std::cerr << error << '\n';
+    exit(1);
+
+  }
 
 }
 

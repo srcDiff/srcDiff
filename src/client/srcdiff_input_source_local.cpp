@@ -35,9 +35,20 @@ void srcdiff_input_source_local::consume() {
 
    for(std::pair<std::string, std::string> input_pair : options.input_pairs) {
 
-      struct stat instat = { 0 };
-      int stat_status = stat(input_pair.first.c_str(), &instat);
-      if (!stat_status && S_ISDIR(instat.st_mode)) {
+      struct stat in_stat_original = { 0 };
+      int stat_status_original = stat(input_pair.first.c_str(), &in_stat_original);
+
+      struct stat in_stat_modified = { 0 };
+      int stat_status_modified = stat(input_pair.second.c_str(), &in_stat_modified);
+
+      if(stat_status_original == -1 && stat_status_modified == -1)
+        throw std::string("Input sources '" + input_pair.first + "' and '" + input_pair.second + "' could not be opened");
+      else if(stat_status_original == -1)
+        throw std::string("Input source '" + input_pair.first + "' could not be opened");
+      else if(stat_status_modified == -1)
+        throw std::string("Input source '" + input_pair.second + "' could not be opened");
+
+      if (!stat_status_original && S_ISDIR(in_stat_original.st_mode)) {
 
         srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
 
@@ -172,9 +183,22 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
 
   int n = scandir(directory_original ? directory_original->c_str() : "", &namelist_original, dir_filter, alphasort);
   int m = scandir(directory_modified ? directory_modified->c_str() : "", &namelist_modified, dir_filter, alphasort);
+
   // TODO:  Fix error handling.  What if one is in error?
   if (n < 0 && m < 0) {
-    return;
+
+    throw std::string("Directories '" + (directory_original ? *directory_original : "")
+      + "' and '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
+
+  } else if(n < 0) {
+
+    throw std::string("Directory '" + (directory_original ? *directory_original : "") + "' could not be opened");
+
+  } else if(m < 0){
+
+    throw std::string("Directory '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
+
+
   }
 
   std::string path_original;
