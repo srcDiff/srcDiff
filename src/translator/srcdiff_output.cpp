@@ -16,8 +16,12 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
    rbuf_original(std::make_shared<reader_state>(SESDELETE)), rbuf_modified(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
-  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY))
-    srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
+  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY)) {
+
+      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
+      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
+
+  }
 
   if(is_option(flags, OPTION_VISUALIZE)) {
 

@@ -94,6 +94,10 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
       input = new srcdiff_input_source_svn(options);
 
+    } catch(const std::string & error) {
+
+      std::cerr << "Error: " << error << '\n';
+
     } catch(...) {
 
       std::cerr << "Problem with input url " << *options.svn_url << " for revisions " << options.revision_one << " and " << options.revision_two << '\n';
@@ -111,6 +115,10 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
       input = new srcdiff_input_source_git(options);
 
+    } catch(const std::string & error) {
+
+      std::cerr << "Error: " << error << '\n';
+
     } catch(...) {
 
       std::cerr << "Problem with input url " << *options.git_url << " for revisions " << options.git_revision_one << " and " << options.git_revision_two << '\n';
@@ -119,7 +127,16 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
   } else {
 #endif
-    input = new srcdiff_input_source_local(options);
+
+    try {
+
+     input = new srcdiff_input_source_local(options);
+
+    } catch(const std::string & error) {
+
+      std::cerr << "Error: " << error << '\n';
+
+    }
 
 #if SVN
   }
