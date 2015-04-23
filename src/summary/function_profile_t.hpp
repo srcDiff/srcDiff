@@ -59,6 +59,23 @@ class function_profile_t : public profile_t {
 
         }
 
+        std::string get_cyclomatic_complexity_change() const {
+
+            int cyclomatic_complexity_change = 0;
+            for(change_entity_map<conditional_profile_t>::pair conditional_pair : conditionals) {
+
+                if(conditional_pair.first == SRCDIFF_DELETE)
+                    --cyclomatic_complexity_change;
+                else if(conditional_pair.first == SRCDIFF_INSERT)
+                    ++cyclomatic_complexity_change;
+
+            }
+
+            if(cyclomatic_complexity_change > 0)  return "+" + std::to_string(cyclomatic_complexity_change);
+            return std::to_string(cyclomatic_complexity_change);
+
+        }
+
         /** @todo may need to add rest of things that can occur here between parameter list and block */
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
@@ -72,7 +89,7 @@ class function_profile_t : public profile_t {
             out.begin_line() << type_name << " '" << name << "':\n";
             out.pad() << "  ";
             out << "Impact = " << statement_churn << " Statement" << (statement_churn == 1 ? " " : "s ");
-            out << "Cyclomatic = ";
+            out << "Cyclomatic = " << get_cyclomatic_complexity_change();
             out << '\n';
 
             out.increment_depth();

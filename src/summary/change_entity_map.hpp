@@ -44,6 +44,12 @@ class change_entity_map {
 
         }
 
+        const_iterator begin() const {
+
+            return entity.begin();
+
+        }
+
         const_iterator end() const {
 
             return entity.end();

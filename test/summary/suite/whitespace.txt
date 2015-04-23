@@ -11,7 +11,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  Impact = 0 Statements Cyclomatic = 
+  Impact = 0 Statements Cyclomatic = 0
 	• only whitespace changes
 
 END_SUMMARY
