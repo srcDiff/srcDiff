@@ -10,7 +10,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = None
 
 • Modified function(s): 1
-• function 'f': Impact = 0 Statements
+• function 'f':
+  Impact = 0 Statements Cyclomatic = 
 	• only whitespace changes
 
 END_SUMMARY

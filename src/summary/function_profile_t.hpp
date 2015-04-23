@@ -59,15 +59,6 @@ class function_profile_t : public profile_t {
 
         }
 
-        virtual impact_factor calculate_impact_factor() const {
-
-            if(statement_churn == 0)                         return NONE;
-            if(statement_churn * 4 <= statement_count)       return LOW;
-            if(statement_churn * 10 <= 4 * statement_count)  return MEDIUM;
-            return HIGH;
-
-        }
-
         /** @todo may need to add rest of things that can occur here between parameter list and block */
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
@@ -78,8 +69,11 @@ class function_profile_t : public profile_t {
 
             }
 
-            out.begin_line() << type_name << " '" << name << "': Impact = " << statement_churn << " Statement" << (statement_churn == 1 ? "" : "s") << '\n';
-            //"': Impact = " << get_impact_factor() << '\n'; 
+            out.begin_line() << type_name << " '" << name << "':\n";
+            out.pad() << "  ";
+            out << "Impact = " << statement_churn << " Statement" << (statement_churn == 1 ? " " : "s ");
+            out << "Cyclomatic = ";
+            out << '\n';
 
             out.increment_depth();
 

@@ -39,7 +39,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisZoomManager::changeAspectMode': Impact = 6 Statements
+• function 'KisZoomManager::changeAspectMode':
+  Impact = 6 Statements Cyclomatic = 
 	• several expression statements, a declaration statement declaring 'sz' of type 'QSize', 
 	  and a comment were replaced with a call to 'm_zoomController->setZoom'
 
@@ -153,7 +154,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KoZoomController::setZoom': Impact = 2 Statements
+• function 'KoZoomController::setZoom':
+  Impact = 2 Statements Cyclomatic = 
 	• a guard clause was commented out
 
 END_SUMMARY

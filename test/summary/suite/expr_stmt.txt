@@ -77,7 +77,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisView2::slotLoadingFinished': Impact = 2 Statements
+• function 'KisView2::slotLoadingFinished':
+  Impact = 2 Statements Cyclomatic = 
 	• a call to 'm_d->zoomManager->zoomController' was deleted from a call chain and a call to 
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
 	• a call chain consisting of 'm_d->zoomManager->zoomController' and setAspectMode' was 
@@ -104,7 +105,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'TextShape::paintComponent': Impact = 1 Statement
+• function 'TextShape::paintComponent':
+  Impact = 1 Statement Cyclomatic = 
 	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
 	  'converter.documentToView' was deleted and its arguments were retained
 
@@ -129,7 +131,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'TextShape::paintComponent': Impact = 1 Statement
+• function 'TextShape::paintComponent':
+  Impact = 1 Statement Cyclomatic = 
 	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
 	  'converter.documentToView' was added and it was placed around an existing argument
 
@@ -159,7 +162,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KoDocument::openExistingFile': Impact = 4 Statements
+• function 'KoDocument::openExistingFile':
+  Impact = 4 Statements Cyclomatic = 
 	• a declaration statement declaring 'ok' of type 'bool' was replaced with a call to 
 	  'openUrl'
 	• an if statement with a single statement was removed from the function body
@@ -203,7 +207,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation': Impact = 1 Statement
+• constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation':
+  Impact = 1 Statement Cyclomatic = 
 	• the right-hand side of an assignment to 'd->fallBackColorSpace' was modified. The 
 	  modification was a call to '_fallBackToCs->dstColorSpace' was renamed to 
 	  '_fallBackToCs->srcColorSpace
@@ -253,7 +258,8 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisView2::createGUI': Impact = 5 Statements
+• function 'KisView2::createGUI':
+  Impact = 5 Statements Cyclomatic = 
 	• a call to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
 	• a call to 'connect' was deleted from the function body
 	• a call to 'connect' was deleted from the function body
