@@ -27,7 +27,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  Impact = 1 Statement Cyclomatic = +1
+  Impact = 1 Statement	Cyclomatic = +1
 	• an if statement with an else-clause was added
 	• the else-clause was added around a declaration statement
 

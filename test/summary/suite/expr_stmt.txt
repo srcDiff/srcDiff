@@ -78,7 +78,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisView2::slotLoadingFinished':
-  Impact = 2 Statements Cyclomatic = 0
+  Impact = 2 Statements	Cyclomatic = 0
 	• a call to 'm_d->zoomManager->zoomController' was deleted from a call chain and a call to 
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
 	• a call chain consisting of 'm_d->zoomManager->zoomController' and setAspectMode' was 
@@ -106,7 +106,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  Impact = 1 Statement Cyclomatic = 0
+  Impact = 1 Statement	Cyclomatic = 0
 	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
 	  'converter.documentToView' was deleted and its arguments were retained
 
@@ -132,7 +132,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  Impact = 1 Statement Cyclomatic = 0
+  Impact = 1 Statement	Cyclomatic = 0
 	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
 	  'converter.documentToView' was added and it was placed around an existing argument
 
@@ -163,7 +163,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoDocument::openExistingFile':
-  Impact = 4 Statements Cyclomatic = -1
+  Impact = 4 Statements	Cyclomatic = -1
 	• a declaration statement declaring 'ok' of type 'bool' was replaced with a call to 
 	  'openUrl'
 	• an if statement with a single statement was removed from the function body
@@ -208,7 +208,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation':
-  Impact = 1 Statement Cyclomatic = 0
+  Impact = 1 Statement	Cyclomatic = 0
 	• the right-hand side of an assignment to 'd->fallBackColorSpace' was modified. The 
 	  modification was a call to '_fallBackToCs->dstColorSpace' was renamed to 
 	  '_fallBackToCs->srcColorSpace
@@ -259,7 +259,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisView2::createGUI':
-  Impact = 5 Statements Cyclomatic = 0
+  Impact = 5 Statements	Cyclomatic = 0
 	• a call to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
 	• a call to 'connect' was deleted from the function body
 	• a call to 'connect' was deleted from the function body

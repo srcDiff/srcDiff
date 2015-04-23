@@ -40,7 +40,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisZoomManager::changeAspectMode':
-  Impact = 6 Statements Cyclomatic = 0
+  Impact = 6 Statements	Cyclomatic = 0
 	• several expression statements, a declaration statement declaring 'sz' of type 'QSize', 
 	  and a comment were replaced with a call to 'm_zoomController->setZoom'
 
@@ -155,7 +155,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoZoomController::setZoom':
-  Impact = 2 Statements Cyclomatic = -1
+  Impact = 2 Statements	Cyclomatic = -1
 	• a guard clause was commented out
 
 END_SUMMARY

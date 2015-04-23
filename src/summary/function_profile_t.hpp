@@ -88,8 +88,13 @@ class function_profile_t : public profile_t {
 
             out.begin_line() << type_name << " '" << name << "':\n";
             out.pad() << "  ";
-            out << "Impact = " << statement_churn << " Statement" << (statement_churn == 1 ? " " : "s ");
-            out << "Cyclomatic = " << get_cyclomatic_complexity_change();
+            out << "Impact" << " = " << statement_churn << " Statement" << (statement_churn == 1 ? "" : "s");
+            out << '\t';
+            out << "Cyclomatic" << " = " << get_cyclomatic_complexity_change();
+
+            // out << out.bold() << "Impact" << out.normal() << " = " << out.bold() << statement_churn << out.normal() << " Statement" << (statement_churn == 1 ? "" : "s");
+            // out << '\t';
+            // out << out.bold() << "Cyclomatic" << out.normal() << " = " << out.bold() << get_cyclomatic_complexity_change() << out.normal();
             out << '\n';
 
             out.increment_depth();

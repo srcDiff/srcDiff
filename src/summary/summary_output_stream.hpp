@@ -19,6 +19,8 @@ private:
 
 	int number_characters_output;
 
+	static constexpr const char * const BOLD_TEXT = "\x1b[1m";
+	static constexpr const char * const NORMAL_TEXT = "\x1b[0m";
     static constexpr const char * const BULLET = "\u2022";
 
 
@@ -126,6 +128,22 @@ public:
 
 		--depth;
 
+	}
+
+	iomanip_type bold() {
+
+		out << BOLD_TEXT;
+
+		return iomanip_type();
+
+	}
+
+	iomanip_type normal() {
+
+		out << NORMAL_TEXT;
+
+		return iomanip_type();
+		
 	}
 
     summary_output_stream & pad() {
