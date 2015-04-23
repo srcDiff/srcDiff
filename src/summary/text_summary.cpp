@@ -10,6 +10,7 @@
 #include <expr_profile_t.hpp>
 #include <identifier_profile_t.hpp>
 #include <identifier_diff.hpp>
+#include <summary_manip.hpp>
 
 #include <algorithm>
 #include <functional>

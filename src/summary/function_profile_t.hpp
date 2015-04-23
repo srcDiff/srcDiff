@@ -12,6 +12,7 @@
 #include <text_summary.hpp>
 #include <table_summary.hpp>
 #include <move_handler.hpp>
+#include <summary_manip.hpp>
 
 #include <cctype>
 
