@@ -78,7 +78,8 @@ class function_profile_t : public profile_t {
 
             }
 
-            out.begin_line() << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
+            out.begin_line() << type_name << " '" << name << "': Impact = " << statement_churn << " Statement" << (statement_churn == 1 ? "" : "s") << '\n';
+            //"': Impact = " << get_impact_factor() << '\n'; 
 
             out.increment_depth();
 

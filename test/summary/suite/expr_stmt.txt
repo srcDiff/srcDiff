@@ -77,7 +77,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisView2::slotLoadingFinished': Impact = Low
+• function 'KisView2::slotLoadingFinished': Impact = 2 Statements
 	• a call to 'm_d->zoomManager->zoomController' was deleted from a call chain and a call to 
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
 	• a call chain consisting of 'm_d->zoomManager->zoomController' and setAspectMode' was 
@@ -104,7 +104,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'TextShape::paintComponent': Impact = Medium
+• function 'TextShape::paintComponent': Impact = 1 Statement
 	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
 	  'converter.documentToView' was deleted and its arguments were retained
 
@@ -129,13 +129,13 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'TextShape::paintComponent': Impact = Medium
+• function 'TextShape::paintComponent': Impact = 1 Statement
 	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
 	  'converter.documentToView' was added and it was placed around an existing argument
 
 END_SUMMARY
 
-### Test 3 ###
+### Test 4 ###
 ORIGINAL
 void KoDocument::openExistingFile(const KUrl& url)
 {
@@ -159,14 +159,14 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KoDocument::openExistingFile': Impact = High
+• function 'KoDocument::openExistingFile': Impact = 4 Statements
 	• a declaration statement declaring 'ok' of type 'bool' was replaced with a call to 
 	  'openUrl'
 	• an if statement with a single statement was removed from the function body
 
 END_SUMMARY
 
-### Test 4 ###
+### Test 5 ###
 ORIGINAL
 KoFallBackColorTransformation::KoFallBackColorTransformation(KoColorConversionTransformation* _csToFallBack, KoColorConversionTransformation* _fallBackToCs, KoColorTransformation* _transfo) : d(new Private)
 {
@@ -203,14 +203,14 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation': Impact = Low
+• constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation': Impact = 1 Statement
 	• the right-hand side of an assignment to 'd->fallBackColorSpace' was modified. The 
 	  modification was a call to '_fallBackToCs->dstColorSpace' was renamed to 
 	  '_fallBackToCs->srcColorSpace
 
 END_SUMMARY
 
-### Test 4 ###
+### Test 6 ###
 ORIGINAL
 void KisView2::createGUI()
 {
@@ -253,7 +253,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisView2::createGUI': Impact = High
+• function 'KisView2::createGUI': Impact = 5 Statements
 	• a call to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
 	• a call to 'connect' was deleted from the function body
 	• a call to 'connect' was deleted from the function body

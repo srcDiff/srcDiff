@@ -19,7 +19,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'f': Impact = High
+• function 'f': Impact = 1 Statement
 	• the condition of a guard clause was changed from '1' to '2' within the function body
 
 END_SUMMARY
@@ -96,7 +96,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'TextTool::repaintSelection': Impact = Low
+• function 'TextTool::repaintSelection': Impact = 6 Statements
 	• a guard clause was added to the function body
 	• a call to 'Q_ASSERT' was replaced with a guard clause
 
@@ -155,7 +155,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KoMainWindow::slotCloseAllViews': Impact = Medium
+• function 'KoMainWindow::slotCloseAllViews': Impact = 6 Statements
 	• an if statement with an else-clause and 2 of its 9 statements were removed with remaining 
 	  code retained.  Then, the remaining code was modified
 	  this modification included:
@@ -196,7 +196,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KoMainWindow::currentView': Impact = High
+• function 'KoMainWindow::currentView': Impact = 3 Statements
 	• an else statement was converted to an elseif statement
 	  this includes:
 		• an if statement was added around a return statement
@@ -245,7 +245,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisExifIO::loadFrom': Impact = High
+• function 'KisExifIO::loadFrom': Impact = 4 Statements
 	• the condition of a guard clause was changed adding the clause '|| it->key() == "0xea1'
 
 END_SUMMARY
@@ -277,7 +277,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• function 'KisGroupLayer::resetProjection': Impact = High
+• function 'KisGroupLayer::resetProjection': Impact = 3 Statements
 	• an elseif statement with a single statement was added
 
 END_SUMMARY
@@ -337,7 +337,7 @@ SUMMARY
 • file 'original.cpp|modified.cpp': Impact = High
 
 • Modified function(s): 1
-• constructor 'RotateImage::RotateImage': Impact = High
+• constructor 'RotateImage::RotateImage': Impact = 14 Statements
 	• the body of an if statement was modified
 	  this modification included:
 		• the identifier 'action'  was replaced with 'm_rotate180LayerAction' in several 
