@@ -1,4 +1,4 @@
-#include <text_summary_top_down.hpp>
+#include <text_summary_verbose.hpp>
 
 #include <conditional_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
@@ -16,9 +16,9 @@
 #include <list>
 #include <set>
 
-const char * ELLIPSIS = "\u22EF";
+/** @todo survey suggested highlighting important details. Not sure if they mean bold or background color */
 
-std::string text_summary_top_down::get_article(const std::string & type_name) const { 
+std::string text_summary_verbose::get_article(const std::string & type_name) const { 
 
     const char letter = type_name[0];
 
@@ -28,7 +28,7 @@ std::string text_summary_top_down::get_article(const std::string & type_name) co
         return "a";
 }
 
-std::string text_summary_top_down::get_article(const std::shared_ptr<profile_t> & profile) const { 
+std::string text_summary_verbose::get_article(const std::shared_ptr<profile_t> & profile) const { 
 
     const bool is_guard_clause = profile->type_name == "if" ? reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->is_guard() : false;
     if(is_guard_clause) return "a";
@@ -42,7 +42,7 @@ std::string text_summary_top_down::get_article(const std::shared_ptr<profile_t> 
 
 }
 
-std::string text_summary_top_down::get_type_string(const std::shared_ptr<profile_t> & profile) const {
+std::string text_summary_verbose::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
     if(profile->type_name == "if") {
 
@@ -71,7 +71,7 @@ std::string text_summary_top_down::get_type_string(const std::shared_ptr<profile
 
 }
 
-std::string text_summary_top_down::get_type_string_with_count(const std::shared_ptr<profile_t> & profile) const {
+std::string text_summary_verbose::get_type_string_with_count(const std::shared_ptr<profile_t> & profile) const {
 
     if(!has_body(profile->type_name) || profile->operation == SRCDIFF_COMMON
         || (profile->statement_count == 1 && profile->common_statements == 1)) return get_type_string(profile);
@@ -88,14 +88,18 @@ std::string text_summary_top_down::get_type_string_with_count(const std::shared_
 
     if(statement_count == 0)
         return "empty " + get_type_string(profile);
-    else if(statement_count == 1)
+
+    if(profile->common_statements > 0 && profile->common_statements != statement_count)
+        return get_type_string(profile);
+
+    if(statement_count == 1)
         return get_type_string(profile) + " with a single statement";
-    else
-        return get_type_string(profile) + " with " + std::to_string(statement_count) + " statements";   
+
+    return get_type_string(profile) + " with " + std::to_string(statement_count) + " statements";   
 
 }
 
-std::string text_summary_top_down::get_profile_string(const std::shared_ptr<profile_t> & profile) const {
+std::string text_summary_verbose::get_profile_string(const std::shared_ptr<profile_t> & profile) const {
 
     if(!profile->type_name.is_common()) {
 
@@ -110,8 +114,17 @@ std::string text_summary_top_down::get_profile_string(const std::shared_ptr<prof
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
 
-        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
-            return "an " + get_type_string_with_count(profile) + " and with an else-clause";
+        size_t statement_count = profile->operation == SRCDIFF_DELETE ? profile->statement_count_original : profile->statement_count_modified;
+        if(profile->type_name == "elseif") --statement_count;
+
+        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON) {
+
+            if(statement_count == 0 || (profile->common_statements > 0 && profile->common_statements != statement_count))
+                return "an " + get_type_string_with_count(profile) + " with an else-clause";
+            else                
+                return "an " + get_type_string_with_count(profile) + " and with an else-clause";
+
+        }
 
     }
 
@@ -200,7 +213,7 @@ std::string text_summary_top_down::get_profile_string(const std::shared_ptr<prof
 
 }
 
-summary_output_stream & text_summary_top_down::identifiers(summary_output_stream & out, const std::map<versioned_string, size_t> & identifiers) {
+summary_output_stream & text_summary_verbose::identifiers(summary_output_stream & out, const std::map<versioned_string, size_t> & identifiers) {
 
     for(std::pair<versioned_string, size_t> identifier : identifiers) {
 
@@ -237,7 +250,7 @@ summary_output_stream & text_summary_top_down::identifiers(summary_output_stream
 
 }
 
-summary_output_stream & text_summary_top_down::replacement(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & pos) const {
+summary_output_stream & text_summary_verbose::replacement(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & pos, const bool parent_output) const {
 
     const std::shared_ptr<profile_t> & start_profile = profile->child_profiles[pos];
 
@@ -469,39 +482,52 @@ summary_output_stream & text_summary_top_down::replacement(summary_output_stream
 
 }
 
-bool text_summary_top_down::is_body_summary(const std::string & type, bool is_replacement) const {
+bool text_summary_verbose::is_body_summary(const std::string & type, bool is_replacement) const {
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
         || is_jump(type);
 
 }
 
-summary_output_stream & text_summary_top_down::statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos) {
+summary_output_stream & text_summary_verbose::statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos, const bool parent_output) {
 
     const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
 
     if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
 
-        replacement(out, profile, child_pos);
+        replacement(out, profile, child_pos, parent_output);
 
     } else if(child_profile->move_id) {
 
-        out.begin_line() << get_profile_string(child_profile) << " was moved\n";
+        out.begin_line() << get_profile_string(child_profile) << " was moved";
+        // if(child_profile->move_parent) {
+
+        //     out << " from " << get_article(child_profile->parent) << ' ' << get_type_string(child_profile->parent);
+        //     out << " to ";
+
+        //     if(child_profile->parent->type_name == child_profile->move_parent->type_name)
+        //         out << " another " << get_type_string(child_profile->move_parent);
+        //     else
+        //         out<< get_article(child_profile->move_parent) << ' ' << get_type_string(child_profile->move_parent);
+
+        // }
+
+        out << '\n';
 
     } else if(!child_profile->type_name.is_common()) {
 
-        interchange(out, child_profile);
+        interchange(out, child_profile, parent_output);
 
     } else {
 
         if(is_jump(child_profile->type_name))
-            jump(out, child_profile);
+            jump(out, child_profile, parent_output);
         else if(is_condition_type(child_profile->type_name))
-            conditional(out, child_profile);
+            conditional(out, child_profile, parent_output);
         else if(is_expr_stmt(child_profile->type_name))
-            expr_stmt(out, child_profile);
+            expr_stmt(out, child_profile, parent_output);
         else if(is_decl_stmt(child_profile->type_name))
-            decl_stmt(out, child_profile);
+            decl_stmt(out, child_profile, parent_output);
 
     }
 
@@ -509,13 +535,57 @@ summary_output_stream & text_summary_top_down::statement_dispatch(summary_output
 
 }
 
-text_summary_top_down::text_summary_top_down(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
+size_t text_summary_verbose::number_child_changes(const profile_t::profile_list_t & child_profiles) const {
+
+    size_t num_child_changes = 0;
+    size_t num_body_changes = 0;
+
+    for(size_t child_pos = 0; child_pos < child_profiles.size(); ++child_pos) {
+
+        const std::shared_ptr<profile_t> & child_profile = child_profiles[child_pos];
+
+        if(child_profile->is_replacement && ((child_pos + 1) < child_profiles.size())) {
+
+            for(; child_pos < child_profiles.size() && child_profiles[child_pos]->is_replacement; ++child_pos)
+                ;
+            --child_pos;
+
+            ++num_child_changes;
+
+        } else if(child_profile->move_id) {
+
+            ++num_child_changes;
+
+        } else if(!child_profile->type_name.is_common()) {
+
+            ++num_child_changes;
+
+        } else {
+
+            if(is_jump(child_profile->type_name))
+                ++num_child_changes;
+            else if(is_condition_type(child_profile->type_name))
+                ++num_body_changes;
+            else if(is_expr_stmt(child_profile->type_name))
+                ++num_child_changes;
+            else if(is_decl_stmt(child_profile->type_name))
+                ++num_child_changes;
+
+        }
+
+    }
+
+    return num_child_changes > 0 ? num_child_changes + num_body_changes : num_child_changes;
+
+}
+
+text_summary_verbose::text_summary_verbose(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
              const change_entity_map<call_profile_t> & member_initializations,
              const std::map<versioned_string, size_t> & summary_identifiers)
     : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
       summary_identifiers(summary_identifiers), body_depth(0) {}
 
-summary_output_stream & text_summary_top_down::parameter(summary_output_stream & out, size_t number_parameters_deleted,
+summary_output_stream & text_summary_verbose::parameter(summary_output_stream & out, size_t number_parameters_deleted,
                                        size_t number_parameters_inserted, size_t number_parameters_modified) const {
 
     if(number_parameters_deleted > 0) {
@@ -620,7 +690,7 @@ summary_output_stream & text_summary_top_down::parameter(summary_output_stream &
 
 }
 
-summary_output_stream & text_summary_top_down::member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
+summary_output_stream & text_summary_verbose::member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                                    size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const {
 
     if(number_member_initializations_deleted > 0) {
@@ -713,7 +783,7 @@ summary_output_stream & text_summary_top_down::member_initialization(summary_out
 }
 
 /** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
-void text_summary_top_down::expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
+void text_summary_verbose::expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
                               std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
@@ -845,7 +915,7 @@ void text_summary_top_down::expr_stmt_call(const std::shared_ptr<profile_t> & pr
 
 }
 
-std::string text_summary_top_down::summarize_calls(std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
+std::string text_summary_verbose::summarize_calls(std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                                           std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                                           std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                                           std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
@@ -1076,7 +1146,8 @@ std::string text_summary_top_down::summarize_calls(std::vector<std::shared_ptr<c
 
 }
 
-summary_output_stream & text_summary_top_down::expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
+/** @todo probably should make this work for like conditional.  Report either change to top level call or directly affected call. */
+summary_output_stream & text_summary_verbose::expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
@@ -1087,13 +1158,16 @@ summary_output_stream & text_summary_top_down::expr_stmt(summary_output_stream &
 
         out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-        if(profile->parent == id) {
+        if(profile->parent == id || !parent_output) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
             else                                          out << " within ";
 
-            out << "the function body";
+            if(profile->parent == id)
+                out << "the function body";
+            else
+                out << "a nested " << get_type_string(profile->parent);
 
         }
 
@@ -1171,7 +1245,7 @@ summary_output_stream & text_summary_top_down::expr_stmt(summary_output_stream &
         std::vector<std::vector<std::string>> argument_list_modifications;
         expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
 
-        if(modified_calls.size() == 0) return out;
+        if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
 
         out.begin_line();
 
@@ -1201,7 +1275,7 @@ summary_output_stream & text_summary_top_down::expr_stmt(summary_output_stream &
 
 }
 
-summary_output_stream & text_summary_top_down::decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
+summary_output_stream & text_summary_verbose::decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
@@ -1211,13 +1285,16 @@ summary_output_stream & text_summary_top_down::decl_stmt(summary_output_stream &
 
     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-    if(profile->parent == id) {
+    if(profile->parent == id || !parent_output) {
 
         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
         else                                          out << " within ";
 
-        out << "the function body";
+        if(profile->parent == id)
+            out << "the function body";
+        else
+            out << "a nested " << get_type_string(profile->parent);
 
     }
 
@@ -1227,15 +1304,14 @@ summary_output_stream & text_summary_top_down::decl_stmt(summary_output_stream &
 
 }
 
-summary_output_stream & text_summary_top_down::else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
+summary_output_stream & text_summary_verbose::else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
     if(!profile->type_name.is_common())
-        return interchange(out, profile);
+        return interchange(out, profile, parent_output);
 
     const bool has_common = profile->common_profiles.size() > 0;
 
-    const bool output_else = !(profile->operation == SRCDIFF_COMMON && body_depth > 1
-        && profile->child_profiles.size() == 1 && has_body(profile->child_profiles[0]->type_name));
+    const bool output_else = profile->operation != SRCDIFF_COMMON || number_child_changes(profile->child_profiles) > 1;
 
     if(profile->parent->operation != SRCDIFF_COMMON) {
 
@@ -1245,9 +1321,6 @@ summary_output_stream & text_summary_top_down::else_clause(summary_output_stream
         out << '\n';
 
     }
-
-    if(!output_else)
-        out.begin_line() << ELLIPSIS << '\n';
 
     bool is_leaf = true;
     if(output_else) {
@@ -1305,7 +1378,7 @@ summary_output_stream & text_summary_top_down::else_clause(summary_output_stream
                     summary_output_stream sout(string_out, (size_t)-1);
 
                     size_t pos = 0;
-                    statement_dispatch(sout, profile, pos);
+                    statement_dispatch(sout, profile, pos, output_else);
 
                     if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
                         return out << '\n';
@@ -1351,7 +1424,7 @@ summary_output_stream & text_summary_top_down::else_clause(summary_output_stream
 
             if(output_else) out.increment_depth();
 
-            statement_dispatch(out, profile, pos);
+            statement_dispatch(out, profile, pos, output_else);
 
             if(output_else) out.decrement_depth();
 
@@ -1382,8 +1455,40 @@ summary_output_stream & text_summary_top_down::else_clause(summary_output_stream
 
 }
 
-/** @todo need to bound depth somehow. Perhaps after first conditional, if only one child and it has body, then do not output? */
-summary_output_stream & text_summary_top_down::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
+std::string text_summary_verbose::condition_summary(const versioned_string & condition, const bool condition_only) const {
+
+    const std::string & original = condition.original();
+    const std::string & modified = condition.modified();
+
+    size_t start_pos = 0;
+    for(; start_pos < original.size() && start_pos < modified.size() && original[start_pos] == modified[start_pos]; ++start_pos)
+        ;
+
+    size_t end_pos = 1;
+    for(; end_pos <= original.size() && end_pos <= modified.size() && original[original.size() - end_pos] == modified[modified.size() - end_pos]; ++end_pos)
+        ;
+
+    if(start_pos == original.size() || end_pos > original.size()) {
+
+        if(condition_only) return "changed adding the clause '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "'";
+        else               return "the clause '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "' was added to the condition\n";
+
+    } else if(start_pos == modified.size() || end_pos > modified.size()) {
+
+        if(condition_only) return "changed removing the clause '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "'";
+        else               return "the clause '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "' was deleted from the condition\n";
+
+    } else {
+
+        if(condition_only) return "changed from '" + original + "' to '" + modified + "'";
+        else               return "the condition was changed from '" + original + "' to '" + modified + "'\n";
+
+    }
+
+}
+
+/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to some in one line. */
+summary_output_stream & text_summary_verbose::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
     const bool has_common = profile->common_profiles.size() > 0;
 
@@ -1396,23 +1501,24 @@ summary_output_stream & text_summary_top_down::conditional(summary_output_stream
     if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
     const bool else_modified = bool(else_operation) && *else_operation == SRCDIFF_COMMON;
 
-    boost::optional<srcdiff_type> elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
+    boost::optional<srcdiff_type> elseif_operation;
+    if(profile->type_name == "if") elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
     const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
 
     const versioned_string & condition = conditional_profile->get_condition();
 
     if(!condition_modified && !body_modified && bool(else_operation)
         && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
-        return else_clause(out, profile->child_profiles[0]);
+        return else_clause(out, profile->child_profiles[0], parent_output);
 
-    const bool output_conditional = !(profile->operation == SRCDIFF_COMMON && body_depth > 1 && body_modified && !condition_modified
-        && profile->child_profiles.size() == 1 && has_body(profile->child_profiles[0]->type_name));
+    const bool output_conditional = profile->operation != SRCDIFF_COMMON || condition_modified || number_child_changes(profile->child_profiles) > 1;
 
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
 
-    if(!output_conditional)
-        out.begin_line() << ELLIPSIS << '\n';
+    size_t statement_count = summary_profile->operation == SRCDIFF_DELETE ? summary_profile->statement_count_original : summary_profile->statement_count_modified;
+    if(profile->type_name == "elseif") --statement_count;
+    const size_t common_statements = summary_profile->common_statements;
 
     // before children
     bool is_leaf = true;
@@ -1436,35 +1542,55 @@ summary_output_stream & text_summary_top_down::conditional(summary_output_stream
 
         }
 
-        out << get_profile_string(profile) << " was ";
+        out << get_profile_string(profile);
+
+        if(profile->operation != SRCDIFF_COMMON && common_statements > 0 && common_statements != statement_count)
+            out << " and " << statement_count - common_statements <<  " of its " 
+                << statement_count << " statements were ";
+        else
+            out << " was ";
 
         if(profile->operation != SRCDIFF_COMMON)
              out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
         else if(condition_modified && !body_modified && !else_modified && !elseif_modified)
-            out << "changed from '" << condition.original() << "' to '" << condition.modified() << '\'';
+            out << condition_summary(condition, true);
         else out << "modified";
 
         if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
 
-            if(summary_profile->type_name == "if") {
+            if(summary_profile->operation == SRCDIFF_INSERT || common_statements == statement_count) {
 
-                const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(summary_profile);
-                if(if_profile->else_clause()) {
+                if(summary_profile->type_name == "if") {
 
-                    out << " with the if-statement's body ";
-                    out << (summary_profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
+                    const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(summary_profile);
+                    if(if_profile->else_clause()) {
+
+                        out << " with the if-statement's body ";
+                        out << (summary_profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
+
+                    }
 
                 }
 
+                if(summary_profile->operation == SRCDIFF_DELETE)
+                    out << " from around ";
+                else
+                    out << " around ";
+
+            } else {
+
+                out << " with ";
+
             }
 
-            if(summary_profile->operation == SRCDIFF_DELETE)
-                out << " from around ";
-            else
-                out << " around ";
-
             std::string common_summary;
-            if(summary_profile->common_profiles.size() == 1) {
+            if(statement_count == 1 && common_statements == 1) {
+
+                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
+                out <<  get_article(common_profile) << ' ';
+                common_summary = get_type_string(common_profile);
+
+            } else if(common_statements == 1) {
 
                 const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
                 out <<  get_article(common_profile) << ' ';
@@ -1472,11 +1598,17 @@ summary_output_stream & text_summary_top_down::conditional(summary_output_stream
 
             } else {
 
-                common_summary = "existing code";
+                if(summary_profile->operation == SRCDIFF_DELETE && common_statements != statement_count)
+                    common_summary = "remaining code";
+                else
+                    common_summary = "existing code";
 
             }
 
             out << common_summary;
+
+            if(summary_profile->operation == SRCDIFF_DELETE && common_statements != statement_count)
+                out << " retained";
             
             if(summary_profile->syntax_count != 0) {
 
@@ -1498,7 +1630,7 @@ summary_output_stream & text_summary_top_down::conditional(summary_output_stream
                     summary_output_stream sout(string_out, (size_t)-1);
 
                     size_t pos = 0;
-                    statement_dispatch(sout, summary_profile, pos);
+                    statement_dispatch(sout, summary_profile, pos, output_conditional);
 
                     if(string_out.str() == "\u2022 " + get_article(summary_profile->common_profiles[0]) + ' ' + get_type_string(summary_profile->common_profiles[0]) + " was modified\n")
                         return out << '\n';
@@ -1514,8 +1646,9 @@ summary_output_stream & text_summary_top_down::conditional(summary_output_stream
             out << '\n';
             out.pad() << "  this modification included:\n";            
             is_leaf = false;
+
             out.increment_depth();
-            out.begin_line() << "the condition was changed from '" << condition.original() << "' to '" << condition.modified() << "'\n";
+            out.begin_line() << condition_summary(condition, false);
             out.decrement_depth();
         }
 
@@ -1554,7 +1687,7 @@ summary_output_stream & text_summary_top_down::conditional(summary_output_stream
 
             if(output_conditional) out.increment_depth();
 
-            statement_dispatch(out, summary_profile, pos);
+            statement_dispatch(out, summary_profile, pos, output_conditional);
 
             if(output_conditional) out.decrement_depth();
 
@@ -1585,7 +1718,8 @@ summary_output_stream & text_summary_top_down::conditional(summary_output_stream
 
 }
 
-summary_output_stream & text_summary_top_down::interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) {
+/** @todo If only a single operation such as wrapping, possible no other changes, then report a single sentence no this includes */
+summary_output_stream & text_summary_verbose::interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
     out.begin_line();
 
@@ -1615,7 +1749,7 @@ summary_output_stream & text_summary_top_down::interchange(summary_output_stream
 
             out.increment_depth();
 
-            statement_dispatch(out, profile, pos);
+            statement_dispatch(out, profile, pos, true);
 
             out.decrement_depth();
 
@@ -1647,7 +1781,7 @@ summary_output_stream & text_summary_top_down::interchange(summary_output_stream
 }
 
 
-summary_output_stream & text_summary_top_down::jump(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
+summary_output_stream & text_summary_verbose::jump(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
     out.begin_line() << get_profile_string(profile);
 
@@ -1655,13 +1789,16 @@ summary_output_stream & text_summary_top_down::jump(summary_output_stream & out,
 
     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-    if(profile->parent == id) {
+    if(profile->parent == id || !parent_output) {
 
         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
         else                                          out << " within ";
 
-        out << "the function body";
+        if(profile->parent == id)
+            out << "the function body";
+        else
+            out << "a nested " << get_type_string(profile->parent);
 
     }
 
@@ -1671,7 +1808,11 @@ summary_output_stream & text_summary_top_down::jump(summary_output_stream & out,
 
 }
 
-summary_output_stream & text_summary_top_down::body(summary_output_stream & out, const profile_t & profile) {
+/** @todo look for some moves, maybe pure across children.  Then, rewrite the lists accordingly.
+    Might put this if function_profile_t or somewhere else.  Either way.  Best way may be to gather all addition/deletions
+    put into a list and use n2 search for moves.  Must be opposite operation and same type.
+*/
+summary_output_stream & text_summary_verbose::body(summary_output_stream & out, const profile_t & profile) {
 
     identifiers(out, summary_identifiers);
 
@@ -1684,7 +1825,7 @@ summary_output_stream & text_summary_top_down::body(summary_output_stream & out,
                 && child_profile->move_id == 0))
             continue;
 
-        statement_dispatch(out, std::make_shared<profile_t>(profile), pos);
+        statement_dispatch(out, std::make_shared<profile_t>(profile), pos, true);
 
     }
 
