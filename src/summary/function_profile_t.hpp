@@ -92,9 +92,9 @@ class function_profile_t : public profile_t {
             out << '\t';
             out << "Cyclomatic" << " = " << get_cyclomatic_complexity_change();
 
-            // out << out.bold() << "Impact" << out.normal() << " = " << out.bold() << statement_churn << out.normal() << " Statement" << (statement_churn == 1 ? "" : "s");
+            // out << summary_manip::bold() << "Impact" << summary_manip::normal() << " = " << summary_manip::bold() << statement_churn << summary_manip::normal() << " Statement" << (statement_churn == 1 ? "" : "s");
             // out << '\t';
-            // out << out.bold() << "Cyclomatic" << out.normal() << " = " << out.bold() << get_cyclomatic_complexity_change() << out.normal();
+            // out << summary_manip::bold() << "Cyclomatic" << summary_manip::normal() << " = " << summary_manip::bold() << get_cyclomatic_complexity_change() << summary_manip::normal();
             out << '\n';
 
             out.increment_depth();

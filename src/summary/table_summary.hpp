@@ -4,6 +4,7 @@
 #include <profile_t.hpp>
 #include <change_entity_map.hpp>
 #include <summary_output_stream.hpp>
+#include <summary_manip.hpp>
 
 #include <iomanip>
 #include <functional>
@@ -24,18 +25,18 @@ public:
 
     virtual summary_output_stream & output_header(summary_output_stream & out) const {
 
-        return out.pad() << out.setw(10) << out.left() << "" << out.right() << out.setw(9) << "Deleted" << out.setw(9) << "Inserted" << out.setw(9) << "Modified" << '\n';
+        return out.pad() << summary_manip::setw(10) << summary_manip::left() << "" << summary_manip::right() << summary_manip::setw(9) << "Deleted" << summary_manip::setw(9) << "Inserted" << summary_manip::setw(9) << "Modified" << '\n';
 
     }
 
     virtual summary_output_stream & output_counts(summary_output_stream & out, const std::string & type, size_t deleted_count, size_t inserted_count, size_t modified_count) const {
 
-        out.pad() << out.setw(10) << out.left();
+        out.pad() << summary_manip::setw(10) << summary_manip::left();
         out << type;
-        out << out.right();
-        out << out.setw(9) << deleted_count;
-        out << out.setw(9) << inserted_count;
-        out << out.setw(9) << modified_count;
+        out << summary_manip::right();
+        out << summary_manip::setw(9) << deleted_count;
+        out << summary_manip::setw(9) << inserted_count;
+        out << summary_manip::setw(9) << modified_count;
         out << '\n';
 
         return out;
@@ -94,7 +95,7 @@ public:
         if(do_deleted      || do_inserted      || do_modified)      output_counts(out, "do",      do_deleted,      do_inserted,      do_modified);
         if(foreach_deleted || foreach_inserted || foreach_modified) output_counts(out, "foreach", foreach_deleted, foreach_inserted, foreach_modified);
         if(forever_deleted || forever_inserted || forever_modified) output_counts(out, "forever", forever_deleted, forever_inserted, forever_modified);
-        out.pad() << out.setw(10) << out.left() << "total" << out.right() << out.setw(9) << number_deleted << out.setw(9) << number_inserted << out.setw(9) << number_modified << '\n';
+        out.pad() << summary_manip::setw(10) << summary_manip::left() << "total" << summary_manip::right() << summary_manip::setw(9) << number_deleted << summary_manip::setw(9) << number_inserted << summary_manip::setw(9) << number_modified << '\n';
         out.decrement_depth();
 
         return out;

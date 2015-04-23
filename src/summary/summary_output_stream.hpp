@@ -4,7 +4,6 @@
 #include <versioned_string.hpp>
 
 #include <iostream>
-#include <iomanip>
 #include <sstream>
 
 class summary_output_stream {
@@ -19,8 +18,6 @@ private:
 
 	int number_characters_output;
 
-	static constexpr const char * const BOLD_TEXT = "\x1b[1m";
-	static constexpr const char * const NORMAL_TEXT = "\x1b[0m";
     static constexpr const char * const BULLET = "\u2022";
 
 
@@ -94,27 +91,9 @@ public:
 
 	summary_output_stream(std::ostream & out, size_t max_width = 100) : out(out), max_width(max_width), depth(0), number_characters_output(0) {}
 
-	iomanip_type setw(int n) {
+	std::ostream & ostream() {
 
-		out << std::setw(n);
-		return iomanip_type();
-
-
-	}
-
-	iomanip_type left() {
-
-		out << std::left;
-		return iomanip_type();
-
-
-	}
-
-	iomanip_type right() {
-
-		out << std::right;
-		return iomanip_type();
-
+		return out;
 
 	}
 
@@ -128,22 +107,6 @@ public:
 
 		--depth;
 
-	}
-
-	iomanip_type bold() {
-
-		out << BOLD_TEXT;
-
-		return iomanip_type();
-
-	}
-
-	iomanip_type normal() {
-
-		out << NORMAL_TEXT;
-
-		return iomanip_type();
-		
 	}
 
     summary_output_stream & pad() {
@@ -210,12 +173,6 @@ public:
 	summary_output_stream & operator<<(size_t number) {
 
 		output(std::to_string(number));
-
-		return *this;
-
-	}
-
-	summary_output_stream & operator<<(const iomanip_type & type) {
 
 		return *this;
 
