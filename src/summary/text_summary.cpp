@@ -1273,7 +1273,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
     if(profile->parent->operation != SRCDIFF_COMMON) {
 
         out.begin_line();
-        out << "an if statement with an else-clause was ";
+        out << "an if-else statement was ";
         out << (profile->parent->operation == SRCDIFF_DELETE ? "removed" : "added");
         out << '\n';
 
