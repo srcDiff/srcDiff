@@ -30,6 +30,7 @@ private:
 	std::ostream & output(const std::string & str) {
 
 		// in case too much correct wrapping avoid outputting one word on line
+		const size_t number_start_characters = depth * 8 + 2;
 		if((depth * 8) > (max_width / 2)) return out << str;
 
 		size_t start_pos = 0, pos = 0;
@@ -37,7 +38,7 @@ private:
 
 			if(isspace(str[pos])) {
 
-				if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < max_width) {
+				if(number_characters_output <= number_start_characters || (number_characters_output + (pos - start_pos)) < max_width) {
 
 					out << str.substr(start_pos, (pos - start_pos) + 1);
 					if(str[pos] == '\n') number_characters_output = 0;
@@ -49,6 +50,7 @@ private:
 					number_characters_output = 0;
 					pad();
 					out << "  ";
+					number_characters_output += 2;
 
 					while(start_pos < str.size() && str[start_pos] == ' ')
 						++start_pos;
@@ -70,7 +72,7 @@ private:
 
 		if(pos - start_pos) {
 
-			if(number_characters_output == 0 || (number_characters_output + (pos - start_pos)) < max_width) {
+			if(number_characters_output <= number_start_characters || (number_characters_output + (pos - start_pos)) < max_width) {
 
 				out << str.substr(start_pos, pos - start_pos);
 				if(str[pos] == '\n') number_characters_output = 0;
