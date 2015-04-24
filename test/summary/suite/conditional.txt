@@ -21,7 +21,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   Impact = 1 Statement	Cyclomatic = 0
-	• the condition of a guard clause was changed from '1' to '2' within the function body
+	• the condition of a guard clause was changed from '1' to '2' within the function
 
 END_SUMMARY
 
@@ -99,7 +99,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextTool::repaintSelection':
   Impact = 6 Statements	Cyclomatic = +2
-	• a guard clause was added to the function body
+	• a guard clause was added to the function
 	• a call to 'Q_ASSERT' was replaced with a guard clause
 
 END_SUMMARY
@@ -204,7 +204,7 @@ SUMMARY
 	• an else statement was converted to an elseif statement
 	  this includes:
 		• an if statement was added around a return statement
-	• a return statement was added to the function body
+	• a return statement was added to the function
 
 END_SUMMARY
 
