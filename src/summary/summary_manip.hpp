@@ -68,4 +68,6 @@ public:
 
 };
 
+using manip = summary_manip;
+	
 #endif

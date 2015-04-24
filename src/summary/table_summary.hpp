@@ -25,18 +25,18 @@ public:
 
     virtual summary_output_stream & output_header(summary_output_stream & out) const {
 
-        return out.pad() << summary_manip::setw(10) << summary_manip::left() << "" << summary_manip::right() << summary_manip::setw(9) << "Deleted" << summary_manip::setw(9) << "Inserted" << summary_manip::setw(9) << "Modified" << '\n';
+        return out.pad() << manip::setw(10) << manip::left() << "" << manip::right() << manip::setw(9) << "Deleted" << manip::setw(9) << "Inserted" << manip::setw(9) << "Modified" << '\n';
 
     }
 
     virtual summary_output_stream & output_counts(summary_output_stream & out, const std::string & type, size_t deleted_count, size_t inserted_count, size_t modified_count) const {
 
-        out.pad() << summary_manip::setw(10) << summary_manip::left();
+        out.pad() << manip::setw(10) << manip::left();
         out << type;
-        out << summary_manip::right();
-        out << summary_manip::setw(9) << deleted_count;
-        out << summary_manip::setw(9) << inserted_count;
-        out << summary_manip::setw(9) << modified_count;
+        out << manip::right();
+        out << manip::setw(9) << deleted_count;
+        out << manip::setw(9) << inserted_count;
+        out << manip::setw(9) << modified_count;
         out << '\n';
 
         return out;
@@ -95,7 +95,7 @@ public:
         if(do_deleted      || do_inserted      || do_modified)      output_counts(out, "do",      do_deleted,      do_inserted,      do_modified);
         if(foreach_deleted || foreach_inserted || foreach_modified) output_counts(out, "foreach", foreach_deleted, foreach_inserted, foreach_modified);
         if(forever_deleted || forever_inserted || forever_modified) output_counts(out, "forever", forever_deleted, forever_inserted, forever_modified);
-        out.pad() << summary_manip::setw(10) << summary_manip::left() << "total" << summary_manip::right() << summary_manip::setw(9) << number_deleted << summary_manip::setw(9) << number_inserted << summary_manip::setw(9) << number_modified << '\n';
+        out.pad() << manip::setw(10) << manip::left() << "total" << manip::right() << manip::setw(9) << number_deleted << manip::setw(9) << number_inserted << manip::setw(9) << number_modified << '\n';
         out.decrement_depth();
 
         return out;

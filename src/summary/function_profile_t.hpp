@@ -93,9 +93,9 @@ class function_profile_t : public profile_t {
             out << '\t';
             out << "Cyclomatic" << " = " << get_cyclomatic_complexity_change();
 
-            // out << summary_manip::bold() << "Impact" << summary_manip::normal() << " = " << summary_manip::bold() << statement_churn << summary_manip::normal() << " Statement" << (statement_churn == 1 ? "" : "s");
+            // out << manip::bold() << "Impact" << manip::normal() << " = " << manip::bold() << statement_churn << manip::normal() << " Statement" << (statement_churn == 1 ? "" : "s");
             // out << '\t';
-            // out << summary_manip::bold() << "Cyclomatic" << summary_manip::normal() << " = " << summary_manip::bold() << get_cyclomatic_complexity_change() << summary_manip::normal();
+            // out << manip::bold() << "Cyclomatic" << manip::normal() << " = " << manip::bold() << get_cyclomatic_complexity_change() << manip::normal();
             out << '\n';
 
             out.increment_depth();
