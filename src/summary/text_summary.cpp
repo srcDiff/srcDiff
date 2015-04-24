@@ -1427,13 +1427,13 @@ std::string text_summary::condition_summary(const versioned_string & condition, 
 
     if(start_pos == original.size() || end_pos > original.size()) {
 
-        if(condition_only) return "changed adding the clause '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "'";
-        else               return "the clause '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "' was added to the condition\n";
+        if(condition_only) return "changed adding '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "'";
+        else               return "'" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "' was added to the condition\n";
 
     } else if(start_pos == modified.size() || end_pos > modified.size()) {
 
-        if(condition_only) return "changed removing the clause '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "'";
-        else               return "the clause '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "' was deleted from the condition\n";
+        if(condition_only) return "changed removing '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "'";
+        else               return "'" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "' was deleted from the condition\n";
 
     } else {
 
