@@ -164,9 +164,8 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoDocument::openExistingFile':
   Impact = 4 Statements	Cyclomatic = -1
-	• a declaration statement declaring 'ok' of type 'bool' was replaced with a call to 
-	  'openUrl'
-	• an if statement with a single statement was removed from the function body
+	• a declaration statement was replaced with a call to 'openUrl'
+	• an if statement was removed from the function body
 
 END_SUMMARY
 

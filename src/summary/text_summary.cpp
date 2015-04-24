@@ -118,30 +118,8 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
         size_t statement_count = profile->operation == SRCDIFF_DELETE ? profile->statement_count_original : profile->statement_count_modified;
         if(profile->type_name == "elseif") --statement_count;
 
-        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON) {
-
-            if(statement_count == 0 || (profile->common_statements > 0 && profile->common_statements != statement_count))
-                return "an " + get_type_string_with_count(profile) + " with an else-clause";
-            else                
-                return "an " + get_type_string_with_count(profile) + " and with an else-clause";
-
-        }
-
-    }
-
-    if(is_decl_stmt(profile->type_name)) {
-
-        const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
-
-        std::string decl_stmt_summary = get_article(decl_stmt_profile) + ' ' + get_type_string(decl_stmt_profile) + " declaring '";
-        if(decl_stmt_profile->operation == SRCDIFF_DELETE)
-            decl_stmt_summary += decl_stmt_profile->name.original() + "' of type '" + decl_stmt_profile->type.original() + '\'';
-        else if(decl_stmt_profile->operation == SRCDIFF_INSERT)
-            decl_stmt_summary += decl_stmt_profile->name.modified() + "' of type '" + decl_stmt_profile->type.modified() + '\'';
-        else 
-            decl_stmt_summary += decl_stmt_profile->name + "' of type '" + decl_stmt_profile->type + '\'';
-
-        return decl_stmt_summary;
+        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
+            return "an if-else statement";
 
     }
 
@@ -210,7 +188,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
     }
 
-    return get_article(profile) + ' ' + get_type_string_with_count(profile);
+    return get_article(profile) + ' ' + get_type_string(profile);
 
 }
 

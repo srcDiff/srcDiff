@@ -138,8 +138,7 @@ SUMMARY
 	• the body of an if statement was modified
 	  this modification included:
 		• the identifier 'd->' was added in several places
-		• a declaration statement declaring 'aspectButton' of type 'QToolButton' was 
-		  replaced with an assignment to 'd->aspectButton'
+		• a declaration statement was replaced with an assignment to 'd->aspectButton'
 
 END_SUMMARY
 
@@ -173,8 +172,8 @@ SUMMARY
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
   Impact = 5 Statements	Cyclomatic = +1
-	• an if statement with an else-clause and 4 of its 5 statements were added with the 
-	  if-statement's body placed around a delete statement
+	• an if-else statement and 4 of its 5 statements were added with the if-statement's body 
+	  placed around a delete statement
 
 END_SUMMARY
 
