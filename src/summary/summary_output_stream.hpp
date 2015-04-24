@@ -29,7 +29,7 @@ private:
 
 	std::ostream & output(const std::string & str) {
 
-		// in case too much correct wrapping avoid outputting word on line
+		// in case too much correct wrapping avoid outputting one word on line
 		if((depth * 8) > (max_width / 2)) return out << str;
 
 		size_t start_pos = 0, pos = 0;
@@ -50,8 +50,15 @@ private:
 					pad();
 					out << "  ";
 
-					out << str.substr(start_pos, (pos - start_pos) + 1);
-					number_characters_output = (pos - start_pos) + 1;
+					while(start_pos < str.size() && str[start_pos] == ' ')
+						++start_pos;
+
+					if(start_pos <= pos) {
+
+						out << str.substr(start_pos, (pos - start_pos) + 1);
+						number_characters_output = (pos - start_pos) + 1;
+
+					}
 
 				}
 
