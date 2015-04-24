@@ -10,7 +10,7 @@ class summary_manip {
 
 private:
 
-	enum manipulation { SETW, LEFT, RIGHT, BOLD, NORMAL} manip;
+	enum manipulation { SETW, LEFT, RIGHT, BOLD, NORMAL } manip;
 	int setw_n;
 
 	static constexpr const char * const BOLD_TEXT = "\x1b[1m";
@@ -69,5 +69,5 @@ public:
 };
 
 using manip = summary_manip;
-	
+
 #endif
