@@ -180,7 +180,7 @@ summary_output_stream & text_summary::identifiers(summary_output_stream & out, c
 
         if(identifier.first.has_original()) out << identifier.first.original() << "' ";
 
-        if(identifier.first.has_original() && identifier.first.has_modified()) out << " was replaced with '";
+        if(identifier.first.has_original() && identifier.first.has_modified()) out << " was renamed to '";
 
         if(identifier.first.has_modified()) out << identifier.first.modified() << "' ";
 
