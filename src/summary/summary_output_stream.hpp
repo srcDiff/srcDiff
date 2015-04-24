@@ -123,7 +123,7 @@ public:
         for(size_t i = 0; i < depth; ++i)
             out << '\t';
 
-        number_characters_output += depth * 8;
+        number_characters_output = depth * 8;
 
         return *this;
 

@@ -1765,10 +1765,6 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
 
 }
 
-/** @todo look for some moves, maybe pure across children.  Then, rewrite the lists accordingly.
-    Might put this if function_profile_t or somewhere else.  Either way.  Best way may be to gather all addition/deletions
-    put into a list and use n2 search for moves.  Must be opposite operation and same type.
-*/
 summary_output_stream & text_summary::body(summary_output_stream & out, const profile_t & profile) {
 
     identifiers(out, summary_identifiers);
