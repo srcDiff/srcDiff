@@ -27,8 +27,8 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  Impact = 1 Statement	Other = 0	Cyclomatic = +1
-	• an if-else statement was added
-	• the else was added around a declaration
+  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #+1#
+	• an #if-else# was added
+	• the #else# was added around a #declaration#
 
 END_SUMMARY

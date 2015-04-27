@@ -33,16 +33,28 @@ private:
 		const size_t number_start_characters = depth * 8 + 2;
 		if((depth * 8) > (max_width / 2)) return out << str;
 
+		size_t non_count_characters = 0;
 		size_t start_pos = 0, pos = 0;
 		for(; pos < str.size(); ++pos) {
 
+			while(str[pos] == '\x1b') {
+
+				while(str[pos] != 'm')
+					++pos, ++non_count_characters;
+
+				++pos, ++non_count_characters;
+
+				if(pos >= str.size()) goto end_loop;
+
+			}
+
 			if(isspace(str[pos])) {
 
-				if(number_characters_output <= number_start_characters || (number_characters_output + (pos - start_pos)) < max_width) {
+				if(number_characters_output <= number_start_characters || (number_characters_output + ((pos - non_count_characters) - start_pos)) < max_width) {
 
 					out << str.substr(start_pos, (pos - start_pos) + 1);
 					if(str[pos] == '\n') number_characters_output = 0;
-					else                 number_characters_output += (pos - start_pos) + 1;
+					else                 number_characters_output += ((pos - non_count_characters) - start_pos) + 1;
 
 				} else {
 
@@ -58,25 +70,28 @@ private:
 					if(start_pos <= pos) {
 
 						out << str.substr(start_pos, (pos - start_pos) + 1);
-						number_characters_output = (pos - start_pos) + 1;
+						number_characters_output = ((pos - non_count_characters) - start_pos) + 1;
 
 					}
 
 				}
 
+				non_count_characters = 0;
 				start_pos = pos + 1;
 
 			}
 
 		}
 
+end_loop:
+
 		if(pos - start_pos) {
 
-			if(number_characters_output <= number_start_characters || (number_characters_output + (pos - start_pos)) < max_width) {
+			if(number_characters_output <= number_start_characters || (number_characters_output + ((pos - non_count_characters) - start_pos)) < max_width) {
 
 				out << str.substr(start_pos, pos - start_pos);
 				if(str[pos] == '\n') number_characters_output = 0;
-				else                 number_characters_output += pos - start_pos;
+				else                 number_characters_output += (pos - non_count_characters) - start_pos;
 
 			} else {
 
@@ -86,9 +101,11 @@ private:
 				out << "  ";
 
 				out << str.substr(start_pos, pos - start_pos);
-				number_characters_output = pos - start_pos;
+				number_characters_output = (pos - non_count_characters) - start_pos;
 
 			}
+
+			non_count_characters = 0;
 
 		}
 

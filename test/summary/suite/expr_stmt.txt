@@ -78,10 +78,10 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisView2::slotLoadingFinished':
-  Impact = 2 Statements	Other = 0	Cyclomatic = 0
-	• a call to 'm_d->zoomManager->zoomController' was deleted from a call chain and a call to 
+  #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
+	• a #call# to 'm_d->zoomManager->zoomController' was deleted from a #call chain# and a #call# to 
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
-	• a chain of calls was added to the function
+	• a #chain of calls# was added to the function
 
 END_SUMMARY
 
@@ -105,8 +105,8 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  Impact = 1 Statement	Other = 0	Cyclomatic = 0
-	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
+  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+	• the argument list to 'p.addRect' was modified.  The modifications were: a #call# to 
 	  'converter.documentToView' was deleted and its arguments were retained
 
 END_SUMMARY
@@ -131,8 +131,8 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  Impact = 1 Statement	Other = 0	Cyclomatic = 0
-	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
+  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+	• the argument list to 'p.addRect' was modified.  The modifications were: a #call# to 
 	  'converter.documentToView' was added and it was placed around an existing argument
 
 END_SUMMARY
@@ -162,9 +162,9 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoDocument::openExistingFile':
-  Impact = 4 Statements	Other = 0	Cyclomatic = -1
-	• a declaration was replaced with a call to 'openUrl'
-	• an if was removed from the function
+  #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #-1#
+	• a #declaration# was replaced with a #call# to 'openUrl'
+	• an #if# was removed from the function
 
 END_SUMMARY
 
@@ -206,8 +206,8 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation':
-  Impact = 1 Statement	Other = 0	Cyclomatic = 0
-	• an assignment was modified. The modification was a call to '_fallBackToCs->dstColorSpace' 
+  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+	• an #assignment# was modified. The modification was a #call# to '_fallBackToCs->dstColorSpace' 
 	  was renamed to '_fallBackToCs->srcColorSpace
 
 END_SUMMARY
@@ -256,11 +256,11 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisView2::createGUI':
-  Impact = 5 Statements	Other = 0	Cyclomatic = 0
-	• a call to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
-	• a call to 'connect' was deleted from the function
-	• a call to 'connect' was deleted from the function
-	• a call to 'connect' was deleted from the function
-	• a call to 'connect' was deleted from the function
+  #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #0#
+	• a #call# to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
+	• a #call# to 'connect' was deleted from the function
+	• a #call# to 'connect' was deleted from the function
+	• a #call# to 'connect' was deleted from the function
+	• a #call# to 'connect' was deleted from the function
 
 END_SUMMARY

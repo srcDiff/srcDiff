@@ -19,6 +19,14 @@
 
 /** @todo survey suggested highlighting important details. Not sure if they mean bold or background color */
 
+const char * const BOLD_TEXT = "\x1b[1m";
+const char * const NORMAL_TEXT = "\x1b[0m";
+std::string bold(std::string text) {
+
+    return BOLD_TEXT + text + NORMAL_TEXT;
+
+}
+
 std::string text_summary::get_article(const std::string & type_name) const { 
 
     const char letter = type_name[0];
@@ -48,27 +56,27 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
     if(profile->type_name == "if") {
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
-        if(if_profile->is_guard()) return "guard clause";
+        if(if_profile->is_guard()) return bold("guard clause");
 
     }
 
-    if(profile->type_name == "else") return "else";
+    if(profile->type_name == "else") return bold("else");
 
-    if(is_decl_stmt(profile->type_name)) return "declaration";
+    if(is_decl_stmt(profile->type_name)) return bold("declaration");
 
     if(is_expr_stmt(profile->type_name)) {
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
-        if(expr_stmt_profile->assignment()) return "assignment";
-        if(expr_stmt_profile->is_delete())  return "delete";
-        if(expr_stmt_profile->call())       return "call";
-        return "expression";
+        if(expr_stmt_profile->assignment()) return bold("assignment");
+        if(expr_stmt_profile->is_delete())  return bold("delete");
+        if(expr_stmt_profile->call())       return bold("call");
+        return bold("expression");
 
     }
 
-    if(is_comment(profile->type_name)) return profile->type_name;
+    if(is_comment(profile->type_name)) return bold(profile->type_name);
 
-    return profile->type_name;
+    return bold(profile->type_name);
 
 }
 
@@ -104,8 +112,8 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
     if(!profile->type_name.is_common()) {
 
-        std::string original = get_article(profile->type_name.original()) + " " + profile->type_name.original();
-        std::string modified = get_article(profile->type_name.modified()) + " " + profile->type_name.modified();
+        std::string original = get_article(profile->type_name.original()) + " " + bold(profile->type_name.original());
+        std::string modified = get_article(profile->type_name.modified()) + " " + bold(profile->type_name.modified());
 
         return original + " was converted to " + modified;
 
@@ -119,7 +127,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
         if(profile->type_name == "elseif") --statement_count;
 
         if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
-            return "an if-else";
+            return "an " + bold("if-else");
 
     }
 
@@ -129,7 +137,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
         if(expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) {
 
-            std::string expr_stmt_summary = "an assignment to '";
+            std::string expr_stmt_summary = "an " + bold("assignment") + " to '";
             if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += expr_stmt_profile->lhs().original() + '\'';
             else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += expr_stmt_profile->lhs().modified() + '\'';
 
@@ -142,14 +150,14 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
                 std::string expr_stmt_summary;
                 if(expr_stmt_profile->get_call_profiles().size() == 1) {
 
-                    expr_stmt_summary = get_article(profile) + " call to '";
+                    expr_stmt_summary = "a " + bold("call") + " to '";
                     const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[0];
                     if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += call_profile->name.original() + '\'';
                     else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += call_profile->name.modified() + '\'';
 
                 } else {
 
-                    expr_stmt_summary = "a chain of calls";
+                    expr_stmt_summary = "a " + bold("chain of calls");
 
                 }
 
@@ -162,7 +170,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
     if(is_call(profile->type_name)) {
 
         const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile);
-        return "a call to '" + call_profile->name.original() + "' was renamed to '" + call_profile->name.modified();
+        return "a " + bold("call") + " to '" + call_profile->name.original() + "' was renamed to '" + call_profile->name.modified();
 
     }
 
@@ -315,7 +323,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(expr_stmt_deleted.size() == 1)
                 out << get_profile_string(*expr_stmt_deleted.back());
             else
-                out << "several expressions";
+                out << "several " << manip::bold() << "expressions" << manip::normal();
 
             if(number_deleted_types == 2)
                 out << " and ";
@@ -329,7 +337,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(decl_stmt_deleted.size() == 1)
                 out << get_profile_string(*decl_stmt_deleted.back());
             else
-                out << "several declarations";
+                out << "several " << manip::bold() << "declarations" << manip::normal();
 
             if(expr_stmt_deleted.size() && number_deleted_types == 3)
                 out << ", and ";
@@ -345,7 +353,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(conditionals_deleted.size() == 1)
                 out << get_profile_string(*conditionals_deleted.back());
             else
-                out << "several conditionals";
+                out << "several " << manip::bold() << "conditionals" << manip::normal();
 
             if(number_deleted_types > 2)
                 out << ", and ";
@@ -355,9 +363,9 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
         }
 
         if(comment_deleted.size() == 1)
-            out << "a comment";
+            out << "a " << manip::bold() << "comment" << manip::normal();
         else if(comment_deleted.size() > 1)
-            out << "several comments";
+            out << "several " << manip::bold() << "comments" << manip::normal();
 
         out << " were";
 
@@ -383,7 +391,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(expr_stmt_inserted.size() == 1)
                 out << get_profile_string(*expr_stmt_inserted.back());
             else
-                out << "several expressions";
+                out << "several " << manip::bold() << "expressions" << manip::normal();
 
             if(expr_stmt_inserted.size() > 1) out << 's';
 
@@ -399,7 +407,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(decl_stmt_inserted.size() == 1)
                 out << get_profile_string(*decl_stmt_inserted.back());
             else
-                out << "several declarations";
+                out << "several " << manip::bold() << "declarations" << manip::normal();
 
             if(expr_stmt_inserted.size() && number_inserted_types == 3)
                 out << ", and ";
@@ -415,7 +423,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(conditionals_inserted.size() == 1)
                 out << get_profile_string(*conditionals_inserted.back());
             else
-                out << "several conditionals";
+                out << "several " << manip::bold() << "conditionals" << manip::normal();
 
             if(conditionals_inserted.size() > 1) out << 's';
 
@@ -427,9 +435,9 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
         }
 
         if(comment_inserted.size() == 1)
-            out << "a comment";
+            out << "a " << manip::bold() << "comment" << manip::normal();
         else if(comment_inserted.size() > 1)
-            out << "several comments";
+            out << "several " << manip::bold() << "comments" << manip::normal();
 
     }
 
@@ -552,11 +560,11 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         if(number_parameters_deleted == 1) {
 
             change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_DELETE);
-            out << "the parameter '" << param_iterator->second->name.original() << "' of type '" << param_iterator->second->type.original() << "' was removed\n";
+            out << "the " << manip::bold() << "parameter" << manip::normal() << " '" << param_iterator->second->name.original() << "' of type '" << param_iterator->second->type.original() << "' was removed\n";
 
         } else {
 
-            out << "the following parameters were removed:\n";
+            out << "the following " << manip::bold() << "parameters" << manip::normal() << " were removed:\n";
 
             out.increment_depth();
             std::for_each(parameters.lower_bound(SRCDIFF_DELETE), parameters.upper_bound(SRCDIFF_DELETE),
@@ -578,11 +586,11 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         if(number_parameters_inserted == 1) {
 
             change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_INSERT);
-            out << "the parameter '" << param_iterator->second->name.modified() << "' of type '" << param_iterator->second->type.modified() << "' was added\n";
+            out << "the " << manip::bold() << "parameter" << manip::normal() << " '" << param_iterator->second->name.modified() << "' of type '" << param_iterator->second->type.modified() << "' was added\n";
 
         } else {
 
-            out << "the following parameters were added:\n";
+            out << "the following " << manip::bold() << "parameters" << manip::normal() << " were added:\n";
 
             out.increment_depth();
             std::for_each(parameters.lower_bound(SRCDIFF_INSERT), parameters.upper_bound(SRCDIFF_INSERT),
@@ -604,7 +612,7 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         if(number_parameters_modified == 1) {
 
             change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_COMMON);
-            out << "the parameter ";
+            out << "the " << manip::bold() << "parameter" << manip::normal() << " ";
             if(param_iterator->second->name.is_common() && !param_iterator->second->type.is_common())
                 out << '\'' << param_iterator->second->name << "' had its type changed from '" 
                     << param_iterator->second->type.original() << "' to '" << param_iterator->second->type.modified() << '\'';
@@ -618,7 +626,7 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
 
         } else {
 
-            out << "the following parameters were modified:\n";
+            out << "the following " << manip::bold() << "parameters" << manip::normal() << " were modified:\n";
 
             out.increment_depth();
             std::for_each(parameters.lower_bound(SRCDIFF_COMMON), parameters.upper_bound(SRCDIFF_COMMON),
@@ -657,11 +665,11 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
         if(number_member_initializations_deleted == 1) {
 
             change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_DELETE);
-            out << "a member initilization for '" << member_iterator->second->name.original() << "' was removed\n";
+            out << "a " << manip::bold() << "member initilization" << manip::normal() << " for '" << member_iterator->second->name.original() << "' was removed\n";
 
         } else {
 
-            out << "the following member initializations were removed:\n";
+            out << "the following " << manip::bold() << "member initilizations" << manip::normal() << " were removed:\n";
 
             out.increment_depth();
             std::for_each(member_initializations.lower_bound(SRCDIFF_DELETE), member_initializations.upper_bound(SRCDIFF_DELETE),
@@ -683,11 +691,11 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
         if(number_member_initializations_inserted == 1) {
 
             change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_INSERT);
-            out << "a member initilization for '" << member_iterator->second->name.modified() << "' was added\n";
+            out << "a " << manip::bold() << "member initilization" << manip::normal() << " for '" << member_iterator->second->name.modified() << "' was added\n";
 
         } else {
 
-            out << "the following member initializations were added:\n";
+            out << "the following " << manip::bold() << "member initilizations" << manip::normal() << " were added:\n";
 
             out.increment_depth();
             std::for_each(member_initializations.lower_bound(SRCDIFF_INSERT), member_initializations.upper_bound(SRCDIFF_INSERT),
@@ -710,13 +718,13 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
             change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_COMMON);
             if(member_iterator->second->name.is_common())
-                out << "the member initilization for '" << member_iterator->second->name << "' was modified\n";
+                out << "the " << manip::bold() << "member initilization" << manip::normal() << " for '" << member_iterator->second->name << "' was modified\n";
             else
-                out << "the name of a member initilization was changed from '" << member_iterator->second->name.original() << "' to '" << member_iterator->second->name.modified() << "'\n";
+                out << "the name of a " << manip::bold() << "member initilization" << manip::normal() << " was changed from '" << member_iterator->second->name.original() << "' to '" << member_iterator->second->name.modified() << "'\n";
 
         } else {
 
-            out << "the following member initializations were modified:\n";
+            out << "the following " << manip::bold() << "member initilizations" << manip::normal() << " were modified:\n";
 
             out.increment_depth();
             std::for_each(member_initializations.lower_bound(SRCDIFF_COMMON), member_initializations.upper_bound(SRCDIFF_COMMON),
@@ -726,7 +734,7 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
                     if(member.second->name.is_common())
                         out << '\'' << member.second->name << "'\n";
                     else
-                        out << "the name of a member initilization was changed from '" << member.second->name.original() << "' to '" << member.second->name.modified() << "'\n";
+                        out << "the name of a " << manip::bold() << "member initilization" << manip::normal() << " was changed from '" << member.second->name.original() << "' to '" << member.second->name.modified() << "'\n";
 
                 });
             out.decrement_depth();
@@ -883,8 +891,8 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
     if(deleted_calls.size()) {
 
-        if(deleted_calls.size() == 1) summary += "a call to ";
-        else                          summary += "calls to ";
+        if(deleted_calls.size() == 1) summary += "a " + bold("call") + " to ";
+        else                          summary += bold("calls") + " to ";
 
         for(size_t pos = 0; pos < deleted_calls.size(); ++pos) {
 
@@ -904,7 +912,7 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
         // should always be expr
         if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(deleted_calls.front()->parent)->calls() > 1)
-            summary += " from a call chain";
+            summary += " from a " + bold("call chain");
 
         if(deleted_calls.size() == 1) {
 
@@ -944,8 +952,8 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
     if(inserted_calls.size()) {
 
-        if(inserted_calls.size() == 1) summary += "a call to ";
-        else                          summary += "calls to ";
+        if(inserted_calls.size() == 1) summary += "a " + bold("call") + " to ";
+        else                          summary += bold("calls") + " to ";
 
         for(size_t pos = 0; pos < inserted_calls.size(); ++pos) {
 
@@ -965,7 +973,7 @@ std::string text_summary::summarize_calls(std::vector<std::shared_ptr<call_profi
 
         // should always be expr
         if(reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(inserted_calls.front()->parent)->calls() > 1)
-            summary += " to a call chain";
+            summary += " to a " + bold("call chain");
 
         if(inserted_calls.size() == 1) {
 
@@ -1165,13 +1173,13 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
             if(call_names.size() == 1) {
 
-                out << "a call to '" << call_names.front() << "' was ";
+                out << "a " << manip::bold() << "call" << manip::normal() << " to '" << call_names.front() << "' was ";
 
                 out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
 
             } else {
 
-                out << "calls to ";
+                out << manip::bold() << "calls" << manip::normal() << " to ";
 
                 std::string ending = call_names.size() == 2 ? "' " : "', ";
                 while(call_names.size() != 1) {
@@ -1273,7 +1281,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
     if(profile->parent->operation != SRCDIFF_COMMON) {
 
         out.begin_line();
-        out << "an if-else statement was ";
+        out << "an " << manip::bold() << "if-else" << manip::normal() << " was ";
         out << (profile->parent->operation == SRCDIFF_DELETE ? "removed" : "added");
         out << '\n';
 
@@ -1522,7 +1530,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
                     const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(summary_profile);
                     if(if_profile->else_clause()) {
 
-                        out << " with the if's body ";
+                        out << " with the " << manip::bold() << "if" << manip::normal() << "'s body ";
                         out << (summary_profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
 
                     }
