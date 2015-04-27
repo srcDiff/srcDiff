@@ -77,6 +77,23 @@ class function_profile_t : public profile_t {
 
         }
 
+        std::string get_other_change_count() const {
+
+            bool is_return_type_change = !return_type.is_common();
+
+            size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0;
+            parameters.count_operations(number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+
+            size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
+            member_initializations.count_operations(number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+
+            size_t count = (is_return_type_change ? 1 : 0) + number_parameters_deleted + number_parameters_inserted + number_parameters_modified
+                + number_member_initializations_deleted + number_member_initializations_inserted + number_member_initializations_modified;
+
+            return std::to_string(count);
+
+        }
+
         /** @todo may need to add rest of things that can occur here between parameter list and block */
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
@@ -90,6 +107,8 @@ class function_profile_t : public profile_t {
             out.begin_line() << type_name << " '" << name << "':\n";
             out.pad() << "  ";
             out << "Impact" << " = " << statement_churn << " Statement" << (statement_churn == 1 ? "" : "s");
+            out << '\t';
+            out << "Other" << " = " << get_other_change_count();
             out << '\t';
             out << "Cyclomatic" << " = " << get_cyclomatic_complexity_change();
 

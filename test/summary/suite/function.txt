@@ -134,7 +134,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoZoomAction::createWidget':
-  Impact = 10 Statements	Cyclomatic = 0
+  Impact = 10 Statements	Other = 0	Cyclomatic = 0
 	• the body of an if statement was modified
 	  this modification included:
 		• the identifier 'd->' was added in several places
@@ -171,7 +171,7 @@ SUMMARY
 
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
-  Impact = 5 Statements	Cyclomatic = +1
+  Impact = 5 Statements	Other = 0	Cyclomatic = +1
 	• an if-else statement and 4 of its 5 statements were added with the if-statement's body 
 	  placed around a delete statement
 
@@ -197,7 +197,7 @@ SUMMARY
 
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
-  Impact = 2 Statements	Cyclomatic = 0
+  Impact = 2 Statements	Other = 0	Cyclomatic = 0
 	• a delete statement was replaced with an assignment to 'a'
 
 END_SUMMARY
@@ -225,7 +225,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'PageProcessingQueue::PageProcessingQueue':
-  Impact = 0 Statements	Cyclomatic = 0
+  Impact = 0 Statements	Other = 1	Cyclomatic = 0
 	• a member initilization for 'QObject' was added
 
 END_SUMMARY
@@ -316,7 +316,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  Impact = 4 Statements	Cyclomatic = 0
+  Impact = 4 Statements	Other = 0	Cyclomatic = 0
 	• a call to 'applyConversion' was moved
 	• the argument list to 'p.addRect' was modified.  The modifications were: a call to 
 	  'converter.documentToView' was deleted and its arguments were retained
@@ -337,7 +337,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  Impact = 0 Statements	Cyclomatic = 0
+  Impact = 0 Statements	Other = 1	Cyclomatic = 0
 	• Signature change:
 	• the parameter 'bar' of type 'foo' was added
 
@@ -385,7 +385,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'KisRecordedFilterActionEditor::KisRecordedFilterActionEditor':
-  Impact = 3 Statements	Cyclomatic = 0
+  Impact = 3 Statements	Other = 0	Cyclomatic = 0
 	• a call to 'connect' was moved
 
 END_SUMMARY
