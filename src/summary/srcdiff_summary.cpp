@@ -952,8 +952,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
-    bool is_prototype = full_name == "parameter" || (full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list");
-    if(is_statement(full_name) || is_prototype) {
+    //bool is_prototype = full_name == "parameter" || (full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list");
+    if(is_statement(full_name)/* || is_prototype*/) {
 
         size_t parent_pos = std::get<0>(counting_profile_pos.back());
 
