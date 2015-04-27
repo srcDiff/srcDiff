@@ -159,8 +159,8 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoMainWindow::slotCloseAllViews':
   Impact = 6 Statements	Other = 0	Cyclomatic = -1
-	• an if-else statement and 2 of its 9 statements were removed with remaining code retained. 
-	  Then, the remaining code was modified
+	• an if-else and 2 of its 9 statements were removed with remaining code retained.  Then, 
+	  the remaining code was modified
 	  this modification included:
 		• an assignment to 'd->rootDoc' was moved
 
@@ -201,10 +201,10 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoMainWindow::currentView':
   Impact = 3 Statements	Other = 0	Cyclomatic = +1
-	• an else statement was converted to an elseif statement
+	• an else was converted to an elseif
 	  this includes:
-		• an if statement was added around a return statement
-	• a return statement was added to the function
+		• an if was added around a return
+	• a return was added to the function
 
 END_SUMMARY
 
@@ -284,7 +284,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisGroupLayer::resetProjection':
   Impact = 3 Statements	Other = 0	Cyclomatic = +1
-	• an elseif statement was added
+	• an elseif was added
 
 END_SUMMARY
 
@@ -345,7 +345,7 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'RotateImage::RotateImage':
   Impact = 14 Statements	Other = 0	Cyclomatic = 0
-	• the body of an if statement was modified
+	• the body of an if was modified
 	  this modification included:
 		• the identifier 'action'  was renamed to 'm_rotate180LayerAction' in several 
 		  places

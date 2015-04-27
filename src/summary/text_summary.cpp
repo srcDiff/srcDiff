@@ -52,23 +52,23 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
 
     }
 
-    if(profile->type_name == "else") return "else-clause";
+    if(profile->type_name == "else") return "else";
 
-    if(is_decl_stmt(profile->type_name)) return "declaration statement";
+    if(is_decl_stmt(profile->type_name)) return "declaration";
 
     if(is_expr_stmt(profile->type_name)) {
 
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
-        if(expr_stmt_profile->assignment()) return "assignment statement";
-        if(expr_stmt_profile->is_delete())  return "delete statement";
-        if(expr_stmt_profile->call())       return "call statement";
-        return "expression statement";
+        if(expr_stmt_profile->assignment()) return "assignment";
+        if(expr_stmt_profile->is_delete())  return "delete";
+        if(expr_stmt_profile->call())       return "call";
+        return "expression";
 
     }
 
     if(is_comment(profile->type_name)) return profile->type_name;
 
-    return profile->type_name + " statement";
+    return profile->type_name;
 
 }
 
@@ -104,8 +104,8 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
     if(!profile->type_name.is_common()) {
 
-        std::string original = get_article(profile->type_name.original()) + " " + profile->type_name.original() + " statement";
-        std::string modified = get_article(profile->type_name.modified()) + " " + profile->type_name.modified() + " statement";
+        std::string original = get_article(profile->type_name.original()) + " " + profile->type_name.original();
+        std::string modified = get_article(profile->type_name.modified()) + " " + profile->type_name.modified();
 
         return original + " was converted to " + modified;
 
@@ -119,7 +119,7 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
         if(profile->type_name == "elseif") --statement_count;
 
         if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
-            return "an if-else statement";
+            return "an if-else";
 
     }
 
@@ -315,7 +315,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(expr_stmt_deleted.size() == 1)
                 out << get_profile_string(*expr_stmt_deleted.back());
             else
-                out << "several expression statements";
+                out << "several expressions";
 
             if(number_deleted_types == 2)
                 out << " and ";
@@ -329,7 +329,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(decl_stmt_deleted.size() == 1)
                 out << get_profile_string(*decl_stmt_deleted.back());
             else
-                out << "several declaration statements";
+                out << "several declarations";
 
             if(expr_stmt_deleted.size() && number_deleted_types == 3)
                 out << ", and ";
@@ -345,7 +345,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(conditionals_deleted.size() == 1)
                 out << get_profile_string(*conditionals_deleted.back());
             else
-                out << "several conditional statements";
+                out << "several conditionals";
 
             if(number_deleted_types > 2)
                 out << ", and ";
@@ -383,7 +383,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(expr_stmt_inserted.size() == 1)
                 out << get_profile_string(*expr_stmt_inserted.back());
             else
-                out << "several expression statements";
+                out << "several expressions";
 
             if(expr_stmt_inserted.size() > 1) out << 's';
 
@@ -399,7 +399,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(decl_stmt_inserted.size() == 1)
                 out << get_profile_string(*decl_stmt_inserted.back());
             else
-                out << "several declaration statements";
+                out << "several declarations";
 
             if(expr_stmt_inserted.size() && number_inserted_types == 3)
                 out << ", and ";
@@ -415,7 +415,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             if(conditionals_inserted.size() == 1)
                 out << get_profile_string(*conditionals_inserted.back());
             else
-                out << "several conditional statements";
+                out << "several conditionals";
 
             if(conditionals_inserted.size() > 1) out << 's';
 
@@ -1522,7 +1522,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
                     const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(summary_profile);
                     if(if_profile->else_clause()) {
 
-                        out << " with the if-statement's body ";
+                        out << " with the if's body ";
                         out << (summary_profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
 
                     }

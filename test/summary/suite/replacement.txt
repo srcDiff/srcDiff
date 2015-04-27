@@ -41,8 +41,8 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisZoomManager::changeAspectMode':
   Impact = 6 Statements	Other = 0	Cyclomatic = 0
-	• several expression statements, a declaration statement, and a comment were replaced with 
-	  a call to 'm_zoomController->setZoom'
+	• several expressions, a declaration, and a comment were replaced with a call to 
+	  'm_zoomController->setZoom'
 
 END_SUMMARY
 

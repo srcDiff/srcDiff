@@ -29,6 +29,6 @@ SUMMARY
 • function 'f':
   Impact = 1 Statement	Other = 0	Cyclomatic = +1
 	• an if-else statement was added
-	• the else-clause was added around a declaration statement
+	• the else was added around a declaration
 
 END_SUMMARY

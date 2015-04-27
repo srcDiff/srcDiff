@@ -163,8 +163,8 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoDocument::openExistingFile':
   Impact = 4 Statements	Other = 0	Cyclomatic = -1
-	• a declaration statement was replaced with a call to 'openUrl'
-	• an if statement was removed from the function
+	• a declaration was replaced with a call to 'openUrl'
+	• an if was removed from the function
 
 END_SUMMARY
 
@@ -207,8 +207,8 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation':
   Impact = 1 Statement	Other = 0	Cyclomatic = 0
-	• an assignment statement was modified. The modification was a call to 
-	  '_fallBackToCs->dstColorSpace' was renamed to '_fallBackToCs->srcColorSpace
+	• an assignment was modified. The modification was a call to '_fallBackToCs->dstColorSpace' 
+	  was renamed to '_fallBackToCs->srcColorSpace
 
 END_SUMMARY
 
