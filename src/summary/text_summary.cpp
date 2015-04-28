@@ -1502,6 +1502,14 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out.begin_line();
 
+        /** @todo fix this to be neater */
+        if(condition_modified && !body_modified && !else_modified && !elseif_modified) {
+
+            out << "the condition of " << get_profile_string(profile) << " was altered\n";
+            return out;
+
+        }
+
         if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified || elseif_modified)) {
 
             out << "the ";
