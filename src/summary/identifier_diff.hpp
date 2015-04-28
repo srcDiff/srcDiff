@@ -13,6 +13,8 @@ private:
 	const versioned_string identifier;
 	boost::optional<versioned_string> diff;
 
+    bool is_complex;
+
 private:
 
     bool is_identifier_char(char character) const {
@@ -43,7 +45,7 @@ private:
 
 public:
 
-	identifier_diff(const versioned_string & identifier) : identifier(identifier) {}
+	identifier_diff(const versioned_string & identifier) : identifier(identifier), is_complex(false) {}
 
     bool has_diff() const {
 
@@ -64,6 +66,45 @@ public:
 		return *diff;
 
 	}
+
+    bool complex() const {
+
+        return is_complex;
+
+    }
+
+    void trim(bool is_call) {
+
+        std::vector<std::string> original_identifiers = split_complex_identifier(identifier.original());
+        std::vector<std::string> modified_identifiers = split_complex_identifier(identifier.modified());
+
+        if(original_identifiers.size() > 1 || modified_identifiers.size() > 1)
+            is_complex = true;
+
+        if(!is_call || original_identifiers.size() <= 2 || modified_identifiers.size() <= 2) {
+
+            diff = identifier;
+            return;
+
+        }
+
+        original_identifiers.pop_back();
+        original_identifiers.pop_back();
+
+        modified_identifiers.pop_back();
+        modified_identifiers.pop_back();
+
+        versioned_string ident;
+
+        for(const std::string & original : original_identifiers)
+            ident.append(original.c_str(), original.size(), SRCDIFF_DELETE);
+
+        for(const std::string & modified : modified_identifiers)
+            ident.append(modified.c_str(), modified.size(), SRCDIFF_INSERT);
+
+        diff = ident;
+
+    }
 
     void compute_diff() {
 

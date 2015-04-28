@@ -184,12 +184,27 @@ summary_output_stream & text_summary::identifiers(summary_output_stream & out, c
 
         if(identifier.second <= 1) continue;
 
-        out.begin_line() << "the identifier '";
+        out.begin_line();// << "the identifier '";
+
+        if(identifier.first.complex()) {
+
+            out << "name change from '";
+            out << identifier.first.get_diff().original();
+            out << "' to '";
+            out << identifier.first.get_diff().modified();
+            out << '\'';
 
 
-        out << identifier.first.get_identifier().original() << "'";
-        out << " was renamed to '";
-        out << identifier.first.get_identifier().modified() << '\'';
+        } else {
+
+            out << '\'';
+            out << identifier.first.get_diff().original();
+            out << "' was renamed to '";
+            out << identifier.first.get_diff().modified();
+            out << '\'';
+
+        }
+
         out << '\n';
 
     }
@@ -769,9 +784,11 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                 if(report_name) {
 
                     identifier_diff ident_diff(call_profile->name);
-                    ident_diff.compute_diff();
+                    ident_diff.trim(true);
 
-                    if(!identifier_set.count(ident_diff.get_diff())) report_name = false;
+                    if(!identifier_set.count(ident_diff)) {
+                        report_name = false;
+                    }
 
                 }
 
@@ -832,9 +849,9 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                                     = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
 
                                                 identifier_diff ident_diff(identifier_profile->name);
-                                                ident_diff.compute_diff();
+                                                ident_diff.trim(false);
 
-                                                if(identifier_set.count(ident_diff.get_diff())) {
+                                                if(identifier_set.count(ident_diff)) {
 
                                                     report_change = true;
                                                     break;

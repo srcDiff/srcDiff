@@ -752,7 +752,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
 
                 if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common())
-                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_name);
+                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_name, profile_stack.at(parent_pos)->type_name);
 
                 collected_name.clear();
 

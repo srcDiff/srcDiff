@@ -347,12 +347,10 @@ SUMMARY
   #Impact# = #14# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• the body of an #if# was modified
 	  this modification included:
-		• the identifier 'action'  was renamed to 'm_rotate180LayerAction' in several 
-		  places
-		• the identifier 'action'  was renamed to 'm_rotate270LayerAction' in several 
-		  places
-		• the identifier 'action'  was renamed to 'm_rotate90LayerAction' in several places
-		• the identifier 'action'  was renamed to 'm_rotateLayerAction' in several places
+		• 'action' was renamed to 'm_rotate180LayerAction'
+		• 'action' was renamed to 'm_rotate270LayerAction'
+		• 'action' was renamed to 'm_rotate90LayerAction'
+		• 'action' was renamed to 'm_rotateLayerAction'
 		• a #call# to 'connect' was added
 
 END_SUMMARY

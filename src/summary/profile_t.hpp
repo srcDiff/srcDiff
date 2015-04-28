@@ -9,6 +9,7 @@
 #include <srcdiff_macros.hpp>
 #include <identifier_diff.hpp>
 #include <summary_output_stream.hpp>
+#include <type_query.hpp>
 
 #include <vector>
 #include <map>
@@ -106,13 +107,13 @@ class profile_t {
 
         }
 
-        virtual void add_identifier(const versioned_string & identifier) {
+        virtual void add_identifier(const versioned_string & identifier, const versioned_string & parent) {
 
             if(identifier.has_original() && identifier.has_modified() && !identifier.is_common()) {
 
                 identifier_diff ident_diff(identifier);
 
-                ident_diff.compute_diff();
+                ident_diff.trim(is_call(parent));
 
                 std::map<identifier_diff, size_t>::iterator itr = identifiers.find(ident_diff);
                 if(itr == identifiers.end()) {

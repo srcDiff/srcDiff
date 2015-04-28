@@ -137,7 +137,7 @@ SUMMARY
   #Impact# = #10# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• the body of an #if# was modified
 	  this modification included:
-		• the identifier 'd->' was added in several places
+		• name change from 'aspectButton' to 'd->aspectButton'
 		• a #declaration# was replaced with an #assignment# to 'd->aspectButton'
 
 END_SUMMARY
