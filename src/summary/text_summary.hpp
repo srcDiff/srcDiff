@@ -14,6 +14,10 @@
 
 class text_summary {
 
+public:
+
+    enum abstraction_level { HIGH, MEDIUM, LOW };
+
 private:
 
 protected:
@@ -30,6 +34,8 @@ protected:
         std::map<identifier_diff, size_t> output_identifiers;
 
         size_t body_depth;
+
+        abstraction_level abstract_level;
 
 private:
 
@@ -52,7 +58,8 @@ public:
 
     text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<identifier_diff, size_t> & summary_identifiers);
+                 const std::map<identifier_diff, size_t> & summary_identifiers,
+                 abstraction_level abstract_level = HIGH);
 
     summary_output_stream & parameter(summary_output_stream & out, size_t number_parameters_deleted,
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;

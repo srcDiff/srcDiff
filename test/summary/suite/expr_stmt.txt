@@ -81,7 +81,7 @@ SUMMARY
   #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• a #call# to 'm_d->zoomManager->zoomController' was deleted from a #call chain# and a #call# to 
 	  'setZoomMode' was renamed to 'm_d->viewConverter->setZoomMode
-	• a #chain of calls# was added to the function
+	• a #chain of calls# was added
 
 END_SUMMARY
 
@@ -164,7 +164,7 @@ SUMMARY
 • function 'KoDocument::openExistingFile':
   #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #-1#
 	• a #declaration# was replaced with a #call# to 'openUrl'
-	• an #if# was removed from the function
+	• an #if# was removed
 
 END_SUMMARY
 
@@ -258,9 +258,9 @@ SUMMARY
 • function 'KisView2::createGUI':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• a #call# to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
-	• a #call# to 'connect' was deleted from the function
-	• a #call# to 'connect' was deleted from the function
-	• a #call# to 'connect' was deleted from the function
-	• a #call# to 'connect' was deleted from the function
+	• a #call# to 'connect' was deleted
+	• a #call# to 'connect' was deleted
+	• a #call# to 'connect' was deleted
+	• a #call# to 'connect' was deleted
 
 END_SUMMARY

@@ -554,9 +554,10 @@ size_t text_summary::number_child_changes(const profile_t::profile_list_t & chil
 
 text_summary::text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
              const change_entity_map<call_profile_t> & member_initializations,
-             const std::map<identifier_diff, size_t> & summary_identifiers)
+             const std::map<identifier_diff, size_t> & summary_identifiers,
+             abstraction_level abstract_level)
     : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
-      summary_identifiers(summary_identifiers), body_depth(0) {}
+      summary_identifiers(summary_identifiers), body_depth(0), abstract_level(abstract_level) {}
 
 summary_output_stream & text_summary::parameter(summary_output_stream & out, size_t number_parameters_deleted,
                                        size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -1133,7 +1134,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-        if(profile->parent == id || !parent_output) {
+        if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
@@ -1260,7 +1261,7 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-    if(profile->parent == id || !parent_output) {
+    if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
 
         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
@@ -1412,7 +1413,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
     // after children
     if(output_else && is_leaf) {
 
-        if(profile->parent == id && (profile->operation == SRCDIFF_COMMON || !has_common)) {
+        if(abstract_level != HIGH && (profile->parent == id && (profile->operation == SRCDIFF_COMMON || !has_common))) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
@@ -1675,7 +1676,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     // after children
     if(output_conditional && is_leaf) {
 
-        if(summary_profile->parent == id && (summary_profile->operation == SRCDIFF_COMMON || !has_common)) {
+        if(abstract_level != HIGH && (summary_profile->parent == id && (summary_profile->operation == SRCDIFF_COMMON || !has_common))) {
 
             if(summary_profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(summary_profile->operation == SRCDIFF_INSERT) out << " to ";
@@ -1737,7 +1738,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
     // after children
     if(is_leaf) {
 
-        if(profile->parent == id) {
+        if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
 
             if(profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(profile->operation == SRCDIFF_INSERT) out << " to ";
@@ -1764,7 +1765,7 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
 
     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
 
-    if(profile->parent == id || !parent_output) {
+    if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
 
         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
