@@ -10,7 +10,7 @@ class identifier_diff {
 
 private:
 
-	const versioned_string & identifier;
+	const versioned_string identifier;
 	boost::optional<versioned_string> diff;
 
 private:
@@ -48,6 +48,12 @@ public:
     bool has_diff() const {
 
         return bool(diff);
+
+    }
+
+    const versioned_string & get_identifier() const {
+
+        return identifier;
 
     }
 
@@ -92,6 +98,24 @@ public:
         if(start_pos < end_modified) ident.set_modified(identifier.modified().substr(start_pos, end_modified - start_pos));
 
         diff = ident;
+
+    }
+
+    bool operator==(const identifier_diff & other) const {
+
+        return diff == other.diff;
+
+    }
+
+    bool operator!=(const identifier_diff & other) const {
+
+        return diff != other.diff;
+
+    }
+
+    bool operator<(const identifier_diff & other) const {
+
+        return diff < other.diff;
 
     }
 

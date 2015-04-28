@@ -25,9 +25,9 @@ protected:
         const change_entity_map<parameter_profile_t> & parameters;
         const change_entity_map<call_profile_t>      & member_initializations;
 
-        const std::map<versioned_string, size_t> & summary_identifiers;
+        const std::map<identifier_diff, size_t> & summary_identifiers;
 
-        std::map<versioned_string, size_t> output_identifiers;
+        std::map<identifier_diff, size_t> output_identifiers;
 
         size_t body_depth;
 
@@ -39,7 +39,7 @@ private:
     std::string get_type_string_with_count(const std::shared_ptr<profile_t> & profile) const;
     std::string get_profile_string(const std::shared_ptr<profile_t> & profile) const;
 
-    summary_output_stream & identifiers(summary_output_stream & out, const std::map<versioned_string, size_t> & identifiers);
+    summary_output_stream & identifiers(summary_output_stream & out, const std::map<identifier_diff, size_t> & identifiers);
     summary_output_stream & replacement(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & pos, const bool parent_output UNUSED) const;
 
     bool is_body_summary(const std::string & type, bool is_replacement) const;
@@ -52,13 +52,13 @@ public:
 
     text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
                  const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<versioned_string, size_t> & summary_identifiers);
+                 const std::map<identifier_diff, size_t> & summary_identifiers);
 
     summary_output_stream & parameter(summary_output_stream & out, size_t number_parameters_deleted,
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;
     summary_output_stream & member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
-    void expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
+    void expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                         std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & modified_calls,

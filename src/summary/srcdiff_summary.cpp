@@ -917,9 +917,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             std::shared_ptr<profile_t> & parent_body_profile = profile_stack.at(std::get<1>(counting_profile_pos.back()));
 
             // add to identifier list looking for intersections and adding
-            for(std::pair<versioned_string, size_t> identifier : profile_stack.back()->identifiers) {
+            for(std::pair<identifier_diff, size_t> identifier : profile_stack.back()->identifiers) {
 
-                std::map<versioned_string, size_t>::iterator itr = parent_body_profile->identifiers.find(identifier.first);
+                std::map<identifier_diff, size_t>::iterator itr = parent_body_profile->identifiers.find(identifier.first);
                 if(itr == parent_body_profile->identifiers.end()) {
 
                     parent_body_profile->identifiers.insert(itr, identifier);
@@ -928,7 +928,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                     itr->second += identifier.second;
 
-                    std::map<versioned_string, size_t>::iterator itersect_itr = parent_body_profile->summary_identifiers.find(itr->first);
+                    std::map<identifier_diff, size_t>::iterator itersect_itr = parent_body_profile->summary_identifiers.find(itr->first);
                     if(itersect_itr == parent_body_profile->summary_identifiers.end())
                         parent_body_profile->summary_identifiers.insert(itersect_itr, *itr);
                     else
@@ -938,7 +938,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-            for(std::map<versioned_string, size_t>::iterator itr = profile_stack.back()->summary_identifiers.begin();
+            for(std::map<identifier_diff, size_t>::iterator itr = profile_stack.back()->summary_identifiers.begin();
                 itr != profile_stack.back()->summary_identifiers.end();) {
     
                 if(itr->second <= 1) 

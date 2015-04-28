@@ -67,8 +67,8 @@ class profile_t {
         profile_list_t child_profiles;
         profile_list_t descendant_profiles;      
 
-        std::map<versioned_string, size_t> identifiers;
-        std::map<versioned_string, size_t> summary_identifiers;
+        std::map<identifier_diff, size_t> identifiers;
+        std::map<identifier_diff, size_t> summary_identifiers;
 
         std::string raw;
 
@@ -114,16 +114,16 @@ class profile_t {
 
                 ident_diff.compute_diff();
 
-                std::map<versioned_string, size_t>::iterator itr = identifiers.find(ident_diff.get_diff());
+                std::map<identifier_diff, size_t>::iterator itr = identifiers.find(ident_diff);
                 if(itr == identifiers.end()) {
 
-                    identifiers.insert(itr, std::make_pair(ident_diff.get_diff(), 1));
+                    identifiers.insert(itr, std::make_pair(ident_diff, 1));
 
                 } else {
 
                     ++itr->second;
 
-                    std::map<versioned_string, size_t>::iterator itersect_itr = summary_identifiers.find(ident_diff.get_diff());
+                    std::map<identifier_diff, size_t>::iterator itersect_itr = summary_identifiers.find(ident_diff);
                     if(itersect_itr == summary_identifiers.end()) summary_identifiers.insert(itersect_itr, *itr);                     
                     else                                               ++itersect_itr->second;
 

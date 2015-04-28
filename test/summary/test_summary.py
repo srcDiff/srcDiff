@@ -47,6 +47,11 @@ def get_next_test(test_file) :
 	summary = ""
 	line = test_file.readline()
 	while "END_SUMMARY" not in line :
+
+		while "#" in line :
+			line = line.replace("#", "\x1b[1m", 1)
+			line = line.replace("#", "\x1b[0m", 1)
+
 		summary += line
 		line = test_file.readline()
 

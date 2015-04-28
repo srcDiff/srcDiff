@@ -178,32 +178,25 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
 }
 
-summary_output_stream & text_summary::identifiers(summary_output_stream & out, const std::map<versioned_string, size_t> & identifiers) {
+summary_output_stream & text_summary::identifiers(summary_output_stream & out, const std::map<identifier_diff, size_t> & identifiers) {
 
-    for(std::pair<versioned_string, size_t> identifier : identifiers) {
+    for(std::pair<identifier_diff, size_t> identifier : identifiers) {
 
         if(identifier.second <= 1) continue;
 
         out.begin_line() << "the identifier '";
 
-        if(identifier.first.has_original()) out << identifier.first.original() << "' ";
 
-        if(identifier.first.has_original() && identifier.first.has_modified()) out << " was renamed to '";
-
-        if(identifier.first.has_modified()) out << identifier.first.modified() << "' ";
-
-        if(identifier.first.has_original() && !identifier.first.has_modified())
-            out << "was removed ";
-        else if(!identifier.first.has_original() && identifier.first.has_modified())
-            out << "was added ";
-
-        out << "in several places\n";
+        out << identifier.first.get_identifier().original() << "'";
+        out << " was renamed to '";
+        out << identifier.first.get_identifier().modified() << '\'';
+        out << '\n';
 
     }
 
-    for(std::map<versioned_string, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
+    for(std::map<identifier_diff, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
 
-        std::map<versioned_string, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
+        std::map<identifier_diff, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
         if(itersect_itr == output_identifiers.end())
             output_identifiers.insert(itersect_itr, *itr);
         else
@@ -546,7 +539,7 @@ size_t text_summary::number_child_changes(const profile_t::profile_list_t & chil
 
 text_summary::text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
              const change_entity_map<call_profile_t> & member_initializations,
-             const std::map<versioned_string, size_t> & summary_identifiers)
+             const std::map<identifier_diff, size_t> & summary_identifiers)
     : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
       summary_identifiers(summary_identifiers), body_depth(0) {}
 
@@ -748,7 +741,7 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 }
 
 /** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
-void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, size_t> & identifier_set,
+void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                               std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
@@ -1200,7 +1193,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
     } else {
 
         const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-        std::map<versioned_string, size_t> diff_set;
+        std::map<identifier_diff, size_t> diff_set;
         std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
                             output_identifiers.begin(), output_identifiers.end(),
                             std::inserter(diff_set, diff_set.begin()));

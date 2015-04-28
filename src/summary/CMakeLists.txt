@@ -22,5 +22,8 @@
 file(GLOB SUMMARY_HEADERS *.hpp)
 file(GLOB SUMMARY_SOURCE  *.cpp)
 
+list(REMOVE_ITEM SUMMARY_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/text_summary_top_down.hpp ${CMAKE_CURRENT_SOURCE_DIR}/text_summary_verbose.hpp)
+list(REMOVE_ITEM SUMMARY_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/text_summary_top_down.cpp ${CMAKE_CURRENT_SOURCE_DIR}/text_summary_verbose.cpp)
+
 add_library(summary OBJECT ${SUMMARY_HEADERS} ${SUMMARY_SOURCE})
 
