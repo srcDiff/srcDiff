@@ -105,7 +105,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• a #call# was modified
+	• an #argument list# was modified
 
 END_SUMMARY
 
@@ -130,7 +130,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• a #call# was modified
+	• an #argument list# was modified
 
 END_SUMMARY
 
@@ -204,7 +204,7 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• an #assignment# was modified
+	• a #call# was renamed
 
 END_SUMMARY
 
@@ -253,7 +253,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisView2::createGUI':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• an #expression# was modified
+	• a #call# was deleted
 	• a #call# was deleted
 	• a #call# was deleted
 	• a #call# was deleted

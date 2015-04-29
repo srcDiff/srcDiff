@@ -921,18 +921,34 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
         if(deleted_calls.size() != 0) {
 
             if(deleted_calls.size() == 1)
-                return "a call was deleted";
+                return "a " + bold("call") + " was deleted";
             else
-                return "calls were deleted";
+                return bold("calls") + " were deleted";
 
         }
 
         if(inserted_calls.size() != 0) {
 
             if(inserted_calls.size() == 1)
-                return "a call was added";
+                return "a " + bold("call") + " was added";
             else
-                return "calls were added";
+                return bold("calls") + " were added";
+        }
+
+        if(renamed_calls.size() != 0) {
+
+            if(renamed_calls.size() == 1)
+                return "a " + bold("call") + " was renamed";
+            else
+                return bold("calls") + " were renamed";
+        }
+
+        if(modified_argument_lists.size() != 0) {
+
+            if(modified_argument_lists.size() == 1)
+                return "an " + bold("argument list") + " was modified";
+            else
+                return bold("argument lists") + " were modified";
         }
 
     } 
