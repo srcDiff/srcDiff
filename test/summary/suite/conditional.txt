@@ -159,8 +159,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoMainWindow::slotCloseAllViews':
   #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #-1#
-	• an #if-else# was removed with remaining code retained.  Then, the remaining code was 
-	  modified
+	• an #if-else# was removed
 	• an #assignment# was moved
 
 END_SUMMARY
@@ -202,7 +201,7 @@ SUMMARY
   #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
 	• an #else# was converted to an #elseif#
 	  this includes:
-		• an #if# was added around a #return#
+		• an #if# was added
 	• a #return# was added
 
 END_SUMMARY

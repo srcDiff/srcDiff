@@ -1524,7 +1524,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
 
         // after children
-        if(abstract_level != HIGH && (summary_profile->parent == id && (summary_profile->operation == SRCDIFF_COMMON || !has_common))) {
+        if(abstract_level != HIGH && (summary_profile->parent == id && summary_profile->operation == SRCDIFF_COMMON)) {
 
             if(summary_profile->operation == SRCDIFF_DELETE)      out << " from ";
             else if(summary_profile->operation == SRCDIFF_INSERT) out << " to ";
@@ -1534,96 +1534,9 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         }
 
-        if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
-
-            if(summary_profile->operation == SRCDIFF_INSERT || common_statements == statement_count) {
-
-                if(summary_profile->type_name == "if") {
-
-                    const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(summary_profile);
-                    if(if_profile->else_clause()) {
-
-                        out << " with the " << manip::bold() << "if" << manip::normal() << "'s body ";
-                        out << (summary_profile->operation == SRCDIFF_DELETE ? "taken" : "placed");
-
-                    }
-
-                }
-
-                if(summary_profile->operation == SRCDIFF_DELETE)
-                    out << " from around ";
-                else
-                    out << " around ";
-
-            } else {
-
-                out << " with ";
-
-            }
-
-            std::string common_summary;
-            if(statement_count == 1 && common_statements == 1) {
-
-                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
-                out <<  get_article(common_profile) << ' ';
-                common_summary = get_type_string(common_profile);
-
-            } else if(common_statements == 1) {
-
-                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
-                out <<  get_article(common_profile) << ' ';
-                common_summary = get_type_string(common_profile);
-
-            } else {
-
-                if(summary_profile->operation == SRCDIFF_DELETE && common_statements != statement_count)
-                    common_summary = "remaining code";
-                else
-                    common_summary = "existing code";
-
-            }
-
-            out << common_summary;
-
-            if(summary_profile->operation == SRCDIFF_DELETE && common_statements != statement_count)
-                out << " retained";
-            
-            if(summary_profile->syntax_count != 0) {
-
-                size_t number_modified = 0;
-                for(const std::shared_ptr<profile_t> & common_profile : summary_profile->common_profiles) {
-                 
-                    if(common_profile->syntax_count)
-                        ++number_modified;
-
-                }
-
-                if(number_modified > 0)
-                    out << ".  Then, the " << common_summary << " was modified";
-
-                if(summary_profile->common_profiles.size() == 1
-                    && summary_profile->child_profiles.size() == 1) {
-
-                    std::ostringstream string_out;
-                    summary_output_stream sout(string_out, (size_t)-1);
-
-                    size_t pos = 0;
-                    statement_dispatch(sout, summary_profile, pos, output_conditional);
-
-                    if(string_out.str() == "\u2022 " + get_article(summary_profile->common_profiles[0]) + ' ' + get_type_string(summary_profile->common_profiles[0]) + " was modified\n")
-                        return out << '\n';
-
-                }
-
-            }
-
-        }
-
-
         out << '\n';
 
     }
-
 
     ++body_depth;
 

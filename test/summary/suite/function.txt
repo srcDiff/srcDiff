@@ -170,7 +170,7 @@ SUMMARY
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #+1#
-	• an #if-else# was added with the #if#'s body placed around a #delete#
+	• an #if-else# was added
 
 END_SUMMARY
 
