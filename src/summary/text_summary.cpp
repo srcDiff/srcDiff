@@ -960,7 +960,7 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
 
         }
 
-    } 
+    }
 
     summary = get_profile_string(profile) + " was modified";
 
