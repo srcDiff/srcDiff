@@ -41,7 +41,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisZoomManager::changeAspectMode':
   #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• several #expressions#, a #declaration#, and a #comment# were replaced with a #call#
+	• 5 statements and a comment were replaced with a #call#
 
 END_SUMMARY
 

@@ -242,6 +242,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
     std::vector<const std::shared_ptr<expr_stmt_profile_t> *>   expr_stmt_deleted,    expr_stmt_inserted;
     std::vector<const std::shared_ptr<decl_stmt_profile_t> *>   decl_stmt_deleted,    decl_stmt_inserted;
     std::vector<const std::shared_ptr<conditional_profile_t> *> conditionals_deleted, conditionals_inserted;
+    std::vector<const std::shared_ptr<profile_t> *>             jump_deleted,         jump_inserted;
     std::vector<const std::shared_ptr<profile_t> *>             comment_deleted,      comment_inserted;
     for(; pos < profile->child_profiles.size() && profile->child_profiles[pos]->is_replacement; ++pos) {
 
@@ -253,6 +254,13 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
                 conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> *>(&replacement_profile));
             else
                 conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> *>(&replacement_profile));
+
+        } else if(is_jump(replacement_profile->type_name)) {
+
+            if(replacement_profile->operation == SRCDIFF_DELETE)
+                jump_deleted.push_back(&replacement_profile);
+            else
+                jump_inserted.push_back(&replacement_profile);
 
         } else if(is_expr_stmt(replacement_profile->type_name)) {
 
@@ -285,18 +293,21 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
     if(expr_stmt_deleted.size() != 0)    ++number_deleted_types;
     if(decl_stmt_deleted.size() != 0)    ++number_deleted_types;
     if(conditionals_deleted.size() != 0) ++number_deleted_types;
+    if(jump_deleted.size() != 0)         ++number_deleted_types;
     if(comment_deleted.size() != 0)      ++number_deleted_types;
+
+    size_t number_syntax_deletions = expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size() + jump_deleted.size();
 
     size_t number_inserted_types = 0;
     if(expr_stmt_inserted.size() != 0)    ++number_inserted_types;
     if(decl_stmt_inserted.size() != 0)    ++number_inserted_types;
     if(conditionals_inserted.size() != 0) ++number_inserted_types;
+    if(jump_inserted.size() != 0)         ++number_inserted_types;
     if(comment_inserted.size() != 0)      ++number_inserted_types;
 
-    if((((expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size()) == 1 
-            && (expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size()) == 0)
-        || ((expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size()) == 1
-            && (expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size()) == 0))
+    size_t number_syntax_insertions = expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size() + jump_inserted.size();
+
+    if(((number_syntax_deletions == 1 && number_syntax_insertions == 0) || (number_syntax_insertions == 1 && number_syntax_deletions == 0))
         && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
 
         if(expr_stmt_deleted.size())
@@ -311,6 +322,10 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             out << get_profile_string(*conditionals_deleted.back());
         else if(conditionals_inserted.size())
             out << get_profile_string(*conditionals_inserted.back());
+        else if(jump_deleted.size())
+            out << get_profile_string(*jump_deleted.back());
+        else if(jump_inserted.size())
+            out << get_profile_string(*jump_inserted.back());
 
         out << " was ";
 
@@ -323,7 +338,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
     }
 
-    if((expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size() + comment_deleted.size()) == 1) {
+    if(number_syntax_deletions == 1) {
 
         if(expr_stmt_deleted.size())
             out << get_profile_string(*expr_stmt_deleted.back());
@@ -331,6 +346,8 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
             out << get_profile_string(*decl_stmt_deleted.back());
         else if(conditionals_deleted.size())
             out << get_profile_string(*conditionals_deleted.back());
+        else if(jump_deleted.size())
+            out << get_profile_string(*jump_deleted.back());
         else
             out << get_profile_string(*comment_deleted.back());
 
@@ -338,54 +355,59 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
     } else {
 
-        if(expr_stmt_deleted.size()) {
+        if(number_deleted_types == 1 || (comment_deleted.size() != 0 && number_deleted_types == 2)) {
 
-            if(expr_stmt_deleted.size() == 1)
-                out << get_profile_string(*expr_stmt_deleted.back());
-            else
-                out << "several " << manip::bold() << "expressions" << manip::normal();
+            if(expr_stmt_deleted.size()) {
 
-            if(number_deleted_types == 2)
-                out << " and ";
-            else if(number_deleted_types > 2)
-                out << ", ";
+                out << (expr_stmt_deleted.size() == 1 ? get_article(*expr_stmt_deleted.back()) :  std::to_string(expr_stmt_deleted.size())) << ' ' << get_type_string(*expr_stmt_deleted.back());
+
+            } else if(decl_stmt_deleted.size()) {
+
+                out << (decl_stmt_deleted.size() == 1 ? get_article(*decl_stmt_deleted.back()) :  std::to_string(decl_stmt_deleted.size())) << ' ' << get_type_string(*decl_stmt_deleted.back());
+
+            } else if(conditionals_deleted.size()) {
+
+                out << (conditionals_deleted.size() == 1 ? get_article(*conditionals_deleted.back()) :  std::to_string(conditionals_deleted.size())) << ' ' << get_type_string(*conditionals_deleted.back());
+
+            } else if(jump_deleted.size()) {
+
+                if(jump_deleted.size() == 1) {
+
+                    out << get_profile_string(*jump_deleted.back());
+
+                } else {
+
+                    std::set<std::string> jump_types;
+                    for(const std::shared_ptr<profile_t> * profile_ptr : jump_deleted)
+                        jump_types.insert((*profile_ptr)->type_name.original());
+
+                    if(jump_types.size() == 1)
+                        out << std::to_string(jump_deleted.size()) << ' ' << get_type_string(*jump_deleted.back());
+                    else
+                        out << std::to_string(jump_deleted.size()) << " statements";
+
+                }
+
+
+            }
+
+            if(comment_deleted.size() != 0) {
+
+                if(number_deleted_types == 2)
+                    out << " and ";
+
+                out << (comment_deleted.size() == 1 ? "a comment" : std::to_string(comment_deleted.size()) + " comments");
+
+            }
+
+        } else {
+
+            out << std::to_string(number_syntax_deletions) << " statements";
+
+            if(comment_deleted.size() != 0)
+                out << " and " << (comment_deleted.size() == 1 ? "a comment" : std::to_string(comment_deleted.size()) + " comments");
 
         }
-
-        if(decl_stmt_deleted.size()) {
-
-            if(decl_stmt_deleted.size() == 1)
-                out << get_profile_string(*decl_stmt_deleted.back());
-            else
-                out << "several " << manip::bold() << "declarations" << manip::normal();
-
-            if(expr_stmt_deleted.size() && number_deleted_types == 3)
-                out << ", and ";
-            else if(expr_stmt_deleted.size() == 0 && number_deleted_types == 2)
-                out << " and ";
-            else if(number_deleted_types > 2)
-                out << ", ";
-
-        }
-
-        if(conditionals_deleted.size()) {
-
-            if(conditionals_deleted.size() == 1)
-                out << get_profile_string(*conditionals_deleted.back());
-            else
-                out << "several " << manip::bold() << "conditionals" << manip::normal();
-
-            if(number_deleted_types > 2)
-                out << ", and ";
-            else if(comment_deleted.size() == 0 && number_deleted_types == 2)
-                out << " and ";
-
-        }
-
-        if(comment_deleted.size() == 1)
-            out << "a " << manip::bold() << "comment" << manip::normal();
-        else if(comment_deleted.size() > 1)
-            out << "several " << manip::bold() << "comments" << manip::normal();
 
         out << " were";
 
@@ -393,71 +415,74 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
     out << " replaced with ";
 
-    if((expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size() + comment_inserted.size()) == 1) {
- 
+    if(number_syntax_insertions == 1) {
+
         if(expr_stmt_inserted.size())
             out << get_profile_string(*expr_stmt_inserted.back());
         else if(decl_stmt_inserted.size())
             out << get_profile_string(*decl_stmt_inserted.back());
         else if(conditionals_inserted.size())
             out << get_profile_string(*conditionals_inserted.back());
+        else if(jump_inserted.size())
+            out << get_profile_string(*jump_inserted.back());
         else
             out << get_profile_string(*comment_inserted.back());
 
     } else {
 
-        if(expr_stmt_inserted.size()) {
+        if(number_inserted_types == 1 || (comment_inserted.size() != 0 && number_inserted_types == 2)) {
 
-            if(expr_stmt_inserted.size() == 1)
-                out << get_profile_string(*expr_stmt_inserted.back());
-            else
-                out << "several " << manip::bold() << "expressions" << manip::normal();
+            if(expr_stmt_inserted.size()) {
 
-            if(expr_stmt_inserted.size() > 1) out << 's';
+                out << (expr_stmt_inserted.size() == 1 ? get_article(*expr_stmt_inserted.back()) :  std::to_string(expr_stmt_inserted.size())) << ' ' << get_type_string(*expr_stmt_inserted.back());
 
-            if(number_inserted_types == 2)
-                out << " and ";
-            else if(number_inserted_types > 2)
-                out << ", ";
+            } else if(decl_stmt_inserted.size()) {
+
+                out << (decl_stmt_inserted.size() == 1 ? get_article(*decl_stmt_inserted.back()) :  std::to_string(decl_stmt_inserted.size())) << ' ' << get_type_string(*decl_stmt_inserted.back());
+
+            } else if(conditionals_inserted.size()) {
+
+                out << (conditionals_inserted.size() == 1 ? get_article(*conditionals_inserted.back()) :  std::to_string(conditionals_inserted.size())) << ' ' << get_type_string(*conditionals_inserted.back());
+
+            } else if(jump_inserted.size()) {
+
+                if(jump_inserted.size() == 1) {
+
+                    out << get_profile_string(*jump_inserted.back());
+
+                } else {
+
+                    std::set<std::string> jump_types;
+                    for(const std::shared_ptr<profile_t> * profile_ptr : jump_inserted)
+                        jump_types.insert((*profile_ptr)->type_name.original());
+
+                    if(jump_types.size() == 1)
+                        out << std::to_string(jump_inserted.size()) << ' ' << get_type_string(*jump_inserted.back());
+                    else
+                        out << std::to_string(jump_inserted.size()) << " statements";
+
+                }
+
+
+            }
+
+            if(comment_inserted.size() != 0) {
+
+                if(number_inserted_types == 2)
+                    out << " and ";
+
+                out << (comment_inserted.size() == 1 ? "a comment" : std::to_string(comment_inserted.size()) + " comments");
+
+            }
+
+        } else {
+
+            out << std::to_string(number_syntax_insertions) << " statements";
+
+            if(comment_deleted.size() != 0)
+                out << " and " << (comment_deleted.size() == 1 ? "a comment" : std::to_string(comment_deleted.size()) + " comments");
 
         }
-
-        if(decl_stmt_inserted.size()) {
-
-            if(decl_stmt_inserted.size() == 1)
-                out << get_profile_string(*decl_stmt_inserted.back());
-            else
-                out << "several " << manip::bold() << "declarations" << manip::normal();
-
-            if(expr_stmt_inserted.size() && number_inserted_types == 3)
-                out << ", and ";
-            else if(expr_stmt_inserted.size() == 0 && number_inserted_types == 2)
-                out << " and ";
-            else if(number_inserted_types > 2)
-                out << ", ";
-
-        }
-
-        if(conditionals_inserted.size()) {
-
-            if(conditionals_inserted.size() == 1)
-                out << get_profile_string(*conditionals_inserted.back());
-            else
-                out << "several " << manip::bold() << "conditionals" << manip::normal();
-
-            if(conditionals_inserted.size() > 1) out << 's';
-
-            if(number_inserted_types > 2)
-                out << ", and ";
-            else if(comment_inserted.size() == 0 && number_inserted_types == 2)
-                out << " and ";
-
-        }
-
-        if(comment_inserted.size() == 1)
-            out << "a " << manip::bold() << "comment" << manip::normal();
-        else if(comment_inserted.size() > 1)
-            out << "several " << manip::bold() << "comments" << manip::normal();
 
     }
 
