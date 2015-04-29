@@ -1468,38 +1468,6 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
 }
 
-std::string text_summary::condition_summary(const versioned_string & condition, const bool condition_only) const {
-
-    const std::string & original = condition.original();
-    const std::string & modified = condition.modified();
-
-    size_t start_pos = 0;
-    for(; start_pos < original.size() && start_pos < modified.size() && original[start_pos] == modified[start_pos]; ++start_pos)
-        ;
-
-    size_t end_pos = 1;
-    for(; end_pos <= original.size() && end_pos <= modified.size() && original[original.size() - end_pos] == modified[modified.size() - end_pos]; ++end_pos)
-        ;
-
-    if(start_pos == original.size() || end_pos > original.size()) {
-
-        if(condition_only) return "changed adding '" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "'";
-        else               return "'" + modified.substr(start_pos, (modified.size() - end_pos) - start_pos) + "' was added to the condition\n";
-
-    } else if(start_pos == modified.size() || end_pos > modified.size()) {
-
-        if(condition_only) return "changed removing '" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "'";
-        else               return "'" + original.substr(start_pos, (original.size() - end_pos) - start_pos) + "' was deleted from the condition\n";
-
-    } else {
-
-        if(condition_only) return "changed from '" + original + "' to '" + modified + "'";
-        else               return "the condition was changed from '" + original + "' to '" + modified + "'\n";
-
-    }
-
-}
-
 /** @todo if multiple of same change like test case where connect deleted 4 times.  May want to some in one line. */
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
@@ -1533,49 +1501,38 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     if(profile->type_name == "elseif") --statement_count;
     const size_t common_statements = summary_profile->common_statements;
 
+    if(condition_modified) {
+
+         out.begin_line() << "the condition of " << get_profile_string(profile) << " was altered\n";
+
+    }
+
+    if(summary_profile->summary_identifiers.size() > 0) {
+
+        identifiers(out, summary_profile->summary_identifiers);
+
+    }
+
     // before children
     bool is_leaf = true;
-    if(output_conditional) {
+    if(profile->operation != SRCDIFF_COMMON) {
 
         out.begin_line();
 
-        /** @todo fix this to be neater */
-        if(condition_modified && !body_modified && !else_modified && !elseif_modified) {
-
-            out << "the condition of " << get_profile_string(profile) << " was altered\n";
-            return out;
-
-        }
-
-        if(profile->operation == SRCDIFF_COMMON && (body_modified || condition_modified || elseif_modified)) {
-
-            out << "the ";
-
-            if(condition_modified && body_modified && (else_modified || elseif_modified)) out << "condition, body, and " << (else_modified ? "else-clause " : "elseif-clause ");
-            else if(condition_modified && body_modified)                                  out << "condition and body ";
-            else if(condition_modified && (else_modified || elseif_modified))             out << "condition and " << (else_modified ? "else-clause " : "elseif-clause ");
-            else if(body_modified && (else_modified || elseif_modified))                  out << "body and " << (else_modified ? "else-clause " : "elseif-clause ");
-            else if(condition_modified)                                                   out << "condition ";
-            else if(body_modified)                                                        out << "body ";
-            else if(elseif_modified)                                                      out << "elseif-clause ";
-
-            out << "of ";
-
-        }
-
         out << get_profile_string(profile);
+        out << " was ";
+        out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
 
-        if(profile->operation != SRCDIFF_COMMON && common_statements > 0 && common_statements != statement_count)
-            out << " and " << statement_count - common_statements <<  " of its " 
-                << statement_count << " statements were ";
-        else
-            out << " was ";
+        // after children
+        if(abstract_level != HIGH && (summary_profile->parent == id && (summary_profile->operation == SRCDIFF_COMMON || !has_common))) {
 
-        if(profile->operation != SRCDIFF_COMMON)
-             out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
-        else if(condition_modified && !body_modified && !else_modified && !elseif_modified)
-            out << condition_summary(condition, true);
-        else out << "modified";
+            if(summary_profile->operation == SRCDIFF_DELETE)      out << " from ";
+            else if(summary_profile->operation == SRCDIFF_INSERT) out << " to ";
+            else                                          out << " within ";
+
+            out << "the function";
+
+        }
 
         if(summary_profile->operation != SRCDIFF_COMMON && has_common) {
 
@@ -1662,27 +1619,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         }
 
-        if(condition_modified && (body_modified || else_modified || elseif_modified)) {
 
-            out << '\n';
-            out.pad() << "  this modification included:\n";            
-            is_leaf = false;
-
-            out.increment_depth();
-            out.begin_line() << condition_summary(condition, false);
-            out.decrement_depth();
-        }
-
-        if(summary_profile->summary_identifiers.size() > 0) {
-
-            out << '\n';
-            out.pad() << "  this modification included:\n";            
-            is_leaf = false;
-            out.increment_depth();
-            identifiers(out, summary_profile->summary_identifiers);
-            out.decrement_depth();
-
-        }
 
     }
 
@@ -1698,14 +1635,6 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            if(output_conditional && is_leaf) {
-
-                out << '\n';
-                out.pad() << "  this modification included:\n";
-                is_leaf = false;
-
-            }
-
             if(output_conditional) out.increment_depth();
 
             statement_dispatch(out, summary_profile, pos, output_conditional);
@@ -1717,23 +1646,6 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
     }
 
     --body_depth;
-
-    // after children
-    if(output_conditional && is_leaf) {
-
-        if(abstract_level != HIGH && (summary_profile->parent == id && (summary_profile->operation == SRCDIFF_COMMON || !has_common))) {
-
-            if(summary_profile->operation == SRCDIFF_DELETE)      out << " from ";
-            else if(summary_profile->operation == SRCDIFF_INSERT) out << " to ";
-            else                                          out << " within ";
-
-            out << "the function";
-
-        }
-
-        out << '\n';
-
-    }
 
     return out;
 
