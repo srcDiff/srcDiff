@@ -135,10 +135,8 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoZoomAction::createWidget':
   #Impact# = #10# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• the body of an #if# was modified
-	  this modification included:
-		• name change from 'aspectButton' to 'd->aspectButton'
-		• a #declaration# was replaced with an #assignment#
+	• name change from 'aspectButton' to 'd->aspectButton'
+	• a #declaration# was replaced with an #assignment#
 
 END_SUMMARY
 
@@ -172,7 +170,7 @@ SUMMARY
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #+1#
-	• an #if-else# and 4 of its 5 statements were added with the #if#'s body placed around a #delete#
+	• an #if-else# was added with the #if#'s body placed around a #delete#
 
 END_SUMMARY
 

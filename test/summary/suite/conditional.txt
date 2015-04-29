@@ -159,10 +159,9 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoMainWindow::slotCloseAllViews':
   #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #-1#
-	• an #if-else# and 2 of its 9 statements were removed with remaining code retained.  Then, 
-	  the remaining code was modified
-	  this modification included:
-		• an #assignment# was moved
+	• an #if-else# was removed with remaining code retained.  Then, the remaining code was 
+	  modified
+	• an #assignment# was moved
 
 END_SUMMARY
 
@@ -345,12 +344,10 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'RotateImage::RotateImage':
   #Impact# = #14# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• the body of an #if# was modified
-	  this modification included:
-		• 'action' was renamed to 'm_rotate180LayerAction'
-		• 'action' was renamed to 'm_rotate270LayerAction'
-		• 'action' was renamed to 'm_rotate90LayerAction'
-		• 'action' was renamed to 'm_rotateLayerAction'
-		• a #call# was added
+	• 'action' was renamed to 'm_rotate180LayerAction'
+	• 'action' was renamed to 'm_rotate270LayerAction'
+	• 'action' was renamed to 'm_rotate90LayerAction'
+	• 'action' was renamed to 'm_rotateLayerAction'
+	• a #call# was added
 
 END_SUMMARY

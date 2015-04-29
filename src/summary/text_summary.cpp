@@ -1620,8 +1620,10 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         }
 
 
+        out << '\n';
 
     }
+
 
     ++body_depth;
 
@@ -1635,11 +1637,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            if(output_conditional) out.increment_depth();
-
             statement_dispatch(out, summary_profile, pos, output_conditional);
-
-            if(output_conditional) out.decrement_depth();
 
         }
 
