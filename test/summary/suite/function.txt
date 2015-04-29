@@ -315,8 +315,7 @@ SUMMARY
 • function 'TextShape::paintComponent':
   #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• a #call# was moved
-	• the argument list to 'p.addRect' was modified.  The modifications were: a #call# to 
-	  'converter.documentToView' was deleted and its arguments were retained
+	• a #call# was modified
 
 END_SUMMARY
 

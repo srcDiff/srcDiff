@@ -1210,13 +1210,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         out.begin_line();
 
-        if(expr_stmt_profile->assignment()) {
-
-            out << get_profile_string(profile) << " was modified. The modification was ";
-
-        }
-
-        out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
+        out << get_profile_string(profile) << " was modified";
 
     }
 
