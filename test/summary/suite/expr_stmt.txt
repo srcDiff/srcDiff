@@ -163,7 +163,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoDocument::openExistingFile':
   #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #-1#
-	• a #declaration# was replaced with a #call# to 'openUrl'
+	• a #declaration# was replaced with a #call#
 	• an #if# was removed
 
 END_SUMMARY
@@ -258,9 +258,9 @@ SUMMARY
 • function 'KisView2::createGUI':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• a #call# to 'qobject_cast<KisLayerBox*>' was deleted and its arguments were retained
-	• a #call# to 'connect' was deleted
-	• a #call# to 'connect' was deleted
-	• a #call# to 'connect' was deleted
-	• a #call# to 'connect' was deleted
+	• a #call# was deleted
+	• a #call# was deleted
+	• a #call# was deleted
+	• a #call# was deleted
 
 END_SUMMARY

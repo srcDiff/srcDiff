@@ -137,9 +137,15 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
         if(expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) {
 
-            std::string expr_stmt_summary = "an " + bold("assignment") + " to '";
-            if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += expr_stmt_profile->lhs().original() + '\'';
-            else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += expr_stmt_profile->lhs().modified() + '\'';
+            std::string expr_stmt_summary = "an " + bold("assignment");
+
+            if(abstract_level != HIGH) {
+
+                expr_stmt_summary += " to '";
+                if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += expr_stmt_profile->lhs().original() + '\'';
+                else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += expr_stmt_profile->lhs().modified() + '\'';
+
+            }
 
             return expr_stmt_summary;
 
@@ -150,10 +156,16 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
                 std::string expr_stmt_summary;
                 if(expr_stmt_profile->get_call_profiles().size() == 1) {
 
-                    expr_stmt_summary = "a " + bold("call") + " to '";
-                    const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[0];
-                    if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += call_profile->name.original() + '\'';
-                    else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += call_profile->name.modified() + '\'';
+                    expr_stmt_summary = "a " + bold("call");
+
+                    if(abstract_level != HIGH) {
+    
+                        expr_stmt_summary += " to '";
+                        const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[0];
+                        if(expr_stmt_profile->operation == SRCDIFF_DELETE)      expr_stmt_summary += call_profile->name.original() + '\'';
+                        else if(expr_stmt_profile->operation == SRCDIFF_INSERT) expr_stmt_summary += call_profile->name.modified() + '\'';
+
+                    }
 
                 } else {
 

@@ -138,7 +138,7 @@ SUMMARY
 	• the body of an #if# was modified
 	  this modification included:
 		• name change from 'aspectButton' to 'd->aspectButton'
-		• a #declaration# was replaced with an #assignment# to 'd->aspectButton'
+		• a #declaration# was replaced with an #assignment#
 
 END_SUMMARY
 
@@ -197,7 +197,7 @@ SUMMARY
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
   #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• a #delete# was replaced with an #assignment# to 'a'
+	• a #delete# was replaced with an #assignment#
 
 END_SUMMARY
 
@@ -316,7 +316,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
   #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• a #call# to 'applyConversion' was moved
+	• a #call# was moved
 	• the argument list to 'p.addRect' was modified.  The modifications were: a #call# to 
 	  'converter.documentToView' was deleted and its arguments were retained
 
@@ -385,6 +385,6 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'KisRecordedFilterActionEditor::KisRecordedFilterActionEditor':
   #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• a #call# to 'connect' was moved
+	• a #call# was moved
 
 END_SUMMARY

@@ -100,7 +100,7 @@ SUMMARY
 • function 'TextTool::repaintSelection':
   #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #+2#
 	• a #guard clause# was added
-	• a #call# to 'Q_ASSERT' was replaced with a #guard clause#
+	• a #call# was replaced with a #guard clause#
 
 END_SUMMARY
 
@@ -162,7 +162,7 @@ SUMMARY
 	• an #if-else# and 2 of its 9 statements were removed with remaining code retained.  Then, 
 	  the remaining code was modified
 	  this modification included:
-		• an #assignment# to 'd->rootDoc' was moved
+		• an #assignment# was moved
 
 END_SUMMARY
 
@@ -351,6 +351,6 @@ SUMMARY
 		• 'action' was renamed to 'm_rotate270LayerAction'
 		• 'action' was renamed to 'm_rotate90LayerAction'
 		• 'action' was renamed to 'm_rotateLayerAction'
-		• a #call# to 'connect' was added
+		• a #call# was added
 
 END_SUMMARY
