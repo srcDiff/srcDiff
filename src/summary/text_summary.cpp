@@ -1524,10 +1524,10 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
         && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
         return else_clause(out, profile->child_profiles[0], parent_output);
 
-    const bool output_conditional = profile->operation != SRCDIFF_COMMON || condition_modified || number_child_changes(profile->child_profiles) > 1;
-
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
+
+    const bool output_conditional = summary_profile->operation != SRCDIFF_COMMON || condition_modified || number_child_changes(summary_profile->child_profiles) > 1;
 
     size_t statement_count = summary_profile->operation == SRCDIFF_DELETE ? summary_profile->statement_count_original : summary_profile->statement_count_modified;
     if(profile->type_name == "elseif") --statement_count;
