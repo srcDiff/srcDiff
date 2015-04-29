@@ -105,7 +105,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• an #argument list# was modified
+	• an #argument# was modified
 
 END_SUMMARY
 
@@ -130,7 +130,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• an #argument list# was modified
+	• an #argument# was modified
 
 END_SUMMARY
 
