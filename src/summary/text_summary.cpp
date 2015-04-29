@@ -1333,10 +1333,17 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
         out << (profile->parent->operation == SRCDIFF_DELETE ? "removed" : "added");
         out << '\n';
 
+        return out;
+
     }
 
-    bool is_leaf = true;
-    if(output_else) {
+    if(profile->summary_identifiers.size() > 0) {
+
+        identifiers(out, profile->summary_identifiers);
+
+    }
+
+    if(profile->operation != SRCDIFF_COMMON) {
 
         out.begin_line();
 
@@ -1345,73 +1352,19 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
         else
             out << get_profile_string(profile) << " was ";
 
-        if(profile->operation != SRCDIFF_COMMON)
-             out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
-        else out << "modified";
+        out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
 
-        if(profile->operation != SRCDIFF_COMMON && has_common) {
+        if(abstract_level != HIGH && (profile->parent == id && profile->operation == SRCDIFF_COMMON)) {
 
-            if(profile->operation == SRCDIFF_DELETE)
-                out << " from around ";
-            else
-                out << " around ";
+            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+            else                                          out << " within ";
 
-            std::string common_summary;
-            if(profile->common_profiles.size() == 1) {
-
-                const std::shared_ptr<profile_t> & common_profile = profile->common_profiles.back();
-                out <<  get_article(common_profile) << ' ';
-                common_summary = get_type_string(common_profile);
-
-            } else {
-
-                common_summary = "existing code";
-
-            }
-
-            out << common_summary;
-            
-            if(profile->syntax_count != 0) {
-
-                size_t number_modified = 0;
-                for(const std::shared_ptr<profile_t> & common_profile : profile->common_profiles) {
-                 
-                    if(common_profile->syntax_count)
-                        ++number_modified;
-
-                }
-
-                if(number_modified > 0)
-                    out << ".  Then, the " << common_summary << " was modified";
-
-                if(profile->common_profiles.size() == 1
-                    && profile->child_profiles.size() == 1) {
-
-                    std::ostringstream string_out;
-                    summary_output_stream sout(string_out, (size_t)-1);
-
-                    size_t pos = 0;
-                    statement_dispatch(sout, profile, pos, output_else);
-
-                    if(string_out.str() == "\u2022 " + get_article(profile->common_profiles[0]) + ' ' + get_type_string(profile->common_profiles[0]) + " was modified\n")
-                        return out << '\n';
-
-                }
-
-            }
+            out << "the function";
 
         }
 
-        if(profile->summary_identifiers.size() > 0) {
-
-            out << '\n';
-            out.pad() << "  this modification included:\n";            
-            is_leaf = false;
-            out.increment_depth();
-            identifiers(out, profile->summary_identifiers);
-            out.decrement_depth();
-
-        }
+        out << '\n';
 
     }
 
@@ -1427,42 +1380,13 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            if(output_else && is_leaf) {
-
-                out << '\n';
-                out.pad() << "  this modification included:\n";
-                is_leaf = false;
-
-            }
-
-            if(output_else) out.increment_depth();
-
             statement_dispatch(out, profile, pos, output_else);
-
-            if(output_else) out.decrement_depth();
 
         }
 
     }
 
     --body_depth;
-
-    // after children
-    if(output_else && is_leaf) {
-
-        if(abstract_level != HIGH && (profile->parent == id && (profile->operation == SRCDIFF_COMMON || !has_common))) {
-
-            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-            else                                          out << " within ";
-
-            out << "the function";
-
-        }
-
-        out << '\n';
-
-    }
 
     return out;
 
@@ -1567,14 +1491,17 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
     out.begin_line();
 
-    out << get_profile_string(profile);
+    out << get_profile_string(profile) << '\n';
 
     bool is_leaf = true;
 
     ++body_depth;
 
-    /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
-    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
+    std::shared_ptr<profile_t> summary_profile = profile;
+    if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif")
+        summary_profile = profile->child_profiles[0];
+
+    for(size_t pos = 0; pos < summary_profile->child_profiles.size(); ++pos) {
 
         const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
@@ -1583,42 +1510,13 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            if(is_leaf) {
-
-                out << '\n';
-                out.pad() << "  this includes:\n";
-                is_leaf = false;
-
-            }
-
-            out.increment_depth();
-
             statement_dispatch(out, profile, pos, true);
-
-            out.decrement_depth();
 
         }
 
     }
 
     --body_depth;
-
-    // after children
-    if(is_leaf) {
-
-        if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
-
-            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-            else                                          out << " within ";
-
-            out << "the function";
-
-        }
-
-        out << '\n';
-
-    }
 
     return out;
 

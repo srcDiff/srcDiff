@@ -200,8 +200,6 @@ SUMMARY
 • function 'KoMainWindow::currentView':
   #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
 	• an #else# was converted to an #elseif#
-	  this includes:
-		• an #if# was added
 	• a #return# was added
 
 END_SUMMARY
