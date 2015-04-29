@@ -950,7 +950,7 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
                 if(modified_argument_lists[0]->child_profiles.size() == 1)
                     return "an " + bold("argument") + " was modified";
                 else
-                    return "an " + bold("argument list") + " was modified";
+                    return std::to_string(modified_argument_lists[0]->child_profiles.size()) + bold("arguments") + " were modified";
 
             } else {
 
