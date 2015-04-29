@@ -799,8 +799,7 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                              std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
-                              std::vector<std::vector<std::string>> & argument_list_modifications) const {
+                              std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const {
 
     for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
 
@@ -832,8 +831,6 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
 
                 bool report_argument_list = call_profile->argument_list_modified;
                 if(report_argument_list) {
-
-                    argument_list_modifications.push_back(std::vector<std::string>());
 
                     size_t number_arguments_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
                     size_t number_arguments_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
@@ -909,12 +906,38 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
                                           std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                                           std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                                           std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                                          std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
-                                          std::vector<std::vector<std::string>> & argument_list_modifications) const {
+                                          std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const {
 
     std::string summary;
 
-    summary =  get_profile_string(profile) + " was modified";
+    size_t number_change_types = 0;
+    if(deleted_calls.size() != 0)           ++number_change_types;
+    if(inserted_calls.size() != 0)          ++number_change_types;
+    if(renamed_calls.size() != 0)           ++number_change_types;
+    if(modified_argument_lists.size() != 0) ++number_change_types;
+
+    if(number_change_types == 1) {
+
+        if(deleted_calls.size() != 0) {
+
+            if(deleted_calls.size() == 1)
+                return "a call was deleted";
+            else
+                return "calls were deleted";
+
+        }
+
+        if(inserted_calls.size() != 0) {
+
+            if(inserted_calls.size() == 1)
+                return "a call was added";
+            else
+                return "calls were added";
+        }
+
+    } 
+
+    summary = get_profile_string(profile) + " was modified";
 
     return summary;
 
@@ -964,14 +987,13 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls,
             modified_calls, renamed_calls, modified_argument_lists;
-        std::vector<std::vector<std::string>> argument_list_modifications;
-        expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
+        expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
 
         if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
 
         out.begin_line();
 
-        out << summarize_calls(profile, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
+        out << summarize_calls(profile, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
 
         out << '\n';
 

@@ -70,15 +70,13 @@ public:
                         std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                        std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
-                        std::vector<std::vector<std::string>> & argument_list_modifications) const;
+                        std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
     std::string summarize_calls(const std::shared_ptr<profile_t> & profile,
                                 std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                                 std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                                 std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                                 std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                                std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
-                                std::vector<std::vector<std::string>> & argument_list_modifications) const;
+                                std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
     summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
