@@ -1193,59 +1193,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
     // may no longe be needed
     if(profile->child_profiles.empty()) return out;
 
-    // this needs flushed out
-    if(profile->operation != SRCDIFF_COMMON) {
-
-        std::list<std::string> deleted_calls;
-        std::list<std::string> inserted_calls;
-        for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
-
-            if(is_call(child_profile->type_name)) {
-
-                const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
-
-                if(profile->operation == SRCDIFF_DELETE)
-                    deleted_calls.push_back(call_profile->name.original());
-                else
-                    inserted_calls.push_back(call_profile->name.modified());
-
-            }
-
-        }
-
-        if(!deleted_calls.empty() || !inserted_calls.empty()) {
-
-            out.begin_line();
-
-            std::list<std::string> & call_names = !deleted_calls.empty() ? deleted_calls : inserted_calls;
-
-            if(call_names.size() == 1) {
-
-                out << "a " << manip::bold() << "call" << manip::normal() << " to '" << call_names.front() << "' was ";
-
-                out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
-
-            } else {
-
-                out << manip::bold() << "calls" << manip::normal() << " to ";
-
-                std::string ending = call_names.size() == 2 ? "' " : "', ";
-                while(call_names.size() != 1) {
-
-                    out << '\'' << call_names.front() << ending;
-                    call_names.pop_front();
-
-                }
-
-                out << "and \'" << call_names.front() << "' were ";
-
-                out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
-
-            }
-
-        }
-
-    } else {
+    if(profile->operation == SRCDIFF_COMMON) {
 
         const std::shared_ptr<profile_t> & parent_profile = profile->parent;
         std::map<identifier_diff, size_t> diff_set;
@@ -1271,16 +1219,6 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
         out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
 
     }
-
-    // if(profile->parent == id) {
-
-    //     if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-    //     else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-    //     else                                          out << " within ";
-
-    //     out << "the function";
-
-    // }
 
     out << '\n';
 
