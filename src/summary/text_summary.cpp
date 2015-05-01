@@ -499,17 +499,21 @@ bool text_summary::is_body_summary(const std::string & type, bool is_replacement
 
 }
 
-summary_output_stream & text_summary::statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos, const bool parent_output) {
+std::string text_summary::statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos, const bool parent_output, size_t depth) {
 
     const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
 
+    std::ostringstream str_output;
+    summary_output_stream str_out(str_output, (unsigned)-1);
+    str_out.depth(depth);
+
     if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
 
-        replacement(out, profile, child_pos, parent_output);
+        replacement(str_out, profile, child_pos, parent_output);
 
     } else if(child_profile->move_id) {
 
-        out.begin_line() << get_profile_string(child_profile) << " was moved";
+        str_out.begin_line() << get_profile_string(child_profile) << " was moved";
         // if(child_profile->move_parent) {
 
         //     out << " from " << get_article(child_profile->parent) << ' ' << get_type_string(child_profile->parent);
@@ -522,26 +526,27 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
 
         // }
 
-        out << '\n';
+        str_out << '\n';
 
     } else if(!child_profile->type_name.is_common()) {
 
-        interchange(out, child_profile, parent_output);
+        interchange(str_out, child_profile, parent_output);
 
     } else {
 
         if(is_jump(child_profile->type_name))
-            jump(out, child_profile, parent_output);
+            jump(str_out, child_profile, parent_output);
         else if(is_condition_type(child_profile->type_name))
-            conditional(out, child_profile, parent_output);
+            conditional(str_out, child_profile, parent_output);
         else if(is_expr_stmt(child_profile->type_name))
-            expr_stmt(out, child_profile, parent_output);
+            expr_stmt(str_out, child_profile, parent_output);
         else if(is_decl_stmt(child_profile->type_name))
-            decl_stmt(out, child_profile, parent_output);
+            decl_stmt(str_out, child_profile, parent_output);
 
     }
 
-    return out;
+
+    return str_output.str();
 
 }
 
@@ -1004,7 +1009,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            statement_dispatch(out, profile, pos, output_else);
+            out << statement_dispatch(profile, pos, output_else, out.depth());
 
         }
 
@@ -1098,7 +1103,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            statement_dispatch(out, summary_profile, pos, output_conditional);
+            out << statement_dispatch(summary_profile, pos, output_conditional, out.depth());
 
         }
 
@@ -1134,7 +1139,7 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
 
-            statement_dispatch(out, profile, pos, true);
+            out << statement_dispatch(profile, pos, true, out.depth());
 
         }
 
@@ -1178,6 +1183,9 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
 
     identifiers(out, summary_identifiers);
 
+    std::vector<std::string> statement_summaries;
+    std::map<std::string, size_t> duplicate_counts;
+
     for(size_t pos = 0; pos < child_profiles.size(); ++pos) {
 
         const std::shared_ptr<profile_t> & child_profile = child_profiles[pos];
@@ -1187,7 +1195,7 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const pr
                 && child_profile->move_id == 0))
             continue;
 
-        statement_dispatch(out, std::make_shared<profile_t>(profile), pos, true);
+        out << statement_dispatch(std::make_shared<profile_t>(profile), pos, true, out.depth());
 
     }
 

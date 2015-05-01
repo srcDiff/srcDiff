@@ -14,7 +14,7 @@ private:
 
     size_t max_width;
 
-	size_t depth;
+	size_t depth_;
 
 	int number_characters_output;
 
@@ -30,8 +30,8 @@ private:
 	std::ostream & output(const std::string & str) {
 
 		// in case too much correct wrapping avoid outputting one word on line
-		const size_t number_start_characters = depth * 8 + 2;
-		if((depth * 8) > (max_width / 2)) return out << str;
+		const size_t number_start_characters = depth_ * 8 + 2;
+		if((depth_ * 8) > (max_width / 2)) return out << str;
 
 		size_t non_count_characters = 0;
 		size_t start_pos = 0, pos = 0;
@@ -115,7 +115,7 @@ end_loop:
 
 public:
 
-	summary_output_stream(std::ostream & out, size_t max_width = 100) : out(out), max_width(max_width), depth(0), number_characters_output(0) {}
+	summary_output_stream(std::ostream & out, size_t max_width = 100) : out(out), max_width(max_width), depth_(0), number_characters_output(0) {}
 
 	std::ostream & ostream() {
 
@@ -123,24 +123,36 @@ public:
 
 	}
 
+	size_t depth() const {
+
+		return depth_;
+
+	}
+
+	void depth(size_t depth_) {
+
+		this->depth_ = depth_;
+
+	}
+
 	void increment_depth() {
 
-		++depth;
+		++depth_;
 
 	}
 
 	void decrement_depth() {
 
-		--depth;
+		--depth_;
 
 	}
 
     summary_output_stream & pad() {
 
-        for(size_t i = 0; i < depth; ++i)
+        for(size_t i = 0; i < depth_; ++i)
             out << '\t';
 
-        number_characters_output = depth * 8;
+        number_characters_output = depth_ * 8;
 
         return *this;
 
