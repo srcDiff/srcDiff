@@ -334,8 +334,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
-	• Signature change:
-	• the #parameter# 'bar' of type 'foo' was added
+	• a #parameter# was added
 
 END_SUMMARY
 

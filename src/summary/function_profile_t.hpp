@@ -151,7 +151,7 @@ class function_profile_t : public profile_t {
 
                 if(!name.is_common()) out.begin_line() << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
-                if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) out.begin_line() << "Signature change:\n";
+                //if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) out.begin_line() << "Signature change:\n";
 
                 if(is_return_type_change) out.begin_line() << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
 

@@ -606,20 +606,11 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         if(number_parameters_deleted == 1) {
 
             change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_DELETE);
-            out << "the " << manip::bold() << "parameter" << manip::normal() << " '" << param_iterator->second->name.original() << "' of type '" << param_iterator->second->type.original() << "' was removed\n";
+            out << "a " << manip::bold() << "parameter" << manip::normal() << " was removed";
 
         } else {
 
-            out << "the following " << manip::bold() << "parameters" << manip::normal() << " were removed:\n";
-
-            out.increment_depth();
-            std::for_each(parameters.lower_bound(SRCDIFF_DELETE), parameters.upper_bound(SRCDIFF_DELETE),
-                [&out](const change_entity_map<parameter_profile_t>::pair & parameter) {
-
-                    out.begin_line() << '\'' << parameter.second->name.original() << "' of type '" << parameter.second->type.original() << "'\n";
-
-                });
-            out.decrement_depth();
+            out << std::to_string(number_parameters_deleted) << manip::bold() << "parameters" << manip::normal() << " were removed:\n";
 
         }
 
@@ -632,20 +623,11 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         if(number_parameters_inserted == 1) {
 
             change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_INSERT);
-            out << "the " << manip::bold() << "parameter" << manip::normal() << " '" << param_iterator->second->name.modified() << "' of type '" << param_iterator->second->type.modified() << "' was added\n";
+            out << "a " << manip::bold() << "parameter" << manip::normal() << " was added\n";
 
         } else {
 
-            out << "the following " << manip::bold() << "parameters" << manip::normal() << " were added:\n";
-
-            out.increment_depth();
-            std::for_each(parameters.lower_bound(SRCDIFF_INSERT), parameters.upper_bound(SRCDIFF_INSERT),
-                [&out](const change_entity_map<parameter_profile_t>::pair & parameter) {
-
-                    out.begin_line() << '\'' << parameter.second->name.modified() << "' of type '" << parameter.second->type.modified() << "'\n";
-
-                });
-            out.decrement_depth();
+            out << std::to_string(number_parameters_inserted) << manip::bold() << "parameters" << manip::normal() << " were added:\n";
 
         }
 
@@ -658,40 +640,11 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         if(number_parameters_modified == 1) {
 
             change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_COMMON);
-            out << "the " << manip::bold() << "parameter" << manip::normal() << " ";
-            if(param_iterator->second->name.is_common() && !param_iterator->second->type.is_common())
-                out << '\'' << param_iterator->second->name << "' had its type changed from '" 
-                    << param_iterator->second->type.original() << "' to '" << param_iterator->second->type.modified() << '\'';
-            else if(!param_iterator->second->name.is_common() && param_iterator->second->type.is_common())
-                out << "of type '" << param_iterator->second->type << "' had its name changed from '" << param_iterator->second->name.original() << "' to '" << param_iterator->second->name.modified() << '\'';
-            else
-                out << "name was changed from '" << param_iterator->second->name.original() << "' to '" << param_iterator->second->name.modified() << '\''
-                    << " and the type was changed from '" << param_iterator->second->type.original() << "' to '" << param_iterator->second->type.modified() << '\'';;
-
-            out << '\n';
+            out << "a " << manip::bold() << "parameter" << manip::normal() << " was modified\n";
 
         } else {
 
-            out << "the following " << manip::bold() << "parameters" << manip::normal() << " were modified:\n";
-
-            out.increment_depth();
-            std::for_each(parameters.lower_bound(SRCDIFF_COMMON), parameters.upper_bound(SRCDIFF_COMMON),
-                [&out](const change_entity_map<parameter_profile_t>::pair & parameter) {
-
-                    out.begin_line() << "the parameter ";
-                    if(parameter.second->name.is_common() && !parameter.second->type.is_common())
-                        out << '\'' << parameter.second->name << "' had its type changed from '" 
-                            << parameter.second->type.original() << "' to '" << parameter.second->type.modified() << '\'';
-                    else if(!parameter.second->name.is_common() && parameter.second->type.is_common())
-                        out << "of type '" << parameter.second->type << "' had its name changed from '" << parameter.second->name.original() << "' to '" << parameter.second->name.modified() << '\'';
-                    else
-                        out << "name was changed from '" << parameter.second->name.original() << "' to '" << parameter.second->name.modified() << '\''
-                            << " and the type was changed from '" << parameter.second->type.original() << "' to '" << parameter.second->type.modified() << '\'';;
-
-                            out << '\n';
-
-                });
-            out.decrement_depth();
+            out << std::to_string(number_parameters_modified) << manip::bold() << "parameters" << manip::normal() << " were modified:\n";
 
         }
 
