@@ -8,6 +8,11 @@
 
 class summary_output_stream {
 
+public:
+
+	static constexpr const char * const BULLET = "\u2022";
+
+
 private:
 
 	std::ostream & out;
@@ -17,9 +22,6 @@ private:
 	size_t depth_;
 
 	int number_characters_output;
-
-    static constexpr const char * const BULLET = "\u2022";
-
 
 	class iomanip_type {};
 
@@ -166,6 +168,12 @@ public:
         number_characters_output += 2;
 
         return *this;
+
+    }
+
+    void flush() {
+
+    	out.flush();
 
     }
 
