@@ -852,6 +852,39 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
 
 }
 
+summary_output_stream & text_summary::summarize_call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
+
+    const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+
+    std::vector<std::shared_ptr<call_profile_t>>::size_type calls_sequence_length = expr_stmt_profile->get_call_profiles().size();
+
+    bool is_variable_reference_change = true;
+    for(std::vector<std::shared_ptr<call_profile_t>>::size_type pos = 0; pos < calls_sequence_length; ++pos) {
+
+        const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[pos];
+
+        if(call_profile->operation == SRCDIFF_COMMON && call_profile->syntax_count == 0) continue;
+
+        if(call_profile->operation != SRCDIFF_COMMON && pos == (calls_sequence_length - 1)) {
+
+            is_variable_reference_change = false;
+
+        }
+
+    }
+
+
+    if(is_variable_reference_change) {
+
+        out.begin_line() << "variable reference change\n";
+
+    }
+
+
+    return out;
+
+}
+
 /** @todo probably should make this work for like conditional.  Report either change to top level call or directly affected call. */
 summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
