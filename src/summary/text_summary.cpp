@@ -603,16 +603,11 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
 
         out.begin_line();
 
-        if(number_parameters_deleted == 1) {
-
-            change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_DELETE);
+        if(number_parameters_deleted == 1)
             out << "a " << manip::bold() << "parameter" << manip::normal() << " was removed";
 
-        } else {
-
-            out << std::to_string(number_parameters_deleted) << manip::bold() << "parameters" << manip::normal() << " were removed:\n";
-
-        }
+        else
+            out << std::to_string(number_parameters_deleted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were removed:\n";
 
     }
 
@@ -620,16 +615,10 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
 
         out.begin_line();
 
-        if(number_parameters_inserted == 1) {
-
-            change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_INSERT);
+        if(number_parameters_inserted == 1)
             out << "a " << manip::bold() << "parameter" << manip::normal() << " was added\n";
-
-        } else {
-
-            out << std::to_string(number_parameters_inserted) << manip::bold() << "parameters" << manip::normal() << " were added:\n";
-
-        }
+        else
+            out << std::to_string(number_parameters_inserted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were added:\n";
 
     }
 
@@ -637,16 +626,10 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
 
         out.begin_line();
 
-        if(number_parameters_modified == 1) {
-
-            change_entity_map<parameter_profile_t>::const_iterator param_iterator = parameters.find(SRCDIFF_COMMON);
+        if(number_parameters_modified == 1)
             out << "a " << manip::bold() << "parameter" << manip::normal() << " was modified\n";
-
-        } else {
-
-            out << std::to_string(number_parameters_modified) << manip::bold() << "parameters" << manip::normal() << " were modified:\n";
-
-        }
+        else
+            out << std::to_string(number_parameters_modified) << ' ' << manip::bold() << "parameters" << manip::normal() << " were modified:\n";
 
     }
 
@@ -661,25 +644,10 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
         out.begin_line();
 
-        if(number_member_initializations_deleted == 1) {
-
-            change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_DELETE);
-            out << "a " << manip::bold() << "member initilization" << manip::normal() << " for '" << member_iterator->second->name.original() << "' was removed\n";
-
-        } else {
-
-            out << "the following " << manip::bold() << "member initilizations" << manip::normal() << " were removed:\n";
-
-            out.increment_depth();
-            std::for_each(member_initializations.lower_bound(SRCDIFF_DELETE), member_initializations.upper_bound(SRCDIFF_DELETE),
-                [&out](const change_entity_map<call_profile_t>::pair & member) {
-
-                    out.begin_line() << '\'' << member.second->name.original() << "'\n";
-
-                });
-            out.decrement_depth();
-
-        }
+        if(number_member_initializations_deleted == 1)
+            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was removed\n";
+        else
+            out << std::to_string(number_member_initializations_deleted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were removed:\n";
 
     }
 
@@ -687,25 +655,10 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
         out.begin_line();
 
-        if(number_member_initializations_inserted == 1) {
-
-            change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_INSERT);
-            out << "a " << manip::bold() << "member initilization" << manip::normal() << " for '" << member_iterator->second->name.modified() << "' was added\n";
-
-        } else {
-
-            out << "the following " << manip::bold() << "member initilizations" << manip::normal() << " were added:\n";
-
-            out.increment_depth();
-            std::for_each(member_initializations.lower_bound(SRCDIFF_INSERT), member_initializations.upper_bound(SRCDIFF_INSERT),
-                [&out](const change_entity_map<call_profile_t>::pair & member) {
-
-                    out.begin_line() << '\'' << member.second->name.modified() << "'\n";
-
-                });
-            out.decrement_depth();
-
-        }
+        if(number_member_initializations_inserted == 1)
+            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was added\n";
+        else
+            out << std::to_string(number_member_initializations_inserted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were added:\n";
 
     }
 
@@ -713,32 +666,10 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
         out.begin_line();
 
-        if(number_member_initializations_modified == 1) {
-
-            change_entity_map<call_profile_t>::const_iterator member_iterator = member_initializations.find(SRCDIFF_COMMON);
-            if(member_iterator->second->name.is_common())
-                out << "the " << manip::bold() << "member initilization" << manip::normal() << " for '" << member_iterator->second->name << "' was modified\n";
-            else
-                out << "the name of a " << manip::bold() << "member initilization" << manip::normal() << " was changed from '" << member_iterator->second->name.original() << "' to '" << member_iterator->second->name.modified() << "'\n";
-
-        } else {
-
-            out << "the following " << manip::bold() << "member initilizations" << manip::normal() << " were modified:\n";
-
-            out.increment_depth();
-            std::for_each(member_initializations.lower_bound(SRCDIFF_COMMON), member_initializations.upper_bound(SRCDIFF_COMMON),
-                [&out](const change_entity_map<call_profile_t>::pair & member) {
-
-                    out.begin_line();
-                    if(member.second->name.is_common())
-                        out << '\'' << member.second->name << "'\n";
-                    else
-                        out << "the name of a " << manip::bold() << "member initilization" << manip::normal() << " was changed from '" << member.second->name.original() << "' to '" << member.second->name.modified() << "'\n";
-
-                });
-            out.decrement_depth();
-
-        }
+        if(number_member_initializations_modified == 1)
+            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was modified\n";
+        else
+            out << std::to_string(number_member_initializations_modified) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were modified:\n";
 
     }
 

@@ -223,7 +223,7 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'PageProcessingQueue::PageProcessingQueue':
   #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
-	• a #member initilization# for 'QObject' was added
+	• a #member initilization# was added
 
 END_SUMMARY
 
