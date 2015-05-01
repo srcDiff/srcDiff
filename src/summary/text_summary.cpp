@@ -807,7 +807,7 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
             if(deleted_calls.size() == 1)
                 return "a " + bold("call") + " was deleted";
             else
-                return bold("calls") + " were deleted";
+                return std::to_string(deleted_calls.size()) + ' ' + bold("calls") + " were deleted";
 
         }
 
@@ -816,7 +816,7 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
             if(inserted_calls.size() == 1)
                 return "a " + bold("call") + " was added";
             else
-                return bold("calls") + " were added";
+                return std::to_string(inserted_calls.size()) + ' ' + bold("calls") + " were added";
         }
 
         if(renamed_calls.size() != 0) {
@@ -824,7 +824,7 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
             if(renamed_calls.size() == 1)
                 return "a " + bold("call") + " was renamed";
             else
-                return bold("calls") + " were renamed";
+                return std::to_string(renamed_calls.size()) + ' ' + bold("calls") + " were renamed";
         }
 
         if(modified_argument_lists.size() != 0) {
