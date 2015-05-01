@@ -902,6 +902,12 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         out.begin_line();
 
+        /**
+          * @todo probably want to break down and summarize the different types differently 
+          * For instance, call/call sequence.  Deleted function name is more of a rename so summarize like that.
+          * Assignment statements may also have some other semantics.
+          * What I have no probably could be a basis for general expr_stmts.
+          */
         out << summarize_calls(profile, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
 
         out << '\n';
