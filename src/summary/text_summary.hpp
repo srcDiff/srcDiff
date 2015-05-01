@@ -77,7 +77,7 @@ public:
                                 std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                                 std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
                                 std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
-    summary_output_stream & summarize_call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const;
+    summary_output_stream & summarize_call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set) const;
     summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);

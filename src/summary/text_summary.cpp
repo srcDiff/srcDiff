@@ -852,13 +852,15 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
 
 }
 
-summary_output_stream & text_summary::summarize_call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
+summary_output_stream & text_summary::summarize_call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set) const {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     std::vector<std::shared_ptr<call_profile_t>>::size_type calls_sequence_length = expr_stmt_profile->get_call_profiles().size();
 
     bool is_variable_reference_change = true;
+    size_t number_rename = 0;
+    size_t number_argument_list_modified = 0;
     for(std::vector<std::shared_ptr<call_profile_t>>::size_type pos = 0; pos < calls_sequence_length; ++pos) {
 
         const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[pos];
@@ -871,21 +873,93 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
 
         }
 
+        if(call_profile->operation == SRCDIFF_COMMON && !call_profile->name.is_common()) {
+
+            identifier_diff ident_diff(call_profile->name);
+            ident_diff.trim(true);
+
+            if(identifier_set.count(ident_diff))
+                ++number_rename;
+
+        }
+
+        if(call_profile->operation == SRCDIFF_COMMON && call_profile->argument_list_modified) {
+
+            bool report_change = false;
+            std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
+                [&, this](const typename change_entity_map<profile_t>::pair & pair) {
+
+                    if(pair.second->syntax_count == 0 || report_change) return;
+
+                    for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
+
+                       if(argument_child_profile->operation != SRCDIFF_COMMON) { 
+
+                            report_change = true;
+                            break;
+
+                        }                                            
+
+                        if(!is_identifier(argument_child_profile->type_name)) {
+
+                            report_change = true;
+                            break;
+
+                        } else {
+
+                            const std::shared_ptr<identifier_profile_t> & identifier_profile
+                                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
+
+                            identifier_diff ident_diff(identifier_profile->name);
+                            ident_diff.trim(false);
+
+                            if(identifier_set.count(ident_diff)) {
+
+                                report_change = true;
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+            if(report_change)
+                ++number_argument_list_modified;
+
+        }
+
     }
 
+    out.begin_line();
 
-    if(is_variable_reference_change) {
+    if(number_rename == 1 && number_argument_list_modified == 0) {
 
-        out.begin_line() << "variable reference change\n";
+        out << "a call name change occurred";
+
+    } else if(is_variable_reference_change && number_argument_list_modified == 0) {
+
+        out << "a variable reference change occurred";
+
+    } else if(number_argument_list_modified == 1 && number_rename == 0) {
+
+        out << "an argument list was modified";
+
+    } else {
+
+        out << get_profile_string(profile) << " was modified";
 
     }
+
+    out << '\n';
 
 
     return out;
 
 }
 
-/** @todo probably should make this work for like conditional.  Report either change to top level call or directly affected call. */
 summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
