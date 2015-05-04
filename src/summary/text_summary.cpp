@@ -728,14 +728,28 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                     bool report_change = false;
                                     for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
 
-                                       if(argument_child_profile->operation != SRCDIFF_COMMON) { 
+                                        if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
+
+                                            size_t num_calls = 0;
+                                            std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
+                                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
+                                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set, inner_deleted_calls, inner_inserted_calls,
+                                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists);
+
+                                            if(inner_deleted_calls.size() || inner_inserted_calls.size()
+                                                || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
+
+                                                report_change = true;
+                                                break;
+
+                                            }
+
+                                        } else if(argument_child_profile->operation != SRCDIFF_COMMON) { 
 
                                             report_change = true;
                                             break;
 
-                                        }                                            
-
-                                        if(!is_identifier(argument_child_profile->type_name)) {
+                                        } else if(!is_identifier(argument_child_profile->type_name)) {
 
                                             report_change = true;
                                             break;
@@ -756,7 +770,6 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                             }
 
                                         }
-
 
                                     }
 
@@ -902,14 +915,28 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
 
                     for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
 
-                       if(argument_child_profile->operation != SRCDIFF_COMMON) { 
+                       if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
+
+                            size_t num_calls = 0;
+                            std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
+                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
+                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set, inner_deleted_calls, inner_inserted_calls,
+                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists);
+
+                            if(inner_deleted_calls.size() || inner_inserted_calls.size()
+                                || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
+
+                                report_change = true;
+                                break;
+
+                            }
+
+                        } else if(argument_child_profile->operation != SRCDIFF_COMMON) { 
 
                             report_change = true;
                             break;
 
-                        }                                            
-
-                        if(!is_identifier(argument_child_profile->type_name)) {
+                        } else if(!is_identifier(argument_child_profile->type_name)) {
 
                             report_change = true;
                             break;
