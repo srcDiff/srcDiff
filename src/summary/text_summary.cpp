@@ -239,11 +239,11 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
     const std::shared_ptr<profile_t> & start_profile = profile->child_profiles[pos];
 
-    std::vector<const std::shared_ptr<expr_stmt_profile_t> *>   expr_stmt_deleted,    expr_stmt_inserted;
-    std::vector<const std::shared_ptr<decl_stmt_profile_t> *>   decl_stmt_deleted,    decl_stmt_inserted;
-    std::vector<const std::shared_ptr<conditional_profile_t> *> conditionals_deleted, conditionals_inserted;
-    std::vector<const std::shared_ptr<profile_t> *>             jump_deleted,         jump_inserted;
-    std::vector<const std::shared_ptr<profile_t> *>             comment_deleted,      comment_inserted;
+    std::vector<std::reference_wrapper<const std::shared_ptr<expr_stmt_profile_t>>>   expr_stmt_deleted,    expr_stmt_inserted;
+    std::vector<std::reference_wrapper<const std::shared_ptr<decl_stmt_profile_t>>>   decl_stmt_deleted,    decl_stmt_inserted;
+    std::vector<std::reference_wrapper<const std::shared_ptr<conditional_profile_t>>> conditionals_deleted, conditionals_inserted;
+    std::vector<std::reference_wrapper<const std::shared_ptr<profile_t>>>             jump_deleted,         jump_inserted;
+    std::vector<std::reference_wrapper<const std::shared_ptr<profile_t>>>             comment_deleted,      comment_inserted;
     for(; pos < profile->child_profiles.size() && profile->child_profiles[pos]->is_replacement; ++pos) {
 
         const std::shared_ptr<profile_t> & replacement_profile = profile->child_profiles[pos];                    
@@ -251,35 +251,35 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
         if(is_condition_type(replacement_profile->type_name)) {
 
             if(replacement_profile->operation == SRCDIFF_DELETE)
-                conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> *>(&replacement_profile));
+                conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replacement_profile));
             else
-                conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> *>(&replacement_profile));
+                conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replacement_profile));
 
         } else if(is_jump(replacement_profile->type_name)) {
 
             if(replacement_profile->operation == SRCDIFF_DELETE)
-                jump_deleted.push_back(&replacement_profile);
+                jump_deleted.push_back(replacement_profile);
             else
-                jump_inserted.push_back(&replacement_profile);
+                jump_inserted.push_back(replacement_profile);
 
         } else if(is_expr_stmt(replacement_profile->type_name)) {
 
             if(replacement_profile->operation == SRCDIFF_DELETE)
-                expr_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> *>(&replacement_profile));
+                expr_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replacement_profile));
             else
-                expr_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> *>(&replacement_profile));
+                expr_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replacement_profile));
 
         } else if(is_decl_stmt(replacement_profile->type_name)){
 
             if(replacement_profile->operation == SRCDIFF_DELETE)
-                decl_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> *>(&replacement_profile));
+                decl_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replacement_profile));
             else
-                decl_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> *>(&replacement_profile));
+                decl_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replacement_profile));
 
         } else if(is_comment(replacement_profile->type_name)) {
 
-            if(replacement_profile->operation == SRCDIFF_DELETE) comment_deleted.push_back(&replacement_profile);
-            else                                                 comment_inserted.push_back(&replacement_profile);
+            if(replacement_profile->operation == SRCDIFF_DELETE) comment_deleted.push_back(replacement_profile);
+            else                                                 comment_inserted.push_back(replacement_profile);
 
         }
 
@@ -311,21 +311,21 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
         && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
 
         if(expr_stmt_deleted.size())
-            out << get_profile_string(*expr_stmt_deleted.back());
+            out << get_profile_string(expr_stmt_deleted.back().get());
         else if(expr_stmt_inserted.size())
-            out << get_profile_string(*expr_stmt_inserted.back());
+            out << get_profile_string(expr_stmt_inserted.back().get());
         else if(decl_stmt_deleted.size())
-            out << get_profile_string(*decl_stmt_deleted.back());
+            out << get_profile_string(decl_stmt_deleted.back().get());
         else if(decl_stmt_inserted.size())
-            out << get_profile_string(*decl_stmt_inserted.back());
+            out << get_profile_string(decl_stmt_inserted.back().get());
         else if(conditionals_deleted.size())
-            out << get_profile_string(*conditionals_deleted.back());
+            out << get_profile_string(conditionals_deleted.back().get());
         else if(conditionals_inserted.size())
-            out << get_profile_string(*conditionals_inserted.back());
+            out << get_profile_string(conditionals_inserted.back().get());
         else if(jump_deleted.size())
-            out << get_profile_string(*jump_deleted.back());
+            out << get_profile_string(jump_deleted.back().get());
         else if(jump_inserted.size())
-            out << get_profile_string(*jump_inserted.back());
+            out << get_profile_string(jump_inserted.back().get());
 
         out << " was ";
 
@@ -341,15 +341,15 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
     if(number_syntax_deletions == 1) {
 
         if(expr_stmt_deleted.size())
-            out << get_profile_string(*expr_stmt_deleted.back());
+            out << get_profile_string(expr_stmt_deleted.back().get());
         else if(decl_stmt_deleted.size())
-            out << get_profile_string(*decl_stmt_deleted.back());
+            out << get_profile_string(decl_stmt_deleted.back().get());
         else if(conditionals_deleted.size())
-            out << get_profile_string(*conditionals_deleted.back());
+            out << get_profile_string(conditionals_deleted.back().get());
         else if(jump_deleted.size())
-            out << get_profile_string(*jump_deleted.back());
+            out << get_profile_string(jump_deleted.back().get());
         else
-            out << get_profile_string(*comment_deleted.back());
+            out << get_profile_string(comment_deleted.back().get());
 
         out << " was";
 
@@ -359,30 +359,30 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
             if(expr_stmt_deleted.size()) {
 
-                out << (expr_stmt_deleted.size() == 1 ? get_article(*expr_stmt_deleted.back()) :  std::to_string(expr_stmt_deleted.size())) << ' ' << get_type_string(*expr_stmt_deleted.back());
+                out << (expr_stmt_deleted.size() == 1 ? get_article(expr_stmt_deleted.back().get()) :  std::to_string(expr_stmt_deleted.size())) << ' ' << get_type_string(expr_stmt_deleted.back().get());
 
             } else if(decl_stmt_deleted.size()) {
 
-                out << (decl_stmt_deleted.size() == 1 ? get_article(*decl_stmt_deleted.back()) :  std::to_string(decl_stmt_deleted.size())) << ' ' << get_type_string(*decl_stmt_deleted.back());
+                out << (decl_stmt_deleted.size() == 1 ? get_article(decl_stmt_deleted.back().get()) :  std::to_string(decl_stmt_deleted.size())) << ' ' << get_type_string(decl_stmt_deleted.back().get());
 
             } else if(conditionals_deleted.size()) {
 
-                out << (conditionals_deleted.size() == 1 ? get_article(*conditionals_deleted.back()) :  std::to_string(conditionals_deleted.size())) << ' ' << get_type_string(*conditionals_deleted.back());
+                out << (conditionals_deleted.size() == 1 ? get_article(conditionals_deleted.back().get()) :  std::to_string(conditionals_deleted.size())) << ' ' << get_type_string(conditionals_deleted.back().get());
 
             } else if(jump_deleted.size()) {
 
                 if(jump_deleted.size() == 1) {
 
-                    out << get_profile_string(*jump_deleted.back());
+                    out << get_profile_string(jump_deleted.back().get());
 
                 } else {
 
                     std::set<std::string> jump_types;
-                    for(const std::shared_ptr<profile_t> * profile_ptr : jump_deleted)
-                        jump_types.insert((*profile_ptr)->type_name.original());
+                    for(const std::shared_ptr<profile_t> & profile_ptr : jump_deleted)
+                        jump_types.insert(profile_ptr->type_name.original());
 
                     if(jump_types.size() == 1)
-                        out << std::to_string(jump_deleted.size()) << ' ' << get_type_string(*jump_deleted.back());
+                        out << std::to_string(jump_deleted.size()) << ' ' << get_type_string(jump_deleted.back());
                     else
                         out << std::to_string(jump_deleted.size()) << " statements";
 
@@ -418,15 +418,15 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
     if(number_syntax_insertions == 1) {
 
         if(expr_stmt_inserted.size())
-            out << get_profile_string(*expr_stmt_inserted.back());
+            out << get_profile_string(expr_stmt_inserted.back().get());
         else if(decl_stmt_inserted.size())
-            out << get_profile_string(*decl_stmt_inserted.back());
+            out << get_profile_string(decl_stmt_inserted.back().get());
         else if(conditionals_inserted.size())
-            out << get_profile_string(*conditionals_inserted.back());
+            out << get_profile_string(conditionals_inserted.back().get());
         else if(jump_inserted.size())
-            out << get_profile_string(*jump_inserted.back());
+            out << get_profile_string(jump_inserted.back().get());
         else
-            out << get_profile_string(*comment_inserted.back());
+            out << get_profile_string(comment_inserted.back().get());
 
     } else {
 
@@ -434,30 +434,30 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
             if(expr_stmt_inserted.size()) {
 
-                out << (expr_stmt_inserted.size() == 1 ? get_article(*expr_stmt_inserted.back()) :  std::to_string(expr_stmt_inserted.size())) << ' ' << get_type_string(*expr_stmt_inserted.back());
+                out << (expr_stmt_inserted.size() == 1 ? get_article(expr_stmt_inserted.back().get()) :  std::to_string(expr_stmt_inserted.size())) << ' ' << get_type_string(expr_stmt_inserted.back().get());
 
             } else if(decl_stmt_inserted.size()) {
 
-                out << (decl_stmt_inserted.size() == 1 ? get_article(*decl_stmt_inserted.back()) :  std::to_string(decl_stmt_inserted.size())) << ' ' << get_type_string(*decl_stmt_inserted.back());
+                out << (decl_stmt_inserted.size() == 1 ? get_article(decl_stmt_inserted.back().get()) :  std::to_string(decl_stmt_inserted.size())) << ' ' << get_type_string(decl_stmt_inserted.back().get());
 
             } else if(conditionals_inserted.size()) {
 
-                out << (conditionals_inserted.size() == 1 ? get_article(*conditionals_inserted.back()) :  std::to_string(conditionals_inserted.size())) << ' ' << get_type_string(*conditionals_inserted.back());
+                out << (conditionals_inserted.size() == 1 ? get_article(conditionals_inserted.back().get()) :  std::to_string(conditionals_inserted.size())) << ' ' << get_type_string(conditionals_inserted.back().get());
 
             } else if(jump_inserted.size()) {
 
                 if(jump_inserted.size() == 1) {
 
-                    out << get_profile_string(*jump_inserted.back());
+                    out << get_profile_string(jump_inserted.back().get());
 
                 } else {
 
                     std::set<std::string> jump_types;
-                    for(const std::shared_ptr<profile_t> * profile_ptr : jump_inserted)
-                        jump_types.insert((*profile_ptr)->type_name.original());
+                    for(const std::shared_ptr<profile_t> & profile_ptr : jump_inserted)
+                        jump_types.insert(profile_ptr->type_name.original());
 
                     if(jump_types.size() == 1)
-                        out << std::to_string(jump_inserted.size()) << ' ' << get_type_string(*jump_inserted.back());
+                        out << std::to_string(jump_inserted.size()) << ' ' << get_type_string(jump_inserted.back());
                     else
                         out << std::to_string(jump_inserted.size()) << " statements";
 
