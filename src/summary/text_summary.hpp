@@ -70,7 +70,8 @@ public:
                         std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                        std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
+                        std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
+                        std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
     std::string summarize_calls(const std::shared_ptr<profile_t> & profile,
                                 std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                                 std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
