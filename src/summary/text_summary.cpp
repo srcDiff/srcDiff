@@ -933,9 +933,6 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
     }
 
-    if(number_rename == 0 && number_argument_lists_modified == 0)
-        return out;
-
     out.begin_line();
 
     if(number_rename == 1 && number_argument_lists_modified == 0) {
