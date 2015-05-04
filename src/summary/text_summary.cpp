@@ -1036,6 +1036,42 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
+    const std::shared_ptr<profile_t> & parent_profile = profile->parent;
+    std::map<identifier_diff, size_t> identifier_set;
+    std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
+                        output_identifiers.begin(), output_identifiers.end(),
+                        std::inserter(identifier_set, identifier_set.begin()));
+
+    if(decl_stmt_profile->operation == SRCDIFF_COMMON) {
+
+        bool report = false;
+        if(!decl_stmt_profile->type.is_common()) {
+
+            identifier_diff ident_diff(decl_stmt_profile->type);
+            ident_diff.trim(true);
+
+            if(identifier_set.count(ident_diff))
+                report = true;
+
+        }
+
+        if(!decl_stmt_profile->name.is_common()) {
+
+            identifier_diff ident_diff(decl_stmt_profile->name);
+            ident_diff.trim(true);
+
+            if(identifier_set.count(ident_diff))
+                report = true;
+
+        }
+
+        if(!decl_stmt_profile->init.is_common())
+            report = true;
+
+        if(!report) return out;
+
+    }
+
     out.begin_line() << get_profile_string(decl_stmt_profile);
 
     out << " was ";
