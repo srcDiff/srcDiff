@@ -689,7 +689,11 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                               std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                               std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
-    for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles[0]->child_profiles) {
+    for(size_t pos = 0; pos < profile->child_profiles[0]->child_profiles.size(); ++pos) {
+
+        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[0]->child_profiles[pos];
+
+        if(child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0) continue;
 
         if(child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
 
@@ -720,7 +724,7 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                 bool report_argument_list = call_profile->argument_list_modified;
                 if(report_argument_list) {
 
-                    size_t number_deleted = call_profile->arguments.count(SRCDIFF_DELETE);
+                    size_t number_deleted  = call_profile->arguments.count(SRCDIFF_DELETE);
                     size_t number_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
 
                     number_arguments_deleted  += number_deleted;
@@ -728,72 +732,73 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
 
                     number_arguments_total += number_deleted + number_inserted;
 
-                    size_t number_arguments_modified = 0;
+                    bool report_change = false;
                     std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
                         [&, this](const typename change_entity_map<profile_t>::pair & pair) {
 
-                                if(pair.second->syntax_count) {
+                            if(pair.second->syntax_count == 0) return;
 
-                                    bool report_change = false;
-                                    for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
+                            for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
 
-                                        if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
+                               if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
 
-                                            size_t num_calls = 0;
-                                            std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
-                                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
-                                            size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0,
-                                                   inner_number_arguments_total = 0;
-                                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set,
-                                                inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls,
-                                                inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified, inner_number_arguments_total,
-                                                inner_modified_argument_lists, identifier_renames);
+                                    size_t num_calls = 0;
+                                    std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
+                                        inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
+                                    size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0, inner_number_arguments_total = 0;
+                                    expr_stmt_call(argument_child_profile->parent->parent, identifier_set,
+                                        inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls,
+                                        inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified, inner_number_arguments_total,
+                                        inner_modified_argument_lists, identifier_renames);
 
-                                            if(inner_deleted_calls.size() || inner_inserted_calls.size()
-                                                || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
+                                    if(inner_deleted_calls.size() || inner_inserted_calls.size()
+                                        || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
 
-                                                report_change = true;
-                                                break;
-
-                                            }
-
-                                        } else if(argument_child_profile->operation != SRCDIFF_COMMON) { 
-
-                                            report_change = true;
-                                            break;
-
-                                        } else if(!is_identifier(argument_child_profile->type_name)) {
-
-                                            report_change = true;
-                                            break;
-
-                                        } else {
-
-                                            const std::shared_ptr<identifier_profile_t> & identifier_profile
-                                                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
-
-                                            identifier_diff ident_diff(identifier_profile->name);
-                                            ident_diff.trim(false);
-
-                                            if(identifier_set.count(ident_diff)) {
-
-                                                report_change = true;
-                                                identifier_renames.insert(identifier_profile->name);
-                                                break;
-
-                                            }
-
-                                        }
+                                        report_change = true;
+                                        break;
 
                                     }
 
-                                    if(report_change) ++number_arguments_modified; 
+                                } else if(argument_child_profile->operation != SRCDIFF_COMMON) { 
+
+                                    report_change = true;
+                                    break;
+
+                                } else if(!is_identifier(argument_child_profile->type_name)) {
+
+                                    report_change = true;
+                                    break;
+
+                                } else {
+
+                                    const std::shared_ptr<identifier_profile_t> & identifier_profile
+                                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
+
+                                    identifier_diff ident_diff(identifier_profile->name);
+                                    ident_diff.trim(false);
+
+                                    if(identifier_set.count(ident_diff)) {
+
+                                        report_change = true;
+                                        identifier_renames.insert(identifier_profile->name);
+                                        break;
+
+                                    }
 
                                 }
 
-                            });
+                            }
 
-                    if(number_arguments_deleted == 0 && number_arguments_inserted == 0 && number_arguments_modified == 0)
+                            if(report_change) {
+
+                               ++number_arguments_modified;
+                               ++number_arguments_total;
+
+                            }
+
+                        });
+
+                    if(number_deleted == 0 && number_inserted == 0 && !report_change)
                         report_argument_list = false;
 
                 }
@@ -801,12 +806,12 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                 if(!report_name && !report_argument_list) continue;
 
                 modified_calls.push_back(call_profile);
-                if(report_name) renamed_calls.push_back(call_profile);
+                if(report_name)          renamed_calls.push_back(call_profile);
                 if(report_argument_list) modified_argument_lists.push_back(call_profile);
 
             }
 
-         }
+        }
 
      }
 
@@ -830,7 +835,9 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
 
     if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
 
-    if(expr_stmt_profile->call()) return call_sequence(out, expr_stmt_profile, diff_set);
+    if(expr_stmt_profile->call())
+        return call_sequence(out, profile, renamed_calls.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
+                             modified_argument_lists.size(), identifier_renames);
 
     out.begin_line();
 
@@ -898,132 +905,40 @@ bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_o
 
 }
 
-summary_output_stream & text_summary::call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set) const {
+summary_output_stream & text_summary::call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t number_rename,
+                                                    size_t number_arguments_deleted, size_t number_arguments_inserted, size_t number_arguments_modified,
+                                                    size_t number_argument_lists_modified, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     std::vector<std::shared_ptr<call_profile_t>>::size_type calls_sequence_length = expr_stmt_profile->get_call_profiles().size();
 
-    bool is_variable_reference_change = true;
-    size_t number_rename = 0;
-    size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0, number_arguments_total = 0;
-    size_t number_argument_list_modified = 0;
-    std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-    for(std::vector<std::shared_ptr<call_profile_t>>::size_type pos = 0; pos < calls_sequence_length; ++pos) {
+    size_t number_arguments_total = number_arguments_deleted + number_arguments_inserted + number_arguments_modified;
+    bool is_variable_reference_change = number_argument_lists_modified == 0;
 
-        const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[pos];
+    if(is_variable_reference_change) {
 
-        if(call_profile->operation == SRCDIFF_COMMON && call_profile->syntax_count == 0) continue;
+        for(std::vector<std::shared_ptr<call_profile_t>>::size_type pos = 0; pos < calls_sequence_length; ++pos) {
 
-        if(call_profile->operation != SRCDIFF_COMMON && pos == (calls_sequence_length - 1)) {
+            const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[pos];
 
-            is_variable_reference_change = false;
+            if(call_profile->operation != SRCDIFF_COMMON && pos != (calls_sequence_length - 1)) {
 
-        }
-
-        if(call_profile->operation == SRCDIFF_COMMON && !call_profile->name.is_common()) {
-
-            identifier_diff ident_diff(call_profile->name);
-            ident_diff.trim(true);
-
-            if(identifier_set.count(ident_diff))
-                ++number_rename;
-
-        }
-
-        if(call_profile->operation == SRCDIFF_COMMON && call_profile->argument_list_modified) {
-
-            size_t number_deleted  = call_profile->arguments.count(SRCDIFF_DELETE);
-            size_t number_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
-
-            number_arguments_deleted  += number_deleted;
-            number_arguments_inserted += number_inserted;
-
-            number_arguments_total += number_deleted + number_inserted;
-
-            bool report_change = false;
-            std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
-                [&, this](const typename change_entity_map<profile_t>::pair & pair) {
-
-                    if(pair.second->syntax_count == 0) return;
-
-                    for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
-
-                       if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
-
-                            size_t num_calls = 0;
-                            std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
-                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
-                            size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0, inner_number_arguments_total = 0;
-                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set,
-                                inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls,
-                                inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified, inner_number_arguments_total,
-                                inner_modified_argument_lists, identifier_renames);
-
-                            if(inner_deleted_calls.size() || inner_inserted_calls.size()
-                                || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
-
-                                report_change = true;
-                                break;
-
-                            }
-
-                        } else if(argument_child_profile->operation != SRCDIFF_COMMON) { 
-
-                            report_change = true;
-                            break;
-
-                        } else if(!is_identifier(argument_child_profile->type_name)) {
-
-                            report_change = true;
-                            break;
-
-                        } else {
-
-                            const std::shared_ptr<identifier_profile_t> & identifier_profile
-                                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
-
-                            identifier_diff ident_diff(identifier_profile->name);
-                            ident_diff.trim(false);
-
-                            if(identifier_set.count(ident_diff)) {
-
-                                report_change = true;
-                                identifier_renames.insert(identifier_profile->name);
-                                break;
-
-                            }
-
-                        }
-
-                    }
-
-                    if(report_change) {
-
-                       ++number_arguments_modified;
-                       ++number_arguments_total;
-
-                    }
-
-                });
-
-            if(number_deleted || number_inserted || report_change) {
-
-                ++number_argument_list_modified;
                 is_variable_reference_change = false;
+                break;
 
             }
 
-        }
+       }
 
     }
 
-    if(number_rename == 0 && number_argument_list_modified == 0)
+    if(number_rename == 0 && number_argument_lists_modified == 0)
         return out;
 
     out.begin_line();
 
-    if(number_rename == 1 && number_argument_list_modified == 0) {
+    if(number_rename == 1 && number_argument_lists_modified == 0) {
 
         out << "a " << manip::bold() << "call name" << manip::normal() << " change occurred";
 
@@ -1035,7 +950,7 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
         out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
 
-    } else if(number_argument_list_modified == 1 && number_rename == 0) {
+    } else if(number_argument_lists_modified == 1 && number_rename == 0) {
 
         if(number_arguments_total == 1) {
 
