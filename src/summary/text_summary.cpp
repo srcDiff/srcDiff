@@ -865,6 +865,12 @@ std::string text_summary::summarize_calls(const std::shared_ptr<profile_t> & pro
 
 }
 
+bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_one, const std::__1::reference_wrapper<const versioned_string> & ref_two) {
+
+    return ref_one.get() < ref_two.get();
+
+}
+
 summary_output_stream & text_summary::summarize_call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set) const {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
@@ -875,6 +881,7 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
     size_t number_rename = 0;
     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0, number_arguments_total = 0;
     size_t number_argument_list_modified = 0;
+    std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
     for(std::vector<std::shared_ptr<call_profile_t>>::size_type pos = 0; pos < calls_sequence_length; ++pos) {
 
         const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[pos];
@@ -952,6 +959,7 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
                             if(identifier_set.count(ident_diff)) {
 
                                 report_change = true;
+                                identifier_renames.insert(identifier_profile->name);
                                 break;
 
                             }
@@ -992,6 +1000,10 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
     } else if(is_variable_reference_change) {
 
         out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
+
+    } else if(identifier_renames.size() == 1) {
+
+        out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
 
     } else if(number_argument_list_modified == 1 && number_rename == 0) {
 
