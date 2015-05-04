@@ -683,6 +683,10 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
+                              size_t & deleted_arguments,
+                              size_t & inserted_arguments,
+                              size_t & modified_arguments,
+                              size_t & arguments_total,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                               std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
@@ -734,8 +738,11 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                             size_t num_calls = 0;
                                             std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
                                                 inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
-                                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set, inner_deleted_calls, inner_inserted_calls,
-                                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists, identifier_renames);
+                                            size_t inner_deleted_arguments = 0, inner_inserted_arguments = 0, inner_modified_arguments = 0, inner_arguments_total = 0;
+                                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set,
+                                                inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls,
+                                                inner_deleted_arguments, inner_inserted_arguments, inner_modified_arguments, inner_arguments_total,
+                                                inner_modified_argument_lists, identifier_renames);
 
                                             if(inner_deleted_calls.size() || inner_inserted_calls.size()
                                                 || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
@@ -929,8 +936,11 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
                             size_t num_calls = 0;
                             std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
                                 inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
-                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set, inner_deleted_calls, inner_inserted_calls,
-                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists, identifier_renames);
+                            size_t inner_deleted_arguments = 0, inner_inserted_arguments = 0, inner_modified_arguments = 0, inner_arguments_total = 0;
+                            expr_stmt_call(argument_child_profile->parent->parent, identifier_set,
+                                inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls,
+                                inner_deleted_arguments, inner_inserted_arguments, inner_modified_arguments, inner_arguments_total,
+                                inner_modified_argument_lists, identifier_renames);
 
                             if(inner_deleted_calls.size() || inner_inserted_calls.size()
                                 || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
@@ -1094,8 +1104,10 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
             std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls,
                 modified_calls, renamed_calls, modified_argument_lists;
+            size_t deleted_arguments = 0, inserted_arguments = 0, modified_arguments = 0, arguments_total = 0;
             std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-            expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, identifier_renames);
+            expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls,
+                deleted_arguments, inserted_arguments, modified_arguments, arguments_total, modified_argument_lists, identifier_renames);
             if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
 
             out.begin_line() << summarize_calls(profile, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
