@@ -15,6 +15,7 @@
 #include <functional>
 #include <list>
 #include <set>
+#include <typeinfo>
 
 /** @todo survey suggested highlighting important details. Not sure if they mean bold or background color */
 
@@ -688,6 +689,8 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                               size_t & number_arguments_total,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                               std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+
+    assert(typeid(*profile.get()) == typeid(expr_profile_t));
 
     for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
 
