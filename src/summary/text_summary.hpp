@@ -4,6 +4,7 @@
 #include <profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <call_profile_t.hpp>
+#include <expr_stmt_profile_t.hpp>
 #include <change_entity_map.hpp>
 #include <summary_output_stream.hpp>
 
@@ -76,13 +77,8 @@ public:
                         size_t & number_arguments_total,
                         std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                         std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    std::string summarize_calls(const std::shared_ptr<profile_t> & profile,
-                                std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
-                                std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
-                                std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
-                                std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                                std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists) const;
-    summary_output_stream & summarize_call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set) const;
+    summary_output_stream & common_expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & expr_stmt_profile) const;
+    summary_output_stream & call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set) const;
     summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
     summary_output_stream & else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
