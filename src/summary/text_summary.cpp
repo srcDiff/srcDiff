@@ -1018,9 +1018,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         /**
           * @todo probably want to break down and summarize the different types differently 
-          * For instance, call/call sequence.  Deleted function name is more of a rename so summarize like that.
           * Assignment statements may also have some other semantics.
-          * What I have no probably could be a basis for general expr_stmts.
           */
 
         common_expr_stmt(out, profile);
@@ -1065,8 +1063,19 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
         }
 
-        if(!decl_stmt_profile->init.is_common())
+        if(!decl_stmt_profile->init.is_common()) {
+
+            std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
+            size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0, number_arguments_total = 0;
+            std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
+            expr_statistics(decl_stmt_profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls,
+                            number_arguments_deleted, number_arguments_inserted, number_arguments_modified, number_arguments_total, modified_argument_lists, identifier_renames);
+
+            /** @todo need to add support for detecting other changes in expr_statistics and then use to refine here */
+
             report = true;
+
+        }
 
         if(!report) return out;
 
