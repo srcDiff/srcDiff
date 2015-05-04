@@ -677,7 +677,7 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 }
 
 /** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
-void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                               std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
@@ -689,9 +689,9 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                               std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                               std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
-    for(size_t pos = 0; pos < profile->child_profiles[0]->child_profiles.size(); ++pos) {
+    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
 
-        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[0]->child_profiles[pos];
+        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
         if(child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0) continue;
 
@@ -746,7 +746,7 @@ void text_summary::expr_stmt_call(const std::shared_ptr<profile_t> & profile, co
                                     std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
                                         inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
                                     size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0, inner_number_arguments_total = 0;
-                                    expr_stmt_call(argument_child_profile->parent->parent, identifier_set,
+                                    expr_statistics(argument_child_profile->parent, identifier_set,
                                         inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls,
                                         inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified, inner_number_arguments_total,
                                         inner_modified_argument_lists, identifier_renames);
@@ -830,7 +830,7 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
     std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0, number_arguments_total = 0;
     std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-    expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls,
+    expr_statistics(profile->child_profiles[0], diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls,
         number_arguments_deleted, number_arguments_inserted, number_arguments_modified, number_arguments_total, modified_argument_lists, identifier_renames);
 
     if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
