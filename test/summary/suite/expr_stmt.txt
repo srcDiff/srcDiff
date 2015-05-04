@@ -79,7 +79,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisView2::slotLoadingFinished':
   #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• an #expression# was modified
+	• a #call name# change occurred
 	• a #chain of calls# was added
 
 END_SUMMARY

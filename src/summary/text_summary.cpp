@@ -860,6 +860,7 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
 
     bool is_variable_reference_change = true;
     size_t number_rename = 0;
+    size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0, number_arguments_total = 0;
     size_t number_argument_list_modified = 0;
     for(std::vector<std::shared_ptr<call_profile_t>>::size_type pos = 0; pos < calls_sequence_length; ++pos) {
 
@@ -885,11 +886,19 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
 
         if(call_profile->operation == SRCDIFF_COMMON && call_profile->argument_list_modified) {
 
+            size_t number_deleted  = call_profile->arguments.count(SRCDIFF_DELETE);
+            size_t number_inserted = call_profile->arguments.count(SRCDIFF_INSERT);
+
+            number_arguments_deleted  += number_deleted;
+            number_arguments_inserted += number_inserted;
+
+            number_arguments_total += number_deleted + number_inserted;
+
             bool report_change = false;
             std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
                 [&, this](const typename change_entity_map<profile_t>::pair & pair) {
 
-                    if(pair.second->syntax_count == 0 || report_change) return;
+                    if(pair.second->syntax_count == 0) return;
 
                     for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
 
@@ -924,28 +933,57 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
 
                     }
 
+                    if(report_change) {
+
+                       ++number_arguments_modified;
+                       ++number_arguments_total;
+
+                    }
+
                 });
 
-            if(report_change)
+            if(number_deleted || number_inserted || report_change) {
+
                 ++number_argument_list_modified;
+                is_variable_reference_change = false;
+
+            }
 
         }
 
     }
 
+    if(number_rename == 0 && number_argument_list_modified == 0)
+        return out;
+
     out.begin_line();
 
     if(number_rename == 1 && number_argument_list_modified == 0) {
 
-        out << "a call name change occurred";
+        out << "a " << manip::bold() << "call name" << manip::normal() << " change occurred";
 
-    } else if(is_variable_reference_change && number_argument_list_modified == 0) {
+    } else if(is_variable_reference_change) {
 
-        out << "a variable reference change occurred";
+        out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
 
     } else if(number_argument_list_modified == 1 && number_rename == 0) {
 
-        out << "an argument list was modified";
+        if(number_arguments_total == 1) {
+
+            out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
+
+            if(number_arguments_deleted == 1)
+                out << "removed";
+            else if(number_arguments_inserted == 1)
+                out << "added";
+            else
+                out << "modified";
+
+        } else {
+
+           out << "an " << manip::bold() << "argument list" << manip::normal() << " was modified";
+
+        }
 
     } else {
 
@@ -954,7 +992,6 @@ summary_output_stream & text_summary::summarize_call_sequence(summary_output_str
     }
 
     out << '\n';
-
 
     return out;
 
@@ -1001,23 +1038,28 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
                             output_identifiers.begin(), output_identifiers.end(),
                             std::inserter(diff_set, diff_set.begin()));
 
-        std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls,
-            modified_calls, renamed_calls, modified_argument_lists;
-        expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
-
-        if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
-
-        out.begin_line();
-
         /**
           * @todo probably want to break down and summarize the different types differently 
           * For instance, call/call sequence.  Deleted function name is more of a rename so summarize like that.
           * Assignment statements may also have some other semantics.
           * What I have no probably could be a basis for general expr_stmts.
           */
-        out << summarize_calls(profile, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
 
-        out << '\n';
+        if(expr_stmt_profile->call()) {
+
+            summarize_call_sequence(out, profile, diff_set);
+
+        } else {
+
+            std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls,
+                modified_calls, renamed_calls, modified_argument_lists;
+            expr_stmt_call(profile, diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
+            if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
+
+            out.begin_line() << summarize_calls(profile, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists);
+            out << '\n';
+
+        }
 
     }
 

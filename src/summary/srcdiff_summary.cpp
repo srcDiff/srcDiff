@@ -845,7 +845,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos));
 
-        if(!is_call(full_name) && full_name != "operator")
+        if(!is_call(full_name) && uri_stack.back() != SRCDIFF && full_name != "operator")
             expr_stmt_profile->call(false);
 
         if(is_call(full_name))
