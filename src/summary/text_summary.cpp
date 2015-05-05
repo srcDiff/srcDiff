@@ -198,7 +198,7 @@ summary_output_stream & text_summary::identifiers(summary_output_stream & out, c
 
         if(identifier.second <= 1) continue;
 
-        out.begin_line();// << "the identifier '";
+        out.begin_line();
 
         if(identifier.first.complex()) {
 
@@ -808,6 +808,8 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
 summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
 
+    assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
+    
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
@@ -901,6 +903,8 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
                                                     size_t number_arguments_deleted, size_t number_arguments_inserted, size_t number_arguments_modified,
                                                     size_t number_argument_lists_modified, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
+    assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
+
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     std::vector<std::shared_ptr<call_profile_t>>::size_type calls_sequence_length = expr_stmt_profile->get_call_profiles().size();
@@ -972,6 +976,8 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
 summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
+    assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
+
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
@@ -1011,6 +1017,8 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
 /** @todo for decl_stmt and jump need to not report if only a known rename identifier occurs.  Also, report a rename if it occurred */
 summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
+
+    assert(typeid(*profile.get()) == typeid(decl_stmt_profile_t));
 
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
@@ -1094,6 +1102,8 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
     if(!profile->type_name.is_common())
         return interchange(out, profile, parent_output);
 
+    assert(profile->type_name == "else");
+
     const bool has_common = profile->common_profiles.size() > 0;
 
     const bool output_else = profile->operation != SRCDIFF_COMMON || number_child_changes(profile->child_profiles) > 1;
@@ -1164,6 +1174,8 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
 /** @todo if multiple of same change like test case where connect deleted 4 times.  May want to some in one line. */
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
+
+    assert(is_condition_type(profile->type_name));
 
     const bool has_common = profile->common_profiles.size() > 0;
 
@@ -1257,6 +1269,8 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
 summary_output_stream & text_summary::interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
+    assert(!profile->type_name.is_common());
+
     out.begin_line();
 
     out << get_profile_string(profile) << '\n';
@@ -1291,6 +1305,8 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
 
 summary_output_stream & text_summary::jump(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
+
+    assert(is_jump(profile->type_name));
 
     out.begin_line() << get_profile_string(profile);
 
