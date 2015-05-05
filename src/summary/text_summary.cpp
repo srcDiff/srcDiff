@@ -17,8 +17,6 @@
 #include <set>
 #include <typeinfo>
 
-/** @todo survey suggested highlighting important details. Not sure if they mean bold or background color */
-
 const char * const BOLD_TEXT = "\x1b[1m";
 const char * const NORMAL_TEXT = "\x1b[0m";
 std::string bold(std::string text) {
