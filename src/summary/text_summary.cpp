@@ -672,11 +672,11 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
+                              std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                               size_t & number_arguments_deleted,
                               size_t & number_arguments_inserted,
                               size_t & number_arguments_modified,
                               size_t & number_arguments_total,
-                              std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                               std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     assert(typeid(*profile.get()) == typeid(expr_profile_t));
@@ -739,9 +739,9 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                         inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
                                     size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0, inner_number_arguments_total = 0;
                                     expr_statistics(argument_child_profile->parent, identifier_set,
-                                        inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls,
+                                        inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists,
                                         inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified, inner_number_arguments_total,
-                                        inner_modified_argument_lists, identifier_renames);
+                                        identifier_renames);
 
                                     if(inner_deleted_calls.size() || inner_inserted_calls.size()
                                         || inner_modified_calls.size() || inner_renamed_calls.size() || inner_modified_argument_lists.size()) {
@@ -822,8 +822,8 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
     std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0, number_arguments_total = 0;
     std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-    expr_statistics(profile->child_profiles[0], diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls,
-        number_arguments_deleted, number_arguments_inserted, number_arguments_modified, number_arguments_total, modified_argument_lists, identifier_renames);
+    expr_statistics(profile->child_profiles[0], diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
+        number_arguments_deleted, number_arguments_inserted, number_arguments_modified, number_arguments_total, identifier_renames);
 
     if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
 
@@ -1057,8 +1057,8 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
             std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
             size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0, number_arguments_total = 0;
             std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-            expr_statistics(decl_stmt_profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls,
-                            number_arguments_deleted, number_arguments_inserted, number_arguments_modified, number_arguments_total, modified_argument_lists, identifier_renames);
+            expr_statistics(decl_stmt_profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
+                            number_arguments_deleted, number_arguments_inserted, number_arguments_modified, number_arguments_total, identifier_renames);
 
             /** @todo need to add support for detecting other changes in expr_statistics and then use to refine here */
 

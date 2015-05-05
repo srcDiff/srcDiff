@@ -71,11 +71,11 @@ public:
                         std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
                         std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
+                        std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                         size_t & number_arguments_deleted,
                         size_t & number_arguments_inserted,
                         size_t & number_arguments_modified,
                         size_t & number_arguments_total,
-                        std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
                         std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
     summary_output_stream & common_expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & expr_stmt_profile) const;
     summary_output_stream & call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t number_rename,
