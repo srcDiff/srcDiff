@@ -802,6 +802,40 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
             }
 
+        } else {
+
+            if(child_profile->operation != SRCDIFF_COMMON) {
+
+                if(child_profile->operation == SRCDIFF_DELETE)
+                    deleted_other.push_back(child_profile);
+                else
+                    inserted_other.push_back(child_profile);
+
+
+            } else {
+
+                /** @todo need to handle things that can have subexpr or more children. */
+                if(!is_identifier(child_profile->type_name)) {
+
+                    modified_other.push_back(child_profile);
+
+                } else {
+
+
+                    const std::shared_ptr<identifier_profile_t> & identifier_profile
+                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
+
+                    identifier_diff ident_diff(identifier_profile->name);
+                    ident_diff.trim(false);
+
+                    if(identifier_set.count(ident_diff))
+                        modified_other.push_back(child_profile);
+
+
+                }
+
+            }
+
         }
 
      }
