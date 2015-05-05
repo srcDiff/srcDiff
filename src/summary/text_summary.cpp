@@ -67,7 +67,11 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
         const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
         if(expr_stmt_profile->assignment()) return bold("assignment");
         if(expr_stmt_profile->is_delete())  return bold("delete");
-        if(expr_stmt_profile->call())       return bold("call");
+        if(expr_stmt_profile->call()) {
+            std::vector<std::shared_ptr<call_profile_t>>::size_type number_calls = expr_stmt_profile->get_call_profiles().size();
+            if(number_calls == 1)           return bold("call");
+            else                            return bold("call chain");
+        }
         return bold("expression");
 
     }
