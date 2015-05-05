@@ -511,20 +511,7 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
 
     } else if(child_profile->move_id) {
 
-        out.begin_line() << get_profile_string(child_profile) << " was moved";
-        // if(child_profile->move_parent) {
-
-        //     out << " from " << get_article(child_profile->parent) << ' ' << get_type_string(child_profile->parent);
-        //     out << " to ";
-
-        //     if(child_profile->parent->type_name == child_profile->move_parent->type_name)
-        //         out << " another " << get_type_string(child_profile->move_parent);
-        //     else
-        //         out<< get_article(child_profile->move_parent) << ' ' << get_type_string(child_profile->move_parent);
-
-        // }
-
-        out << '\n';
+        out.begin_line() << get_profile_string(child_profile) << " was moved\n";
 
     } else if(!child_profile->type_name.is_common()) {
 
@@ -550,7 +537,7 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
 size_t text_summary::number_child_changes(const profile_t::profile_list_t & child_profiles) const {
 
     size_t num_child_changes = 0;
-    size_t num_body_changes = 0;
+    size_t num_body_changes  = 0;
 
     for(size_t child_pos = 0; child_pos < child_profiles.size(); ++child_pos) {
 
