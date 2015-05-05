@@ -666,7 +666,6 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 }
 
-/** @todo call replacement does not seem to be handled  or added/deleted.  This also is more for a lot of changes.  If there is only simpler want to be more specific.*/
 void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                               std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
@@ -975,7 +974,6 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-    /** @todo think want to summarize lhs as well.  Basically, probably need use below this if and add message about assignment. */
     if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
 
         out.begin_line() << get_profile_string(profile) << " was ";
@@ -1001,15 +999,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
     }
 
-    // may no longe be needed
-    if(profile->child_profiles.empty()) return out;
-
     if(profile->operation == SRCDIFF_COMMON) {
-
-        /**
-          * @todo probably want to break down and summarize the different types differently 
-          * Assignment statements may also have some other semantics.
-          */
 
         common_expr_stmt(out, profile);
 
@@ -1152,12 +1142,10 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
     ++body_depth;
 
-    /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
     for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
 
         const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
-        /** @todo check this condition */
         if((child_profile->syntax_count > 0 || child_profile->move_id
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
@@ -1251,7 +1239,6 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         const std::shared_ptr<profile_t> & child_profile = summary_profile->child_profiles[pos];
 
-        /** @todo check this condition */
         if((child_profile->syntax_count > 0 || child_profile->move_id
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
@@ -1268,7 +1255,6 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
 }
 
-/** @todo If only a single operation such as wrapping, possible no other changes, then report a single sentence no this includes */
 summary_output_stream & text_summary::interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
     out.begin_line();
@@ -1287,7 +1273,6 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
         const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
-        /** @todo check this condition */
         if((child_profile->syntax_count > 0 || child_profile->move_id
             || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
             && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
