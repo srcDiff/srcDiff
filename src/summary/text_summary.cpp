@@ -1099,7 +1099,8 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
                             identifier_renames);
 
             /** @todo need to add support for detecting other changes in expr_statistics and then use to refine here */
-            if(deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0)
+            if(deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0
+            || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0)
                 report = true;
 
         }
@@ -1343,6 +1344,30 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 summary_output_stream & text_summary::jump(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
     assert(is_jump(profile->type_name));
+
+    const std::shared_ptr<profile_t> & parent_profile = profile->parent;
+    std::map<identifier_diff, size_t> identifier_set;
+    std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
+                        output_identifiers.begin(), output_identifiers.end(),
+                        std::inserter(identifier_set, identifier_set.begin()));
+
+    if(profile->operation == SRCDIFF_COMMON) {
+
+        std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
+        std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
+        size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
+        std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
+        expr_statistics(profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
+                        deleted_other, inserted_other, modified_other,
+                        number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
+                        identifier_renames);
+
+        /** @todo need to add support for detecting other changes in expr_statistics and then use to refine here */
+        if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
+        && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0)
+            return out;
+
+    }
 
     out.begin_line() << get_profile_string(profile);
 
