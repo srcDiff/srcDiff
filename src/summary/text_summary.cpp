@@ -1098,7 +1098,7 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
                             number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
                             identifier_renames);
 
-            /** @todo need to add support for detecting other changes in expr_statistics and then use to refine here */
+            /** @todo need to probably output if single identifier change */
             if(deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0
             || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0)
                 report = true;
@@ -1209,7 +1209,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
 }
 
-/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to some in one line. */
+/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to summarize in one line. */
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) {
 
     assert(is_condition_type(profile->type_name));
@@ -1283,7 +1283,6 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
     ++body_depth;
 
-    /** todo should I only report if one expr_stmt modified, what if expression statement after condition both having been modified */
     for(size_t pos = 0; pos < summary_profile->child_profiles.size(); ++pos) {
 
         const std::shared_ptr<profile_t> & child_profile = summary_profile->child_profiles[pos];
@@ -1362,7 +1361,7 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
                         number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
                         identifier_renames);
 
-        /** @todo need to add support for detecting other changes in expr_statistics and then use to refine here */
+        /** @todo need to probably output if single identifier change */
         if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
         && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0)
             return out;
