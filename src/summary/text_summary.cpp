@@ -17,6 +17,8 @@
 #include <set>
 #include <typeinfo>
 
+/** @todo check asserts */
+
 const char * const BOLD_TEXT = "\x1b[1m";
 const char * const NORMAL_TEXT = "\x1b[0m";
 std::string bold(std::string text) {
@@ -809,7 +811,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
 
     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
-    
+
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
