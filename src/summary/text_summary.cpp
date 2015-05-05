@@ -1099,8 +1099,8 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
                             identifier_renames);
 
             /** @todo need to add support for detecting other changes in expr_statistics and then use to refine here */
-
-            report = true;
+            if(deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0)
+                report = true;
 
         }
 
