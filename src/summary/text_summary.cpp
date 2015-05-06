@@ -905,7 +905,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
             } else {
 
-                /** @todo need to handle things that can have subexpr or more children. */
+                /** @todo need to handle things lambda and specialized calls.  Maybe more... */
 
                 if(is_ternary(child_profile->type_name)) {
 
@@ -917,7 +917,6 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                         identifier_rename_only = false;
 
                     }
-
 
                 } else if(!is_identifier(child_profile->type_name)) {
 
