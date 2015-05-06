@@ -29,6 +29,7 @@ class ternary_profile_t : public profile_t {
             if(profile->parent->type_name == "condition") condition_   = profile->parent;
             else if(profile->parent->type_name == "then") then_clause_ = profile->parent;
             else if(profile->type_name == "else")         else_clause_ = profile;
+            
         }
 
         const std::shared_ptr<profile_t> & condition() const {
