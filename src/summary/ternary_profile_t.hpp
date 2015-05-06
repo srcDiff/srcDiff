@@ -16,7 +16,7 @@ class ternary_profile_t : public profile_t {
 
         ternary_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent) {}
 
-        virtual void add_common(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
+        virtual void add_common(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             if(is_expr(profile->type_name)) {
 
@@ -24,9 +24,27 @@ class ternary_profile_t : public profile_t {
                 else if(parent == "then") then_clause_ = reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(profile);
                 else if(parent == "else") else_clause_ = reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(profile);
                 else common_profiles.push_back(profile);
+
+                return;
             }
 
             common_profiles.push_back(profile);
+
+        }
+
+        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+
+            if(is_expr(profile->type_name)) {
+
+                if(parent == "condition") condition_   = reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(profile);
+                else if(parent == "then") then_clause_ = reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(profile);
+                else if(parent == "else") else_clause_ = reinterpret_cast<const std::shared_ptr<expr_profile_t> &>(profile);
+                else child_profiles.push_back(profile);
+
+                return;
+            }
+
+            child_profiles.push_back(profile);
 
         }
 

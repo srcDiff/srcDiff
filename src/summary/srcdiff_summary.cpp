@@ -467,7 +467,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     bool then_clause_child = profile_stack.size() > 1
         && (profile_stack.back()->type_name == "then" || profile_stack.at(profile_stack.size() - 2)->type_name == "then")
-        && has_then_clause(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name);
+        && is_if(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name);
     if(then_clause_child && full_name != "block" && full_name != "comment" && full_name != "break" && full_name != "continue" && full_name != "return")
         reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->is_guard(false);
 
@@ -761,7 +761,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-        } else if(full_name == "condition") {
+        } else if(full_name == "condition" && !is_ternary(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name)) {
 
             --condition_count;
 
@@ -808,7 +808,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back()) - 1))->set_body_modified(true);
 
         } else if((full_name == "else" || full_name == "elseif") && counting_profile_pos.size() > 1
-            && profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->type_name == "if") {
+            && is_if(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->type_name)) {
 
             if(full_name == "else") {
 
