@@ -164,7 +164,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     char * xml = 0;
     size_t size = 0;
-    srcml_unit_get_standalone_xml(wstate->unit, "UTF-8", &xml, &size);
+    srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     colordiff->colorize(xml, line_diff_range);
     srcml_memory_free((char *)xml);
 
@@ -172,7 +172,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     char * xml = 0;
     size_t size = 0;
-    srcml_unit_get_standalone_xml(wstate->unit, "UTF-8", &xml, &size);
+    srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     bashview->transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
@@ -180,7 +180,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     char * xml = 0;
     size_t size = 0;
-    srcml_unit_get_standalone_xml(wstate->unit, "UTF-8", &xml, &size);
+    srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     summary->summarize(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
