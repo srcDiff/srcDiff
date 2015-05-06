@@ -66,6 +66,8 @@ public:
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;
     summary_output_stream & member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
+    void ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+             bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified) const;
     void expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                          std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                          std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
