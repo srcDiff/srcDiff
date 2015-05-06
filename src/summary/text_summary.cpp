@@ -680,6 +680,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                               size_t & number_arguments_deleted,
                               size_t & number_arguments_inserted,
                               size_t & number_arguments_modified,
+                              bool & identifier_rename_only,
                               std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     assert(typeid(*profile.get()) == typeid(expr_profile_t));
@@ -697,10 +698,12 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
             if(child_profile->operation == SRCDIFF_DELETE) {
 
                 deleted_calls.push_back(call_profile);
+                identifier_rename_only = false;
 
             } else if(child_profile->operation == SRCDIFF_INSERT) {
 
                 inserted_calls.push_back(call_profile);
+                identifier_rename_only = false;
 
             } else if(child_profile->operation == SRCDIFF_COMMON) {
 
@@ -725,6 +728,9 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                     number_arguments_deleted  += number_deleted;
                     number_arguments_inserted += number_inserted;
 
+                    if(number_deleted != 0 || number_inserted != 0)
+                        identifier_rename_only = false;
+
                     bool report_change = false;
                     std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
                         [&, this](const typename change_entity_map<profile_t>::pair & pair) {
@@ -745,7 +751,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                                     inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists,
                                                     inner_deleted_other, inner_inserted_other, inner_modified_other,
                                                     inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified,
-                                                    identifier_renames);
+                                                    identifier_rename_only, identifier_renames);
 
                                     if(inner_deleted_calls.size() != 0 || inner_inserted_calls.size() != 0 || inner_modified_calls.size() != 0
                                     || inner_deleted_other.size() != 0 || inner_inserted_other.size() != 0 || inner_modified_other.size() != 0
@@ -758,10 +764,12 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                 } else if(argument_child_profile->operation != SRCDIFF_COMMON) { 
 
                                     report_change = true;
+                                    identifier_rename_only = false;
 
                                 } else if(!is_identifier(argument_child_profile->type_name)) {
 
                                     report_change = true;
+                                    identifier_rename_only = false;
 
                                 } else {
 
@@ -809,6 +817,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 else
                     inserted_other.push_back(child_profile);
 
+                identifier_rename_only = false;
 
             } else {
 
@@ -816,6 +825,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 if(!is_identifier(child_profile->type_name)) {
 
                     modified_other.push_back(child_profile);
+                    identifier_rename_only = false;
 
                 } else {
 
@@ -854,11 +864,12 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
     std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
     std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
+    bool identifier_rename_only = true;
     std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
     expr_statistics(profile->child_profiles[0], diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                     deleted_other, inserted_other, modified_other,
                     number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-                    identifier_renames);
+                    identifier_rename_only, identifier_renames);
 
     if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0
@@ -866,7 +877,7 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
 
     if(expr_stmt_profile->call())
         return call_sequence(out, profile, renamed_calls.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-                             modified_argument_lists.size(), identifier_renames);
+                             modified_argument_lists.size(), identifier_rename_only, identifier_renames);
 
     out.begin_line();
 
@@ -879,7 +890,7 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
     if(inserted_other.size() != 0)          ++number_change_types;
     if(modified_other.size() != 0)          ++number_change_types;
 
-    if(identifier_renames.size() == 1 && number_change_types == 0) {
+    if(identifier_rename_only && identifier_renames.size() == 1) {
 
         out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
 
@@ -947,7 +958,8 @@ bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_o
 
 summary_output_stream & text_summary::call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t number_rename,
                                                     size_t number_arguments_deleted, size_t number_arguments_inserted, size_t number_arguments_modified,
-                                                    size_t number_argument_lists_modified, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+                                                    size_t number_argument_lists_modified,
+                                                    bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
 
@@ -986,7 +998,7 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
         out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
 
-    } else if(identifier_renames.size() == 1) {
+    } else if(identifier_rename_only && identifier_renames.size() == 1) {
 
         out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
 
@@ -1103,11 +1115,12 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
             std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
             std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
             size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
+            bool identifier_rename_only = true;
             std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
             expr_statistics(decl_stmt_profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                             deleted_other, inserted_other, modified_other,
                             number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-                            identifier_renames);
+                            identifier_rename_only, identifier_renames);
 
             /** @todo need to probably output if single identifier change */
             if(deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0
@@ -1367,11 +1380,12 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
         std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
         std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
         size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
-        std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
+        bool identifier_rename_only = true;
+        std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
         expr_statistics(profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                         deleted_other, inserted_other, modified_other,
                         number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-                        identifier_renames);
+                        identifier_rename_only, identifier_renames);
 
         /** @todo need to probably output if single identifier change */
         if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
