@@ -18,18 +18,14 @@ class ternary_profile_t : public profile_t {
 
         virtual void add_common(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
-            if(profile->parent->type_name == "condition") condition_   = profile->parent;
-            else if(profile->parent->type_name == "then") then_clause_ = profile->parent;
-            else if(profile->type_name == "else")         else_clause_ = profile;
+            if(profile->type_name == "else") else_clause_ = profile;
 
         }
 
         virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
-            if(profile->parent->type_name == "condition") condition_   = profile->parent;
-            else if(profile->parent->type_name == "then") then_clause_ = profile->parent;
-            else if(profile->type_name == "else")         else_clause_ = profile;
-            
+            if(profile->type_name == "else") else_clause_ = profile;
+
         }
 
         const std::shared_ptr<profile_t> & condition() const {
@@ -38,9 +34,21 @@ class ternary_profile_t : public profile_t {
 
         }
 
+        void condition(const std::shared_ptr<profile_t> & condition_) {
+
+            this->condition_ = condition_;
+
+        }
+
         const std::shared_ptr<profile_t> & then_clause() const {
 
             return then_clause_;
+
+        }
+
+        void then_clause(const std::shared_ptr<profile_t> & then_clause_) {
+
+            this->then_clause_ = then_clause_;
 
         }
 

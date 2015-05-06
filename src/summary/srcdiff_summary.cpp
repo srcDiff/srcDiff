@@ -527,6 +527,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     } else {
 
         profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
+
         if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
         if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0 && uri_stack.back() != SRCDIFF && current_move_id < srcdiff_stack.back().move_id) {
 
@@ -761,29 +762,41 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-        } else if(full_name == "condition" && !is_ternary(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name)) {
+        } else if(full_name == "condition") {
 
             --condition_count;
 
-            if(condition_count == 0) {
+            if(is_ternary(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name)) {
 
-                if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original()[0] == '(')
-                    collected_condition.original().erase(collected_condition.original().begin());
-                if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original().back() == ')')
-                    collected_condition.original().pop_back();
+                reinterpret_cast<std::shared_ptr<ternary_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->condition(profile_stack.back());
 
-                if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified()[0] == '(')
-                    collected_condition.modified().erase(collected_condition.modified().begin());
-                if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified().back() == ')')
-                    collected_condition.modified().pop_back();
+            } else {
 
-                reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition(collected_condition);
-                collected_condition.clear();
+                 if(condition_count == 0) {
+
+                    if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original()[0] == '(')
+                        collected_condition.original().erase(collected_condition.original().begin());
+                    if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original().back() == ')')
+                        collected_condition.original().pop_back();
+
+                    if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified()[0] == '(')
+                        collected_condition.modified().erase(collected_condition.modified().begin());
+                    if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified().back() == ')')
+                        collected_condition.modified().pop_back();
+
+                    reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition(collected_condition);
+                    collected_condition.clear();
+
+                }
+
+                if(profile_stack.back()->syntax_count > 0)
+                    reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition_modified(true);
 
             }
 
-            if(profile_stack.back()->syntax_count > 0)
-                reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->set_condition_modified(true);
+        } else if(full_name == "then" && is_ternary(profile_stack.at(std::get<0>(counting_profile_pos.back()))->type_name)) {
+
+            reinterpret_cast<std::shared_ptr<ternary_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.back())))->then_clause(profile_stack.back());
 
         } else if(full_name == "expr_stmt") {
 

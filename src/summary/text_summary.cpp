@@ -7,6 +7,7 @@
 #include <if_profile_t.hpp>
 #include <call_profile_t.hpp>
 #include <expr_profile_t.hpp>
+#include <ternary_profile_t.hpp>
 #include <identifier_profile_t.hpp>
 #include <identifier_diff.hpp>
 #include <summary_manip.hpp>
