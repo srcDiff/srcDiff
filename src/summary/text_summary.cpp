@@ -717,6 +717,8 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                         report_name = false;
                     }
 
+                    identifier_rename_only = false;
+
                 }
 
                 bool report_argument_list = call_profile->argument_list_modified;
