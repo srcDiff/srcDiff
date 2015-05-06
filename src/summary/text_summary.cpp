@@ -670,7 +670,8 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 }
 
 void text_summary::ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
-             bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified) const {
+                           bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
+                           std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     assert(typeid(*profile.get()) == typeid(ternary_profile_t));
 
@@ -678,6 +679,7 @@ void text_summary::ternary(const std::shared_ptr<profile_t> & profile, const std
 
     if(ternary_profile->condition() && ternary_profile->condition()->syntax_count != 0) {
 
+        /** @todo first case expression deleted and inserted.  Could possibly still be a rename if only a signle identifier may need to handle  */
         if(ternary_profile->condition()->child_profiles.size() != 1) {
 
             condition_modified = true;
@@ -688,7 +690,6 @@ void text_summary::ternary(const std::shared_ptr<profile_t> & profile, const std
             std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
             size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
             bool identifier_rename_only = true;
-            std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
             expr_statistics(ternary_profile->condition()->child_profiles[0], identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                             deleted_other, inserted_other, modified_other,
                             number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
@@ -712,7 +713,6 @@ void text_summary::ternary(const std::shared_ptr<profile_t> & profile, const std
             std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
             size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
             bool identifier_rename_only = true;
-            std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
             expr_statistics(ternary_profile->then_clause()->child_profiles[0], identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                             deleted_other, inserted_other, modified_other,
                             number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
@@ -736,7 +736,6 @@ void text_summary::ternary(const std::shared_ptr<profile_t> & profile, const std
             std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
             size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
             bool identifier_rename_only = true;
-            std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
             expr_statistics(ternary_profile->else_clause()->child_profiles[0], identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                             deleted_other, inserted_other, modified_other,
                             number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
@@ -915,7 +914,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 if(is_ternary(child_profile->type_name)) {
 
                     bool condition_modified = false, then_clause_modified = false, else_clause_modified = false;
-                    ternary(child_profile, identifier_set, condition_modified, then_clause_modified, else_clause_modified);
+                    ternary(child_profile, identifier_set, condition_modified, then_clause_modified, else_clause_modified, identifier_renames);
                     if(condition_modified || then_clause_modified || else_clause_modified) {
 
                         modified_other.push_back(child_profile);
