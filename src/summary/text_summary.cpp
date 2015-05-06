@@ -925,6 +925,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 } else if(!is_identifier(child_profile->type_name)) {
 
                     bool report = false;
+                    /** @todo Kind of do not like this code.  May replace with specific instances */
                     for(const std::shared_ptr<profile_t> & sub_profile : child_profile->child_profiles) {
 
                         if(is_expr(sub_profile->type_name)) {
