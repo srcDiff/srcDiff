@@ -825,7 +825,6 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                                if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
 
-                                    size_t num_calls = 0;
                                     std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
                                         inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
                                     std::vector<std::shared_ptr<profile_t>> inner_deleted_other, inner_inserted_other, inner_modified_other;
@@ -838,8 +837,14 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                                     identifier_rename_only, identifier_renames);
 
                                     if(inner_deleted_calls.size() != 0 || inner_inserted_calls.size() != 0 || inner_modified_calls.size() != 0
-                                    || inner_deleted_other.size() != 0 || inner_inserted_other.size() != 0 || inner_modified_other.size() != 0
-                                    || save_identifier_count != identifier_renames.size()) {
+                                    || inner_deleted_other.size() != 0 || inner_inserted_other.size() != 0 || inner_modified_other.size() != 0) {
+
+                                        report_change = true;
+                                        identifier_rename_only = false;
+
+                                    }
+
+                                    if(save_identifier_count != identifier_renames.size()) {
 
                                         report_change = true;
 
@@ -920,8 +925,54 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                 } else if(!is_identifier(child_profile->type_name)) {
 
-                    modified_other.push_back(child_profile);
-                    identifier_rename_only = false;
+                    bool report = false;
+                    for(const std::shared_ptr<profile_t> & sub_profile : child_profile->child_profiles) {
+
+                        if(is_expr(sub_profile->type_name)) {
+
+                            std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
+                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
+                            std::vector<std::shared_ptr<profile_t>> inner_deleted_other, inner_inserted_other, inner_modified_other;
+                            size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0;
+                            size_t save_identifier_count = identifier_renames.size();
+                            expr_statistics(sub_profile, identifier_set,
+                                            inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists,
+                                            inner_deleted_other, inner_inserted_other, inner_modified_other,
+                                            inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified,
+                                            identifier_rename_only, identifier_renames);
+
+                            if(inner_deleted_calls.size() != 0 || inner_inserted_calls.size() != 0 || inner_modified_calls.size() != 0
+                            || inner_deleted_other.size() != 0 || inner_inserted_other.size() != 0 || inner_modified_other.size() != 0) {
+
+                                report = true;
+
+                            }
+
+                        } else if(!is_identifier(sub_profile->type_name)) {
+
+                            report = true;
+
+                        } else {
+
+                            const std::shared_ptr<identifier_profile_t> & identifier_profile
+                                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(sub_profile);
+
+                            identifier_diff ident_diff(identifier_profile->name);
+                            ident_diff.trim(false);
+
+                            if(identifier_set.count(ident_diff))
+                                identifier_renames.insert(identifier_profile->name);
+
+                        }
+
+                    }
+
+                    if(report) {
+
+                        modified_other.push_back(child_profile);
+                        identifier_rename_only = false;
+
+                    }
 
                 } else {
 
