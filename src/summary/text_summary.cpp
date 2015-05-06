@@ -826,7 +826,7 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                     ident_diff.trim(false);
 
                     if(identifier_set.count(ident_diff))
-                        modified_other.push_back(child_profile);
+                        identifier_renames.insert(identifier_profile->name);
 
 
                 }
