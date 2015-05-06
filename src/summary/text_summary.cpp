@@ -772,13 +772,8 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                     identifier_diff ident_diff(identifier_profile->name);
                                     ident_diff.trim(false);
 
-                                    if(identifier_set.count(ident_diff)) {
-
-                                        report_change = true;
+                                    if(identifier_set.count(ident_diff))
                                         identifier_renames.insert(identifier_profile->name);
-                                        break;
-
-                                    }
 
                                 }
 
@@ -821,7 +816,6 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                 } else {
 
-
                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
 
@@ -863,7 +857,9 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
                     number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
                     identifier_renames);
 
-    if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0) return out;
+    if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
+    && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0
+    && identifier_renames.size() == 0) return out;
 
     if(expr_stmt_profile->call())
         return call_sequence(out, profile, renamed_calls.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
@@ -954,7 +950,8 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
             const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[pos];
 
-            if(call_profile->operation != SRCDIFF_COMMON && pos != (calls_sequence_length - 1)) {
+            if((call_profile->operation == SRCDIFF_COMMON && call_profile->argument_list_modified)
+                || (call_profile->operation != SRCDIFF_COMMON && pos != (calls_sequence_length - 1))) {
 
                 is_variable_reference_change = false;
                 break;
@@ -967,7 +964,7 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
     out.begin_line();
 
-    if(number_rename == 1 && number_argument_lists_modified == 0) {
+    if(number_rename == 1 && identifier_renames.size() == 0 && number_argument_lists_modified == 0) {
 
         out << "a " << manip::bold() << "call name" << manip::normal() << " change occurred";
 
@@ -1100,7 +1097,8 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
             /** @todo need to probably output if single identifier change */
             if(deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0
-            || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0)
+            || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0
+            || identifier_renames.size() != 0)
                 report = true;
 
         }
@@ -1363,7 +1361,8 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
 
         /** @todo need to probably output if single identifier change */
         if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
-        && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0)
+        && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0
+        && identifier_renames.size() == 0)
             return out;
 
     }
