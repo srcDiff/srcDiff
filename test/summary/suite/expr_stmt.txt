@@ -253,7 +253,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisView2::createGUI':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #0#
-	• a #call# was deleted
+	• an #expression# was modified
 	• a #call# was deleted
 	• a #call# was deleted
 	• a #call# was deleted

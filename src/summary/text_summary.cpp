@@ -875,8 +875,15 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
     if(inserted_calls.size() != 0)          ++number_change_types;
     if(renamed_calls.size() != 0)           ++number_change_types;
     if(modified_argument_lists.size() != 0) ++number_change_types;
+    if(deleted_other.size() != 0)           ++number_change_types;
+    if(inserted_other.size() != 0)          ++number_change_types;
+    if(modified_other.size() != 0)          ++number_change_types;
 
-    if(number_change_types == 1) {
+    if(identifier_renames.size() == 1 && number_change_types == 0) {
+
+        out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
+
+    } else if(number_change_types == 1) {
 
         if(deleted_calls.size() != 0) {
 
@@ -913,6 +920,10 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
                 out << manip::bold() << "argument lists" << manip::normal() << " were modified";
 
             }
+
+        } else {
+
+           out << get_profile_string(profile) << " was modified";
 
         }
 
