@@ -118,21 +118,33 @@ bool is_jump(const std::string & type_name) {
 
 }
 
+bool is_if(const std::string & type_name) {
+
+    return type_name == "if";
+
+}
+
+bool is_ternary(const std::string & type_name) {
+
+    return type_name == "ternary";
+
+}
+
 bool has_then_clause(const std::string & type_name) {
 
-    return type_name == "if" || type_name == "ternary";
+    return is_if(type_name) || is_ternary(type_name);
 
 }
 
 bool has_body(const std::string & type_name) {
 
-    return (type_name != "ternary" && is_condition_type(type_name)) || is_function_type(type_name) || is_class_type(type_name) || type_name == "else";
+    return (!is_ternary(type_name) && is_condition_type(type_name)) || is_function_type(type_name) || is_class_type(type_name) || type_name == "else";
 }
 
 /** @todo what should I consider a statement. */
 bool is_statement(const std::string & type_name) {
 
-    return (type_name != "ternary" && type_name != "elseif" && is_condition_type(type_name)) || is_decl_stmt(type_name) || is_expr_stmt(type_name) || is_jump(type_name)
+    return (!is_ternary(type_name) && type_name != "elseif" && is_condition_type(type_name)) || is_decl_stmt(type_name) || is_expr_stmt(type_name) || is_jump(type_name)
         || type_name == "try" || type_name == "catch" || type_name == "case"   || type_name == "default";
 
 }

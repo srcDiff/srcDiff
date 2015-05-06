@@ -11,6 +11,7 @@
 #include <expr_stmt_profile_t.hpp>
 #include <identifier_profile_t.hpp>
 #include <expr_profile_t.hpp>
+#include <ternary_profile_t.hpp>
 
 #include <cstring>
 #include <algorithm>
@@ -23,7 +24,8 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_call(type_name)           || is_preprocessor_special(type_name) || is_expr(type_name)
     || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name)
     || is_specifier(type_name)      || is_expr_stmt(type_name)            || is_argument(type_name)
-    || is_comment(type_name)        || is_emit(type_name)                 || is_jump(type_name);
+    || is_comment(type_name)        || is_emit(type_name)                 || is_jump(type_name)
+    || is_ternary(type_name);
 
 }
 
@@ -41,7 +43,8 @@ std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace
     if(is_function_type(type_name))  return std::make_shared<function_profile_t>   (type_name, uri, operation, parent);
     if(is_parameter(type_name))      return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent);
     if(is_decl_stmt(type_name))      return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent);
-    if(has_then_clause(type_name))   return std::make_shared<if_profile_t>         (type_name, uri, operation, parent);
+    if(is_if(type_name))             return std::make_shared<if_profile_t>         (type_name, uri, operation, parent);
+    if(is_ternary(type_name))        return std::make_shared<ternary_profile_t>    (type_name, uri, operation, parent);
     if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent);
     if(is_call(type_name))           return std::make_shared<call_profile_t>       (type_name, uri, operation, parent);
     if(is_expr_stmt(type_name))      return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent);
