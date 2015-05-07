@@ -422,16 +422,32 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
     if(number_syntax_insertions == 1) {
 
+
+        std::function<std::string (const std::shared_ptr<profile_t> &)> summary_string_function = std::bind(&text_summary::get_profile_string, this, std::placeholders::_1);
+
+        bool type_equal = (expr_stmt_deleted.size() && expr_stmt_inserted.size() && get_type_string(expr_stmt_deleted.back().get()) == get_type_string(expr_stmt_inserted.back().get()))
+            || (decl_stmt_deleted.size() && decl_stmt_inserted.size())
+            || (conditionals_deleted.size() && conditionals_inserted.size() && conditionals_deleted[0].get()->type_name == conditionals_inserted[0].get()->type_name)
+            || (jump_deleted.size() && jump_inserted.size() && jump_deleted[0].get()->type_name == jump_inserted[0].get()->type_name)
+            || (comment_deleted.size() && comment_inserted.size());
+        if(number_syntax_deletions == 1 && type_equal) {
+
+            out << "another "; 
+
+            summary_string_function = std::bind(&text_summary::get_type_string, this, std::placeholders::_1);
+
+        }
+
         if(expr_stmt_inserted.size())
-            out << get_profile_string(expr_stmt_inserted.back().get());
+            out << summary_string_function(expr_stmt_inserted.back().get());
         else if(decl_stmt_inserted.size())
-            out << get_profile_string(decl_stmt_inserted.back().get());
+            out << summary_string_function(decl_stmt_inserted.back().get());
         else if(conditionals_inserted.size())
-            out << get_profile_string(conditionals_inserted.back().get());
+            out << summary_string_function(conditionals_inserted.back().get());
         else if(jump_inserted.size())
-            out << get_profile_string(jump_inserted.back().get());
+            out << summary_string_function(jump_inserted.back().get());
         else
-            out << get_profile_string(comment_inserted.back().get());
+            out << summary_string_function(comment_inserted.back().get());
 
     } else {
 
