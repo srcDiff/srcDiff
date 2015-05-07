@@ -300,7 +300,7 @@ try :
 				# only process xml files
 				if os.path.splitext(name)[1] != ".xml" :
 					continue
-				print name
+
 				# full path of the file
 				xml_filename = os.path.join(root, name)
 			
@@ -319,9 +319,9 @@ try :
 					continue
 			
 				# language of the entire document with a default of C++
-				language = lre.search(info).group(1)
-				if len(language) == 0 :
-					language = "C++"
+				#language = lre.search(info).group(1)
+				#if len(language) == 0 :
+				language = "C++"
 
 				# only process if language matches or is not given
 				if speclang != "" and language != speclang :
