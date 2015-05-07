@@ -1236,6 +1236,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 }
 
 /** @todo for decl_stmt and jump need to not report if only a known rename identifier occurs.  Also, report a rename if it occurred */
+/** @todo report type rename and name rename.  Report as type and name change probably. */
 summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const {
 
     assert(typeid(*profile.get()) == typeid(decl_stmt_profile_t));
