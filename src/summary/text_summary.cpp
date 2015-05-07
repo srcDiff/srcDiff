@@ -500,7 +500,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 bool text_summary::is_body_summary(const std::string & type, bool is_replacement) const {
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
-        || is_jump(type);
+        || is_jump(type) || type == "else";
 
 }
 
@@ -526,6 +526,8 @@ summary_output_stream & text_summary::statement_dispatch(summary_output_stream &
             jump(out, child_profile, parent_output);
         else if(is_condition_type(child_profile->type_name))
             conditional(out, child_profile, parent_output);
+        else if(child_profile->type_name == "else")
+            else_clause(out, child_profile, parent_output);
         else if(is_expr_stmt(child_profile->type_name))
             expr_stmt(out, child_profile, parent_output);
         else if(is_decl_stmt(child_profile->type_name))
