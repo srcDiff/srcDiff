@@ -586,6 +586,8 @@ size_t text_summary::number_child_changes(const profile_t::profile_list_t & chil
                 ++num_child_changes;
             else if(is_condition_type(child_profile->type_name))
                 ++num_body_changes;
+            else if(child_profile->type_name == "else")
+                ++num_body_changes;
             else if(is_expr_stmt(child_profile->type_name))
                 ++num_child_changes;
             else if(is_decl_stmt(child_profile->type_name))
