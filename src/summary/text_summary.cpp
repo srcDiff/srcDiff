@@ -687,6 +687,40 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 }
 
+bool text_summary::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+                                    std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+
+    bool is_identifier_only = true;
+    for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
+
+        if(is_identifier(child_profile->type_name)) {
+
+            const std::shared_ptr<identifier_profile_t> & identifier_profile
+                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
+
+            identifier_diff ident_diff(identifier_profile->name);
+            ident_diff.trim(false);
+
+            if(identifier_set.count(ident_diff))
+                identifier_renames.insert(identifier_profile->name);
+
+
+        } else if(child_profile->operation != SRCDIFF_COMMON) {
+
+            is_identifier_only = false;
+
+        } else {
+
+            is_identifier_only = is_identifier_only && identifier_check(child_profile, identifier_set, identifier_renames);
+
+        }
+
+    }
+
+    return is_identifier_only;
+
+}
+
 void text_summary::ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                            bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
                            std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
@@ -942,53 +976,13 @@ void text_summary::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                 } else if(!is_identifier(child_profile->type_name)) {
 
-                    bool report = false;
-                    /** @todo Kind of do not like this code.  May replace with specific instances */
-                    for(const std::shared_ptr<profile_t> & sub_profile : child_profile->child_profiles) {
+                    size_t save_identifier_count = identifier_renames.size();
+                    bool is_identifier_only = identifier_check(child_profile, identifier_set, identifier_renames);
 
-                        if(is_expr(sub_profile->type_name)) {
-
-                            std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
-                                inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
-                            std::vector<std::shared_ptr<profile_t>> inner_deleted_other, inner_inserted_other, inner_modified_other;
-                            size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0;
-                            size_t save_identifier_count = identifier_renames.size();
-                            expr_statistics(sub_profile, identifier_set,
-                                            inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists,
-                                            inner_deleted_other, inner_inserted_other, inner_modified_other,
-                                            inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified,
-                                            identifier_rename_only, identifier_renames);
-
-                            if(inner_deleted_calls.size() != 0 || inner_inserted_calls.size() != 0 || inner_modified_calls.size() != 0
-                            || inner_deleted_other.size() != 0 || inner_inserted_other.size() != 0 || inner_modified_other.size() != 0) {
-
-                                report = true;
-
-                            }
-
-                        } else if(!is_identifier(sub_profile->type_name)) {
-
-                            report = true;
-
-                        } else {
-
-                            const std::shared_ptr<identifier_profile_t> & identifier_profile
-                                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(sub_profile);
-
-                            identifier_diff ident_diff(identifier_profile->name);
-                            ident_diff.trim(false);
-
-                            if(identifier_set.count(ident_diff))
-                                identifier_renames.insert(identifier_profile->name);
-
-                        }
-
-                    }
-
-                    if(report) {
+                    if(!is_identifier_only || save_identifier_count != identifier_renames.size()) {
 
                         modified_other.push_back(child_profile);
-                        identifier_rename_only = false;
+                        identifier_rename_only = identifier_rename_only && is_identifier_only;
 
                     }
 
