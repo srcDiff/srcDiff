@@ -52,10 +52,10 @@ void srcdiff_input_source_local::consume() {
 
         srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
 
-        if(!srcml_archive_get_directory(options.archive)) {
+        if(!srcml_archive_get_url(options.archive)) {
 
           std::string directory_path = input_pair.first == input_pair.second ? input_pair.first : input_pair.first + '|' + input_pair.second;
-          srcml_archive_set_directory(options.archive, directory_path.c_str());
+          srcml_archive_set_url(options.archive, directory_path.c_str());
 
         }
 
@@ -109,7 +109,7 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
   srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
   line_diff_range<srcdiff_input_source_local> line_diff_range(path_one, path_two, this);
 
-  const char * dir = srcml_archive_get_directory(options.archive);
+  const char * dir = srcml_archive_get_url(options.archive);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string, dir ? boost::optional<std::string>(dir) : boost::optional<std::string>(), unit_filename, 0);
 

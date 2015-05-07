@@ -25,9 +25,9 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   if(is_option(flags, OPTION_VISUALIZE)) {
 
-    const std::string directory = srcml_archive_get_directory(archive) ? srcml_archive_get_directory(archive) : "";
+    const std::string url = srcml_archive_get_url(archive) ? srcml_archive_get_url(archive) : "";
     const std::string version = srcml_archive_get_version(archive) ? srcml_archive_get_version(archive) : "";
-    colordiff = std::make_shared<color_diff>(srcdiff_filename, directory, version, flags);
+    colordiff = std::make_shared<color_diff>(srcdiff_filename, url, version, flags);
 
   } else if(is_option(flags, OPTION_BASH_VIEW)) {
 
@@ -121,7 +121,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
  }
 
- void srcdiff_output::start_unit(const std::string & language_string, const boost::optional<std::string> & unit_directory, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version) {
+ void srcdiff_output::start_unit(const std::string & language_string, const boost::optional<std::string> & unit_url, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
 
@@ -129,7 +129,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   srcml_archive_get_filename(archive) ? 
     srcml_unit_set_filename(wstate->unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
-  srcml_unit_set_directory(wstate->unit, unit_directory ? unit_directory->c_str() : 0);
+  srcml_unit_set_url(wstate->unit, unit_url ? unit_url->c_str() : 0);
   srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
   /** @todo when output non-archive additional namespaces not appended, because not collected 
     However this is correct when output is to archive */

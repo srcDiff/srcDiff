@@ -173,7 +173,7 @@ void option_srcml_field<TABSTOP>(const int & arg) {
 
 }
 
-enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, DIRECTORY, FILENAME, SRC_VERSION, REGISTER_EXT, XMLNS };
+enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, URL, FILENAME, SRC_VERSION, REGISTER_EXT, XMLNS };
 
 template<srcml_string_field field>
 void option_srcml_field(const std::string & arg) {}
@@ -200,9 +200,9 @@ void option_srcml_field<LANGUAGE>(const std::string & arg) {
 }
 
 template<>
-void option_srcml_field<DIRECTORY>(const std::string & arg) {
+void option_srcml_field<URL>(const std::string & arg) {
 
-  srcml_archive_set_directory(options.archive, arg.c_str());
+  srcml_archive_set_url(options.archive, arg.c_str());
 
 }
 
@@ -361,7 +361,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
     ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input source programming language")
     ("register-ext", boost::program_options::value<std::string>()->notifier(option_srcml_field<REGISTER_EXT>), "Register an extension to language pair to be used during parsing")
-    ("directory,d", boost::program_options::value<std::string>()->notifier(option_srcml_field<DIRECTORY>), "Set the root directory attribute")
+    ("url,u", boost::program_options::value<std::string>()->notifier(option_srcml_field<URL>), "Set the root url attribute")
     ("filename,f", boost::program_options::value<std::string>()->notifier(option_srcml_field<FILENAME>), "Set the root filename attribute")
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
     ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set the prefix associationed with a namespace or register a new one. of the form --xmlns:prefix=url or --xmlns=url for default prefix.")
