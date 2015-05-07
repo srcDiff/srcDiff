@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" directory="complex">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" url="complex">
 
 <unit filename="complex|complex">
 <diff:delete><if>if <condition>(<expr><call><name><name>shape</name><operator>-&gt;</operator><name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{

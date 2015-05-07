@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" directory="destructor">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" url="destructor">
 
 <unit filename="destructor|destructor">
 <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <block><diff:delete type="change">{}</diff:delete><diff:insert type="change">{

@@ -16,7 +16,7 @@ error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
 FIELD_WIDTH_LANGUAGE = 11
 
-FIELD_WIDTH_DIRECTORY = 27
+FIELD_WIDTH_URL = 27
 MAX_COUNT = 29
 sperrorlist = []
 
@@ -52,7 +52,7 @@ def safe_communicate_file(command, filename) :
 			raise
 
 # extracts a particular unit from a srcML file
-def safe_communicate_two_files(command, filename_one, filename_two, directory) :
+def safe_communicate_two_files(command, filename_one, filename_two, url) :
 
 	newcommand = command[:]
 	newcommand.append(filename_one)
@@ -64,7 +64,7 @@ def safe_communicate_two_files(command, filename_one, filename_two, directory) :
 		try :
 			return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
 		except OSError, (errornum, strerror) :
-			sperrorlist.append((command, directory, errornum, strerror))
+			sperrorlist.append((command, url, errornum, strerror))
 			raise
 
 # extracts a particular unit from a srcML file
@@ -112,9 +112,9 @@ def linediff(xml_filename1, xml_filename2) :
 		return ""
 
 # find differences of two files
-def srcdiff(source_file_version_one, source_file_version_two, encoding, language, directory, filename, prefixlist) :
+def srcdiff(source_file_version_one, source_file_version_two, encoding, language, url, filename, prefixlist) :
 
-	command = [globals()["srcdiff_utility"], "-d", directory, "-f", filename, "--same"]
+	command = [globals()["srcdiff_utility"], "-u", url, "-f", filename, "--same"]
 
 	temp_file = open("temp_file_one.cpp", "w")
 	temp_file.write(source_file_version_one)
@@ -124,7 +124,7 @@ def srcdiff(source_file_version_one, source_file_version_two, encoding, language
 	temp_file.write(source_file_version_two)
 	temp_file.close()
 
-	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", directory).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "").replace(" revision=\"0.8.0\"", "")
+	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", url).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "").replace(" revision=\"0.8.0\"", "")
 
 def get_srcml_attribute(xml_file, command) :
 
@@ -138,10 +138,10 @@ def get_srcml_attribute_file(xml_file, command) :
 
 	return last_line.strip()
 
-# directory attribute
-def get_directory(xml_file) :
+# url attribute
+def get_url(xml_file) :
 
-	return get_srcml_attribute(xml_file, "-d")
+	return get_srcml_attribute(xml_file, "-u")
 
 # language attribute
 def get_language(xml_file) :
@@ -281,7 +281,7 @@ error_count = 0
 # total test cases
 total_count = 0
 
-dre = re.compile("directory=\"([^\"]*)\"", re.M)
+ure = re.compile("url=\"([^\"]*)\"", re.M)
 fre = re.compile("filename=\"([^\"]*)\"", re.M)
 lre = re.compile("language=\"([^\"]*)\"", re.M)
 vre = re.compile("src-version=\"([^\"]*)\"", re.M)
@@ -300,7 +300,7 @@ try :
 				# only process xml files
 				if os.path.splitext(name)[1] != ".xml" :
 					continue
-
+				print name
 				# full path of the file
 				xml_filename = os.path.join(root, name)
 			
@@ -310,12 +310,12 @@ try :
 					print "Problem with", xml_filename
 					continue
 
-				# directory of the outer unit element
-				dreinfo = dre.search(info)
-				directory = dreinfo.group(1)
+				# url of the outer unit element
+				ureinfo = ure.search(info)
+				url = ureinfo.group(1)
 
-				# only process if directory name matches or is not given
-				if specname != "" and m.match(directory) == None :
+				# only process if url name matches or is not given
+				if specname != "" and m.match(url) == None :
 					continue
 			
 				# language of the entire document with a default of C++
@@ -327,9 +327,9 @@ try :
 				if speclang != "" and language != speclang :
 					continue
 			
-				# output language and directory
+				# output language and url
 				print
-				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
+				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", url.ljust(FIELD_WIDTH_URL), " ",
 
 				# encoding of the outer unit
 				encoding = ere.search(info).group(1)
@@ -378,23 +378,23 @@ try :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, url, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
 
 						test_number = count * 2 - 1
-						if directory == "interchange" :
+						if url == "interchange" :
 							test_number = count
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
 						if count == MAX_COUNT :
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
 						if result != "" :
 							error_count += 1
 
-							errorlist.append((directory + " " + language, test_number, result))
+							errorlist.append((url + " " + language, test_number, result))
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(test_number) + "\033[0m",
@@ -402,7 +402,7 @@ try :
 							# part of list of nested unit number in output
 							print "\033[0;33m" + str(test_number) + "\033[0m",
 
-						if directory == "interchange" :
+						if url == "interchange" :
 							continue
 
 						# total count of test cases
@@ -419,7 +419,7 @@ try :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, directory, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, url, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
@@ -427,11 +427,11 @@ try :
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
 						if count == MAX_COUNT :
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
 						if result != "" :
 							error_count += 1
 							
-							errorlist.append((directory + " " + language, count * 2, result))
+							errorlist.append((url + " " + language, count * 2, result))
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(count * 2) + "\033[0m",
