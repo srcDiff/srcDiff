@@ -17,6 +17,7 @@
 #include <list>
 #include <set>
 #include <typeinfo>
+#include <cstring>
 
 /** @todo check asserts */
 
@@ -315,29 +316,49 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
     if(((number_syntax_deletions == 1 && number_syntax_insertions == 0) || (number_syntax_insertions == 1 && number_syntax_deletions == 0))
         && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
 
+        std::shared_ptr<profile_t> single_profile;
+
         if(expr_stmt_deleted.size())
-            out << get_profile_string(expr_stmt_deleted.back());
+            single_profile = expr_stmt_deleted.back();
         else if(expr_stmt_inserted.size())
-            out << get_profile_string(expr_stmt_inserted.back());
+            single_profile = expr_stmt_inserted.back();
         else if(decl_stmt_deleted.size())
-            out << get_profile_string(decl_stmt_deleted.back());
+            single_profile = decl_stmt_deleted.back();
         else if(decl_stmt_inserted.size())
-            out << get_profile_string(decl_stmt_inserted.back());
+            single_profile = decl_stmt_inserted.back();
         else if(conditionals_deleted.size())
-            out << get_profile_string(conditionals_deleted.back());
+            single_profile = conditionals_deleted.back();
         else if(conditionals_inserted.size())
-            out << get_profile_string(conditionals_inserted.back());
+            single_profile = conditionals_inserted.back();
         else if(jump_deleted.size())
-            out << get_profile_string(jump_deleted.back());
+            single_profile = jump_deleted.back();
         else if(jump_inserted.size())
-            out << get_profile_string(jump_inserted.back());
+            single_profile = jump_inserted.back();
 
-        out << " was ";
+        bool is_match = true;
 
-        if(comment_deleted.size())
-            out << "uncommented\n";
-        else
-            out << "commented out\n";
+        if(!is_match) {
+
+            if(comment_deleted.size())
+                out << "a comment was replaced with " << get_profile_string(single_profile);
+            else
+                out << get_profile_string(single_profile) << " was replaced with a comment";
+
+        } else {
+
+            out << get_profile_string(single_profile);
+
+            out << " was ";
+
+            if(comment_deleted.size())
+                out << "uncommented";
+            else
+                out << "commented out";
+
+        }
+
+        out << '\n';
+
 
         return out;
 
