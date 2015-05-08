@@ -1249,16 +1249,18 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
                         output_identifiers.begin(), output_identifiers.end(),
                         std::inserter(identifier_set, identifier_set.begin()));
 
+    size_t number_parts_report = 0;
+    bool identifier_rename_only = true;
+    std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
     if(decl_stmt_profile->operation == SRCDIFF_COMMON) {
 
-        bool report = false;
         if(!decl_stmt_profile->type.is_common()) {
 
             identifier_diff ident_diff(decl_stmt_profile->type);
             ident_diff.trim(true);
 
             if(identifier_set.count(ident_diff))
-                report = true;
+                ++number_parts_report;
 
         }
 
@@ -1268,7 +1270,7 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
             ident_diff.trim(true);
 
             if(identifier_set.count(ident_diff))
-                report = true;
+                ++number_parts_report;
 
         }
 
@@ -1277,7 +1279,6 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
             std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
             std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
             size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
-            bool identifier_rename_only = true;
             std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
             expr_statistics(decl_stmt_profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                             deleted_other, inserted_other, modified_other,
@@ -1288,30 +1289,56 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
             if(deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0
             || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0
             || identifier_renames.size() != 0)
-                report = true;
+                ++number_parts_report;
 
         }
 
-        if(!report) return out;
+        if(number_parts_report == 0) return out;
 
     }
 
     out.begin_line() << get_profile_string(decl_stmt_profile);
 
-    out << " was ";
+    if(number_parts_report == 1) {
 
-    out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+        if(!decl_stmt_profile->type.is_common()) {
 
-    if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
+            out << " type was changed";
 
-        if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-        else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-        else                                          out << " within ";
+        }
 
-        if(profile->parent == id)
-            out << "the function";
+       if(!decl_stmt_profile->name.is_common()) {
+
+            out << " name was changed";
+
+        } else {
+
+         if(identifier_rename_only && identifier_renames.size() == 1)
+            out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
         else
-            out << "a nested " << get_type_string(profile->parent);
+            out << " initialization was modified";
+
+
+        }
+
+    } else {
+
+        out << " was ";
+
+        out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+
+        if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
+
+            if(profile->operation == SRCDIFF_DELETE)      out << " from ";
+            else if(profile->operation == SRCDIFF_INSERT) out << " to ";
+            else                                          out << " within ";
+
+            if(profile->parent == id)
+                out << "the function";
+            else
+                out << "a nested " << get_type_string(profile->parent);
+
+        }
 
     }
 
