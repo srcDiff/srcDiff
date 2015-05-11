@@ -199,7 +199,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoMainWindow::currentView':
   #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
-	• an #else# was converted to an #elseif#
+	• an #else# was converted to an #else if#
 	• a #return# was inserted
 
 END_SUMMARY
@@ -280,7 +280,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisGroupLayer::resetProjection':
   #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
-	• an #elseif# was inserted
+	• an #else if# was inserted
 
 END_SUMMARY
 

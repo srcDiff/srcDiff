@@ -55,7 +55,7 @@ std::string text_summary::get_article(const std::shared_ptr<profile_t> & profile
 
 std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
-    if(profile->type_name == "if") {
+    if(is_if(profile->type_name)) {
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
         if(if_profile->is_guard()) return bold("guard clause");
@@ -63,6 +63,8 @@ std::string text_summary::get_type_string(const std::shared_ptr<profile_t> & pro
     }
 
     if(profile->type_name == "else") return bold("else");
+
+    if(profile->type_name == "elseif") return bold("else if");
 
     if(is_decl_stmt(profile->type_name)) return bold("declaration");
 
@@ -90,14 +92,14 @@ std::string text_summary::get_profile_string(const std::shared_ptr<profile_t> & 
 
     if(!profile->type_name.is_common()) {
 
-        std::string original = get_article(profile->type_name.original()) + " " + bold(profile->type_name.original());
-        std::string modified = get_article(profile->type_name.modified()) + " " + bold(profile->type_name.modified());
+        std::string original = get_article(profile->type_name.original()) + " " + bold(profile->type_name.original() == "elseif" ? "else if" : profile->type_name.original());
+        std::string modified = get_article(profile->type_name.modified()) + " " + bold(profile->type_name.modified() == "elseif" ? "else if" : profile->type_name.modified());
 
         return original + " was converted to " + modified;
 
     }
 
-    if(profile->type_name == "if") {
+    if(is_if(profile->type_name)) {
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
 
