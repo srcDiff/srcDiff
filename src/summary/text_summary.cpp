@@ -1174,7 +1174,7 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
     if(number_rename == 1 && identifier_renames.size() == 0 && number_argument_lists_modified == 0) {
 
-        out << "a " << manip::bold() << "call name" << manip::normal() << " change occurred";
+        out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to a " << manip::bold() << "call" << manip::normal();
 
     } else if(is_variable_reference_change) {
 
