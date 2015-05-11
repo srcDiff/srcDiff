@@ -637,10 +637,10 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         out.begin_line();
 
         if(number_parameters_deleted == 1)
-            out << "a " << manip::bold() << "parameter" << manip::normal() << " was removed";
+            out << "a " << manip::bold() << "parameter" << manip::normal() << " was deleted";
 
         else
-            out << std::to_string(number_parameters_deleted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were removed:\n";
+            out << std::to_string(number_parameters_deleted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were deleted\n";
 
     }
 
@@ -649,9 +649,9 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         out.begin_line();
 
         if(number_parameters_inserted == 1)
-            out << "a " << manip::bold() << "parameter" << manip::normal() << " was added\n";
+            out << "a " << manip::bold() << "parameter" << manip::normal() << " was inserted\n";
         else
-            out << std::to_string(number_parameters_inserted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were added:\n";
+            out << std::to_string(number_parameters_inserted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were inserted\n";
 
     }
 
@@ -662,7 +662,7 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, siz
         if(number_parameters_modified == 1)
             out << "a " << manip::bold() << "parameter" << manip::normal() << " was modified\n";
         else
-            out << std::to_string(number_parameters_modified) << ' ' << manip::bold() << "parameters" << manip::normal() << " were modified:\n";
+            out << std::to_string(number_parameters_modified) << ' ' << manip::bold() << "parameters" << manip::normal() << " were modified\n";
 
     }
 
@@ -678,9 +678,9 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
         out.begin_line();
 
         if(number_member_initializations_deleted == 1)
-            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was removed\n";
+            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was deleted\n";
         else
-            out << std::to_string(number_member_initializations_deleted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were removed:\n";
+            out << std::to_string(number_member_initializations_deleted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were deleted\n";
 
     }
 
@@ -689,9 +689,9 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
         out.begin_line();
 
         if(number_member_initializations_inserted == 1)
-            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was added\n";
+            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was inserted\n";
         else
-            out << std::to_string(number_member_initializations_inserted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were added:\n";
+            out << std::to_string(number_member_initializations_inserted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were inserted\n";
 
     }
 
@@ -702,7 +702,7 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
         if(number_member_initializations_modified == 1)
             out << "a " << manip::bold() << "member initilization" << manip::normal() << " was modified\n";
         else
-            out << std::to_string(number_member_initializations_modified) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were modified:\n";
+            out << std::to_string(number_member_initializations_modified) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were modified\n";
 
     }
 
@@ -1088,9 +1088,9 @@ summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & o
         } else if(inserted_calls.size() != 0) {
 
             if(inserted_calls.size() == 1)
-                out << "a " << manip::bold() << "call" << manip::normal() << " was added";
+                out << "a " << manip::bold() << "call" << manip::normal() << " was inserted";
             else
-                out << std::to_string(inserted_calls.size()) << ' ' << manip::bold() << "calls" << manip::normal() << " were added";
+                out << std::to_string(inserted_calls.size()) << ' ' << manip::bold() << "calls" << manip::normal() << " were inserted";
 
         } else if(renamed_calls.size() != 0) {
 
@@ -1191,9 +1191,9 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
             out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
 
             if(number_arguments_deleted == 1)
-                out << "removed";
+                out << "deleted";
             else if(number_arguments_inserted == 1)
-                out << "added";
+                out << "inserted";
             else
                 out << "modified";
 
@@ -1225,7 +1225,7 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 
         out.begin_line() << get_profile_string(profile) << " was ";
 
-        out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+        out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
         if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
 
@@ -1346,7 +1346,7 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
         out << " was ";
 
-        out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+        out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
         if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
 
@@ -1384,7 +1384,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
 
         out.begin_line();
         out << "an " << manip::bold() << "if-else" << manip::normal() << " was ";
-        out << (profile->parent->operation == SRCDIFF_DELETE ? "removed" : "added");
+        out << (profile->parent->operation == SRCDIFF_DELETE ? "deleted" : "inserted");
         out << '\n';
 
         return out;
@@ -1406,7 +1406,7 @@ summary_output_stream & text_summary::else_clause(summary_output_stream & out, c
         else
             out << get_profile_string(profile) << " was ";
 
-        out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
+        out << (profile->operation == SRCDIFF_DELETE ? "deleted" : "inserted");
 
         if(abstract_level != HIGH && (profile->parent == id && profile->operation == SRCDIFF_COMMON)) {
 
@@ -1499,7 +1499,7 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out << get_profile_string(profile);
         out << " was ";
-        out << (profile->operation == SRCDIFF_DELETE ? "removed" : "added");
+        out << (profile->operation == SRCDIFF_DELETE ? "deleted" : "inserted");
 
         // after children
         if(abstract_level != HIGH && (summary_profile->parent == id && summary_profile->operation == SRCDIFF_COMMON)) {
@@ -1609,7 +1609,7 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const st
 
     out << " was ";
 
-    out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "added" : "modified"));
+    out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
     if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
 

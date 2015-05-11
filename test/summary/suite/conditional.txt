@@ -99,7 +99,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextTool::repaintSelection':
   #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #+2#
-	• a #guard clause# was added
+	• a #guard clause# was inserted
 	• a #call# was replaced with a #guard clause#
 
 END_SUMMARY
@@ -159,7 +159,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoMainWindow::slotCloseAllViews':
   #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #-1#
-	• an #if-else# was removed
+	• an #if-else# was deleted
 	• an #assignment# was moved
 
 END_SUMMARY
@@ -200,7 +200,7 @@ SUMMARY
 • function 'KoMainWindow::currentView':
   #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
 	• an #else# was converted to an #elseif#
-	• a #return# was added
+	• a #return# was inserted
 
 END_SUMMARY
 
@@ -280,7 +280,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisGroupLayer::resetProjection':
   #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
-	• an #elseif# was added
+	• an #elseif# was inserted
 
 END_SUMMARY
 
@@ -345,6 +345,6 @@ SUMMARY
 	• 'action' was renamed to 'm_rotate270LayerAction'
 	• 'action' was renamed to 'm_rotate90LayerAction'
 	• 'action' was renamed to 'm_rotateLayerAction'
-	• a #call# was added
+	• a #call# was inserted
 
 END_SUMMARY

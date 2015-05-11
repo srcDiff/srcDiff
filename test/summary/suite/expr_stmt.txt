@@ -80,7 +80,7 @@ SUMMARY
 • function 'KisView2::slotLoadingFinished':
   #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• a #call name# change occurred
-	• a #chain of calls# was added
+	• a #chain of calls# was inserted
 
 END_SUMMARY
 
@@ -161,7 +161,7 @@ SUMMARY
 • function 'KoDocument::openExistingFile':
   #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #-1#
 	• a #declaration# was replaced with a #call#
-	• an #if# was removed
+	• an #if# was deleted
 
 END_SUMMARY
 

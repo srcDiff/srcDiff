@@ -170,7 +170,7 @@ SUMMARY
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #+1#
-	• an #if-else# was added
+	• an #if-else# was inserted
 
 END_SUMMARY
 
@@ -223,7 +223,7 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'PageProcessingQueue::PageProcessingQueue':
   #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
-	• a #member initilization# was added
+	• a #member initilization# was inserted
 
 END_SUMMARY
 
@@ -334,7 +334,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
-	• a #parameter# was added
+	• a #parameter# was inserted
 
 END_SUMMARY
 

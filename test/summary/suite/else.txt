@@ -28,6 +28,6 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #+1#
-	• an #if-else# was added
+	• an #if-else# was inserted
 
 END_SUMMARY
