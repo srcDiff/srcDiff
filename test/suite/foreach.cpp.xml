@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:diff="http://www.sdml.info/srcDiff" language="C++" url="foreach">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="foreach">
 
 <unit filename="foreach|foreach"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>j</name></expr></range></decl></init>)</control>
 <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></foreach></diff:delete></unit>
