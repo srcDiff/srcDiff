@@ -326,7 +326,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   options.archive = srcml_archive_create();
   srcml_archive_disable_option(options.archive, SRCML_OPTION_ARCHIVE);
   srcml_archive_enable_option(options.archive, SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_TERNARY);
-  srcml_archive_register_namespace(options.archive, "diff", "http://www.sdml.info/srcDiff");
+  srcml_archive_register_namespace(options.archive, "diff", "http://www.srcML.org/srcDiff");
 
   general.add_options()
     ("help,h", boost::program_options::bool_switch()->notifier(&option_help), "Output srcdiff help message")

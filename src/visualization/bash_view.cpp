@@ -167,7 +167,7 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
 
   const std::string local_name(localname);
 
-  if(strcmp(URI, "http://www.sdml.info/srcDiff") == 0) {
+  if(strcmp(URI, "http://www.srcML.org/srcDiff") == 0) {
 
     if(local_name == "common")
      diff_stack.push_back(SESCOMMON);
@@ -225,7 +225,7 @@ void bash_view::endElement(const char * localname, const char * prefix, const ch
 
     const std::string local_name(localname);
 
-    if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+    if(strcmp((const char *)URI, "http://www.srcML.org/srcDiff") == 0) {
 
       if(local_name == "common" || local_name == "delete" || local_name == "insert")
         diff_stack.pop_back();

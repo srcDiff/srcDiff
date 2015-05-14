@@ -534,7 +534,7 @@ void sax2_color_diff::startElementNs(void* ctx, const xmlChar* localname, const 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct sax2_color_diff::source_diff * data = (sax2_color_diff::source_diff *)ctxt->_private;
 
-  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+  if(strcmp((const char *)URI, "http://www.srcML.org/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0)
       data->in_diff->push_back(SESCOMMON);
@@ -558,7 +558,7 @@ void sax2_color_diff::endElementNs(void *ctx, const xmlChar *localname, const xm
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct sax2_color_diff::source_diff * data = (sax2_color_diff::source_diff *)ctxt->_private;
 
-  if(strcmp((const char *)URI, "http://www.sdml.info/srcDiff") == 0) {
+  if(strcmp((const char *)URI, "http://www.srcML.org/srcDiff") == 0) {
 
     if(strcmp((const char *)localname, "common") == 0
        || strcmp((const char *)localname, "delete") == 0

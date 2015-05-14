@@ -952,8 +952,8 @@ bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, c
 
   if(original_uri != modified_uri) return false;
 
-  if(original_tag == "if" && original_uri != "http://www.sdml.info/srcML/src") return false;
-  if(modified_tag == "if" && modified_uri != "http://www.sdml.info/srcML/src") return false;
+  if(original_tag == "if" && original_uri != "http://www.srcML.org/srcML/src") return false;
+  if(modified_tag == "if" && modified_uri != "http://www.srcML.org/srcML/src") return false;
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
@@ -1088,7 +1088,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
     if(original_name == modified_name) return false;
 
-  } else if(original_tag == "if" && original_uri == "http://www.sdml.info/srcML/src") {
+  } else if(original_tag == "if" && original_uri == "http://www.srcML.org/srcML/src") {
 
     std::string original_condition = get_condition(nodes_original, original_pos);
     std::string modified_condition = get_condition(nodes_modified, modified_pos);
