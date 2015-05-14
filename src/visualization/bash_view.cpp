@@ -1,4 +1,7 @@
 #include <bash_view.hpp>
+
+#include <srcdiff_constants.hpp>
+
 #include <shortest_edit_script.hpp>
 #include <type_query.hpp>
 
@@ -167,7 +170,7 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
 
   const std::string local_name(localname);
 
-  if(strcmp(URI, "http://www.srcML.org/srcDiff") == 0) {
+  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(local_name == "common")
      diff_stack.push_back(SESCOMMON);
@@ -225,7 +228,7 @@ void bash_view::endElement(const char * localname, const char * prefix, const ch
 
     const std::string local_name(localname);
 
-    if(strcmp((const char *)URI, "http://www.srcML.org/srcDiff") == 0) {
+    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
       if(local_name == "common" || local_name == "delete" || local_name == "insert")
         diff_stack.pop_back();

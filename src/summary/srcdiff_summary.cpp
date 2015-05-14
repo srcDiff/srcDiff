@@ -1,5 +1,7 @@
 #include <srcdiff_summary.hpp>
 
+#include <srcdiff_constants.hpp>
+
 #include <type_query.hpp>
 
 #include <unit_profile_t.hpp>
@@ -458,7 +460,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     }
     full_name += local_name;
 
-    uri_stack.push_back(URI == std::string("http://www.srcML.org/srcDiff") ? SRCDIFF : (URI == std::string("http://www.srcML.org/srcML/src") ? SRC : CPP));
+    uri_stack.push_back(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF ? SRCDIFF : (URI == SRCML_SRC_NAMESPACE_HREF ? SRC : CPP));
 
     // detect if interchange
     size_t srcml_depth = uri_stack.size();

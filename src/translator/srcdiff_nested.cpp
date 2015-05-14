@@ -1,5 +1,6 @@
 #include <srcdiff_nested.hpp>
 
+#include <srcdiff_constants.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_measure.hpp>
@@ -81,7 +82,7 @@ int is_block_type(const node_set & structure, const srcml_nodes & nodes) {
   if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
 
-  if(nodes.at(structure.at(0))->ns->href != "http://www.srcML.org/srcML/src")
+  if(nodes.at(structure.at(0))->ns->href != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
@@ -109,7 +110,7 @@ bool is_nest_type(const node_set & structure, const srcml_nodes & nodes
   if((xmlReaderTypes)nodes.at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-    if(nodes.at(structure.at(0))->ns->href != "http://www.srcML.org/srcML/src")
+    if(nodes.at(structure.at(0))->ns->href != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)

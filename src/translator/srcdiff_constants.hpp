@@ -12,6 +12,9 @@ const std::string DIFF_TYPE = "type";
 const std::string SRCDIFF_DEFAULT_NAMESPACE_HREF = "http://www.srcML.org/srcDiff";
 const std::string SRCDIFF_DEFAULT_NAMESPACE_PREFIX =  "diff";
 
+const std::string SRCML_SRC_NAMESPACE_HREF = "http://www.srcML.org/srcML/src";
+const std::string SRCML_CPP_NAMESPACE_HREF = "http://www.srcML.org/srcML/cpp";
+
 const int MAX_INT = (unsigned)-1 >> 1;
 
 #endif

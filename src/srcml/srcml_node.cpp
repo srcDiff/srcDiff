@@ -24,6 +24,8 @@
 
 #include <srcml_node.hpp>
 
+#include <srcdiff_constants.hpp>
+
 #include <iostream>
 #include <cstdlib>
 
@@ -81,7 +83,7 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
   xmlNsPtr node_ns = node.nsDef;
   if(name == "unit" && ns) {
 
-    while(is_archive && node_ns && (const char *)node_ns->href != std::string("http://www.srcML.org/srcML/cpp"))
+    while(is_archive && node_ns && (const char *)node_ns->href !=SRCML_CPP_NAMESPACE_HREF)
         node_ns = node_ns->next;
 
     std::string ns_name = "xmlns";
