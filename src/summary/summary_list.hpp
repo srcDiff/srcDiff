@@ -6,6 +6,7 @@
 #include <call_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
 #include <change_entity_map.hpp>
+#include <summary_t.hpp>
 
 #include <cstdlib>
 #include <vector>
@@ -16,31 +17,14 @@ class summary_list {
 
 public:
 
-    enum abstraction_level { HIGH, MEDIUM, LOW };
-
 private:
 
 protected:
 
-        const size_t id;
-
-        const profile_t::profile_list_t & child_profiles;
-
-        const change_entity_map<parameter_profile_t> & parameters;
-        const change_entity_map<call_profile_t>      & member_initializations;
-
-        const std::map<identifier_diff, size_t> & summary_identifiers;
-
-        std::map<identifier_diff, size_t> output_identifiers;
-
-        abstraction_level abstract_level;
+    std::vector<summary_t> summaries;
+    std::map<identifier_diff, size_t> output_identifiers;
 
 private:
-
-    std::string get_article(const std::string & type_name) const;
-    std::string get_article(const std::shared_ptr<profile_t> & profile) const;
-    std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
-    std::string get_profile_string(const std::shared_ptr<profile_t> & profile) const;
 
     void identifiers(const std::map<identifier_diff, size_t> & identifiers);
     void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos) const;
@@ -53,10 +37,7 @@ private:
 
 public:
 
-    summary_list(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
-                 const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<identifier_diff, size_t> & summary_identifiers,
-                 abstraction_level abstract_level = HIGH);
+    summary_list();
 
     void parameter(size_t number_parameters_deleted,
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;

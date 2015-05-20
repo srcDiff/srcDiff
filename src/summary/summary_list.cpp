@@ -175,12 +175,7 @@ size_t summary_list::number_child_changes(const profile_t::profile_list_t & chil
 
 }
 
-summary_list::summary_list(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
-             const change_entity_map<call_profile_t> & member_initializations,
-             const std::map<identifier_diff, size_t> & summary_identifiers,
-             abstraction_level abstract_level)
-    : id(id), child_profiles(child_profiles), parameters(parameters), member_initializations(member_initializations),
-      summary_identifiers(summary_identifiers), abstract_level(abstract_level) {}
+summary_list::summary_list() {}
 
 void summary_list::parameter(size_t number_parameters_deleted,
                                        size_t number_parameters_inserted, size_t number_parameters_modified) const {
@@ -866,11 +861,11 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) const {
 
 void summary_list::body(const profile_t & profile) {
 
-    identifiers(summary_identifiers);
+    identifiers(profile.summary_identifiers);
 
-    for(size_t pos = 0; pos < child_profiles.size(); ++pos) {
+    for(size_t pos = 0; pos < profile.child_profiles.size(); ++pos) {
 
-        const std::shared_ptr<profile_t> & child_profile = child_profiles[pos];
+        const std::shared_ptr<profile_t> & child_profile = profile.child_profiles[pos];
 
         if(!is_body_summary(child_profile->type_name, child_profile->is_replacement)
             || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0
