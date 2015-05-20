@@ -75,7 +75,7 @@ public:
     void else_clause(const std::shared_ptr<profile_t> & profile);
     void conditional(const std::shared_ptr<profile_t> & profile);
     void interchange(const std::shared_ptr<profile_t> & profile);
-    void jump(const std::shared_ptr<profile_t> & profile) const;
+    void jump(const std::shared_ptr<profile_t> & profile);
     void body(const profile_t & profile);
 
 };

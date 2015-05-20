@@ -1066,7 +1066,7 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
 }
 
 
-void summary_list::jump(const std::shared_ptr<profile_t> & profile) const {
+void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
     assert(is_jump(profile->type_name));
 
@@ -1096,7 +1096,7 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) const {
 
     }
 
-    summaries.push_back(jump_summary_t(summary_t::JUMP, SRC, profile->operation), get_type_string(profile));
+    summaries.emplace_back(jump_summary_t(summary_t::JUMP, SRC, profile->operation, get_type_string(profile)));
 
 }
 
