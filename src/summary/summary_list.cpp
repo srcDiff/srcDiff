@@ -10,7 +10,8 @@
 #include <ternary_profile_t.hpp>
 #include <identifier_profile_t.hpp>
 #include <identifier_diff.hpp>
-#include <summary_manip.hpp>
+
+#include <identifier_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -23,7 +24,10 @@
 
 void summary_list::identifiers(const std::map<identifier_diff, size_t> & identifiers) {
 
+
     for(std::map<identifier_diff, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
+
+        summaries.emplace_back(identifier_summary_t(summary_t::IDENTIFIER, SRC, SRCDIFF_COMMON, itr->first.get_diff(), itr->first.complex()));
 
         std::map<identifier_diff, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
         if(itersect_itr == output_identifiers.end())
