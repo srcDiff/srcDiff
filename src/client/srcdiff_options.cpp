@@ -175,7 +175,7 @@ void option_srcml_field<TABSTOP>(const int & arg) {
 
 }
 
-enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, URL, FILENAME, SRC_VERSION, REGISTER_EXT, XMLNS };
+enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, URL, SRC_VERSION, REGISTER_EXT, XMLNS };
 
 template<srcml_string_field field>
 void option_srcml_field(const std::string & arg) {}
@@ -205,13 +205,6 @@ template<>
 void option_srcml_field<URL>(const std::string & arg) {
 
   srcml_archive_set_url(options.archive, arg.c_str());
-
-}
-
-template<>
-void option_srcml_field<FILENAME>(const std::string & arg) {
-
-  srcml_archive_set_filename(options.archive, arg.c_str());
 
 }
 
@@ -364,7 +357,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input source programming language")
     ("register-ext", boost::program_options::value<std::string>()->notifier(option_srcml_field<REGISTER_EXT>), "Register an extension to language pair to be used during parsing")
     ("url,u", boost::program_options::value<std::string>()->notifier(option_srcml_field<URL>), "Set the root url attribute")
-    ("filename,f", boost::program_options::value<std::string>()->notifier(option_srcml_field<FILENAME>), "Set the root filename attribute")
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
     ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set the prefix associationed with a namespace or register a new one. of the form --xmlns:prefix=url or --xmlns=url for default prefix.")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")

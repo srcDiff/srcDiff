@@ -127,8 +127,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
-  srcml_archive_get_filename(archive) ? 
-    srcml_unit_set_filename(wstate->unit, srcml_archive_get_filename(archive)) : srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
+  srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
   srcml_unit_set_url(wstate->unit, unit_url ? unit_url->c_str() : 0);
   srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
   /** @todo when output non-archive additional namespaces not appended, because not collected 
