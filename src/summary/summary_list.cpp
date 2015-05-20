@@ -15,6 +15,7 @@
 #include <replacement_summary_t.hpp>
 #include <move_summary_t.hpp>
 #include <interchange_summary_t.hpp>
+#include <jump_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -1094,6 +1095,8 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) const {
             return;
 
     }
+
+    summaries.push_back(jump_summary_t(summary_t::JUMP, SRC, profile->operation), get_type_string(profile));
 
 }
 
