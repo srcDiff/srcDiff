@@ -12,6 +12,7 @@
 #include <identifier_diff.hpp>
 
 #include <identifier_summary_t.hpp>
+#include <replacement_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -21,6 +22,41 @@
 #include <cstring>
 
 /** @todo check asserts */
+
+std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
+
+    if(is_if(profile->type_name)) {
+
+        const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
+        if(if_profile->is_guard()) return "guard clause";
+
+    }
+
+    if(profile->type_name == "else") return "else";
+
+    if(profile->type_name == "elseif") return "else if";
+
+    if(is_decl_stmt(profile->type_name)) return "declaration";
+
+    if(is_expr_stmt(profile->type_name)) {
+
+        const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+        if(expr_stmt_profile->assignment()) return "assignment";
+        if(expr_stmt_profile->is_delete())  return "delete";
+        if(expr_stmt_profile->call()) {
+            std::vector<std::shared_ptr<call_profile_t>>::size_type number_calls = expr_stmt_profile->get_call_profiles().size();
+            if(number_calls == 1)           return "call";
+            else                            return "call chain";
+        }
+        return "expression";
+
+    }
+
+    if(is_comment(profile->type_name)) return profile->type_name;
+
+    return profile->type_name;
+
+}
 
 void summary_list::identifiers(const std::map<identifier_diff, size_t> & identifiers) {
 
@@ -39,7 +75,7 @@ void summary_list::identifiers(const std::map<identifier_diff, size_t> & identif
 
 }
 
-void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_t & pos) const {
+void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_t & pos) {
 
     const std::shared_ptr<profile_t> & start_profile = profile->child_profiles[pos];
 
@@ -90,6 +126,198 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
     }
 
     --pos;
+
+    size_t number_deleted_types  = 0;
+    if(expr_stmt_deleted.size() != 0)    ++number_deleted_types;
+    if(decl_stmt_deleted.size() != 0)    ++number_deleted_types;
+    if(conditionals_deleted.size() != 0) ++number_deleted_types;
+    if(jump_deleted.size() != 0)         ++number_deleted_types;
+    if(comment_deleted.size() != 0)      ++number_deleted_types;
+
+    size_t number_syntax_deletions = expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size() + jump_deleted.size();
+
+    size_t number_inserted_types = 0;
+    if(expr_stmt_inserted.size() != 0)    ++number_inserted_types;
+    if(decl_stmt_inserted.size() != 0)    ++number_inserted_types;
+    if(conditionals_inserted.size() != 0) ++number_inserted_types;
+    if(jump_inserted.size() != 0)         ++number_inserted_types;
+    if(comment_inserted.size() != 0)      ++number_inserted_types;
+
+    size_t number_syntax_insertions = expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size() + jump_inserted.size();
+
+    if(((number_syntax_deletions == 1 && number_syntax_insertions == 0) || (number_syntax_insertions == 1 && number_syntax_deletions == 0))
+        && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
+
+        std::shared_ptr<profile_t> single_profile;
+
+        if(expr_stmt_deleted.size())
+            single_profile = expr_stmt_deleted.back();
+        else if(expr_stmt_inserted.size())
+            single_profile = expr_stmt_inserted.back();
+        else if(decl_stmt_deleted.size())
+            single_profile = decl_stmt_deleted.back();
+        else if(decl_stmt_inserted.size())
+            single_profile = decl_stmt_inserted.back();
+        else if(conditionals_deleted.size())
+            single_profile = conditionals_deleted.back();
+        else if(conditionals_inserted.size())
+            single_profile = conditionals_inserted.back();
+        else if(jump_deleted.size())
+            single_profile = jump_deleted.back();
+        else if(jump_inserted.size())
+            single_profile = jump_inserted.back();
+
+        if(number_syntax_deletions == 1)
+            summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRC, SRCDIFF_COMMON,
+                                                         1, get_type_string(single_profile), comment_deleted.size(), 0, std::string(), comment_inserted.size()));
+        else
+            summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRC, SRCDIFF_COMMON,
+                                                         0, std::string(), comment_deleted.size(), 1, get_type_string(single_profile), comment_inserted.size()));
+
+        return;
+
+    }
+
+    size_t number_original = 0;
+    std::string original_type;
+
+    if(number_syntax_deletions == 1) {
+
+        number_original = 1;
+        if(expr_stmt_deleted.size())
+            original_type = get_type_string(expr_stmt_deleted.back());
+        else if(decl_stmt_deleted.size())
+            original_type = get_type_string(decl_stmt_deleted.back());
+        else if(conditionals_deleted.size())
+            original_type = get_type_string(conditionals_deleted.back());
+        else if(jump_deleted.size())
+            original_type = get_type_string(jump_deleted.back());
+        else
+            original_type = get_type_string(comment_deleted.back());
+
+    } else {
+
+        if(number_deleted_types == 1 || (comment_deleted.size() != 0 && number_deleted_types == 2)) {
+
+            if(expr_stmt_deleted.size()) {
+
+                number_original = expr_stmt_deleted.size();
+                original_type = get_type_string(expr_stmt_deleted.back());
+
+            } else if(decl_stmt_deleted.size()) {
+
+                number_original = decl_stmt_deleted.size();
+                original_type = get_type_string(decl_stmt_deleted.back());
+
+            } else if(conditionals_deleted.size()) {
+
+                number_original = conditionals_deleted.size();
+                original_type = "conditional";
+
+            } else if(jump_deleted.size()) {
+
+                if(jump_deleted.size() == 1) {
+
+                    number_original = 1;
+                    original_type = get_type_string(jump_deleted.back());
+
+                } else {
+
+                    number_original = jump_deleted.size();
+                    std::set<std::string> jump_types;
+                    for(const std::shared_ptr<profile_t> & profile_ptr : jump_deleted)
+                        jump_types.insert(profile_ptr->type_name.original());
+
+                    if(jump_types.size() == 1)
+                        original_type = get_type_string(jump_deleted.back());
+                    else
+                        original_type = "statement";
+
+                }
+
+
+            }
+
+        } else {
+
+            number_original = number_syntax_deletions;
+            original_type = "statement";
+
+        }
+
+    }
+
+    size_t number_modified = 0;
+    std::string modified_type;
+
+    if(number_syntax_insertions == 1) {
+
+        number_modified = 1;
+        if(expr_stmt_inserted.size())
+            modified_type = get_type_string(expr_stmt_inserted.back());
+        else if(decl_stmt_inserted.size())
+            modified_type = get_type_string(decl_stmt_inserted.back());
+        else if(conditionals_inserted.size())
+            modified_type = get_type_string(conditionals_inserted.back());
+        else if(jump_inserted.size())
+            modified_type = get_type_string(jump_inserted.back());
+        else
+            modified_type = get_type_string(comment_inserted.back());
+
+    } else {
+
+        if(number_inserted_types == 1 || (comment_inserted.size() != 0 && number_inserted_types == 2)) {
+
+            if(expr_stmt_inserted.size()) {
+
+                number_modified = expr_stmt_inserted.size();
+                modified_type = get_type_string(expr_stmt_inserted.back());
+
+            } else if(decl_stmt_inserted.size()) {
+
+                number_modified = decl_stmt_inserted.size();
+                modified_type = get_type_string(decl_stmt_inserted.back());
+
+            } else if(conditionals_inserted.size()) {
+
+                number_modified = conditionals_inserted.size();
+                modified_type = "conditional";
+
+            } else if(jump_inserted.size()) {
+
+                if(jump_inserted.size() == 1) {
+
+                    number_modified = 1;
+                    modified_type = get_type_string(jump_inserted.back());
+
+                } else {
+
+                    number_modified = jump_inserted.size();
+                    std::set<std::string> jump_types;
+                    for(const std::shared_ptr<profile_t> & profile_ptr : jump_inserted)
+                        jump_types.insert(profile_ptr->type_name.modified());
+
+                    if(jump_types.size() == 1)
+                        modified_type = get_type_string(jump_inserted.back());
+                    else
+                        modified_type = "statement";
+
+                }
+
+
+            }
+
+        } else {
+
+            number_modified = number_syntax_insertions;
+            modified_type = "statement";
+
+        }
+
+    }
+
+    summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRC, SRCDIFF_COMMON,
+                                                 number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
 
 }
 

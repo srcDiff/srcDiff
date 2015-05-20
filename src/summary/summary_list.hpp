@@ -26,8 +26,10 @@ protected:
 
 private:
 
+    std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
+
     void identifiers(const std::map<identifier_diff, size_t> & identifiers);
-    void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos) const;
+    void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos);
 
     bool is_body_summary(const std::string & type, bool is_replacement) const;
 
