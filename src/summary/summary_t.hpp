@@ -2,7 +2,6 @@
 #define INCLUDED_SUMMARY_T_HPP
 
 #include <srcdiff_type.hpp>
-#include <namespace_uri.hpp>
 #include <srcdiff_macros.hpp>
 #include <type_query.hpp>
 
@@ -15,13 +14,12 @@ class summary_t {
     private:
 
         summary_name_t type;
-        namespace_uri uri;
         srcdiff_type operation;
 
     public:
 
-        summary_t(summary_name_t type, namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON)
-            : type(type), uri(uri), operation(operation) {}
+        summary_t(summary_name_t type, srcdiff_type operation)
+            : type(type), operation(operation) {}
 
         // bool operator<(const summary_t & summary) const {
 

@@ -13,9 +13,9 @@ class move_summary_t : public summary_t {
 
     public:
 
-        move_summary_t(summary_name_t type, namespace_uri uri, srcdiff_type operation,
+        move_summary_t(summary_name_t type, srcdiff_type operation,
                        std::string statement_type)
-            : summary_t(type, uri, operation), statement_type(statement_type) {}
+            : summary_t(type, operation), statement_type(statement_type) {}
 
 };
 

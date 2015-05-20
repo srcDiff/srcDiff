@@ -66,7 +66,7 @@ void summary_list::identifiers(const std::map<identifier_diff, size_t> & identif
 
     for(std::map<identifier_diff, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
 
-        summaries.emplace_back(identifier_summary_t(summary_t::IDENTIFIER, SRC, SRCDIFF_COMMON, itr->first.get_diff(), itr->first.complex()));
+        summaries.emplace_back(identifier_summary_t(summary_t::IDENTIFIER, SRCDIFF_COMMON, itr->first.get_diff(), itr->first.complex()));
 
         std::map<identifier_diff, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
         if(itersect_itr == output_identifiers.end())
@@ -171,10 +171,10 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
             single_profile = jump_inserted.back();
 
         if(number_syntax_deletions == 1)
-            summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRC, SRCDIFF_COMMON,
+            summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRCDIFF_COMMON,
                                                          1, get_type_string(single_profile), comment_deleted.size(), 0, std::string(), comment_inserted.size()));
         else
-            summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRC, SRCDIFF_COMMON,
+            summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRCDIFF_COMMON,
                                                          0, std::string(), comment_deleted.size(), 1, get_type_string(single_profile), comment_inserted.size()));
 
         return;
@@ -319,7 +319,7 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
 
     }
 
-    summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRC, SRCDIFF_COMMON,
+    summaries.emplace_back(replacement_summary_t(summary_t::REPLACEMENT, SRCDIFF_COMMON,
                                                  number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
 
 }
@@ -341,7 +341,7 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
     } else if(child_profile->move_id) {
 
-        summaries.emplace_back(move_summary_t(summary_t::MOVE, SRC, SRCDIFF_COMMON, get_type_string(child_profile)));
+        summaries.emplace_back(move_summary_t(summary_t::MOVE, SRCDIFF_COMMON, get_type_string(child_profile)));
 
     } else if(!child_profile->type_name.is_common()) {
 
@@ -1041,7 +1041,7 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
 
     assert(!profile->type_name.is_common());
 
-    summaries.emplace_back(interchange_summary_t(summary_t::INTERCHANGE, SRC, SRCDIFF_COMMON,
+    summaries.emplace_back(interchange_summary_t(summary_t::INTERCHANGE, SRCDIFF_COMMON,
             versioned_string(profile->type_name.original() == "elseif" ? "else if" : profile->type_name.original(),
                              profile->type_name.modified() == "elseif" ? "else if" : profile->type_name.modified())));
 
@@ -1096,7 +1096,7 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
     }
 
-    summaries.emplace_back(jump_summary_t(summary_t::JUMP, SRC, profile->operation, get_type_string(profile)));
+    summaries.emplace_back(jump_summary_t(summary_t::JUMP, profile->operation, get_type_string(profile)));
 
 }
 

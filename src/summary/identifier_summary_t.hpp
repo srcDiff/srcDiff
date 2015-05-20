@@ -14,9 +14,9 @@ class identifier_summary_t : public summary_t {
 
     public:
 
-        identifier_summary_t(summary_name_t type, namespace_uri uri, srcdiff_type operation,
+        identifier_summary_t(summary_name_t type, srcdiff_type operation,
                              versioned_string name, bool is_complex)
-            : summary_t(type, uri, operation), name(name), is_complex(is_complex) {}
+            : summary_t(type, operation), name(name), is_complex(is_complex) {}
 
 };
 
