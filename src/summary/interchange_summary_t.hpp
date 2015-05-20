@@ -1,0 +1,22 @@
+#ifndef INCLUDED_INTERCHANGE_SUMMARY_T_HPP
+#define INCLUDED_INTERCHANGE_SUMMARY_T_HPP
+
+#include <summary_t.hpp>
+
+#include <versioned_string.hpp>
+
+class interchange_summary_t : public summary_t {
+
+    private:
+
+        versioned_string statement_type;
+
+    public:
+
+        interchange_summary_t(summary_name_t type, namespace_uri uri, srcdiff_type operation,
+		                      versioned_string statement_type)
+            : summary_t(type, uri, operation), statement_type(statement_type) {}
+
+};
+
+#endif

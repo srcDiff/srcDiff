@@ -14,6 +14,7 @@
 #include <identifier_summary_t.hpp>
 #include <replacement_summary_t.hpp>
 #include <move_summary_t.hpp>
+#include <interchange_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -1038,6 +1039,10 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
 void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
 
     assert(!profile->type_name.is_common());
+
+    summaries.emplace_back(interchange_summary_t(summary_t::INTERCHANGE, SRC, SRCDIFF_COMMON,
+            versioned_string(profile->type_name.original() == "elseif" ? "else if" : profile->type_name.original(),
+                             profile->type_name.modified() == "elseif" ? "else if" : profile->type_name.modified())));
 
     std::shared_ptr<profile_t> summary_profile = profile;
     if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif")
