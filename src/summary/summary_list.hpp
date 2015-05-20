@@ -1,0 +1,100 @@
+#ifndef INCLUDED_SUMMARY_LIST_HPP
+#define INCLUDED_SUMMARY_LIST_HPP
+
+#include <profile_t.hpp>
+#include <parameter_profile_t.hpp>
+#include <call_profile_t.hpp>
+#include <expr_stmt_profile_t.hpp>
+#include <change_entity_map.hpp>
+
+#include <cstdlib>
+#include <vector>
+#include <memory>
+#include <map>
+
+class summary_list {
+
+public:
+
+    enum abstraction_level { HIGH, MEDIUM, LOW };
+
+private:
+
+protected:
+
+        const size_t id;
+
+        const profile_t::profile_list_t & child_profiles;
+
+        const change_entity_map<parameter_profile_t> & parameters;
+        const change_entity_map<call_profile_t>      & member_initializations;
+
+        const std::map<identifier_diff, size_t> & summary_identifiers;
+
+        std::map<identifier_diff, size_t> output_identifiers;
+
+        abstraction_level abstract_level;
+
+private:
+
+    std::string get_article(const std::string & type_name) const;
+    std::string get_article(const std::shared_ptr<profile_t> & profile) const;
+    std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
+    std::string get_profile_string(const std::shared_ptr<profile_t> & profile) const;
+
+    void identifiers(const std::map<identifier_diff, size_t> & identifiers);
+    void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos) const;
+
+    bool is_body_summary(const std::string & type, bool is_replacement) const;
+
+    void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
+
+    size_t number_child_changes(const profile_t::profile_list_t & child_profiles) const;
+
+public:
+
+    summary_list(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
+                 const change_entity_map<call_profile_t> & member_initializations,
+                 const std::map<identifier_diff, size_t> & summary_identifiers,
+                 abstraction_level abstract_level = HIGH);
+
+    void parameter(size_t number_parameters_deleted,
+                            size_t number_parameters_inserted, size_t number_parameters_modified) const;
+    void member_initialization(size_t number_member_initializations_deleted,
+                                         size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
+
+    bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+                          std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
+    void ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+                 bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
+                 std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
+    void expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+                         std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
+                         std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
+                         std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
+                         std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
+                         std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
+                         std::vector<std::shared_ptr<profile_t>> & deleted_other,
+                         std::vector<std::shared_ptr<profile_t>> & inserted_other,
+                         std::vector<std::shared_ptr<profile_t>> & modified_other,
+                         size_t & number_arguments_deleted,
+                         size_t & number_arguments_inserted,
+                         size_t & number_arguments_modified,
+                         bool & identifier_rename_only,
+                         std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
+    void common_expr_stmt(const std::shared_ptr<profile_t> & expr_stmt_profile) const;
+    void call_sequence(const std::shared_ptr<profile_t> & profile, size_t number_rename,
+                                          size_t number_arguments_deleted, size_t number_arguments_inserted, size_t numbe_arguments_modified,
+                                          size_t number_argument_lists_modified,
+                                          bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
+    void expr_stmt(const std::shared_ptr<profile_t> & profile) const;
+    void decl_stmt(const std::shared_ptr<profile_t> & profile) const;
+    void else_clause(const std::shared_ptr<profile_t> & profile);
+    void conditional(const std::shared_ptr<profile_t> & profile);
+    void interchange(const std::shared_ptr<profile_t> & profile);
+    void jump(const std::shared_ptr<profile_t> & profile) const;
+    void body(const profile_t & profile);
+
+};
+
+#endif
