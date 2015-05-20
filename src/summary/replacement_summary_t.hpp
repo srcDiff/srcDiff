@@ -3,7 +3,7 @@
 
 #include <summary_t.hpp>
 
-#include <versioned_string.hpp>
+#include <string>
 
 class replacement_summary_t : public summary_t {
 

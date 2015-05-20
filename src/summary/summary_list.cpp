@@ -13,6 +13,7 @@
 
 #include <identifier_summary_t.hpp>
 #include <replacement_summary_t.hpp>
+#include <move_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -338,7 +339,7 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
     } else if(child_profile->move_id) {
 
-
+        summaries.emplace_back(move_summary_t(summary_t::MOVE, SRC, SRCDIFF_COMMON, get_type_string(child_profile)));
 
     } else if(!child_profile->type_name.is_common()) {
 
