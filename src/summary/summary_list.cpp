@@ -936,6 +936,13 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
 
     assert(profile->type_name == "else");
 
+    if(profile->parent->operation != SRCDIFF_COMMON) {
+
+        summaries_.emplace_back(new conditional_summary_t(profile->parent->operation, get_type_string(profile->parent), false));
+        return;
+
+    }
+
     if(profile->parent->operation != SRCDIFF_COMMON)
         summaries_.emplace_back(new conditional_summary_t(profile->operation, get_type_string(profile), false));
 
