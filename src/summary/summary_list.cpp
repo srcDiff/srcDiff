@@ -64,7 +64,8 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
         if(if_profile->is_guard()) return "guard clause";
-
+        if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
+            return "if-else";
     }
 
     if(profile->type_name == "else") return "else";

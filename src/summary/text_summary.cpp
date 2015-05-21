@@ -118,16 +118,16 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
     out.begin_line();
 
     if(summary.number_original == 1)
-        out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal();
+        out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal() << " was";
     else
-        out << std::to_string(summary.number_original) << ' ' << manip::bold() << summary.original_type << manip::normal();
+        out << std::to_string(summary.number_original) << ' ' << manip::bold() << summary.original_type << manip::normal() << " were";
 
-    out << " were replaced with ";
+    out << " replaced with ";
 
     if(summary.number_original == 1)
-        out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal();
+        out << get_article(summary.modified_type) << ' ' << manip::bold() << summary.modified_type << manip::normal();
     else
-        out << std::to_string(summary.number_original) << ' ' << manip::bold() << summary.original_type << manip::normal();
+        out << std::to_string(summary.number_modified) << ' ' << manip::bold() << summary.modified_type << manip::normal();
 
     out << '\n';
 
@@ -139,7 +139,7 @@ summary_output_stream & text_summary::move(summary_output_stream & out, const mo
 
     out.begin_line();
 
-    out << get_article(summary.statement_type) << ' ' << summary.statement_type << " was moved";
+    out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was moved";
 
     out << '\n';
 
@@ -154,6 +154,8 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
     out << get_article(summary.statement_type.original()) << ' ' << manip::bold() << summary.statement_type.original() << manip::normal()
         << " was converted to "
         << get_article(summary.statement_type.modified()) << ' ' << manip::bold() << summary.statement_type.modified() << manip::normal();
+
+    out << '\n';
 
     return out;
 
