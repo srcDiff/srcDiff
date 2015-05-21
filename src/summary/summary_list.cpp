@@ -47,6 +47,12 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
+#define identifier_set_difference(PROFILE)                                        \
+    std::map<identifier_diff, size_t> identifier_set;                             \
+    std::set_difference(PROFILE->identifiers.begin(), PROFILE->identifiers.end(), \
+                        output_identifiers.begin(), output_identifiers.end(),     \
+                        std::inserter(identifier_set, identifier_set.begin()));
+
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
     if(is_if(profile->type_name)) {
@@ -740,10 +746,7 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-    std::map<identifier_diff, size_t> identifier_set;
-    std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-                        output_identifiers.begin(), output_identifiers.end(),
-                        std::inserter(identifier_set, identifier_set.begin()));
+    identifier_set_difference(parent_profile);
 
     run_expr_statistics(profile->child_profiles[0]);
 
@@ -832,10 +835,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) const {
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-    std::map<identifier_diff, size_t> identifier_set;
-    std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-                        output_identifiers.begin(), output_identifiers.end(),
-                        std::inserter(identifier_set, identifier_set.begin()));
+    identifier_set_difference(parent_profile);
 
     size_t number_parts_report = 0;
     bool identifier_rename_only = true;
@@ -1014,10 +1014,7 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
     assert(is_jump(profile->type_name));
 
     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-    std::map<identifier_diff, size_t> identifier_set;
-    std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-                        output_identifiers.begin(), output_identifiers.end(),
-                        std::inserter(identifier_set, identifier_set.begin()));
+    identifier_set_difference(parent_profile);
 
     if(profile->operation == SRCDIFF_COMMON) {
 
