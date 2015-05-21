@@ -886,21 +886,11 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
 
     assert(profile->type_name == "else");
 
-    const bool has_common = profile->common_profiles.size() > 0;
+    if(profile->parent->operation != SRCDIFF_COMMON)
+        summaries.emplace_back(conditional_summary_t(summary_t::CONDITIONAL, profile->operation, get_type_string(profile), false));
 
-    const bool output_else = profile->operation != SRCDIFF_COMMON || number_child_changes(profile->child_profiles) > 1;
-
-    if(profile->parent->operation != SRCDIFF_COMMON) {
-
-
-
-    }
-
-    if(profile->summary_identifiers.size() > 0) {
-
+    if(profile->summary_identifiers.size() > 0)
         identifiers(profile->summary_identifiers);
-
-    }
 
     for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
 
