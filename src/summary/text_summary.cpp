@@ -471,8 +471,11 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
 summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t *> summaries) {
 
-    for(const summary_t * summary : summaries)
-        summary_dispatch(out, *summary);    
+    for(std::vector<summary_t *>::size_type pos = 0; pos < summaries.size(); ++pos) {
+
+        summary_dispatch(out, *summaries[pos]);    
+
+    }
 
     return out;
 
