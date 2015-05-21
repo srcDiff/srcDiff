@@ -147,7 +147,7 @@ class function_profile_t : public profile_t {
 
             if(is_summary_type(summary_types, summary_type::TEXT)) {
 
-                text_summary text(id, child_profiles, parameters, member_initializations, summary_identifiers);
+                text_summary text(parameters, member_initializations);
 
                 if(!name.is_common()) out.begin_line() << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
 
@@ -167,7 +167,7 @@ class function_profile_t : public profile_t {
                 m_handler.gather_candidates(descendant_profiles);
                 m_handler.detect();
 
-                text.body(out, *this);
+                //text.body(out, *this);
 
             }
 

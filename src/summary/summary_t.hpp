@@ -21,6 +21,10 @@ class summary_t {
         summary_t(summary_name_t type, srcdiff_type operation)
             : type(type), operation(operation) {}
 
+        virtual ~summary_t() {}
+
+        friend class text_summary;
+
         // bool operator<(const summary_t & summary) const {
 
         //     return id < summary.id;

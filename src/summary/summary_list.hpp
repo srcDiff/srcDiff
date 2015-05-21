@@ -21,7 +21,7 @@ private:
 
 protected:
 
-    std::vector<summary_t> summaries;
+    std::vector<summary_t> summaries_;
     std::map<identifier_diff, size_t> output_identifiers;
 
 private:
@@ -36,10 +36,6 @@ private:
     void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
 
     size_t number_child_changes(const profile_t::profile_list_t & child_profiles) const;
-
-public:
-
-    summary_list();
 
     bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                           std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
@@ -71,7 +67,14 @@ public:
     void conditional(const std::shared_ptr<profile_t> & profile);
     void interchange(const std::shared_ptr<profile_t> & profile);
     void jump(const std::shared_ptr<profile_t> & profile);
+
+public:
+
+    summary_list();
+
     void body(const profile_t & profile);
+
+    const std::vector<summary_t> & summaries() const;
 
 };
 

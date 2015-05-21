@@ -1,12 +1,21 @@
 #ifndef INCLUDED_TEXT_SUMMARY_HPP
 #define INCLUDED_TEXT_SUMMARY_HPP
 
-#include <profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <call_profile_t.hpp>
 #include <expr_stmt_profile_t.hpp>
 #include <change_entity_map.hpp>
 #include <summary_output_stream.hpp>
+
+#include <summary_t.hpp>
+#include <identifier_summary_t.hpp>
+#include <replacement_summary_t.hpp>
+#include <move_summary_t.hpp>
+#include <interchange_summary_t.hpp>
+#include <expr_stmt_summary_t.hpp>
+#include <decl_stmt_summary_t.hpp>
+#include <conditional_summary_t.hpp>
+#include <jump_summary_t.hpp>
 
 #include <cstdlib>
 #include <vector>
@@ -23,80 +32,34 @@ private:
 
 protected:
 
-        const size_t id;
-
-        const profile_t::profile_list_t & child_profiles;
-
         const change_entity_map<parameter_profile_t> & parameters;
         const change_entity_map<call_profile_t>      & member_initializations;
-
-        const std::map<identifier_diff, size_t> & summary_identifiers;
-
-        std::map<identifier_diff, size_t> output_identifiers;
-
-        size_t body_depth;
-
-        abstraction_level abstract_level;
 
 private:
 
     std::string get_article(const std::string & type_name) const;
-    std::string get_article(const std::shared_ptr<profile_t> & profile) const;
-    std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
-    std::string get_profile_string(const std::shared_ptr<profile_t> & profile) const;
 
-    summary_output_stream & identifiers(summary_output_stream & out, const std::map<identifier_diff, size_t> & identifiers);
-    summary_output_stream & replacement(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & pos, const bool parent_output UNUSED) const;
+    summary_output_stream & summary_dispatch(summary_output_stream & out, const summary_t & summary);
 
-    bool is_body_summary(const std::string & type, bool is_replacement) const;
+    summary_output_stream & identifier(summary_output_stream & out, const identifier_summary_t & summary) const;
+    summary_output_stream & replacement(summary_output_stream & out, const replacement_summary_t & summary) const;
+    summary_output_stream & move(summary_output_stream & out, const move_summary_t & summary) const;
+    summary_output_stream & interchange(summary_output_stream & out, const interchange_summary_t & summary) const;
 
-    summary_output_stream & statement_dispatch(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t & child_pos, const bool parent_output);
-
-    size_t number_child_changes(const profile_t::profile_list_t & child_profiles) const;
+    summary_output_stream & expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary) const;
+    summary_output_stream & decl_stmt(summary_output_stream & out, const decl_stmt_summary_t & summary) const;
+    summary_output_stream & conditional(summary_output_stream & out, const conditional_summary_t & summary) const;
+    summary_output_stream & jump(summary_output_stream & out, const jump_summary_t & summary) const;
 
 public:
 
-    text_summary(const size_t id, const profile_t::profile_list_t & child_profiles, const change_entity_map<parameter_profile_t> & parameters,
-                 const change_entity_map<call_profile_t> & member_initializations,
-                 const std::map<identifier_diff, size_t> & summary_identifiers,
-                 abstraction_level abstract_level = HIGH);
+    text_summary(const change_entity_map<parameter_profile_t> & parameters, const change_entity_map<call_profile_t> & member_initializations);
 
     summary_output_stream & parameter(summary_output_stream & out, size_t number_parameters_deleted,
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;
     summary_output_stream & member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
-
-    bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
-                          std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    void ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
-                 bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
-                 std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    void expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
-                         std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
-                         std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
-                         std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
-                         std::vector<std::shared_ptr<call_profile_t>> & renamed_calls,
-                         std::vector<std::shared_ptr<call_profile_t>> & modified_argument_lists,
-                         std::vector<std::shared_ptr<profile_t>> & deleted_other,
-                         std::vector<std::shared_ptr<profile_t>> & inserted_other,
-                         std::vector<std::shared_ptr<profile_t>> & modified_other,
-                         size_t & number_arguments_deleted,
-                         size_t & number_arguments_inserted,
-                         size_t & number_arguments_modified,
-                         bool & identifier_rename_only,
-                         std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    summary_output_stream & common_expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & expr_stmt_profile) const;
-    summary_output_stream & call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t number_rename,
-                                          size_t number_arguments_deleted, size_t number_arguments_inserted, size_t numbe_arguments_modified,
-                                          size_t number_argument_lists_modified,
-                                          bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    summary_output_stream & expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
-    summary_output_stream & decl_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
-    summary_output_stream & else_clause(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
-    summary_output_stream & conditional(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
-    summary_output_stream & interchange(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output UNUSED);
-    summary_output_stream & jump(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, const bool parent_output) const;
-    summary_output_stream & body(summary_output_stream & out, const profile_t & profile);
+    summary_output_stream & body(summary_output_stream & out, const std::vector<summary_t> summaries);
 
 };
 

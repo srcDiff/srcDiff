@@ -25,6 +25,8 @@ class replacement_summary_t : public summary_t {
               number_original(number_original), original_type(original_type), number_comments_original(number_comments_original),
               number_modified(number_modified), modified_type(modified_type), number_comments_modified(number_comments_modified) {}
 
+        friend class text_summary;
+
 };
 
 #endif
