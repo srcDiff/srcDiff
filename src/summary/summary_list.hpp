@@ -66,7 +66,7 @@ public:
                                           size_t number_argument_lists_modified,
                                           bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames);
     void expr_stmt(const std::shared_ptr<profile_t> & profile);
-    void decl_stmt(const std::shared_ptr<profile_t> & profile) const;
+    void decl_stmt(const std::shared_ptr<profile_t> & profile);
     void else_clause(const std::shared_ptr<profile_t> & profile);
     void conditional(const std::shared_ptr<profile_t> & profile);
     void interchange(const std::shared_ptr<profile_t> & profile);

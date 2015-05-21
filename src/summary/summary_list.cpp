@@ -20,6 +20,7 @@
 #include <expr_stmt_summary_t.hpp>
 #include <call_sequence_summary_t.hpp>
 #include <expr_stmt_calls_summary_t.hpp>
+#include <decl_stmt_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -872,7 +873,7 @@ void summary_list::expr_stmt(const std::shared_ptr<profile_t> & profile) {
 
 /** @todo for decl_stmt and jump need to not report if only a known rename identifier occurs.  Also, report a rename if it occurred */
 /** @todo report type rename and name rename.  Report as type and name change probably. */
-void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) const {
+void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
     assert(typeid(*profile.get()) == typeid(decl_stmt_profile_t));
 
@@ -919,6 +920,8 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) const {
         if(number_parts_report == 0) return;
 
     }
+
+    summaries.emplace_back(decl_stmt_summary_t(profile->operation, !decl_stmt_profile->type.is_common(), !decl_stmt_profile->name.is_common(), !decl_stmt_profile->init.is_common()));
 
 }
 
