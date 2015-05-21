@@ -41,11 +41,6 @@ public:
 
     summary_list();
 
-    void parameter(size_t number_parameters_deleted,
-                            size_t number_parameters_inserted, size_t number_parameters_modified) const;
-    void member_initialization(size_t number_member_initializations_deleted,
-                                         size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
-
     bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                           std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
     void ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,

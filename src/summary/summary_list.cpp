@@ -412,44 +412,6 @@ size_t summary_list::number_child_changes(const profile_t::profile_list_t & chil
 
 summary_list::summary_list() {}
 
-void summary_list::parameter(size_t number_parameters_deleted,
-                                       size_t number_parameters_inserted, size_t number_parameters_modified) const {
-
-    if(number_parameters_deleted > 0) {
-
-    }
-
-    if(number_parameters_inserted > 0) {
-
-
-    }
-
-    if(number_parameters_modified > 0) {
-
-
-    }
-
-}
-
-void summary_list::member_initialization(size_t number_member_initializations_deleted,
-                                                   size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const {
-
-    if(number_member_initializations_deleted > 0) {
-
-
-    }
-
-    if(number_member_initializations_inserted > 0) {
-
-
-    }
-
-    if(number_member_initializations_modified > 0) {
-
-    }
-
-}
-
 bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                                     std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
@@ -778,17 +740,17 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-    std::map<identifier_diff, size_t> diff_set;
+    std::map<identifier_diff, size_t> identifier_set;
     std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
                         output_identifiers.begin(), output_identifiers.end(),
-                        std::inserter(diff_set, diff_set.begin()));
+                        std::inserter(identifier_set, identifier_set.begin()));
 
     std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
     std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
     bool identifier_rename_only = true;
     std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-    expr_statistics(profile->child_profiles[0], diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
+    expr_statistics(profile->child_profiles[0], identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
                     deleted_other, inserted_other, modified_other,
                     number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
                     identifier_rename_only, identifier_renames);
