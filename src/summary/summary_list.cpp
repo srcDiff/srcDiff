@@ -17,6 +17,9 @@
 #include <interchange_summary_t.hpp>
 #include <jump_summary_t.hpp>
 #include <conditional_summary_t.hpp>
+#include <expr_stmt_summary_t.hpp>
+#include <call_sequence_summary_t.hpp>
+#include <expr_stmt_calls_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -740,7 +743,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
 }
 
-void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) const {
+void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) {
 
     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
 
@@ -766,6 +769,25 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
     if(inserted_other.size() != 0)          ++number_change_types;
     if(modified_other.size() != 0)          ++number_change_types;
 
+    if(identifier_rename_only && identifier_renames.size() == 1) {
+
+        summaries.emplace_back(identifier_summary_t(summary_t::IDENTIFIER, SRCDIFF_COMMON, identifier_renames.begin()->get(), false));
+
+    } else if(number_change_types == 1) {
+
+        if(modified_argument_lists.size() <= 1)
+            summaries.emplace_back(
+                expr_stmt_calls_summary_t(summary_t::EXPR_STMT_CALLS, profile->operation, get_type_string(profile), deleted_calls.size(), inserted_calls.size(), renamed_calls.size(),
+                                          modified_argument_lists.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified));
+        else
+            summaries.emplace_back(expr_stmt_summary_t(summary_t::EXPR_STMT, profile->operation, get_type_string(profile)));
+
+    } else {
+
+       summaries.emplace_back(expr_stmt_summary_t(summary_t::EXPR_STMT, profile->operation, get_type_string(profile)));
+
+    }
+
 }
 
 static bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_one, const std::__1::reference_wrapper<const versioned_string> & ref_two) {
@@ -777,7 +799,7 @@ static bool operator<(const std::__1::reference_wrapper<const versioned_string> 
 void summary_list::call_sequence(const std::shared_ptr<profile_t> & profile, size_t number_rename,
                                                     size_t number_arguments_deleted, size_t number_arguments_inserted, size_t number_arguments_modified,
                                                     size_t number_argument_lists_modified,
-                                                    bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+                                                    bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) {
 
     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
 
@@ -806,9 +828,33 @@ void summary_list::call_sequence(const std::shared_ptr<profile_t> & profile, siz
 
     }
 
+    if(number_rename == 1 && identifier_renames.size() == 0 && number_argument_lists_modified == 0) {
+
+        summaries.emplace_back(call_sequence_summary_t(summary_t::CALL_SEQUENCE, SRCDIFF_COMMON, get_type_string(profile), true, false));
+
+    } else if(is_variable_reference_change) {
+
+        summaries.emplace_back(call_sequence_summary_t(summary_t::CALL_SEQUENCE, SRCDIFF_COMMON, get_type_string(profile), false, true));
+
+    } else if(identifier_rename_only && identifier_renames.size() == 1) {
+
+        summaries.emplace_back(identifier_summary_t(summary_t::IDENTIFIER, SRCDIFF_COMMON, identifier_renames.begin()->get(), false));
+
+    } else if(number_argument_lists_modified == 1 && number_rename == 0) {
+
+        summaries.emplace_back(
+                expr_stmt_calls_summary_t(summary_t::EXPR_STMT_CALLS, profile->operation, get_type_string(profile), 0, 0, number_rename,
+                                          number_argument_lists_modified, number_arguments_deleted, number_arguments_inserted, number_arguments_modified));
+
+    } else {
+
+        summaries.emplace_back(expr_stmt_summary_t(summary_t::EXPR_STMT, profile->operation, get_type_string(profile)));
+
+    }
+
 }
 
-void summary_list::expr_stmt(const std::shared_ptr<profile_t> & profile) const {
+void summary_list::expr_stmt(const std::shared_ptr<profile_t> & profile) {
 
     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
 
