@@ -71,6 +71,7 @@ private:
 public:
 
     summary_list();
+    ~summary_list();
 
     void body(const profile_t & profile);
 

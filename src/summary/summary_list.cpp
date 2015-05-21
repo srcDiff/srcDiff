@@ -442,6 +442,13 @@ size_t summary_list::number_child_changes(const profile_t::profile_list_t & chil
 
 summary_list::summary_list() {}
 
+summary_list::~summary_list() {
+
+    for(summary_t * summary : summaries_)
+        delete summary;
+
+}
+
 bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                                     std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
