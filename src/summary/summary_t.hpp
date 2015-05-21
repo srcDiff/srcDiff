@@ -11,7 +11,7 @@ class summary_t {
 
         enum summary_name_t { IDENTIFIER, REPLACEMENT, MOVE, INTERCHANGE, JUMP, CONDITIONAL, EXPR_STMT, EXPR_STMT_CALLS, CALL_SEQUENCE, DECL_STMT, NONE };
 
-    private:
+    protected:
 
         summary_name_t type;
         srcdiff_type operation;
@@ -25,41 +25,11 @@ class summary_t {
 
         friend class text_summary;
 
-        // bool operator<(const summary_t & summary) const {
+        virtual bool operator==(const summary_t & summary) const {
 
-        //     return id < summary.id;
+            return false;
 
-        // }
-
-        // friend bool operator<(const std::shared_ptr<summary_t> & summary_one, const std::shared_ptr<summary_t> & summary_two) {
-
-        //     return summary_one->id < summary_two->id;
-
-        // }
-
-        // bool operator==(const summary_t & summary) const {
-
-        //     return id == summary.id;
-
-        // }
-
-        // friend bool operator==(const std::shared_ptr<summary_t> & summary_one, const std::shared_ptr<summary_t> & summary_two) {
-
-        //     return summary_one->id == summary_two->id;
-
-        // }
-
-        // bool operator==(int summary_id) const {
-
-        //     return id == summary_id;
-
-        // }
-
-        // friend bool operator==(const std::shared_ptr<summary_t> & summary_one, size_t summary_id) {
-
-        //     return summary_one->id == summary_id;
-
-        // }
+        }
 
 };
 

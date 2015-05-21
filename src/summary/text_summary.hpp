@@ -41,14 +41,14 @@ private:
 
     std::string get_article(const std::string & type_name) const;
 
-    summary_output_stream & summary_dispatch(summary_output_stream & out, const summary_t & summary);
+    summary_output_stream & summary_dispatch(summary_output_stream & out, const summary_t & summary, size_t count);
 
     summary_output_stream & identifier(summary_output_stream & out, const identifier_summary_t & summary) const;
     summary_output_stream & replacement(summary_output_stream & out, const replacement_summary_t & summary) const;
     summary_output_stream & move(summary_output_stream & out, const move_summary_t & summary) const;
     summary_output_stream & interchange(summary_output_stream & out, const interchange_summary_t & summary) const;
 
-    summary_output_stream & expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary) const;
+    summary_output_stream & expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary, size_t count) const;
     summary_output_stream & expr_stmt_calls(summary_output_stream & out, const expr_stmt_calls_summary_t & summary) const;
     summary_output_stream & call_sequence(summary_output_stream & out, const call_sequence_summary_t & summary) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const decl_stmt_summary_t & summary) const;

@@ -23,6 +23,13 @@ class expr_stmt_summary_t : public summary_t {
 
         friend class text_summary;
 
+        virtual bool operator==(const summary_t & summary) const {
+
+            const expr_stmt_summary_t & expr_stmt_summary = dynamic_cast<const expr_stmt_summary_t &>(summary);
+            return operation == expr_stmt_summary.operation && statement_type == expr_stmt_summary.statement_type;
+
+        }
+
 };
 
 #endif

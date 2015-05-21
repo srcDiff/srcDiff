@@ -39,7 +39,7 @@ std::string text_summary::get_article(const std::string & type_name) const {
         return "a";
 }
 
-summary_output_stream & text_summary::summary_dispatch(summary_output_stream & out, const summary_t & summary) {
+summary_output_stream & text_summary::summary_dispatch(summary_output_stream & out, const summary_t & summary, size_t count) {
 
     switch(summary.type) {
 
@@ -68,7 +68,7 @@ summary_output_stream & text_summary::summary_dispatch(summary_output_stream & o
             break;            
 
         case summary_t::EXPR_STMT:
-            expr_stmt(out, dynamic_cast<const expr_stmt_summary_t &>(summary));
+            expr_stmt(out, dynamic_cast<const expr_stmt_summary_t &>(summary), count);
             break;            
 
         case summary_t::EXPR_STMT_CALLS:
@@ -418,11 +418,14 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
 }
 
-summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary) const {
+summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary, size_t count) const {
 
     out.begin_line();
 
-    out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
+    if(count == 1)
+        out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
+    else
+        out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type << 's' << manip::normal() << " were ";
 
     out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
@@ -471,9 +474,16 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
 summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t *> summaries) {
 
+    std::vector<summary_t *>::size_type start = 0;
     for(std::vector<summary_t *>::size_type pos = 0; pos < summaries.size(); ++pos) {
 
-        summary_dispatch(out, *summaries[pos]);    
+        if((pos + 1) < summaries.size()
+            && summaries[pos]->type == summary_t::EXPR_STMT && summaries[pos + 1]->type == summary_t::EXPR_STMT
+            && (*summaries[pos]) == (*summaries[pos + 1]))
+            continue;
+
+        summary_dispatch(out, *summaries[pos], (pos + 1) - start);    
+        start = pos + 1;
 
     }
 
