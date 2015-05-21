@@ -26,16 +26,26 @@
 
 /** @todo check asserts */
 
-#define run_expr_statistics(PROFILE)                                                                                                \
-std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists; \
-std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;                                              \
-size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;                                  \
-bool identifier_rename_only = true;                                                                                                 \
-std::set<std::reference_wrapper<const versioned_string>> identifier_renames;                                                        \
-expr_statistics(PROFILE, identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,     \
-                deleted_other, inserted_other, modified_other,                                                                      \
-                number_arguments_deleted, number_arguments_inserted, number_arguments_modified,                                     \
-                identifier_rename_only, identifier_renames);                                                                        \
+#define run_expr_statistics(PROFILE)                                                                                                    \
+    std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists; \
+    std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;                                              \
+    size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;                                  \
+    bool identifier_rename_only = true;                                                                                                 \
+    std::set<std::reference_wrapper<const versioned_string>> identifier_renames;                                                        \
+    expr_statistics(PROFILE, identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,     \
+                    deleted_other, inserted_other, modified_other,                                                                      \
+                    number_arguments_deleted, number_arguments_inserted, number_arguments_modified,                                     \
+                    identifier_rename_only, identifier_renames);
+
+#define is_expr_syntax_change()                                                              \
+      (deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0 \
+    || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0 \
+    || identifier_renames.size() != 0)
+
+#define no_expr_syntax_change()                                                              \
+      (deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0 \
+    && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
+    && identifier_renames.size() == 0)
 
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
@@ -737,9 +747,7 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 
     run_expr_statistics(profile->child_profiles[0]);
 
-    if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
-    && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0
-    && identifier_renames.size() == 0) return;
+    if(no_expr_syntax_change()) return;
 
     if(expr_stmt_profile->call())
         return call_sequence(profile, renamed_calls.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
@@ -859,9 +867,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) const {
             run_expr_statistics(decl_stmt_profile->child_profiles.back());
 
             /** @todo need to probably output if single identifier change */
-            if(deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0
-            || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0
-            || identifier_renames.size() != 0)
+            if(is_expr_syntax_change())
                 ++number_parts_report;
 
         }
@@ -1018,9 +1024,7 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
         run_expr_statistics(profile->child_profiles.back());
 
         /** @todo need to probably output if single identifier change */
-        if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
-        && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0
-        && identifier_renames.size() == 0)
+        if(no_expr_syntax_change())
             return;
 
     }
