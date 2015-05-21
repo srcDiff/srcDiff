@@ -521,14 +521,10 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const ju
 
 }
 
-summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t> summaries) {
+summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t *> summaries) {
 
-    for(const summary_t & summary : summaries) {
-
-
-
-    }
-    
+    for(const summary_t * summary : summaries)
+        summary_dispatch(out, *summary);    
 
     return out;
 

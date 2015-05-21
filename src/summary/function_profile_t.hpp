@@ -13,6 +13,7 @@
 #include <table_summary.hpp>
 #include <move_handler.hpp>
 #include <summary_manip.hpp>
+#include <summary_list.hpp>
 
 #include <cctype>
 
@@ -167,7 +168,9 @@ class function_profile_t : public profile_t {
                 m_handler.gather_candidates(descendant_profiles);
                 m_handler.detect();
 
-                //text.body(out, *this);
+                summary_list list;
+                list.body(*this);
+                text.body(out, list.summaries());
 
             }
 

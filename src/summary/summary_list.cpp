@@ -98,7 +98,7 @@ void summary_list::identifiers(const std::map<identifier_diff, size_t> & identif
 
     for(std::map<identifier_diff, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
 
-        summaries_.emplace_back(identifier_summary_t(itr->first.get_diff(), itr->first.complex()));
+        summaries_.emplace_back(new identifier_summary_t(itr->first.get_diff(), itr->first.complex()));
 
         std::map<identifier_diff, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
         if(itersect_itr == output_identifiers.end())
@@ -203,9 +203,9 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
             single_profile = jump_inserted.back();
 
         if(number_syntax_deletions == 1)
-            summaries_.emplace_back(replacement_summary_t(1, get_type_string(single_profile), comment_deleted.size(), 0, std::string(), comment_inserted.size()));
+            summaries_.emplace_back(new replacement_summary_t(1, get_type_string(single_profile), comment_deleted.size(), 0, std::string(), comment_inserted.size()));
         else
-            summaries_.emplace_back(replacement_summary_t(0, std::string(), comment_deleted.size(), 1, get_type_string(single_profile), comment_inserted.size()));
+            summaries_.emplace_back(new replacement_summary_t(0, std::string(), comment_deleted.size(), 1, get_type_string(single_profile), comment_inserted.size()));
 
         return;
 
@@ -349,7 +349,7 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
 
     }
 
-    summaries_.emplace_back(replacement_summary_t(number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
+    summaries_.emplace_back(new replacement_summary_t(number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
 
 }
 
@@ -370,7 +370,7 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
     } else if(child_profile->move_id) {
 
-        summaries_.emplace_back(move_summary_t(get_type_string(child_profile)));
+        summaries_.emplace_back(new move_summary_t(get_type_string(child_profile)));
 
     } else if(!child_profile->type_name.is_common()) {
 
@@ -769,20 +769,20 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 
     if(identifier_rename_only && identifier_renames.size() == 1) {
 
-        summaries_.emplace_back(identifier_summary_t(identifier_renames.begin()->get(), false));
+        summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
 
     } else if(number_change_types == 1) {
 
         if(modified_argument_lists.size() <= 1)
-            summaries_.emplace_back(
+            summaries_.emplace_back(new 
                 expr_stmt_calls_summary_t(get_type_string(profile), deleted_calls.size(), inserted_calls.size(), renamed_calls.size(),
                                           modified_argument_lists.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified));
         else
-            summaries_.emplace_back(expr_stmt_summary_t(profile->operation, get_type_string(profile)));
+            summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
 
     } else {
 
-       summaries_.emplace_back(expr_stmt_summary_t(profile->operation, get_type_string(profile)));
+       summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
 
     }
 
@@ -828,25 +828,25 @@ void summary_list::call_sequence(const std::shared_ptr<profile_t> & profile, siz
 
     if(number_rename == 1 && identifier_renames.size() == 0 && number_argument_lists_modified == 0) {
 
-        summaries_.emplace_back(call_sequence_summary_t(get_type_string(profile), true, false));
+        summaries_.emplace_back(new call_sequence_summary_t(get_type_string(profile), true, false));
 
     } else if(is_variable_reference_change) {
 
-        summaries_.emplace_back(call_sequence_summary_t(get_type_string(profile), false, true));
+        summaries_.emplace_back(new call_sequence_summary_t(get_type_string(profile), false, true));
 
     } else if(identifier_rename_only && identifier_renames.size() == 1) {
 
-        summaries_.emplace_back(identifier_summary_t(identifier_renames.begin()->get(), false));
+        summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
 
     } else if(number_argument_lists_modified == 1 && number_rename == 0) {
 
-        summaries_.emplace_back(
+        summaries_.emplace_back(new 
                 expr_stmt_calls_summary_t(get_type_string(profile), 0, 0, number_rename,
                                           number_argument_lists_modified, number_arguments_deleted, number_arguments_inserted, number_arguments_modified));
 
     } else {
 
-        summaries_.emplace_back(expr_stmt_summary_t(profile->operation, get_type_string(profile)));
+        summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
 
     }
 
@@ -922,9 +922,9 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
     }
 
     if(number_parts_report == 1 && identifier_rename_only && identifier_renames.size() == 1)
-        summaries_.emplace_back(identifier_summary_t(identifier_renames.begin()->get(), false));
+        summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
     else
-        summaries_.emplace_back(decl_stmt_summary_t(profile->operation, !decl_stmt_profile->type.is_common(), !decl_stmt_profile->name.is_common(), !decl_stmt_profile->init.is_common()));
+        summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, !decl_stmt_profile->type.is_common(), !decl_stmt_profile->name.is_common(), !decl_stmt_profile->init.is_common()));
 
 }
 
@@ -936,7 +936,7 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
     assert(profile->type_name == "else");
 
     if(profile->parent->operation != SRCDIFF_COMMON)
-        summaries_.emplace_back(conditional_summary_t(profile->operation, get_type_string(profile), false));
+        summaries_.emplace_back(new conditional_summary_t(profile->operation, get_type_string(profile), false));
 
     if(profile->summary_identifiers.size() > 0)
         identifiers(profile->summary_identifiers);
@@ -983,7 +983,7 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
 
     if(condition_modified || summary_profile->operation != SRCDIFF_COMMON)
-        summaries_.emplace_back(conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
+        summaries_.emplace_back(new conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
 
     if(summary_profile->summary_identifiers.size() > 0)
         identifiers(summary_profile->summary_identifiers);
@@ -1008,7 +1008,7 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
 
     assert(!profile->type_name.is_common());
 
-    summaries_.emplace_back(interchange_summary_t(versioned_string(profile->type_name.original() == "elseif" ? "else if" : profile->type_name.original(),
+    summaries_.emplace_back(new interchange_summary_t(versioned_string(profile->type_name.original() == "elseif" ? "else if" : profile->type_name.original(),
                                                                   profile->type_name.modified() == "elseif" ? "else if" : profile->type_name.modified())));
 
     std::shared_ptr<profile_t> summary_profile = profile;
@@ -1049,7 +1049,7 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
     }
 
-    summaries_.emplace_back(jump_summary_t(profile->operation, get_type_string(profile)));
+    summaries_.emplace_back(new jump_summary_t(profile->operation, get_type_string(profile)));
 
 }
 
@@ -1072,7 +1072,7 @@ void summary_list::body(const profile_t & profile) {
 
 }
 
-const std::vector<summary_t> & summary_list::summaries() const {
+const std::vector<summary_t *> & summary_list::summaries() const {
 
     return summaries_;
 

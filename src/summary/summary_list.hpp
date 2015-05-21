@@ -21,7 +21,7 @@ private:
 
 protected:
 
-    std::vector<summary_t> summaries_;
+    std::vector<summary_t *> summaries_;
     std::map<identifier_diff, size_t> output_identifiers;
 
 private:
@@ -74,7 +74,7 @@ public:
 
     void body(const profile_t & profile);
 
-    const std::vector<summary_t> & summaries() const;
+    const std::vector<summary_t *> & summaries() const;
 
 };
 

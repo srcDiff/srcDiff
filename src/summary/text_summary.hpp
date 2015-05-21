@@ -59,7 +59,7 @@ public:
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;
     summary_output_stream & member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
-    summary_output_stream & body(summary_output_stream & out, const std::vector<summary_t> summaries);
+    summary_output_stream & body(summary_output_stream & out, const std::vector<summary_t *> summaries);
 
 };
 
