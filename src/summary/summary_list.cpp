@@ -82,7 +82,7 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
         if(expr_stmt_profile->call()) {
             std::vector<std::shared_ptr<call_profile_t>>::size_type number_calls = expr_stmt_profile->get_call_profiles().size();
             if(number_calls == 1)           return "call";
-            else                            return "call chain";
+            else                            return "chain of calls";
         }
         return "expression";
 
@@ -861,10 +861,9 @@ void summary_list::expr_stmt(const std::shared_ptr<profile_t> & profile) {
 
     if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
 
+        summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
 
-    }
-
-    if(profile->operation == SRCDIFF_COMMON) {
+    } else if(profile->operation == SRCDIFF_COMMON) {
 
         common_expr_stmt(profile);
 

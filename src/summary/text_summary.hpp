@@ -13,6 +13,8 @@
 #include <move_summary_t.hpp>
 #include <interchange_summary_t.hpp>
 #include <expr_stmt_summary_t.hpp>
+#include <expr_stmt_calls_summary_t.hpp>
+#include <call_sequence_summary_t.hpp>
 #include <decl_stmt_summary_t.hpp>
 #include <conditional_summary_t.hpp>
 #include <jump_summary_t.hpp>
@@ -47,6 +49,8 @@ private:
     summary_output_stream & interchange(summary_output_stream & out, const interchange_summary_t & summary) const;
 
     summary_output_stream & expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary) const;
+    summary_output_stream & expr_stmt_calls(summary_output_stream & out, const expr_stmt_calls_summary_t & summary) const;
+    summary_output_stream & call_sequence(summary_output_stream & out, const call_sequence_summary_t & summary) const;
     summary_output_stream & decl_stmt(summary_output_stream & out, const decl_stmt_summary_t & summary) const;
     summary_output_stream & conditional(summary_output_stream & out, const conditional_summary_t & summary) const;
     summary_output_stream & jump(summary_output_stream & out, const jump_summary_t & summary) const;

@@ -27,6 +27,8 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
               number_argument_list_modified(number_argument_list_modified),
               number_arguments_deleted(number_arguments_deleted), number_arguments_inserted(number_arguments_inserted), number_arguments_modified(number_arguments_modified) {}
 
+        friend class text_summary;
+
 };
 
 #endif

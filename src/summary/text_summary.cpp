@@ -71,6 +71,14 @@ summary_output_stream & text_summary::summary_dispatch(summary_output_stream & o
             expr_stmt(out, dynamic_cast<const expr_stmt_summary_t &>(summary));
             break;            
 
+        case summary_t::EXPR_STMT_CALLS:
+            expr_stmt_calls(out, dynamic_cast<const expr_stmt_calls_summary_t &>(summary));
+            break;    
+
+        case summary_t::CALL_SEQUENCE:
+            call_sequence(out, dynamic_cast<const call_sequence_summary_t &>(summary));
+            break;    
+
         case summary_t::DECL_STMT:
             decl_stmt(out, dynamic_cast<const decl_stmt_summary_t &>(summary));
             break;
@@ -280,189 +288,88 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 }
 
-// summary_output_stream & text_summary::common_expr_stmt(summary_output_stream & out, const std::shared_ptr<profile_t> & profile) const {
+summary_output_stream & text_summary::expr_stmt_calls(summary_output_stream & out, const expr_stmt_calls_summary_t & summary) const {
 
-//     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
+    out.begin_line();
 
-//     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+    if(summary.number_deleted != 0) {
 
-//     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-//     std::map<identifier_diff, size_t> diff_set;
-//     std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-//                         output_identifiers.begin(), output_identifiers.end(),
-//                         std::inserter(diff_set, diff_set.begin()));
+        if(summary.number_deleted == 1)
+            out << "a " << manip::bold() << "call" << manip::normal() << " was deleted";
+        else
+            out << std::to_string(summary.number_deleted) << ' ' << manip::bold() << "calls" << manip::normal() << " were deleted";
 
-//     std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
-//     std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
-//     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
-//     bool identifier_rename_only = true;
-//     std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-//     expr_statistics(profile->child_profiles[0], diff_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
-//                     deleted_other, inserted_other, modified_other,
-//                     number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-//                     identifier_rename_only, identifier_renames);
+    } else if(summary.number_inserted != 0) {
 
-//     if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
-//     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0
-//     && identifier_renames.size() == 0) return out;
+        if(summary.number_inserted == 1)
+            out << "a " << manip::bold() << "call" << manip::normal() << " was inserted";
+        else
+            out << std::to_string(summary.number_inserted) << ' ' << manip::bold() << "calls" << manip::normal() << " were inserted";
 
-//     if(expr_stmt_profile->call())
-//         return call_sequence(out, profile, renamed_calls.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-//                              modified_argument_lists.size(), identifier_rename_only, identifier_renames);
+    } else if(summary.number_renamed != 0) {
 
-//     out.begin_line();
+        if(summary.number_renamed == 1)
+            out << "a " << manip::bold() << "call" << manip::normal() << " was renamed";
+        else
+            out << std::to_string(summary.number_renamed) << ' ' << manip::bold() << "calls" << manip::normal() << " were renamed";
 
-//     size_t number_change_types = 0;
-//     if(deleted_calls.size() != 0)           ++number_change_types;
-//     if(inserted_calls.size() != 0)          ++number_change_types;
-//     if(renamed_calls.size() != 0)           ++number_change_types;
-//     if(modified_argument_lists.size() != 0) ++number_change_types;
-//     if(deleted_other.size() != 0)           ++number_change_types;
-//     if(inserted_other.size() != 0)          ++number_change_types;
-//     if(modified_other.size() != 0)          ++number_change_types;
+    } else if(summary.number_argument_list_modified != 0) {
 
-//     if(identifier_rename_only && identifier_renames.size() == 1) {
+        size_t number_arguments_total = summary.number_arguments_deleted + summary.number_arguments_inserted + summary.number_arguments_modified;
 
-//         out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
+        if(summary.number_argument_list_modified == 1) {
 
-//     } else if(number_change_types == 1) {
+            if(number_arguments_total == 1) {
 
-//         if(deleted_calls.size() != 0) {
+                out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
 
-//             if(deleted_calls.size() == 1)
-//                 out << "a " << manip::bold() << "call" << manip::normal() << " was deleted";
-//             else
-//                 out << std::to_string(deleted_calls.size()) << ' ' << manip::bold() << "calls" << manip::normal() << " were deleted";
+                if(summary.number_arguments_deleted == 1)
+                    out << "deleted";
+                else if(summary.number_arguments_inserted == 1)
+                    out << "inserted";
+                else
+                    out << "modified";
 
-//         } else if(inserted_calls.size() != 0) {
+            } else {
 
-//             if(inserted_calls.size() == 1)
-//                 out << "a " << manip::bold() << "call" << manip::normal() << " was inserted";
-//             else
-//                 out << std::to_string(inserted_calls.size()) << ' ' << manip::bold() << "calls" << manip::normal() << " were inserted";
+                //out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << " were modified";
+                out << "an " << manip::bold() << "argument list" << manip::normal() << " was modified";
 
-//         } else if(renamed_calls.size() != 0) {
+            }
 
-//             if(renamed_calls.size() == 1)
-//                 out << "a " << manip::bold() << "call" << manip::normal() << " was renamed";
-//             else
-//                 out << std::to_string(renamed_calls.size()) << ' ' << manip::bold() << "calls" << manip::normal() << " were renamed";
+        } else {
 
-//         } else if(modified_argument_lists.size() != 0) {
+            out << manip::bold() << "argument lists" << manip::normal() << " were modified";
 
-//             if(modified_argument_lists.size() == 1) {
+        }
 
-//                 if(modified_argument_lists[0]->child_profiles.size() == 1)
-//                     out << "an " << manip::bold() << "argument" << manip::normal() << " was modified";
-//                 else
-//                     out << std::to_string(modified_argument_lists[0]->child_profiles.size()) << manip::bold() << "arguments" << manip::normal() << " were modified";
+    }
 
-//             } else {
+    out << '\n';
 
-//                 out << manip::bold() << "argument lists" << manip::normal() << " were modified";
+    return out;
 
-//             }
+}
 
-//         } else {
+summary_output_stream & text_summary::call_sequence(summary_output_stream & out, const call_sequence_summary_t & summary) const {
 
-//            out << get_profile_string(profile) << " was modified";
+    out.begin_line();
 
-//         }
+    if(summary.name_change) {
 
-//     } else {
+        out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to a " << manip::bold() << "call" << manip::normal();
 
-//        out << get_profile_string(profile) << " was modified";
+    } else if(summary.variable_reference_change) {
 
-//     }
+        out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
 
-//     out << '\n';
+    }
 
-//     return out;
+    out << '\n';
 
-// }
+    return out;
 
-// static bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_one, const std::__1::reference_wrapper<const versioned_string> & ref_two) {
-
-//     return ref_one.get() < ref_two.get();
-
-// }
-
-// summary_output_stream & text_summary::call_sequence(summary_output_stream & out, const std::shared_ptr<profile_t> & profile, size_t number_rename,
-//                                                     size_t number_arguments_deleted, size_t number_arguments_inserted, size_t number_arguments_modified,
-//                                                     size_t number_argument_lists_modified,
-//                                                     bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
-
-//     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
-
-//     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
-
-//     std::vector<std::shared_ptr<call_profile_t>>::size_type calls_sequence_length = expr_stmt_profile->get_call_profiles().size();
-
-//     size_t number_arguments_total = number_arguments_deleted + number_arguments_inserted + number_arguments_modified;
-//     bool is_variable_reference_change = number_argument_lists_modified == 0;
-
-//     if(is_variable_reference_change) {
-
-//         for(std::vector<std::shared_ptr<call_profile_t>>::size_type pos = 0; pos < calls_sequence_length; ++pos) {
-
-//             const std::shared_ptr<call_profile_t> & call_profile = expr_stmt_profile->get_call_profiles()[pos];
-
-//             if((call_profile->operation == SRCDIFF_COMMON && call_profile->argument_list_modified)
-//                 || (call_profile->operation != SRCDIFF_COMMON && pos != (calls_sequence_length - 1))) {
-
-//                 is_variable_reference_change = false;
-//                 break;
-
-//             }
-
-//        }
-
-//     }
-
-//     out.begin_line();
-
-//     if(number_rename == 1 && identifier_renames.size() == 0 && number_argument_lists_modified == 0) {
-
-//         out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to a " << manip::bold() << "call" << manip::normal();
-
-//     } else if(is_variable_reference_change) {
-
-//         out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
-
-//     } else if(identifier_rename_only && identifier_renames.size() == 1) {
-
-//         out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
-
-//     } else if(number_argument_lists_modified == 1 && number_rename == 0) {
-
-//         if(number_arguments_total == 1) {
-
-//             out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
-
-//             if(number_arguments_deleted == 1)
-//                 out << "deleted";
-//             else if(number_arguments_inserted == 1)
-//                 out << "inserted";
-//             else
-//                 out << "modified";
-
-//         } else {
-
-//            out << "an " << manip::bold() << "argument list" << manip::normal() << " was modified";
-
-//         }
-
-//     } else {
-
-//         out << get_profile_string(profile) << " was modified";
-
-//     }
-
-//     out << '\n';
-
-//     return out;
-
-// }
+}
 
 summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary) const {
 
@@ -471,6 +378,8 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
     out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
 
     out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+
+    out << '\n';
 
     return out;
 
