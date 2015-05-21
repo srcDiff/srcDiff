@@ -13,9 +13,8 @@ class interchange_summary_t : public summary_t {
 
     public:
 
-        interchange_summary_t(summary_name_t type, srcdiff_type operation,
-		                      versioned_string statement_type)
-            : summary_t(type, operation), statement_type(statement_type) {}
+        interchange_summary_t(versioned_string statement_type)
+            : summary_t(INTERCHANGE, SRCDIFF_COMMON), statement_type(statement_type) {}
 
 };
 

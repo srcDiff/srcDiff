@@ -13,6 +13,10 @@ class expr_stmt_summary_t : public summary_t {
 
     public:
 
+        expr_stmt_summary_t(srcdiff_type operation,
+                       		std::string statement_type)
+            : summary_t(EXPR_STMT, operation), statement_type(statement_type) {}
+
         expr_stmt_summary_t(summary_name_t type, srcdiff_type operation,
                        		std::string statement_type)
             : summary_t(type, operation), statement_type(statement_type) {}

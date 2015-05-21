@@ -14,9 +14,9 @@ class conditional_summary_t : public summary_t {
 
     public:
 
-        conditional_summary_t(summary_name_t type, srcdiff_type operation,
+        conditional_summary_t(srcdiff_type operation,
                        		  std::string statement_type, bool condition_modified)
-            : summary_t(type, operation), statement_type(statement_type), condition_modified(condition_modified) {}
+            : summary_t(CONDITIONAL, operation), statement_type(statement_type), condition_modified(condition_modified) {}
 
 };
 

@@ -14,9 +14,9 @@ class call_sequence_summary_t : public expr_stmt_summary_t {
 
     public:
 
-        call_sequence_summary_t(summary_name_t type, srcdiff_type operation, std::string statement_type,
+        call_sequence_summary_t(std::string statement_type,
         						bool is_name_change, bool is_variable_reference_change)
-            : expr_stmt_summary_t(type, operation, statement_type), is_name_change(is_name_change), is_variable_reference_change(is_variable_reference_change) {}
+            : expr_stmt_summary_t(CALL_SEQUENCE, SRCDIFF_COMMON, statement_type), is_name_change(is_name_change), is_variable_reference_change(is_variable_reference_change) {}
 
 };
 
