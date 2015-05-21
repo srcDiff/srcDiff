@@ -288,6 +288,53 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 }
 
+summary_output_stream & text_summary::jump(summary_output_stream & out, const jump_summary_t & summary) const {
+
+    out.begin_line();
+
+    out << get_article(summary.statement_type) << ' '
+        << manip::bold() << summary.statement_type << manip::normal();
+
+    out << " was ";
+
+    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+
+    out << '\n';
+
+    return out;
+
+}
+
+/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to summarize in one line. */
+summary_output_stream & text_summary::conditional(summary_output_stream & out, const conditional_summary_t & summary) const {
+
+    if(summary.condition_modified) {
+
+         out.begin_line() << "the condition of "
+                          << get_article(summary.statement_type) << ' '
+                          << manip::bold() << summary.statement_type << manip::normal()
+                          << " was altered\n";
+
+    }
+
+    if(summary.operation != SRCDIFF_COMMON) {
+
+        out.begin_line();
+
+        out << get_article(summary.statement_type) << ' '
+            << manip::bold() << summary.statement_type << manip::normal();
+
+        out << " was ";
+        out << (summary.operation == SRCDIFF_DELETE ? "deleted" : "inserted");
+
+        out << '\n';
+
+    }
+
+    return out;
+
+}
+
 summary_output_stream & text_summary::expr_stmt_calls(summary_output_stream & out, const expr_stmt_calls_summary_t & summary) const {
 
     out.begin_line();
@@ -420,52 +467,7 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
 }
 
-/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to summarize in one line. */
-summary_output_stream & text_summary::conditional(summary_output_stream & out, const conditional_summary_t & summary) const {
 
-    if(summary.condition_modified) {
-
-         out.begin_line() << "the condition of "
-                          << get_article(summary.statement_type) << ' '
-                          << manip::bold() << summary.statement_type << manip::normal()
-                          << " was altered\n";
-
-    }
-
-    if(summary.operation != SRCDIFF_COMMON) {
-
-        out.begin_line();
-
-        out << get_article(summary.statement_type) << ' '
-            << manip::bold() << summary.statement_type << manip::normal();
-
-        out << " was ";
-        out << (summary.operation == SRCDIFF_DELETE ? "deleted" : "inserted");
-
-        out << '\n';
-
-    }
-
-    return out;
-
-}
-
-summary_output_stream & text_summary::jump(summary_output_stream & out, const jump_summary_t & summary) const {
-
-    out.begin_line();
-
-    out << get_article(summary.statement_type) << ' '
-        << manip::bold() << summary.statement_type << manip::normal();
-
-    out << " was ";
-
-    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
-
-    out << '\n';
-
-    return out;
-
-}
 
 summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t *> summaries) {
 
