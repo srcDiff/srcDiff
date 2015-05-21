@@ -9,7 +9,7 @@ class summary_t {
 
     public:
 
-        enum summary_name_t { IDENTIFIER, REPLACEMENT, MOVE, INTERCHANGE, JUMP, NONE };
+        enum summary_name_t { IDENTIFIER, REPLACEMENT, MOVE, INTERCHANGE, JUMP, CONDITIONAL, NONE };
 
     private:
 

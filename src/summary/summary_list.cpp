@@ -16,6 +16,7 @@
 #include <move_summary_t.hpp>
 #include <interchange_summary_t.hpp>
 #include <jump_summary_t.hpp>
+#include <conditional_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -922,8 +923,6 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
 
     assert(is_condition_type(profile->type_name));
 
-    const bool has_common = profile->common_profiles.size() > 0;
-
     const std::shared_ptr<conditional_profile_t> & conditional_profile = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile);
 
     const bool condition_modified = conditional_profile->is_condition_modified();
@@ -937,8 +936,6 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
     if(profile->type_name == "if") elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
     const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
 
-    const versioned_string & condition = conditional_profile->get_condition();
-
     if(!condition_modified && !body_modified && bool(else_operation)
         && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
         return else_clause(profile->child_profiles[0]);
@@ -946,23 +943,11 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
 
-    const bool output_conditional = summary_profile->operation != SRCDIFF_COMMON || condition_modified || number_child_changes(summary_profile->child_profiles) > 1;
+    if(condition_modified || summary_profile->operation != SRCDIFF_COMMON)
+        summaries.emplace_back(conditional_summary_t(summary_t::CONDITIONAL, summary_profile->operation, get_type_string(summary_profile), condition_modified));
 
-    size_t statement_count = summary_profile->operation == SRCDIFF_DELETE ? summary_profile->statement_count_original : summary_profile->statement_count_modified;
-    if(profile->type_name == "elseif") --statement_count;
-    const size_t common_statements = summary_profile->common_statements;
-
-    if(condition_modified) {
-
-         
-
-    }
-
-    if(summary_profile->summary_identifiers.size() > 0) {
-
+    if(summary_profile->summary_identifiers.size() > 0)
         identifiers(summary_profile->summary_identifiers);
-
-    }
 
     for(size_t pos = 0; pos < summary_profile->child_profiles.size(); ++pos) {
 
