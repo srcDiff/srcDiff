@@ -18,6 +18,8 @@ class conditional_summary_t : public summary_t {
                        		  std::string statement_type, bool condition_modified)
             : summary_t(CONDITIONAL, operation), statement_type(statement_type), condition_modified(condition_modified) {}
 
+        friend class text_summary;
+
 };
 
 #endif

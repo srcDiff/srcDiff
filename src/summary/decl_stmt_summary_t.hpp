@@ -20,6 +20,8 @@ class decl_stmt_summary_t : public summary_t {
             : summary_t(DECL_STMT, operation),
               type_modified(type_modified), name_modified(name_modified), init_modified(init_modified) {}
 
+        friend class text_summary;
+        
 };
 
 #endif

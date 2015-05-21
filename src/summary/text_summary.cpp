@@ -52,7 +52,7 @@ summary_output_stream & text_summary::summary_dispatch(summary_output_stream & o
             break;
 
         case summary_t::MOVE:
-            //move(out, dynamic_cast<const identifier_summary_t &>(summary));
+            move(out, dynamic_cast<const move_summary_t &>(summary));
             break;
 
         case summary_t::INTERCHANGE:
@@ -118,16 +118,28 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
     out.begin_line();
 
     if(summary.number_original == 1)
-        out << get_article(summary.original_type) << manip::bold() << summary.original_type << manip::normal();
+        out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal();
     else
-        out << std::to_string(summary.number_original) << manip::bold() << summary.original_type << manip::normal();
+        out << std::to_string(summary.number_original) << ' ' << manip::bold() << summary.original_type << manip::normal();
 
     out << " were replaced with ";
 
     if(summary.number_original == 1)
-        out << get_article(summary.original_type) << manip::bold() << summary.original_type << manip::normal();
+        out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal();
     else
-        out << std::to_string(summary.number_original) << manip::bold() << summary.original_type << manip::normal();
+        out << std::to_string(summary.number_original) << ' ' << manip::bold() << summary.original_type << manip::normal();
+
+    out << '\n';
+
+    return out;
+
+}
+
+summary_output_stream & text_summary::move(summary_output_stream & out, const move_summary_t & summary) const {
+
+    out.begin_line();
+
+    out << get_article(summary.statement_type) << ' ' << summary.statement_type << " was moved";
 
     out << '\n';
 
@@ -139,9 +151,9 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
     out.begin_line();
 
-    out << get_article(summary.statement_type.original()) << manip::bold() << summary.statement_type.original() << manip::normal()
+    out << get_article(summary.statement_type.original()) << ' ' << manip::bold() << summary.statement_type.original() << manip::normal()
         << " was converted to "
-        << get_article(summary.statement_type.modified()) << manip::bold() << summary.statement_type.modified() << manip::normal();
+        << get_article(summary.statement_type.modified()) << ' ' << manip::bold() << summary.statement_type.modified() << manip::normal();
 
     return out;
 
@@ -417,40 +429,11 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary) const {
 
-    // assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
+    out.begin_line();
 
-    // const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
+    out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
 
-    // if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
-
-    //     out.begin_line() << get_profile_string(profile) << " was ";
-
-    //     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "inserted" : "modified"));
-
-    //     if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
-
-    //         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-    //         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-    //         else                                          out << " within ";
-
-    //         if(profile->parent == id)
-    //             out << "the function";
-    //         else
-    //             out << "a nested " << get_type_string(profile->parent);
-
-    //     }
-
-    //     out << '\n';
-
-    //     return out;
-
-    // }
-
-    // if(profile->operation == SRCDIFF_COMMON) {
-
-    //     common_expr_stmt(out, profile);
-
-    // }
+    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
     return out;
 
@@ -460,110 +443,32 @@ summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, con
 /** @todo report type rename and name rename.  Report as type and name change probably. */
 summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, const decl_stmt_summary_t & summary) const {
 
-    // assert(typeid(*profile.get()) == typeid(decl_stmt_profile_t));
+    out.begin_line();
 
-    // const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
+    out << "a " << manip::bold() << "declaration" << manip::normal();
 
-    // const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-    // std::map<identifier_diff, size_t> identifier_set;
-    // std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-    //                     output_identifiers.begin(), output_identifiers.end(),
-    //                     std::inserter(identifier_set, identifier_set.begin()));
+    size_t number_parts_report = (summary.type_modified ? 1 : 0) + (summary.name_modified ? 1 : 0) + (summary.init_modified ? 1 : 0);
 
-    // size_t number_parts_report = 0;
-    // bool identifier_rename_only = true;
-    // std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
-    // if(decl_stmt_profile->operation == SRCDIFF_COMMON) {
+    if(number_parts_report == 1) {
 
-    //     if(!decl_stmt_profile->type.is_common()) {
+        if(summary.type_modified)
+            out << " type was changed";
 
-    //         identifier_diff ident_diff(decl_stmt_profile->type);
-    //         ident_diff.trim(true);
+        if(summary.name_modified)
+            out << " name was changed";
+        
+        if(summary.init_modified)
+            out << " initialization was modified";
 
-    //         if(identifier_set.count(ident_diff))
-    //             ++number_parts_report;
+    } else {
 
-    //     }
+        out << " was ";
 
-    //     if(!decl_stmt_profile->name.is_common()) {
+        out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
-    //         identifier_diff ident_diff(decl_stmt_profile->name);
-    //         ident_diff.trim(true);
+    }
 
-    //         if(identifier_set.count(ident_diff))
-    //             ++number_parts_report;
-
-    //     }
-
-    //     if(!decl_stmt_profile->init.is_common()) {
-
-    //         std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
-    //         std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
-    //         size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
-    //         std::set<std::reference_wrapper<const versioned_string>> identifier_renames; 
-    //         expr_statistics(decl_stmt_profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
-    //                         deleted_other, inserted_other, modified_other,
-    //                         number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-    //                         identifier_rename_only, identifier_renames);
-
-    //         /** @todo need to probably output if single identifier change */
-    //         if(deleted_calls.size() != 0 || inserted_calls.size() != 0 || modified_calls.size() != 0
-    //         || deleted_other.size() != 0 || inserted_other.size() != 0 || modified_other.size() != 0
-    //         || identifier_renames.size() != 0)
-    //             ++number_parts_report;
-
-    //     }
-
-    //     if(number_parts_report == 0) return out;
-
-    // }
-
-    // out.begin_line() << get_profile_string(decl_stmt_profile);
-
-    // if(number_parts_report == 1) {
-
-    //     if(!decl_stmt_profile->type.is_common()) {
-
-    //         out << " type was changed";
-
-    //     }
-
-    //    if(!decl_stmt_profile->name.is_common()) {
-
-    //         out << " name was changed";
-
-    //     } else {
-
-    //      if(identifier_rename_only && identifier_renames.size() == 1)
-    //         out << '\'' << identifier_renames.begin()->get().original() << "' was renamed to '" << identifier_renames.begin()->get().modified() << '\'';
-    //     else
-    //         out << " initialization was modified";
-
-
-    //     }
-
-    // } else {
-
-    //     out << " was ";
-
-    //     out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "inserted" : "modified"));
-
-    //     if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
-
-    //         if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-    //         else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-    //         else                                          out << " within ";
-
-    //         if(profile->parent == id)
-    //             out << "the function";
-    //         else
-    //             out << "a nested " << get_type_string(profile->parent);
-
-    //     }
-
-    // }
-
-    // out << '\n';
+    out << '\n';
 
     return out;
 
@@ -572,92 +477,28 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 /** @todo if multiple of same change like test case where connect deleted 4 times.  May want to summarize in one line. */
 summary_output_stream & text_summary::conditional(summary_output_stream & out, const conditional_summary_t & summary) const {
 
-    // assert(is_condition_type(profile->type_name));
+    if(summary.condition_modified) {
 
-    // const bool has_common = profile->common_profiles.size() > 0;
+         out.begin_line() << "the condition of "
+                          << get_article(summary.statement_type) << ' '
+                          << manip::bold() << summary.statement_type << manip::normal()
+                          << " was altered\n";
 
-    // const std::shared_ptr<conditional_profile_t> & conditional_profile = reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile);
+    }
 
-    // const bool condition_modified = conditional_profile->is_condition_modified();
-    // const bool body_modified = conditional_profile->is_body_modified();
+    if(summary.operation != SRCDIFF_COMMON) {
 
-    // boost::optional<srcdiff_type> else_operation;
-    // if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
-    // const bool else_modified = bool(else_operation) && *else_operation == SRCDIFF_COMMON;
+        out.begin_line();
 
-    // boost::optional<srcdiff_type> elseif_operation;
-    // if(profile->type_name == "if") elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
-    // const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
+        out << get_article(summary.statement_type) << ' '
+            << manip::bold() << summary.statement_type << manip::normal();
 
-    // const versioned_string & condition = conditional_profile->get_condition();
+        out << " was ";
+        out << (summary.operation == SRCDIFF_DELETE ? "deleted" : "inserted");
 
-    // if(!condition_modified && !body_modified && bool(else_operation)
-    //     && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
-    //     return else_clause(out, profile->child_profiles[0], parent_output);
+        out << '\n';
 
-    // const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
-    //     && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
-
-    // const bool output_conditional = summary_profile->operation != SRCDIFF_COMMON || condition_modified || number_child_changes(summary_profile->child_profiles) > 1;
-
-    // size_t statement_count = summary_profile->operation == SRCDIFF_DELETE ? summary_profile->statement_count_original : summary_profile->statement_count_modified;
-    // if(profile->type_name == "elseif") --statement_count;
-    // const size_t common_statements = summary_profile->common_statements;
-
-    // if(condition_modified) {
-
-    //      out.begin_line() << "the condition of " << get_profile_string(profile) << " was altered\n";
-
-    // }
-
-    // if(summary_profile->summary_identifiers.size() > 0) {
-
-    //     identifiers(out, summary_profile->summary_identifiers);
-
-    // }
-
-    // // before children
-    // bool is_leaf = true;
-    // if(profile->operation != SRCDIFF_COMMON) {
-
-    //     out.begin_line();
-
-    //     out << get_profile_string(profile);
-    //     out << " was ";
-    //     out << (profile->operation == SRCDIFF_DELETE ? "deleted" : "inserted");
-
-    //     // after children
-    //     if(abstract_level != HIGH && (summary_profile->parent == id && summary_profile->operation == SRCDIFF_COMMON)) {
-
-    //         if(summary_profile->operation == SRCDIFF_DELETE)      out << " from ";
-    //         else if(summary_profile->operation == SRCDIFF_INSERT) out << " to ";
-    //         else                                          out << " within ";
-
-    //         out << "the function";
-
-    //     }
-
-    //     out << '\n';
-
-    // }
-
-    // ++body_depth;
-
-    // for(size_t pos = 0; pos < summary_profile->child_profiles.size(); ++pos) {
-
-    //     const std::shared_ptr<profile_t> & child_profile = summary_profile->child_profiles[pos];
-
-    //     if((child_profile->syntax_count > 0 || child_profile->move_id
-    //         || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-    //         && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
-
-    //         statement_dispatch(out, summary_profile, pos, output_conditional);
-
-    //     }
-
-    // }
-
-    // --body_depth;
+    }
 
     return out;
 
@@ -665,54 +506,16 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
 summary_output_stream & text_summary::jump(summary_output_stream & out, const jump_summary_t & summary) const {
 
-    // assert(is_jump(profile->type_name));
+    out.begin_line();
 
-    // const std::shared_ptr<profile_t> & parent_profile = profile->parent;
-    // std::map<identifier_diff, size_t> identifier_set;
-    // std::set_difference(parent_profile->identifiers.begin(), parent_profile->identifiers.end(),
-    //                     output_identifiers.begin(), output_identifiers.end(),
-    //                     std::inserter(identifier_set, identifier_set.begin()));
+    out << get_article(summary.statement_type) << ' '
+        << manip::bold() << summary.statement_type << manip::normal();
 
-    // if(profile->operation == SRCDIFF_COMMON) {
+    out << " was ";
 
-    //     std::vector<std::shared_ptr<call_profile_t>> deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists;
-    //     std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;
-    //     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;
-    //     bool identifier_rename_only = true;
-    //     std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
-    //     expr_statistics(profile->child_profiles.back(), identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,
-    //                     deleted_other, inserted_other, modified_other,
-    //                     number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
-    //                     identifier_rename_only, identifier_renames);
+    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
-    //     /** @todo need to probably output if single identifier change */
-    //     if(deleted_calls.size() == 0 && inserted_calls.size() == 0 && modified_calls.size() == 0
-    //     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0
-    //     && identifier_renames.size() == 0)
-    //         return out;
-
-    // }
-
-    // out.begin_line() << get_profile_string(profile);
-
-    // out << " was ";
-
-    // out << (profile->operation == SRCDIFF_DELETE ?  "deleted" : (profile->operation == SRCDIFF_INSERT ? "inserted" : "modified"));
-
-    // if(abstract_level != HIGH && (profile->parent == id || !parent_output)) {
-
-    //     if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-    //     else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-    //     else                                          out << " within ";
-
-    //     if(profile->parent == id)
-    //         out << "the function";
-    //     else
-    //         out << "a nested " << get_type_string(profile->parent);
-
-    // }
-
-    // out << '\n';
+    out << '\n';
 
     return out;
 

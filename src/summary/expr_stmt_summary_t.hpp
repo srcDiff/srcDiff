@@ -21,6 +21,8 @@ class expr_stmt_summary_t : public summary_t {
                        		std::string statement_type)
             : summary_t(type, operation), statement_type(statement_type) {}
 
+        friend class text_summary;
+
 };
 
 #endif

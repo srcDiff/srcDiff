@@ -16,6 +16,8 @@ class move_summary_t : public summary_t {
         move_summary_t(std::string statement_type)
             : summary_t(MOVE, SRCDIFF_COMMON), statement_type(statement_type) {}
 
+        friend class text_summary;
+
 };
 
 #endif
