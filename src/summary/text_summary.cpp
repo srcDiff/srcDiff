@@ -117,17 +117,52 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
     out.begin_line();
 
+    if(summary.number_original == 0 || summary.number_modified == 0) {
+
+        if(summary.number_original == 1) {
+
+            out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal();
+            out << " was commented out";
+
+        } else {
+
+            out << get_article(summary.modified_type) << ' ' << manip::bold() << summary.modified_type << 's' << manip::normal();
+            out << " was uncommented";
+
+        }
+
+        out << '\n';
+
+        return out;
+    }
+
     if(summary.number_original == 1)
-        out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal() << " was";
+        out << get_article(summary.original_type) << ' ' << manip::bold() << summary.original_type << manip::normal();
     else
-        out << std::to_string(summary.number_original) << ' ' << manip::bold() << summary.original_type << manip::normal() << " were";
+        out << std::to_string(summary.number_original) << ' ' << manip::bold() << summary.original_type << 's' << manip::normal();
+
+    if(summary.number_comments_original == 1)
+        out << " and a " << manip::bold() << "comment" << manip::normal();
+    else if(summary.number_comments_original > 1)
+        out << "and " << std::to_string(summary.number_comments_original) << manip::bold() << "comments" << manip::normal();
+
+
+    if((summary.number_original + summary.number_comments_original) == 1)
+        out << " was";
+    else
+        out << " were";
 
     out << " replaced with ";
 
-    if(summary.number_original == 1)
+    if(summary.number_modified == 1)
         out << get_article(summary.modified_type) << ' ' << manip::bold() << summary.modified_type << manip::normal();
     else
-        out << std::to_string(summary.number_modified) << ' ' << manip::bold() << summary.modified_type << manip::normal();
+        out << std::to_string(summary.number_modified) << ' ' << manip::bold() << summary.modified_type << 's' << manip::normal();
+
+    if(summary.number_comments_modified == 1)
+        out << " and a " << manip::bold() << "comment" << manip::normal();
+    else if(summary.number_comments_modified > 1)
+        out << "and " << std::to_string(summary.number_comments_modified) << manip::bold() << "comments" << manip::normal();
 
     out << '\n';
 
