@@ -15,6 +15,7 @@ class summary_t {
 
         summary_name_t type;
         srcdiff_type operation;
+        size_t count;
 
         static std::string get_article(const std::string & type_name) { 
 
@@ -29,7 +30,7 @@ class summary_t {
     public:
 
         summary_t(summary_name_t type, srcdiff_type operation)
-            : type(type), operation(operation) {}
+            : type(type), operation(operation), count(1) {}
 
         virtual bool compare(const summary_t & summary) const {
 
@@ -47,11 +48,13 @@ class summary_t {
 
         virtual summary_t & operator+=(const summary_t & summary) {
 
+            count += summary.count;
+
             return *this;
 
         }
 
-        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+        virtual summary_output_stream & output(summary_output_stream & out) const {
 
             return out;
 

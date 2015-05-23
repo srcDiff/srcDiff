@@ -42,6 +42,8 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
             const expr_stmt_calls_summary_t & expr_stmt_calls_summary = dynamic_cast<const expr_stmt_calls_summary_t &>(summary);
 
+            count += expr_stmt_calls_summary.count;
+
             number_deleted                 += expr_stmt_calls_summary.number_deleted;
             number_inserted                += expr_stmt_calls_summary.number_inserted;
             number_renamed                 += expr_stmt_calls_summary.number_renamed;
@@ -55,7 +57,7 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
         }
 
-        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+        virtual summary_output_stream & output(summary_output_stream & out) const {
 
             out.begin_line();
 

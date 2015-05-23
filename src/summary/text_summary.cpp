@@ -105,18 +105,16 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t *> summaries) {
 
-    std::vector<summary_t *>::size_type start = 0;
     for(std::vector<summary_t *>::size_type pos = 0; pos < summaries.size(); ++pos) {
 
         if((pos + 1) < summaries.size() && (*summaries[pos]) == (*summaries[pos + 1])) {
 
-            (*summaries[pos]) += (*summaries[pos + 1]);
+            (*summaries[pos + 1]) += (*summaries[pos]);
             continue;
 
         }
 
-        summaries[pos]->output(out, (pos + 1) - start);    
-        start = pos + 1;
+        summaries[pos]->output(out);    
 
     }
 

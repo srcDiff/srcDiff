@@ -24,7 +24,7 @@ class identifier_summary_t : public summary_t {
 
         }
 
-        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+        virtual summary_output_stream & output(summary_output_stream & out) const {
 
             out.begin_line();
 
