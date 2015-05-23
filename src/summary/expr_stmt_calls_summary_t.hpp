@@ -30,12 +30,28 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
         virtual bool compare(const summary_t & summary) const {
 
             const expr_stmt_calls_summary_t & expr_stmt_calls_summary = dynamic_cast<const expr_stmt_calls_summary_t &>(summary);
-            return false;
-            // return number_deleted == expr_stmt_calls_summary.number_deleted && number_inserted == expr_stmt_calls_summary.number_inserted
-            //     && number_renamed == expr_stmt_calls_summary.number_renamed && number_argument_list_modified == expr_stmt_calls_summary.number_argument_list_modified
-            //     && number_arguments_deleted == expr_stmt_calls_summary.number_arguments_deleted
-            //     && number_arguments_inserted == expr_stmt_calls_summary.number_arguments_inserted
-            //     && number_arguments_modified == expr_stmt_calls_summary.number_arguments_modified;
+            return bool(number_deleted) == bool(expr_stmt_calls_summary.number_deleted) && bool(number_inserted) == bool(expr_stmt_calls_summary.number_inserted)
+                && bool(number_renamed) == bool(expr_stmt_calls_summary.number_renamed) && bool(number_argument_list_modified) == bool(expr_stmt_calls_summary.number_argument_list_modified)
+                && bool(number_arguments_deleted)  == bool(expr_stmt_calls_summary.number_arguments_deleted)
+                && bool(number_arguments_inserted) == bool(expr_stmt_calls_summary.number_arguments_inserted)
+                && bool(number_arguments_modified) == bool(expr_stmt_calls_summary.number_arguments_modified);
+
+        }
+
+        virtual summary_t & operator+=(const summary_t & summary) {
+
+            const expr_stmt_calls_summary_t & expr_stmt_calls_summary = dynamic_cast<const expr_stmt_calls_summary_t &>(summary);
+
+            number_deleted                 += expr_stmt_calls_summary.number_deleted;
+            number_inserted                += expr_stmt_calls_summary.number_inserted;
+            number_renamed                 += expr_stmt_calls_summary.number_renamed;
+            number_argument_list_modified  += expr_stmt_calls_summary.number_argument_list_modified;
+
+            number_arguments_deleted  += expr_stmt_calls_summary.number_arguments_deleted;
+            number_arguments_inserted += expr_stmt_calls_summary.number_arguments_inserted;
+            number_arguments_modified += expr_stmt_calls_summary.number_arguments_modified;
+
+            return *this;
 
         }
 

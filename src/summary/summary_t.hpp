@@ -45,6 +45,12 @@ class summary_t {
 
         }
 
+        virtual summary_t & operator+=(const summary_t & summary) {
+
+            return *this;
+
+        }
+
         virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
 
             return out;
