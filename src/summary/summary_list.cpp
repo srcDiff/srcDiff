@@ -1086,7 +1086,13 @@ void summary_list::body(const profile_t & profile) {
 
 }
 
-const std::vector<summary_t *> & summary_list::summaries() const {
+const std::list<summary_t *> & summary_list::summaries() const {
+
+    return summaries_;
+
+}
+
+std::list<summary_t *> & summary_list::summaries() {
 
     return summaries_;
 

@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <list>
 
 class summary_list {
 
@@ -21,7 +22,7 @@ private:
 
 protected:
 
-    std::vector<summary_t *> summaries_;
+    std::list<summary_t *> summaries_;
     std::map<identifier_diff, size_t> output_identifiers;
 
 private:
@@ -75,7 +76,8 @@ public:
 
     void body(const profile_t & profile);
 
-    const std::vector<summary_t *> & summaries() const;
+    const std::list<summary_t *> & summaries() const;
+    std::list<summary_t *> & summaries();
 
 };
 

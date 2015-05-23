@@ -83,18 +83,19 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 }
 
-summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t *> summaries) {
+summary_output_stream & text_summary::body(summary_output_stream & out, std::list<summary_t *> summaries) const {
 
-    for(std::vector<summary_t *>::size_type pos = 0; pos < summaries.size(); ++pos) {
+    for(std::list<summary_t *>::iterator itr = summaries.begin(); itr != summaries.end(); ++itr) {
 
-        if((pos + 1) < summaries.size() && (*summaries[pos]) == (*summaries[pos + 1])) {
+        std::list<summary_t *>::iterator next_itr = std::next(itr, 1);
+        if(next_itr != summaries.end() && (**itr) == (**next_itr)) {
 
-            (*summaries[pos + 1]) += (*summaries[pos]);
+            (**next_itr) += (**itr);
             continue;
 
         }
 
-        summaries[pos]->output(out);    
+        (*itr)->output(out);    
 
     }
 
