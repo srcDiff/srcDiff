@@ -13,6 +13,8 @@ class expr_stmt_summary_t : public summary_t {
 
     public:
 
+        friend class text_summary;
+
         expr_stmt_summary_t(srcdiff_type operation,
                        		std::string statement_type)
             : summary_t(EXPR_STMT, operation), statement_type(statement_type) {}
@@ -21,9 +23,7 @@ class expr_stmt_summary_t : public summary_t {
                        		std::string statement_type)
             : summary_t(type, operation), statement_type(statement_type) {}
 
-        friend class text_summary;
-
-        virtual bool operator==(const summary_t & summary) const {
+        virtual bool compare(const summary_t & summary) const {
 
             const expr_stmt_summary_t & expr_stmt_summary = dynamic_cast<const expr_stmt_summary_t &>(summary);
             return operation == expr_stmt_summary.operation && statement_type == expr_stmt_summary.statement_type;

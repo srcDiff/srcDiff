@@ -18,14 +18,22 @@ class summary_t {
 
     public:
 
+        friend class text_summary;
+
         summary_t(summary_name_t type, srcdiff_type operation)
             : type(type), operation(operation) {}
 
         virtual ~summary_t() {}
 
-        friend class text_summary;
+        virtual bool compare(const summary_t & summary) const {
+
+            return false;
+
+        }
 
         virtual bool operator==(const summary_t & summary) const {
+
+            if(type == summary.type) return compare(summary);
 
             return false;
 

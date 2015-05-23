@@ -477,9 +477,7 @@ summary_output_stream & text_summary::body(summary_output_stream & out, const st
     std::vector<summary_t *>::size_type start = 0;
     for(std::vector<summary_t *>::size_type pos = 0; pos < summaries.size(); ++pos) {
 
-        if((pos + 1) < summaries.size()
-            && summaries[pos]->type == summary_t::EXPR_STMT && summaries[pos + 1]->type == summary_t::EXPR_STMT
-            && (*summaries[pos]) == (*summaries[pos + 1]))
+        if((pos + 1) < summaries.size() && (*summaries[pos]) == (*summaries[pos + 1]))
             continue;
 
         summary_dispatch(out, *summaries[pos], (pos + 1) - start);    
