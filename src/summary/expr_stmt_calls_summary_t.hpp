@@ -90,7 +90,7 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
                 } else {
 
-                    out << manip::bold() << "argument lists" << manip::normal() << " were modified";
+                    out << std::to_string(number_argument_list_modified) << ' ' << manip::bold() << "argument lists" << manip::normal() << " were modified";
 
                 }
 
