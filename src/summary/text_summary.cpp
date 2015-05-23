@@ -183,7 +183,10 @@ summary_output_stream & text_summary::move(summary_output_stream & out, const mo
 
     out.begin_line();
 
-    out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was moved";
+    if(count == 1)
+        out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was moved";
+    else
+        out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type << 's' << manip::normal() << " were moved";
 
     out << '\n';
 
@@ -195,9 +198,14 @@ summary_output_stream & text_summary::interchange(summary_output_stream & out, c
 
     out.begin_line();
 
-    out << get_article(summary.statement_type.original()) << ' ' << manip::bold() << summary.statement_type.original() << manip::normal()
-        << " was converted to "
-        << get_article(summary.statement_type.modified()) << ' ' << manip::bold() << summary.statement_type.modified() << manip::normal();
+    if(count == 1)
+        out << get_article(summary.statement_type.original()) << ' ' << manip::bold() << summary.statement_type.original() << manip::normal()
+            << " was converted to "
+            << get_article(summary.statement_type.modified()) << ' ' << manip::bold() << summary.statement_type.modified() << manip::normal();
+    else
+        out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type.original() << 's' << manip::normal()
+            << " were converted to "
+            << manip::bold() << summary.statement_type.modified() << 's' << manip::normal();
 
     out << '\n';
 
@@ -209,10 +217,10 @@ summary_output_stream & text_summary::jump(summary_output_stream & out, const ju
 
     out.begin_line();
 
-    out << get_article(summary.statement_type) << ' '
-        << manip::bold() << summary.statement_type << manip::normal();
-
-    out << " was ";
+    if(count == 1)
+        out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
+    else
+        out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type << 's' << manip::normal() << " were ";
 
     out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
@@ -227,10 +235,17 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
     if(summary.condition_modified) {
 
-         out.begin_line() << "the condition of "
-                          << get_article(summary.statement_type) << ' '
-                          << manip::bold() << summary.statement_type << manip::normal()
-                          << " was altered\n";
+         out.begin_line();
+
+
+         out << "the condition of ";
+
+         if(count == 1)
+             out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
+         else
+             out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type << 's' << manip::normal() << " were ";
+
+         out << "altered\n";
 
     }
 
@@ -238,10 +253,11 @@ summary_output_stream & text_summary::conditional(summary_output_stream & out, c
 
         out.begin_line();
 
-        out << get_article(summary.statement_type) << ' '
-            << manip::bold() << summary.statement_type << manip::normal();
+        if(count == 1)
+            out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
+        else
+            out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type << 's' << manip::normal() << " were ";
 
-        out << " was ";
         out << (summary.operation == SRCDIFF_DELETE ? "deleted" : "inserted");
 
         out << '\n';
@@ -321,11 +337,28 @@ summary_output_stream & text_summary::call_sequence(summary_output_stream & out,
 
     if(summary.name_change) {
 
-        out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to a " << manip::bold() << "call" << manip::normal();
+        out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to ";
+
+        if(count == 1)
+            out << "a " << manip::bold() << "call" << manip::normal();
+        else
+            out << std::to_string(count) << ' ' << manip::bold() << "calls" << manip::normal();
 
     } else if(summary.variable_reference_change) {
 
-        out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
+        if(count == 1)
+            out << "a ";
+        else
+            out << std::to_string(count) << ' ';
+
+        out << manip::bold() << "variable reference" << manip::normal();
+
+        if(count == 1)
+            out << " change ";
+        else
+            out << " changes ";
+
+        out << "occurred";
 
     }
 
@@ -358,24 +391,50 @@ summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, con
 
     out.begin_line();
 
-    out << "a " << manip::bold() << "declaration" << manip::normal();
+    if(count == 1)
+        out << "a " << manip::bold() << "declaration" << manip::normal();
+    else
+        out << std::to_string(count) << ' ' << manip::bold() << "declarations" << manip::normal();
 
     size_t number_parts_report = (summary.type_modified ? 1 : 0) + (summary.name_modified ? 1 : 0) + (summary.init_modified ? 1 : 0);
 
     if(number_parts_report == 1) {
 
-        if(summary.type_modified)
-            out << " type was changed";
+        if(summary.type_modified) {
 
-        if(summary.name_modified)
-            out << " name was changed";
-        
-        if(summary.init_modified)
-            out << " initialization was modified";
+            if(count == 1)
+                out << " type was ";
+            else
+                out << " types were ";
+
+            out << "changed";
+
+        } else if(summary.name_modified) {
+
+            if(count == 1)
+                out << " name was ";
+            else
+                out << " names were ";
+
+            out << "changed";
+
+        } else {
+
+            if(count == 1)
+                out << " initialization was ";
+            else
+                out << " initialiations were ";
+
+            out  << "modified";
+
+        }
 
     } else {
 
-        out << " was ";
+        if(count == 1)
+            out << " was ";
+        else
+            out << " were ";
 
         out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 

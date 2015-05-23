@@ -31,7 +31,7 @@ class summary_t {
 
         virtual bool operator==(const summary_t & summary) const {
 
-            if(type == summary.type) return compare(summary);
+            if(type == summary.type && operation == summary.operation) return compare(summary);
 
             return false;
 
