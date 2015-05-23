@@ -1,5 +1,7 @@
 #include <text_summary.hpp>
 
+#include <iterator>
+
 text_summary::text_summary() {}
 
 summary_output_stream & text_summary::parameter(summary_output_stream & out, size_t number_parameters_deleted,
@@ -83,17 +85,37 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 }
 
-summary_output_stream & text_summary::body(summary_output_stream & out, std::list<summary_t *> summaries) const {
+summary_output_stream & text_summary::body(summary_output_stream & out, std::list<summary_t *> & summaries) const {
 
     for(std::list<summary_t *>::iterator itr = summaries.begin(); itr != summaries.end(); ++itr) {
 
-        std::list<summary_t *>::iterator next_itr = std::next(itr, 1);
-        if(next_itr != summaries.end() && (**itr) == (**next_itr)) {
+        for(std::list<summary_t *>::iterator next_itr = std::next(itr, 1); next_itr != summaries.end();) {
 
-            (**next_itr) += (**itr);
-            continue;
+            if((**itr) == (**next_itr)) {
+
+                (**itr) += (**next_itr);
+                delete *next_itr;
+                summaries.erase(next_itr++);
+                
+            } else {
+
+                ++next_itr;
+
+            }
 
         }
+
+    }
+
+    for(std::list<summary_t *>::iterator itr = summaries.begin(); itr != summaries.end(); ++itr) {
+
+        // std::list<summary_t *>::iterator next_itr = std::next(itr, 1);
+        // if(next_itr != summaries.end() && (**itr) == (**next_itr)) {
+
+        //     (**next_itr) += (**itr);
+        //     continue;
+
+        // }
 
         (*itr)->output(out);    
 
