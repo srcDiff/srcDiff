@@ -13,8 +13,6 @@ class jump_summary_t : public summary_t {
 
     public:
 
-        friend class text_summary;
-
         jump_summary_t(srcdiff_type operation,
                        std::string statement_type)
             : summary_t(JUMP, operation), statement_type(statement_type) {}

@@ -15,8 +15,6 @@ class decl_stmt_summary_t : public summary_t {
 
     public:
 
-        friend class text_summary;
-
         decl_stmt_summary_t(srcdiff_type operation,
 				        	bool type_modified,	bool name_modified,	bool init_modified)
             : summary_t(DECL_STMT, operation),

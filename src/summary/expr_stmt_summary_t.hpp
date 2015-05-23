@@ -13,8 +13,6 @@ class expr_stmt_summary_t : public summary_t {
 
     public:
 
-        friend class text_summary;
-
         expr_stmt_summary_t(srcdiff_type operation,
                        		std::string statement_type)
             : summary_t(EXPR_STMT, operation), statement_type(statement_type) {}

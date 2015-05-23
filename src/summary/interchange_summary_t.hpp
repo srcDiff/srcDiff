@@ -13,8 +13,6 @@ class interchange_summary_t : public summary_t {
 
     public:
 
-        friend class text_summary;
-
         interchange_summary_t(versioned_string statement_type)
             : summary_t(INTERCHANGE, SRCDIFF_COMMON), statement_type(statement_type) {}
 

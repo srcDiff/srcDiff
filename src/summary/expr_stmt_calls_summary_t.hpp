@@ -18,8 +18,6 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
     	size_t number_arguments_modified;
 
     public:
-
-        friend class text_summary;
  
         expr_stmt_calls_summary_t(std::string statement_type,
         						  size_t number_deleted, size_t number_inserted, size_t number_renamed,

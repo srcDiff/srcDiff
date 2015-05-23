@@ -28,8 +28,6 @@ class summary_t {
 
     public:
 
-        friend class text_summary;
-
         summary_t(summary_name_t type, srcdiff_type operation)
             : type(type), operation(operation) {}
 
