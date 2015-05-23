@@ -311,7 +311,7 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 
     }
 
-    summary_output_stream output_stream(*out);
+    summary_output_stream output_stream(*out, columns);
  
     profile->summary(output_stream, summary_types);
     (*out) << "\n";
