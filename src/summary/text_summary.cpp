@@ -85,7 +85,7 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
 }
 
-summary_output_stream & text_summary::body(summary_output_stream & out, std::list<summary_t *> & summaries) const {
+summary_output_stream & text_summary::function_body(summary_output_stream & out, std::list<summary_t *> & summaries) const {
 
     for(std::list<summary_t *>::iterator itr = summaries.begin(); itr != summaries.end(); ++itr) {
 

@@ -94,6 +94,64 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 
 }
 
+bool summary_list::is_block_summary(const std::string & type, bool is_replacement) const {
+
+    return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
+        || is_jump(type) || type == "else";
+
+}
+
+void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos) {
+
+    const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
+
+    if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
+
+        replacement(profile, child_pos);
+
+    } else if(child_profile->move_id) {
+
+        summaries_.emplace_back(new move_summary_t(get_type_string(child_profile)));
+
+    } else if(!child_profile->type_name.is_common()) {
+
+        interchange(child_profile);
+
+    } else {
+
+        if(is_jump(child_profile->type_name))
+            jump(child_profile);
+        else if(is_condition_type(child_profile->type_name))
+            conditional(child_profile);
+        else if(child_profile->type_name == "else")
+            else_clause(child_profile);
+        else if(is_expr_stmt(child_profile->type_name))
+            expr_stmt(child_profile);
+        else if(is_decl_stmt(child_profile->type_name))
+            decl_stmt(child_profile);
+
+    }
+
+}
+
+void summary_list::block(const std::shared_ptr<profile_t> & profile) {
+
+    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
+
+        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
+
+        if((child_profile->syntax_count > 0 || child_profile->move_id
+            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+            && is_block_summary(child_profile->type_name, child_profile->is_replacement)) {
+
+            statement_dispatch(profile, pos);
+
+        }
+
+    }
+
+}
+
 void summary_list::identifiers(const std::map<identifier_diff, size_t> & identifiers) {
 
 
@@ -351,46 +409,6 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
     }
 
     summaries_.emplace_back(new replacement_summary_t(number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
-
-}
-
-bool summary_list::is_body_summary(const std::string & type, bool is_replacement) const {
-
-    return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
-        || is_jump(type) || type == "else";
-
-}
-
-void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos) {
-
-    const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
-
-    if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
-
-        replacement(profile, child_pos);
-
-    } else if(child_profile->move_id) {
-
-        summaries_.emplace_back(new move_summary_t(get_type_string(child_profile)));
-
-    } else if(!child_profile->type_name.is_common()) {
-
-        interchange(child_profile);
-
-    } else {
-
-        if(is_jump(child_profile->type_name))
-            jump(child_profile);
-        else if(is_condition_type(child_profile->type_name))
-            conditional(child_profile);
-        else if(child_profile->type_name == "else")
-            else_clause(child_profile);
-        else if(is_expr_stmt(child_profile->type_name))
-            expr_stmt(child_profile);
-        else if(is_decl_stmt(child_profile->type_name))
-            decl_stmt(child_profile);
-
-    }
 
 }
 
@@ -955,19 +973,7 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
     if(profile->summary_identifiers.size() > 0)
         identifiers(profile->summary_identifiers);
 
-    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
-
-        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
-
-        if((child_profile->syntax_count > 0 || child_profile->move_id
-            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-            && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
-
-            statement_dispatch(profile, pos);
-
-        }
-
-    }
+    block(profile);
 
 }
 
@@ -1002,19 +1008,7 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
     if(summary_profile->summary_identifiers.size() > 0)
         identifiers(summary_profile->summary_identifiers);
 
-    for(size_t pos = 0; pos < summary_profile->child_profiles.size(); ++pos) {
-
-        const std::shared_ptr<profile_t> & child_profile = summary_profile->child_profiles[pos];
-
-        if((child_profile->syntax_count > 0 || child_profile->move_id
-            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-            && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
-
-            statement_dispatch(summary_profile, pos);
-
-        }
-
-    }
+    block(summary_profile);
 
 }
 
@@ -1029,19 +1023,7 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
     if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif")
         summary_profile = profile->child_profiles[0];
 
-    for(size_t pos = 0; pos < summary_profile->child_profiles.size(); ++pos) {
-
-        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
-
-        if((child_profile->syntax_count > 0 || child_profile->move_id
-            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
-            && is_body_summary(child_profile->type_name, child_profile->is_replacement)) {
-
-            statement_dispatch(profile, pos);
-
-        }
-
-    }
+    block(summary_profile);
 
 }
 
@@ -1067,22 +1049,11 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
 }
 
-void summary_list::body(const profile_t & profile) {
+void summary_list::function_body(const profile_t & profile) {
 
     identifiers(profile.summary_identifiers);
 
-    for(size_t pos = 0; pos < profile.child_profiles.size(); ++pos) {
-
-        const std::shared_ptr<profile_t> & child_profile = profile.child_profiles[pos];
-
-        if(!is_body_summary(child_profile->type_name, child_profile->is_replacement)
-            || (child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0
-                && child_profile->move_id == 0))
-            continue;
-
-        statement_dispatch(std::make_shared<profile_t>(profile), pos);
-
-    }
+    block(std::make_shared<profile_t>(profile));
 
 }
 

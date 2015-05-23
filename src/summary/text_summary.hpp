@@ -18,7 +18,7 @@ public:
                             size_t number_parameters_inserted, size_t number_parameters_modified) const;
     summary_output_stream & member_initialization(summary_output_stream & out, size_t number_member_initializations_deleted,
                                          size_t number_member_initializations_inserted, size_t number_member_initializations_modified) const;
-    summary_output_stream & body(summary_output_stream & out, std::list<summary_t *> & summaries) const;
+    summary_output_stream & function_body(summary_output_stream & out, std::list<summary_t *> & summaries) const;
 
 };
 

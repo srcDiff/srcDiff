@@ -29,12 +29,12 @@ private:
 
     std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
 
+    bool is_block_summary(const std::string & type, bool is_replacement) const;
+    void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
+    void block(const std::shared_ptr<profile_t> & profile);
+
     void identifiers(const std::map<identifier_diff, size_t> & identifiers);
     void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos);
-
-    bool is_body_summary(const std::string & type, bool is_replacement) const;
-
-    void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
 
     size_t number_child_changes(const profile_t::profile_list_t & child_profiles) const;
 
@@ -74,7 +74,7 @@ public:
     summary_list();
     ~summary_list();
 
-    void body(const profile_t & profile);
+    void function_body(const profile_t & profile);
 
     const std::list<summary_t *> & summaries() const;
     std::list<summary_t *> & summaries();

@@ -169,8 +169,8 @@ class function_profile_t : public profile_t {
                 m_handler.detect();
 
                 summary_list list;
-                list.body(*this);
-                text.body(out, list.summaries());
+                list.function_body(*this);
+                text.function_body(out, list.summaries());
 
             }
 
