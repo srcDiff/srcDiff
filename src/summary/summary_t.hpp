@@ -23,8 +23,6 @@ class summary_t {
         summary_t(summary_name_t type, srcdiff_type operation)
             : type(type), operation(operation) {}
 
-        virtual ~summary_t() {}
-
         virtual bool compare(const summary_t & summary) const {
 
             return false;

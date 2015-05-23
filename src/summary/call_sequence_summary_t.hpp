@@ -14,12 +14,19 @@ class call_sequence_summary_t : public expr_stmt_summary_t {
 
     public:
 
+        friend class text_summary;
+
         call_sequence_summary_t(std::string statement_type,
         						bool name_change, bool variable_reference_change)
             : expr_stmt_summary_t(CALL_SEQUENCE, SRCDIFF_COMMON, statement_type), name_change(name_change), variable_reference_change(variable_reference_change) {}
 
 
-        friend class text_summary;
+        virtual bool compare(const summary_t & summary) const {
+
+        	const call_sequence_summary_t & call_sequence_summary = dynamic_cast<const call_sequence_summary_t &>(summary);
+            return name_change == call_sequence_summary.name_change && variable_reference_change == call_sequence_summary.variable_reference_change;
+
+        }
 
 };
 

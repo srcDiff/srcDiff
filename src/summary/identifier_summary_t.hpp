@@ -14,10 +14,17 @@ class identifier_summary_t : public summary_t {
 
     public:
 
+        friend class text_summary;        
+
         identifier_summary_t(versioned_string name, bool is_complex)
             : summary_t(IDENTIFIER, SRCDIFF_COMMON), name(name), is_complex(is_complex) {}
 
-        friend class text_summary;
+        virtual bool compare(const summary_t & summary) const {
+
+            //const identifier_summary_t & identifier_summary = dynamic_cast<const identifier_summary_t &>(summary);
+            return false;
+
+        }
 
 };
 

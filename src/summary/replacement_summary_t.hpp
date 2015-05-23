@@ -19,13 +19,21 @@ class replacement_summary_t : public summary_t {
 
     public:
 
+        friend class text_summary;
+
         replacement_summary_t(size_t number_original, std::string original_type, size_t number_comments_original,
         					  size_t number_modified, std::string modified_type, size_t number_comments_modified)
             : summary_t(REPLACEMENT, SRCDIFF_COMMON),
               number_original(number_original), original_type(original_type), number_comments_original(number_comments_original),
               number_modified(number_modified), modified_type(modified_type), number_comments_modified(number_comments_modified) {}
 
-        friend class text_summary;
+
+        virtual bool compare(const summary_t & summary) const {
+
+            //const replacement_summary_t & replacement_summary = dynamic_cast<const replacement_summary_t &>(summary);
+            return false;
+
+        }
 
 };
 

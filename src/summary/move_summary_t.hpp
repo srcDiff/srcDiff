@@ -13,10 +13,17 @@ class move_summary_t : public summary_t {
 
     public:
 
+        friend class text_summary;
+
         move_summary_t(std::string statement_type)
             : summary_t(MOVE, SRCDIFF_COMMON), statement_type(statement_type) {}
 
-        friend class text_summary;
+        virtual bool compare(const summary_t & summary) const {
+
+            const move_summary_t & move_summary = dynamic_cast<const move_summary_t &>(summary);
+            return statement_type == move_summary.statement_type;
+
+        }
 
 };
 

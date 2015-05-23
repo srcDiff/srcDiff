@@ -7,7 +7,7 @@
 
 class expr_stmt_summary_t : public summary_t {
 
-    private:
+    protected:
 
         std::string statement_type;
 
