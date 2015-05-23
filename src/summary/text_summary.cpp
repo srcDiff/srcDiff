@@ -52,19 +52,19 @@ summary_output_stream & text_summary::summary_dispatch(summary_output_stream & o
             break;
 
         case summary_t::MOVE:
-            move(out, dynamic_cast<const move_summary_t &>(summary));
+            move(out, dynamic_cast<const move_summary_t &>(summary), count);
             break;
 
         case summary_t::INTERCHANGE:
-            interchange(out, dynamic_cast<const interchange_summary_t &>(summary));
+            interchange(out, dynamic_cast<const interchange_summary_t &>(summary), count);
             break;            
 
         case summary_t::JUMP:
-            jump(out, dynamic_cast<const jump_summary_t &>(summary));
+            jump(out, dynamic_cast<const jump_summary_t &>(summary), count);
             break;            
 
         case summary_t::CONDITIONAL:
-            conditional(out, dynamic_cast<const conditional_summary_t &>(summary));
+            conditional(out, dynamic_cast<const conditional_summary_t &>(summary), count);
             break;            
 
         case summary_t::EXPR_STMT:
@@ -72,18 +72,19 @@ summary_output_stream & text_summary::summary_dispatch(summary_output_stream & o
             break;            
 
         case summary_t::EXPR_STMT_CALLS:
-            expr_stmt_calls(out, dynamic_cast<const expr_stmt_calls_summary_t &>(summary));
+            expr_stmt_calls(out, dynamic_cast<const expr_stmt_calls_summary_t &>(summary), count);
             break;    
 
         case summary_t::CALL_SEQUENCE:
-            call_sequence(out, dynamic_cast<const call_sequence_summary_t &>(summary));
+            call_sequence(out, dynamic_cast<const call_sequence_summary_t &>(summary), count);
             break;    
 
         case summary_t::DECL_STMT:
-            decl_stmt(out, dynamic_cast<const decl_stmt_summary_t &>(summary));
+            decl_stmt(out, dynamic_cast<const decl_stmt_summary_t &>(summary), count);
             break;
 
         default:
+            std::cerr << "Unhandled summary: " << summary.type << '\n';
             break;
 
     }
@@ -178,7 +179,7 @@ summary_output_stream & text_summary::replacement(summary_output_stream & out, c
 
 }
 
-summary_output_stream & text_summary::move(summary_output_stream & out, const move_summary_t & summary) const {
+summary_output_stream & text_summary::move(summary_output_stream & out, const move_summary_t & summary, size_t count) const {
 
     out.begin_line();
 
@@ -190,13 +191,195 @@ summary_output_stream & text_summary::move(summary_output_stream & out, const mo
 
 }
 
-summary_output_stream & text_summary::interchange(summary_output_stream & out, const interchange_summary_t & summary) const {
+summary_output_stream & text_summary::interchange(summary_output_stream & out, const interchange_summary_t & summary, size_t count) const {
 
     out.begin_line();
 
     out << get_article(summary.statement_type.original()) << ' ' << manip::bold() << summary.statement_type.original() << manip::normal()
         << " was converted to "
         << get_article(summary.statement_type.modified()) << ' ' << manip::bold() << summary.statement_type.modified() << manip::normal();
+
+    out << '\n';
+
+    return out;
+
+}
+
+summary_output_stream & text_summary::jump(summary_output_stream & out, const jump_summary_t & summary, size_t count) const {
+
+    out.begin_line();
+
+    out << get_article(summary.statement_type) << ' '
+        << manip::bold() << summary.statement_type << manip::normal();
+
+    out << " was ";
+
+    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+
+    out << '\n';
+
+    return out;
+
+}
+
+/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to summarize in one line. */
+summary_output_stream & text_summary::conditional(summary_output_stream & out, const conditional_summary_t & summary, size_t count) const {
+
+    if(summary.condition_modified) {
+
+         out.begin_line() << "the condition of "
+                          << get_article(summary.statement_type) << ' '
+                          << manip::bold() << summary.statement_type << manip::normal()
+                          << " was altered\n";
+
+    }
+
+    if(summary.operation != SRCDIFF_COMMON) {
+
+        out.begin_line();
+
+        out << get_article(summary.statement_type) << ' '
+            << manip::bold() << summary.statement_type << manip::normal();
+
+        out << " was ";
+        out << (summary.operation == SRCDIFF_DELETE ? "deleted" : "inserted");
+
+        out << '\n';
+
+    }
+
+    return out;
+
+}
+
+summary_output_stream & text_summary::expr_stmt_calls(summary_output_stream & out, const expr_stmt_calls_summary_t & summary, size_t count) const {
+
+    out.begin_line();
+
+    if(summary.number_deleted != 0) {
+
+        if(summary.number_deleted == 1)
+            out << "a " << manip::bold() << "call" << manip::normal() << " was deleted";
+        else
+            out << std::to_string(summary.number_deleted) << ' ' << manip::bold() << "calls" << manip::normal() << " were deleted";
+
+    } else if(summary.number_inserted != 0) {
+
+        if(summary.number_inserted == 1)
+            out << "a " << manip::bold() << "call" << manip::normal() << " was inserted";
+        else
+            out << std::to_string(summary.number_inserted) << ' ' << manip::bold() << "calls" << manip::normal() << " were inserted";
+
+    } else if(summary.number_renamed != 0) {
+
+        if(summary.number_renamed == 1)
+            out << "a " << manip::bold() << "call" << manip::normal() << " was renamed";
+        else
+            out << std::to_string(summary.number_renamed) << ' ' << manip::bold() << "calls" << manip::normal() << " were renamed";
+
+    } else if(summary.number_argument_list_modified != 0) {
+
+        size_t number_arguments_total = summary.number_arguments_deleted + summary.number_arguments_inserted + summary.number_arguments_modified;
+
+        if(summary.number_argument_list_modified == 1) {
+
+            if(number_arguments_total == 1) {
+
+                out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
+
+                if(summary.number_arguments_deleted == 1)
+                    out << "deleted";
+                else if(summary.number_arguments_inserted == 1)
+                    out << "inserted";
+                else
+                    out << "modified";
+
+            } else {
+
+                //out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << " were modified";
+                out << "an " << manip::bold() << "argument list" << manip::normal() << " was modified";
+
+            }
+
+        } else {
+
+            out << manip::bold() << "argument lists" << manip::normal() << " were modified";
+
+        }
+
+    }
+
+    out << '\n';
+
+    return out;
+
+}
+
+summary_output_stream & text_summary::call_sequence(summary_output_stream & out, const call_sequence_summary_t & summary, size_t count) const {
+
+    out.begin_line();
+
+    if(summary.name_change) {
+
+        out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to a " << manip::bold() << "call" << manip::normal();
+
+    } else if(summary.variable_reference_change) {
+
+        out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
+
+    }
+
+    out << '\n';
+
+    return out;
+
+}
+
+summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary, size_t count) const {
+
+    out.begin_line();
+
+    if(count == 1)
+        out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
+    else
+        out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type << 's' << manip::normal() << " were ";
+
+    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+
+    out << '\n';
+
+    return out;
+
+}
+
+/** @todo for decl_stmt and jump need to not report if only a known rename identifier occurs.  Also, report a rename if it occurred */
+/** @todo report type rename and name rename.  Report as type and name change probably. */
+summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, const decl_stmt_summary_t & summary, size_t count) const {
+
+    out.begin_line();
+
+    out << "a " << manip::bold() << "declaration" << manip::normal();
+
+    size_t number_parts_report = (summary.type_modified ? 1 : 0) + (summary.name_modified ? 1 : 0) + (summary.init_modified ? 1 : 0);
+
+    if(number_parts_report == 1) {
+
+        if(summary.type_modified)
+            out << " type was changed";
+
+        if(summary.name_modified)
+            out << " name was changed";
+        
+        if(summary.init_modified)
+            out << " initialization was modified";
+
+    } else {
+
+        out << " was ";
+
+        out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+
+    }
 
     out << '\n';
 
@@ -287,190 +470,6 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
     return out;
 
 }
-
-summary_output_stream & text_summary::jump(summary_output_stream & out, const jump_summary_t & summary) const {
-
-    out.begin_line();
-
-    out << get_article(summary.statement_type) << ' '
-        << manip::bold() << summary.statement_type << manip::normal();
-
-    out << " was ";
-
-    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
-
-    out << '\n';
-
-    return out;
-
-}
-
-/** @todo if multiple of same change like test case where connect deleted 4 times.  May want to summarize in one line. */
-summary_output_stream & text_summary::conditional(summary_output_stream & out, const conditional_summary_t & summary) const {
-
-    if(summary.condition_modified) {
-
-         out.begin_line() << "the condition of "
-                          << get_article(summary.statement_type) << ' '
-                          << manip::bold() << summary.statement_type << manip::normal()
-                          << " was altered\n";
-
-    }
-
-    if(summary.operation != SRCDIFF_COMMON) {
-
-        out.begin_line();
-
-        out << get_article(summary.statement_type) << ' '
-            << manip::bold() << summary.statement_type << manip::normal();
-
-        out << " was ";
-        out << (summary.operation == SRCDIFF_DELETE ? "deleted" : "inserted");
-
-        out << '\n';
-
-    }
-
-    return out;
-
-}
-
-summary_output_stream & text_summary::expr_stmt_calls(summary_output_stream & out, const expr_stmt_calls_summary_t & summary) const {
-
-    out.begin_line();
-
-    if(summary.number_deleted != 0) {
-
-        if(summary.number_deleted == 1)
-            out << "a " << manip::bold() << "call" << manip::normal() << " was deleted";
-        else
-            out << std::to_string(summary.number_deleted) << ' ' << manip::bold() << "calls" << manip::normal() << " were deleted";
-
-    } else if(summary.number_inserted != 0) {
-
-        if(summary.number_inserted == 1)
-            out << "a " << manip::bold() << "call" << manip::normal() << " was inserted";
-        else
-            out << std::to_string(summary.number_inserted) << ' ' << manip::bold() << "calls" << manip::normal() << " were inserted";
-
-    } else if(summary.number_renamed != 0) {
-
-        if(summary.number_renamed == 1)
-            out << "a " << manip::bold() << "call" << manip::normal() << " was renamed";
-        else
-            out << std::to_string(summary.number_renamed) << ' ' << manip::bold() << "calls" << manip::normal() << " were renamed";
-
-    } else if(summary.number_argument_list_modified != 0) {
-
-        size_t number_arguments_total = summary.number_arguments_deleted + summary.number_arguments_inserted + summary.number_arguments_modified;
-
-        if(summary.number_argument_list_modified == 1) {
-
-            if(number_arguments_total == 1) {
-
-                out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
-
-                if(summary.number_arguments_deleted == 1)
-                    out << "deleted";
-                else if(summary.number_arguments_inserted == 1)
-                    out << "inserted";
-                else
-                    out << "modified";
-
-            } else {
-
-                //out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << " were modified";
-                out << "an " << manip::bold() << "argument list" << manip::normal() << " was modified";
-
-            }
-
-        } else {
-
-            out << manip::bold() << "argument lists" << manip::normal() << " were modified";
-
-        }
-
-    }
-
-    out << '\n';
-
-    return out;
-
-}
-
-summary_output_stream & text_summary::call_sequence(summary_output_stream & out, const call_sequence_summary_t & summary) const {
-
-    out.begin_line();
-
-    if(summary.name_change) {
-
-        out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to a " << manip::bold() << "call" << manip::normal();
-
-    } else if(summary.variable_reference_change) {
-
-        out << "a " << manip::bold() << "variable reference" << manip::normal() << " change occurred";
-
-    }
-
-    out << '\n';
-
-    return out;
-
-}
-
-summary_output_stream & text_summary::expr_stmt(summary_output_stream & out, const expr_stmt_summary_t & summary, size_t count) const {
-
-    out.begin_line();
-
-    if(count == 1)
-        out << get_article(summary.statement_type) << ' ' << manip::bold() << summary.statement_type << manip::normal() << " was ";
-    else
-        out << std::to_string(count) << ' ' << manip::bold() << summary.statement_type << 's' << manip::normal() << " were ";
-
-    out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
-
-    out << '\n';
-
-    return out;
-
-}
-
-/** @todo for decl_stmt and jump need to not report if only a known rename identifier occurs.  Also, report a rename if it occurred */
-/** @todo report type rename and name rename.  Report as type and name change probably. */
-summary_output_stream & text_summary::decl_stmt(summary_output_stream & out, const decl_stmt_summary_t & summary) const {
-
-    out.begin_line();
-
-    out << "a " << manip::bold() << "declaration" << manip::normal();
-
-    size_t number_parts_report = (summary.type_modified ? 1 : 0) + (summary.name_modified ? 1 : 0) + (summary.init_modified ? 1 : 0);
-
-    if(number_parts_report == 1) {
-
-        if(summary.type_modified)
-            out << " type was changed";
-
-        if(summary.name_modified)
-            out << " name was changed";
-        
-        if(summary.init_modified)
-            out << " initialization was modified";
-
-    } else {
-
-        out << " was ";
-
-        out << (summary.operation == SRCDIFF_DELETE ?  "deleted" : (summary.operation == SRCDIFF_INSERT ? "inserted" : "modified"));
-
-    }
-
-    out << '\n';
-
-    return out;
-
-}
-
-
 
 summary_output_stream & text_summary::body(summary_output_stream & out, const std::vector<summary_t *> summaries) {
 
