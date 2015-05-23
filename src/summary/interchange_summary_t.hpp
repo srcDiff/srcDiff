@@ -25,6 +25,25 @@ class interchange_summary_t : public summary_t {
 
         }
 
+        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+
+            out.begin_line();
+
+            if(count == 1)
+                out << get_article(statement_type.original()) << ' ' << manip::bold() << statement_type.original() << manip::normal()
+                    << " was converted to "
+                    << get_article(statement_type.modified()) << ' ' << manip::bold() << statement_type.modified() << manip::normal();
+            else
+                out << std::to_string(count) << ' ' << manip::bold() << statement_type.original() << 's' << manip::normal()
+                    << " were converted to "
+                    << manip::bold() << statement_type.modified() << 's' << manip::normal();
+
+            out << '\n';
+
+            return out;
+
+        }
+
 };
 
 #endif

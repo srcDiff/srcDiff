@@ -28,6 +28,42 @@ class call_sequence_summary_t : public expr_stmt_summary_t {
 
         }
 
+        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+
+            out.begin_line();
+
+            if(name_change) {
+
+                out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to ";
+
+                if(count == 1)
+                    out << "a " << manip::bold() << "call" << manip::normal();
+                else
+                    out << std::to_string(count) << ' ' << manip::bold() << "calls" << manip::normal();
+
+            } else if(variable_reference_change) {
+
+                if(count == 1)
+                    out << "a ";
+                else
+                    out << std::to_string(count) << ' ';
+
+                out << manip::bold() << "variable reference" << manip::normal();
+
+                if(count == 1)
+                    out << " change ";
+                else
+                    out << " changes ";
+
+                out << "occurred";
+
+            }
+
+            out << '\n';
+
+            return out;
+        }
+
 };
 
 #endif

@@ -25,6 +25,21 @@ class move_summary_t : public summary_t {
 
         }
 
+        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+
+            out.begin_line();
+
+            if(count == 1)
+                out << get_article(statement_type) << ' ' << manip::bold() << statement_type << manip::normal() << " was moved";
+            else
+                out << std::to_string(count) << ' ' << manip::bold() << statement_type << 's' << manip::normal() << " were moved";
+
+            out << '\n';
+
+            return out;
+
+        }
+
 };
 
 #endif

@@ -28,6 +28,65 @@ class decl_stmt_summary_t : public summary_t {
             return type_modified == decl_stmt_summary.type_modified && name_modified == decl_stmt_summary.name_modified && init_modified == decl_stmt_summary.init_modified;
 
         }
+
+        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+
+            out.begin_line();
+
+            if(count == 1)
+                out << "a " << manip::bold() << "declaration" << manip::normal();
+            else
+                out << std::to_string(count) << ' ' << manip::bold() << "declarations" << manip::normal();
+
+            size_t number_parts_report = (type_modified ? 1 : 0) + (name_modified ? 1 : 0) + (init_modified ? 1 : 0);
+
+            if(number_parts_report == 1) {
+
+                if(type_modified) {
+
+                    if(count == 1)
+                        out << " type was ";
+                    else
+                        out << " types were ";
+
+                    out << "changed";
+
+                } else if(name_modified) {
+
+                    if(count == 1)
+                        out << " name was ";
+                    else
+                        out << " names were ";
+
+                    out << "changed";
+
+                } else {
+
+                    if(count == 1)
+                        out << " initialization was ";
+                    else
+                        out << " initialiations were ";
+
+                    out  << "modified";
+
+                }
+
+            } else {
+
+                if(count == 1)
+                    out << " was ";
+                else
+                    out << " were ";
+
+                out << (operation == SRCDIFF_DELETE ?  "deleted" : (operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+
+            }
+
+            out << '\n';
+
+            return out;
+
+        }
         
 };
 

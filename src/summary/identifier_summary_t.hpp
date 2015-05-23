@@ -26,6 +26,35 @@ class identifier_summary_t : public summary_t {
 
         }
 
+        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+
+            out.begin_line();
+
+            if(is_complex) {
+
+                out << "name change from '";
+                out << name.original();
+                out << "' to '";
+                out << name.modified();
+                out << '\'';
+
+
+            } else {
+
+                out << '\'';
+                out << name.original();
+                out << "' was renamed to '";
+                out << name.modified();
+                out << '\'';
+
+            }
+
+            out << '\n';
+
+            return out;
+
+        }
+
 };
 
 #endif

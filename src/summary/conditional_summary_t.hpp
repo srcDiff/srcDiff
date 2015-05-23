@@ -27,6 +27,43 @@ class conditional_summary_t : public summary_t {
 
         }
 
+        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+
+            if(condition_modified) {
+
+                 out.begin_line();
+
+
+                 out << "the condition of ";
+
+                 if(count == 1)
+                     out << get_article(statement_type) << ' ' << manip::bold() << statement_type << manip::normal() << " was ";
+                 else
+                     out << std::to_string(count) << ' ' << manip::bold() << statement_type << 's' << manip::normal() << " were ";
+
+                 out << "altered\n";
+
+            }
+
+            if(operation != SRCDIFF_COMMON) {
+
+                out.begin_line();
+
+                if(count == 1)
+                    out << get_article(statement_type) << ' ' << manip::bold() << statement_type << manip::normal() << " was ";
+                else
+                    out << std::to_string(count) << ' ' << manip::bold() << statement_type << 's' << manip::normal() << " were ";
+
+                out << (operation == SRCDIFF_DELETE ? "deleted" : "inserted");
+
+                out << '\n';
+
+            }
+
+            return out;
+
+        }
+
 };
 
 #endif

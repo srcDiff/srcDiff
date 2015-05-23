@@ -41,6 +41,69 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
         }
 
+        virtual summary_output_stream & output(summary_output_stream & out, size_t count) const {
+
+            out.begin_line();
+
+            if(number_deleted != 0) {
+
+                if(number_deleted == 1)
+                    out << "a " << manip::bold() << "call" << manip::normal() << " was deleted";
+                else
+                    out << std::to_string(number_deleted) << ' ' << manip::bold() << "calls" << manip::normal() << " were deleted";
+
+            } else if(number_inserted != 0) {
+
+                if(number_inserted == 1)
+                    out << "a " << manip::bold() << "call" << manip::normal() << " was inserted";
+                else
+                    out << std::to_string(number_inserted) << ' ' << manip::bold() << "calls" << manip::normal() << " were inserted";
+
+            } else if(number_renamed != 0) {
+
+                if(number_renamed == 1)
+                    out << "a " << manip::bold() << "call" << manip::normal() << " was renamed";
+                else
+                    out << std::to_string(number_renamed) << ' ' << manip::bold() << "calls" << manip::normal() << " were renamed";
+
+            } else if(number_argument_list_modified != 0) {
+
+                size_t number_arguments_total = number_arguments_deleted + number_arguments_inserted + number_arguments_modified;
+
+                if(number_argument_list_modified == 1) {
+
+                    if(number_arguments_total == 1) {
+
+                        out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
+
+                        if(number_arguments_deleted == 1)
+                            out << "deleted";
+                        else if(number_arguments_inserted == 1)
+                            out << "inserted";
+                        else
+                            out << "modified";
+
+                    } else {
+
+                        //out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << " were modified";
+                        out << "an " << manip::bold() << "argument list" << manip::normal() << " was modified";
+
+                    }
+
+                } else {
+
+                    out << manip::bold() << "argument lists" << manip::normal() << " were modified";
+
+                }
+
+            }
+
+            out << '\n';
+
+            return out;
+
+        }
+
 };
 
 #endif
