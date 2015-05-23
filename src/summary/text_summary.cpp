@@ -1,26 +1,6 @@
 #include <text_summary.hpp>
 
-#include <conditional_profile_t.hpp>
-#include <decl_stmt_profile_t.hpp>
-#include <call_profile_t.hpp>
-#include <parameter_profile_t.hpp>
-#include <if_profile_t.hpp>
-#include <call_profile_t.hpp>
-#include <expr_profile_t.hpp>
-#include <ternary_profile_t.hpp>
-#include <identifier_profile_t.hpp>
-#include <identifier_diff.hpp>
-#include <summary_manip.hpp>
-
-#include <algorithm>
-#include <functional>
-#include <list>
-#include <set>
-#include <typeinfo>
-#include <cstring>
-
-text_summary::text_summary(const change_entity_map<parameter_profile_t> & parameters, const change_entity_map<call_profile_t> & member_initializations)
-    : parameters(parameters), member_initializations(member_initializations) {}
+text_summary::text_summary() {}
 
 summary_output_stream & text_summary::parameter(summary_output_stream & out, size_t number_parameters_deleted,
                                        size_t number_parameters_inserted, size_t number_parameters_modified) const {
