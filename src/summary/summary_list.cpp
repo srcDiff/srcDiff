@@ -152,40 +152,6 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 
 }
 
-bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
-                                    std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
-
-    bool is_identifier_only = true;
-    for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
-
-        if(is_identifier(child_profile->type_name)) {
-
-            const std::shared_ptr<identifier_profile_t> & identifier_profile
-                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
-
-            identifier_diff ident_diff(identifier_profile->name);
-            ident_diff.trim(false);
-
-            if(identifier_set.count(ident_diff))
-                identifier_renames.insert(identifier_profile->name);
-
-
-        } else if(child_profile->operation != SRCDIFF_COMMON) {
-
-            is_identifier_only = false;
-
-        } else {
-
-            is_identifier_only = is_identifier_only && identifier_check(child_profile, identifier_set, identifier_renames);
-
-        }
-
-    }
-
-    return is_identifier_only;
-
-}
-
 void summary_list::identifiers(const std::map<identifier_diff, size_t> & identifiers) {
 
 
@@ -541,6 +507,46 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
 
 }
 
+static bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_one, const std::__1::reference_wrapper<const versioned_string> & ref_two) {
+
+    return ref_one.get() < ref_two.get();
+
+}
+
+bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+                                    std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+
+    bool is_identifier_only = true;
+    for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
+
+        if(is_identifier(child_profile->type_name)) {
+
+            const std::shared_ptr<identifier_profile_t> & identifier_profile
+                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
+
+            identifier_diff ident_diff(identifier_profile->name);
+            ident_diff.trim(false);
+
+            if(identifier_set.count(ident_diff))
+                identifier_renames.insert(identifier_profile->name);
+
+
+        } else if(child_profile->operation != SRCDIFF_COMMON) {
+
+            is_identifier_only = false;
+
+        } else {
+
+            is_identifier_only = is_identifier_only && identifier_check(child_profile, identifier_set, identifier_renames);
+
+        }
+
+    }
+
+    return is_identifier_only;
+
+}
+
 void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                            bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
                            std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
@@ -851,12 +857,6 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
        summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
 
     }
-
-}
-
-static bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_one, const std::__1::reference_wrapper<const versioned_string> & ref_two) {
-
-    return ref_one.get() < ref_two.get();
 
 }
 
