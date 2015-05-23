@@ -10,11 +10,6 @@ test_number = 1
 test_count = 0
 errors = []
 
-def set_winsize(fd, row, col, xpix=0, ypix=0) :
-
-    winsize = struct.pack("HHHH", row, col, xpix, ypix)
-    fcntl.ioctl(fd, termios.TIOCSWINSZ, winsize)
-
 def get_next_test(test_file) :
 
 	line = test_file.readline()
