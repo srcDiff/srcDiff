@@ -150,16 +150,16 @@ class function_profile_t : public profile_t {
 
                 text_summary text;
 
-                if(!name.is_common()) out.begin_line() << "Name changed: " << name.original() << " -> " << name.modified() << '\n';
+                if(!name.is_common()) out.begin_line() << "name changed: " << name.original() << " -> " << name.modified() << '\n';
 
                 //if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) out.begin_line() << "Signature change:\n";
 
-                if(is_return_type_change) out.begin_line() << "Return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
+                if(is_return_type_change) out.begin_line() << "return type changed: " << return_type.original() << " -> " << return_type.modified() << '\n';
 
                 if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                     text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
-                if(const_specifier) out.begin_line() << (*const_specifier == SRCDIFF_DELETE ? "Deleted " : (*const_specifier == SRCDIFF_INSERT ? "Inserted " : "Moved ")) << "const specifier \n";
+                if(const_specifier) out.begin_line() << (*const_specifier == SRCDIFF_DELETE ? "deleted " : (*const_specifier == SRCDIFF_INSERT ? "inserted " : "moved ")) << "const specifier \n";
 
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
