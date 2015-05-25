@@ -52,11 +52,14 @@ private:
 
   srcdiff_output output;
 
+  const boost::optional<std::string> & unit_filename;
+
 public:
 
   // constructor
   srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
-                    const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str);
+                     const boost::optional<std::string> & unit_filename,
+                     const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str);
 
   // destructor
   ~srcdiff_translator();
@@ -105,7 +108,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
   // run on file level
   if(is_original || is_modified) {
 
-    output.start_unit(language, unit_directory, unit_filename, unit_version);
+    output.start_unit(language, unit_directory, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 
     srcdiff_diff diff(output, set_original, set_modified);
     diff.output();

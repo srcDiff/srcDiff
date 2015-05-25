@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="access_region">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="access_region">
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><public>public:
@@ -11,7 +11,7 @@
 
 </public></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><private>private:
@@ -21,7 +21,7 @@
 
 </private></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><protected>protected:
@@ -31,7 +31,7 @@
 
 </protected></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><signals>signals:
@@ -41,7 +41,7 @@
 
 </signals></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<public>public:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -50,7 +50,7 @@
 
 </public>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private>private:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -59,7 +59,7 @@
 
 </private>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<protected>protected:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -68,7 +68,7 @@
 
 </protected>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<signals>signals:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -77,7 +77,7 @@
 
 </signals>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><public>public:
@@ -92,7 +92,7 @@
 
 </public></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><private>private:
@@ -107,7 +107,7 @@
 
 </private></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><protected>protected:
@@ -122,7 +122,7 @@
 
 </protected></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><signals>signals:
@@ -137,7 +137,7 @@
 
 </signals></diff:delete>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<public>public:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -152,7 +152,7 @@
 
 </public>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private>private:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -167,7 +167,7 @@
 
 </private>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<protected>protected:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -182,7 +182,7 @@
 
 </protected>}</block>;</class></unit>
 
-<unit filename="access_region|access_region">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<signals>signals:
 
 <diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>

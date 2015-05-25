@@ -20,7 +20,6 @@ FIELD_WIDTH_URL = 27
 MAX_COUNT = 29
 sperrorlist = []
 
-srcml_utility = "srcml2src"
 srcml_client = "srcml"
 switch_utility = "../bin/switch_differences"
 srcdiff_utility = "../bin/srcdiff"
@@ -70,7 +69,7 @@ def safe_communicate_two_files(command, filename_one, filename_two, url) :
 # extracts a particular unit from a srcML file
 def extract_unit(src, count) :
 
-	command = [srcml_utility, "--unit=" + str(count), "--xml"]
+	command = [srcml_client, "--unit=" + str(count), "--output-xml"]
 
 	return safe_communicate(command, src)
 
@@ -83,7 +82,7 @@ def name2filestr(src_filename) :
 def extract_source(srcDiff, operation) :
 
 	# run the srcML extractor
-	command = [srcml_utility, "--revision", operation]
+	command = [srcml_client, "--revision", operation]
 
 	return safe_communicate(command, srcDiff)
 
@@ -114,7 +113,7 @@ def linediff(xml_filename1, xml_filename2) :
 # find differences of two files
 def srcdiff(source_file_version_one, source_file_version_two, encoding, language, url, filename, prefixlist) :
 
-	command = [globals()["srcdiff_utility"], "-u", url, "-f", filename, "--same"]
+	command = [globals()["srcdiff_utility"], "-f", filename]
 
 	temp_file = open("temp_file_one.cpp", "w")
 	temp_file.write(source_file_version_one)
@@ -128,7 +127,7 @@ def srcdiff(source_file_version_one, source_file_version_two, encoding, language
 
 def get_srcml_attribute(xml_file, command) :
 
-	last_line = safe_communicate([srcml_utility, command], xml_file)
+	last_line = safe_communicate([srcml_client, command], xml_file)
 
 	return last_line.strip()
 
@@ -138,30 +137,10 @@ def get_srcml_attribute_file(xml_file, command) :
 
 	return last_line.strip()
 
-# url attribute
-def get_url(xml_file) :
-
-	return get_srcml_attribute(xml_file, "-u")
-
-# language attribute
-def get_language(xml_file) :
-	
-	return get_srcml_attribute(xml_file, "-l")
-
-# xml encoding
-def get_encoding(xml_file) :
-
-	return get_srcml_attribute(xml_file, "-x")
-
-# version attribute
-def get_version(xml_file) :
-
-	return get_srcml_attribute(xml_file, "-x")
-
 # filename attribute
 def get_filename(xml_file) :
 
-	return get_srcml_attribute(xml_file, "-f")
+	return get_srcml_attribute(xml_file, "--show-filename")
 
 # xmlns attribute
 def get_full_xmlns(xml_file) :
@@ -195,14 +174,14 @@ def nondefault_xmlns(l) :
 # version of srcml2src
 def srcml2src_version() :
 
-	last_line = safe_communicate([srcml_utility, "-V"], "")
+	last_line = safe_communicate([srcml_client, "-V"], "")
 
 	return last_line.splitlines()[0].strip()
 
 # number of nested units
 def get_nested(xml_file) :
 
-	snumber = safe_communicate([srcml_utility, "-n"], xml_file)
+	snumber = safe_communicate([srcml_client, "-n"], xml_file)
 
 	if snumber != "" :
 		return int(snumber)
@@ -370,8 +349,8 @@ try :
 						total_count = total_count + 1
 
 						# convert the unit in xml to text
-						unit_text_version_one = extract_source(unitxml, "1")
-						unit_text_version_two = extract_source(unitxml, "2")
+						unit_text_version_one = extract_source(unitxml, "0")
+						unit_text_version_two = extract_source(unitxml, "1")
 
 						# convert the unit in xml to text (if needed)
 						if doseol :
@@ -524,6 +503,6 @@ if os.path.exists("temp_file_two.cpp") :
 
 # output tool version
 print
-print srcml2src_version(), srcml_utility
+print srcml2src_version(), srcml_client
 
 exit

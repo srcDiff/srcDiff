@@ -355,6 +355,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
     ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
     ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input source programming language")
+    ("filename,f", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::unit_filename>), "Override unit filename")
     ("register-ext", boost::program_options::value<std::string>()->notifier(option_srcml_field<REGISTER_EXT>), "Register an extension to language pair to be used during parsing")
     ("url,u", boost::program_options::value<std::string>()->notifier(option_srcml_field<URL>), "Set the root url attribute")
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
