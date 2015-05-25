@@ -13,9 +13,34 @@ class interchange_summary_t : public summary_t {
 
     public:
 
-        interchange_summary_t(summary_name_t type, srcdiff_type operation,
-		                      versioned_string statement_type)
-            : summary_t(type, operation), statement_type(statement_type) {}
+        interchange_summary_t(versioned_string statement_type)
+            : summary_t(INTERCHANGE, SRCDIFF_COMMON), statement_type(statement_type) {}
+
+        virtual bool compare(const summary_t & summary) const {
+
+            const interchange_summary_t & interchange_summary = dynamic_cast<const interchange_summary_t &>(summary);
+            return statement_type == interchange_summary.statement_type;
+
+        }
+
+        virtual summary_output_stream & output(summary_output_stream & out) const {
+
+            out.begin_line();
+
+            if(count == 1)
+                out << get_article(statement_type.original()) << ' ' << manip::bold() << statement_type.original() << manip::normal()
+                    << " was converted to "
+                    << get_article(statement_type.modified()) << ' ' << manip::bold() << statement_type.modified() << manip::normal();
+            else
+                out << std::to_string(count) << ' ' << manip::bold() << statement_type.original() << 's' << manip::normal()
+                    << " were converted to "
+                    << manip::bold() << statement_type.modified() << 's' << manip::normal();
+
+            out << '\n';
+
+            return out;
+
+        }
 
 };
 

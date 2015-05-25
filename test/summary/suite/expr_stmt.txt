@@ -254,10 +254,7 @@ SUMMARY
 • function 'KisView2::createGUI':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• an #expression# was modified
-	• a #call# was deleted
-	• a #call# was deleted
-	• a #call# was deleted
-	• a #call# was deleted
+	• 4 #calls# were deleted
 
 END_SUMMARY
 

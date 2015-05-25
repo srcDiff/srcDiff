@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <list>
 
 class summary_list {
 
@@ -21,26 +22,24 @@ private:
 
 protected:
 
-    std::vector<summary_t> summaries;
+    std::list<summary_t *> summaries_;
     std::map<identifier_diff, size_t> output_identifiers;
 
 private:
 
     std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
 
+    bool is_block_summary(const std::string & type, bool is_replacement) const;
+    void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
+    void block(const std::shared_ptr<profile_t> & profile);
+
     void identifiers(const std::map<identifier_diff, size_t> & identifiers);
     void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos);
+    void interchange(const std::shared_ptr<profile_t> & profile);
 
-    bool is_body_summary(const std::string & type, bool is_replacement) const;
-
-    void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
-
-    size_t number_child_changes(const profile_t::profile_list_t & child_profiles) const;
-
-public:
-
-    summary_list();
-
+    void jump(const std::shared_ptr<profile_t> & profile);
+    void else_clause(const std::shared_ptr<profile_t> & profile);
+    void conditional(const std::shared_ptr<profile_t> & profile);
     bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                           std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
     void ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
@@ -60,18 +59,23 @@ public:
                          size_t & number_arguments_modified,
                          bool & identifier_rename_only,
                          std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    void common_expr_stmt(const std::shared_ptr<profile_t> & expr_stmt_profile) const;
+    void common_expr_stmt(const std::shared_ptr<profile_t> & expr_stmt_profile);
     void call_sequence(const std::shared_ptr<profile_t> & profile, size_t number_rename,
                                           size_t number_arguments_deleted, size_t number_arguments_inserted, size_t numbe_arguments_modified,
                                           size_t number_argument_lists_modified,
-                                          bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    void expr_stmt(const std::shared_ptr<profile_t> & profile) const;
-    void decl_stmt(const std::shared_ptr<profile_t> & profile) const;
-    void else_clause(const std::shared_ptr<profile_t> & profile);
-    void conditional(const std::shared_ptr<profile_t> & profile);
-    void interchange(const std::shared_ptr<profile_t> & profile);
-    void jump(const std::shared_ptr<profile_t> & profile);
-    void body(const profile_t & profile);
+                                          bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames);
+    void expr_stmt(const std::shared_ptr<profile_t> & profile);
+    void decl_stmt(const std::shared_ptr<profile_t> & profile);
+
+public:
+
+    summary_list();
+    ~summary_list();
+
+    void function_body(const profile_t & profile);
+
+    const std::list<summary_t *> & summaries() const;
+    std::list<summary_t *> & summaries();
 
 };
 

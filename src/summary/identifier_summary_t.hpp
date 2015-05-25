@@ -14,9 +14,44 @@ class identifier_summary_t : public summary_t {
 
     public:
 
-        identifier_summary_t(summary_name_t type, srcdiff_type operation,
-                             versioned_string name, bool is_complex)
-            : summary_t(type, operation), name(name), is_complex(is_complex) {}
+        identifier_summary_t(versioned_string name, bool is_complex)
+            : summary_t(IDENTIFIER, SRCDIFF_COMMON), name(name), is_complex(is_complex) {}
+
+        virtual bool compare(const summary_t & summary) const {
+
+            //const identifier_summary_t & identifier_summary = dynamic_cast<const identifier_summary_t &>(summary);
+            return false;
+
+        }
+
+        virtual summary_output_stream & output(summary_output_stream & out) const {
+
+            out.begin_line();
+
+            if(is_complex) {
+
+                out << "name change from '";
+                out << name.original();
+                out << "' to '";
+                out << name.modified();
+                out << '\'';
+
+
+            } else {
+
+                out << '\'';
+                out << name.original();
+                out << "' was renamed to '";
+                out << name.modified();
+                out << '\'';
+
+            }
+
+            out << '\n';
+
+            return out;
+
+        }
 
 };
 
