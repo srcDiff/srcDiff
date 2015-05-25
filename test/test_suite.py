@@ -390,8 +390,8 @@ try :
 						# convert the unit in xml to text
 						unitxml = switch_differences(unitxml)
 
-						unit_text_version_one = extract_source(unitxml, "1")
-						unit_text_version_two = extract_source(unitxml, "2")
+						unit_text_version_one = extract_source(unitxml, "0")
+						unit_text_version_two = extract_source(unitxml, "1")
 
 						# convert the unit in xml to text (if needed)
 						if doseol :
