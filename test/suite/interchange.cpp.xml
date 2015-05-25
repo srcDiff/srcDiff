@@ -1,180 +1,180 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="interchange">
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><while>while<diff:common><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:common><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></while></diff:insert></if></diff:delete>
 </unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><for>for<control>(<init>;</init> <diff:common><condition><diff:delete>(</diff:delete><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr><diff:delete type="change">)</diff:delete><diff:insert type="change">;</diff:insert></condition></diff:common><incr/>)</control><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></for></diff:insert></if></diff:delete>
 </unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete type="change"><if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></then></if></diff:delete><diff:insert type="change"><for>for<control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></for></diff:insert></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete type="change"><if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></then></if></diff:delete><diff:insert type="change"><foreach>foreach<control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></foreach></diff:insert></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><foreach>foreach<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name></expr>,<range> <expr><name>b</name></expr></range></init>)</control><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></foreach></diff:insert></if></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><for>for<control>(<init>;</init> <diff:common><condition><diff:delete>(</diff:delete><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr><diff:delete type="change">)</diff:delete><diff:insert type="change">;</diff:insert></condition></diff:common><diff:delete type="whitespace"> </diff:delete><incr/>)</control> <diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></while>
 </diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><for>for<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><foreach>foreach<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><foreach>foreach<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name></expr>,<range> <expr><name>b</name></expr></range></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><diff:delete type="change">;</diff:delete><diff:insert type="change"><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></diff:insert></init><diff:delete type="whitespace"> <condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:delete>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><diff:delete type="change">;</diff:delete><diff:insert type="change"><expr><name>a</name></expr>,<range> <expr><name>b</name></expr></range></diff:insert></init><diff:delete type="whitespace"> <condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:delete>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for>
 </diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><expr><name>a</name></expr><diff:delete type="change"><operator>,</operator> <expr><name>b</name></expr></diff:delete><diff:insert type="change">,<range> <expr><name>b</name></expr></range></diff:insert></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for>
 </diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><if>if<diff:common><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:common><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><if>if<diff:delete><control>(<init>;</init> <diff:common><condition><diff:insert>(</diff:insert><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr><diff:delete type="change">;</diff:delete><diff:insert type="change">)</diff:insert></condition></diff:common><incr/>)</control></diff:delete><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete type="change"><for>for<control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></for></diff:delete><diff:insert type="change"><if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></then></if></diff:insert></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete type="change"><foreach>foreach<control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></foreach></diff:delete><diff:insert type="change"><if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></then></if></diff:insert></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><if>if<diff:delete type="change"><control>(<init><expr><name>a</name></expr>,<range> <expr><name>b</name></expr></range></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><while>while<diff:delete><control>(<init>;</init> <diff:common><condition><diff:insert>(</diff:insert><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr><diff:delete type="change">;</diff:delete><diff:insert type="change">)</diff:insert></condition></diff:common><diff:insert type="whitespace"> </diff:insert><incr/>)</control> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><while>while<diff:delete type="change"><control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:common> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><while>while<diff:delete type="change"><control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:common> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><while>while<diff:delete type="change"><control>(<init><expr><name>a</name></expr>,<range> <expr><name>b</name></expr></range></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:common> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><diff:delete type="change"><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></diff:delete><diff:insert type="change">;</diff:insert></init><diff:insert type="whitespace"> <condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:insert>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><diff:delete type="change"><expr><name>a</name></expr>,<range> <expr><name>b</name></expr></range></diff:delete><diff:insert type="change">;</diff:insert></init><diff:insert type="whitespace"> <condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:insert>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><expr><name>a</name> <range>: <expr><name>b</name></expr></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><expr><name>a</name><diff:insert> <range>: <expr><name>b</name></expr></range></diff:insert></expr><diff:delete>,<range> <expr><name>b</name></expr></range></diff:delete></init>)</control> <block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><while>while<diff:common><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name><diff:delete type="change">b</diff:delete><diff:insert type="change">c</diff:insert></name></expr>)</condition></diff:common> <diff:delete><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></while></diff:insert></if></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><for>for<control>(<init>;</init> <diff:common><condition><diff:delete>(</diff:delete><expr><name>a</name> <operator>&amp;&amp;</operator> <name><diff:delete type="change">b</diff:delete><diff:insert type="change">c</diff:insert></name></expr><diff:delete type="change">)</diff:delete><diff:insert type="change">;</diff:insert></condition></diff:common><incr/>)</control><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></for></diff:insert></if></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><for>for<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></for></diff:insert></if></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><foreach>foreach<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></foreach></diff:insert></if></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><if>if<diff:insert><foreach>foreach<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name></expr>,<range> <expr><name>c</name></expr></range></init>)</control><diff:delete><then> <diff:insert type="whitespace"> </diff:insert><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></diff:delete></foreach></diff:insert></if></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><for>for<control>(<init>;</init> <diff:common><condition><diff:delete>(</diff:delete><expr><name>a</name> <operator>&amp;&amp;</operator> <name><diff:delete type="change">b</diff:delete><diff:insert type="change">c</diff:insert></name></expr><diff:delete type="change">)</diff:delete><diff:insert type="change">;</diff:insert></condition></diff:common><diff:delete type="whitespace"> </diff:delete><incr/>)</control> <diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><for>for<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><foreach>foreach<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><foreach>foreach<diff:delete type="change"><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition></diff:delete><control>(<init><expr><name>a</name></expr>,<range> <expr><name>c</name></expr></range></init>)</control><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><diff:delete type="change">;</diff:delete><diff:insert type="change"><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></diff:insert></init> <diff:delete><condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:delete>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><diff:delete type="change">;</diff:delete><diff:insert type="change"><expr><name>a</name></expr>,<range> <expr><name>c</name></expr></range></diff:insert></init> <diff:delete><condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:delete>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><expr><name>a</name> <range>: <diff:delete type="change"><expr><name>b</name></expr></diff:delete><diff:insert type="change"><expr><name>c</name></expr></diff:insert></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><foreach>foreach<diff:common><control>(<init><expr><name>a</name><diff:delete> <range>: <expr><name>b</name></expr></range></diff:delete></expr><diff:insert>,<range> <expr><name>c</name></expr></range></diff:insert></init>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></foreach></diff:insert></for></diff:delete></unit>
 
 
 
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><while>while<diff:insert><if>if<diff:common><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name><diff:delete type="change">c</diff:delete><diff:insert type="change">b</diff:insert></name></expr>)</condition></diff:common><diff:delete type="whitespace"> </diff:delete><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></while></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><if>if<diff:delete><control>(<init>;</init> <diff:common><condition><diff:insert>(</diff:insert><expr><name>a</name> <operator>&amp;&amp;</operator> <name><diff:delete type="change">c</diff:delete><diff:insert type="change">b</diff:insert></name></expr><diff:delete type="change">;</diff:delete><diff:insert type="change">)</diff:insert></condition></diff:common><incr/>)</control></diff:delete><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><if>if<diff:delete type="change"><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><if>if<diff:delete type="change"><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><if>if<diff:delete type="change"><control>(<init><expr><name>a</name></expr>,<range> <expr><name>c</name></expr></range></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then> <diff:delete type="whitespace"> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></then></if></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><while>while<diff:delete><control>(<init>;</init> <diff:common><condition><diff:insert>(</diff:insert><expr><name>a</name> <operator>&amp;&amp;</operator> <name><diff:delete type="change">c</diff:delete><diff:insert type="change">b</diff:insert></name></expr><diff:delete type="change">;</diff:delete><diff:insert type="change">)</diff:insert></condition></diff:common><diff:insert type="whitespace"> </diff:insert><incr/>)</control> </diff:delete><diff:common><block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><for>for<diff:insert><while>while<diff:delete type="change"><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></for></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><while>while<diff:delete type="change"><control>(<init><expr><name>a</name> <range>: <expr><name>c</name></expr></range></expr></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><while>while<diff:delete type="change"><control>(<init><expr><name>a</name></expr>,<range> <expr><name>c</name></expr></range></init>)</control></diff:delete><condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:common> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></while></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><diff:delete type="change"><expr><name>a</name></expr>,<range> <expr><name>c</name></expr></range></diff:delete><diff:insert type="change">;</diff:insert></init><diff:insert><condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:insert>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><diff:delete type="change"><expr><name>a</name></expr>,<range> <expr><name>c</name></expr></range></diff:delete><diff:insert type="change">;</diff:insert></init><diff:insert><condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition><incr/></diff:insert>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><expr><name>a</name> <range>: <diff:delete type="change"><expr><name>c</name></expr></diff:delete><diff:insert type="change"><expr><name>b</name></expr></diff:insert></range></expr></init>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><expr><name>a</name><diff:insert><range>: <expr><name>b</name></expr></range></diff:insert></expr><diff:delete>,<range> <expr><name>c</name></expr></range></diff:delete></init>)</control> <block type="pseudo"><expr_stmt><expr><name>d</name> <operator>+</operator> <name>e</name> <operator>+</operator> <name>f</name> <operator>+</operator> <name>g</name></expr>;</expr_stmt></block></diff:common></for></diff:insert></foreach></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><else><diff:insert><elseif><diff:common>else </diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></elseif></diff:insert></else></diff:delete></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><elseif><diff:insert><else><diff:common>else </diff:common><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></diff:delete></else></diff:insert></elseif></diff:delete></unit>
 
 
 <!-- Specific examples -->
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><foreach>foreach<diff:insert><for>for<diff:common><control>(<init><diff:delete type="change"><decl><type><name><name>KoViewPrivate</name><operator>::</operator><name>StatusBarItem</name></name></type> <name>sbItem</name>,<range> <expr><name><name>d</name><operator>-&gt;</operator><name>statusBarItems</name></name></expr></range></decl></diff:delete><diff:insert type="change"><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</diff:insert></init><diff:insert type="whitespace"> <condition><expr><name>i</name> <operator>&lt;</operator> <name>itemCount</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr></diff:insert>)</control> <block>{
 <diff:insert>    <decl_stmt><decl><type><name><name>KoViewPrivate</name><operator>::</operator><name>StatusBarItem</name></name> <modifier>&amp;</modifier></type><name>sbItem</name> <init>= <expr><name><name>d</name><operator>-&gt;</operator><name>statusBarItems</name><index>[<expr><name>i</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
 </diff:insert>    <if>if <condition>(<expr><name>show</name></expr>)</condition><then><diff:delete type="whitespace">
@@ -188,7 +188,7 @@
 }</block></diff:common></for></diff:insert></foreach></diff:delete>
 </unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <if>if <condition>(<expr><name>paragraphStyle</name></expr>)</condition><then> <block>{
     <expr_stmt><expr><name>paragStyleClone</name> <operator>=</operator> <call><name><name>paragraphStyle</name><operator>-&gt;</operator><name>clone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
     <decl_stmt><decl><type><name>ParagraphGeneral</name> <modifier>*</modifier></type><name>p</name> <init>= <expr><operator>new</operator> <name>ParagraphGeneral</name></expr></init></decl>;</decl_stmt>
@@ -211,11 +211,11 @@
 }</block></else></diff:insert></elseif></diff:delete></if>
 </unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><class>class<diff:insert><struct>struct<diff:common> <name>foo</name> <block>{<diff:delete type="change"><private type="default"/></diff:delete><diff:insert type="change"><public type="default"/></diff:insert>}</block>;</diff:common></struct></diff:insert></class></diff:delete>
 </unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><struct>struct<diff:insert><class>class<diff:common> <name>function_profile_t</name> <super>: <specifier>public</specifier> <name>profile_t</name></super> <block>{<diff:delete><public type="default"><diff:insert><private type="default"><diff:common>
 
     </diff:common></private></diff:insert></public></diff:delete><private>private:
@@ -234,7 +234,7 @@
 
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></unit>
 
-<unit filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete><struct>struct<diff:insert><class>class<diff:common> <name>A</name> <block>{<diff:insert><private type="default">
 
 </private></diff:insert><public type="default|"><diff:insert>public:</diff:insert>

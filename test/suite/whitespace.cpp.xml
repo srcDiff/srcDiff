@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="whitespace">
 
-<unit filename="whitespace|whitespace">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="whitespace|whitespace">
 <diff:delete type="whitespace">  </diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit filename="whitespace|whitespace">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="whitespace|whitespace">
   <diff:delete type="whitespace">  </diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 

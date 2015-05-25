@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="expr_stmt">
 
-<unit filename="expr_stmt|expr_stmt"><diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt"><diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
 
-<unit filename="expr_stmt|expr_stmt"><diff:delete>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt"><diff:delete>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
 
-<unit filename="expr_stmt|expr_stmt">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt">
 <expr_stmt><expr><call><name>c</name><argument_list>(<diff:insert><argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument></diff:insert>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit filename="expr_stmt|expr_stmt">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt">
 <expr_stmt><expr><call><name>actionCollection</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>addAction</name><argument_list>(<argument><expr><literal type="string">"rotatelayer"</literal></expr></argument>, <argument><expr><name><diff:delete type="change">action</diff:delete><diff:insert type="change">m_rotateLayerAction</diff:insert></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 

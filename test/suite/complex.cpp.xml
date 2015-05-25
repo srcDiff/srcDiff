@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="complex">
 
-<unit filename="complex|complex">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
 <diff:delete><if>if <condition>(<expr><call><name><name>shape</name><operator>-&gt;</operator><name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
     <diff:common><decl_stmt><decl><type><name>QString</name></type> <name>anchorType</name><diff:delete> <init>= <expr><call><name><name>shape</name><operator>-&gt;</operator><name>additionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
 </diff:common><diff:insert><if>if <condition>(<expr><call><name><name>shape</name><operator>-&gt;</operator><name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr>)</condition><then>
@@ -31,7 +31,7 @@
 </diff:common>}</block></then></if>
 </diff:delete></unit>
 
-<unit filename="complex|complex">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
 <function><type><name>bool</name></type> <name><name>AbstractRegionCommand</name><operator>::</operator><name>isApproved</name></name><parameter_list>()</parameter_list> <specifier>const</specifier>
 <block>{
     <decl_stmt><decl><type><specifier>const</specifier> <name><name>QList</name><argument_list type="template">&lt;<argument><expr><name>Element</name> <modifier>*</modifier></expr></argument>&gt;</argument_list></name></type> <name>elements</name> <init>= <expr><call><name>cells</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
@@ -72,7 +72,7 @@
 }</block></function>
 </unit>
 
-<unit filename="complex|complex">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
 <diff:delete><if>if <condition>(<expr><call><name><name>shape</name><operator>.</operator><name>has</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
     <diff:common><decl_stmt><decl><type><name>string</name></type> <name>type</name><diff:delete> <init>= <expr><call><name><name>shape</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
 </diff:common>    <diff:common><if>if<condition>(<expr><name>type</name> <operator>!=</operator> <literal type="string">"page"</literal></expr>)</condition><then> <block>{
@@ -83,7 +83,7 @@
 </diff:common>}</block></then></if>
 </diff:delete></unit>
 
-<unit filename="complex|complex">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
 <function><type><name>void</name></type> <name><name>KisToolSelectPolygonal</name><operator>::</operator><name>finish</name></name><parameter_list>()</parameter_list>
 <block>{
     <if>if <condition>(<expr><call><name>currentImage</name><argument_list>()</argument_list></call><diff:insert> <operator>&amp;&amp;</operator> <call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call> <operator>&gt;</operator> <literal type="number">2</literal></diff:insert></expr>)</condition><then> <block>{
@@ -139,7 +139,7 @@
 }</block></function>
 </unit>
 
-<unit filename="complex|complex">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
 <function><type><name>bool</name></type> <name><name>Sheet</name><operator>::</operator><name>testListChoose</name></name><parameter_list>(<parameter><decl><type><name>Selection</name><modifier>*</modifier></type> <name>selection</name></decl></parameter>)</parameter_list>
 <block>{
   <diff:delete type="whitespace"> </diff:delete><decl_stmt><decl><type><specifier>const</specifier> <name>QPoint</name></type> <name>marker</name><argument_list>( <argument><expr><call><name><name>selection</name><operator>-&gt;</operator><name>marker</name></name><argument_list>()</argument_list></call></expr></argument> )</argument_list></decl>;</decl_stmt>
@@ -177,7 +177,7 @@
 }</block></function>
 </unit>
 
-<unit filename="complex|complex">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
    <diff:delete type="whitespace"> </diff:delete><if>if <condition>(<expr><call><name>read_icc_profile</name><argument_list>(<argument><expr><operator>&amp;</operator><name>cinfo</name></expr></argument>, <argument><expr><operator>&amp;</operator><name>profile_data</name></expr></argument>, <argument><expr><operator>&amp;</operator><name>profile_len</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
         <expr_stmt><expr><call><name><name>profile_rawdata</name><operator>.</operator><name>resize</name></name><argument_list>(<argument><expr><name>profile_len</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
         <expr_stmt><expr><call><name>memcpy</name><argument_list>(<argument><expr><call><name><name>profile_rawdata</name><operator>.</operator><name>data</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>profile_data</name></expr></argument>, <argument><expr><name>profile_len</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
@@ -194,7 +194,7 @@
     }</block></then></if>
 </unit>
 
-<unit filename="complex|complex">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
 <if>if<condition>( <expr><name>path</name> <operator>&amp;&amp;</operator> <call><name><name>shape</name><operator>-&gt;</operator><name>background</name></name><argument_list>()</argument_list></call></expr> )</condition><then> <block>{
 <diff:insert>    <comment type="line">// non-zero is default, so only write fillrule if evenodd is set</comment></diff:insert>
     <if>if<condition>( <expr><call><name><name>path</name><operator>-&gt;</operator><name>fillRule</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>Qt</name><operator>::</operator><name>OddEvenFill</name></name></expr> )</condition><then>

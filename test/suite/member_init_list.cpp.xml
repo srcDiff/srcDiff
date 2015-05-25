@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="member_init_list">
 
-<unit filename="member_init_list|member_init_list">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="member_init_list|member_init_list">
 <constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
 <diff:delete><member_init_list>: <call><name>a</name><argument_list>()</argument_list></call></member_init_list></diff:delete><block>{}</block></constructor>
 </unit>
 
-<unit filename="member_init_list|member_init_list">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="member_init_list|member_init_list">
 <constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
 <diff:delete><member_init_list>: <call><name>a</name><argument_list>()</argument_list></call>
 </member_init_list></diff:delete><block>{}</block></constructor>

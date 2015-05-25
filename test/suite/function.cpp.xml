@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="function">
 
-<unit filename="function|function"><diff:delete><function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function></diff:delete></unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function"><diff:delete><function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function></diff:delete></unit>
 
-<unit filename="function|function"><diff:delete>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function"><diff:delete>
 <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function></diff:delete></unit>
 
 <!-- type one part delete -->
-<unit filename="function|function">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
 <function><type><diff:delete><specifier>const</specifier> </diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -15,7 +15,7 @@
 </unit>
 
 <!-- delete first parameter -->
-<unit filename="function|function">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
 <function><type><diff:delete><specifier>const</specifier> </diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<diff:delete><parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, </diff:delete><parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -23,7 +23,7 @@
 </unit>
 
 <!-- delete second parameter -->
-<unit filename="function|function">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
 <function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <diff:delete><parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, </diff:delete><parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -31,7 +31,7 @@
 </unit>
 
 <!-- type one part replace -->
-<unit filename="function|function">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
 <function><type><specifier>const</specifier> <name><diff:delete type="change">int</diff:delete><diff:insert type="change">double</diff:insert></name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -39,17 +39,17 @@
 </unit>
 
 <!-- name change -->
-<unit filename="function|function">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
 <function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name><diff:delete type="change">f</diff:delete><diff:insert type="change">g</diff:insert></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 }</block></function>
 </unit>
 
-<unit filename="foreach|foreach"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>j</name></expr></range></decl></init>)</control>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="foreach|foreach"><diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>j</name></expr></range></decl></init>)</control>
 <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></foreach></diff:delete></unit>
 
-<unit filename="foreach|foreach">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="foreach|foreach">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 <diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -57,7 +57,7 @@
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common>
 }</block></foreach></diff:delete></unit>
 
-<unit filename="foreach|foreach">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="foreach|foreach">
 <foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 
 <diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -75,7 +75,7 @@
 </diff:delete>}</block></foreach><diff:delete type="whitespace">
 </diff:delete></unit>
 
-<unit filename="foreach|foreach">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="foreach|foreach">
 <foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -94,7 +94,7 @@
     <block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></foreach>
 </unit>
 
-<unit filename="foreach|foreach">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="foreach|foreach">
 <foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control> <block>{
 
 <diff:delete>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -112,7 +112,7 @@
 </diff:delete>}</block></foreach><diff:delete type="whitespace">
 </diff:delete></unit>
 
-<unit filename="foreach|foreach">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="foreach|foreach">
 <foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change"> <block>{
 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
