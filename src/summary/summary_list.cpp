@@ -116,6 +116,8 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
     const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
 
+    if(profile->operation != SRCDIFF_COMMON && profile->operation == profile->parent->operation) return;
+
     if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
 
         replacement(profile, child_pos);
@@ -507,10 +509,12 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
         && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
         return else_clause(profile->child_profiles[0]);
 
+    bool is_internal = profile->operation != SRCDIFF_COMMON && profile->operation == profile->parent->operation;
+
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
         && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
 
-    if(condition_modified || summary_profile->operation != SRCDIFF_COMMON)
+    if(condition_modified || (summary_profile->operation != SRCDIFF_COMMON && !is_internal))
         summaries_.emplace_back(new conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
 
     if(summary_profile->summary_identifiers.size() > 0)
