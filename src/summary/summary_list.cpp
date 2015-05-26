@@ -21,6 +21,7 @@
 #include <call_sequence_summary_t.hpp>
 #include <expr_stmt_calls_summary_t.hpp>
 #include <decl_stmt_summary_t.hpp>
+#include <exception_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -97,7 +98,7 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 bool summary_list::is_block_summary(const std::string & type, bool is_replacement) const {
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
-        || is_jump(type) || type == "else";
+        || is_jump(type) || type == "else" || is_exception_handling(type);
 
 }
 
@@ -129,6 +130,8 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
             expr_stmt(child_profile);
         else if(is_decl_stmt(child_profile->type_name))
             decl_stmt(child_profile);
+        else if(is_exception_handling(child_profile->type_name))
+            exception(child_profile);
 
     }
 
@@ -990,6 +993,20 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
         summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
     else
         summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, !decl_stmt_profile->type.is_common(), !decl_stmt_profile->name.is_common(), !decl_stmt_profile->init.is_common()));
+
+}
+
+void summary_list::exception(const std::shared_ptr<profile_t> & profile) {
+
+    assert(is_exception_handling(profile->type_name));
+
+    if(profile->operation != SRCDIFF_COMMON)
+        summaries_.emplace_back(new exception_summary_t(profile->operation, get_type_string(profile)));
+
+    if(profile->summary_identifiers.size() > 0)
+        identifiers(profile->summary_identifiers);
+
+    block(profile);
 
 }
 

@@ -66,6 +66,7 @@ private:
                                           bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames);
     void expr_stmt(const std::shared_ptr<profile_t> & profile);
     void decl_stmt(const std::shared_ptr<profile_t> & profile);
+    void exception(const std::shared_ptr<profile_t> & profile);
 
 public:
 

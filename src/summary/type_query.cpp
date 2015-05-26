@@ -148,3 +148,9 @@ bool is_statement(const std::string & type_name) {
         || type_name == "try" || type_name == "catch" || type_name == "case"   || type_name == "default";
 
 }
+
+bool is_exception_handling(const std::string & type_name) {
+
+    return type_name == "try" || is_catch(type_name);
+
+}
