@@ -89,7 +89,7 @@ def run_test(original, modified, summary) :
  
 def run_test_file(file_name) :
 
-	print file_name.ljust(globals()['FILE_WIDTH']), " ",
+	print file_name[:len(file_name) - 4].ljust(globals()['FILE_WIDTH']), " ",
 	globals()['test_number'] = 1
 
 	test_file = open(os.path.join(globals()['source_dir'], file_name), "r");
