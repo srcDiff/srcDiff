@@ -14,6 +14,7 @@
 #include <identifier_profile_t.hpp>
 #include <expr_profile_t.hpp>
 #include <ternary_profile_t.hpp>
+#include <exception_profile_t.hpp>
 
 #include <cstring>
 #include <algorithm>
@@ -40,18 +41,19 @@ bool is_summary(const std::string & type_name) {
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation,
                                         const std::shared_ptr<profile_t> & parent) {
 
-    if(is_identifier(type_name))     return std::make_shared<identifier_profile_t> (type_name, uri, operation, parent);
-    if(is_class_type(type_name))     return std::make_shared<class_profile_t>      (type_name, uri, operation, parent);
-    if(is_function_type(type_name))  return std::make_shared<function_profile_t>   (type_name, uri, operation, parent);
-    if(is_parameter(type_name))      return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent);
-    if(is_decl_stmt(type_name))      return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent);
-    if(is_if(type_name))             return std::make_shared<if_profile_t>         (type_name, uri, operation, parent);
-    if(is_ternary(type_name))        return std::make_shared<ternary_profile_t>    (type_name, uri, operation, parent);
-    if(is_condition_type(type_name)) return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent);
-    if(is_call(type_name))           return std::make_shared<call_profile_t>       (type_name, uri, operation, parent);
-    if(is_expr_stmt(type_name))      return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent);
-    if(is_expr(type_name))           return std::make_shared<expr_profile_t>       (type_name, uri, operation, parent);
-    return std::make_shared<profile_t>                                             (type_name, uri, operation, parent);
+    if(is_identifier(type_name))         return std::make_shared<identifier_profile_t> (type_name, uri, operation, parent);
+    if(is_class_type(type_name))         return std::make_shared<class_profile_t>      (type_name, uri, operation, parent);
+    if(is_function_type(type_name))      return std::make_shared<function_profile_t>   (type_name, uri, operation, parent);
+    if(is_parameter(type_name))          return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent);
+    if(is_decl_stmt(type_name))          return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent);
+    if(is_if(type_name))                 return std::make_shared<if_profile_t>         (type_name, uri, operation, parent);
+    if(is_ternary(type_name))            return std::make_shared<ternary_profile_t>    (type_name, uri, operation, parent);
+    if(is_condition_type(type_name))     return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent);
+    if(is_call(type_name))               return std::make_shared<call_profile_t>       (type_name, uri, operation, parent);
+    if(is_expr_stmt(type_name))          return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent);
+    if(is_expr(type_name))               return std::make_shared<expr_profile_t>       (type_name, uri, operation, parent);
+    if(is_exception_handling(type_name)) return std::make_shared<exception_profile_t>  (type_name, uri, operation, parent);
+    return std::make_shared<profile_t>                                                 (type_name, uri, operation, parent);
 
 }
 
@@ -853,6 +855,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             if(is_expr(profile_stack.at(expr_pos)->type_name))
                 reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->increment_calls();
+
+        } else if(full_name == "catch" && counting_profile_pos.size() > 1
+            && profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->type_name == "try") {
+
+            reinterpret_cast<std::shared_ptr<exception_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->increment_catches();
 
         }
 

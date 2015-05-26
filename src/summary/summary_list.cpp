@@ -9,6 +9,8 @@
 #include <expr_profile_t.hpp>
 #include <ternary_profile_t.hpp>
 #include <identifier_profile_t.hpp>
+#include <exception_profile_t.hpp>
+
 #include <identifier_diff.hpp>
 
 #include <identifier_summary_t.hpp>
@@ -86,6 +88,14 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
             else                            return "chain of calls";
         }
         return "expression";
+
+    }
+
+    if(is_exception_handling(profile->type_name)) {
+
+        const std::shared_ptr<exception_profile_t> & exception_profile = reinterpret_cast<const std::shared_ptr<exception_profile_t> &>(profile);
+        if(profile->type_name == "try" && profile->operation != SRCDIFF_COMMON && exception_profile->catches() > 0)
+            return "try-catch";
 
     }
 
