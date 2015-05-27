@@ -116,8 +116,6 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
     const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
 
-    if(profile->operation != SRCDIFF_COMMON && profile->operation == profile->parent->operation) return;
-
     if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
 
         replacement(profile, child_pos);
