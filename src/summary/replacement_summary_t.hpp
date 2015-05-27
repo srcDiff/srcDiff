@@ -75,7 +75,7 @@ class replacement_summary_t : public summary_t {
             out << " replaced with ";
 
             if(number_modified == 1)
-                out << get_article(modified_type) << ' ' << manip::bold() << modified_type << manip::normal();
+                out << (original_type == modified_type ? "another" : get_article(modified_type)) << ' ' << manip::bold() << modified_type << manip::normal();
             else
                 out << std::to_string(number_modified) << ' ' << manip::bold() << modified_type << 's' << manip::normal();
 
