@@ -977,6 +977,15 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
+    if(profile_stack.back()->operation != SRCDIFF_COMMON && is_condition_type(full_name) && !is_ternary(full_name) && full_name != "elseif") {
+
+        if(profile_stack.back()->operation == SRCDIFF_DELETE)
+            reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(function_pos))->decrement_cyclomatic_complexity_change();
+        else
+            reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(function_pos))->increment_cyclomatic_complexity_change();
+
+    }
+
     //bool is_prototype = full_name == "parameter" || (full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list");
     if(is_statement(full_name)/* || is_prototype*/) {
 

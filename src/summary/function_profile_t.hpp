@@ -33,13 +33,14 @@ class function_profile_t : public profile_t {
         change_entity_map<call_profile_t>        member_initializations;
 
         size_t total_statements;
+        int cyclomatic_complexity_change;
 
     private:
 
     public:
 
         function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
-            : profile_t(type_name, uri, operation, parent), total_statements(0) {}
+            : profile_t(type_name, uri, operation, parent), total_statements(0), cyclomatic_complexity_change(0) {}
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
@@ -61,17 +62,19 @@ class function_profile_t : public profile_t {
 
         }
 
+        void increment_cyclomatic_complexity_change() {
+
+            ++cyclomatic_complexity_change;
+
+        }
+
+        void decrement_cyclomatic_complexity_change() {
+
+            --cyclomatic_complexity_change;
+
+        }
+
         std::string get_cyclomatic_complexity_change() const {
-
-            int cyclomatic_complexity_change = 0;
-            for(change_entity_map<conditional_profile_t>::pair conditional_pair : conditionals) {
-
-                if(conditional_pair.first == SRCDIFF_DELETE)
-                    --cyclomatic_complexity_change;
-                else if(conditional_pair.first == SRCDIFF_INSERT)
-                    ++cyclomatic_complexity_change;
-
-            }
 
             if(cyclomatic_complexity_change > 0)  return "+" + std::to_string(cyclomatic_complexity_change);
             return std::to_string(cyclomatic_complexity_change);

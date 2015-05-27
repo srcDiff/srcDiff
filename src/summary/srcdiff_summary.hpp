@@ -57,6 +57,7 @@ protected:
 
     std::vector<std::tuple<size_t, size_t, size_t>> counting_profile_pos;
 
+    // the expr and funciton pos may need to be stack because of lambda functions and local classes
     size_t expr_stmt_pos;
     size_t function_pos;
     size_t current_move_id;
