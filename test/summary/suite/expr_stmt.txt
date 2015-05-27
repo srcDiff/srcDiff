@@ -308,7 +308,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• 2 arguments were modified
+	• 2 #arguments# were modified
 
 END_SUMMARY
 
@@ -338,3 +338,42 @@ SUMMARY
 	• an #argument# was modified
 
 END_SUMMARY
+
+### Test 9 ###
+ORIGINAL
+KoTextEditor::Private::Private(QTextDocument *document)
+	: document (document),
+    headCommand(0)
+{
+    caret = QTextCursor(document);
+    editorState = NoOp;
+}
+END_ORIGINAL
+
+MODIFIED
+KoTextEditor::Private::Private(KoTextEditor *qq, QTextDocument *document)
+    : q(qq),
+    document (document),
+    headCommand(0),
+    isBidiDocument(false)
+{
+    caret = QTextCursor(document);
+    editorState = NoOp;
+    updateRtlTimer.setSingleShot(true);
+    updateRtlTimer.setInterval(250);
+    QObject::connect(&updateRtlTimer, SIGNAL(timeout()), q, SLOT(runDirectionUpdater()));
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• constructor 'KoTextEditor::Private::Private':
+  #Impact# = #3# Statements	#Other# = #3#	#Cyclomatic# = #0#
+	• a #parameter# was inserted
+	• 2 #member initilizations# were inserted
+	• 3 #calls# were inserted
+
+END_SUMMARY
+

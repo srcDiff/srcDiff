@@ -386,5 +386,6 @@ SUMMARY
 • function 'KWView::formatPage':
   #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #+2#
 	• an #if# was inserted
+	• an #argument# was modified
 
 END_SUMMARY

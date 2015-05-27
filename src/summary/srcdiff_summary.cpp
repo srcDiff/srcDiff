@@ -109,7 +109,7 @@ void srcdiff_summary::process_characters() {
 
         } else if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos) {
 
-            if(text != "." && text != "->" && text != ".*" && text != "->*")
+            if(text != "." && text != "->" && text != ".*" && text != "->*" && text != "::")
                 reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->call(false);
 
         }
