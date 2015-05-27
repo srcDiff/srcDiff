@@ -88,13 +88,21 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
                 if(number_argument_list_modified == 1) {
 
-                    if(number_arguments_total == 1) {
+                    size_t number_argument_operations = 0;
+                    if(number_arguments_deleted != 0)  ++number_argument_operations;
+                    if(number_arguments_inserted != 0) ++number_argument_operations;
+                    if(number_arguments_modified != 0) ++number_argument_operations;
 
-                        out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
+                    if(number_argument_operations == 1) {
 
-                        if(number_arguments_deleted == 1)
+                        if(number_arguments_total == 1)
+                            out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
+                        else
+                            out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << " were ";
+
+                        if(number_arguments_deleted > 0)
                             out << "deleted";
-                        else if(number_arguments_inserted == 1)
+                        else if(number_arguments_inserted > 0)
                             out << "inserted";
                         else
                             out << "modified";

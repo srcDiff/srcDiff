@@ -308,7 +308,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• an #argument list# was modified
+	• 2 arguments were modified
 
 END_SUMMARY
 
