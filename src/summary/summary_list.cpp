@@ -24,6 +24,7 @@
 #include <expr_stmt_calls_summary_t.hpp>
 #include <decl_stmt_summary_t.hpp>
 #include <exception_summary_t.hpp>
+#include <label_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -108,7 +109,7 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 bool summary_list::is_block_summary(const std::string & type, bool is_replacement) const {
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
-        || is_jump(type) || type == "else" || is_exception_handling(type);
+        || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type);
 
 }
 
@@ -142,6 +143,8 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
             decl_stmt(child_profile);
         else if(is_exception_handling(child_profile->type_name))
             exception(child_profile);
+        else if(is_label(child_profile->type_name))
+            label(child_profile);
 
     }
 
@@ -1019,6 +1022,14 @@ void summary_list::exception(const std::shared_ptr<profile_t> & profile) {
         identifiers(profile->summary_identifiers);
 
     block(profile);
+
+}
+
+void summary_list::label(const std::shared_ptr<profile_t> & profile) {
+
+    assert(is_label(profile->type_name));
+
+    summaries_.emplace_back(new label_summary_t(profile->operation, get_type_string(profile)));
 
 }
 

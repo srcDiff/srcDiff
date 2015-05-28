@@ -1,11 +1,11 @@
-#ifndef INCLUDED_EXCEPTION_SUMMARY_T_HPP
-#define INCLUDED_EXCEPTION_SUMMARY_T_HPP
+#ifndef INCLUDED_LABEL_SUMMARY_T_HPP
+#define INCLUDED_LABEL_SUMMARY_T_HPP
 
 #include <summary_t.hpp>
 
 #include <string>
 
-class exception_summary_t : public summary_t {
+class label_summary_t : public summary_t {
 
     private:
 
@@ -13,15 +13,15 @@ class exception_summary_t : public summary_t {
 
     public:
 
-        exception_summary_t(srcdiff_type operation,
+        label_summary_t(srcdiff_type operation,
                        std::string statement_type)
-            : summary_t(EXCEPTION, operation), statement_type(statement_type) {}
+            : summary_t(LABEL, operation), statement_type(statement_type) {}
 
 
         virtual bool compare(const summary_t & summary) const {
 
-        	const exception_summary_t & exception_summary = dynamic_cast<const exception_summary_t &>(summary);
-            return statement_type == exception_summary.statement_type;
+        	const label_summary_t & label_summary = dynamic_cast<const label_summary_t &>(summary);
+            return statement_type == label_summary.statement_type;
 
         }
 

@@ -5,7 +5,7 @@ bool is_simple_type(const std::string & type_name) {
     return type_name == "throw" || type_name == "try" || type_name == "else" || type_name == "literal" || type_name == "operator"
         || type_name == "modifier" || type_name == "cpp:if" || type_name == "cpp:elif" || type_name == "cpp:else"
         || type_name == "cpp:endif" || type_name == "cpp:ifdef" || type_name == "cpp:ifndef" || type_name == "cpp:pragma" || type_name == "cpp:error"
-        || type_name == "cpp:region" || type_name == "cpp:endregion" || type_name == "case" || type_name == "default";
+        || type_name == "cpp:region" || type_name == "cpp:endregion" || type_name == "default";
 
 }
 
@@ -127,6 +127,12 @@ bool is_if(const std::string & type_name) {
 bool is_ternary(const std::string & type_name) {
 
     return type_name == "ternary";
+
+}
+
+bool is_label(const std::string & type_name) {
+
+    return type_name == "label" || type_name == "case";
 
 }
 

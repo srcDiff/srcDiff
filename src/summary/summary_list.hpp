@@ -67,6 +67,7 @@ private:
     void expr_stmt(const std::shared_ptr<profile_t> & profile);
     void decl_stmt(const std::shared_ptr<profile_t> & profile);
     void exception(const std::shared_ptr<profile_t> & profile);
+    void label(const std::shared_ptr<profile_t> & profile);
 
 public:
 

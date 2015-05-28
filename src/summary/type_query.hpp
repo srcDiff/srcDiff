@@ -24,6 +24,7 @@ bool is_emit(const std::string & type_name);
 bool is_jump(const std::string & type_name);
 bool is_if(const std::string & type_name);
 bool is_ternary(const std::string & type_name);
+bool is_label(const std::string & type_name);
 
 bool has_then_clause(const std::string & type_name);
 bool has_body(const std::string & type_name);
