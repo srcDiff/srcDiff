@@ -75,9 +75,9 @@ protected:
     size_t condition_count;
     versioned_string collected_condition;
 
-    bool left_hand_side;
-    versioned_string collect_lhs;
-    versioned_string collect_rhs;
+    std::vector<bool> left_hand_side;
+    std::vector<versioned_string> collect_lhs;
+    std::vector<versioned_string> collect_rhs;
 
     std::map<size_t, std::string &> raw_statements;
 

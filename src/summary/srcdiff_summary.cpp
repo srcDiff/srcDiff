@@ -81,22 +81,21 @@ void srcdiff_summary::process_characters() {
 
                 for(size_t pos = text.size(); pos > 0; --pos) {
 
-                    if(collect_lhs.has_original() && !collect_lhs.original().empty() && collect_lhs.original().back() == text[pos - 1])
-                        collect_lhs.original().pop_back();
+                    if(collect_lhs.back().has_original() && !collect_lhs.back().original().empty() && collect_lhs.back().original().back() == text[pos - 1])
+                        collect_lhs.back().original().pop_back();
 
-                    if(collect_lhs.has_modified() && !collect_lhs.modified().empty() && collect_lhs.modified().back() == text[pos - 1])
-                        collect_lhs.modified().pop_back();
+                    if(collect_lhs.back().has_modified() && !collect_lhs.back().modified().empty() && collect_lhs.back().modified().back() == text[pos - 1])
+                        collect_lhs.back().modified().pop_back();
                 }
 
-                while(collect_lhs.has_original() && !collect_lhs.original().empty() && isspace(collect_lhs.original().back()))
-                    collect_lhs.original().pop_back();
+                while(collect_lhs.back().has_original() && !collect_lhs.back().original().empty() && isspace(collect_lhs.back().original().back()))
+                    collect_lhs.back().original().pop_back();
 
-                while(collect_lhs.has_modified() && !collect_lhs.modified().empty() && isspace(collect_lhs.modified().back()))
-                    collect_lhs.modified().pop_back();
+                while(collect_lhs.back().has_modified() && !collect_lhs.back().modified().empty() && isspace(collect_lhs.back().modified().back()))
+                    collect_lhs.back().modified().pop_back();
 
-                expr_stmt_profile->lhs(collect_lhs);
-                left_hand_side = false;
-                collect_lhs.clear();
+                expr_stmt_profile->lhs(collect_lhs.back());
+                left_hand_side.back() = false;
 
 
             }
@@ -245,7 +244,7 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
-      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(false), collect_lhs(), collect_rhs(), raw_statements() {
+      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -335,7 +334,7 @@ void srcdiff_summary::reset() {
     collected_name.clear();
     condition_count = 0;
     collected_condition.clear();
-    left_hand_side = false;
+    left_hand_side.clear();
     collect_lhs.clear();
     collect_rhs.clear();
 
@@ -542,7 +541,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         }
         if(expr_stmt_pos.size() > 0) {
 
-            if(left_hand_side) profile_stack.back()->left_hand_side = true;
+            if(left_hand_side.back()) profile_stack.back()->left_hand_side = true;
             else               profile_stack.back()->right_hand_side = true;
 
         }
@@ -562,7 +561,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         } else if(full_name == "expr_stmt") {
 
             expr_stmt_pos.emplace_back(profile_stack.size() - 1);
-            left_hand_side = true;
+            left_hand_side.emplace_back(true);
 
         } else if(is_function_type(full_name)) {
 
@@ -805,12 +804,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         } else if(full_name == "expr_stmt") {
 
-            if(left_hand_side) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->lhs(collect_lhs);
-            else               reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->rhs(collect_rhs);
+            if(left_hand_side.back()) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->lhs(collect_lhs.back());
+            else                      reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->rhs(collect_rhs.back());
 
             expr_stmt_pos.pop_back();
-            collect_lhs.clear();
-            collect_rhs.clear();
+            left_hand_side.pop_back();
+            collect_lhs.pop_back();
+            collect_rhs.pop_back();
 
         } else if(full_name == "argument_list" && is_call(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())
                   && profile_stack.back()->syntax_count > 0) {
@@ -1055,8 +1055,13 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
-    if(expr_stmt_pos.size() > 0 && left_hand_side)  collect_lhs.append(ch, len, srcdiff_stack.back().operation);
-    if(expr_stmt_pos.size() > 0 && !left_hand_side) collect_rhs.append(ch, len, srcdiff_stack.back().operation);
+
+    for(size_t pos : expr_stmt_pos) {
+ 
+        if(left_hand_side[pos])  collect_lhs[pos].append(ch, len, srcdiff_stack.back().operation);
+        else                     collect_rhs[pos].append(ch, len, srcdiff_stack.back().operation);
+
+    }
 
     for(std::pair<const size_t, std::string &> & raw_statement : raw_statements)
         raw_statement.second.append(ch, len);
