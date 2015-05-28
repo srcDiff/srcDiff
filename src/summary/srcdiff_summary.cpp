@@ -74,9 +74,9 @@ void srcdiff_summary::process_characters() {
 
             reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->assignment(true);
 
-            if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos) {
+            if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
 
-                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos));
+                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
                 expr_stmt_profile->assignment(true);
 
                 for(size_t pos = text.size(); pos > 0; --pos) {
@@ -105,13 +105,13 @@ void srcdiff_summary::process_characters() {
 
             reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->is_delete(true);
 
-            if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos)
-                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->is_delete(true);
+            if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back())
+                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->is_delete(true);
 
-        } else if(expr_stmt_pos > 0 && (expr_pos - 1) == expr_stmt_pos) {
+        } else if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
 
             if(text != "." && text != "->" && text != ".*" && text != "->*" && text != "::")
-                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->call(false);
+                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->call(false);
 
         }
 
@@ -243,7 +243,7 @@ no_expr:
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
-      srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(0), function_pos(0), current_move_id(0),
+      srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(false), collect_lhs(), collect_rhs(), raw_statements() {
 
@@ -327,8 +327,8 @@ void srcdiff_summary::reset() {
     srcdiff_stack.clear();
     profile_stack.clear();
     counting_profile_pos.clear();
-    expr_stmt_pos = 0;
-    function_pos = 0;
+    expr_stmt_pos.clear();
+    function_pos.clear();
     current_move_id = 0;
     text.clear();
     name_count = 0;
@@ -540,7 +540,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
             current_move_id = srcdiff_stack.back().move_id;
 
         }
-        if(expr_stmt_pos) {
+        if(expr_stmt_pos.size() > 0) {
 
             if(left_hand_side) profile_stack.back()->left_hand_side = true;
             else               profile_stack.back()->right_hand_side = true;
@@ -561,12 +561,12 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         } else if(full_name == "expr_stmt") {
 
-            expr_stmt_pos = profile_stack.size() - 1;
+            expr_stmt_pos.emplace_back(profile_stack.size() - 1);
             left_hand_side = true;
 
         } else if(is_function_type(full_name)) {
 
-            function_pos = profile_stack.size() - 1;
+            function_pos.emplace_back(profile_stack.size() - 1);
 
         }
 
@@ -805,10 +805,10 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         } else if(full_name == "expr_stmt") {
 
-            if(left_hand_side) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->lhs(collect_lhs);
-            else               reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos))->rhs(collect_rhs);
+            if(left_hand_side) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->lhs(collect_lhs);
+            else               reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->rhs(collect_rhs);
 
-            expr_stmt_pos = 0;
+            expr_stmt_pos.pop_back();
             collect_lhs.clear();
             collect_rhs.clear();
 
@@ -846,7 +846,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         } else if(is_function_type(full_name)) {
 
-            function_pos = 0;
+            function_pos.pop_back();
 
         } else if(is_call(full_name)) {
 
@@ -867,9 +867,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     }
 
     // inner expr_stmt handling
-    if(expr_stmt_pos > 0 && ((profile_stack.size() - 1) - expr_stmt_pos) == 2) {
+    if(expr_stmt_pos.size() > 0 && ((profile_stack.size() - 1) - expr_stmt_pos.back()) == 2) {
 
-        std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos));
+        std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
 
         if(!is_call(full_name) && uri_stack.back() != SRCDIFF && full_name != "operator")
             expr_stmt_profile->call(false);
@@ -980,10 +980,14 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     if(profile_stack.back()->operation != SRCDIFF_COMMON && is_condition_type(full_name) && !is_ternary(full_name) && full_name != "elseif") {
 
-        if(profile_stack.back()->operation == SRCDIFF_DELETE)
-            reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(function_pos))->decrement_cyclomatic_complexity_change();
-        else
-            reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(function_pos))->increment_cyclomatic_complexity_change();
+        for(size_t pos : function_pos) {
+
+            if(profile_stack.back()->operation == SRCDIFF_DELETE)
+                reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(pos))->decrement_cyclomatic_complexity_change();
+            else
+                reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(pos))->increment_cyclomatic_complexity_change();
+
+        }
 
     }
 
@@ -1051,8 +1055,8 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
-    if(expr_stmt_pos && left_hand_side)  collect_lhs.append(ch, len, srcdiff_stack.back().operation);
-    if(expr_stmt_pos && !left_hand_side) collect_rhs.append(ch, len, srcdiff_stack.back().operation);
+    if(expr_stmt_pos.size() > 0 && left_hand_side)  collect_lhs.append(ch, len, srcdiff_stack.back().operation);
+    if(expr_stmt_pos.size() > 0 && !left_hand_side) collect_rhs.append(ch, len, srcdiff_stack.back().operation);
 
     for(std::pair<const size_t, std::string &> & raw_statement : raw_statements)
         raw_statement.second.append(ch, len);
