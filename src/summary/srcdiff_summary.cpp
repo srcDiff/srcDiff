@@ -806,6 +806,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         } else if(full_name == "expr_stmt") {
 
+
             if(left_hand_side.back()) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->lhs(collect_lhs.back());
             else                      reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->rhs(collect_rhs.back());
 
@@ -1058,7 +1059,7 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
 
-    for(size_t pos : expr_stmt_pos) {
+    for(std::vector<size_t>::size_type pos = 0; pos < expr_stmt_pos.size(); ++pos) {
  
         if(left_hand_side[pos])  collect_lhs[pos].append(ch, len, srcdiff_stack.back().operation);
         else                     collect_rhs[pos].append(ch, len, srcdiff_stack.back().operation);
