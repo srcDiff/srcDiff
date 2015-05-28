@@ -534,7 +534,7 @@ static bool operator<(const std::__1::reference_wrapper<const versioned_string> 
 bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
                                     std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
-    bool is_identifier_only = true;
+    bool is_identifier_only = profile->child_profiles.size() != 0;
     for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
 
         if(is_identifier(child_profile->type_name)) {
@@ -848,20 +848,20 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
         return call_sequence(profile, renamed_calls.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
                              modified_argument_lists.size(), identifier_rename_only, identifier_renames);
 
-    size_t number_change_types = 0;
-    if(deleted_calls.size() != 0)           ++number_change_types;
-    if(inserted_calls.size() != 0)          ++number_change_types;
-    if(renamed_calls.size() != 0)           ++number_change_types;
-    if(modified_argument_lists.size() != 0) ++number_change_types;
-    if(deleted_other.size() != 0)           ++number_change_types;
-    if(inserted_other.size() != 0)          ++number_change_types;
-    if(modified_other.size() != 0)          ++number_change_types;
+    size_t number_change_types = 0, number_call_types = 0, number_other_types = 0;
+    if(deleted_calls.size() != 0)           ++number_change_types, ++number_call_types;
+    if(inserted_calls.size() != 0)          ++number_change_types, ++number_call_types;
+    if(renamed_calls.size() != 0)           ++number_change_types, ++number_call_types;
+    if(modified_argument_lists.size() != 0) ++number_change_types, ++number_call_types;
+    if(deleted_other.size() != 0)           ++number_change_types, ++number_other_types;
+    if(inserted_other.size() != 0)          ++number_change_types, ++number_other_types;
+    if(modified_other.size() != 0)          ++number_change_types, ++number_other_types;
 
     if(identifier_rename_only && identifier_renames.size() == 1) {
 
         summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
 
-    } else if(number_change_types == 1) {
+    } else if(number_change_types == 1 && number_call_types == 1) {
 
         if(modified_argument_lists.size() <= 1)
             summaries_.emplace_back(new 
