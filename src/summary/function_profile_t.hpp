@@ -17,6 +17,8 @@
 
 #include <cctype>
 
+class class_profile_t;
+
 class function_profile_t : public profile_t {
 
     private:
@@ -34,6 +36,8 @@ class function_profile_t : public profile_t {
 
         size_t total_statements;
         int cyclomatic_complexity_change;
+
+        change_entity_map<class_profile_t> local_classes;
 
     private:
 
@@ -57,7 +61,8 @@ class function_profile_t : public profile_t {
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile));
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
             else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
-            
+            else if(is_class_type(type_name)) local_classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
+
             descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
 
         }
@@ -195,6 +200,10 @@ class function_profile_t : public profile_t {
             }
 
             out.decrement_depth();
+
+            local_classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            local_classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            local_classes.summarize_modified(out, summary_types);
 
             return out;
 
