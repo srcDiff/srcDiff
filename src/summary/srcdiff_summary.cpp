@@ -562,6 +562,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
             expr_stmt_pos.emplace_back(profile_stack.size() - 1);
             left_hand_side.emplace_back(true);
+            collect_lhs.emplace_back(versioned_string());
+            collect_rhs.emplace_back(versioned_string());
 
         } else if(is_function_type(full_name)) {
 
