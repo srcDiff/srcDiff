@@ -17,7 +17,7 @@ const char * const LINE_CODE = "\x1b[36m";
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 bash_view::bash_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
-          is_after_change(false), wait_change(true), in_function(false), context_type(context_type), length(0),
+          is_after_change(false), wait_change(true), in_function(), context_type(context_type), length(0),
           is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
   if(context_type.type() == typeid(size_t)) {
@@ -62,7 +62,7 @@ void bash_view::reset() {
   line_number_insert = 0;
   is_after_change = false;
   wait_change = true;
-  in_function = false;
+  in_function.clear();
   length = 0;
   additional_context.clear();
   is_after_additional = false;
@@ -183,9 +183,14 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
-      in_function = true;
-      additional_context.clear();
-      length = 0;
+      in_function.emplace_back(true);
+
+      if(in_function.size() == 1) {
+
+        additional_context.clear();
+        length = 0;
+
+      }
 
     }
 
@@ -236,9 +241,13 @@ void bash_view::endElement(const char * localname, const char * prefix, const ch
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
-      in_function = false;
-      additional_context.clear();
-      length = 0;
+      in_function.pop_back();
+      if(in_function.size() == 0) {
+
+        additional_context.clear();
+        length = 0;
+
+      }
 
     }
 
@@ -314,7 +323,7 @@ void bash_view::characters(const char * ch, int len) {
 
         ++after_edit_count;
 
-        if((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function) && after_edit_count == number_context_lines) || (in_mode(FUNCTION) && !in_function)) {
+        if((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && after_edit_count == number_context_lines) || (in_mode(FUNCTION) && !in_function.size())) {
 
           is_after_additional = false;
           after_edit_count = 0;
@@ -323,9 +332,9 @@ void bash_view::characters(const char * ch, int len) {
 
         }
 
-      } else if(wait_change && ((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function))) {
+      } else if(wait_change && ((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function.size()))) {
 
-        if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function) && length >= number_context_lines)
+        if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
         additional_context.push_back(context);

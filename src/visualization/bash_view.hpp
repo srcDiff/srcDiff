@@ -36,7 +36,7 @@ private:
 
   bool is_after_change;
   bool wait_change;
-  bool in_function;
+  std::vector<bool> in_function;
 
   boost::any context_type;
   std::list<std::string>::size_type length;
