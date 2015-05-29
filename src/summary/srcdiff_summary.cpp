@@ -34,7 +34,7 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
 
 bool is_summary(const std::string & type_name) {
 
-    return /*is_class_type(type_name) || */is_function_type(type_name);
+    return is_function_type(type_name) || is_class_type(type_name);
 
 }
 

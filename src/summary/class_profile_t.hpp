@@ -46,19 +46,19 @@ class class_profile_t : public profile_t {
 
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
-            out.begin_line() << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
+            // out.begin_line() << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
 
-            /** Change these to text and table summaries */
-            members.summarize_pure(out, summary_types, SRCDIFF_DELETE);
-            members.summarize_pure(out, summary_types, SRCDIFF_INSERT);
-            members.summarize_modified(out, summary_types);
+            // /** Change these to text and table summaries */
+            // members.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            // members.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            // members.summarize_modified(out, summary_types);
 
             methods.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             methods.summarize_pure(out, summary_types, SRCDIFF_INSERT);
             methods.summarize_modified(out, summary_types);
 
-            classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
-            classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            // classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            // classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
             classes.summarize_modified(out, summary_types);
 
             return out;
