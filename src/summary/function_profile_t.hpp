@@ -125,7 +125,7 @@ class function_profile_t : public profile_t {
 
             out.begin_line() << type_name << " '" << name << "':\n";
             out.pad() << "  ";
-            out << manip::bold() << "Impact" << manip::normal() << " = " << manip::bold() << statement_churn << manip::normal() << " Statement" << (statement_churn == 1 ? "" : "s");
+            out << manip::bold() << "Impact" << manip::normal() << " = " << manip::bold() << this->statement_churn << manip::normal() << " Statement" << (statement_churn == 1 ? "" : "s");
             out << '\t';
             out << manip::bold() << "Other" << manip::normal() << " = " << manip::bold() << get_other_change_count() << manip::normal();
             out << '\t';

@@ -40,7 +40,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'KisRecordedFilterActionEditor::KisRecordedFilterActionEditor':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact# = #3# Statement	#Other# = #0#	#Cyclomatic# = #0#
 	• a #call# was moved
 
 END_SUMMARY
