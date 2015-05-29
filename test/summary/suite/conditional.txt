@@ -389,3 +389,37 @@ SUMMARY
 	• an #argument# was modified
 
 END_SUMMARY
+
+### Test 9 ###
+ORIGINAL
+KWTextFrameSet::~KWTextFrameSet()
+{
+	delete m_document;
+}
+END_ORIGINAL
+
+MODIFIED
+KWTextFrameSet::~KWTextFrameSet()
+{
+	// first remove the doc from all our frames so they won't try to use it after we delete it.
+	if (m_frames.isEmpty()) {
+		delete m_document;
+	} else {
+		// we transfer ownership of the doc to our last shape so it will keep being alive until nobody references it anymore.
+		KoTextShapeData *tsd = qobject_cast<KoTextShapeData*>(m_frames.last()->shape()->userData());
+		Q_ASSERT(tsd);
+		tsd->setDocument(m_document);
+		m_document = 0;
+	}
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• destructor 'KWTextFrameSet::~KWTextFrameSet':
+  #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #+1#
+	• an #if-else# was inserted
+
+END_SUMMARY
