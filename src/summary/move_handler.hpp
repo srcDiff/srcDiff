@@ -2,7 +2,6 @@
 #define INCLUDED_MOVE_HANDLER_HPP
 
 #include <profile_t.hpp>
-#include <expr_stmt_profile_t.hpp>
 #include <versioned_string.hpp>
 
 #include <vector>
