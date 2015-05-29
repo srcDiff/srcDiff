@@ -172,11 +172,11 @@ class function_profile_t : public profile_t {
                     text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
                 for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr)
-                    out.begin_line() << citr->second << " specifier was deleted\n";
+                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted\n";
                 for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_INSERT); citr != specifiers.upper_bound(SRCDIFF_INSERT); ++citr)
-                    out.begin_line() << citr->second << " specifier was inserted\n";              
+                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was inserted\n";              
                 for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr)
-                    out.begin_line() << citr->second << " specifier was modified\n";
+                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was modified\n";
 
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
