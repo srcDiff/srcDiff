@@ -199,11 +199,11 @@ class function_profile_t : public profile_t {
 
             }
 
-            out.decrement_depth();
-
             local_classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             local_classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
             local_classes.summarize_modified(out, summary_types);
+
+            out.decrement_depth();
 
             return out;
 
