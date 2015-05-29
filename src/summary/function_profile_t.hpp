@@ -28,7 +28,7 @@ class function_profile_t : public profile_t {
         versioned_string return_type;
         versioned_string name;
 
-        std::map<srcdiff_type, std::string> specifiers;
+        std::multimap<srcdiff_type, std::string> specifiers;
 
         change_entity_map<conditional_profile_t> conditionals;
         change_entity_map<parameter_profile_t>   parameters;
