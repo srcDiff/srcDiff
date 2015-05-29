@@ -244,7 +244,7 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
-      text(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {
+      text(), specifier_raw(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -330,6 +330,7 @@ void srcdiff_summary::reset() {
     function_pos.clear();
     current_move_id = 0;
     text.clear();
+    specifier_raw.clear();
     name_count = 0;
     collected_name.clear();
     condition_count = 0;
@@ -865,6 +866,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             reinterpret_cast<std::shared_ptr<exception_profile_t> &>(profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2))))->increment_catches();
 
+        } else if(is_specifier(full_name)) {
+
+            profile_stack.back()->raw = specifier_raw;
+            specifier_raw.clear();
+
         }
 
     }
@@ -1055,6 +1061,8 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     if(len == 0) return;
 
     text.append(ch, len);
+    if(is_specifier(profile_stack.back()->type_name))
+        specifier_raw.append(ch,len);
 
     if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);

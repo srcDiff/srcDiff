@@ -28,7 +28,7 @@ class function_profile_t : public profile_t {
         versioned_string return_type;
         versioned_string name;
 
-        boost::optional<srcdiff_type> const_specifier;
+        std::map<srcdiff_type, std::string> specifiers;
 
         change_entity_map<conditional_profile_t> conditionals;
         change_entity_map<parameter_profile_t>   parameters;
@@ -60,7 +60,7 @@ class function_profile_t : public profile_t {
             if(is_parameter(type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile));
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
-            else if(is_specifier(type_name) && parent == "function") const_specifier = profile->operation;
+            else if(is_specifier(type_name) && parent == "function") specifiers.emplace(profile->operation, profile->raw);
             else if(is_class_type(type_name)) local_classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
 
             descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
@@ -167,7 +167,12 @@ class function_profile_t : public profile_t {
                 if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                     text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
-                if(const_specifier) out.begin_line() << (*const_specifier == SRCDIFF_DELETE ? "deleted " : (*const_specifier == SRCDIFF_INSERT ? "inserted " : "moved ")) << "const specifier \n";
+                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr)
+                    out.begin_line() << citr->second << " specifier was deleted\n";
+                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_INSERT); citr != specifiers.upper_bound(SRCDIFF_INSERT); ++citr)
+                    out.begin_line() << citr->second << " specifier was inserted\n";              
+                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr)
+                    out.begin_line() << citr->second << " specifier was modified\n";
 
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);

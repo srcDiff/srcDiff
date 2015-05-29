@@ -68,12 +68,14 @@ protected:
     counts_t total;
 
     std::string text;
+    std::string specifier_raw;
 
     size_t name_count;
     versioned_string collected_name;
 
     size_t condition_count;
     versioned_string collected_condition;
+
 
     std::vector<bool> left_hand_side;
     std::vector<versioned_string> collect_lhs;
