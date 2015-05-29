@@ -117,6 +117,12 @@ class function_profile_t : public profile_t {
 
             }
 
+
+            size_t statement_count = this->statement_count, statement_churn = this->statement_churn;
+            move_handler m_handler(statement_count, statement_churn);
+            m_handler.gather_candidates(descendant_profiles);
+            m_handler.detect();
+
             out.begin_line() << type_name << " '" << name << "':\n";
             out.pad() << "  ";
             out << manip::bold() << "Impact" << manip::normal() << " = " << manip::bold() << statement_churn << manip::normal() << " Statement" << (statement_churn == 1 ? "" : "s");
@@ -182,10 +188,6 @@ class function_profile_t : public profile_t {
 
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
-
-                move_handler m_handler;
-                m_handler.gather_candidates(descendant_profiles);
-                m_handler.detect();
 
                 summary_list list;
                 list.function_body(*this);

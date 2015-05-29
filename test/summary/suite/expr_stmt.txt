@@ -395,7 +395,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
 	• a #call# was moved
 	• an #argument# was modified
 

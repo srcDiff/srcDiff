@@ -11,6 +11,9 @@ class move_handler {
 
 private:
 
+    size_t & statement_count;
+    size_t & statement_churn;
+
 	profile_t::profile_list_t move_candidates;
 
 	void set_strings(srcdiff_type first_operation, const versioned_string & first, const versioned_string & second, versioned_string & original, versioned_string & modified) const {
@@ -23,6 +26,9 @@ private:
 	void set_move(std::shared_ptr<profile_t> & first_profile, std::shared_ptr<profile_t> & second_profile) {
 
 		if(!first_profile->raw.empty() && first_profile->raw == second_profile->raw) {
+
+            --statement_count;
+            statement_churn -= 2;
 
 			first_profile->move_id = (size_t)-1;
         	first_profile->move_parent = second_profile->parent;
@@ -42,7 +48,8 @@ private:
 
 public:
 
-	move_handler() {}
+	move_handler(size_t & statement_count, size_t & statement_churn)
+        : statement_count(statement_count), statement_churn(statement_churn) {}
 
     virtual void gather_candidates(const profile_t::profile_list_t & descendant_profiles) {
 
