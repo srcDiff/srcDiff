@@ -974,7 +974,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
             bool is_identifier_only = identifier_check(decl_stmt_profile->type, identifier_set, identifier_renames);
 
-            if(is_identifier_only)
+            if(!is_identifier_only)
                 ++number_parts_report;
 
         }
