@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+#include <cctype>
+
 class move_handler {
 
 private:
@@ -15,6 +17,40 @@ private:
     size_t & statement_churn;
 
 	profile_t::profile_list_t move_candidates;
+
+    bool compare_ignore_whitespace(const std::string & one, const std::string & two) {
+
+        std::string::size_type pos_one = 0, pos_two = 0;
+        while(pos_one < one.size() && pos_two < two.size()) {
+
+            if(isspace(one[pos_one]) || isspace(two[pos_two])) {
+
+                if(isspace(one[pos_one]))
+                    ++pos_one;
+
+                if(isspace(two[pos_two]))
+                    ++pos_two;            
+
+                continue;
+
+            }
+
+            if(one[pos_one] != two[pos_two]) return false;
+
+            ++pos_one, ++pos_two;
+
+
+        }
+
+        while(pos_one < one.size() && isspace(one[pos_one]))
+            ++pos_one;
+
+        while(pos_two < two.size() && isspace(two[pos_two]))
+            ++pos_two;
+
+        return pos_one == one.size() && pos_two == two.size();
+
+    }
 
 	void set_strings(srcdiff_type first_operation, const versioned_string & first, const versioned_string & second, versioned_string & original, versioned_string & modified) const {
 
@@ -25,7 +61,7 @@ private:
 
 	void set_move(std::shared_ptr<profile_t> & first_profile, std::shared_ptr<profile_t> & second_profile) {
 
-		if(!first_profile->raw.empty() && first_profile->raw == second_profile->raw) {
+		if(!first_profile->raw.empty() && compare_ignore_whitespace(first_profile->raw, second_profile->raw)) {
 
             --statement_count;
             statement_churn -= 2;
