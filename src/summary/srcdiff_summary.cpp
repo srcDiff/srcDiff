@@ -28,7 +28,8 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name)
     || is_specifier(type_name)      || is_expr_stmt(type_name)            || is_argument(type_name)
     || is_comment(type_name)        || is_emit(type_name)                 || is_jump(type_name)
-    || is_ternary(type_name)        || is_label(type_name)                || is_init(type_name);
+    || is_ternary(type_name)        || is_label(type_name)                || is_init(type_name)
+    || is_type(type_name);
 
 }
 
@@ -874,13 +875,26 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             specifier_raw.clear();
 
         } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
-            && profile_stack.at(profile_stack.size() - 3)->type_name == "decl_stmt") {
+            && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name)) {
 
             if(profile_stack.back()->type_name == "type")
                 reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->type = profile_stack.back();
             else if(profile_stack.back()->type_name == "init")
                 reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init = profile_stack.back();
 
+
+        } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
+            && is_parameter(profile_stack.at(profile_stack.size() - 3)->type_name)) {
+
+            if(profile_stack.back()->type_name == "type")
+                reinterpret_cast<std::shared_ptr<parameter_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->type = profile_stack.back();
+            else if(profile_stack.back()->type_name == "init")
+                reinterpret_cast<std::shared_ptr<parameter_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init = profile_stack.back();
+
+
+        } else if(full_name == "type" && profile_stack.size() > 1 && is_function_type(profile_stack.at(profile_stack.size() - 2)->type_name)) {
+
+                reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(profile_stack.size() - 2))->return_type = profile_stack.back();
 
         }
 

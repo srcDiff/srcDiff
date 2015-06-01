@@ -142,6 +142,12 @@ bool is_init(const std::string & type_name) {
 
 }
 
+bool is_type(const std::string & type_name) {
+
+    return type_name == "type";
+
+}
+
 bool has_then_clause(const std::string & type_name) {
 
     return is_if(type_name) || is_ternary(type_name);

@@ -6,6 +6,7 @@
 #include <conditional_profile_t.hpp>
 #include <if_profile_t.hpp>
 #include <call_profile_t.hpp>
+#include <identifier_profile_t.hpp>
 #include <versioned_string.hpp>
 #include <change_entity_map.hpp>
 #include <type_query.hpp>
@@ -25,7 +26,7 @@ class function_profile_t : public profile_t {
 
     public:
 
-        versioned_string return_type;
+        std::shared_ptr<profile_t> return_type;
         versioned_string name;
 
         std::multimap<srcdiff_type, std::string> specifiers;
@@ -48,8 +49,7 @@ class function_profile_t : public profile_t {
 
         virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
 
-            if(*parent == "type") return_type = name;
-            else if(is_function_type(*parent)) this->name = name;
+            if(is_function_type(*parent)) this->name = name;
 
         }
 
@@ -90,7 +90,7 @@ class function_profile_t : public profile_t {
 
             bool is_name_change = !name.is_common();
 
-            bool is_return_type_change = !return_type.is_common();
+            bool is_return_type_change = bool(return_type) && return_type->syntax_count > 0;
 
             size_t number_specifier_operations = specifiers.size();
 
@@ -157,7 +157,7 @@ class function_profile_t : public profile_t {
             }
           
             // get counts and set flags
-            bool is_return_type_change = !return_type.is_common();
+            bool is_return_type_change = bool(return_type) && return_type->syntax_count > 0;
             size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0;
             parameters.count_operations(number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
@@ -173,8 +173,11 @@ class function_profile_t : public profile_t {
 
                 //if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) out.begin_line() << "Signature change:\n";
 
-                if(is_return_type_change) out.begin_line() << manip::bold() << "return type change" <<manip::normal()
-                                                           << " from '" << return_type.original() << "' to '" << return_type.modified() << "'\n";
+                if(is_return_type_change) {
+
+                    out.begin_line() << manip::bold() << "return type change" << manip::normal() << '\n';
+
+                }
 
                 if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
                     text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
