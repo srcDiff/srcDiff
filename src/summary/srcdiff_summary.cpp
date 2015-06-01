@@ -871,6 +871,11 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             profile_stack.back()->raw = specifier_raw;
             specifier_raw.clear();
 
+        } else if(full_name == "init" && profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
+            && profile_stack.at(profile_stack.size() - 3)->type_name == "decl_stmt") {
+
+            reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init_modified = profile_stack.back()->syntax_count > 0;
+
         }
 
     }

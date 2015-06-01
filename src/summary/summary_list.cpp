@@ -990,7 +990,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         }
 
-        if(!decl_stmt_profile->init.is_common()) {
+        if(decl_stmt_profile->init_modified) {
 
             run_expr_statistics(decl_stmt_profile->child_profiles.back());
 
@@ -1007,7 +1007,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
     if(number_parts_report == 1 && identifier_rename_only && identifier_renames.size() == 1)
         summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
     else
-        summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, !decl_stmt_profile->type.is_common(), !decl_stmt_profile->name.is_common(), !decl_stmt_profile->init.is_common()));
+        summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, !decl_stmt_profile->type.is_common(), !decl_stmt_profile->name.is_common(), decl_stmt_profile->init_modified));
 
 }
 
