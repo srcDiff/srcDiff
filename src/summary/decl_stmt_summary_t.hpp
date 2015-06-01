@@ -47,7 +47,7 @@ class decl_stmt_summary_t : public summary_t {
                     else
                         out << " types were ";
 
-                    out << "changed";
+                    out << "modified";
 
                 } else if(name_modified) {
 
