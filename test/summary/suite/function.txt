@@ -78,7 +78,6 @@ void f() {
 END_ORIGINAL
 
 MODIFIED
-ORIGINAL
 void g() {
   
   a;
@@ -113,6 +112,6 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
-	• #return type change# from 'void' to 'int'
+	• #return type change#
 
 END_SUMMARY

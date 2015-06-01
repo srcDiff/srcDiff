@@ -22,7 +22,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• a #declaration# initialization was modified
+	• a #declaration#'s initialization was modified
 
 END_SUMMARY
 
@@ -50,7 +50,34 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
-	• a #declaration# type was modified
+	• a #declaration#'s type was modified
 
 END_SUMMARY
 
+### Test 3 ###
+ORIGINAL
+void f() {
+
+    int a = 0;
+
+}
+
+END_ORIGINAL
+
+MODIFIED
+void f() {
+
+    virtual int a;
+
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'f':
+  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+	• a #declaration#'s specifiers were modified
+
+END_SUMMARY

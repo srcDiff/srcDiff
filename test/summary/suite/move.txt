@@ -44,3 +44,54 @@ SUMMARY
 	• a #call# was moved
 
 END_SUMMARY
+
+### Test 2 ###
+ORIGINAL
+void KoTextLoader::loadBody(const KoXmlElement &bodyElem, QTextCursor &cursor)
+{
+
+    QString cellStyleName = rowTag.attributeNS(KoXmlNS::table, "style-name", "");
+    if (!cellStyleName.isEmpty()) {
+        KoTableCellStyle *cellStyle = d->textSharedData->tableCellStyle(cellStyleName, d->stylesDotXml);
+        QTextTableCellFormat cellFormat = cell.format().toTableCellFormat();
+        cellStyle->applyStyle(cellFormat);
+        cell.setFormat(cellFormat);
+    }
+
+    if (cell.isValid()) {
+        cursor = cell.firstCursorPosition();
+        loadBody(rowTag, cursor);
+    }
+
+}
+END_ORIGINAL
+
+MODIFIED
+void KoTextLoader::loadBody(const KoXmlElement &bodyElem, QTextCursor &cursor)
+{
+    if (cell.isValid()) {
+        QString cellStyleName = rowTag.attributeNS(KoXmlNS::table, "style-name", "");
+        if (!cellStyleName.isEmpty()) {
+            KoTableCellStyle *cellStyle = d->textSharedData->tableCellStyle(cellStyleName, d->stylesDotXml);
+            QTextTableCellFormat cellFormat = cell.format().toTableCellFormat();
+            cellStyle->applyStyle(cellFormat);
+            cell.setFormat(cellFormat);
+        }
+
+        cursor = cell.firstCursorPosition();
+        loadBody(rowTag, cursor);
+    }
+
+}
+END_MODIFIED
+
+SUMMARY
+• file 'original.cpp|modified.cpp': Impact = High
+
+• Modified function(s): 1
+• function 'KoTextLoader::loadBody':
+  #Impact# = #13# Statements	#Other# = #0#	#Cyclomatic# = #0#
+	• a #declaration# was moved
+	• an #if# was moved
+
+END_SUMMARY

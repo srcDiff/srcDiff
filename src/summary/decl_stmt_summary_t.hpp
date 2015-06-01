@@ -9,6 +9,7 @@ class decl_stmt_summary_t : public summary_t {
 
     private:
 
+        bool specifiers_operation;
     	bool type_modified;
     	bool name_modified;
     	bool init_modified;
@@ -16,9 +17,9 @@ class decl_stmt_summary_t : public summary_t {
     public:
 
         decl_stmt_summary_t(srcdiff_type operation,
-				        	bool type_modified,	bool name_modified,	bool init_modified)
+				        	bool specifiers_operation, bool type_modified,	bool name_modified,	bool init_modified)
             : summary_t(DECL_STMT, operation),
-              type_modified(type_modified), name_modified(name_modified), init_modified(init_modified) {}
+              specifiers_operation(specifiers_operation), type_modified(type_modified), name_modified(name_modified), init_modified(init_modified) {}
 
         virtual bool compare(const summary_t & summary) const {
 
@@ -36,34 +37,40 @@ class decl_stmt_summary_t : public summary_t {
             else
                 out << std::to_string(count) << ' ' << manip::bold() << "declarations" << manip::normal();
 
-            size_t number_parts_report = (type_modified ? 1 : 0) + (name_modified ? 1 : 0) + (init_modified ? 1 : 0);
+            size_t number_parts_report = (specifiers_operation ? 1 : 0) + (type_modified ? 1 : 0) + (name_modified ? 1 : 0) + (init_modified ? 1 : 0);
 
             if(number_parts_report == 1) {
 
-                if(type_modified) {
+                out << "'s ";
+
+                if(specifiers_operation) {
+
+                    out << "specifiers were modified";
+
+                } else if(type_modified) {
 
                     if(count == 1)
-                        out << " type was ";
+                        out << "type was ";
                     else
-                        out << " types were ";
+                        out << "types were ";
 
                     out << "modified";
 
                 } else if(name_modified) {
 
                     if(count == 1)
-                        out << " name was ";
+                        out << "name was ";
                     else
-                        out << " names were ";
+                        out << "names were ";
 
                     out << "changed";
 
                 } else {
 
                     if(count == 1)
-                        out << " initialization was ";
+                        out << "initialization was ";
                     else
-                        out << " initialiations were ";
+                        out << "initialiations were ";
 
                     out  << "modified";
 
