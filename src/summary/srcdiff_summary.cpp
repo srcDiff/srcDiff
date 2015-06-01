@@ -28,7 +28,7 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_template(type_name)       || is_parameter(type_name)            || is_lambda(type_name)
     || is_specifier(type_name)      || is_expr_stmt(type_name)            || is_argument(type_name)
     || is_comment(type_name)        || is_emit(type_name)                 || is_jump(type_name)
-    || is_ternary(type_name)        || is_label(type_name);
+    || is_ternary(type_name)        || is_label(type_name)                || type_name == "init";
 
 }
 
@@ -769,7 +769,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             }
 
-        } else if(full_name == "condition") {
+        }
+
+        if(full_name == "condition") {
 
             --condition_count;
 
@@ -871,10 +873,14 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             profile_stack.back()->raw = specifier_raw;
             specifier_raw.clear();
 
-        } else if(full_name == "init" && profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
+        } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
             && profile_stack.at(profile_stack.size() - 3)->type_name == "decl_stmt") {
 
-            reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init_modified = profile_stack.back()->syntax_count > 0;
+            if(profile_stack.back()->type_name == "type")
+                reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->type = profile_stack.back();
+            else if(profile_stack.back()->type_name == "init")
+                reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init = profile_stack.back();
+
 
         }
 

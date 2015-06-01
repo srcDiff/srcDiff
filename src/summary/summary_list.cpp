@@ -970,12 +970,11 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
     std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
     if(decl_stmt_profile->operation == SRCDIFF_COMMON) {
 
-        if(!decl_stmt_profile->type.is_common()) {
+        if(decl_stmt_profile->type->syntax_count > 0) {
 
-            identifier_diff ident_diff(decl_stmt_profile->type);
-            ident_diff.trim(true);
+            bool is_identifier_only = identifier_check(decl_stmt_profile->type, identifier_set, identifier_renames);
 
-            if(identifier_set.count(ident_diff))
+            if(is_identifier_only)
                 ++number_parts_report;
 
         }
@@ -990,13 +989,21 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         }
 
-        if(decl_stmt_profile->init_modified) {
+        if(decl_stmt_profile->init && decl_stmt_profile->init->syntax_count > 0) {
 
-            run_expr_statistics(decl_stmt_profile->child_profiles.back());
+            if(decl_stmt_profile->init->child_profiles.size() != 1) {
 
-            /** @todo need to probably output if single identifier change */
-            if(is_expr_syntax_change())
                 ++number_parts_report;
+
+            } else {
+
+                run_expr_statistics(decl_stmt_profile->init->child_profiles[0]);
+
+                /** @todo need to probably output if single identifier change */
+                if(is_expr_syntax_change())
+                    ++number_parts_report;
+
+            }
 
         }
 
@@ -1007,7 +1014,9 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
     if(number_parts_report == 1 && identifier_rename_only && identifier_renames.size() == 1)
         summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
     else
-        summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, !decl_stmt_profile->type.is_common(), !decl_stmt_profile->name.is_common(), decl_stmt_profile->init_modified));
+        summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, decl_stmt_profile->type->syntax_count > 0,
+                                                                            !decl_stmt_profile->name.is_common(),
+                                                                            decl_stmt_profile->init->syntax_count > 0));
 
 }
 
