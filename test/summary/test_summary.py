@@ -103,6 +103,7 @@ def run_test_file(file_name) :
 
 			globals()['test_number'] += 1
 			globals()['test_count'] += 1
+			
 			original, modified, summary = get_next_test(test_file)
 
 	test_file.close()
