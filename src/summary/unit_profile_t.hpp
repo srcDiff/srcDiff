@@ -64,7 +64,7 @@ class unit_profile_t : public profile_t {
 
             // classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             // classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
-            // classes.summarize_modified(out, summary_types);
+            classes.summarize_modified(out, summary_types);
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
 
