@@ -29,7 +29,7 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_specifier(type_name)      || is_expr_stmt(type_name)            || is_argument(type_name)
     || is_comment(type_name)        || is_emit(type_name)                 || is_jump(type_name)
     || is_ternary(type_name)        || is_label(type_name)                || is_init(type_name)
-    || is_type(type_name);
+    || is_type(type_name)           || is_expr_block(type_name);
 
 }
 
@@ -464,6 +464,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     }
     full_name += local_name;
 
+    if(is_block(full_name) && (is_block(profile_stack.back()->type_name) || (profile_stack.back()->uri == SRCDIFF && is_block(profile_stack.at(profile_stack.size() - 2)->type_name))))
+        full_name = "expr_block";
+
     uri_stack.push_back(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF ? SRCDIFF : (URI == SRCML_SRC_NAMESPACE_HREF ? SRC : CPP));
 
     // detect if interchange
@@ -743,6 +746,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     }
     full_name += local_name;
 
+    if(is_block(full_name) && (is_block(profile_stack.at(profile_stack.size() - 2)->type_name) || (profile_stack.at(profile_stack.size() - 2)->uri == SRCDIFF && is_block(profile_stack.at(profile_stack.size() - 3)->type_name))))
+        full_name = "expr_block";
+
     if(uri_stack.back() != SRCDIFF) {
 
         if(!is_interchange && srcdiff_stack.back().level > 0) --srcdiff_stack.back().level;
@@ -964,6 +970,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             || profile_stack.back()->move_id
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 0)
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1 && full_name == "else")
+            || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1 && is_expr_block(profile_stack.at(profile_stack.size() - 2)->type_name))
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list")
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1 && profile_stack.at(profile_stack.size() - 2)->type_name == "expr")
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && full_name == "argument"))

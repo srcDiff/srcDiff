@@ -148,6 +148,18 @@ bool is_type(const std::string & type_name) {
 
 }
 
+bool is_block(const std::string & type_name) {
+
+    return type_name == "block";
+
+}
+
+bool is_expr_block(const std::string & type_name) {
+
+    return type_name == "expr_block";
+
+}
+
 bool has_then_clause(const std::string & type_name) {
 
     return is_if(type_name) || is_ternary(type_name);

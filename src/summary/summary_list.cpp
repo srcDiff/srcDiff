@@ -109,7 +109,7 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 bool summary_list::is_block_summary(const std::string & type, bool is_replacement) const {
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
-        || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type);
+        || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type) || is_expr_block(type);
 
 }
 
@@ -145,6 +145,8 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
             exception(child_profile);
         else if(is_label(child_profile->type_name))
             label(child_profile);
+        else if(is_expr_block(child_profile->type_name))
+            block(child_profile);
 
     }
 
@@ -157,7 +159,7 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
         const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
 
         if((child_profile->syntax_count > 0 || child_profile->move_id
-            || (child_profile->operation != SRCDIFF_COMMON && profile->operation != child_profile->operation))
+            || (child_profile->operation != SRCDIFF_COMMON && (profile->operation != child_profile->operation || is_expr_block(profile->type_name))))
             && is_block_summary(child_profile->type_name, child_profile->is_replacement)) {
 
             statement_dispatch(profile, pos);
