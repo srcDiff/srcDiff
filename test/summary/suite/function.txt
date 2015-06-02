@@ -21,7 +21,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'PageProcessingQueue::PageProcessingQueue':
-  #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #0#	#Non-Statement# = #1#	#Cyclomatic# = #0#
 	• a #member initilization# was inserted
 
 END_SUMMARY
@@ -40,7 +40,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #0#	#Non-Statement# = #1#	#Cyclomatic# = #0#
 	• a #parameter# was inserted
 
 END_SUMMARY
@@ -59,7 +59,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #0# Statements	#Other# = #3#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #0#	#Non-Statement# = #3#	#Cyclomatic# = #0#
 	• #virtual# specifier was deleted
 	• #inline# specifier was deleted
 	• #const# specifier was inserted
@@ -92,7 +92,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f|g':
-  #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #0#	#Non-Statement# = #1#	#Cyclomatic# = #0#
 	• #function name change# from 'f' to 'g'
 
 END_SUMMARY
@@ -111,7 +111,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #0# Statements	#Other# = #1#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #0#	#Non-Statement# = #1#	#Cyclomatic# = #0#
 	• #return type change#
 
 END_SUMMARY

@@ -20,7 +20,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• the condition of a #guard clause# was altered
 
 END_SUMMARY
@@ -98,7 +98,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextTool::repaintSelection':
-  #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #+2#
+  #Impact#: #Statement# = #6#	#Non-Statement# = #0#	#Cyclomatic# = #+2#
 	• a #guard clause# was inserted
 	• a #call# was replaced with a #guard clause#
 
@@ -158,7 +158,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoMainWindow::slotCloseAllViews':
-  #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #-1#
+  #Impact#: #Statement# = #6#	#Non-Statement# = #0#	#Cyclomatic# = #-1#
 	• an #if-else# was deleted
 	• an #assignment# was moved
 
@@ -198,7 +198,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoMainWindow::currentView':
-  #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
+  #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #+1#
 	• an #else# was converted to an #else if#
 	• a #return# was inserted
 
@@ -246,7 +246,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisExifIO::loadFrom':
-  #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #4#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• the condition of a #guard clause# was altered
 
 END_SUMMARY
@@ -279,7 +279,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisGroupLayer::resetProjection':
-  #Impact# = #3# Statements	#Other# = #0#	#Cyclomatic# = #+1#
+  #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #+1#
 	• an #else if# was inserted
 
 END_SUMMARY
@@ -319,7 +319,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KWView::formatPage':
-  #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #+2#
+  #Impact#: #Statement# = #5#	#Non-Statement# = #0#	#Cyclomatic# = #+2#
 	• an #if# was inserted
 	• an #argument# was modified
 
@@ -354,7 +354,7 @@ SUMMARY
 
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
-  #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #+1#
+  #Impact#: #Statement# = #5#	#Non-Statement# = #0#	#Cyclomatic# = #+1#
 	• an #if-else# was inserted
 
 END_SUMMARY

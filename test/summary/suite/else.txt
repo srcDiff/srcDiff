@@ -27,7 +27,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #+1#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #+1#
 	• an #if-else# was inserted
 
 END_SUMMARY

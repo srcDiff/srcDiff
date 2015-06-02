@@ -23,7 +23,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoDocument::openExistingFile':
-  #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #-1#
+  #Impact#: #Statement# = #4#	#Non-Statement# = #0#	#Cyclomatic# = #-1#
 	• a #declaration# was replaced with a #call#
 	• an #if# was deleted
 
@@ -60,7 +60,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'KoTextEditor::Private::Private':
-  #Impact# = #3# Statements	#Other# = #3#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #3#	#Non-Statement# = #3#	#Cyclomatic# = #0#
 	• a #parameter# was inserted
 	• 2 #member initilizations# were inserted
 	• 3 #calls# were inserted

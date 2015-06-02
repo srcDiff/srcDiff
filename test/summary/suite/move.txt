@@ -40,7 +40,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'KisRecordedFilterActionEditor::KisRecordedFilterActionEditor':
-  #Impact# = #3# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• a #call# was moved
 
 END_SUMMARY
@@ -90,7 +90,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoTextLoader::loadBody':
-  #Impact# = #13# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #13#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• a #declaration# was moved
 	• an #if# was moved
 

@@ -78,7 +78,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisView2::slotLoadingFinished':
-  #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #2#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• a #name# change occurred to a #call#
 	• a #chain of calls# was inserted
 
@@ -104,7 +104,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• an #argument# was modified
 
 END_SUMMARY
@@ -129,7 +129,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• an #argument# was modified
 
 END_SUMMARY
@@ -172,7 +172,7 @@ SUMMARY
 
 • Modified function(s): 1
 • constructor 'KoFallBackColorTransformation::KoFallBackColorTransformation':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• a #call# was renamed
 
 END_SUMMARY
@@ -221,7 +221,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisView2::createGUI':
-  #Impact# = #5# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #5#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• an #expression# was modified
 	• 4 #calls# were deleted
 
@@ -249,7 +249,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• 2 #arguments# were modified
 
 END_SUMMARY
@@ -276,7 +276,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• an #argument# was modified
 
 END_SUMMARY
@@ -304,7 +304,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'f':
-  #Impact# = #1# Statement	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• an #expression# was modified
 
 END_SUMMARY
@@ -395,7 +395,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'TextShape::paintComponent':
-  #Impact# = #4# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #4#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• a #call# was moved
 	• an #argument# was modified
 

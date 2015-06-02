@@ -40,7 +40,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KisZoomManager::changeAspectMode':
-  #Impact# = #6# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #6#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• 5 #statements# and a #comment# were replaced with a #call#
 
 END_SUMMARY
@@ -154,7 +154,7 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoZoomController::setZoom':
-  #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #-1#
+  #Impact#: #Statement# = #2#	#Non-Statement# = #0#	#Cyclomatic# = #-1#
 	• a #guard clause# was commented out
 
 END_SUMMARY
@@ -179,7 +179,7 @@ SUMMARY
 
 • Modified function(s): 1
 • destructor 'KWTextFrameSet::~KWTextFrameSet':
-  #Impact# = #2# Statements	#Other# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #2#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• a #delete# was replaced with an #assignment#
 
 END_SUMMARY
