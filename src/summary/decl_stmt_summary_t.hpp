@@ -39,7 +39,7 @@ class decl_stmt_summary_t : public summary_t {
 
             size_t number_parts_report = (specifiers_operation ? 1 : 0) + (type_modified ? 1 : 0) + (name_modified ? 1 : 0) + (init_modified ? 1 : 0);
 
-            if(number_parts_report == 1) {
+            if(operation == SRCDIFF_COMMON && number_parts_report == 1) {
 
                 out << "'s ";
 
