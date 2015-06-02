@@ -3,12 +3,16 @@ import sys
 import os
 import subprocess
 import difflib
+import re
 
 source_dir = "suite"
 FILE_WIDTH = 24
 test_number = 1
 test_count = 0
 errors = []
+
+file_pattern = None
+test_number_filter = 0
 
 def get_next_test(test_file) :
 
@@ -84,9 +88,6 @@ def run_test(original, modified, summary) :
 	else :
 		print "\033[0;33m" + str(globals()['test_number']) + "\033[0m",
 
-	globals()['test_number'] += 1
-	globals()['test_count'] += 1
- 
 def run_test_file(file_name) :
 
 	print file_name[:len(file_name) - 4].ljust(globals()['FILE_WIDTH']), " ",
@@ -96,7 +97,12 @@ def run_test_file(file_name) :
 
 	original, modified, summary = get_next_test(test_file)
 	while original != None :
-			run_test(original, modified, summary)
+
+			if globals()['test_number_filter'] == 0 or globals()['test_number_filter'] == globals()['test_number'] :
+				run_test(original, modified, summary)
+
+			globals()['test_number'] += 1
+			globals()['test_count'] += 1
 			original, modified, summary = get_next_test(test_file)
 
 	test_file.close()
@@ -106,9 +112,21 @@ def run_test_file(file_name) :
 # main
 os.environ['COLUMNS'] = "130"
 
+argc = len(sys.argv)
+if argc > 2 or (argc > 1 and not(sys.argv[1][0].isdigit())) :
+	file_pattern = re.compile(sys.argv[1])
+
+if argc > 2 :
+	test_number_filter = int(sys.argv[2])
+elif argc > 1 and sys.argv[1][0].isdigit() :
+	test_number_filter = int(sys.argv[1])
+
 for root, dirs, files in os.walk(source_dir, topdown=True) :
 
 	for name in files :
+
+		if file_pattern and not(file_pattern.match(name)) :
+			continue
 
 		run_test_file(name)
 
