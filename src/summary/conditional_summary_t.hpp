@@ -39,7 +39,7 @@ class conditional_summary_t : public summary_t {
                  else
                      out << std::to_string(count) << ' ' << manip::bold() << statement_type << 's' << manip::normal() << " were ";
 
-                 out << "altered\n";
+                 out << "modified\n";
 
             }
 

@@ -21,7 +21,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• the condition of a #guard clause# was altered
+	• the condition of a #guard clause# was modified
 
 END_SUMMARY
 
@@ -247,7 +247,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisExifIO::loadFrom':
   #Impact#: #Statement# = #4#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• the condition of a #guard clause# was altered
+	• the condition of a #guard clause# was modified
 
 END_SUMMARY
 
