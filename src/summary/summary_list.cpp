@@ -160,7 +160,7 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 
         if((child_profile->syntax_count > 0 || child_profile->move_id
             || (child_profile->operation != SRCDIFF_COMMON && (profile->operation != child_profile->operation || is_expr_block(profile->type_name))))
-            && is_block_summary(child_profile->type_name, child_profile->is_replacement)) {
+            && is_block_summary(child_profile->type_name.first_active_string(), child_profile->is_replacement)) {
 
             statement_dispatch(profile, pos);
 
@@ -468,19 +468,9 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
 void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
 
-    if(!profile->type_name.is_common())
-        return interchange(profile);
-
     assert(profile->type_name == "else");
 
-    if(profile->parent->operation != SRCDIFF_COMMON) {
-
-        summaries_.emplace_back(new conditional_summary_t(profile->parent->operation, get_type_string(profile->parent), false));
-        return;
-
-    }
-
-    if(profile->parent->operation != SRCDIFF_COMMON)
+    if(profile->operation != SRCDIFF_COMMON)
         summaries_.emplace_back(new conditional_summary_t(profile->operation, get_type_string(profile), false));
 
     if(profile->summary_identifiers.size() > 0)
@@ -499,18 +489,6 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
 
     const bool condition_modified = conditional_profile->is_condition_modified();
     const bool body_modified = conditional_profile->is_body_modified();
-
-    boost::optional<srcdiff_type> else_operation;
-    if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
-    const bool else_modified = bool(else_operation) && *else_operation == SRCDIFF_COMMON;
-
-    boost::optional<srcdiff_type> elseif_operation;
-    if(profile->type_name == "if") elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
-    const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
-
-    if(!condition_modified && !body_modified && bool(else_operation)
-        && (profile->operation == SRCDIFF_COMMON || profile->child_profiles.back()->common_profiles.size() > 0))
-        return else_clause(profile->child_profiles[0]);
 
     bool is_internal = profile->operation != SRCDIFF_COMMON && profile->operation == profile->parent->operation;
 
