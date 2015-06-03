@@ -31,9 +31,7 @@ class function_profile_t : public profile_t {
 
         std::multimap<srcdiff_type, std::string> specifiers;
         std::vector<std::shared_ptr<parameter_profile_t>> parameters;
-
-        change_entity_map<conditional_profile_t> conditionals;
-        change_entity_map<call_profile_t>        member_initializations;
+        change_entity_map<call_profile_t> member_initializations;
 
         size_t total_statements;
         int cyclomatic_complexity_change;
@@ -58,7 +56,6 @@ class function_profile_t : public profile_t {
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 
             if(is_parameter(type_name)) parameters.push_back(reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
-            else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile));
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
             else if(is_specifier(type_name) && parent == "function") specifiers.emplace(profile->operation, profile->raw);
             else if(is_class_type(type_name)) local_classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
@@ -192,23 +189,6 @@ class function_profile_t : public profile_t {
                 text.function_body(out, list.summaries());
 
             }
-
-            // if(is_summary_type(summary_types, summary_type::TABLE)) {
-
-            //     table_summary table(conditionals);
-
-            //     if(parameters.size())
-            //         table.output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
-
-            //     if(is_summary_type(summary_types, summary_type::TABLE) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
-            //         table.output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
-
-            //     size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
-            //     conditionals.count_operations(number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
-            //     if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
-            //         table.output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
-
-            // }
 
             local_classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             local_classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
