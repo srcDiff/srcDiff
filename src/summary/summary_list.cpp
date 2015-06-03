@@ -175,7 +175,7 @@ void summary_list::identifiers(const std::map<identifier_diff, size_t> & identif
 
     for(std::map<identifier_diff, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
 
-        summaries_.emplace_back(new identifier_summary_t(itr->first.get_diff(), itr->first.complex()));
+        summaries_.emplace_back(new identifier_summary_t(itr->first.get_diff(), true));
 
         std::map<identifier_diff, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
         if(itersect_itr == output_identifiers.end())

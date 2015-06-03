@@ -10,12 +10,12 @@ class identifier_summary_t : public summary_t {
     private:
 
         versioned_string name;
-        bool is_complex;
+        bool is_rename;
 
     public:
 
-        identifier_summary_t(versioned_string name, bool is_complex)
-            : summary_t(IDENTIFIER, SRCDIFF_COMMON), name(name), is_complex(is_complex) {}
+        identifier_summary_t(versioned_string name, bool is_rename)
+            : summary_t(IDENTIFIER, SRCDIFF_COMMON), name(name), is_rename(is_rename) {}
 
         virtual bool compare(const summary_t & summary) const {
 
@@ -28,14 +28,13 @@ class identifier_summary_t : public summary_t {
 
             out.begin_line();
 
-            if(is_complex) {
+            if(!is_rename) {
 
                 out << "name change from '";
                 out << name.original();
                 out << "' to '";
                 out << name.modified();
                 out << '\'';
-
 
             } else {
 

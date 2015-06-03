@@ -135,7 +135,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoZoomAction::createWidget':
   #Impact#: #Statement# = #10#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• name change from 'aspectButton' to 'd->aspectButton'
+	• 'aspectButton' was renamed to 'd->aspectButton'
 	• a #declaration# was replaced with an #assignment#
 
 END_SUMMARY
@@ -163,7 +163,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• 'c' was renamed to 'd'
+	• name change from 'c' to 'd'
 
 END_SUMMARY
 
