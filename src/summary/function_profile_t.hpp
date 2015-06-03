@@ -57,7 +57,7 @@ class function_profile_t : public profile_t {
 
             if(is_parameter(type_name)) parameters.push_back(reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
-            else if(is_specifier(type_name) && parent == "function") specifiers.emplace(profile->operation, profile->raw);
+            else if(is_specifier(type_name) && is_function_type(parent)) specifiers.emplace(profile->operation, profile->raw);
             else if(is_class_type(type_name)) local_classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
 
             descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
