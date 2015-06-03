@@ -4,15 +4,51 @@
 
 text_summary::text_summary() {}
 
-summary_output_stream & text_summary::parameter(summary_output_stream & out, size_t number_parameters_deleted,
-                                       size_t number_parameters_inserted, size_t number_parameters_modified) const {
+summary_output_stream & text_summary::parameter(summary_output_stream & out, const std::vector<std::shared_ptr<parameter_profile_t>> & parameters) const {
+
+    size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0, number_parameters_replaced = 0;
+    for(std::vector<std::shared_ptr<parameter_profile_t>>::size_type pos = 0; pos < parameters.size(); ++pos) {
+
+        if(parameters[pos]->is_replacement && parameters[pos]->operation == SRCDIFF_DELETE
+            && (pos == 0 || !parameters[pos - 1]->is_replacement || parameters[pos - 1]->operation != SRCDIFF_DELETE)) {
+
+            if((pos + 1) < parameters.size() && parameters[pos + 1]->operation == SRCDIFF_INSERT
+                && ((pos + 2) == parameters.size() || !parameters[pos + 2]->is_replacement || parameters[pos + 2]->operation != SRCDIFF_INSERT)) {
+
+                ++number_parameters_replaced;
+                ++pos;
+                continue;
+
+            }
+
+        }
+
+        if(parameters[pos]->operation == SRCDIFF_DELETE)
+            ++number_parameters_deleted;
+        else if(parameters[pos]->operation == SRCDIFF_INSERT)
+            ++number_parameters_inserted;
+        else if(parameters[pos]->operation == SRCDIFF_COMMON)
+            ++number_parameters_modified;
+
+    }
+
+    if(number_parameters_replaced > 0) {
+
+        out.begin_line();
+
+        if(number_parameters_replaced == 1)
+            out << "a " << manip::bold() << "parameter" << manip::normal() << " was replaced\n";
+        else
+            out << std::to_string(number_parameters_replaced) << ' ' << manip::bold() << "parameters" << manip::normal() << " were replaced\n";
+
+    }
 
     if(number_parameters_deleted > 0) {
 
         out.begin_line();
 
         if(number_parameters_deleted == 1)
-            out << "a " << manip::bold() << "parameter" << manip::normal() << " was deleted";
+            out << "a " << manip::bold() << "parameter" << manip::normal() << " was deleted\n";
 
         else
             out << std::to_string(number_parameters_deleted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were deleted\n";

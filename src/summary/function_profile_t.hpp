@@ -30,9 +30,9 @@ class function_profile_t : public profile_t {
         versioned_string name;
 
         std::multimap<srcdiff_type, std::string> specifiers;
+        std::vector<std::shared_ptr<parameter_profile_t>> parameters;
 
         change_entity_map<conditional_profile_t> conditionals;
-        change_entity_map<parameter_profile_t>   parameters;
         change_entity_map<call_profile_t>        member_initializations;
 
         size_t total_statements;
@@ -57,7 +57,7 @@ class function_profile_t : public profile_t {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 
-            if(is_parameter(type_name)) parameters.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
+            if(is_parameter(type_name)) parameters.push_back(reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile));
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile));
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
             else if(is_specifier(type_name) && parent == "function") specifiers.emplace(profile->operation, profile->raw);
@@ -94,13 +94,12 @@ class function_profile_t : public profile_t {
 
             size_t number_specifier_operations = specifiers.size();
 
-            size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0;
-            parameters.count_operations(number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+            size_t number_parameters = parameters.size();
 
             size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
             member_initializations.count_operations(number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
-            size_t count = (is_name_change ? 1 : 0) + (is_return_type_change ? 1 : 0) + number_specifier_operations + number_parameters_deleted + number_parameters_inserted + number_parameters_modified
+            size_t count = (is_name_change ? 1 : 0) + (is_return_type_change ? 1 : 0) + number_specifier_operations + number_parameters
                 + number_member_initializations_deleted + number_member_initializations_inserted + number_member_initializations_modified;
 
             return std::to_string(count);
@@ -159,8 +158,6 @@ class function_profile_t : public profile_t {
           
             // get counts and set flags
             bool is_return_type_change = bool(return_type) && return_type->syntax_count > 0;
-            size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0;
-            parameters.count_operations(number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
             size_t number_member_initializations_deleted = 0, number_member_initializations_inserted = 0, number_member_initializations_modified = 0;
             member_initializations.count_operations(number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
@@ -172,16 +169,13 @@ class function_profile_t : public profile_t {
                 if(!name.is_common()) out.begin_line() << manip::bold() << "function name change" << manip::normal()
                                                        << " from '" <<name.original() << "' to '" << name.modified() << "'\n";
 
-                //if(is_return_type_change || number_parameters_deleted || number_parameters_inserted || number_parameters_modified) out.begin_line() << "Signature change:\n";
-
                 if(is_return_type_change) {
 
                     out.begin_line() << manip::bold() << "return type change" << manip::normal() << '\n';
 
                 }
 
-                if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
-                    text.parameter(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+                text.parameter(out, parameters);
 
                 for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr)
                     out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted\n";
@@ -199,22 +193,22 @@ class function_profile_t : public profile_t {
 
             }
 
-            if(is_summary_type(summary_types, summary_type::TABLE)) {
+            // if(is_summary_type(summary_types, summary_type::TABLE)) {
 
-                table_summary table(conditionals);
+            //     table_summary table(conditionals);
 
-                if(number_parameters_deleted || number_parameters_inserted || number_parameters_modified)
-                    table.output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
+            //     if(parameters.size())
+            //         table.output_all_parameter_counts(out, number_parameters_deleted, number_parameters_inserted, number_parameters_modified);
 
-                if(is_summary_type(summary_types, summary_type::TABLE) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
-                    table.output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+            //     if(is_summary_type(summary_types, summary_type::TABLE) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
+            //         table.output_all_member_initialization_counts(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
-                size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
-                conditionals.count_operations(number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
-                if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
-                    table.output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+            //     size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
+            //     conditionals.count_operations(number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+            //     if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
+            //         table.output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
 
-            }
+            // }
 
             local_classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             local_classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
