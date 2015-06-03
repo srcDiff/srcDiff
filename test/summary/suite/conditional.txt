@@ -21,7 +21,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact#: #Statement# = #1#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• the condition of a #guard clause# was modified
+	• the condition of a #guard-clause# was modified
 
 END_SUMMARY
 
@@ -99,8 +99,8 @@ SUMMARY
 • Modified function(s): 1
 • function 'TextTool::repaintSelection':
   #Impact#: #Statement# = #6#	#Non-Statement# = #0#	#Cyclomatic# = #+2#
-	• a #guard clause# was inserted
-	• a #call# was replaced with a #guard clause#
+	• a #guard-clause# was inserted
+	• a #call# was replaced with a #guard-clause#
 
 END_SUMMARY
 
@@ -199,7 +199,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoMainWindow::currentView':
   #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #+1#
-	• an #else# was converted to an #else if#
+	• an #else# was converted to an #else-if#
 	• a #return# was inserted
 
 END_SUMMARY
@@ -247,7 +247,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisExifIO::loadFrom':
   #Impact#: #Statement# = #4#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• the condition of a #guard clause# was modified
+	• the condition of a #guard-clause# was modified
 
 END_SUMMARY
 
@@ -280,7 +280,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisGroupLayer::resetProjection':
   #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #+1#
-	• an #else if# was inserted
+	• an #else-if# was inserted
 
 END_SUMMARY
 

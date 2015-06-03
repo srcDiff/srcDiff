@@ -67,14 +67,14 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
     if(is_if(profile->type_name)) {
 
         const std::shared_ptr<if_profile_t> & if_profile = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile);
-        if(if_profile->is_guard()) return "guard clause";
+        if(if_profile->is_guard()) return "guard-clause";
         if(if_profile->else_clause() && if_profile->operation != SRCDIFF_COMMON)
             return "if-else";
     }
 
     if(profile->type_name == "else") return "else";
 
-    if(profile->type_name == "elseif") return "else if";
+    if(profile->type_name == "elseif") return "else-if";
 
     if(is_decl_stmt(profile->type_name)) return "declaration";
 
@@ -86,7 +86,7 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
         if(expr_stmt_profile->call()) {
             std::vector<std::shared_ptr<call_profile_t>>::size_type number_calls = expr_stmt_profile->get_call_profiles().size();
             if(number_calls == 1)           return "call";
-            else                            return "chain of calls";
+            else                            return "call chain";
         }
         return "expression";
 
@@ -434,8 +434,8 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
 
     assert(!profile->type_name.is_common());
 
-    summaries_.emplace_back(new interchange_summary_t(versioned_string(profile->type_name.original() == "elseif" ? "else if" : profile->type_name.original(),
-                                                                  profile->type_name.modified() == "elseif" ? "else if" : profile->type_name.modified())));
+    summaries_.emplace_back(new interchange_summary_t(versioned_string(profile->type_name.original() == "elseif" ? "else-if" : profile->type_name.original(),
+                                                                  profile->type_name.modified() == "elseif" ? "else-if" : profile->type_name.modified())));
 
     std::shared_ptr<profile_t> summary_profile = profile;
     if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif")

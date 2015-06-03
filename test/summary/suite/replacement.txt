@@ -155,7 +155,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoZoomController::setZoom':
   #Impact#: #Statement# = #2#	#Non-Statement# = #0#	#Cyclomatic# = #-1#
-	• a #guard clause# was commented out
+	• a #guard-clause# was commented out
 
 END_SUMMARY
 

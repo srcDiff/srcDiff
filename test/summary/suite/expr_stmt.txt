@@ -80,7 +80,7 @@ SUMMARY
 • function 'KisView2::slotLoadingFinished':
   #Impact#: #Statement# = #2#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• a #name# change occurred to a #call#
-	• a #chain of calls# was inserted
+	• a #call chain# was inserted
 
 END_SUMMARY
 
