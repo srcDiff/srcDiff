@@ -7,7 +7,7 @@
 #include <summary_type.hpp>
 #include <namespace_uri.hpp>
 #include <srcdiff_macros.hpp>
-#include <identifier_diff.hpp>
+#include <identifier_utilities.hpp>
 #include <summary_output_stream.hpp>
 #include <type_query.hpp>
 
@@ -68,10 +68,13 @@ class profile_t {
         profile_list_t child_profiles;
         profile_list_t descendant_profiles;      
 
-        std::map<identifier_diff, size_t> identifiers;
-        std::map<identifier_diff, size_t> summary_identifiers;
+        std::map<identifier_utilities, size_t> identifiers;
+        std::map<identifier_utilities, size_t> summary_identifiers;
 
         std::string raw;
+
+        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> common_identifiers;
+        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> changed_identifiers;
 
     public:
 
@@ -111,11 +114,11 @@ class profile_t {
 
             if(identifier.has_original() && identifier.has_modified() && !identifier.is_common()) {
 
-                identifier_diff ident_diff(identifier);
+                identifier_utilities ident_diff(identifier);
 
                 ident_diff.trim(is_call(parent));
 
-                std::map<identifier_diff, size_t>::iterator itr = identifiers.find(ident_diff);
+                std::map<identifier_utilities, size_t>::iterator itr = identifiers.find(ident_diff);
                 if(itr == identifiers.end()) {
 
                     identifiers.insert(itr, std::make_pair(ident_diff, 1));
@@ -124,7 +127,7 @@ class profile_t {
 
                     ++itr->second;
 
-                    std::map<identifier_diff, size_t>::iterator itersect_itr = summary_identifiers.find(ident_diff);
+                    std::map<identifier_utilities, size_t>::iterator itersect_itr = summary_identifiers.find(ident_diff);
                     if(itersect_itr == summary_identifiers.end()) summary_identifiers.insert(itersect_itr, *itr);                     
                     else                                               ++itersect_itr->second;
 

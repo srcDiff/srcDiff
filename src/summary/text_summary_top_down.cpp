@@ -9,7 +9,7 @@
 #include <call_profile_t.hpp>
 #include <expr_profile_t.hpp>
 #include <identifier_profile_t.hpp>
-#include <identifier_diff.hpp>
+#include <identifier_utilities.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -740,7 +740,7 @@ void text_summary_top_down::expr_stmt_call(const std::shared_ptr<profile_t> & pr
                 bool report_name = !call_profile->name.is_common();
                 if(report_name) {
 
-                    identifier_diff ident_diff(call_profile->name);
+                    identifier_utilities ident_diff(call_profile->name);
                     ident_diff.compute_diff();
 
                     if(!identifier_set.count(ident_diff.get_diff())) report_name = false;
@@ -803,7 +803,7 @@ void text_summary_top_down::expr_stmt_call(const std::shared_ptr<profile_t> & pr
                                                 const std::shared_ptr<identifier_profile_t> & identifier_profile
                                                     = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
 
-                                                identifier_diff ident_diff(identifier_profile->name);
+                                                identifier_utilities ident_diff(identifier_profile->name);
                                                 ident_diff.compute_diff();
 
                                                 if(identifier_set.count(ident_diff.get_diff())) {

@@ -11,7 +11,7 @@
 #include <identifier_profile_t.hpp>
 #include <exception_profile_t.hpp>
 
-#include <identifier_diff.hpp>
+#include <identifier_utilities.hpp>
 
 #include <identifier_summary_t.hpp>
 #include <replacement_summary_t.hpp>
@@ -57,7 +57,7 @@
     && identifier_renames.size() == 0)
 
 #define identifier_set_difference(PROFILE)                                        \
-    std::map<identifier_diff, size_t> identifier_set;                             \
+    std::map<identifier_utilities, size_t> identifier_set;                             \
     std::set_difference(PROFILE->identifiers.begin(), PROFILE->identifiers.end(), \
                         output_identifiers.begin(), output_identifiers.end(),     \
                         std::inserter(identifier_set, identifier_set.begin()));
@@ -170,14 +170,14 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 
 }
 
-void summary_list::identifiers(const std::map<identifier_diff, size_t> & identifiers) {
+void summary_list::identifiers(const std::map<identifier_utilities, size_t> & identifiers) {
 
 
-    for(std::map<identifier_diff, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
+    for(std::map<identifier_utilities, size_t>::const_iterator itr = identifiers.begin(); itr != identifiers.end(); ++itr) {
 
-        summaries_.emplace_back(new identifier_summary_t(itr->first.get_diff(), true));
+        summaries_.emplace_back(new identifier_summary_t(itr->first.trim(), true));
 
-        std::map<identifier_diff, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
+        std::map<identifier_utilities, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
         if(itersect_itr == output_identifiers.end())
             output_identifiers.insert(itersect_itr, *itr);
         else
@@ -511,7 +511,7 @@ static bool operator<(const std::__1::reference_wrapper<const versioned_string> 
 
 }
 
-bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
                                     std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     bool is_identifier_only = profile->child_profiles.size() != 0;
@@ -522,7 +522,7 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
             const std::shared_ptr<identifier_profile_t> & identifier_profile
                 = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
 
-            identifier_diff ident_diff(identifier_profile->name);
+            identifier_utilities ident_diff(identifier_profile->name);
             ident_diff.trim(false);
 
             if(identifier_set.count(ident_diff))
@@ -545,7 +545,7 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
 
 }
 
-void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
                            bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
                            std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
@@ -604,7 +604,7 @@ void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std
 
 }
 
-void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_diff, size_t> & identifier_set,
+void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
                               std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
@@ -646,7 +646,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 bool report_name = !call_profile->name.is_common();
                 if(report_name) {
 
-                    identifier_diff ident_diff(call_profile->name);
+                    identifier_utilities ident_diff(call_profile->name);
                     ident_diff.trim(true);
 
                     if(!identifier_set.count(ident_diff)) {
@@ -719,7 +719,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
 
-                                    identifier_diff ident_diff(identifier_profile->name);
+                                    identifier_utilities ident_diff(identifier_profile->name);
                                     ident_diff.trim(false);
 
                                     if(identifier_set.count(ident_diff)) {
@@ -794,7 +794,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
 
-                    identifier_diff ident_diff(identifier_profile->name);
+                    identifier_utilities ident_diff(identifier_profile->name);
                     ident_diff.trim(false);
 
                     if(identifier_set.count(ident_diff))
@@ -967,7 +967,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         if(!decl_stmt_profile->name.is_common()) {
 
-            identifier_diff ident_diff(decl_stmt_profile->name);
+            identifier_utilities ident_diff(decl_stmt_profile->name);
             ident_diff.trim(true);
 
             if(identifier_set.count(ident_diff))
