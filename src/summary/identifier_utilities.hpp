@@ -2,6 +2,9 @@
 #define INCLUDED_IDENTIFIER_UTILITIES
 
 #include <versioned_string.hpp>
+#include <srcdiff_type.hpp>
+
+#include <shortest_edit_script.hpp>
 
 #include <string>
 #include <vector>
@@ -18,6 +21,7 @@ private:
 
     boost::optional<versioned_string> trimmed_;
     boost::optional<versioned_string> diffed_;
+    boost::optional<std::vector<std::pair<std::string, srcdiff_type>>> list_;
 
     bool is_complex;
 
@@ -49,6 +53,18 @@ private:
 
     }
 
+    static const void * str_accessor(int index, const void * structure, const void * context) {
+
+        return &(*(const std::vector<std::string> *)structure)[index];
+
+    }
+
+    static int str_compare(const void * item_one, const void * item_two, const void * context) {
+
+        return (*(const std::string *)item_one) == (*(const std::string *)item_two);
+
+    }
+
 public:
 
 	identifier_utilities(const versioned_string & identifier_) : identifier_(identifier_), is_split(false), is_complex(false) {}
@@ -74,6 +90,57 @@ public:
             is_split = true;
 
         }
+
+    }
+
+    const std::vector<std::pair<std::string, srcdiff_type>> & list() {
+
+        if(list_) return *list_;
+
+        split_identifier();
+
+        class shortest_edit_script ses(str_compare, str_accessor, nullptr);
+        ses.compute(&original_identifiers, original_identifiers.size(), &modified_identifiers, modified_identifiers.size());
+
+        list_ = std::vector<std::pair<std::string, srcdiff_type>>();
+        edit * edit_script = ses.get_script();
+        int original_pos = 0, modified_pos = 0;
+        for(edit * edits = edit_script; edits != nullptr; edits = edits->next) {
+
+            if(edits->operation == SESDELETE) {
+
+                while(original_pos < edits->offset_sequence_one) {
+
+                    list_->emplace_back(original_identifiers[original_pos++], SRCDIFF_COMMON);
+                    ++modified_pos;
+
+                }
+
+
+                for(int pos = 0; pos < edits->length; ++pos) {
+
+                    list_->emplace_back(original_identifiers[original_pos++], SRCDIFF_DELETE);
+
+                }
+
+            } else {
+
+                while(modified_pos < edits->offset_sequence_two) {
+
+                    list_->emplace_back(modified_identifiers[modified_pos++], SRCDIFF_COMMON);
+                    ++original_pos;
+
+                }
+
+
+                for(int pos = 0; pos < edits->length; ++pos)
+                    list_->emplace_back(modified_identifiers[modified_pos++], SRCDIFF_INSERT);
+
+            }
+
+        }
+
+        return *list_;
 
     }
 
