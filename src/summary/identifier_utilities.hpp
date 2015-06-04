@@ -65,6 +65,18 @@ public:
 
     }
 
+    void split_identifier() {
+
+        if(!is_split) {
+
+            original_identifiers = split_complex_identifier(identifier_.original());
+            modified_identifiers = split_complex_identifier(identifier_.modified());
+            is_split = true;
+
+        }
+
+    }
+
     const versioned_string & trim() const {
 
         return *trimmed_;
@@ -75,12 +87,7 @@ public:
 
         if(trimmed_) return *trimmed_;
  
-        if(!is_split) {
-
-            original_identifiers = split_complex_identifier(identifier_.original());
-            modified_identifiers = split_complex_identifier(identifier_.modified());
-
-        }
+        split_identifier();
 
         if(original_identifiers.size() > 1 || modified_identifiers.size() > 1)
             is_complex = true;
@@ -122,12 +129,7 @@ public:
 
         if(diffed_) return *diffed_;
 
-        if(!is_split) {
-
-    		original_identifiers = split_complex_identifier(identifier_.original());
-            modified_identifiers = split_complex_identifier(identifier_.modified());
-
-        }
+        split_identifier();
 
         size_t pos = 0;
         std::string::size_type start_pos = 0;
