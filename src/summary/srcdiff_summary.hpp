@@ -15,6 +15,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <set>
 #include <memory>
 #include <tuple>
 
@@ -71,7 +72,9 @@ protected:
     std::string specifier_raw;
 
     size_t name_count;
-    versioned_string collected_name;
+    versioned_string collected_full_name;
+    versioned_string collected_simple_name;
+    std::set<versioned_string> simple_names;
 
     size_t condition_count;
     versioned_string collected_condition;

@@ -245,7 +245,8 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
     : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
-      text(), specifier_raw(), name_count(0), collected_name(), condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {
+      text(), specifier_raw(), name_count(0), collected_full_name(), collected_simple_name(), simple_names(),
+      condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -333,7 +334,9 @@ void srcdiff_summary::reset() {
     text.clear();
     specifier_raw.clear();
     name_count = 0;
-    collected_name.clear();
+    collected_full_name.clear();
+    collected_simple_name.clear();
+    simple_names.clear();
     condition_count = 0;
     collected_condition.clear();
     left_hand_side.clear();
@@ -555,9 +558,16 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(uri_stack.back() != SRCDIFF) {
 
-        if(full_name == "name") {
+        if(is_identifier(profile_stack.back()->parent->type_name))
+            reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent)->is_simple = false;
+
+        if(profile_stack.back()->parent->uri == SRCDIFF && is_identifier(profile_stack.back()->parent->parent->type_name))
+            reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent->parent)->is_simple = false;
+
+        if(is_identifier(full_name)) {
 
             ++name_count;
+            collected_simple_name.clear();
 
         } else if(full_name == "condition") {
 
@@ -753,9 +763,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(!is_interchange && srcdiff_stack.back().level > 0) --srcdiff_stack.back().level;
 
-        if(full_name == "name") {
+        if(is_identifier(full_name)) {
 
             --name_count;
+            if(reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back())->is_simple)
+                simple_names.emplace(collected_simple_name);
+            collected_simple_name.clear();
 
             if(name_count == 0) {
 
@@ -764,24 +777,26 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     --parent_pos;
 
                 // set identifier_profile_t name
-                profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
+                profile_stack.at(std::get<0>(counting_profile_pos.back()))->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
 
                 // set name of identifiers parent profile
-                profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->set_name(collected_name, profile_stack.at(parent_pos)->type_name);
+                profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
 
-                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_name.is_common())
-                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_name, profile_stack.at(parent_pos)->type_name);
+                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_full_name.is_common())
+                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_full_name, profile_stack.at(parent_pos)->type_name);
 
+                collected_full_name.clear();
 
-                identifier_utilities trimmer(collected_name);
-                const versioned_string & trimmed = trimmer.trim(profile_stack.back()->parent->type_name == "call");
+                for(const versioned_string & name : simple_names) {
 
-                if(profile_stack.back()->syntax_count == 0)
-                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->common_identifiers[trimmed].push_back(profile_stack.back());
-                else
-                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->changed_identifiers[trimmed].push_back(profile_stack.back());
+                    if(name.is_common())
+                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->common_identifiers[name].push_back(profile_stack.back());
+                    else
+                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->changed_identifiers[name].push_back(profile_stack.back());
 
-                collected_name.clear();
+                }
+
+                simple_names.clear();
 
             }
 
@@ -1102,10 +1117,12 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     if(len == 0) return;
 
     text.append(ch, len);
-    if(is_specifier(profile_stack.back()->type_name))
-        specifier_raw.append(ch,len);
+    if(is_specifier(profile_stack.back()->type_name)) specifier_raw.append(ch,len);
 
-    if(name_count) collected_name.append(ch, len, srcdiff_stack.back().operation);
+    if(is_identifier(profile_stack.back()->type_name)
+        || (profile_stack.back()->uri == SRCDIFF && is_identifier(profile_stack.back()->parent->type_name)))
+        collected_simple_name.append(ch, len, srcdiff_stack.back().operation);
+    if(name_count) collected_full_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
 
     for(std::vector<size_t>::size_type pos = 0; pos < expr_stmt_pos.size(); ++pos) {
