@@ -531,6 +531,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     } else {
 
         profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
+        if(uri_stack.back() != SRCDIFF) profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile_stack.back());
 
         if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
         if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0 && uri_stack.back() != SRCDIFF && current_move_id < srcdiff_stack.back().move_id) {
@@ -700,19 +701,8 @@ void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> 
         --parent_pos;
 
     // should always have at least unit
-    profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile, profile_stack.at(parent_pos)->type_name);
-    profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant(profile, profile_stack.at(parent_pos)->type_name);
-
-}
-
-void srcdiff_summary::update_common_profiles(const std::shared_ptr<profile_t> & profile) {
-
-    size_t parent_pos = profile_stack.size() - 2;
-    while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
-        --parent_pos;
-
-    // should always have at least unit
-    profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_common(profile, profile_stack.at(parent_pos)->type_name);
+    profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child_change(profile, profile_stack.at(parent_pos)->type_name);
+    profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant_change(profile, profile_stack.at(parent_pos)->type_name);
 
 }
 
@@ -993,9 +983,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && srcdiff_stack.back().level == 1 && profile_stack.at(profile_stack.size() - 2)->type_name == "expr")
             || (srcdiff_stack.back().operation != SRCDIFF_COMMON && full_name == "argument"))
             update_anscestor_profile(profile_stack.back());
-        /** @todo may want this even if total_count or syntax_count are not 0 */
-        if(/**profile_stack.back()->total_count == 0 && */srcdiff_stack.back().operation == SRCDIFF_COMMON)
-                update_common_profiles(profile_stack.back());
 
         if(has_body(full_name)) {
 

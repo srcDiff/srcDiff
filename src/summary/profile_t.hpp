@@ -40,9 +40,9 @@ class profile_t {
         srcdiff_type operation;
         bool is_replacement;
         size_t move_id;
-        std::shared_ptr<profile_t> move_parent;
 
         std::shared_ptr<profile_t> parent;
+        profile_list_t child_profiles;
 
         size_t statement_count_original;
         size_t statement_count_modified;
@@ -66,10 +66,8 @@ class profile_t {
 
         std::string raw;
 
-        profile_list_t common_profiles;
-
-        profile_list_t child_profiles;
-        profile_list_t descendant_profiles;      
+        profile_list_t child_change_profiles;
+        profile_list_t descendant_change_profiles;      
 
         std::map<identifier_utilities, size_t> identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;
@@ -82,14 +80,14 @@ class profile_t {
     public:
 
         profile_t(std::string type_name = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0), move_parent(),
+                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
                                                                    parent(), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
                                                                    left_hand_side(false), right_hand_side(false), raw() {}
 
         profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0), move_parent(),
+                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
                                                                    parent(parent), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
@@ -110,6 +108,12 @@ class profile_t {
         virtual void set_name(versioned_string name) {
 
             set_name(name, boost::optional<versioned_string>());
+
+        }
+
+        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
+
+            child_profiles.push_back(profile);
 
         }
 
@@ -142,27 +146,21 @@ class profile_t {
 
         virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
         
-        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
+        virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
-            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile), profile);
+            child_change_profiles.insert(std::lower_bound(child_change_profiles.begin(), child_change_profiles.end(), profile), profile);
 
         }
 
-        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
+        virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
-            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
+            descendant_change_profiles.insert(std::lower_bound(descendant_change_profiles.begin(), descendant_change_profiles.end(), profile), profile);
             
         }
 
-        virtual void add_common(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
-
-            common_profiles.push_back(profile);
-
-        }        
-
         virtual impact_factor calculate_impact_factor() const {
 
-            double impact_factor_number = (double)syntax_count / descendant_profiles.size();
+            double impact_factor_number = (double)syntax_count / descendant_change_profiles.size();
 
             if(impact_factor_number == 0)    return NONE;
             if(impact_factor_number <  0.1)  return LOW;
