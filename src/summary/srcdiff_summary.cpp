@@ -408,6 +408,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
     full_name += localname;
 
     profile_stack.push_back(unit_profile = std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
+    profile_stack.back()->parent_ = profile_stack.back();
     profile_stack.back()->body = profile_stack.back();
     profile_stack.back()->summary_profile = profile_stack.back();
 
@@ -425,7 +426,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
         }
 
-    counting_profile_pos.emplace_back(profile_stack.size() - 1);
+    counting_profile_pos.emplace_back(0);
     profile_stack.back()->set_id(++id_count);
 
 }
