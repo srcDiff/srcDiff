@@ -51,7 +51,7 @@ class function_profile_t : public profile_t {
 
         }
 
-        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+        virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 
@@ -60,7 +60,7 @@ class function_profile_t : public profile_t {
             else if(is_specifier(type_name) && is_function_type(parent)) specifiers.emplace(profile->operation, profile->raw);
             else if(is_class_type(type_name)) local_classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
 
-            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
+            descendant_change_profiles.insert(std::lower_bound(descendant_change_profiles.begin(), descendant_change_profiles.end(), profile), profile);
 
         }
 
@@ -116,7 +116,7 @@ class function_profile_t : public profile_t {
 
             size_t statement_count = this->statement_count, statement_churn = this->statement_churn;
             move_handler m_handler(statement_count, statement_churn);
-            m_handler.gather_candidates(descendant_profiles);
+            m_handler.gather_candidates(descendant_change_profiles);
             m_handler.detect();
 
             out.begin_line() << type_name << " '" << name << "':\n";

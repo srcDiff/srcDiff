@@ -27,11 +27,11 @@ class call_profile_t : public profile_t {
 
         }
 
-        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+        virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
         	if(is_argument(profile->type_name)) arguments.emplace(profile->operation, profile);
 
-            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile), profile);
+            child_change_profiles.insert(std::lower_bound(child_change_profiles.begin(), child_change_profiles.end(), profile), profile);
             
         }
 

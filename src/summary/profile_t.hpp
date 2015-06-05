@@ -66,10 +66,8 @@ class profile_t {
 
         std::string raw;
 
-        profile_list_t common_profiles;
-
-        profile_list_t child_profiles;
-        profile_list_t descendant_profiles;      
+        profile_list_t child_change_profiles;
+        profile_list_t descendant_change_profiles;      
 
         std::map<identifier_utilities, size_t> identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;
@@ -142,27 +140,21 @@ class profile_t {
 
         virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
         
-        virtual void add_child(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
+        virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
-            child_profiles.insert(std::lower_bound(child_profiles.begin(), child_profiles.end(), profile), profile);
+            child_change_profiles.insert(std::lower_bound(child_change_profiles.begin(), child_change_profiles.end(), profile), profile);
 
         }
 
-        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
+        virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
-            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
+            descendant_change_profiles.insert(std::lower_bound(descendant_change_profiles.begin(), descendant_change_profiles.end(), profile), profile);
             
         }
 
-        virtual void add_common(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
-
-            common_profiles.push_back(profile);
-
-        }        
-
         virtual impact_factor calculate_impact_factor() const {
 
-            double impact_factor_number = (double)syntax_count / descendant_profiles.size();
+            double impact_factor_number = (double)syntax_count / descendant_change_profiles.size();
 
             if(impact_factor_number == 0)    return NONE;
             if(impact_factor_number <  0.1)  return LOW;

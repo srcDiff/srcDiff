@@ -36,7 +36,7 @@ class unit_profile_t : public profile_t {
 
         }
 
-        virtual void add_descendant(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
+        virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
 
@@ -45,7 +45,7 @@ class unit_profile_t : public profile_t {
             else if(is_class_type(type_name))     classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
             else if(is_condition_type(type_name)) conditionals.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(profile));
             
-            descendant_profiles.insert(std::lower_bound(descendant_profiles.begin(), descendant_profiles.end(), profile), profile);
+            descendant_change_profiles.insert(std::lower_bound(descendant_change_profiles.begin(), descendant_change_profiles.end(), profile), profile);
             
         }
 

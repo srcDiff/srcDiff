@@ -115,38 +115,38 @@ bool summary_list::is_block_summary(const std::string & type, bool is_replacemen
 
 void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos) {
 
-    const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[child_pos];
+    const std::shared_ptr<profile_t> & child_change_profile = profile->child_change_profiles[child_pos];
 
-    if(child_profile->is_replacement && ((child_pos + 1) < profile->child_profiles.size())) {
+    if(child_change_profile->is_replacement && ((child_pos + 1) < profile->child_change_profiles.size())) {
 
         replacement(profile, child_pos);
 
-    } else if(child_profile->move_id) {
+    } else if(child_change_profile->move_id) {
 
-        summaries_.emplace_back(new move_summary_t(get_type_string(child_profile)));
+        summaries_.emplace_back(new move_summary_t(get_type_string(child_change_profile)));
 
-    } else if(!child_profile->type_name.is_common()) {
+    } else if(!child_change_profile->type_name.is_common()) {
 
-        interchange(child_profile);
+        interchange(child_change_profile);
 
     } else {
 
-        if(is_jump(child_profile->type_name))
-            jump(child_profile);
-        else if(is_condition_type(child_profile->type_name))
-            conditional(child_profile);
-        else if(child_profile->type_name == "else")
-            else_clause(child_profile);
-        else if(is_expr_stmt(child_profile->type_name))
-            expr_stmt(child_profile);
-        else if(is_decl_stmt(child_profile->type_name))
-            decl_stmt(child_profile);
-        else if(is_exception_handling(child_profile->type_name))
-            exception(child_profile);
-        else if(is_label(child_profile->type_name))
-            label(child_profile);
-        else if(is_expr_block(child_profile->type_name))
-            block(child_profile);
+        if(is_jump(child_change_profile->type_name))
+            jump(child_change_profile);
+        else if(is_condition_type(child_change_profile->type_name))
+            conditional(child_change_profile);
+        else if(child_change_profile->type_name == "else")
+            else_clause(child_change_profile);
+        else if(is_expr_stmt(child_change_profile->type_name))
+            expr_stmt(child_change_profile);
+        else if(is_decl_stmt(child_change_profile->type_name))
+            decl_stmt(child_change_profile);
+        else if(is_exception_handling(child_change_profile->type_name))
+            exception(child_change_profile);
+        else if(is_label(child_change_profile->type_name))
+            label(child_change_profile);
+        else if(is_expr_block(child_change_profile->type_name))
+            block(child_change_profile);
 
     }
 
@@ -154,13 +154,13 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
 void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 
-    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
+    for(size_t pos = 0; pos < profile->child_change_profiles.size(); ++pos) {
 
-        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
+        const std::shared_ptr<profile_t> & child_change_profile = profile->child_change_profiles[pos];
 
-        if((child_profile->syntax_count > 0 || child_profile->move_id
-            || (child_profile->operation != SRCDIFF_COMMON && (profile->operation != child_profile->operation || is_expr_block(profile->type_name))))
-            && is_block_summary(child_profile->type_name.first_active_string(), child_profile->is_replacement)) {
+        if((child_change_profile->syntax_count > 0 || child_change_profile->move_id
+            || (child_change_profile->operation != SRCDIFF_COMMON && (profile->operation != child_change_profile->operation || is_expr_block(profile->type_name))))
+            && is_block_summary(child_change_profile->type_name.first_active_string(), child_change_profile->is_replacement)) {
 
             statement_dispatch(profile, pos);
 
@@ -189,16 +189,16 @@ void summary_list::identifiers(const std::map<identifier_utilities, size_t> & id
 
 void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_t & pos) {
 
-    const std::shared_ptr<profile_t> & start_profile = profile->child_profiles[pos];
+    const std::shared_ptr<profile_t> & start_profile = profile->child_change_profiles[pos];
 
     std::vector<const std::shared_ptr<expr_stmt_profile_t>>   expr_stmt_deleted,    expr_stmt_inserted;
     std::vector<const std::shared_ptr<decl_stmt_profile_t>>   decl_stmt_deleted,    decl_stmt_inserted;
     std::vector<const std::shared_ptr<conditional_profile_t>> conditionals_deleted, conditionals_inserted;
     std::vector<const std::shared_ptr<profile_t>>             jump_deleted,         jump_inserted;
     std::vector<const std::shared_ptr<profile_t>>             comment_deleted,      comment_inserted;
-    for(; pos < profile->child_profiles.size() && profile->child_profiles[pos]->is_replacement; ++pos) {
+    for(; pos < profile->child_change_profiles.size() && profile->child_change_profiles[pos]->is_replacement; ++pos) {
 
-        const std::shared_ptr<profile_t> & replacement_profile = profile->child_profiles[pos];                    
+        const std::shared_ptr<profile_t> & replacement_profile = profile->child_change_profiles[pos];                    
 
         if(is_condition_type(replacement_profile->type_name)) {
 
@@ -439,7 +439,7 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
 
     std::shared_ptr<profile_t> summary_profile = profile;
     if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif")
-        summary_profile = profile->child_profiles[0];
+        summary_profile = profile->child_change_profiles[0];
 
     block(summary_profile);
 
@@ -454,7 +454,7 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
     if(profile->operation == SRCDIFF_COMMON) {
 
-        run_expr_statistics(profile->child_profiles.back());
+        run_expr_statistics(profile->child_change_profiles.back());
 
         /** @todo need to probably output if single identifier change */
         if(no_expr_syntax_change())
@@ -492,8 +492,8 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
 
     bool is_internal = profile->operation != SRCDIFF_COMMON && profile->operation == profile->parent->operation;
 
-    const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_profiles.size() == 1
-        && profile->child_profiles[0]->type_name == "if" ? profile->child_profiles[0] : profile;
+    const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_change_profiles.size() == 1
+        && profile->child_change_profiles[0]->type_name == "if" ? profile->child_change_profiles[0] : profile;
 
     if(condition_modified || (summary_profile->operation != SRCDIFF_COMMON && !is_internal))
         summaries_.emplace_back(new conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
@@ -514,13 +514,13 @@ static bool operator<(const std::__1::reference_wrapper<const versioned_string> 
 bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
                                     std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
-    bool is_identifier_only = profile->child_profiles.size() != 0;
-    for(const std::shared_ptr<profile_t> & child_profile : profile->child_profiles) {
+    bool is_identifier_only = profile->child_change_profiles.size() != 0;
+    for(const std::shared_ptr<profile_t> & child_change_profile : profile->child_change_profiles) {
 
-        if(is_identifier(child_profile->type_name)) {
+        if(is_identifier(child_change_profile->type_name)) {
 
             const std::shared_ptr<identifier_profile_t> & identifier_profile
-                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
+                = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
             identifier_utilities ident_diff(identifier_profile->name);
             ident_diff.trim(false);
@@ -529,13 +529,13 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
                 identifier_renames.insert(identifier_profile->name);
 
 
-        } else if(child_profile->operation != SRCDIFF_COMMON) {
+        } else if(child_change_profile->operation != SRCDIFF_COMMON) {
 
             is_identifier_only = false;
 
         } else {
 
-            is_identifier_only = is_identifier_only && identifier_check(child_profile, identifier_set, identifier_renames);
+            is_identifier_only = is_identifier_only && identifier_check(child_change_profile, identifier_set, identifier_renames);
 
         }
 
@@ -556,13 +556,13 @@ void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std
     if(ternary_profile->condition() && ternary_profile->condition()->syntax_count != 0) {
 
         /** @todo first case expression deleted and inserted.  Could possibly still be a rename if only a signle identifier may need to handle  */
-        if(ternary_profile->condition()->child_profiles.size() != 1) {
+        if(ternary_profile->condition()->child_change_profiles.size() != 1) {
 
             condition_modified = true;
 
         } else {
 
-            run_expr_statistics(ternary_profile->condition()->child_profiles[0]);
+            run_expr_statistics(ternary_profile->condition()->child_change_profiles[0]);
 
             if(!identifier_rename_only) condition_modified = true;
 
@@ -572,13 +572,13 @@ void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std
 
     if(ternary_profile->then_clause() && ternary_profile->then_clause()->syntax_count != 0) {
 
-        if(ternary_profile->then_clause()->child_profiles.size() != 1) {
+        if(ternary_profile->then_clause()->child_change_profiles.size() != 1) {
 
             then_clause_modified = true;
 
         } else {
 
-            run_expr_statistics(ternary_profile->then_clause()->child_profiles[0]);
+            run_expr_statistics(ternary_profile->then_clause()->child_change_profiles[0]);
 
             if(!identifier_rename_only) then_clause_modified = true;
 
@@ -588,13 +588,13 @@ void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std
 
     if(ternary_profile->else_clause() && ternary_profile->else_clause()->syntax_count != 0) {
 
-        if(ternary_profile->else_clause()->child_profiles.size() != 1) {
+        if(ternary_profile->else_clause()->child_change_profiles.size() != 1) {
 
             else_clause_modified = true;
 
         } else {
 
-            run_expr_statistics(ternary_profile->else_clause()->child_profiles[0]);
+            run_expr_statistics(ternary_profile->else_clause()->child_change_profiles[0]);
 
             if(!identifier_rename_only) else_clause_modified = true;
 
@@ -621,27 +621,27 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
     assert(typeid(*profile.get()) == typeid(expr_profile_t));
 
-    for(size_t pos = 0; pos < profile->child_profiles.size(); ++pos) {
+    for(size_t pos = 0; pos < profile->child_change_profiles.size(); ++pos) {
 
-        const std::shared_ptr<profile_t> & child_profile = profile->child_profiles[pos];
+        const std::shared_ptr<profile_t> & child_change_profile = profile->child_change_profiles[pos];
 
-        if(child_profile->operation == SRCDIFF_COMMON && child_profile->syntax_count == 0) continue;
+        if(child_change_profile->operation == SRCDIFF_COMMON && child_change_profile->syntax_count == 0) continue;
 
-        if(child_profile->type_name.is_common() && is_call(child_profile->type_name)) {
+        if(child_change_profile->type_name.is_common() && is_call(child_change_profile->type_name)) {
 
-            const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_profile);
+            const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(child_change_profile);
 
-            if(child_profile->operation == SRCDIFF_DELETE) {
+            if(child_change_profile->operation == SRCDIFF_DELETE) {
 
                 deleted_calls.push_back(call_profile);
                 identifier_rename_only = false;
 
-            } else if(child_profile->operation == SRCDIFF_INSERT) {
+            } else if(child_change_profile->operation == SRCDIFF_INSERT) {
 
                 inserted_calls.push_back(call_profile);
                 identifier_rename_only = false;
 
-            } else if(child_profile->operation == SRCDIFF_COMMON) {
+            } else if(child_change_profile->operation == SRCDIFF_COMMON) {
 
                 bool report_name = !call_profile->name.is_common();
                 if(report_name) {
@@ -675,16 +675,16 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                             if(pair.second->syntax_count == 0) return;
 
-                            for(const std::shared_ptr<profile_t> & argument_child_profile : pair.second->child_profiles[0]->child_profiles) {
+                            for(const std::shared_ptr<profile_t> & argument_child_change_profile : pair.second->child_change_profiles[0]->child_change_profiles) {
 
-                               if(argument_child_profile->type_name.is_common() && is_call(argument_child_profile->type_name)) {
+                               if(argument_child_change_profile->type_name.is_common() && is_call(argument_child_change_profile->type_name)) {
 
                                     std::vector<std::shared_ptr<call_profile_t>> inner_deleted_calls, inner_inserted_calls,
                                         inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists;
                                     std::vector<std::shared_ptr<profile_t>> inner_deleted_other, inner_inserted_other, inner_modified_other;
                                     size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0;
                                     size_t save_identifier_count = identifier_renames.size();
-                                    expr_statistics(argument_child_profile->parent, identifier_set,
+                                    expr_statistics(argument_child_change_profile->parent, identifier_set,
                                                     inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists,
                                                     inner_deleted_other, inner_inserted_other, inner_modified_other,
                                                     inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified,
@@ -704,12 +704,12 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                                     }
 
-                                } else if(argument_child_profile->operation != SRCDIFF_COMMON) { 
+                                } else if(argument_child_change_profile->operation != SRCDIFF_COMMON) { 
 
                                     report_change = true;
                                     identifier_rename_only = false;
 
-                                } else if(!is_identifier(argument_child_profile->type_name)) {
+                                } else if(!is_identifier(argument_child_change_profile->type_name)) {
 
                                     report_change = true;
                                     identifier_rename_only = false;
@@ -717,7 +717,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                 } else {
 
                                     const std::shared_ptr<identifier_profile_t> & identifier_profile
-                                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_profile);
+                                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_change_profile);
 
                                     identifier_utilities ident_diff(identifier_profile->name);
                                     ident_diff.trim(false);
@@ -753,12 +753,12 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
         } else {
 
-            if(child_profile->operation != SRCDIFF_COMMON) {
+            if(child_change_profile->operation != SRCDIFF_COMMON) {
 
-                if(child_profile->operation == SRCDIFF_DELETE)
-                    deleted_other.push_back(child_profile);
+                if(child_change_profile->operation == SRCDIFF_DELETE)
+                    deleted_other.push_back(child_change_profile);
                 else
-                    inserted_other.push_back(child_profile);
+                    inserted_other.push_back(child_change_profile);
 
                 identifier_rename_only = false;
 
@@ -766,25 +766,25 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                 /** @todo need to handle things lambda and specialized calls.  Maybe more... */
 
-                if(is_ternary(child_profile->type_name)) {
+                if(is_ternary(child_change_profile->type_name)) {
 
                     bool condition_modified = false, then_clause_modified = false, else_clause_modified = false;
-                    ternary(child_profile, identifier_set, condition_modified, then_clause_modified, else_clause_modified, identifier_renames);
+                    ternary(child_change_profile, identifier_set, condition_modified, then_clause_modified, else_clause_modified, identifier_renames);
                     if(condition_modified || then_clause_modified || else_clause_modified) {
 
-                        modified_other.push_back(child_profile);
+                        modified_other.push_back(child_change_profile);
                         identifier_rename_only = false;
 
                     }
 
-                } else if(!is_identifier(child_profile->type_name)) {
+                } else if(!is_identifier(child_change_profile->type_name)) {
 
                     size_t save_identifier_count = identifier_renames.size();
-                    bool is_identifier_only = identifier_check(child_profile, identifier_set, identifier_renames);
+                    bool is_identifier_only = identifier_check(child_change_profile, identifier_set, identifier_renames);
 
                     if(!is_identifier_only || save_identifier_count != identifier_renames.size()) {
 
-                        modified_other.push_back(child_profile);
+                        modified_other.push_back(child_change_profile);
                         identifier_rename_only = identifier_rename_only && is_identifier_only;
 
                     }
@@ -792,7 +792,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 } else {
 
                     const std::shared_ptr<identifier_profile_t> & identifier_profile
-                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_profile);
+                        = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
                     identifier_utilities ident_diff(identifier_profile->name);
                     ident_diff.trim(false);
@@ -820,7 +820,7 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
     const std::shared_ptr<profile_t> & parent_profile = profile->parent;
     identifier_set_difference(parent_profile);
 
-    run_expr_statistics(profile->child_profiles[0]);
+    run_expr_statistics(profile->child_change_profiles[0]);
 
     if(no_expr_syntax_change()) return;
 
@@ -922,7 +922,7 @@ void summary_list::expr_stmt(const std::shared_ptr<profile_t> & profile) {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-    if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_profiles.empty()) {
+    if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_change_profiles.empty()) {
 
         summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
 
@@ -977,13 +977,13 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         if(decl_stmt_profile->init && decl_stmt_profile->init->syntax_count > 0) {
 
-            if(decl_stmt_profile->init->child_profiles.size() != 1) {
+            if(decl_stmt_profile->init->child_change_profiles.size() != 1) {
 
                 ++number_parts_report;
 
             } else {
 
-                run_expr_statistics(decl_stmt_profile->init->child_profiles[0]);
+                run_expr_statistics(decl_stmt_profile->init->child_change_profiles[0]);
 
                 /** @todo need to probably output if single identifier change */
                 if(is_expr_syntax_change())
