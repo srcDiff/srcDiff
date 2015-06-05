@@ -50,7 +50,6 @@ protected:
     size_t summary_types;    
 
     size_t id_count;
-    std::shared_ptr<profile_t> unit_profile;
 
     std::vector<srcdiff> srcdiff_stack;
     std::vector<std::shared_ptr<profile_t>> profile_stack;

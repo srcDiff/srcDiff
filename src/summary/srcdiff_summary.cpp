@@ -235,7 +235,7 @@ no_expr:
 }
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
-    : out(nullptr), summary_types(summary_type::NONE), id_count(0), unit_profile(),
+    : out(nullptr), summary_types(summary_type::NONE), id_count(0),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), specifier_raw(), name_count(0), collected_full_name(), collected_simple_name(), simple_names(),
@@ -284,7 +284,7 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
     if(!first) (*out) << '\n';
     else first = false;
     
-    summarize(unit_profile);
+    summarize(profile_t::unit_profile);
 
     reset();
 
@@ -407,7 +407,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
     full_name += localname;
 
-    profile_stack.push_back(unit_profile = std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
+    profile_stack.push_back(profile_t::unit_profile = std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
     profile_stack.back()->parent = profile_stack.back();
     profile_stack.back()->body = profile_stack.back();
     profile_stack.back()->summary_profile = profile_stack.back();

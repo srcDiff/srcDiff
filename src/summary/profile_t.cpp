@@ -7,6 +7,8 @@
 
 #include <type_query.hpp>
 
+std::shared_ptr<profile_t> profile_t::unit_profile;
+
 profile_t::profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) :
     id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
     parent(), summary_parent(), body(), summary_profile(), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),

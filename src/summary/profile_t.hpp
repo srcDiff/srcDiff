@@ -22,6 +22,8 @@ class profile_t {
 
     public:
 
+        static std::shared_ptr<profile_t> unit_profile;
+
         typedef std::vector<std::shared_ptr<profile_t>> profile_list_t;
 
         enum impact_factor {
