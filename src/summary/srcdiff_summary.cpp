@@ -407,8 +407,9 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
     full_name += localname;
 
-    unit_profile = std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON);
-    profile_stack.push_back(unit_profile);
+    profile_stack.push_back(unit_profile = std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
+    profile_stack.back()->body = profile_stack.back();
+    profile_stack.back()->summary_profile = profile_stack.back();
 
     for(int i = 0; i < num_attributes; ++i)
         if(attributes[i].localname == std::string("filename")) {
@@ -530,7 +531,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     } else {
 
-        profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
+        profile_stack.emplace_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
         if(has_body(full_name))
             profile_stack.back()->body = profile_stack.back();
         else
@@ -712,7 +713,7 @@ void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> 
 
     // should always have at least unit
     profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child_change(profile, profile_stack.at(parent_pos)->type_name);
-    profile_stack.at(std::get<2>(counting_profile_pos.back()))->add_descendant_change(profile, profile_stack.at(parent_pos)->type_name);
+    profile_stack.back()->parent->summary_profile->add_descendant_change(profile, profile_stack.at(parent_pos)->type_name);
 
 }
 
@@ -775,20 +776,20 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 profile_stack.at(std::get<0>(counting_profile_pos.at(counting_profile_pos.size() - 2)))->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
 
                 if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_full_name.is_common())
-                    profile_stack.at(std::get<1>(counting_profile_pos.back()))->add_identifier(collected_full_name, profile_stack.at(parent_pos)->type_name);
+                    profile_stack.back()->body->add_identifier(collected_full_name, profile_stack.at(parent_pos)->type_name);
 
                 collected_full_name.clear();
 
                 for(const versioned_string & name : simple_names) {
 
                     if(name.is_common())
-                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->common_identifiers[name].push_back(profile_stack.back());
+                        profile_stack.back()->body->common_identifiers[name].push_back(profile_stack.back());
                     else if(name.has_original() && name.has_modified())
-                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->modified_identifiers[name].push_back(profile_stack.back());
+                        profile_stack.back()->body->modified_identifiers[name].push_back(profile_stack.back());
                     else if(name.has_original())
-                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->deleted_identifiers[name].push_back(profile_stack.back());
+                        profile_stack.back()->body->deleted_identifiers[name].push_back(profile_stack.back());
                     else if(name.has_modified())
-                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->inserted_identifiers[name].push_back(profile_stack.back());
+                        profile_stack.back()->body->inserted_identifiers[name].push_back(profile_stack.back());
 
                 }
 
@@ -996,7 +997,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(has_body(full_name)) {
 
-            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.at(std::get<1>(counting_profile_pos.back()));
+            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent->body;
 
             // add to identifier list looking for intersections and adding
             for(std::pair<identifier_utilities, size_t> identifier : profile_stack.back()->all_identifiers) {
