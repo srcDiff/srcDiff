@@ -49,7 +49,6 @@ void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
         const std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile);
         body->identifiers.push_back(function_profile->name);
 
-
     } else if(is_parameter(profile->type_name)) {
 
         const std::shared_ptr<parameter_profile_t> & parameter_profile = reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile);
