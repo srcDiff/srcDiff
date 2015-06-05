@@ -408,7 +408,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
     full_name += localname;
 
     profile_stack.push_back(unit_profile = std::make_shared<unit_profile_t>(full_name, SRC, SRCDIFF_COMMON));
-    profile_stack.back()->parent_ = profile_stack.back();
+    profile_stack.back()->parent = profile_stack.back();
     profile_stack.back()->body = profile_stack.back();
     profile_stack.back()->summary_profile = profile_stack.back();
 
@@ -538,16 +538,16 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
             --parent_pos;
 
-        profile_stack.back()->parent_ = profile_stack.at(parent_pos);
+        profile_stack.back()->parent = profile_stack.at(parent_pos);
         if(has_body(full_name))
             profile_stack.back()->body = profile_stack.back();
         else
-            profile_stack.back()->body = profile_stack.back()->parent_->body;
+            profile_stack.back()->body = profile_stack.back()->parent->body;
 
         if(is_summary(full_name))
             profile_stack.back()->summary_profile = profile_stack.back();
         else
-            profile_stack.back()->summary_profile = profile_stack.back()->parent_->summary_profile;
+            profile_stack.back()->summary_profile = profile_stack.back()->parent->summary_profile;
 
         if(uri_stack.back() != SRCDIFF) profile_stack.at(counting_profile_pos.back())->add_child(profile_stack.back());
 
@@ -569,8 +569,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(uri_stack.back() != SRCDIFF) {
 
-        if(is_identifier(profile_stack.back()->parent_->type_name))
-            reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent_)->is_simple = false;
+        if(is_identifier(profile_stack.back()->parent->type_name))
+            reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent)->is_simple = false;
 
         if(is_identifier(full_name)) {
 
@@ -713,7 +713,7 @@ void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> 
 
     // should always have at least unit
     profile_stack.at(counting_profile_pos.back())->add_child_change(profile, profile_stack.at(parent_pos)->type_name);
-    profile_stack.back()->parent_->summary_profile->add_descendant_change(profile, profile_stack.at(parent_pos)->type_name);
+    profile_stack.back()->parent->summary_profile->add_descendant_change(profile, profile_stack.at(parent_pos)->type_name);
 
 }
 
@@ -997,7 +997,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(has_body(full_name)) {
 
-            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent_->body;
+            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent->body;
 
             // add to identifier list looking for intersections and adding
             for(std::pair<identifier_utilities, size_t> identifier : profile_stack.back()->all_identifiers) {
@@ -1112,7 +1112,7 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     if(is_specifier(profile_stack.back()->type_name)) specifier_raw.append(ch,len);
 
     if(is_identifier(profile_stack.back()->type_name)
-        || (profile_stack.back()->uri == SRCDIFF && is_identifier(profile_stack.back()->parent_->type_name)))
+        || (profile_stack.back()->uri == SRCDIFF && is_identifier(profile_stack.back()->parent->type_name)))
         collected_simple_name.append(ch, len, srcdiff_stack.back().operation);
     if(name_count) collected_full_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
