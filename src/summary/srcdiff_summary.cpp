@@ -228,7 +228,6 @@ no_expr:
 
         }
 
-
     }
 
     text.clear();
@@ -293,7 +292,7 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
 
 void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
 
-	if(profile->total_count == 0) return;
+    if(profile->total_count == 0) return;
 
     const char * columns_str = std::getenv("COLUMNS");
 
@@ -909,7 +908,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             else if(profile_stack.back()->type_name == "init")
                 reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init = profile_stack.back();
 
-
         } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
             && is_parameter(profile_stack.at(profile_stack.size() - 3)->type_name)) {
 
@@ -937,7 +935,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(is_call(full_name))
             expr_stmt_profile->add_call_profile(reinterpret_cast<std::shared_ptr<call_profile_t> &>(profile_stack.back()));
-
 
     }
 
