@@ -41,7 +41,11 @@ class profile_t {
         size_t move_id;
 
         std::shared_ptr<profile_t> parent;
+        std::shared_ptr<profile_t> body;
+        std::shared_ptr<profile_t> summary_profile;
+
         profile_list_t child_profiles;
+        profile_list_t identifiers;
 
         size_t statement_count_original;
         size_t statement_count_modified;

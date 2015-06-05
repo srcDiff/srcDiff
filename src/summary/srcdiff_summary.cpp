@@ -531,6 +531,16 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     } else {
 
         profile_stack.push_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
+        if(has_body(full_name))
+            profile_stack.back()->body = profile_stack.back();
+        else
+            profile_stack.back()->body = profile_stack.back()->parent->body;
+
+        if(is_summary(full_name))
+            profile_stack.back()->summary_profile = profile_stack.back();
+        else
+            profile_stack.back()->summary_profile = profile_stack.back()->parent->summary_profile;
+
         if(uri_stack.back() != SRCDIFF) profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile_stack.back());
 
         if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
