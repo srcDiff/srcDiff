@@ -132,11 +132,8 @@ no_expr:
             const char * save_ch = current_ch;
             for(; current_ch < (ch + len); ++current_ch) {
 
-                if(!isspace((char)*current_ch)) {
-
+                if(!isspace((char)*current_ch))
                     break;
-
-                }
 
             }
 
@@ -146,11 +143,8 @@ no_expr:
 
                 for(; current_ch < (ch + len); ++current_ch) {
 
-                    if(isspace((char)*current_ch)) {
-
+                    if(isspace((char)*current_ch))
                         break;
-
-                    }
 
                 }
 
@@ -304,8 +298,7 @@ void srcdiff_summary::summarize(const std::shared_ptr<profile_t> & profile) {
     const char * columns_str = std::getenv("COLUMNS");
 
     size_t columns = 0;
-    if(columns_str)
-        columns = std::stoull(columns_str);
+    if(columns_str) columns = std::stoull(columns_str);
 
     if(columns == 0) {
 
