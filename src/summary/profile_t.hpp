@@ -69,7 +69,7 @@ class profile_t {
         profile_list_t child_change_profiles;
         profile_list_t descendant_change_profiles;      
 
-        std::map<identifier_utilities, size_t> identifiers;
+        std::map<identifier_utilities, size_t> all_identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;
 
         std::map<std::string, std::vector<std::shared_ptr<profile_t>>> common_identifiers;
@@ -125,10 +125,10 @@ class profile_t {
 
                 ident_diff.trim(is_call(parent));
 
-                std::map<identifier_utilities, size_t>::iterator itr = identifiers.find(ident_diff);
-                if(itr == identifiers.end()) {
+                std::map<identifier_utilities, size_t>::iterator itr = all_identifiers.find(ident_diff);
+                if(itr == all_identifiers.end()) {
 
-                    identifiers.insert(itr, std::make_pair(ident_diff, 1));
+                    all_identifiers.insert(itr, std::make_pair(ident_diff, 1));
 
                 } else {
 

@@ -58,7 +58,7 @@
 
 #define identifier_set_difference(PROFILE)                                        \
     std::map<identifier_utilities, size_t> identifier_set;                             \
-    std::set_difference(PROFILE->identifiers.begin(), PROFILE->identifiers.end(), \
+    std::set_difference(PROFILE->all_identifiers.begin(), PROFILE->all_identifiers.end(), \
                         output_identifiers.begin(), output_identifiers.end(),     \
                         std::inserter(identifier_set, identifier_set.begin()));
 

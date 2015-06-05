@@ -989,12 +989,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             std::shared_ptr<profile_t> & parent_body_profile = profile_stack.at(std::get<1>(counting_profile_pos.back()));
 
             // add to identifier list looking for intersections and adding
-            for(std::pair<identifier_utilities, size_t> identifier : profile_stack.back()->identifiers) {
+            for(std::pair<identifier_utilities, size_t> identifier : profile_stack.back()->all_identifiers) {
 
-                std::map<identifier_utilities, size_t>::iterator itr = parent_body_profile->identifiers.find(identifier.first);
-                if(itr == parent_body_profile->identifiers.end()) {
+                std::map<identifier_utilities, size_t>::iterator itr = parent_body_profile->all_identifiers.find(identifier.first);
+                if(itr == parent_body_profile->all_identifiers.end()) {
 
-                    parent_body_profile->identifiers.insert(itr, identifier);
+                    parent_body_profile->all_identifiers.insert(itr, identifier);
 
                 } else {
 
