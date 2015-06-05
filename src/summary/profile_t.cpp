@@ -36,14 +36,14 @@ void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
     if(is_parameter(profile->type_name)) {
 
         const std::shared_ptr<parameter_profile_t> & parameter_profile = reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile);
-        identifiers.push_back(parameter_profile->name);
+        body->identifiers.push_back(parameter_profile->name);
 
     }
 
     if(is_decl_stmt(profile->type_name)) {
 
         const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
-        identifiers.push_back(decl_stmt_profile->name);
+        body->identifiers.push_back(decl_stmt_profile->name);
 
     }
 
