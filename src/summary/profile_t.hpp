@@ -40,7 +40,6 @@ class profile_t {
         srcdiff_type operation;
         bool is_replacement;
         size_t move_id;
-        std::shared_ptr<profile_t> move_parent;
 
         std::shared_ptr<profile_t> parent;
 
@@ -80,14 +79,14 @@ class profile_t {
     public:
 
         profile_t(std::string type_name = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0), move_parent(),
+                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
                                                                    parent(), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
                                                                    left_hand_side(false), right_hand_side(false), raw() {}
 
         profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0), move_parent(),
+                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
                                                                    parent(parent), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
                                                                    is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
                                                                    modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),

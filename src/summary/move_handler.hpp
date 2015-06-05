@@ -67,7 +67,6 @@ private:
             statement_churn -= 2;
 
 			first_profile->move_id = (size_t)-1;
-        	first_profile->move_parent = second_profile->parent;
             for(profile_t::profile_list_t::iterator itr = second_profile->parent->child_change_profiles.begin(); itr != second_profile->parent->child_change_profiles.end(); ++itr) {
 
                 if(second_profile == *itr) {
