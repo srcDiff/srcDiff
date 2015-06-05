@@ -449,7 +449,7 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
     assert(is_jump(profile->type_name));
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->parent;
+    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
     identifier_set_difference(parent_profile);
 
     if(profile->operation == SRCDIFF_COMMON) {
@@ -490,7 +490,7 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
     const bool condition_modified = conditional_profile->is_condition_modified();
     const bool body_modified = conditional_profile->is_body_modified();
 
-    bool is_internal = profile->operation != SRCDIFF_COMMON && profile->operation == profile->parent->operation;
+    bool is_internal = profile->operation != SRCDIFF_COMMON && profile->operation == profile->summary_parent->operation;
 
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_change_profiles.size() == 1
         && profile->child_change_profiles[0]->type_name == "if" ? profile->child_change_profiles[0] : profile;
@@ -684,7 +684,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                     std::vector<std::shared_ptr<profile_t>> inner_deleted_other, inner_inserted_other, inner_modified_other;
                                     size_t inner_number_arguments_deleted = 0, inner_number_arguments_inserted = 0, inner_number_arguments_modified = 0;
                                     size_t save_identifier_count = identifier_renames.size();
-                                    expr_statistics(argument_child_change_profile->parent, identifier_set,
+                                    expr_statistics(argument_child_change_profile->summary_parent, identifier_set,
                                                     inner_deleted_calls, inner_inserted_calls, inner_modified_calls, inner_renamed_calls, inner_modified_argument_lists,
                                                     inner_deleted_other, inner_inserted_other, inner_modified_other,
                                                     inner_number_arguments_deleted, inner_number_arguments_inserted, inner_number_arguments_modified,
@@ -817,7 +817,7 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->parent;
+    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
     identifier_set_difference(parent_profile);
 
     run_expr_statistics(profile->child_change_profiles[0]);
@@ -942,7 +942,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->parent;
+    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
     identifier_set_difference(parent_profile);
 
     size_t number_parts_report = 0;

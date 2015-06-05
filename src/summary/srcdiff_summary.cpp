@@ -40,21 +40,21 @@ bool is_summary(const std::string & type_name) {
 }
 
 std::shared_ptr<profile_t> make_profile(const std::string & type_name, namespace_uri uri, srcdiff_type operation,
-                                        const std::shared_ptr<profile_t> & parent) {
+                                        const std::shared_ptr<profile_t> & summary_parent) {
 
-    if(is_identifier(type_name))         return std::make_shared<identifier_profile_t> (type_name, uri, operation, parent);
-    if(is_class_type(type_name))         return std::make_shared<class_profile_t>      (type_name, uri, operation, parent);
-    if(is_function_type(type_name))      return std::make_shared<function_profile_t>   (type_name, uri, operation, parent);
-    if(is_parameter(type_name))          return std::make_shared<parameter_profile_t>  (type_name, uri, operation, parent);
-    if(is_decl_stmt(type_name))          return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, parent);
-    if(is_if(type_name))                 return std::make_shared<if_profile_t>         (type_name, uri, operation, parent);
-    if(is_ternary(type_name))            return std::make_shared<ternary_profile_t>    (type_name, uri, operation, parent);
-    if(is_condition_type(type_name))     return std::make_shared<conditional_profile_t>(type_name, uri, operation, parent);
-    if(is_call(type_name))               return std::make_shared<call_profile_t>       (type_name, uri, operation, parent);
-    if(is_expr_stmt(type_name))          return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, parent);
-    if(is_expr(type_name))               return std::make_shared<expr_profile_t>       (type_name, uri, operation, parent);
-    if(is_exception_handling(type_name)) return std::make_shared<exception_profile_t>  (type_name, uri, operation, parent);
-    return std::make_shared<profile_t>                                                 (type_name, uri, operation, parent);
+    if(is_identifier(type_name))         return std::make_shared<identifier_profile_t> (type_name, uri, operation, summary_parent);
+    if(is_class_type(type_name))         return std::make_shared<class_profile_t>      (type_name, uri, operation, summary_parent);
+    if(is_function_type(type_name))      return std::make_shared<function_profile_t>   (type_name, uri, operation, summary_parent);
+    if(is_parameter(type_name))          return std::make_shared<parameter_profile_t>  (type_name, uri, operation, summary_parent);
+    if(is_decl_stmt(type_name))          return std::make_shared<decl_stmt_profile_t>  (type_name, uri, operation, summary_parent);
+    if(is_if(type_name))                 return std::make_shared<if_profile_t>         (type_name, uri, operation, summary_parent);
+    if(is_ternary(type_name))            return std::make_shared<ternary_profile_t>    (type_name, uri, operation, summary_parent);
+    if(is_condition_type(type_name))     return std::make_shared<conditional_profile_t>(type_name, uri, operation, summary_parent);
+    if(is_call(type_name))               return std::make_shared<call_profile_t>       (type_name, uri, operation, summary_parent);
+    if(is_expr_stmt(type_name))          return std::make_shared<expr_stmt_profile_t>  (type_name, uri, operation, summary_parent);
+    if(is_expr(type_name))               return std::make_shared<expr_profile_t>       (type_name, uri, operation, summary_parent);
+    if(is_exception_handling(type_name)) return std::make_shared<exception_profile_t>  (type_name, uri, operation, summary_parent);
+    return std::make_shared<profile_t>                                                 (type_name, uri, operation, summary_parent);
 
 }
 
@@ -532,15 +532,21 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     } else {
 
         profile_stack.emplace_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(std::get<0>(counting_profile_pos.back()))));
+
+        size_t parent_pos = profile_stack.size() - 2;
+        while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+            --parent_pos;
+
+        profile_stack.back()->parent_ = profile_stack.at(parent_pos);
         if(has_body(full_name))
             profile_stack.back()->body = profile_stack.back();
         else
-            profile_stack.back()->body = profile_stack.back()->parent->body;
+            profile_stack.back()->body = profile_stack.back()->parent_->body;
 
         if(is_summary(full_name))
             profile_stack.back()->summary_profile = profile_stack.back();
         else
-            profile_stack.back()->summary_profile = profile_stack.back()->parent->summary_profile;
+            profile_stack.back()->summary_profile = profile_stack.back()->parent_->summary_profile;
 
         if(uri_stack.back() != SRCDIFF) profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child(profile_stack.back());
 
@@ -562,11 +568,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(uri_stack.back() != SRCDIFF) {
 
-        if(is_identifier(profile_stack.back()->parent->type_name))
-            reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent)->is_simple = false;
-
-        if(profile_stack.back()->parent->uri == SRCDIFF && is_identifier(profile_stack.back()->parent->parent->type_name))
-            reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent->parent)->is_simple = false;
+        if(is_identifier(profile_stack.back()->parent_->type_name))
+            reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent_)->is_simple = false;
 
         if(is_identifier(full_name)) {
 
@@ -713,7 +716,7 @@ void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> 
 
     // should always have at least unit
     profile_stack.at(std::get<0>(counting_profile_pos.back()))->add_child_change(profile, profile_stack.at(parent_pos)->type_name);
-    profile_stack.back()->parent->summary_profile->add_descendant_change(profile, profile_stack.at(parent_pos)->type_name);
+    profile_stack.back()->parent_->summary_profile->add_descendant_change(profile, profile_stack.at(parent_pos)->type_name);
 
 }
 
@@ -997,7 +1000,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(has_body(full_name)) {
 
-            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent->body;
+            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent_->body;
 
             // add to identifier list looking for intersections and adding
             for(std::pair<identifier_utilities, size_t> identifier : profile_stack.back()->all_identifiers) {
@@ -1112,7 +1115,7 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     if(is_specifier(profile_stack.back()->type_name)) specifier_raw.append(ch,len);
 
     if(is_identifier(profile_stack.back()->type_name)
-        || (profile_stack.back()->uri == SRCDIFF && is_identifier(profile_stack.back()->parent->type_name)))
+        || (profile_stack.back()->uri == SRCDIFF && is_identifier(profile_stack.back()->parent_->type_name)))
         collected_simple_name.append(ch, len, srcdiff_stack.back().operation);
     if(name_count) collected_full_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);

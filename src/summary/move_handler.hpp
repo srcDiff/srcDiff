@@ -67,12 +67,12 @@ private:
             statement_churn -= 2;
 
 			first_profile->move_id = (size_t)-1;
-            for(profile_t::profile_list_t::iterator itr = second_profile->parent->child_change_profiles.begin(); itr != second_profile->parent->child_change_profiles.end(); ++itr) {
+            for(profile_t::profile_list_t::iterator itr = second_profile->summary_parent->child_change_profiles.begin(); itr != second_profile->summary_parent->child_change_profiles.end(); ++itr) {
 
                 if(second_profile == *itr) {
 
 
-                    second_profile->parent->child_change_profiles.erase(itr);
+                    second_profile->summary_parent->child_change_profiles.erase(itr);
                     break;
                 }
 

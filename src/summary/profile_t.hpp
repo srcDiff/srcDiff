@@ -40,7 +40,9 @@ class profile_t {
         bool is_replacement;
         size_t move_id;
 
-        std::shared_ptr<profile_t> parent;
+
+        std::shared_ptr<profile_t> parent_;
+        std::shared_ptr<profile_t> summary_parent;
         std::shared_ptr<profile_t> body;
         std::shared_ptr<profile_t> summary_profile;
 
@@ -84,7 +86,7 @@ class profile_t {
 
         profile_t(std::string type_name = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON);
 
-        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent);
+        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & summary_parent);
 
         void set_id(size_t id_count);
         void set_operation(srcdiff_type operation);
