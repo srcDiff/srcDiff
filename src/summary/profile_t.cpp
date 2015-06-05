@@ -1,5 +1,8 @@
 #include <profile_t.hpp>
 
+#include <parameter_profile_t.hpp>
+#include <decl_stmt_profile_t.hpp>
+
 #include <type_query.hpp>
 
 profile_t::profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) :
@@ -29,6 +32,20 @@ void profile_t::set_operation(srcdiff_type operation) {
 }
 
 void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
+
+    if(is_parameter(profile->type_name)) {
+
+        const std::shared_ptr<parameter_profile_t> & parameter_profile = reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile);
+        identifiers.push_back(parameter_profile->name);
+
+    }
+
+    if(is_decl_stmt(profile->type_name)) {
+
+        const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
+        identifiers.push_back(decl_stmt_profile->name);
+
+    }
 
     child_profiles.push_back(profile);
 

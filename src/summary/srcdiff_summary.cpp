@@ -549,8 +549,6 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         else
             profile_stack.back()->summary_profile = profile_stack.back()->parent->summary_profile;
 
-        if(uri_stack.back() != SRCDIFF) profile_stack.at(counting_profile_pos.back())->add_child(profile_stack.back());
-
         if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
         if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0 && uri_stack.back() != SRCDIFF && current_move_id < srcdiff_stack.back().move_id) {
 
@@ -753,6 +751,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         full_name = "expr_block";
 
     if(uri_stack.back() != SRCDIFF) {
+
+        profile_stack.back()->parent->add_child(profile_stack.back());
 
         if(!is_interchange && srcdiff_stack.back().level > 0) --srcdiff_stack.back().level;
 

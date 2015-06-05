@@ -47,7 +47,7 @@ class profile_t {
         std::shared_ptr<profile_t> summary_profile;
 
         profile_list_t child_profiles;
-        profile_list_t identifiers;
+        std::vector<versioned_string> identifiers;
 
         size_t statement_count_original;
         size_t statement_count_modified;
