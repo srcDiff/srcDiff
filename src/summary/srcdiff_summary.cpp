@@ -791,8 +791,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                     if(name.is_common())
                         profile_stack.at(std::get<1>(counting_profile_pos.back()))->common_identifiers[name].push_back(profile_stack.back());
-                    else
-                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->changed_identifiers[name].push_back(profile_stack.back());
+                    else if(name.has_original() && name.has_modified())
+                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->modified_identifiers[name].push_back(profile_stack.back());
+                    else if(name.has_original())
+                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->deleted_identifiers[name].push_back(profile_stack.back());
+                    else if(name.has_modified())
+                        profile_stack.at(std::get<1>(counting_profile_pos.back()))->inserted_identifiers[name].push_back(profile_stack.back());
 
                 }
 

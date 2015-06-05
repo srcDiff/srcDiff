@@ -63,6 +63,9 @@ class profile_t {
 
         bool left_hand_side;
         bool right_hand_side;
+
+        std::string raw;
+
         profile_list_t common_profiles;
 
         profile_list_t child_profiles;
@@ -71,10 +74,10 @@ class profile_t {
         std::map<identifier_utilities, size_t> identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;
 
-        std::string raw;
-
         std::map<std::string, std::vector<std::shared_ptr<profile_t>>> common_identifiers;
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> changed_identifiers;
+        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> deleted_identifiers;
+        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> inserted_identifiers;
+        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> modified_identifiers;
 
     public:
 
