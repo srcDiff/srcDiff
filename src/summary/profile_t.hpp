@@ -42,6 +42,7 @@ class profile_t {
         size_t move_id;
 
         std::shared_ptr<profile_t> parent;
+        profile_list_t child_profiles;
 
         size_t statement_count_original;
         size_t statement_count_modified;
@@ -107,6 +108,12 @@ class profile_t {
         virtual void set_name(versioned_string name) {
 
             set_name(name, boost::optional<versioned_string>());
+
+        }
+
+        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
+
+            child_profiles.push_back(profile);
 
         }
 
