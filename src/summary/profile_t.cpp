@@ -1,5 +1,7 @@
 #include <profile_t.hpp>
 
+#include <class_profile_t.hpp>
+#include <function_profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <decl_stmt_profile_t.hpp>
 
@@ -33,14 +35,25 @@ void profile_t::set_operation(srcdiff_type operation) {
 
 void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
 
-    if(is_parameter(profile->type_name)) {
+
+    if(is_class_type(profile->type_name)) {
+
+        const std::shared_ptr<class_profile_t> & class_profile = reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile);
+        body->identifiers.push_back(class_profile->name);
+
+
+    } else if(is_function_type(profile->type_name)) {
+
+        const std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile);
+        body->identifiers.push_back(function_profile->name);
+
+
+    } else if(is_parameter(profile->type_name)) {
 
         const std::shared_ptr<parameter_profile_t> & parameter_profile = reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile);
         body->identifiers.push_back(parameter_profile->name);
 
-    }
-
-    if(is_decl_stmt(profile->type_name)) {
+    } else if(is_decl_stmt(profile->type_name)) {
 
         const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
         body->identifiers.push_back(decl_stmt_profile->name);
