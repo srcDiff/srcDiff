@@ -35,29 +35,45 @@ void profile_t::set_operation(srcdiff_type operation) {
                 
 }
 
+static void update_identifiers(std::map<std::string, std::set<versioned_string>> & identifiers, const versioned_string & identifier) {
+
+        if(identifier.is_common()) {
+
+            identifiers[identifier].insert(identifier);
+            return;
+
+        }
+
+        if(identifier.has_original())
+            identifiers[identifier.original()].insert(identifier);
+
+        if(identifier.has_modified())
+            identifiers[identifier.modified()].insert(identifier);
+
+}
+
 void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
 
 
     if(is_class_type(profile->type_name)) {
 
         const std::shared_ptr<class_profile_t> & class_profile = reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile);
-        body->identifiers.push_back(class_profile->name);
-
+        update_identifiers(body->identifiers, class_profile->name);
 
     } else if(is_function_type(profile->type_name)) {
 
         const std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile);
-        body->identifiers.push_back(function_profile->name);
+        update_identifiers(body->identifiers, function_profile->name);
 
     } else if(is_parameter(profile->type_name)) {
 
         const std::shared_ptr<parameter_profile_t> & parameter_profile = reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile);
-        body->identifiers.push_back(parameter_profile->name);
+        update_identifiers(body->identifiers, parameter_profile->name);
 
     } else if(is_decl_stmt(profile->type_name)) {
 
         const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
-        body->identifiers.push_back(decl_stmt_profile->name);
+        update_identifiers(body->identifiers, decl_stmt_profile->name);
 
     }
 

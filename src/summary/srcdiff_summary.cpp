@@ -782,14 +782,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                 for(const versioned_string & name : simple_names) {
 
-                    if(name.is_common())
-                        profile_stack.back()->body->common_identifiers[name].push_back(profile_stack.back());
-                    else if(name.has_original() && name.has_modified())
-                        profile_stack.back()->body->modified_identifiers[name].push_back(profile_stack.back());
-                    else if(name.has_original())
-                        profile_stack.back()->body->deleted_identifiers[name].push_back(profile_stack.back());
-                    else if(name.has_modified())
-                        profile_stack.back()->body->inserted_identifiers[name].push_back(profile_stack.back());
 
                 }
 

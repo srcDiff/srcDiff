@@ -23,6 +23,8 @@ class unit_profile_t : public profile_t {
         change_entity_map<class_profile_t>       classes;
         change_entity_map<conditional_profile_t> conditionals;
 
+        std::map<std::string, srcdiff_type> declarations;
+
     public:
 
         unit_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : profile_t(type_name, uri, operation) {}

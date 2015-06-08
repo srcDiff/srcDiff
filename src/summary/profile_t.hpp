@@ -49,7 +49,7 @@ class profile_t {
         std::shared_ptr<profile_t> summary_profile;
 
         profile_list_t child_profiles;
-        std::vector<versioned_string> identifiers;
+        std::map<std::string, std::set<versioned_string>> identifiers;
 
         size_t statement_count_original;
         size_t statement_count_modified;
@@ -78,11 +78,6 @@ class profile_t {
 
         std::map<identifier_utilities, size_t> all_identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;
-
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> common_identifiers;
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> deleted_identifiers;
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> inserted_identifiers;
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> modified_identifiers;
 
     public:
 
