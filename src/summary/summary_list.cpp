@@ -946,8 +946,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
     identifier_set_difference(parent_profile);
 
     size_t number_parts_report = 0;
-    bool identifier_rename_only = true;
-    std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
+    boost::optional<versioned_string> identifier_rename;
     if(decl_stmt_profile->operation == SRCDIFF_COMMON) {
 
         if(decl_stmt_profile->specifiers.size() != 0) {
@@ -958,10 +957,14 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         if(decl_stmt_profile->type->syntax_count > 0) {
 
+            std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
             bool is_identifier_only = identifier_check(decl_stmt_profile->type, identifier_set, identifier_renames);
 
-            if(!is_identifier_only)
+            if(!is_identifier_only || identifier_renames.size() != 0)
                 ++number_parts_report;
+
+            if(is_identifier_only && identifier_renames.size() == 1)
+                identifier_rename = identifier_renames.begin()->get();
 
         }
 
@@ -989,6 +992,9 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
                 if(is_expr_syntax_change())
                     ++number_parts_report;
 
+                if(identifier_rename_only && identifier_renames.size() == 1)
+                    identifier_rename = identifier_renames.begin()->get();
+
             }
 
         }
@@ -997,8 +1003,8 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
     }
 
-    if(number_parts_report == 1 && identifier_rename_only && identifier_renames.size() == 1)
-        summaries_.emplace_back(new identifier_summary_t(identifier_renames.begin()->get(), false));
+    if(number_parts_report == 1 && bool(identifier_rename))
+        summaries_.emplace_back(new identifier_summary_t(*identifier_rename, false));
     else
         summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, decl_stmt_profile->specifiers.size() != 0,
                                                                             decl_stmt_profile->type->syntax_count > 0,
