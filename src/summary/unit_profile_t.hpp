@@ -23,7 +23,11 @@ class unit_profile_t : public profile_t {
         change_entity_map<class_profile_t>       classes;
         change_entity_map<conditional_profile_t> conditionals;
 
-        std::map<std::string, srcdiff_type> declarations;
+        /** 
+         * @todo this assumes declarations are simple names.  Believe some class at least can be complex, and function definitions are complex 
+         * and need to be resolved into a simple
+         */
+        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> declarations;
 
     public:
 

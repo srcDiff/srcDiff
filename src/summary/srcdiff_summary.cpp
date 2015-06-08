@@ -780,8 +780,34 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                 collected_full_name.clear();
 
+                std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
                 for(const versioned_string & name : simple_names) {
 
+                    if(name.is_common()) {
+    
+                        std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->declarations.find(name);
+                        if(itr != unit_profile->declarations.end())
+                            unit_profile->declarations[name].back()->identifiers[name].insert(name);
+
+                        continue;
+
+                    }
+
+                    if(name.has_original()) {
+
+                        std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->declarations.find(name.original());
+                        if(itr != unit_profile->declarations.end())
+                            unit_profile->declarations[name.original()].back()->identifiers[name.original()].insert(name);
+
+                    }
+
+                    if(name.has_modified()) {
+
+                        std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->declarations.find(name.modified());
+                        if(itr != unit_profile->declarations.end())
+                            unit_profile->declarations[name.modified()].back()->identifiers[name.modified()].insert(name);
+
+                    }
 
                 }
 
@@ -1062,6 +1088,17 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     }
 
    if(has_body(full_name)) {
+
+        std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
+        for(const std::pair<std::string, std::set<versioned_string>> & identifier : profile_stack.back()->identifiers) {
+
+            if(profile_stack.back()->id == unit_profile->declarations[identifier.first].back()->id)
+                unit_profile->declarations[identifier.first].pop_back();
+
+            if(unit_profile->declarations[identifier.first].size() == 0)
+                unit_profile->declarations.erase(identifier.first);
+
+        }
 
         profile_stack.at(counting_profile_pos.back())->statement_count_original += profile_stack.back()->statement_count_original;
         profile_stack.at(counting_profile_pos.back())->statement_count_modified += profile_stack.back()->statement_count_modified;

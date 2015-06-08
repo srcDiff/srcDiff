@@ -4,6 +4,7 @@
 #include <function_profile_t.hpp>
 #include <parameter_profile_t.hpp>
 #include <decl_stmt_profile_t.hpp>
+#include <unit_profile_t.hpp>
 
 #include <type_query.hpp>
 
@@ -35,20 +36,29 @@ void profile_t::set_operation(srcdiff_type operation) {
                 
 }
 
-static void update_identifiers(std::map<std::string, std::set<versioned_string>> & identifiers, const versioned_string & identifier) {
+static void update_identifiers(std::shared_ptr<profile_t> & body, const versioned_string & identifier) {
 
         if(identifier.is_common()) {
 
-            identifiers[identifier].insert(identifier);
+            body->identifiers[identifier].insert(identifier);
+            reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile)->declarations[identifier].push_back(body);
             return;
 
         }
 
-        if(identifier.has_original())
-            identifiers[identifier.original()].insert(identifier);
+        if(identifier.has_original()) {
 
-        if(identifier.has_modified())
-            identifiers[identifier.modified()].insert(identifier);
+            body->identifiers[identifier.original()].insert(identifier);
+            reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile)->declarations[identifier.original()].push_back(body);
+
+        }
+
+        if(identifier.has_modified()) {
+
+            body->identifiers[identifier.modified()].insert(identifier);
+            reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile)->declarations[identifier.modified()].push_back(body);
+
+        }
 
 }
 
@@ -58,22 +68,22 @@ void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
     if(is_class_type(profile->type_name)) {
 
         const std::shared_ptr<class_profile_t> & class_profile = reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile);
-        update_identifiers(body->identifiers, class_profile->name);
+        update_identifiers(body, class_profile->name);
 
     } else if(is_function_type(profile->type_name)) {
 
         const std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile);
-        update_identifiers(body->identifiers, function_profile->name);
+        update_identifiers(body, function_profile->name);
 
     } else if(is_parameter(profile->type_name)) {
 
         const std::shared_ptr<parameter_profile_t> & parameter_profile = reinterpret_cast<const std::shared_ptr<parameter_profile_t> &>(profile);
-        update_identifiers(body->identifiers, parameter_profile->name);
+        update_identifiers(body, parameter_profile->name);
 
     } else if(is_decl_stmt(profile->type_name)) {
 
         const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
-        update_identifiers(body->identifiers, decl_stmt_profile->name);
+        update_identifiers(body, decl_stmt_profile->name);
 
     }
 
