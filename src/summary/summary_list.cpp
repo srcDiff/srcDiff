@@ -56,11 +56,17 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
-#define identifier_set_difference(PROFILE)                                        \
-    std::map<identifier_utilities, size_t> identifier_set;                             \
-    std::set_difference(PROFILE->all_identifiers.begin(), PROFILE->all_identifiers.end(), \
-                        output_identifiers.begin(), output_identifiers.end(),     \
-                        std::inserter(identifier_set, identifier_set.begin()));
+bool compare_identifier_map(const std::pair<identifier_utilities, size_t> & first, const std::pair<identifier_utilities, size_t> & second) {
+
+    return first.first < second.first;
+
+}
+
+#define identifier_set_difference(PROFILE)                                                              \
+    std::map<identifier_utilities, size_t> identifier_set;                                              \
+    std::set_difference(PROFILE->all_identifiers.begin(), PROFILE->all_identifiers.end(),               \
+                        output_identifiers.begin(), output_identifiers.end(),                           \
+                        std::inserter(identifier_set, identifier_set.begin()), compare_identifier_map);
 
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
@@ -943,6 +949,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
     const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
+
     identifier_set_difference(parent_profile);
 
     size_t number_parts_report = 0;

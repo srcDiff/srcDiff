@@ -238,7 +238,7 @@ public:
 
     bool operator==(const identifier_utilities & other) const {
 
-        return trimmed_ == other.trimmed_;
+        return trimmed_ == other.trimmed_ && diffed_ == other.diffed_;
 
     }
 
@@ -250,7 +250,9 @@ public:
 
     bool operator<(const identifier_utilities & other) const {
 
+        if(trimmed_)
             return trimmed_ < other.trimmed_;
+        return diffed_ < other.diffed_;
 
     }
 
