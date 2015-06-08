@@ -62,8 +62,8 @@ static void update_identifiers(std::shared_ptr<profile_t> & body, const versione
 
 }
 
+/** @todo need to add identifiers as soon as name encountered */
 void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
-
 
     if(is_class_type(profile->type_name)) {
 
