@@ -1092,11 +1092,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
         for(const std::pair<std::string, std::set<versioned_string>> & identifier : profile_stack.back()->identifiers) {
 
-            // std::cerr << identifier.first << ":" << identifier.second.size() << '{';
-            // for(auto &str : identifier.second)
-            //     std::cerr << str << ", ";
-            // std::cerr << "}\n";
-
             if(profile_stack.back()->id == unit_profile->declarations[identifier.first].back()->id)
                 unit_profile->declarations[identifier.first].pop_back();
 

@@ -1053,6 +1053,32 @@ summary_list::~summary_list() {
 
 void summary_list::function_body(const profile_t & profile) {
 
+    std::vector<versioned_string> summary_identifiers;
+
+    std::map<std::string, std::set<versioned_string>> profile_identifiers = profile.identifiers;
+    for(std::map<std::string, std::set<versioned_string>>::iterator itr = profile_identifiers.begin(); itr != profile_identifiers.end();) {
+
+        if(itr->second.size() == 1 && (!itr->second.begin()->has_original() || profile_identifiers[itr->second.begin()->original()].size() == 1)
+            && (!itr->second.begin()->has_modified() || profile_identifiers[itr->second.begin()->modified()].size() == 1)) {
+
+            versioned_string save_identifier = *itr->second.begin();
+            ++itr;
+            if(save_identifier.has_original())
+                profile_identifiers.erase(save_identifier.original());
+
+            if(save_identifier.has_modified())
+                profile_identifiers.erase(save_identifier.modified());
+
+            summary_identifiers.push_back(save_identifier);
+
+            continue;
+
+        }
+
+        ++itr;
+
+    }
+
     identifiers(profile.summary_identifiers);
 
     block(std::make_shared<profile_t>(profile));
