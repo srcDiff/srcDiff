@@ -909,6 +909,45 @@ std::string get_case_expr(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
+
+  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+    || (nodes.at(start_pos)->name != "expr_stmt" && nodes.at(start_pos)->name != "expr")) return false;
+
+  if(nodes.at(start_pos)->extra & 0x1) return false;
+
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "expr_stmt")
+    ++start_pos;
+
+  if(nodes.at(start_pos)->extra & 0x1) return false;
+
+  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "expr")
+    ++start_pos;
+
+  if(nodes.at(start_pos)->name != "name") return false;
+
+  int open_name_count = (nodes.at(start_pos)->extra & 0x1) ? 0 : 1;
+  ++start_pos;
+
+  while(open_name_count) {
+
+    if(nodes.at(start_pos)->name == "name") {
+
+      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
+        ++open_name_count;
+      else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        --open_name_count;
+
+    }
+
+    ++start_pos;
+
+  }
+
+  return nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "expr";
+
+}
+
 /*
   End internal heuristic functions for reject_match
 */
@@ -1002,6 +1041,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   // may need to refine to if child only single name
   if(original_tag == "expr" && nodes_original.at(original_pos)->parent && (*nodes_original.at(original_pos)->parent)->name == "argument") return false;
+  if(original_tag == "expr" && is_single_name_expr(nodes_original, original_pos) && is_single_name_expr(nodes_modified, modified_pos)) return false;
 
   if(original_tag == "block") {
 
