@@ -23,7 +23,8 @@ private:
 protected:
 
     std::list<summary_t *> summaries_;
-    std::map<identifier_utilities, size_t> output_identifiers;
+    std::set<versioned_string> output_identifiers;
+    std::map<identifier_utilities, size_t> output_identifiers_old;
 
 private:
 
@@ -33,7 +34,7 @@ private:
     void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
     void block(const std::shared_ptr<profile_t> & profile);
 
-    void identifiers(const std::map<identifier_utilities, size_t> & identifiers);
+    void identifiers(std::map<std::string, std::set<versioned_string>> profile_identifiers);
     void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos);
     void interchange(const std::shared_ptr<profile_t> & profile);
 
