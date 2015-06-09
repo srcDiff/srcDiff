@@ -182,9 +182,10 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
     for(std::map<std::string, std::set<versioned_string>>::iterator itr = profile_identifiers.begin(); itr != profile_identifiers.end();) {
 
-        if(itr->second.size() == 1 && !itr->second.begin()->is_common() && itr->second.begin()->has_original() && itr->second.begin()->has_modified()
-            && (!itr->second.begin()->has_original() || profile_identifiers[itr->second.begin()->original()].size() == 1)
-            && (!itr->second.begin()->has_modified() || profile_identifiers[itr->second.begin()->modified()].size() == 1)) {
+        if(itr->second.size() == 1 && !itr->second.begin()->is_common()
+            && itr->second.begin()->has_original() && itr->second.begin()->has_modified()
+            && profile_identifiers[itr->second.begin()->original()].size() == 1
+            && profile_identifiers[itr->second.begin()->modified()].size() == 1) {
 
             versioned_string save_identifier = *itr->second.begin();
     
