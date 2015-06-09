@@ -173,6 +173,9 @@ RotateImage::RotateImage(QObject *parent, const QStringList &)
         : KParts::Plugin(parent)
 {
     if (parent->inherits("KisView2")) {
+
+    	KAction *action  = new KAction(i18n("&Rotate Image..."), this);
+
         action  = new KAction(i18n("&Rotate Layer..."), this);
         actionCollection()->addAction("rotatelayer", action);
         connect(action, SIGNAL(triggered()), this, SLOT(slotRotateLayer()));
@@ -197,6 +200,9 @@ RotateImage::RotateImage(QObject *parent, const QStringList &)
         : KParts::Plugin(parent)
 {
     if (parent->inherits("KisView2")) {
+
+    	KAction *action  = new KAction(i18n("&Rotate Image..."), this);
+
         m_rotateLayerAction  = new KAction(i18n("&Rotate Layer..."), this);
         actionCollection()->addAction("rotatelayer", m_rotateLayerAction);
         connect(m_rotateLayerAction, SIGNAL(triggered()), this, SLOT(slotRotateLayer()));

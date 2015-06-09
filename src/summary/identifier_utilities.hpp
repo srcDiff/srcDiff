@@ -67,7 +67,17 @@ private:
 
 public:
 
-	identifier_utilities(const versioned_string & identifier_) : identifier_(identifier_), is_split(false), is_complex(false) {}
+	identifier_utilities(const versioned_string & identifier_, bool is_single = false) : identifier_(identifier_), is_split(false), is_complex(!is_single) {
+
+        if(is_single) {
+
+            is_split = true;
+            diffed_ = identifier_;
+            trimmed_ = identifier_;
+
+        }
+
+    }
 
     const versioned_string & identifier() const {
 

@@ -23,7 +23,7 @@ private:
 protected:
 
     std::list<summary_t *> summaries_;
-    std::set<versioned_string> output_identifiers;
+    std::map<identifier_utilities, size_t> output_identifiers;
 
 private:
 
@@ -40,12 +40,12 @@ private:
     void jump(const std::shared_ptr<profile_t> & profile);
     void else_clause(const std::shared_ptr<profile_t> & profile);
     void conditional(const std::shared_ptr<profile_t> & profile);
-    bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::set<versioned_string> & identifier_set,
+    bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
                           std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    void ternary(const std::shared_ptr<profile_t> & profile, const std::set<versioned_string> & identifier_set,
+    void ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
                  bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
                  std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
-    void expr_statistics(const std::shared_ptr<profile_t> & profile, const std::set<versioned_string> & identifier_set,
+    void expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
                          std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                          std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                          std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
