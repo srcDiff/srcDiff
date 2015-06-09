@@ -9,7 +9,6 @@
 #include <srcdiff_macros.hpp>
 #include <identifier_utilities.hpp>
 #include <summary_output_stream.hpp>
-#include <type_query.hpp>
 
 #include <vector>
 #include <map>
@@ -22,6 +21,8 @@ class profile_t {
     private:
 
     public:
+
+        static std::shared_ptr<profile_t> unit_profile;
 
         typedef std::vector<std::shared_ptr<profile_t>> profile_list_t;
 
@@ -41,8 +42,14 @@ class profile_t {
         bool is_replacement;
         size_t move_id;
 
+
         std::shared_ptr<profile_t> parent;
+        std::shared_ptr<profile_t> summary_parent;
+        std::shared_ptr<profile_t> body;
+        std::shared_ptr<profile_t> summary_profile;
+
         profile_list_t child_profiles;
+        std::map<std::string, std::set<versioned_string>> identifiers;
 
         size_t statement_count_original;
         size_t statement_count_modified;
@@ -69,169 +76,35 @@ class profile_t {
         profile_list_t child_change_profiles;
         profile_list_t descendant_change_profiles;      
 
-        std::map<identifier_utilities, size_t> identifiers;
+        std::map<identifier_utilities, size_t> all_identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;
-
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> common_identifiers;
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> deleted_identifiers;
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> inserted_identifiers;
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> modified_identifiers;
 
     public:
 
-        profile_t(std::string type_name = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
-                                                                   parent(), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
-                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
-                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
-                                                                   left_hand_side(false), right_hand_side(false), raw() {}
+        profile_t(std::string type_name = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON);
 
-        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) :
-                                                                   id(0), type_name(type_name), uri(uri), operation(operation), is_replacement(false), move_id(0),
-                                                                   parent(parent), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
-                                                                   is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
-                                                                   modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
-                                                                   left_hand_side(false), right_hand_side(false), raw() {}
+        profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & summary_parent);
 
-        void set_id(size_t id_count) {
+        void set_id(size_t id_count);
+        void set_operation(srcdiff_type operation);
+        void add_child(const std::shared_ptr<profile_t> & profile);
 
-            id = id_count;
+        virtual void set_name(versioned_string name);
+        virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
+        virtual void add_identifier(const versioned_string & identifier, const versioned_string & parent);        
+        virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
+        virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
 
-        }
+        virtual impact_factor calculate_impact_factor() const;
+        virtual const char * get_impact_factor() const;
+        virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types UNUSED) const;
 
-        void set_operation(srcdiff_type operation) {
-
-            this->operation = operation;
-                        
-        }
-
-        virtual void set_name(versioned_string name) {
-
-            set_name(name, boost::optional<versioned_string>());
-
-        }
-
-        virtual void add_child(const std::shared_ptr<profile_t> & profile) {
-
-            child_profiles.push_back(profile);
-
-        }
-
-        virtual void add_identifier(const versioned_string & identifier, const versioned_string & parent) {
-
-            if(identifier.has_original() && identifier.has_modified() && !identifier.is_common()) {
-
-                identifier_utilities ident_diff(identifier);
-
-                ident_diff.trim(is_call(parent));
-
-                std::map<identifier_utilities, size_t>::iterator itr = identifiers.find(ident_diff);
-                if(itr == identifiers.end()) {
-
-                    identifiers.insert(itr, std::make_pair(ident_diff, 1));
-
-                } else {
-
-                    ++itr->second;
-
-                    std::map<identifier_utilities, size_t>::iterator itersect_itr = summary_identifiers.find(ident_diff);
-                    if(itersect_itr == summary_identifiers.end()) summary_identifiers.insert(itersect_itr, *itr);                     
-                    else                                               ++itersect_itr->second;
-
-                }
-
-            }
-
-        }
-
-        virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
-        
-        virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
-
-            child_change_profiles.insert(std::lower_bound(child_change_profiles.begin(), child_change_profiles.end(), profile), profile);
-
-        }
-
-        virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
-
-            descendant_change_profiles.insert(std::lower_bound(descendant_change_profiles.begin(), descendant_change_profiles.end(), profile), profile);
-            
-        }
-
-        virtual impact_factor calculate_impact_factor() const {
-
-            double impact_factor_number = (double)syntax_count / descendant_change_profiles.size();
-
-            if(impact_factor_number == 0)    return NONE;
-            if(impact_factor_number <  0.1)  return LOW;
-            if(impact_factor_number <  0.25) return MEDIUM;
-            return HIGH;
-
-        }
-
-        virtual const char * get_impact_factor() const {
-
-            impact_factor factor = calculate_impact_factor();
-
-            switch(factor) {
-
-                case NONE:   return "None";
-                case LOW:    return "Low";
-                case MEDIUM: return "Medium";
-                case HIGH:   return "High";
-
-            }
-
-        }
-
-        virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types UNUSED) const {
-
-            out.pad() << type_name << ":"; 
-            out << " Whitespace: " << whitespace_count;
-            out << "\tComment: " << comment_count;
-            out << "\tSyntax: " << syntax_count;
-            out << "\tTotal: " << total_count;
-            out << '\n';
-
-            return out;
-
-        }
-
-        bool operator<(const profile_t & profile) const {
-
-            return id < profile.id;
-
-        }
-
-        friend bool operator<(const std::shared_ptr<profile_t> & profile_one, const std::shared_ptr<profile_t> & profile_two) {
-
-            return profile_one->id < profile_two->id;
-
-        }
-
-        bool operator==(const profile_t & profile) const {
-
-            return id == profile.id;
-
-        }
-
-        friend bool operator==(const std::shared_ptr<profile_t> & profile_one, const std::shared_ptr<profile_t> & profile_two) {
-
-            return profile_one->id == profile_two->id;
-
-        }
-
-        bool operator==(int profile_id) const {
-
-            return id == profile_id;
-
-        }
-
-        friend bool operator==(const std::shared_ptr<profile_t> & profile_one, size_t profile_id) {
-
-            return profile_one->id == profile_id;
-
-        }
+        bool operator<(const profile_t & profile) const;
+        friend bool operator<(const std::shared_ptr<profile_t> & profile_one, const std::shared_ptr<profile_t> & profile_two);
+        bool operator==(const profile_t & profile) const;
+        friend bool operator==(const std::shared_ptr<profile_t> & profile_one, const std::shared_ptr<profile_t> & profile_two);
+        bool operator==(int profile_id) const;
+        friend bool operator==(const std::shared_ptr<profile_t> & profile_one, size_t profile_id);
 
 };
 

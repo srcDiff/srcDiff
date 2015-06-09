@@ -50,13 +50,12 @@ protected:
     size_t summary_types;    
 
     size_t id_count;
-    std::shared_ptr<profile_t> unit_profile;
 
     std::vector<srcdiff> srcdiff_stack;
     std::vector<std::shared_ptr<profile_t>> profile_stack;
     std::vector<namespace_uri> uri_stack;
 
-    std::vector<std::tuple<size_t, size_t, size_t>> counting_profile_pos;
+    std::vector<size_t> counting_profile_pos;
 
     // the expr and funciton pos may need to be stack because of lambda functions and local classes
     std::vector<size_t> expr_stmt_pos;
