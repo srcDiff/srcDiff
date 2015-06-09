@@ -135,7 +135,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KoZoomAction::createWidget':
   #Impact#: #Statement# = #10#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• 'aspectButton' was renamed to 'd->aspectButton'
+	• name change from 'aspectButton' to 'd->aspectButton'
 	• a #declaration# was replaced with an #assignment#
 
 END_SUMMARY
@@ -230,10 +230,10 @@ SUMMARY
 • Modified function(s): 1
 • constructor 'RotateImage::RotateImage':
   #Impact#: #Statement# = #14#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• 'action' was renamed to 'm_rotate180LayerAction'
-	• 'action' was renamed to 'm_rotate270LayerAction'
-	• 'action' was renamed to 'm_rotate90LayerAction'
-	• 'action' was renamed to 'm_rotateLayerAction'
+	• name change from 'action' to 'm_rotate180LayerAction'
+	• name change from 'action' to 'm_rotate270LayerAction'
+	• name change from 'action' to 'm_rotate90LayerAction'
+	• name change from 'action' to 'm_rotateLayerAction'
 	• a #call# was inserted
 
 END_SUMMARY

@@ -226,7 +226,7 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
         std::map<identifier_utilities, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
         if(itersect_itr == output_identifiers.end()) {
 
-            summaries_.emplace_back(new identifier_summary_t(itr->first.trim(), true));
+            summaries_.emplace_back(new identifier_summary_t(itr->first.trim(), false));
             output_identifiers.insert(itersect_itr, *itr);
 
         } else {
