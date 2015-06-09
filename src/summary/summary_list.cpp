@@ -176,15 +176,11 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 
 }
 
-void summary_list::identifiers(std::map<std::string, std::set<versioned_string>> profile_identifiers) {
+void summary_list::identifiers(std::map<std::string, std::set<versioned_string>> profile_identifiers,
+                               const std::map<identifier_utilities, size_t> & name_change_identifiers) {
 
     std::vector<versioned_string> rename_identifiers;
     for(std::map<std::string, std::set<versioned_string>>::iterator itr = profile_identifiers.begin(); itr != profile_identifiers.end();) {
-
-        std::cerr << itr->first << " { ";
-        for(auto & temp : itr->second)
-            std::cerr << temp << ' ';
-        std::cerr << " }\n";
 
         if(itr->second.size() == 1 && !itr->second.begin()->is_common()
             && itr->second.begin()->has_original() && itr->second.begin()->has_modified()
@@ -193,9 +189,9 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
             versioned_string save_identifier = *itr->second.begin();
     
-            // the erase may be erase this iterator to if second.
-            while((save_identifier.has_original() && save_identifier.original() == itr->first)
-                || (save_identifier.has_modified() && save_identifier.modified() == itr->first))
+            while(itr != profile_identifiers.end()
+                &&    ((save_identifier.has_original() && save_identifier.original() == itr->first)
+                    || (save_identifier.has_modified() && save_identifier.modified() == itr->first)))
                 ++itr;
     
             if(save_identifier.has_original())
@@ -221,6 +217,23 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
         identifier_utilities ident(*itr, true);
 
         ++output_identifiers[*itr];
+
+    }
+
+
+    for(std::map<identifier_utilities, size_t>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
+
+        std::map<identifier_utilities, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
+        if(itersect_itr == output_identifiers.end()) {
+
+            summaries_.emplace_back(new identifier_summary_t(itr->first.trim(), true));
+            output_identifiers.insert(itersect_itr, *itr);
+
+        } else {
+
+            itersect_itr->second += itr->second;
+
+        }
 
     }
 
@@ -513,7 +526,7 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
         summaries_.emplace_back(new conditional_summary_t(profile->operation, get_type_string(profile), false));
 
     if(profile->summary_identifiers.size() > 0)
-        identifiers(profile->identifiers);
+        identifiers(profile->identifiers, profile->summary_identifiers);
 
     block(profile);
 
@@ -538,7 +551,7 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
         summaries_.emplace_back(new conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
 
     if(summary_profile->summary_identifiers.size() > 0)
-        identifiers(summary_profile->identifiers);
+        identifiers(summary_profile->identifiers, summary_profile->summary_identifiers);
 
     block(summary_profile);
 
@@ -1061,7 +1074,7 @@ void summary_list::exception(const std::shared_ptr<profile_t> & profile) {
         summaries_.emplace_back(new exception_summary_t(profile->operation, get_type_string(profile)));
 
     if(profile->summary_identifiers.size() > 0)
-        identifiers(profile->identifiers);
+        identifiers(profile->identifiers, profile->summary_identifiers);
 
     block(profile);
 
@@ -1086,7 +1099,7 @@ summary_list::~summary_list() {
 
 void summary_list::function_body(const profile_t & profile) {
 
-    identifiers(profile.identifiers);
+    identifiers(profile.identifiers, profile.summary_identifiers);
 
     block(std::make_shared<profile_t>(profile));
 
