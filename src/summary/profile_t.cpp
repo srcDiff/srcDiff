@@ -74,12 +74,12 @@ void profile_t::add_declaration_identifier(const std::shared_ptr<profile_t> & pr
     if(is_class_type(profile->type_name)) {
 
         const std::shared_ptr<class_profile_t> & class_profile = reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile);
-        update_identifiers(body, class_profile->name);
+        update_identifiers(profile->parent->body, class_profile->name);
 
     } else if(is_function_type(profile->type_name)) {
 
         const std::shared_ptr<function_profile_t> & function_profile = reinterpret_cast<const std::shared_ptr<function_profile_t> &>(profile);
-        update_identifiers(body, function_profile->name);
+        update_identifiers(profile->parent->body, function_profile->name);
 
     } else if(is_parameter(profile->type_name)) {
 
