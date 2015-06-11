@@ -44,7 +44,7 @@ bool is_catch(const std::string & type_name) {
 
 bool is_call(const std::string & type_name) {
 
-    return type_name == "call" || type_name == "macro";
+    return type_name == "call" || type_name == "macro" || type_name == "cast";
 
 }
 
