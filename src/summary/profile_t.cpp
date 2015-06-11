@@ -36,6 +36,13 @@ void profile_t::set_operation(srcdiff_type operation) {
                 
 }
 
+/** @todo need to add identifiers as soon as name encountered */
+void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
+
+    child_profiles.push_back(profile);
+
+}
+
 static void update_identifiers(std::shared_ptr<profile_t> & body, const versioned_string & identifier) {
 
         if(identifier.is_common()) {
@@ -62,8 +69,7 @@ static void update_identifiers(std::shared_ptr<profile_t> & body, const versione
 
 }
 
-/** @todo need to add identifiers as soon as name encountered */
-void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
+void profile_t::add_declaration_identifier(const std::shared_ptr<profile_t> & profile) {
 
     if(is_class_type(profile->type_name)) {
 
@@ -86,8 +92,6 @@ void profile_t::add_child(const std::shared_ptr<profile_t> & profile) {
         update_identifiers(body, decl_stmt_profile->name);
 
     }
-
-    child_profiles.push_back(profile);
 
 }
 

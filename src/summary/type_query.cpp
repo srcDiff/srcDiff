@@ -168,7 +168,9 @@ bool has_then_clause(const std::string & type_name) {
 
 bool has_body(const std::string & type_name) {
 
-    return (!is_ternary(type_name) && is_condition_type(type_name)) || is_function_type(type_name) || is_class_type(type_name) || type_name == "else" || is_expr_block(type_name);
+    return type_name == "unit" || is_function_type(type_name) || is_class_type(type_name)
+        || (!is_ternary(type_name) && is_condition_type(type_name)) || type_name == "else" || is_expr_block(type_name);
+
 }
 
 /** @todo what should I consider a statement. */

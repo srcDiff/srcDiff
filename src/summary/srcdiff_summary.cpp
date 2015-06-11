@@ -775,6 +775,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 // set name of identifiers parent profile
                 profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
 
+                // add declaration to body
+                profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->body->add_declaration_identifier(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)));
+
                 if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_full_name.is_common())
                     profile_stack.back()->body->add_identifier(collected_full_name, profile_stack.at(parent_pos)->type_name);
 

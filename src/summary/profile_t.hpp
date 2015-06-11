@@ -88,6 +88,7 @@ class profile_t {
         void set_id(size_t id_count);
         void set_operation(srcdiff_type operation);
         void add_child(const std::shared_ptr<profile_t> & profile);
+        void add_declaration_identifier(const std::shared_ptr<profile_t> & profile);
 
         virtual void set_name(versioned_string name);
         virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
