@@ -514,11 +514,11 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     if(is_interchange) {
 
         // update element name/operation
-        profile_stack.at(counting_profile_pos.back())->set_operation(SRCDIFF_COMMON);
-        profile_stack.at(counting_profile_pos.back())->type_name.set_modified(full_name);
+        profile_stack.at(profile_stack.size() - 2)->set_operation(SRCDIFF_COMMON);
+        profile_stack.at(profile_stack.size() - 2)->type_name.set_modified(full_name);
 
         // correct element counts
-        std::shared_ptr<profile_t> & parent = profile_stack.at(counting_profile_pos.back() - 2);
+        std::shared_ptr<profile_t> & parent = profile_stack.at(profile_stack.size() - 3);
         size_t syntax_dec = 1;
         parent->syntax_count -= syntax_dec;
         parent->total_count  -= syntax_dec;
