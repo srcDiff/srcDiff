@@ -804,7 +804,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name].back()->declarations[name].insert(name);
 
-                        profile_stack.back()->body->identifiers[name].insert(name);
+                        ++profile_stack.back()->body->identifiers[name][name];
 
                         continue;
 
@@ -816,7 +816,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.original()].back()->declarations[name.original()].insert(name);
 
-                        profile_stack.back()->body->identifiers[name.original()].insert(name);
+                        ++profile_stack.back()->body->identifiers[name.original()][name];
 
                     }
 
@@ -826,7 +826,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.modified()].back()->declarations[name.modified()].insert(name);
 
-                        profile_stack.back()->body->identifiers[name.modified()].insert(name);
+                        ++profile_stack.back()->body->identifiers[name.modified()][name];
 
                     }
 
