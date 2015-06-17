@@ -221,22 +221,21 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
     }
 
+    // for(std::map<identifier_utilities, size_t>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
 
-    for(std::map<identifier_utilities, size_t>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
+    //     std::map<identifier_utilities, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
+    //     if(itersect_itr == output_identifiers.end()) {
 
-        std::map<identifier_utilities, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
-        if(itersect_itr == output_identifiers.end()) {
+    //         summaries_.emplace_back(new identifier_summary_t(itr->first.trim(), false));
+    //         output_identifiers.insert(itersect_itr, *itr);
 
-            summaries_.emplace_back(new identifier_summary_t(itr->first.trim(), false));
-            output_identifiers.insert(itersect_itr, *itr);
+    //     } else {
 
-        } else {
+    //         itersect_itr->second += itr->second;
 
-            itersect_itr->second += itr->second;
+    //     }
 
-        }
-
-    }
+    // }
 
 }
 
@@ -1103,6 +1102,39 @@ void summary_list::function_body(const profile_t & profile) {
 
     identifiers(profile.declarations, profile.summary_identifiers);
 
+    std::vector<versioned_string> name_change_identifiers;
+    std::map<std::string, std::map<versioned_string, size_t>> profile_identifiers = profile.identifiers;
+    for(std::map<std::string, std::map<versioned_string, size_t>>::iterator itr = profile_identifiers.begin(); itr != profile_identifiers.end(); ++itr) {
+
+        for(std::map<versioned_string, size_t>::iterator use_itr = itr->second.begin(); use_itr != itr->second.end();) {
+
+            if(!use_itr->first.is_common() && use_itr->first.has_original() && use_itr->first.has_modified() && use_itr->second > 1) {
+
+                name_change_identifiers.push_back(use_itr->first);
+                ++use_itr;
+                profile_identifiers[name_change_identifiers.back().original()].erase(name_change_identifiers.back());
+                profile_identifiers[name_change_identifiers.back().modified()].erase(name_change_identifiers.back());
+
+            } else {
+
+                ++use_itr;
+
+            }
+
+        }
+
+    }
+
+    for(std::vector<versioned_string>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
+
+        summaries_.emplace_back(new identifier_summary_t(*itr, false));
+
+        identifier_utilities ident(*itr, true);
+
+        ++output_identifiers[*itr];
+
+    }
+    
     block(std::make_shared<profile_t>(profile));
 
 }
