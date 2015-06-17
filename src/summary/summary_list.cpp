@@ -527,7 +527,7 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
         summaries_.emplace_back(new conditional_summary_t(profile->operation, get_type_string(profile), false));
 
     if(profile->summary_identifiers.size() > 0)
-        identifiers(profile->identifiers, profile->summary_identifiers);
+        identifiers(profile->declarations, profile->summary_identifiers);
 
     block(profile);
 
@@ -552,7 +552,7 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
         summaries_.emplace_back(new conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
 
     if(summary_profile->summary_identifiers.size() > 0)
-        identifiers(summary_profile->identifiers, summary_profile->summary_identifiers);
+        identifiers(summary_profile->declarations, summary_profile->summary_identifiers);
 
     block(summary_profile);
 
@@ -1076,7 +1076,7 @@ void summary_list::exception(const std::shared_ptr<profile_t> & profile) {
         summaries_.emplace_back(new exception_summary_t(profile->operation, get_type_string(profile)));
 
     if(profile->summary_identifiers.size() > 0)
-        identifiers(profile->identifiers, profile->summary_identifiers);
+        identifiers(profile->declarations, profile->summary_identifiers);
 
     block(profile);
 
@@ -1101,7 +1101,7 @@ summary_list::~summary_list() {
 
 void summary_list::function_body(const profile_t & profile) {
 
-    identifiers(profile.identifiers, profile.summary_identifiers);
+    identifiers(profile.declarations, profile.summary_identifiers);
 
     block(std::make_shared<profile_t>(profile));
 

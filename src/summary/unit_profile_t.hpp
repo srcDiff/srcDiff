@@ -27,7 +27,7 @@ class unit_profile_t : public profile_t {
          * @todo this assumes declarations are simple names.  Believe some class at least can be complex, and function definitions are complex 
          * and need to be resolved into a simple
          */
-        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> declarations;
+        std::map<std::string, std::vector<std::shared_ptr<profile_t>>> identifier_to_declaration_profile;
 
     public:
 

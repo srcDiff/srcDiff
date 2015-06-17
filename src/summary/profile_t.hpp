@@ -49,7 +49,7 @@ class profile_t {
         std::shared_ptr<profile_t> summary_profile;
 
         profile_list_t child_profiles;
-        std::map<std::string, std::set<versioned_string>> identifiers;
+        std::map<std::string, std::set<versioned_string>> declarations;
 
         size_t statement_count_original;
         size_t statement_count_modified;
