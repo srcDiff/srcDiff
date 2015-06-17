@@ -56,17 +56,12 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
-bool compare_identifier_map(const std::pair<identifier_utilities, size_t> & first, const std::pair<identifier_utilities, size_t> & second) {
-
-    return first.first < second.first;
-
-}
-
+/** May need to build of set (only changed and has original and modified) of all versioned_string in identifiers */
 #define identifier_set_difference(PROFILE)                                                              \
-    std::map<identifier_utilities, size_t> identifier_set;                                              \
+    std::set<versioned_string> identifier_set;                                                          \
     std::set_difference(PROFILE->all_identifiers.begin(), PROFILE->all_identifiers.end(),               \
                         output_identifiers.begin(), output_identifiers.end(),                           \
-                        std::inserter(identifier_set, identifier_set.begin()), compare_identifier_map);
+                        std::inserter(identifier_set, identifier_set.begin()));
 
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
@@ -243,11 +238,14 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
     }
 
+    /** @todo if a single rename probably need to not report as name change but entity modified.  Exceptions for some call name change etc. */
     for(std::vector<versioned_string>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
 
-        summaries_.emplace_back(new identifier_summary_t(*itr, false));
-
         identifier_utilities ident(*itr, true);
+
+        if(output_identifiers.find(ident) != output_identifiers.end()) continue;
+
+        summaries_.emplace_back(new identifier_summary_t(*itr, false));
 
         ++output_identifiers[*itr];
 

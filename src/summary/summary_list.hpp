@@ -23,7 +23,7 @@ private:
 protected:
 
     std::list<summary_t *> summaries_;
-    std::map<identifier_utilities, size_t> output_identifiers;
+    std::set<versioned_string> output_identifiers;
 
 private:
 
