@@ -42,7 +42,6 @@ class profile_t {
         bool is_replacement;
         size_t move_id;
 
-
         std::shared_ptr<profile_t> parent;
         std::shared_ptr<profile_t> summary_parent;
         std::shared_ptr<profile_t> body;
@@ -75,6 +74,8 @@ class profile_t {
 
         profile_list_t child_change_profiles;
         profile_list_t descendant_change_profiles;      
+
+        std::map<std::string, std::multiset<versioned_string>> identifiers;
 
         std::map<identifier_utilities, size_t> all_identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;
