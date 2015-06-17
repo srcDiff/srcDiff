@@ -94,6 +94,7 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
             if(number_calls == 1)           return "call";
             else                            return "call chain";
         }
+        if(expr_stmt_profile->print())      return "print";
         return "expression";
 
     }
@@ -974,7 +975,8 @@ void summary_list::expr_stmt(const std::shared_ptr<profile_t> & profile) {
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-    if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON) || expr_stmt_profile->is_delete() || profile->child_change_profiles.empty()) {
+    if((expr_stmt_profile->assignment() && expr_stmt_profile->operation != SRCDIFF_COMMON)
+        || expr_stmt_profile->is_delete() || expr_stmt_profile->print() || profile->child_change_profiles.empty()) {
 
         summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
 

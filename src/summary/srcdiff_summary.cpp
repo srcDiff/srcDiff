@@ -78,6 +78,7 @@ void srcdiff_summary::process_characters() {
             if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
 
                 std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
+
                 expr_stmt_profile->assignment(true);
 
                 for(size_t pos = text.size(); pos > 0; --pos) {
@@ -105,13 +106,24 @@ void srcdiff_summary::process_characters() {
 
             reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->is_delete(true);
 
-            if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back())
-                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->is_delete(true);
+            if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
 
-        } else if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
+                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
+                expr_stmt_profile->is_delete(true);
+
+            }
+
+        }
+
+        if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
+
+            std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
+
+            if(text == "<<" && !expr_stmt_profile->assignment())
+                expr_stmt_profile->print(true);
 
             if(text != "." && text != "->" && text != ".*" && text != "->*" && text != "::")
-                reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->call(false);
+                expr_stmt_profile->call(false);
 
         }
 
