@@ -33,7 +33,8 @@ private:
     void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
     void block(const std::shared_ptr<profile_t> & profile);
 
-    void identifiers(std::map<std::string, std::set<versioned_string>> profile_identifiers, const std::map<identifier_utilities, size_t> & name_change_identifiers);
+    void identifiers(std::map<std::string, std::set<versioned_string>> profile_declarations,
+                     std::map<std::string, std::map<versioned_string, size_t>> profile_identifiers);
     void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos);
     void interchange(const std::shared_ptr<profile_t> & profile);
 
