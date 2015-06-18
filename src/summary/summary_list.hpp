@@ -34,7 +34,7 @@ private:
     void block(const std::shared_ptr<profile_t> & profile);
 
     void identifiers(std::map<std::string, std::set<versioned_string>> profile_declarations,
-                     std::map<std::string, std::map<versioned_string, size_t>> profile_identifiers);
+                     std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>> profile_identifiers);
     void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos);
     void interchange(const std::shared_ptr<profile_t> & profile);
 

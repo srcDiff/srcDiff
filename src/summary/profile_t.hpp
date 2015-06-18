@@ -75,7 +75,7 @@ class profile_t {
         profile_list_t child_change_profiles;
         profile_list_t descendant_change_profiles;      
 
-        std::map<std::string, std::map<versioned_string, size_t>> identifiers;
+        std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>> identifiers;
 
         std::map<identifier_utilities, size_t> all_identifiers;
         std::map<identifier_utilities, size_t> summary_identifiers;

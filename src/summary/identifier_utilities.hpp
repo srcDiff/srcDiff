@@ -126,7 +126,6 @@ public:
 
                 }
 
-
                 for(int pos = 0; pos < edits->length; ++pos) {
 
                     list_->emplace_back(original_identifiers[original_pos++], SRCDIFF_DELETE);
@@ -141,7 +140,6 @@ public:
                     ++original_pos;
 
                 }
-
 
                 for(int pos = 0; pos < edits->length; ++pos)
                     list_->emplace_back(modified_identifiers[modified_pos++], SRCDIFF_INSERT);

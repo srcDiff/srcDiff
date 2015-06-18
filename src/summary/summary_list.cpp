@@ -56,16 +56,17 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
-#define identifier_set_difference(PROFILE)                                                                            \
-    std::set<versioned_string> identifier_set;                                                                        \
-    std::set<versioned_string> identifier_list;                                                                       \
-    for(const std::pair<std::string, std::map<versioned_string, size_t>> & identifier_map : PROFILE->identifiers)     \
-        for(const std::pair<versioned_string, size_t> & identifier : identifier_map.second)                           \
-            if(!identifier.first.is_common() && identifier.first.has_original() && identifier.first.has_modified() \
-                && identifier.second > 1)                                                                             \
-                    identifier_list.insert(identifier.first);                                                         \
-    std::set_difference(identifier_list.begin(), identifier_list.end(),                                               \
-                        output_identifiers.begin(), output_identifiers.end(),                                         \
+#define identifier_set_difference(PROFILE)                                                                               \
+    std::set<versioned_string> identifier_set;                                                                           \
+    std::set<versioned_string> identifier_list;                                                                          \
+    for(const std::pair<std::string, std::map<versioned_string,                                                          \
+        std::multiset<versioned_string>>> & identifier_map : PROFILE->identifiers)                                       \
+            for(const std::pair<versioned_string, std::multiset<versioned_string>> & identifier : identifier_map.second) \
+                if(!identifier.first.is_common() && identifier.first.has_original() && identifier.first.has_modified()   \
+                    && identifier.second.size() > 1)                                                                     \
+                        identifier_list.insert(identifier.first);                                                        \
+    std::set_difference(identifier_list.begin(), identifier_list.end(),                                                  \
+                        output_identifiers.begin(), output_identifiers.end(),                                            \
                         std::inserter(identifier_set, identifier_set.begin()));
 
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
@@ -178,7 +179,7 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 }
 
 void summary_list::identifiers(std::map<std::string, std::set<versioned_string>> profile_declarations,
-                               std::map<std::string, std::map<versioned_string, size_t>> profile_identifiers) {
+                               std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>> profile_identifiers) {
 
     std::vector<versioned_string> rename_identifiers;
     for(std::map<std::string, std::set<versioned_string>>::iterator itr = profile_declarations.begin(); itr != profile_declarations.end();) {
@@ -222,11 +223,14 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
     }
 
     std::vector<versioned_string> name_change_identifiers;
-        for(std::map<std::string, std::map<versioned_string, size_t>>::iterator itr = profile_identifiers.begin(); itr != profile_identifiers.end(); ++itr) {
+        for(std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>>::iterator
+            itr = profile_identifiers.begin(); itr != profile_identifiers.end(); ++itr) {
 
-        for(std::map<versioned_string, size_t>::iterator use_itr = itr->second.begin(); use_itr != itr->second.end();) {
+        for(std::map<versioned_string, std::multiset<versioned_string>>::iterator 
+            use_itr = itr->second.begin(); use_itr != itr->second.end();) {
 
-            if(!use_itr->first.is_common() && use_itr->first.has_original() && use_itr->first.has_modified() && use_itr->second > 1) {
+            if(!use_itr->first.is_common() && use_itr->first.has_original() && use_itr->first.has_modified()
+                && use_itr->second.size() > 1) {
 
                 name_change_identifiers.push_back(use_itr->first);
                 ++use_itr;

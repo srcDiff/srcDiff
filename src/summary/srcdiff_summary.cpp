@@ -793,8 +793,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_full_name.is_common())
                     profile_stack.back()->body->add_identifier(collected_full_name, profile_stack.at(parent_pos)->type_name);
 
-                collected_full_name.clear();
-
                 std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
                 for(const versioned_string & name : simple_names) {
 
@@ -804,7 +802,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name].back()->declarations[name].insert(name);
 
-                        ++profile_stack.back()->body->identifiers[name][name];
+                        profile_stack.back()->body->identifiers[name][name].insert(collected_full_name);
 
                         continue;
 
@@ -816,7 +814,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.original()].back()->declarations[name.original()].insert(name);
 
-                        ++profile_stack.back()->body->identifiers[name.original()][name];
+                        profile_stack.back()->body->identifiers[name.original()][name].insert(collected_full_name);
 
                     }
 
@@ -826,12 +824,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.modified()].back()->declarations[name.modified()].insert(name);
 
-                        ++profile_stack.back()->body->identifiers[name.modified()][name];
+                        profile_stack.back()->body->identifiers[name.modified()][name].insert(collected_full_name);
 
                     }
 
                 }
 
+                collected_full_name.clear();
                 simple_names.clear();
 
             }
