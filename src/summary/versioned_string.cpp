@@ -107,6 +107,13 @@ void versioned_string::clear() {
 
 }
 
+void versioned_string::swap(versioned_string & other) {
+
+	string_original.swap(other.string_original);
+	string_modified.swap(other.string_modified);
+
+}
+
 versioned_string::operator std::string() const {
 
 	if(is_common()) return original();

@@ -40,6 +40,8 @@ class versioned_string {
 		void append(const char * characters, size_t len, enum srcdiff_type version);
 		void clear();
 
+		void swap(versioned_string & other);
+
        	operator std::string() const;
        	bool operator==(const std::string & str) const;
 		bool operator!=(const std::string & str) const;

@@ -794,8 +794,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                 // set identifier_profile_t name
                 std::shared_ptr<identifier_profile_t> & identifier_profile = reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.at(counting_profile_pos.back()));
-                identifier_profile->name = collected_full_name;
-                identifier_profile->simple_names = simple_names;
+                identifier_profile->name.swap(collected_full_name);
+                identifier_profile->simple_names.swap(simple_names);
 
                 // set name of identifiers parent profile
                 profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->set_name(identifier_profile, profile_stack.at(parent_pos)->type_name);
@@ -803,11 +803,15 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 // add declaration to body
                 profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->body->add_declaration_identifier(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)));
 
-                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_full_name.is_common())
-                    profile_stack.back()->body->add_identifier(collected_full_name, profile_stack.at(parent_pos)->type_name);
+                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !identifier_profile->name.is_common())
+                    profile_stack.back()->body->add_identifier(identifier_profile->name, profile_stack.at(parent_pos)->type_name);
 
                 std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
-                for(const versioned_string & name : simple_names) {
+                std::cerr << identifier_profile->name << " = { ";
+                for(auto & foo : identifier_profile->simple_names)
+                    std::cerr << foo << ", ";
+                std::cerr << "}\n";
+                for(const versioned_string & name : identifier_profile->simple_names) {
 
                     if(name.is_common()) {
     
@@ -815,7 +819,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name].back()->declarations[name].insert(name);
 
-                        profile_stack.back()->body->identifiers[name][name].insert(collected_full_name);
+                        profile_stack.back()->body->identifiers[name][name].insert(identifier_profile->name);
 
                         continue;
 
@@ -826,8 +830,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name.original());
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.original()].back()->declarations[name.original()].insert(name);
-
-                        profile_stack.back()->body->identifiers[name.original()][name].insert(collected_full_name);
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+                        profile_stack.back()->body->identifiers[name.original()][name].insert(identifier_profile->name);
 
                     }
 
@@ -836,8 +840,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name.modified());
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.modified()].back()->declarations[name.modified()].insert(name);
-
-                        profile_stack.back()->body->identifiers[name.modified()][name].insert(collected_full_name);
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+                        profile_stack.back()->body->identifiers[name.modified()][name].insert(identifier_profile->name);
 
                     }
 

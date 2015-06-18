@@ -732,10 +732,10 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                 bool report_name = !call_profile->name->name.is_common();
                 if(report_name) {
-
+                    std::cerr << call_profile->name->name << '\n';
                     bool is_found = true;
                     for(const versioned_string & v_string : call_profile->name->simple_names) {
-
+std::cerr << v_string << '\n';
                         std::map<versioned_string, std::multiset<versioned_string>>::const_iterator citr = identifier_set.find(v_string);
                         if(citr != identifier_set.end() && citr->second.find(call_profile->name->name) != citr->second.end()) continue;
 
