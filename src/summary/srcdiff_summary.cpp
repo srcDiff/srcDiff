@@ -782,7 +782,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     --parent_pos;
 
                 // set identifier_profile_t name
-                profile_stack.at(counting_profile_pos.back())->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
+                std::shared_ptr<identifier_profile_t> & identifier_profile = reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.at(counting_profile_pos.back()));
+                identifier_profile->name = collected_full_name;
+                identifier_profile->simple_names = simple_names;
 
                 // set name of identifiers parent profile
                 profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
